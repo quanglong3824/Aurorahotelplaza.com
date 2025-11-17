@@ -30,7 +30,7 @@
         <div class="container-custom">
             <div class="story-section">
                 <div class="story-image-wrapper">
-                    <img src="img/src/ui/horizontal/Le_tan_Aurora.jpg" alt="Aurora Hotel Plaza" class="story-image">
+                    <img src="assets/img/src/ui/horizontal/Le_tan_Aurora.jpg" alt="Aurora Hotel Plaza" class="story-image">
                 </div>
                 <div class="story-content">
                     <span class="section-label">Câu chuyện của chúng tôi</span>
@@ -175,7 +175,7 @@
                     </ul>
                 </div>
                 <div class="story-image-wrapper">
-                    <img src="img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Tiện nghi Aurora" class="story-image">
+                    <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Tiện nghi Aurora" class="story-image">
                 </div>
             </div>
         </div>

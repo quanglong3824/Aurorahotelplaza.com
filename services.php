@@ -32,7 +32,7 @@
                 <!-- Wedding Service -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tổ chức tiệc cưới" class="service-image">
+                        <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tổ chức tiệc cưới" class="service-image">
                         <div class="service-overlay">
                             <a href="wedding.php" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -60,7 +60,7 @@
                 <!-- Conference Service -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg" alt="Tổ chức hội nghị" class="service-image">
+                        <img src="assets/img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg" alt="Tổ chức hội nghị" class="service-image">
                         <div class="service-overlay">
                             <a href="conference.php" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -88,7 +88,7 @@
                 <!-- Restaurant Service -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Nhà hàng" class="service-image">
+                        <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Nhà hàng" class="service-image">
                         <div class="service-overlay">
                             <a href="restaurant.php" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -116,7 +116,7 @@
                 <!-- Office Rental -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg" alt="Văn phòng cho thuê" class="service-image">
+                        <img src="assets/img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg" alt="Văn phòng cho thuê" class="service-image">
                         <div class="service-overlay">
                             <a href="office.php" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -144,7 +144,7 @@
                 <!-- Spa Service -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Spa & Massage" class="service-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Spa & Massage" class="service-image">
                         <div class="service-overlay">
                             <a href="#" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -172,7 +172,7 @@
                 <!-- Pool & Gym -->
                 <div class="service-card">
                     <div class="service-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-3.jpg" alt="Hồ bơi & Gym" class="service-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg" alt="Hồ bơi & Gym" class="service-image">
                         <div class="service-overlay">
                             <a href="#" class="service-link">
                                 <span class="material-symbols-outlined">arrow_forward</span>

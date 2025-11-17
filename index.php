@@ -67,7 +67,7 @@
 </div>
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("img/deluxe/deluxe1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">Phòng Deluxe</h3>
@@ -79,7 +79,7 @@
 </div>
 </div>
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("img/premium deluxe/premium-deluxe1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">Premium Deluxe</h3>
@@ -91,7 +91,7 @@
 </div>
 </div>
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("img/vip /vip1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">VIP Suite</h3>

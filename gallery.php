@@ -42,7 +42,7 @@
                 <!-- Rooms -->
                 <div class="gallery-item" data-category="rooms">
                     <div class="gallery-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Phòng Deluxe" class="gallery-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Phòng Deluxe" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng Deluxe</h3>
                             <p class="gallery-category">Phòng nghỉ</p>
@@ -55,7 +55,7 @@
 
                 <div class="gallery-item" data-category="rooms">
                     <div class="gallery-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-3.jpg" alt="Phòng Deluxe" class="gallery-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg" alt="Phòng Deluxe" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng Deluxe - View 2</h3>
                             <p class="gallery-category">Phòng nghỉ</p>
@@ -68,7 +68,7 @@
 
                 <div class="gallery-item" data-category="rooms">
                     <div class="gallery-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-5.jpg" alt="Phòng Deluxe" class="gallery-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-5.jpg" alt="Phòng Deluxe" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng Deluxe - Phòng tắm</h3>
                             <p class="gallery-category">Phòng nghỉ</p>
@@ -82,7 +82,7 @@
                 <!-- Restaurant -->
                 <div class="gallery-item" data-category="restaurant">
                     <div class="gallery-image-wrapper">
-                        <img src="img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Nhà hàng" class="gallery-image">
+                        <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Nhà hàng" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Nhà hàng Aurora</h3>
                             <p class="gallery-category">Nhà hàng</p>
@@ -95,7 +95,7 @@
 
                 <div class="gallery-item" data-category="restaurant">
                     <div class="gallery-image-wrapper">
-                        <img src="img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg" alt="Nhà hàng" class="gallery-image">
+                        <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg" alt="Nhà hàng" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Không gian nhà hàng</h3>
                             <p class="gallery-category">Nhà hàng</p>
@@ -108,7 +108,7 @@
 
                 <div class="gallery-item" data-category="restaurant">
                     <div class="gallery-image-wrapper">
-                        <img src="img/restaurant/NHA-HANG-AURORA-HOTEL-11.jpg" alt="Nhà hàng" class="gallery-image">
+                        <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-11.jpg" alt="Nhà hàng" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Khu vực buffet</h3>
                             <p class="gallery-category">Nhà hàng</p>
@@ -122,7 +122,7 @@
                 <!-- Facilities -->
                 <div class="gallery-item" data-category="facilities">
                     <div class="gallery-image-wrapper">
-                        <img src="img/src/ui/horizontal/Le_tan_Aurora.jpg" alt="Lễ tân" class="gallery-image">
+                        <img src="assets/img/src/ui/horizontal/Le_tan_Aurora.jpg" alt="Lễ tân" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Lễ tân</h3>
                             <p class="gallery-category">Tiện nghi</p>
@@ -135,7 +135,7 @@
 
                 <div class="gallery-item" data-category="facilities">
                     <div class="gallery-image-wrapper">
-                        <img src="img/src/ui/horizontal/sanh-khach-san-aurora.jpg" alt="Sảnh khách sạn" class="gallery-image">
+                        <img src="assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg" alt="Sảnh khách sạn" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Sảnh khách sạn</h3>
                             <p class="gallery-category">Tiện nghi</p>
@@ -148,7 +148,7 @@
 
                 <div class="gallery-item" data-category="facilities">
                     <div class="gallery-image-wrapper">
-                        <img src="img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg" alt="Studio" class="gallery-image">
+                        <img src="assets/img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg" alt="Studio" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng Studio</h3>
                             <p class="gallery-category">Tiện nghi</p>
@@ -162,7 +162,7 @@
                 <!-- Events -->
                 <div class="gallery-item" data-category="events">
                     <div class="gallery-image-wrapper">
-                        <img src="img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tiệc cưới" class="gallery-image">
+                        <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tiệc cưới" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Tiệc cưới</h3>
                             <p class="gallery-category">Sự kiện</p>
@@ -175,7 +175,7 @@
 
                 <div class="gallery-item" data-category="events">
                     <div class="gallery-image-wrapper">
-                        <img src="img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg" alt="Hội nghị" class="gallery-image">
+                        <img src="assets/img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg" alt="Hội nghị" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng hội nghị</h3>
                             <p class="gallery-category">Sự kiện</p>
@@ -188,7 +188,7 @@
 
                 <div class="gallery-item" data-category="events">
                     <div class="gallery-image-wrapper">
-                        <img src="img/src/ui/horizontal/Hoi-nghi-aurora-8.jpg" alt="Hội nghị" class="gallery-image">
+                        <img src="assets/img/src/ui/horizontal/Hoi-nghi-aurora-8.jpg" alt="Hội nghị" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Sự kiện hội nghị</h3>
                             <p class="gallery-category">Sự kiện</p>
@@ -202,7 +202,7 @@
                 <!-- More rooms -->
                 <div class="gallery-item" data-category="rooms">
                     <div class="gallery-image-wrapper">
-                        <img src="img/deluxe/DELUXE-ROOM-AURORA-7.jpg" alt="Phòng Deluxe" class="gallery-image">
+                        <img src="assets/img/deluxe/DELUXE-ROOM-AURORA-7.jpg" alt="Phòng Deluxe" class="gallery-image">
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Phòng Deluxe - Giường đôi</h3>
                             <p class="gallery-category">Phòng nghỉ</p>

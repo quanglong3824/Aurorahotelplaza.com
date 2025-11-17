@@ -65,10 +65,9 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
                 <div class="submenu">
                     <a href="<?php echo $base_path; ?>about.php" class="submenu-item">Giới thiệu</a>
                     <a href="<?php echo $base_path; ?>gallery.php" class="submenu-item">Thư viện ảnh</a>
+                    <a href="<?php echo $base_path; ?>blog.php" class="submenu-item">Bài viết</a>
                 </div>
             </div>
-
-            <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>blog.php">Bài viết</a>
             <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>contact.php">Liên hệ</a>
         </nav>
         <div class="flex items-center gap-2">
