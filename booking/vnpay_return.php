@@ -55,24 +55,20 @@ try {
                 $stmt = $db->prepare("
                     UPDATE bookings 
                     SET status = 'confirmed', 
-                        payment_status = 'paid',
-                        paid_amount = ?,
-                        confirmed_at = NOW()
-                    WHERE id = ?
+                        payment_status = 'paid'
+                    WHERE booking_id = ?
                 ");
-                $stmt->execute([$vnp_Amount / 100, $booking['id']]);
+                $stmt->execute([$booking['booking_id']]);
                 
                 // Create payment record
-                $payment_code = 'PAY' . date('Ymd') . strtoupper(substr(uniqid(), -6));
                 $stmt = $db->prepare("
                     INSERT INTO payments (
-                        booking_id, payment_code, amount, payment_method,
-                        payment_status, vnpay_transaction_id, vnpay_response, paid_at
-                    ) VALUES (?, ?, ?, 'vnpay', 'completed', ?, ?, NOW())
+                        booking_id, payment_method, amount, currency,
+                        transaction_id, vnpay_response, status, paid_at
+                    ) VALUES (?, 'vnpay', ?, 'VND', ?, ?, 'completed', NOW())
                 ");
                 $stmt->execute([
-                    $booking['id'],
-                    $payment_code,
+                    $booking['booking_id'],
                     $vnp_Amount / 100,
                     $vnp_TransactionNo,
                     json_encode($_GET)
@@ -83,40 +79,31 @@ try {
                 
                 // Update or create loyalty record
                 $stmt = $db->prepare("
-                    INSERT INTO customer_loyalty (user_id, total_points, current_points, total_bookings, total_spent, last_booking_date)
-                    VALUES (?, ?, ?, 1, ?, NOW())
+                    INSERT INTO user_loyalty (user_id, current_points, lifetime_points)
+                    VALUES (?, ?, ?)
                     ON DUPLICATE KEY UPDATE
-                        total_points = total_points + ?,
                         current_points = current_points + ?,
-                        total_bookings = total_bookings + 1,
-                        total_spent = total_spent + ?,
-                        last_booking_date = NOW()
+                        lifetime_points = lifetime_points + ?
                 ");
                 $stmt->execute([
                     $booking['user_id'],
                     $points_earned,
                     $points_earned,
-                    $booking['total_amount'],
                     $points_earned,
-                    $points_earned,
-                    $booking['total_amount']
+                    $points_earned
                 ]);
                 
-                // Add loyalty transaction
+                // Add points transaction
                 $stmt = $db->prepare("
-                    INSERT INTO loyalty_transactions (user_id, booking_id, points, type, description)
-                    VALUES (?, ?, ?, 'earn', ?)
+                    INSERT INTO points_transactions (user_id, points, transaction_type, reference_type, reference_id, description)
+                    VALUES (?, ?, 'earn', 'booking', ?, ?)
                 ");
                 $stmt->execute([
                     $booking['user_id'],
-                    $booking['id'],
                     $points_earned,
+                    $booking['booking_id'],
                     'Tích điểm từ đặt phòng ' . $vnp_TxnRef
                 ]);
-                
-                // Update booking with points
-                $stmt = $db->prepare("UPDATE bookings SET points_earned = ? WHERE id = ?");
-                $stmt->execute([$points_earned, $booking['id']]);
                 
                 $message = 'Thanh toán thành công! Bạn đã nhận được ' . $points_earned . ' điểm thưởng.';
                 
@@ -125,8 +112,8 @@ try {
                 $message = 'Thanh toán không thành công. Mã lỗi: ' . $vnp_ResponseCode;
                 
                 // Update booking status
-                $stmt = $db->prepare("UPDATE bookings SET status = 'cancelled' WHERE id = ?");
-                $stmt->execute([$booking['id']]);
+                $stmt = $db->prepare("UPDATE bookings SET status = 'cancelled' WHERE booking_id = ?");
+                $stmt->execute([$booking['booking_id']]);
             }
         } else {
             $message = 'Không tìm thấy đơn đặt phòng';

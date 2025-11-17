@@ -34,13 +34,12 @@
 - ⚠️ Quản lý hệ thống
 
 ### 5. **TÍCH HỢP**
-- ⚠️ VNPay payment gateway
+- ⚠️ VNPay payment gateway ( khách vãng lai bắ buộc phải đăng nhập )
 - ⚠️ Email automation (PHPMailer)
 - ⚠️ QR Code generation
 - ⚠️ Real-time chat (WebSocket hoặc AJAX polling)
 - ⚠️ Push notifications
-- 🔮 ML/DL AI (dự kiến tương lai)
-
+- 🔮 ML/ DL AI (dự kiến tương lai)
 ## 🔐 BẢO MẬT
 
 ### Cần implement:

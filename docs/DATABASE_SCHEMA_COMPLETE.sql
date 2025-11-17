@@ -5,9 +5,7 @@
 -- Description: Full-featured hotel booking system with role-based access
 -- ============================================================================
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Removed SET SQL_MODE, START TRANSACTION, and SET time_zone for hosting compatibility
 
 -- ============================================================================
 -- 1. USERS & AUTHENTICATION
@@ -1025,8 +1023,8 @@ CREATE INDEX idx_blog_posts_status_published ON blog_posts(status, published_at)
 -- EVENTS FOR AUTOMATED TASKS
 -- ============================================================================
 
--- Enable event scheduler
-SET GLOBAL event_scheduler = ON;
+-- Event scheduler requires SUPER privilege - enable manually if needed
+-- SET GLOBAL event_scheduler = ON;
 
 -- Event: Clean expired password reset tokens
 DELIMITER $$
@@ -1196,7 +1194,7 @@ NEXT STEPS:
 8. Setup push notification service
 */
 
-COMMIT;
+-- COMMIT removed for hosting compatibility
 
 -- ============================================================================
 -- END OF SCHEMA

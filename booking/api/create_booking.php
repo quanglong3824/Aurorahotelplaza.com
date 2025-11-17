@@ -28,7 +28,7 @@ try {
     $db = getDB();
     
     // Get room type details
-    $stmt = $db->prepare("SELECT * FROM room_types WHERE id = ? AND is_active = 1");
+    $stmt = $db->prepare("SELECT * FROM room_types WHERE room_type_id = ? AND status = 'active'");
     $stmt->execute([$room_type_id]);
     $room_type = $stmt->fetch();
     
@@ -58,33 +58,32 @@ try {
     // If not logged in, create guest account or use guest user
     if (!$user_id) {
         // Check if email exists
-        $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ?");
         $stmt->execute([$guest_email]);
         $existing_user = $stmt->fetch();
         
         if ($existing_user) {
-            $user_id = $existing_user['id'];
+            $user_id = $existing_user['user_id'];
         } else {
             // Create guest user
-            $username = 'guest_' . time() . rand(1000, 9999);
             $password_hash = password_hash(uniqid(), PASSWORD_DEFAULT);
             
             $stmt = $db->prepare("
-                INSERT INTO users (username, email, password_hash, full_name, phone, role, status) 
-                VALUES (?, ?, ?, ?, ?, 'customer', 'active')
+                INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified) 
+                VALUES (?, ?, ?, ?, 'customer', 'active', 0)
             ");
-            $stmt->execute([$username, $guest_email, $password_hash, $guest_name, $guest_phone]);
+            $stmt->execute([$guest_email, $password_hash, $guest_name, $guest_phone]);
             $user_id = $db->lastInsertId();
         }
     }
     
     // Check room availability
     $stmt = $db->prepare("
-        SELECT r.id 
+        SELECT r.room_id 
         FROM rooms r
         WHERE r.room_type_id = ? 
         AND r.status = 'available'
-        AND r.id NOT IN (
+        AND r.room_id NOT IN (
             SELECT room_id 
             FROM bookings 
             WHERE room_id IS NOT NULL
@@ -105,22 +104,22 @@ try {
     ]);
     $available_room = $stmt->fetch();
     
-    $room_id = $available_room['id'] ?? null;
+    $room_id = $available_room['room_id'] ?? null;
     
     // Create booking
     $stmt = $db->prepare("
         INSERT INTO bookings (
             booking_code, user_id, room_id, room_type_id,
-            check_in_date, check_out_date, num_guests, num_nights,
+            check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
             room_price, total_amount,
             guest_name, guest_email, guest_phone, special_requests,
             status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'unpaid')
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'unpaid')
     ");
     
     $stmt->execute([
         $booking_code, $user_id, $room_id, $room_type_id,
-        $check_in_date, $check_out_date, $num_guests, $num_nights,
+        $check_in_date, $check_out_date, $num_guests, 0, 1, $num_nights,
         $room_price, $total_amount,
         $guest_name, $guest_email, $guest_phone, $special_requests
     ]);
@@ -129,7 +128,7 @@ try {
     
     // Update room status if assigned
     if ($room_id) {
-        $stmt = $db->prepare("UPDATE rooms SET status = 'reserved' WHERE id = ?");
+        $stmt = $db->prepare("UPDATE rooms SET status = 'occupied' WHERE room_id = ?");
         $stmt->execute([$room_id]);
     }
     

@@ -4,7 +4,7 @@ require_once '../config/database.php';
 
 // Get room types for selection
 $db = getDB();
-$stmt = $db->prepare("SELECT * FROM room_types WHERE is_active = 1 ORDER BY sort_order, base_price");
+$stmt = $db->prepare("SELECT * FROM room_types WHERE status = 'active' ORDER BY sort_order, base_price");
 $stmt->execute();
 $room_types = $stmt->fetchAll();
 ?>
@@ -75,10 +75,10 @@ $room_types = $stmt->fetchAll();
                             <select name="room_type_id" id="room_type_id" class="form-input" required>
                                 <option value="">-- Chọn loại phòng --</option>
                                 <?php foreach($room_types as $room): ?>
-                                <option value="<?php echo $room['id']; ?>" 
+                                <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
-                                        data-max-guests="<?php echo $room['max_guests']; ?>">
-                                    <?php echo $room['name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm
+                                        data-max-guests="<?php echo $room['max_occupancy']; ?>">
+                                    <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm
                                 </option>
                                 <?php endforeach; ?>
                             </select>
