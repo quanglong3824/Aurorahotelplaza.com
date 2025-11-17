@@ -1,0 +1,149 @@
+### 1. **KHÁCH HÀNG (Customer)**
+- ✅ Đăng ký, Đăng nhập (pages/auth/ đã có cơ bản)
+- ⚠️ Đặt phòng đầy đủ nghiệp vụ
+- ⚠️ Xem lịch sử đặt phòng
+- ⚠️ Cập nhật thông tin cá nhân
+- ⚠️ Nhận email xác nhận + QR code
+- ⚠️ Xem và comment bài viết
+- ⚠️ Xem room map và chọn phòng
+- ⚠️ Tìm kiếm booking
+- ⚠️ Hệ thống tích điểm & hạng thành viên
+- ⚠️ Nhận thông báo push
+- ⚠️ Xem và đặt dịch vụ
+- ⚠️ Chat trực tiếp với nhân viên
+
+### 2. **LỄ TÂN (Receptionist)**
+- ⚠️ Quét QR nhận khách
+- ⚠️ Theo dõi và cập nhật room map
+- ⚠️ Chat với khách (lock conversation)
+- ⚠️ Xác nhận đặt phòng
+
+### 3. **SALE**
+- ⚠️ Kế thừa chức năng lễ tân
+- ⚠️ Cập nhật content web
+- ⚠️ CRUD phòng, giá phòng
+- ⚠️ CRUD dịch vụ
+- ⚠️ Quản lý banner, khuyến mãi
+- ⚠️ Xem thống kê
+- ⚠️ Xuất báo cáo Excel
+- ⚠️ Kiểm soát tích điểm
+
+### 4. **ADMIN**
+- ⚠️ Kế thừa tất cả chức năng
+- ⚠️ Phân quyền người dùng
+- ⚠️ Quản lý hệ thống
+
+### 5. **TÍCH HỢP**
+- ⚠️ VNPay payment gateway
+- ⚠️ Email automation (PHPMailer)
+- ⚠️ QR Code generation
+- ⚠️ Real-time chat (WebSocket hoặc AJAX polling)
+- ⚠️ Push notifications
+- 🔮 ML/DL AI (dự kiến tương lai)
+
+## 🔐 BẢO MẬT
+
+### Cần implement:
+1. **Authentication & Authorization**
+   - JWT hoặc Session-based auth
+   - Role-based access control (RBAC)
+   - Password hashing (bcrypt)
+
+2. **Input Validation**
+   - Server-side validation
+   - Prepared statements (PDO)
+   - XSS prevention
+
+3. **CSRF Protection**
+   - Token generation & validation
+
+4. **Rate Limiting**
+   - Login attempts
+   - API requests
+
+5. **HTTPS**
+   - SSL certificate
+   - Secure cookies
+
+---
+
+Kiến trúc 3 tầng để quản lý dữ liệu hiển thị trên UI:
+
+```
+┌─────────────────────────────────────────────────┐
+│              UI LAYER (View)                    │
+│  - index.php, phong.php, can-ho.php...         │
+│  - Chỉ hiển thị dữ liệu từ biến                │
+│  - Không truy cập database trực tiếp            │
+└─────────────────┬───────────────────────────────┘
+                  │ Nhận biến
+                  ↓
+┌─────────────────────────────────────────────────┐
+│         DATA LAYER (Trung gian)                 │
+│  - includes/data-pages/data-*.php               │
+│  - Lấy dữ liệu từ database                      │
+│  - Gán vào biến PHP                             │
+│  - Xử lý logic đơn giản                         │
+└─────────────────┬───────────────────────────────┘
+                  │ Query
+                  ↓
+┌─────────────────────────────────────────────────┐
+│         DATABASE LAYER (Model)                  │
+│  - models/*.php                                 │
+│  - Truy vấn database                            │
+│  - Business logic                               │
+│  - Validation                                   │
+└─────────────────────────────────────────────────┘
+```
+
+## 🎯 NGUYÊN TẮC THIẾT KẾ
+
+### 1. **Separation of Concerns**
+- UI chỉ hiển thị, không xử lý logic
+- Data layer chỉ lấy và gán biến
+- Model xử lý business logic
+
+### 2. **Single Source of Truth**
+- Mỗi nội dung chỉ lưu ở 1 nơi trong database
+- Data layer đọc từ database
+- UI đọc từ data layer
+
+### 3. **Easy to Edit**
+- Admin có thể sửa mọi chữ trên UI
+- Không cần sửa code
+- Chỉ cần update database
+
+### 4. **Fallback Values**
+- Luôn có giá trị mặc định
+- Nếu database trống, dùng default
+- Website không bao giờ bị lỗi hiển thị
+
+
+## ✅ LỢI ÍCH
+
+### 1. **Dễ bảo trì**
+- Code sạch, tách biệt rõ ràng
+- Dễ tìm và sửa lỗi
+- Dễ thêm tính năng mới
+
+### 2. **Dễ chỉnh sửa nội dung**
+- Admin sửa qua UI, không cần code
+- Mọi chữ đều có thể thay đổi
+- Preview trước khi publish
+
+### 3. **Performance**
+- Cache được dữ liệu
+- Giảm query database
+- Load nhanh hơn
+
+### 4. **Scalability**
+- Dễ thêm ngôn ngữ mới (i18n)
+- Dễ thêm trang mới
+- Dễ A/B testing
+
+### 5. **Security**
+- Tách biệt logic và data
+- Validate input tập trung
+- Dễ implement permissions
+
+---

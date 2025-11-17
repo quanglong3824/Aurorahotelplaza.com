@@ -1,0 +1,272 @@
+<?php
+session_start();
+require_once '../config/database.php';
+require_once '../payment/config.php';
+
+// Get VNPay response
+$vnp_SecureHash = $_GET['vnp_SecureHash'] ?? '';
+$inputData = array();
+foreach ($_GET as $key => $value) {
+    if (substr($key, 0, 4) == "vnp_") {
+        $inputData[$key] = $value;
+    }
+}
+
+unset($inputData['vnp_SecureHash']);
+ksort($inputData);
+$i = 0;
+$hashData = "";
+foreach ($inputData as $key => $value) {
+    if ($i == 1) {
+        $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+    } else {
+        $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+        $i = 1;
+    }
+}
+
+$secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+$vnp_ResponseCode = $_GET['vnp_ResponseCode'] ?? '';
+$vnp_TxnRef = $_GET['vnp_TxnRef'] ?? '';
+$vnp_Amount = $_GET['vnp_Amount'] ?? 0;
+$vnp_TransactionNo = $_GET['vnp_TransactionNo'] ?? '';
+$vnp_BankCode = $_GET['vnp_BankCode'] ?? '';
+
+$payment_success = false;
+$message = '';
+
+try {
+    $db = getDB();
+    
+    // Verify secure hash
+    if ($secureHash == $vnp_SecureHash) {
+        // Get booking
+        $stmt = $db->prepare("SELECT * FROM bookings WHERE booking_code = ?");
+        $stmt->execute([$vnp_TxnRef]);
+        $booking = $stmt->fetch();
+        
+        if ($booking) {
+            if ($vnp_ResponseCode == '00') {
+                // Payment successful
+                $payment_success = true;
+                
+                // Update booking status
+                $stmt = $db->prepare("
+                    UPDATE bookings 
+                    SET status = 'confirmed', 
+                        payment_status = 'paid',
+                        paid_amount = ?,
+                        confirmed_at = NOW()
+                    WHERE id = ?
+                ");
+                $stmt->execute([$vnp_Amount / 100, $booking['id']]);
+                
+                // Create payment record
+                $payment_code = 'PAY' . date('Ymd') . strtoupper(substr(uniqid(), -6));
+                $stmt = $db->prepare("
+                    INSERT INTO payments (
+                        booking_id, payment_code, amount, payment_method,
+                        payment_status, vnpay_transaction_id, vnpay_response, paid_at
+                    ) VALUES (?, ?, ?, 'vnpay', 'completed', ?, ?, NOW())
+                ");
+                $stmt->execute([
+                    $booking['id'],
+                    $payment_code,
+                    $vnp_Amount / 100,
+                    $vnp_TransactionNo,
+                    json_encode($_GET)
+                ]);
+                
+                // Calculate loyalty points (1 point per 10,000 VND)
+                $points_earned = floor($booking['total_amount'] / 10000);
+                
+                // Update or create loyalty record
+                $stmt = $db->prepare("
+                    INSERT INTO customer_loyalty (user_id, total_points, current_points, total_bookings, total_spent, last_booking_date)
+                    VALUES (?, ?, ?, 1, ?, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        total_points = total_points + ?,
+                        current_points = current_points + ?,
+                        total_bookings = total_bookings + 1,
+                        total_spent = total_spent + ?,
+                        last_booking_date = NOW()
+                ");
+                $stmt->execute([
+                    $booking['user_id'],
+                    $points_earned,
+                    $points_earned,
+                    $booking['total_amount'],
+                    $points_earned,
+                    $points_earned,
+                    $booking['total_amount']
+                ]);
+                
+                // Add loyalty transaction
+                $stmt = $db->prepare("
+                    INSERT INTO loyalty_transactions (user_id, booking_id, points, type, description)
+                    VALUES (?, ?, ?, 'earn', ?)
+                ");
+                $stmt->execute([
+                    $booking['user_id'],
+                    $booking['id'],
+                    $points_earned,
+                    'Tích điểm từ đặt phòng ' . $vnp_TxnRef
+                ]);
+                
+                // Update booking with points
+                $stmt = $db->prepare("UPDATE bookings SET points_earned = ? WHERE id = ?");
+                $stmt->execute([$points_earned, $booking['id']]);
+                
+                $message = 'Thanh toán thành công! Bạn đã nhận được ' . $points_earned . ' điểm thưởng.';
+                
+            } else {
+                // Payment failed
+                $message = 'Thanh toán không thành công. Mã lỗi: ' . $vnp_ResponseCode;
+                
+                // Update booking status
+                $stmt = $db->prepare("UPDATE bookings SET status = 'cancelled' WHERE id = ?");
+                $stmt->execute([$booking['id']]);
+            }
+        } else {
+            $message = 'Không tìm thấy đơn đặt phòng';
+        }
+    } else {
+        $message = 'Chữ ký không hợp lệ';
+    }
+    
+} catch (Exception $e) {
+    $message = 'Có lỗi xảy ra: ' . $e->getMessage();
+}
+?>
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title><?php echo $payment_success ? 'Thanh toán thành công' : 'Thanh toán thất bại'; ?> - Aurora Hotel Plaza</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="../assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<div class="relative flex min-h-screen w-full flex-col">
+
+<?php include '../includes/header.php'; ?>
+
+<main class="flex h-full grow flex-col items-center justify-center py-20 px-4">
+    <div class="max-w-2xl w-full bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg p-8 text-center">
+        
+        <?php if ($payment_success): ?>
+            <div class="mb-6">
+                <div class="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-5xl text-green-600 dark:text-green-400">check_circle</span>
+                </div>
+                <h1 class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">Thanh toán thành công!</h1>
+                <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark"><?php echo $message; ?></p>
+            </div>
+            
+            <div class="bg-primary-light/20 dark:bg-gray-700 rounded-lg p-6 mb-6 text-left">
+                <h3 class="font-bold text-lg mb-4">Thông tin đặt phòng</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>Mã đặt phòng:</span>
+                        <span class="font-bold"><?php echo $vnp_TxnRef; ?></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Mã giao dịch:</span>
+                        <span class="font-bold"><?php echo $vnp_TransactionNo; ?></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Ngân hàng:</span>
+                        <span class="font-bold"><?php echo $vnp_BankCode; ?></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Số tiền:</span>
+                        <span class="font-bold text-accent"><?php echo number_format($vnp_Amount / 100); ?> VNĐ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 justify-center">
+                <a href="./confirmation.php?booking_code=<?php echo $vnp_TxnRef; ?>" class="btn-primary">
+                    Xem chi tiết đặt phòng
+                </a>
+                <a href="../index.php" class="btn-secondary">
+                    Về trang chủ
+                </a>
+            </div>
+            
+        <?php else: ?>
+            <div class="mb-6">
+                <div class="w-20 h-20 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-5xl text-red-600 dark:text-red-400">cancel</span>
+                </div>
+                <h1 class="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">Thanh toán thất bại</h1>
+                <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark"><?php echo $message; ?></p>
+            </div>
+            
+            <div class="flex gap-4 justify-center">
+                <a href="./index.php" class="btn-primary">
+                    Đặt phòng lại
+                </a>
+                <a href="../contact.php" class="btn-secondary">
+                    Liên hệ hỗ trợ
+                </a>
+            </div>
+        <?php endif; ?>
+        
+    </div>
+</main>
+
+<?php include '../includes/footer.php'; ?>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+
+<style>
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #d4af37;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #b8941f;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: #6b7280;
+    font-weight: 600;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    border-color: #d4af37;
+    color: #d4af37;
+}
+</style>
+
+</body>
+</html>

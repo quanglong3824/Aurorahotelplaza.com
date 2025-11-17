@@ -1,0 +1,359 @@
+/* Rooms Page Styles */
+
+.page-header-rooms {
+    position: relative;
+    background-image: url('../img/deluxe/DELUXE-ROOM-AURORA-1.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 180px 20px 100px;
+    text-align: center;
+    color: white;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26, 35, 126, 0.85) 0%, rgba(204, 154, 44, 0.75) 100%);
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+    font-size: 20px;
+    opacity: 0.95;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.section-padding {
+    padding: 100px 0;
+}
+
+.container-custom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Room Categories */
+.room-categories {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 12px 32px;
+    background: white;
+    border: 2px solid #e5e5e5;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    border-color: #cc9a2c;
+    color: #cc9a2c;
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #cc9a2c 0%, #b8882a 100%);
+    border-color: #cc9a2c;
+    color: white;
+    box-shadow: 0 4px 12px rgba(204, 154, 44, 0.3);
+}
+
+/* Rooms Grid */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 40px;
+}
+
+@media (max-width: 768px) {
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.room-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.room-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+}
+
+.room-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.room-card:hover .room-image {
+    transform: scale(1.1);
+}
+
+.room-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #cc9a2c;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(204, 154, 44, 0.4);
+}
+
+.room-content {
+    padding: 32px;
+}
+
+.room-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+.room-description {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.room-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border-radius: 20px;
+}
+
+.feature-item .material-symbols-outlined {
+    font-size: 20px;
+    color: #cc9a2c;
+}
+
+.room-amenities {
+    margin-bottom: 24px;
+}
+
+.amenities-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+.amenities-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.amenity-item::before {
+    content: '✓';
+    color: #cc9a2c;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.room-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.room-price {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.price-label {
+    font-size: 13px;
+    color: #999;
+    font-weight: 500;
+}
+
+.price-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #cc9a2c;
+}
+
+.price-unit {
+    font-size: 14px;
+    color: #666;
+}
+
+.room-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-book-now {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #cc9a2c 0%, #b8882a 100%);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-book-now:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(204, 154, 44, 0.4);
+}
+
+.btn-view-details {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #1A237E 0%, #0d1642 100%);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-view-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(26, 35, 126, 0.3);
+}
+
+.btn-view-details .material-symbols-outlined {
+    font-size: 20px;
+}
+
+@media (max-width: 480px) {
+    .room-actions {
+        flex-direction: column;
+    }
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, #1A237E 0%, #cc9a2c 100%);
+    padding: 80px 0;
+    text-align: center;
+    color: white;
+}
+
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.cta-description {
+    font-size: 18px;
+    margin-bottom: 32px;
+    opacity: 0.95;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 40px;
+    background: white;
+    color: #1A237E;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.cta-button .material-symbols-outlined {
+    font-size: 24px;
+}
