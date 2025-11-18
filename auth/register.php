@@ -1,4 +1,7 @@
 <?php
+// Start output buffering to prevent header issues
+ob_start();
+
 session_start();
 
 // Redirect if already logged in
@@ -35,27 +38,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db = getDB();
             
             // Check if email exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ?");
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
                 $errors[] = 'Email đã được sử dụng';
             } else {
                 // Create user
-                $username = 'user_' . time() . rand(1000, 9999);
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
                 
                 $stmt = $db->prepare("
-                    INSERT INTO users (username, email, password_hash, full_name, phone, role, status)
-                    VALUES (?, ?, ?, ?, ?, 'customer', 'active')
+                    INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified)
+                    VALUES (?, ?, ?, ?, 'customer', 'active', 0)
                 ");
-                $stmt->execute([$username, $email, $password_hash, $full_name, $phone]);
+                $stmt->execute([$email, $password_hash, $full_name, $phone]);
+                $user_id = $db->lastInsertId();
                 
-                // Redirect to login
-                header('Location: ./login.php?registered=1');
-                exit;
+                // Send welcome email (optional - don't block registration if email fails)
+                $emailSent = false;
+                try {
+                    require_once '../helpers/mailer.php';
+                    $mailer = getMailer();
+                    $emailSent = $mailer->sendWelcomeEmail($email, $full_name, $user_id);
+                } catch (Exception $emailError) {
+                    // Log email error but don't stop registration
+                    error_log("Email send failed: " . $emailError->getMessage());
+                }
+                
+                // Log registration
+                try {
+                    require_once '../helpers/logger.php';
+                    $logger = getLogger();
+                    $logger->logUserRegister($user_id, [
+                        'email' => $email,
+                        'full_name' => $full_name,
+                        'phone' => $phone,
+                        'email_sent' => $emailSent
+                    ]);
+                } catch (Exception $logError) {
+                    // Log error but don't stop registration
+                    error_log("Logger failed: " . $logError->getMessage());
+                }
+                
+                // Set success flag to show popup
+                $_SESSION['registration_success'] = true;
+                $_SESSION['registration_email'] = $email;
+                $_SESSION['registration_name'] = $full_name;
             }
         } catch (Exception $e) {
-            $errors[] = 'Có lỗi xảy ra. Vui lòng thử lại.';
+            $errors[] = 'Có lỗi xảy ra: ' . $e->getMessage();
+            error_log("Registration error: " . $e->getMessage());
         }
     }
 }
@@ -72,41 +103,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="./assets/css/auth.css">
+<link rel="stylesheet" href="./assets/css/success-modal.css">
 </head>
 <body class="auth-register">
-<!-- Decorative Elements -->
-<div class="auth-decoration auth-decoration-1"></div>
-<div class="auth-decoration auth-decoration-2"></div>
-<div class="auth-decoration auth-decoration-3"></div>
-
-<!-- Particles -->
-<div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
-
 <div class="relative flex min-h-screen w-full flex-col">
 
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col items-center justify-center py-24 px-4 min-h-screen">
     <div class="auth-container">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">Đăng ký</h1>
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <div class="icon-badge">
+                <span class="material-symbols-outlined text-4xl text-accent">person_add</span>
+            </div>
+            <h1 class="text-4xl font-bold mb-3">Đăng ký tài khoản</h1>
             <p class="text-text-secondary-light dark:text-text-secondary-dark">Tạo tài khoản để trải nghiệm dịch vụ tốt nhất</p>
         </div>
 
         <!-- Register Form -->
         <div class="auth-card">
+            
+            <?php if (isset($_SESSION['registration_success']) && $_SESSION['registration_success']): ?>
+            <div class="success-modal">
+                <div class="success-modal-content">
+                    <div class="success-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2>Đăng ký thành công!</h2>
+                    <p>Tài khoản của bạn đã được tạo thành công. Vui lòng đăng nhập để tiếp tục.</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-primary" onclick="window.location.href='./login.php'">
+                            Đăng nhập ngay
+                        </button>
+                        <button class="modal-btn modal-btn-secondary" onclick="window.location.href='../index.php'">
+                            Quay lại trang chủ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <?php 
+                unset($_SESSION['registration_success']);
+                unset($_SESSION['registration_email']);
+                unset($_SESSION['registration_name']);
+            ?>
+            <?php endif; ?>
             
             <?php if (!empty($errors)): ?>
             <div class="alert alert-error">

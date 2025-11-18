@@ -14,11 +14,14 @@ if (empty($token)) {
     try {
         $db = getDB();
         
-        // Verify token
+        // Verify token from password_resets table
         $stmt = $db->prepare("
-            SELECT id, email FROM users 
-            WHERE password_reset_token = ? 
-            AND password_reset_expires_at > NOW()
+            SELECT pr.reset_id, pr.user_id, u.email, u.full_name 
+            FROM password_resets pr
+            JOIN users u ON pr.user_id = u.user_id
+            WHERE pr.token = ? 
+            AND pr.expires_at > NOW()
+            AND pr.used = 0
         ");
         $stmt->execute([$token]);
         $user = $stmt->fetch();
@@ -41,12 +44,30 @@ if (empty($token)) {
                     $password_hash = password_hash($password, PASSWORD_DEFAULT);
                     $stmt = $db->prepare("
                         UPDATE users 
-                        SET password_hash = ?, 
-                            password_reset_token = NULL, 
-                            password_reset_expires_at = NULL 
-                        WHERE id = ?
+                        SET password_hash = ?
+                        WHERE user_id = ?
                     ");
-                    $stmt->execute([$password_hash, $user['id']]);
+                    $stmt->execute([$password_hash, $user['user_id']]);
+                    
+                    // Mark token as used
+                    $stmt = $db->prepare("
+                        UPDATE password_resets 
+                        SET used = 1 
+                        WHERE reset_id = ?
+                    ");
+                    $stmt->execute([$user['reset_id']]);
+                    
+                    // Log password reset success
+                    try {
+                        require_once '../helpers/logger.php';
+                        $logger = getLogger();
+                        $logger->logAdminAction($user['user_id'], 'password_reset', 'user', $user['user_id'], [
+                            'email' => $user['email'],
+                            'user_name' => $user['full_name']
+                        ]);
+                    } catch (Exception $logError) {
+                        error_log("Logger failed: " . $logError->getMessage());
+                    }
                     
                     $success = 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay.';
                 }
@@ -73,37 +94,18 @@ if (empty($token)) {
 <link rel="stylesheet" href="./assets/css/auth.css">
 </head>
 <body class="auth-reset">
-<!-- Decorative Elements -->
-<div class="auth-decoration auth-decoration-1"></div>
-<div class="auth-decoration auth-decoration-2"></div>
-<div class="auth-decoration auth-decoration-3"></div>
-
-<!-- Particles -->
-<div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
-
 <div class="relative flex min-h-screen w-full flex-col">
 
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col items-center justify-center py-24 px-4 min-h-screen">
     <div class="auth-container">
-        <!-- Logo -->
-        <div class="text-center mb-8">
+        <!-- Header -->
+        <div class="text-center mb-10">
             <div class="icon-badge">
-                <span class="material-symbols-outlined text-3xl text-accent">key</span>
+                <span class="material-symbols-outlined text-4xl text-accent">key</span>
             </div>
-            <h1 class="text-3xl font-bold mb-2">Đặt lại mật khẩu</h1>
+            <h1 class="text-4xl font-bold mb-3">Đặt lại mật khẩu</h1>
             <p class="text-text-secondary-light dark:text-text-secondary-dark">
                 Nhập mật khẩu mới cho tài khoản của bạn
             </p>

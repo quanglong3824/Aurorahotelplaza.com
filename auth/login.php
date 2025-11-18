@@ -28,20 +28,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($user && password_verify($password, $user['password_hash'])) {
                 // Login successful
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_name'] = $user['full_name'] ?? $user['username'];
-                $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_name'] = $user['full_name'];
+                $_SESSION['user_role'] = $user['user_role'];
                 
                 // Update last login
-                $stmt = $db->prepare("UPDATE users SET last_login_at = NOW(), last_login_ip = ? WHERE id = ?");
-                $stmt->execute([$_SERVER['REMOTE_ADDR'], $user['id']]);
+                $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
+                $stmt->execute([$user['user_id']]);
+                
+                // Log login
+                try {
+                    require_once '../helpers/logger.php';
+                    $logger = getLogger();
+                    $logger->logUserLogin($user['user_id'], [
+                        'email' => $user['email'],
+                        'user_name' => $user['full_name'],
+                        'role' => $user['user_role'],
+                        'remember_me' => $remember
+                    ]);
+                } catch (Exception $logError) {
+                    error_log("Logger failed: " . $logError->getMessage());
+                }
                 
                 // Remember me
                 if ($remember) {
                     $token = bin2hex(random_bytes(32));
                     setcookie('remember_token', $token, time() + (86400 * 30), '/');
-                    // TODO: Store token in database
+                    // TODO: Store token in user_sessions table
                 }
                 
                 // Redirect
@@ -52,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Email hoặc mật khẩu không đúng';
             }
         } catch (Exception $e) {
-            $error = 'Có lỗi xảy ra. Vui lòng thử lại.';
+            $error = 'Có lỗi xảy ra: ' . $e->getMessage();
+            error_log("Login error: " . $e->getMessage());
         }
     }
 }
@@ -71,34 +86,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="./assets/css/auth.css">
 </head>
 <body class="auth-login">
-<!-- Decorative Elements -->
-<div class="auth-decoration auth-decoration-1"></div>
-<div class="auth-decoration auth-decoration-2"></div>
-<div class="auth-decoration auth-decoration-3"></div>
-
-<!-- Particles -->
-<div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
-
 <div class="relative flex min-h-screen w-full flex-col">
 
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col items-center justify-center py-24 px-4 min-h-screen">
     <div class="auth-container">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">Đăng nhập</h1>
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <div class="icon-badge">
+                <span class="material-symbols-outlined text-4xl text-accent">login</span>
+            </div>
+            <h1 class="text-4xl font-bold mb-3">Đăng nhập</h1>
             <p class="text-text-secondary-light dark:text-text-secondary-dark">Chào mừng bạn trở lại Aurora Hotel Plaza</p>
         </div>
 

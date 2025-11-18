@@ -1,45 +1,39 @@
 // Tailwind CSS Configuration
 tailwind.config = {
-    darkMode: "class",
     theme: {
         extend: {
             colors: {
-                "primary": {
-                    DEFAULT: "#1A237E",
-                    light: "#E8EAF6"
-                },
-                "accent": {
-                    DEFAULT: "#cc9a2c"
-                },
-                "background": {
-                    light: "#FAFAFA",
-                    dark: "#101622"
-                },
-                "surface": {
-                    light: "#FFFFFF",
-                    dark: "#1A2230"
-                },
-                "text": {
-                   primary: {
-                        light: "#333333",
-                        dark: "#E0E0E0"
-                   },
-                   secondary: {
-                        light: "#555555",
-                        dark: "#B0B0B0"
-                   }
-                }
+                accent: '#d4af37',
+                'accent-dark': '#b8941f',
+                'surface-light': '#ffffff',
+                'surface-dark': '#1f2937',
+                'text-primary-light': '#1f2937',
+                'text-primary-dark': '#f3f4f6',
+                'text-secondary-light': '#6b7280',
+                'text-secondary-dark': '#9ca3af',
             },
             fontFamily: {
-                "display": ["Playfair Display", "serif"],
-                "body": ["Plus Jakarta Sans", "sans-serif"]
+                sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
             },
-            borderRadius: {
-                "DEFAULT": "0.25rem",
-                "lg": "0.5rem",
-                "xl": "0.75rem",
-                "full": "9999px"
+            animation: {
+                'fade-in': 'fadeIn 0.5s ease-out',
+                'slide-down': 'slideDown 0.3s ease-out',
+                'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+                slideDown: {
+                    '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                    '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                'pulse-slow': {
+                    '0%, 100%': { opacity: '0.5' },
+                    '50%': { opacity: '1' },
+                },
             },
         },
     },
-}
+};

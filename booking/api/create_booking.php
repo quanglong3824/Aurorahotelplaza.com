@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 require_once '../../config/database.php';
+require_once '../../helpers/logger.php';
 
 // Get POST data
 $room_type_id = $_POST['room_type_id'] ?? null;

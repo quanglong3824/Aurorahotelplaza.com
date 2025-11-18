@@ -2,6 +2,7 @@
 session_start();
 require_once '../config/database.php';
 require_once '../payment/config.php';
+require_once '../helpers/logger.php';
 
 // Get VNPay response
 $vnp_SecureHash = $_GET['vnp_SecureHash'] ?? '';
@@ -106,6 +107,20 @@ try {
                 ]);
                 
                 $message = 'Thanh toán thành công! Bạn đã nhận được ' . $points_earned . ' điểm thưởng.';
+                
+                // Log payment success
+                $logger = getLogger();
+                $logger->logPaymentSuccess($vnp_TransactionNo, [
+                    'booking_id' => $booking['booking_id'],
+                    'booking_code' => $vnp_TxnRef,
+                    'amount' => $vnp_Amount / 100,
+                    'currency' => 'VND',
+                    'transaction_id' => $vnp_TransactionNo,
+                    'bank_code' => $vnp_BankCode,
+                    'response_code' => $vnp_ResponseCode,
+                    'points_earned' => $points_earned,
+                    'payment_method' => 'vnpay'
+                ], $booking['user_id']);
                 
             } else {
                 // Payment failed

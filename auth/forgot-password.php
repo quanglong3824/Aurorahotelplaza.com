@@ -16,31 +16,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
             
             if ($user) {
+                $userDetails = $user;
+                
                 // Generate reset token
                 $token = bin2hex(random_bytes(32));
                 $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
                 
-                // Save token
+                // Save token in password_resets table
                 $stmt = $db->prepare("
-                    UPDATE users 
-                    SET password_reset_token = ?, password_reset_expires_at = ? 
-                    WHERE id = ?
+                    INSERT INTO password_resets (user_id, token, expires_at, used)
+                    VALUES (?, ?, ?, 0)
                 ");
-                $stmt->execute([$token, $expires, $user['id']]);
+                $stmt->execute([$user['user_id'], $token, $expires]);
                 
-                // Send email (TODO: implement with PHPMailer)
-                $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/auth/reset-password.php?token=" . $token;
+                // Send email with PHPMailer (optional - don't block if email fails)
+                $emailSent = false;
+                try {
+                    require_once '../helpers/mailer.php';
+                    $mailer = getMailer();
+                    $emailSent = $mailer->sendPasswordReset($email, $userDetails['full_name'], $token);
+                } catch (Exception $emailError) {
+                    error_log("Email send failed: " . $emailError->getMessage());
+                }
                 
-                // For now, just show success
-                $success = 'Đã gửi link đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư.';
+                // Log password reset request
+                try {
+                    require_once '../helpers/logger.php';
+                    $logger = getLogger();
+                    $logger->logAdminAction($user['user_id'], 'password_reset_requested', 'user', $user['user_id'], [
+                        'email' => $email,
+                        'email_sent' => $emailSent,
+                        'token_expires' => $expires
+                    ]);
+                } catch (Exception $logError) {
+                    error_log("Logger failed: " . $logError->getMessage());
+                }
                 
-                // TODO: Send actual email
-                // sendEmail($email, 'Đặt lại mật khẩu', 'Click vào link: ' . $reset_link);
+                if ($emailSent) {
+                    $success = 'Đã gửi link đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư (có thể trong thư mục Spam).';
+                } else {
+                    // Show success anyway for security (don't reveal if email exists)
+                    $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu.';
+                }
             } else {
                 // Don't reveal if email exists or not (security)
                 $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu.';
@@ -65,37 +87,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="./assets/css/auth.css">
 </head>
 <body class="auth-forgot">
-<!-- Decorative Elements -->
-<div class="auth-decoration auth-decoration-1"></div>
-<div class="auth-decoration auth-decoration-2"></div>
-<div class="auth-decoration auth-decoration-3"></div>
-
-<!-- Particles -->
-<div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
-
 <div class="relative flex min-h-screen w-full flex-col">
 
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col items-center justify-center py-24 px-4 min-h-screen">
     <div class="auth-container">
-        <!-- Logo -->
-        <div class="text-center mb-8">
+        <!-- Header -->
+        <div class="text-center mb-10">
             <div class="icon-badge">
-                <span class="material-symbols-outlined text-3xl text-accent">lock_reset</span>
+                <span class="material-symbols-outlined text-4xl text-accent">lock_reset</span>
             </div>
-            <h1 class="text-3xl font-bold mb-2">Quên mật khẩu?</h1>
+            <h1 class="text-4xl font-bold mb-3">Quên mật khẩu?</h1>
             <p class="text-text-secondary-light dark:text-text-secondary-dark">
                 Nhập email của bạn để nhận link đặt lại mật khẩu
             </p>
