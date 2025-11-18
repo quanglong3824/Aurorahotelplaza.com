@@ -134,13 +134,13 @@ main {
     color: #6b7280;
 }
 
-/* Password Wrapper - Underline Style */
+/* Password Wrapper */
 .password-wrapper {
     position: relative;
 }
 
 .password-wrapper .form-input {
-    padding-right: 2.5rem;
+    padding-right: 3rem;
 }
 
 /* Button Primary - Modern Design */
@@ -412,17 +412,17 @@ main {
     text-decoration: underline;
 }
 
-/* Password Toggle - Underline Style */
+/* Password Toggle */
 .password-toggle {
     position: absolute;
-    right: 0.5rem;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     color: #6b7280;
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0.5rem;
     border-radius: 0.375rem;
     transition: all 0.2s ease;
     display: flex;
@@ -1126,15 +1126,15 @@ body.auth-reset > div {
     height: 300px;
 }
 
-/* Input validation states - Underline Style */
+/* Input validation states */
 .form-input.is-valid {
-    border-bottom-color: #10b981;
-    border-bottom-width: 3px;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 .form-input.is-invalid {
-    border-bottom-color: #ef4444;
-    border-bottom-width: 3px;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     animation: shake 0.5s ease-in-out;
 }
 
@@ -1149,7 +1149,7 @@ body.auth-reset > div {
     display: none !important;
 }
 
-/* Success state animation - Underline Style */
+/* Success state animation */
 .form-input.is-valid {
     position: relative;
 }
@@ -1157,7 +1157,7 @@ body.auth-reset > div {
 .form-input.is-valid::after {
     content: '✓';
     position: absolute;
-    right: 0.5rem;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     color: #10b981;
@@ -1184,18 +1184,6 @@ body.auth-reset > div {
     to {
         transform: rotate(360deg);
     }
-}
-
-/* Social button loading state */
-.social-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.social-btn:disabled:hover {
-    transform: none;
-    box-shadow: none;
 }
 
 /* Enhanced social button hover effects */
@@ -1228,15 +1216,15 @@ body.auth-reset > div {
     outline-offset: 2px;
 }
 
-/* Dark mode enhancements - Underline Style */
+/* Dark mode enhancements */
 .dark .form-input.is-valid {
-    border-bottom-color: #10b981;
-    border-bottom-width: 3px;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .dark .form-input.is-invalid {
-    border-bottom-color: #ef4444;
-    border-bottom-width: 3px;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
 .dark .error-message {

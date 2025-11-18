@@ -83,11 +83,11 @@ class Booking {
         $stmt = $this->db->prepare("
             INSERT INTO bookings (
                 booking_code, user_id, room_id, room_type_id,
-                check_in_date, check_out_date, num_guests, num_nights,
+                check_in_date, check_out_date, num_adults, num_children, num_nights,
                 room_price, total_amount,
                 guest_name, guest_email, guest_phone, special_requests,
                 status, payment_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
         $stmt->execute([
@@ -97,7 +97,8 @@ class Booking {
             $data['room_type_id'],
             $data['check_in_date'],
             $data['check_out_date'],
-            $data['num_guests'],
+            $data['num_adults'] ?? $data['num_guests'] ?? 1,
+            $data['num_children'] ?? 0,
             $data['num_nights'],
             $data['room_price'],
             $data['total_amount'],
@@ -113,14 +114,20 @@ class Booking {
     }
     
     /**
-     * Get booking by code
+     * Get booking by code with full details
      */
     public function getByCode($booking_code) {
         $stmt = $this->db->prepare("
-            SELECT b.*, rt.name as room_type_name, r.room_number
+            SELECT b.*, 
+                   rt.type_name, rt.category, rt.description, rt.amenities, rt.thumbnail,
+                   r.room_number, r.floor, r.building,
+                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status, p.amount as paid_amount,
+                   u.full_name as user_name, u.email as user_email
             FROM bookings b
-            LEFT JOIN room_types rt ON b.room_type_id = rt.id
-            LEFT JOIN rooms r ON b.room_id = r.id
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+            LEFT JOIN rooms r ON b.room_id = r.room_id
+            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            LEFT JOIN users u ON b.user_id = u.user_id
             WHERE b.booking_code = ?
         ");
         $stmt->execute([$booking_code]);
@@ -128,10 +135,29 @@ class Booking {
     }
     
     /**
+     * Get booking by ID
+     */
+    public function getById($booking_id) {
+        $stmt = $this->db->prepare("
+            SELECT b.*, 
+                   rt.type_name, rt.category, rt.description, rt.amenities,
+                   r.room_number, r.floor, r.building,
+                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status
+            FROM bookings b
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+            LEFT JOIN rooms r ON b.room_id = r.room_id
+            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            WHERE b.booking_id = ?
+        ");
+        $stmt->execute([$booking_id]);
+        return $stmt->fetch();
+    }
+    
+    /**
      * Update booking status
      */
     public function updateStatus($booking_id, $status) {
-        $stmt = $this->db->prepare("UPDATE bookings SET status = ? WHERE id = ?");
+        $stmt = $this->db->prepare("UPDATE bookings SET status = ? WHERE booking_id = ?");
         return $stmt->execute([$status, $booking_id]);
     }
     
@@ -143,30 +169,121 @@ class Booking {
             $stmt = $this->db->prepare("
                 UPDATE bookings 
                 SET payment_status = ?, paid_amount = ? 
-                WHERE id = ?
+                WHERE booking_id = ?
             ");
             return $stmt->execute([$payment_status, $paid_amount, $booking_id]);
         } else {
-            $stmt = $this->db->prepare("UPDATE bookings SET payment_status = ? WHERE id = ?");
+            $stmt = $this->db->prepare("UPDATE bookings SET payment_status = ? WHERE booking_id = ?");
             return $stmt->execute([$payment_status, $booking_id]);
         }
     }
     
     /**
-     * Get user bookings
+     * Get user bookings with filters and pagination
      */
-    public function getUserBookings($user_id, $limit = 10) {
-        $stmt = $this->db->prepare("
-            SELECT b.*, rt.name as room_type_name, r.room_number
+    public function getUserBookings($user_id, $filters = [], $page = 1, $per_page = 10) {
+        $where_conditions = ['b.user_id = ?'];
+        $params = [$user_id];
+        
+        // Apply filters
+        if (!empty($filters['status'])) {
+            $where_conditions[] = 'b.status = ?';
+            $params[] = $filters['status'];
+        }
+        
+        if (!empty($filters['payment_status'])) {
+            $where_conditions[] = '(p.status = ? OR (p.status IS NULL AND b.payment_status = ?))';
+            $params[] = $filters['payment_status'];
+            $params[] = $filters['payment_status'];
+        }
+        
+        if (!empty($filters['date_from'])) {
+            $where_conditions[] = 'b.check_in_date >= ?';
+            $params[] = $filters['date_from'];
+        }
+        
+        if (!empty($filters['date_to'])) {
+            $where_conditions[] = 'b.check_in_date <= ?';
+            $params[] = $filters['date_to'];
+        }
+        
+        if (!empty($filters['search'])) {
+            $where_conditions[] = '(b.booking_code LIKE ? OR b.guest_name LIKE ? OR rt.type_name LIKE ?)';
+            $search_param = '%' . $filters['search'] . '%';
+            $params[] = $search_param;
+            $params[] = $search_param;
+            $params[] = $search_param;
+        }
+        
+        $where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
+        
+        // Get total count
+        $count_sql = "
+            SELECT COUNT(*) as total
             FROM bookings b
-            LEFT JOIN room_types rt ON b.room_type_id = rt.id
-            LEFT JOIN rooms r ON b.room_id = r.id
-            WHERE b.user_id = ?
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            $where_clause
+        ";
+        $stmt = $this->db->prepare($count_sql);
+        $stmt->execute($params);
+        $total = $stmt->fetch()['total'];
+        
+        // Get bookings
+        $offset = (int)(($page - 1) * $per_page);
+        $per_page = (int)$per_page;
+        
+        $sql = "
+            SELECT b.booking_id, b.booking_code, b.user_id, b.room_type_id, b.room_id,
+                   b.check_in_date, b.check_out_date, b.num_adults, b.num_children,
+                   b.total_nights, b.room_price, b.total_amount, b.special_requests,
+                   b.guest_name, b.guest_email, b.guest_phone, b.status, b.created_at,
+                   rt.type_name, rt.category, rt.thumbnail,
+                   r.room_number, r.floor, r.building,
+                   COALESCE(p.status, b.payment_status) as payment_status, 
+                   p.payment_method, p.paid_at, p.amount as paid_amount
+            FROM bookings b
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+            LEFT JOIN rooms r ON b.room_id = r.room_id
+            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            $where_clause
             ORDER BY b.created_at DESC
-            LIMIT ?
+            LIMIT $per_page OFFSET $offset
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $bookings = $stmt->fetchAll();
+        
+        return [
+            'bookings' => $bookings,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $per_page,
+            'total_pages' => ceil($total / $per_page)
+        ];
+    }
+    
+    /**
+     * Get user booking statistics
+     */
+    public function getUserStatistics($user_id) {
+        $stmt = $this->db->prepare("
+            SELECT 
+                COUNT(*) as total_bookings,
+                COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_bookings,
+                COUNT(CASE WHEN status = 'confirmed' THEN 1 END) as confirmed_bookings,
+                COUNT(CASE WHEN status = 'checked_in' THEN 1 END) as checked_in_bookings,
+                COUNT(CASE WHEN status = 'checked_out' THEN 1 END) as completed_bookings,
+                COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled_bookings,
+                COUNT(CASE WHEN status = 'no_show' THEN 1 END) as no_show_bookings,
+                SUM(CASE WHEN status IN ('confirmed', 'checked_in', 'checked_out') THEN total_amount ELSE 0 END) as total_spent,
+                SUM(CASE WHEN status IN ('confirmed', 'checked_in', 'checked_out') THEN total_nights ELSE 0 END) as total_nights
+            FROM bookings 
+            WHERE user_id = ?
         ");
-        $stmt->execute([$user_id, $limit]);
-        return $stmt->fetchAll();
+        $stmt->execute([$user_id]);
+        return $stmt->fetch();
     }
     
     /**
@@ -184,6 +301,174 @@ class Booking {
         $date2 = new DateTime($check_out);
         $interval = $date1->diff($date2);
         return $interval->days;
+    }
+    
+    /**
+     * Cancel booking
+     */
+    public function cancelBooking($booking_id, $user_id, $reason = null) {
+        // Get booking details
+        $booking = $this->getById($booking_id);
+        
+        if (!$booking) {
+            return ['success' => false, 'message' => 'Không tìm thấy đặt phòng'];
+        }
+        
+        // Check if booking belongs to user
+        if ($booking['user_id'] != $user_id) {
+            return ['success' => false, 'message' => 'Bạn không có quyền hủy đặt phòng này'];
+        }
+        
+        // Check if booking can be cancelled
+        if (!in_array($booking['status'], ['pending', 'confirmed'])) {
+            return ['success' => false, 'message' => 'Không thể hủy đặt phòng ở trạng thái hiện tại'];
+        }
+        
+        // Check cancellation policy (24 hours before check-in)
+        $check_in = new DateTime($booking['check_in_date']);
+        $now = new DateTime();
+        $hours_until_checkin = ($check_in->getTimestamp() - $now->getTimestamp()) / 3600;
+        
+        if ($hours_until_checkin < 24) {
+            return ['success' => false, 'message' => 'Không thể hủy đặt phòng trong vòng 24 giờ trước khi nhận phòng'];
+        }
+        
+        try {
+            $this->db->beginTransaction();
+            
+            // Update booking status
+            $stmt = $this->db->prepare("
+                UPDATE bookings 
+                SET status = 'cancelled', 
+                    cancelled_at = NOW(), 
+                    cancelled_by = ?,
+                    cancellation_reason = ?
+                WHERE booking_id = ?
+            ");
+            $stmt->execute([$user_id, $reason, $booking_id]);
+            
+            // Add to booking history
+            $this->addHistory($booking_id, $booking['status'], 'cancelled', $user_id, $reason);
+            
+            // If payment was made, create refund record
+            if ($booking['payment_status'] === 'paid') {
+                $stmt = $this->db->prepare("
+                    UPDATE payments 
+                    SET status = 'refunded', refunded_at = NOW()
+                    WHERE booking_id = ?
+                ");
+                $stmt->execute([$booking_id]);
+            }
+            
+            $this->db->commit();
+            return ['success' => true, 'message' => 'Đã hủy đặt phòng thành công'];
+            
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Cancel booking error: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Có lỗi xảy ra khi hủy đặt phòng'];
+        }
+    }
+    
+    /**
+     * Add booking history record
+     */
+    public function addHistory($booking_id, $old_status, $new_status, $changed_by = null, $notes = null) {
+        $stmt = $this->db->prepare("
+            INSERT INTO booking_history (booking_id, old_status, new_status, changed_by, notes)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        return $stmt->execute([$booking_id, $old_status, $new_status, $changed_by, $notes]);
+    }
+    
+    /**
+     * Get booking history
+     */
+    public function getHistory($booking_id) {
+        $stmt = $this->db->prepare("
+            SELECT bh.*, u.full_name as changed_by_name
+            FROM booking_history bh
+            LEFT JOIN users u ON bh.changed_by = u.user_id
+            WHERE bh.booking_id = ?
+            ORDER BY bh.created_at ASC
+        ");
+        $stmt->execute([$booking_id]);
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * Check if booking can be cancelled
+     */
+    public function canBeCancelled($booking_id) {
+        $booking = $this->getById($booking_id);
+        
+        if (!$booking) {
+            return false;
+        }
+        
+        // Check status
+        if (!in_array($booking['status'], ['pending', 'confirmed'])) {
+            return false;
+        }
+        
+        // Check time (24 hours before check-in)
+        $check_in = new DateTime($booking['check_in_date']);
+        $now = new DateTime();
+        $hours_until_checkin = ($check_in->getTimestamp() - $now->getTimestamp()) / 3600;
+        
+        return $hours_until_checkin >= 24;
+    }
+    
+    /**
+     * Export bookings to array for CSV/Excel
+     */
+    public function exportUserBookings($user_id, $filters = []) {
+        $where_conditions = ['b.user_id = ?'];
+        $params = [$user_id];
+        
+        // Apply filters
+        if (!empty($filters['status'])) {
+            $where_conditions[] = 'b.status = ?';
+            $params[] = $filters['status'];
+        }
+        
+        if (!empty($filters['date_from'])) {
+            $where_conditions[] = 'b.check_in_date >= ?';
+            $params[] = $filters['date_from'];
+        }
+        
+        if (!empty($filters['date_to'])) {
+            $where_conditions[] = 'b.check_in_date <= ?';
+            $params[] = $filters['date_to'];
+        }
+        
+        $where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
+        
+        $stmt = $this->db->prepare("
+            SELECT 
+                b.booking_code,
+                b.created_at as booking_date,
+                rt.type_name as room_type,
+                b.check_in_date,
+                b.check_out_date,
+                b.total_nights,
+                b.num_adults,
+                b.num_children,
+                b.total_amount,
+                b.status,
+                p.status as payment_status,
+                p.payment_method,
+                b.guest_name,
+                b.guest_phone,
+                b.guest_email
+            FROM bookings b
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            $where_clause
+            ORDER BY b.created_at DESC
+        ");
+        $stmt->execute($params);
+        return $stmt->fetchAll();
     }
 }
 ?>

@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <title>Classical Premium Apartment - Aurora Hotel Plaza</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="../assets/js/tailwindcss-cdn.js"></script>
+<link href="../assets/css/fonts.css" rel="stylesheet"/>
 <script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="../assets/css/room-detail.css">

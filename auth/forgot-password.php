@@ -79,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Quên mật khẩu - Aurora Hotel Plaza</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="../assets/js/tailwindcss-cdn.js"></script>
+<link href="../assets/css/fonts.css" rel="stylesheet"/>
+
 <script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="./assets/css/auth.css">

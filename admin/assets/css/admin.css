@@ -1,0 +1,350 @@
+/* Admin Panel Custom Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --admin-primary: #6366f1;
+    --admin-primary-hover: #4f46e5;
+    --admin-success: #10b981;
+    --admin-warning: #f59e0b;
+    --admin-danger: #ef4444;
+    --admin-info: #3b82f6;
+    --admin-sidebar-width: 280px;
+    --admin-header-height: 70px;
+}
+
+/* Animations */
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+}
+
+/* Custom Scrollbar */
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Table Styles */
+.data-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.dark .data-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Form Styles */
+.form-group {
+    @apply mb-4;
+}
+
+.form-label {
+    @apply block text-sm font-medium mb-2;
+}
+
+.form-input {
+    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
+           bg-background-light dark:bg-background-dark 
+           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+}
+
+.form-select {
+    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
+           bg-background-light dark:bg-background-dark 
+           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+}
+
+.form-textarea {
+    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
+           bg-background-light dark:bg-background-dark 
+           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
+           min-h-[100px];
+}
+
+/* Button Styles */
+.btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium 
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+    @apply bg-accent text-white hover:bg-accent/90 focus:ring-accent;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+}
+
+.btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.btn-warning {
+    @apply bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500;
+}
+
+.btn-sm {
+    @apply px-3 py-1.5 text-sm;
+}
+
+.btn-lg {
+    @apply px-6 py-3 text-lg;
+}
+
+/* Card Styles */
+.card {
+    @apply bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark;
+}
+
+.card-header {
+    @apply px-6 py-4 border-b border-border-light dark:border-border-dark;
+}
+
+.card-body {
+    @apply p-6;
+}
+
+.card-footer {
+    @apply px-6 py-4 border-t border-border-light dark:border-border-dark;
+}
+
+/* Modal Styles */
+.modal {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 hidden;
+}
+
+.modal.active {
+    @apply flex;
+}
+
+.modal-content {
+    @apply bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+}
+
+.modal-header {
+    @apply px-6 py-4 border-b border-border-light dark:border-border-dark flex items-center justify-between;
+}
+
+.modal-body {
+    @apply p-6;
+}
+
+.modal-footer {
+    @apply px-6 py-4 border-t border-border-light dark:border-border-dark flex items-center justify-end gap-3;
+}
+
+/* Pagination */
+.pagination {
+    @apply flex items-center gap-2;
+}
+
+.pagination-item {
+    @apply w-10 h-10 flex items-center justify-center rounded-lg border border-border-light dark:border-border-dark
+           hover:bg-accent hover:text-white hover:border-accent transition-colors;
+}
+
+.pagination-item.active {
+    @apply bg-accent text-white border-accent;
+}
+
+.pagination-item.disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-transparent hover:text-current hover:border-border-light dark:hover:border-border-dark;
+}
+
+/* Status Indicators */
+.status-dot {
+    @apply w-2 h-2 rounded-full inline-block mr-2;
+}
+
+.status-dot.green {
+    @apply bg-green-500;
+}
+
+.status-dot.yellow {
+    @apply bg-yellow-500;
+}
+
+.status-dot.red {
+    @apply bg-red-500;
+}
+
+.status-dot.blue {
+    @apply bg-blue-500;
+}
+
+.status-dot.gray {
+    @apply bg-gray-500;
+}
+
+/* Loading Spinner */
+.spinner {
+    @apply inline-block w-6 h-6 border-4 border-gray-300 border-t-accent rounded-full animate-spin;
+}
+
+/* Empty State */
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-state-icon {
+    @apply text-6xl text-gray-400 mb-4;
+}
+
+.empty-state-title {
+    @apply text-xl font-semibold mb-2;
+}
+
+.empty-state-description {
+    @apply text-text-secondary-light dark:text-text-secondary-dark;
+}
+
+/* Tabs */
+.tabs {
+    @apply flex border-b border-border-light dark:border-border-dark;
+}
+
+.tab {
+    @apply px-6 py-3 font-medium border-b-2 border-transparent hover:border-accent/50 transition-colors;
+}
+
+.tab.active {
+    @apply border-accent text-accent;
+}
+
+/* Dropdown */
+.dropdown {
+    @apply relative inline-block;
+}
+
+.dropdown-menu {
+    @apply absolute right-0 mt-2 w-48 bg-surface-light dark:bg-surface-dark rounded-lg shadow-lg border border-border-light dark:border-border-dark
+           opacity-0 invisible transition-all duration-200 z-50;
+}
+
+.dropdown.active .dropdown-menu {
+    @apply opacity-100 visible;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 hover:bg-background-light dark:hover:bg-background-dark transition-colors;
+}
+
+/* File Upload */
+.file-upload {
+    @apply relative border-2 border-dashed border-border-light dark:border-border-dark rounded-lg p-8 text-center
+           hover:border-accent transition-colors cursor-pointer;
+}
+
+.file-upload input[type="file"] {
+    @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
+}
+
+/* Image Preview */
+.image-preview {
+    @apply relative w-32 h-32 rounded-lg overflow-hidden border border-border-light dark:border-border-dark;
+}
+
+.image-preview img {
+    @apply w-full h-full object-cover;
+}
+
+.image-preview-remove {
+    @apply absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center
+           hover:bg-red-600 transition-colors cursor-pointer;
+}
+
+/* Search Box */
+.search-box {
+    @apply relative;
+}
+
+.search-box input {
+    @apply pl-10;
+}
+
+.search-box .search-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400;
+}
+
+/* Filter Bar */
+.filter-bar {
+    @apply flex flex-wrap items-center gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-lg mb-6;
+}
+
+/* Action Buttons */
+.action-buttons {
+    @apply flex items-center gap-2;
+}
+
+.action-btn {
+    @apply w-8 h-8 flex items-center justify-center rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors;
+}
+
+/* Stats Grid */
+.stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6;
+}
+
+/* Chart Container */
+.chart-container {
+    @apply relative h-64 md:h-80;
+}
+
+/* Responsive Table Wrapper */
+.table-wrapper {
+    @apply overflow-x-auto rounded-lg border border-border-light dark:border-border-dark;
+}
+
+/* Print Styles */
+@media print {
+    #sidebar,
+    header,
+    .no-print {
+        display: none !important;
+    }
+    
+    .lg\:ml-64 {
+        margin-left: 0 !important;
+    }
+}

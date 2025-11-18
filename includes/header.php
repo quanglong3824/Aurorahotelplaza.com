@@ -13,16 +13,23 @@ $base_path = in_array($current_dir, $subdirs) ? '../' : '';
 $is_logged_in = isset($_SESSION['user_id']);
 $user_name = $_SESSION['user_name'] ?? 'User';
 $user_role = $_SESSION['user_role'] ?? 'customer';
+
+// Detect if current page has hero banner
+$current_page = basename($_SERVER['PHP_SELF'], '.php');
+$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact'];
+$has_hero = in_array($current_page, $pages_with_hero);
+$header_class = $has_hero ? 'header-transparent' : 'header-solid';
 ?>
-<!-- TopNavBar - Transparent Overlay -->
-<header class="fixed top-0 z-50 flex items-center justify-center w-full bg-transparent transition-all duration-300">
-    <div class="flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
+<!-- TopNavBar - Smart Header -->
+<header id="main-header" class="fixed top-0 z-50 w-full transition-all duration-300 <?php echo $header_class; ?>" data-has-hero="<?php echo $has_hero ? 'true' : 'false'; ?>">
+    <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
-            <img src="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png" 
-                 data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
-                 data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
+            <img id="header-logo" 
+                 src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo $has_hero ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>" 
+                 data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
+                 data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
                  alt="Aurora Hotel Plaza Logo" 
-                 class="logo-image">
+                 class="h-16 w-auto transition-all duration-300">
         </div>
         <nav class="hidden items-center gap-10 md:flex">
             <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>index.php">Trang chủ</a>
@@ -69,7 +76,6 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
                 </div>
             </div>
             <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>contact.php">Liên hệ</a>
-            
         </nav>
         <div class="flex items-center gap-2">
             <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
@@ -115,6 +121,10 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
                         <span class="material-symbols-outlined">stars</span>
                         Điểm thưởng
                     </a>
+                    <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
+                        <span class="material-symbols-outlined">map</span>
+                        Sơ đồ phòng
+                    </a>
                     <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                     <div class="user-menu-divider"></div>
                     <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
@@ -143,3 +153,7 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
         </div>
     </div>
 </header>
+
+<!-- Header Styles & Script -->
+<link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/header-styles.css">
+<script src="<?php echo $base_path; ?>assets/js/header-scroll.js" defer></script>

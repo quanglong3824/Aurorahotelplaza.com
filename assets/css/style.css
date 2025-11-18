@@ -1,5 +1,31 @@
 /* Aurora Hotel Plaza - Main Stylesheet */
 
+/* CSS Variables */
+:root {
+    /* Primary Colors */
+    --primary: #cc9a2c;
+    --primary-light: #d4af37;
+    --primary-dark: #b8941f;
+    
+    /* Accent Colors */
+    --accent: #d4af37;
+    --accent-dark: #b8941f;
+    
+    /* Background Colors */
+    --background-light: #ffffff;
+    --background-dark: #111827;
+    
+    /* Surface Colors */
+    --surface-light: #f9fafb;
+    --surface-dark: #1f2937;
+    
+    /* Text Colors */
+    --text-primary-light: #1f2937;
+    --text-primary-dark: #f3f4f6;
+    --text-secondary-light: #6b7280;
+    --text-secondary-dark: #9ca3af;
+}
+
 /* Material Icons Configuration */
 .material-symbols-outlined {
     font-variation-settings:
@@ -420,7 +446,7 @@ header.scrolled .user-menu-btn:hover {
     }
 }
 
-/* User Menu Styles */
+/* User Menu Styles - Consolidated */
 .user-menu-wrapper {
     position: relative;
 }
@@ -465,7 +491,8 @@ header.scrolled .user-menu-btn:hover {
 }
 
 .user-menu-wrapper:hover .user-menu,
-.user-menu-wrapper:focus-within .user-menu {
+.user-menu-wrapper:focus-within .user-menu,
+.user-menu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

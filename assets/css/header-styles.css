@@ -1,0 +1,167 @@
+/* ============================================
+   SMART HEADER STYLES
+   Transparent on hero pages, solid on others
+   ============================================ */
+
+/* Base Header */
+#main-header {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Transparent State (Hero pages at top) */
+.header-transparent {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.header-transparent .nav-link,
+.header-transparent .submenu-trigger {
+    color: white !important;
+}
+
+.header-transparent .user-menu-btn {
+    color: white !important;
+}
+
+.header-transparent .btn-booking {
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-transparent .btn-booking:hover {
+    background: white;
+    color: #d4af37;
+    border-color: white;
+}
+
+/* Solid State (Scrolled or no-hero pages) */
+.header-solid {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header-solid.header-scrolled {
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.header-solid .nav-link,
+.header-solid .submenu-trigger {
+    color: #1f2937 !important;
+}
+
+.header-solid .user-menu-btn {
+    color: #1f2937 !important;
+}
+
+.header-solid .btn-booking {
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    color: white;
+    border: 2px solid #d4af37;
+}
+
+.header-solid .btn-booking:hover {
+    background: #b8941f;
+    border-color: #b8941f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Dark Mode Support */
+.dark .header-solid {
+    background-color: rgba(30, 41, 59, 0.95);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dark .header-solid.header-scrolled {
+    background-color: rgba(30, 41, 59, 0.98);
+}
+
+.dark .header-solid .nav-link,
+.dark .header-solid .submenu-trigger {
+    color: #f3f4f6 !important;
+}
+
+.dark .header-solid .user-menu-btn {
+    color: #f3f4f6 !important;
+}
+
+/* Submenu Styles */
+.header-transparent .submenu {
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+}
+
+.header-transparent .submenu-item {
+    color: #1f2937;
+}
+
+.header-solid .submenu {
+    background-color: white;
+}
+
+.dark .header-solid .submenu {
+    background-color: rgba(30, 41, 59, 0.98);
+}
+
+/* Mobile Menu Button */
+.header-transparent .mobile-menu-btn {
+    color: white;
+}
+
+.header-solid .mobile-menu-btn {
+    color: #1f2937;
+}
+
+.dark .header-solid .mobile-menu-btn {
+    color: #f3f4f6;
+}
+
+/* Smooth Transitions */
+#main-header,
+#main-header .nav-link,
+#main-header .submenu-trigger,
+#main-header .user-menu-btn,
+#main-header .btn-booking,
+#header-logo {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Material Icons Color */
+.header-transparent .material-symbols-outlined {
+    color: white;
+}
+
+.header-solid .material-symbols-outlined {
+    color: #1f2937;
+}
+
+.dark .header-solid .material-symbols-outlined {
+    color: #f3f4f6;
+}
+
+/* Badge "Mới" */
+.badge-new {
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+}
+
+/* Hover Effects */
+.header-transparent .nav-link:hover,
+.header-transparent .submenu-trigger:hover {
+    color: #d4af37 !important;
+}
+
+.header-solid .nav-link:hover,
+.header-solid .submenu-trigger:hover {
+    color: #d4af37 !important;
+}

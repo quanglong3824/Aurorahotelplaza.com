@@ -82,23 +82,36 @@ document.addEventListener('DOMContentLoaded', function() {
         // Track if we're currently changing the logo to prevent observer conflicts
         let isChangingLogo = false;
         
+        // Check if page has hero section or dark background at top
+        const hasHeroSection = document.querySelector('.hero-section, .hero-slider, .hero-banner');
+        const hasLightBackground = !hasHeroSection; // If no hero, assume light background
+        
         function updateLogo() {
             const currentScroll = window.pageYOffset;
             
-            if (currentScroll > 100) {
+            // If page has light background and at top, force scrolled state
+            if (hasLightBackground && currentScroll <= 100) {
                 header.classList.add('scrolled');
-                // Change to dark logo when scrolled
-                if (logoImage.getAttribute('src') !== logoDark) {
+                // Use white logo for light background (reversed)
+                if (logoImage.getAttribute('src') !== logoWhite) {
                     isChangingLogo = true;
-                    logoImage.setAttribute('src', logoDark);
+                    logoImage.setAttribute('src', logoWhite);
+                    setTimeout(() => { isChangingLogo = false; }, 50);
+                }
+            } else if (currentScroll > 100) {
+                header.classList.add('scrolled');
+                // Change to white logo when scrolled (reversed)
+                if (logoImage.getAttribute('src') !== logoWhite) {
+                    isChangingLogo = true;
+                    logoImage.setAttribute('src', logoWhite);
                     setTimeout(() => { isChangingLogo = false; }, 50);
                 }
             } else {
                 header.classList.remove('scrolled');
-                // Change to white logo at top
-                if (logoImage.getAttribute('src') !== logoWhite) {
+                // Change to dark logo at top (only for pages with hero - reversed)
+                if (logoImage.getAttribute('src') !== logoDark) {
                     isChangingLogo = true;
-                    logoImage.setAttribute('src', logoWhite);
+                    logoImage.setAttribute('src', logoDark);
                     setTimeout(() => { isChangingLogo = false; }, 50);
                 }
             }
@@ -128,8 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
             attributeFilter: ['src']
         });
     }
-});
-
 
     // User Menu Functionality
     const userMenuWrapper = document.querySelector('.user-menu-wrapper');
@@ -139,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (userMenuBtn && userMenu) {
         // Toggle menu on button click
         userMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
             userMenu.classList.toggle('show');
         });
@@ -151,18 +163,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Prevent menu from closing when clicking inside
-        userMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
+        if (userMenu) {
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                userMenu.classList.remove('show');
+            }
         });
     }
     
-    // Add show class styles dynamically
-    const style = document.createElement('style');
-    style.textContent = `
-        .user-menu.show {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
+    // Mobile Menu Toggle (if exists)
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mobileMenu.classList.toggle('show');
+        });
+    }
+});

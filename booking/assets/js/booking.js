@@ -130,6 +130,7 @@ function calculateTotal() {
     const roomSelect = document.getElementById('room_type_id');
     const roomPriceDisplay = document.getElementById('room_price_display');
     const estimatedTotal = document.getElementById('estimated_total');
+    const estimatedTotalDisplay = document.getElementById('estimated_total_display');
     
     if (!roomSelect || !roomPriceDisplay || !estimatedTotal) {
         console.error('Required elements not found');
@@ -138,7 +139,8 @@ function calculateTotal() {
     
     if (!roomSelect.value) {
         roomPriceDisplay.textContent = '0 VNĐ';
-        estimatedTotal.textContent = '0 VNĐ';
+        estimatedTotal.value = '0';
+        if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
         console.log('No room selected');
         return 0;
     }
@@ -158,13 +160,15 @@ function calculateTotal() {
     roomPriceDisplay.textContent = formatCurrency(price);
     
     if (nights <= 0) {
-        estimatedTotal.textContent = '0 VNĐ';
+        estimatedTotal.value = '0';
+        if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
         console.log('No nights calculated');
         return 0;
     }
     
     const total = price * nights;
-    estimatedTotal.textContent = formatCurrency(total);
+    estimatedTotal.value = total; // Store numeric value
+    if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = formatCurrency(total); // Display formatted
     
     // Store values for form submission
     roomSelect.setAttribute('data-calculated-total', total);
@@ -402,4 +406,96 @@ async function handleSubmit(e) {
         submitBtn.classList.remove('loading');
         submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span> Xác nhận đặt phòng';
     }
+}
+
+// Apply Promotion Code
+let appliedPromotion = null;
+
+async function applyPromoCode() {
+    const promoCode = document.getElementById('promo_code').value.trim().toUpperCase();
+    const messageDiv = document.getElementById('promo_message');
+    
+    if (!promoCode) {
+        messageDiv.innerHTML = '<span class="text-red-600">Vui lòng nhập mã giảm giá</span>';
+        return;
+    }
+    
+    // Get current total
+    const totalAmount = parseFloat(document.getElementById('estimated_total').value) || 0;
+    const roomTypeId = document.getElementById('room_type_id').value;
+    
+    if (totalAmount <= 0) {
+        messageDiv.innerHTML = '<span class="text-red-600">Vui lòng chọn ngày trước khi áp dụng mã</span>';
+        return;
+    }
+    
+    messageDiv.innerHTML = '<span class="text-gray-600">Đang kiểm tra...</span>';
+    
+    try {
+        const formData = new FormData();
+        formData.append('promo_code', promoCode);
+        formData.append('total_amount', totalAmount);
+        formData.append('room_type_id', roomTypeId);
+        
+        const response = await fetch('./api/apply-promotion.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            appliedPromotion = result;
+            
+            // Update display
+            document.getElementById('summary_subtotal').textContent = formatCurrency(result.original_amount);
+            document.getElementById('summary_discount').textContent = '-' + formatCurrency(result.discount_amount);
+            document.getElementById('summary_total').textContent = formatCurrency(result.final_amount);
+            document.getElementById('discount_row').style.display = 'flex';
+            
+            // Update hidden inputs
+            document.getElementById('promotion_code_input').value = result.promotion.code;
+            document.getElementById('discount_amount_input').value = result.discount_amount;
+            
+            // Show success message
+            messageDiv.innerHTML = `
+                <div class="flex items-center gap-2 text-green-600">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span>${result.message} Giảm ${formatCurrency(result.discount_amount)}</span>
+                </div>
+            `;
+            
+            // Disable input
+            document.getElementById('promo_code').disabled = true;
+            
+        } else {
+            messageDiv.innerHTML = `<span class="text-red-600">${result.message}</span>`;
+            removePromotion();
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        messageDiv.innerHTML = '<span class="text-red-600">Có lỗi xảy ra khi áp dụng mã</span>';
+    }
+}
+
+function removePromotion() {
+    appliedPromotion = null;
+    
+    const totalAmount = parseFloat(document.getElementById('estimated_total').value) || 0;
+    
+    document.getElementById('summary_subtotal').textContent = formatCurrency(totalAmount);
+    document.getElementById('summary_total').textContent = formatCurrency(totalAmount);
+    document.getElementById('discount_row').style.display = 'none';
+    
+    document.getElementById('promotion_code_input').value = '';
+    document.getElementById('discount_amount_input').value = '0';
+    document.getElementById('promo_code').disabled = false;
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount);
 }

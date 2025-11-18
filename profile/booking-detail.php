@@ -1,36 +1,37 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../models/Booking.php';
 
 $booking_code = $_GET['code'] ?? '';
 $error = '';
 $booking = null;
+$booking_history = [];
+$can_cancel = false;
 
 if (!$booking_code) {
     $error = 'Mã đặt phòng không hợp lệ';
 } else {
     try {
         $db = getDB();
+        $bookingModel = new Booking($db);
         
         // Get booking details
-        $stmt = $db->prepare("
-            SELECT b.*, rt.type_name, rt.category, rt.description, rt.amenities,
-                   r.room_number, r.floor, r.building,
-                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status
-            FROM bookings b
-            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
-            LEFT JOIN rooms r ON b.room_id = r.room_id
-            LEFT JOIN payments p ON b.booking_id = p.booking_id
-            WHERE b.booking_code = ?
-        ");
-        $stmt->execute([$booking_code]);
-        $booking = $stmt->fetch();
+        $booking = $bookingModel->getByCode($booking_code);
         
         if (!$booking) {
             $error = 'Không tìm thấy đặt phòng với mã này';
         } elseif (isset($_SESSION['user_id']) && $booking['user_id'] != $_SESSION['user_id']) {
             // If user is logged in but not the owner, don't show
             $error = 'Bạn không có quyền xem đặt phòng này';
+        } else {
+            // Get booking history
+            $booking_history = $bookingModel->getHistory($booking['booking_id']);
+            
+            // Check if booking can be cancelled
+            if (isset($_SESSION['user_id'])) {
+                $can_cancel = $bookingModel->canBeCancelled($booking['booking_id']);
+            }
         }
         
     } catch (Exception $e) {
@@ -62,9 +63,9 @@ $payment_labels = [
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Chi tiết đặt phòng <?php echo htmlspecialchars($booking_code); ?> - Aurora Hotel Plaza</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script src="../assets/js/tailwindcss-cdn.js"></script>
+<link href="../assets/css/fonts.css" rel="stylesheet"/>
+    
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/profile.css">
@@ -156,7 +157,20 @@ $payment_labels = [
                     <p><?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?></p>
                 </div>
                 <?php endif; ?>
+                <?php if ($booking['cancelled_at']): ?>
+                <div>
+                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Ngày hủy:</span>
+                    <p><?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?></p>
+                </div>
+                <?php endif; ?>
             </div>
+            
+            <?php if ($booking['cancellation_reason']): ?>
+            <div class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Lý do hủy:</span>
+                <p class="mt-1"><?php echo htmlspecialchars($booking['cancellation_reason']); ?></p>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -341,6 +355,14 @@ $payment_labels = [
                     <h3 class="text-xl font-bold mb-4">Hành động</h3>
                     
                     <div class="space-y-3">
+                        <?php if ($booking['status'] === 'pending'): ?>
+                        <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>" 
+                           class="w-full px-4 py-3 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 font-semibold">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Xác nhận đặt phòng
+                        </a>
+                        <?php endif; ?>
+                        
                         <button onclick="window.print()" 
                                 class="w-full px-4 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
                             <span class="material-symbols-outlined mr-2">print</span>
@@ -360,15 +382,61 @@ $payment_labels = [
                             Tạo QR Code (Sắp có)
                         </button>
                         
-                        <?php if ($booking['status'] === 'confirmed' && strtotime($booking['check_in_date']) > time()): ?>
+                        <?php if ($can_cancel): ?>
                         <button onclick="cancelBooking()" 
                                 class="w-full px-4 py-3 border-2 border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
                             <span class="material-symbols-outlined mr-2">cancel</span>
                             Hủy đặt phòng
                         </button>
+                        <?php elseif ($booking['status'] === 'confirmed'): ?>
+                        <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-sm text-yellow-800 dark:text-yellow-200">
+                            <span class="material-symbols-outlined text-sm mr-1">info</span>
+                            Không thể hủy trong vòng 24 giờ trước check-in
+                        </div>
                         <?php endif; ?>
                     </div>
                 </div>
+                
+                <!-- Booking History Timeline -->
+                <?php if (!empty($booking_history)): ?>
+                <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">history</span>
+                        Lịch sử thay đổi
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <?php foreach ($booking_history as $history): ?>
+                        <div class="flex gap-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-3 h-3 bg-accent rounded-full"></div>
+                                <?php if ($history !== end($booking_history)): ?>
+                                <div class="w-0.5 h-full bg-gray-300 dark:bg-gray-600 mt-1"></div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="flex-1 pb-4">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="px-2 py-1 text-xs font-medium rounded <?php echo $status_labels[$history['new_status']]['color'] ?? 'bg-gray-100 text-gray-800'; ?>">
+                                        <?php echo $status_labels[$history['new_status']]['label'] ?? $history['new_status']; ?>
+                                    </span>
+                                    <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                                        <?php echo date('d/m/Y H:i', strtotime($history['created_at'])); ?>
+                                    </span>
+                                </div>
+                                <?php if ($history['changed_by_name']): ?>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                    Bởi: <?php echo htmlspecialchars($history['changed_by_name']); ?>
+                                </p>
+                                <?php endif; ?>
+                                <?php if ($history['notes']): ?>
+                                <p class="text-sm mt-1"><?php echo htmlspecialchars($history['notes']); ?></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
         
@@ -398,9 +466,45 @@ function shareBooking() {
 }
 
 function cancelBooking() {
-    if (confirm('Bạn có chắc chắn muốn hủy đặt phòng này?\n\nLưu ý: Việc hủy đặt phòng có thể phát sinh phí theo chính sách của khách sạn.')) {
-        // TODO: Implement cancel booking functionality
-        alert('Tính năng hủy đặt phòng sẽ được triển khai sau.');
+    const reason = prompt('Vui lòng nhập lý do hủy đặt phòng (không bắt buộc):');
+    
+    if (reason !== null) { // User didn't click Cancel
+        if (confirm('Bạn có chắc chắn muốn hủy đặt phòng <?php echo $booking_code; ?>?\n\nLưu ý: Bạn chỉ có thể hủy đặt phòng trước 24 giờ check-in.')) {
+            // Show loading
+            const btn = event.target;
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
+            
+            // Send cancel request
+            fetch('api/cancel-booking.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    booking_id: <?php echo $booking['booking_id']; ?>,
+                    reason: reason
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã hủy đặt phòng thành công!');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi hủy đặt phòng. Vui lòng thử lại.');
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            });
+        }
     }
 }
 

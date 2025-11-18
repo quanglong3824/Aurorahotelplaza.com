@@ -158,9 +158,10 @@ try {
     $_SESSION['pending_booking_id'] = $booking_id;
     $_SESSION['pending_booking_code'] = $booking_code;
     
-    // Send booking confirmation email
+    // Send booking confirmation email (don't block booking if email fails)
+    $emailSent = false;
     try {
-        require_once '../../helpers/email.php';
+        require_once '../../helpers/mailer.php';
         
         // Get complete booking data for email
         $stmt = $db->prepare("
@@ -170,18 +171,29 @@ try {
             WHERE b.booking_id = ?
         ");
         $stmt->execute([$booking_id]);
-        $booking_data = $stmt->fetch();
+        $booking_data = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($booking_data) {
-            $emailHelper = getEmailHelper();
-            $email_sent = $emailHelper->sendBookingConfirmation($booking_data);
+            // Ensure required fields are set for email template
+            $booking_data['num_nights'] = $num_nights; // For old template compatibility
+            $booking_data['total_nights'] = $num_nights; // For new template
+            $booking_data['num_adults'] = $num_guests;
+            $booking_data['room_type_name'] = $booking_data['type_name']; // Alias for template
             
-            if (!$email_sent) {
-                error_log("Failed to send booking confirmation email for booking: $booking_code");
+            // Send email using Mailer class
+            $mailer = getMailer();
+            $emailSent = $mailer->sendBookingConfirmation($guest_email, $booking_data);
+            
+            if ($emailSent) {
+                error_log("✅ Booking confirmation email sent successfully to: $guest_email for booking: $booking_code");
+            } else {
+                error_log("❌ Failed to send booking confirmation email to: $guest_email for booking: $booking_code");
             }
+        } else {
+            error_log("❌ Could not fetch booking data for email: $booking_code");
         }
     } catch (Exception $emailError) {
-        error_log("Email sending error: " . $emailError->getMessage());
+        error_log("Email sending error for booking $booking_code: " . $emailError->getMessage());
         // Don't fail the booking if email fails
     }
     

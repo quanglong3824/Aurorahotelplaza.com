@@ -35,11 +35,11 @@ foreach ($room_types as $room) {
 <title>Đặt phòng - Aurora Hotel Plaza</title>
 
 <!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="../assets/js/tailwindcss-cdn.js"></script>
+<link href="../assets/css/fonts.css" rel="stylesheet"/>
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="../assets/css/fonts.css" rel="stylesheet"/>
 
 <!-- Tailwind Configuration -->
 <script src="../assets/js/tailwind-config.js"></script>
@@ -134,7 +134,8 @@ foreach ($room_types as $room) {
                         </div>
                         <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
                             <span class="font-semibold">Tổng tiền tạm tính:</span>
-                            <span id="estimated_total" class="text-xl font-bold text-accent">0 VNĐ</span>
+                            <span id="estimated_total_display" class="text-xl font-bold text-accent">0 VNĐ</span>
+                            <input type="hidden" id="estimated_total" value="0">
                         </div>
                     </div>
 
@@ -250,11 +251,35 @@ foreach ($room_types as $room) {
                                 <span id="summary_phone" class="font-semibold"></span>
                             </div>
                             <hr class="my-3 border-gray-300 dark:border-gray-600">
+                            <div class="flex justify-between">
+                                <span>Tạm tính:</span>
+                                <span id="summary_subtotal" class="font-semibold"></span>
+                            </div>
+                            <div class="flex justify-between text-green-600" id="discount_row" style="display: none;">
+                                <span>Giảm giá:</span>
+                                <span id="summary_discount" class="font-semibold"></span>
+                            </div>
+                            <hr class="my-3 border-gray-300 dark:border-gray-600">
                             <div class="flex justify-between text-lg font-bold text-accent">
                                 <span>Tổng thanh toán:</span>
                                 <span id="summary_total"></span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Promotion Code -->
+                    <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
+                        <h4 class="font-bold text-lg mb-4">Mã giảm giá</h4>
+                        <div class="flex gap-3">
+                            <input type="text" id="promo_code" class="form-input flex-1" 
+                                   placeholder="Nhập mã giảm giá" style="text-transform: uppercase;">
+                            <button type="button" onclick="applyPromoCode()" class="btn-primary whitespace-nowrap">
+                                Áp dụng
+                            </button>
+                        </div>
+                        <div id="promo_message" class="mt-3 text-sm"></div>
+                        <input type="hidden" name="promotion_code" id="promotion_code_input">
+                        <input type="hidden" name="discount_amount" id="discount_amount_input" value="0">
                     </div>
 
                     <!-- Payment Method -->

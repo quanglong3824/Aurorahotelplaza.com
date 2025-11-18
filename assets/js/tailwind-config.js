@@ -1,18 +1,41 @@
 // Tailwind CSS Configuration
 tailwind.config = {
+    darkMode: 'class',
     theme: {
         extend: {
             colors: {
-                accent: '#d4af37',
-                'accent-dark': '#b8941f',
-                'surface-light': '#ffffff',
-                'surface-dark': '#1f2937',
-                'text-primary-light': '#1f2937',
-                'text-primary-dark': '#f3f4f6',
-                'text-secondary-light': '#6b7280',
-                'text-secondary-dark': '#9ca3af',
+                // Primary colors
+                primary: {
+                    DEFAULT: '#cc9a2c',
+                    light: '#d4af37',
+                    dark: '#b8941f',
+                },
+                // Accent colors
+                accent: {
+                    DEFAULT: '#d4af37',
+                    dark: '#b8941f',
+                },
+                // Background colors
+                background: {
+                    light: '#ffffff',
+                    dark: '#111827',
+                },
+                // Surface colors
+                surface: {
+                    light: '#f9fafb',
+                    dark: '#1f2937',
+                },
+                // Text colors
+                text: {
+                    'primary-light': '#1f2937',
+                    'primary-dark': '#f3f4f6',
+                    'secondary-light': '#6b7280',
+                    'secondary-dark': '#9ca3af',
+                },
             },
             fontFamily: {
+                body: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                display: ['Playfair Display', 'serif'],
                 sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
             },
             animation: {

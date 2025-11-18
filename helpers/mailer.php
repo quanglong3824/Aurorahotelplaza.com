@@ -165,13 +165,30 @@ class Mailer {
      */
     public function sendBookingConfirmation($userEmail, $bookingData) {
         try {
-            $subject = "Xác nhận đặt phòng #{$bookingData['booking_code']} - Aurora Hotel Plaza";
-            $body = EmailTemplates::getBookingConfirmationTemplate($bookingData);
+            // Load the detailed booking confirmation template
+            require_once __DIR__ . '/../includes/email-templates/booking-confirmation.php';
             
-            return $this->send($userEmail, $subject, $body);
+            // Prepare hotel info
+            $hotel_info = [
+                'name' => 'Aurora Hotel Plaza',
+                'address' => 'KP2, Phường Tân Hiệp, Thủ Đông Nai',
+                'phone' => '(+84-251) 391 8888',
+                'email' => 'info@aurorahotelplaza.com',
+                'website' => 'https://aurorahotelplaza.com'
+            ];
+            
+            // Format total amount for display
+            $bookingData['total_amount_formatted'] = number_format($bookingData['total_amount'], 0, ',', '.');
+            
+            $subject = "Xác nhận đặt phòng #{$bookingData['booking_code']} - Aurora Hotel Plaza";
+            $body = getBookingConfirmationEmailHTML($bookingData, $hotel_info);
+            $altBody = getBookingConfirmationEmailText($bookingData, $hotel_info);
+            
+            return $this->send($userEmail, $subject, $body, $altBody);
             
         } catch (Exception $e) {
             error_log("Booking confirmation email error: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return false;
         }
     }
