@@ -69,6 +69,7 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
                 </div>
             </div>
             <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>contact.php">Liên hệ</a>
+            
         </nav>
         <div class="flex items-center gap-2">
             <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">

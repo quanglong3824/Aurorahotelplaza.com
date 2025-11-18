@@ -1,57 +1,40 @@
 /**
- * Auth Pages JavaScript - Enhanced UX
+ * Auth Pages JavaScript - Modern Enhanced UX
  */
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Password visibility toggle
+    // Initialize all features
     initPasswordToggle();
-    
-    // Form validation
+    initPasswordStrength();
+    initPasswordMatch();
     initFormValidation();
-    
-    // Loading state on submit
     initFormSubmit();
-    
-    // Auto-dismiss alerts
+    initSocialLogin();
     autoDismissAlerts();
+    initAnimations();
     
 });
 
 /**
  * Password Visibility Toggle
  */
-function initPasswordToggle() {
-    const passwordInputs = document.querySelectorAll('input[type="password"]');
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggle = input.parentElement.querySelector('.password-toggle');
     
-    passwordInputs.forEach(input => {
-        // Create wrapper if not exists
-        if (!input.parentElement.classList.contains('password-wrapper')) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'password-wrapper';
-            input.parentNode.insertBefore(wrapper, input);
-            wrapper.appendChild(input);
-        }
-        
-        // Create toggle button
-        const toggleBtn = document.createElement('button');
-        toggleBtn.type = 'button';
-        toggleBtn.className = 'password-toggle';
-        toggleBtn.innerHTML = '<span class="material-symbols-outlined">visibility</span>';
-        toggleBtn.setAttribute('aria-label', 'Toggle password visibility');
-        
-        // Insert after input
-        input.parentElement.appendChild(toggleBtn);
-        
-        // Toggle functionality
-        toggleBtn.addEventListener('click', function() {
-            const type = input.type === 'password' ? 'text' : 'password';
-            input.type = type;
-            
-            const icon = type === 'password' ? 'visibility' : 'visibility_off';
-            toggleBtn.innerHTML = `<span class="material-symbols-outlined">${icon}</span>`;
-        });
-    });
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggle.innerHTML = '<span class="material-symbols-outlined">visibility_off</span>';
+    } else {
+        input.type = 'password';
+        toggle.innerHTML = '<span class="material-symbols-outlined">visibility</span>';
+    }
+}
+
+function initPasswordToggle() {
+    // Password toggle functionality is handled by onclick in HTML
+    // This function can be used for additional initialization if needed
 }
 
 /**
@@ -83,7 +66,7 @@ function initFormValidation() {
         if (password && confirmPassword) {
             confirmPassword.addEventListener('input', function() {
                 if (confirmPassword.value !== password.value) {
-                    setInvalid(confirmPassword, 'Mật khẩu không khớp');
+                    setInvalid(confirmPassword);
                 } else {
                     setValid(confirmPassword);
                 }
@@ -105,7 +88,7 @@ function validateInput(input) {
     
     // Required check
     if (input.hasAttribute('required') && !value) {
-        setInvalid(input, 'Trường này là bắt buộc');
+        setInvalid(input);
         return false;
     }
     
@@ -113,7 +96,7 @@ function validateInput(input) {
     if (type === 'email' && value) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
-            setInvalid(input, 'Email không hợp lệ');
+            setInvalid(input);
             return false;
         }
     }
@@ -122,14 +105,14 @@ function validateInput(input) {
     if (name === 'phone' && value) {
         const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
         if (!phoneRegex.test(value.replace(/\s/g, ''))) {
-            setInvalid(input, 'Số điện thoại không hợp lệ');
+            setInvalid(input);
             return false;
         }
     }
     
     // Password length
     if (type === 'password' && value && value.length < 6) {
-        setInvalid(input, 'Mật khẩu phải có ít nhất 6 ký tự');
+        setInvalid(input);
         return false;
     }
     
@@ -138,20 +121,14 @@ function validateInput(input) {
 }
 
 /**
- * Set Invalid State
+ * Set Invalid State - Only visual feedback, no text message
  */
 function setInvalid(input, message) {
     input.classList.add('is-invalid');
     input.classList.remove('is-valid');
     
-    // Add error message
-    let errorDiv = input.parentElement.querySelector('.error-message');
-    if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message text-xs text-red-600 dark:text-red-400 mt-1';
-        input.parentElement.appendChild(errorDiv);
-    }
-    errorDiv.textContent = message;
+    // Remove any existing error message - only show visual feedback
+    removeError(input);
 }
 
 /**
@@ -174,7 +151,7 @@ function removeError(input) {
 }
 
 /**
- * Form Submit with Loading State
+ * Enhanced Form Submit with Loading State
  */
 function initFormSubmit() {
     const forms = document.querySelectorAll('form');
@@ -187,15 +164,24 @@ function initFormSubmit() {
                 // Validate all inputs
                 const inputs = form.querySelectorAll('input[required]');
                 let isValid = true;
+                let firstInvalidInput = null;
                 
                 inputs.forEach(input => {
                     if (!validateInput(input)) {
                         isValid = false;
+                        if (!firstInvalidInput) {
+                            firstInvalidInput = input;
+                        }
                     }
                 });
                 
                 if (!isValid) {
                     e.preventDefault();
+                    // Focus on first invalid input
+                    if (firstInvalidInput) {
+                        firstInvalidInput.focus();
+                        firstInvalidInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                     return;
                 }
                 
@@ -203,81 +189,292 @@ function initFormSubmit() {
                 submitBtn.disabled = true;
                 submitBtn.classList.add('loading');
                 
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<span>Đang xử lý...</span>';
+                const btnText = submitBtn.querySelector('.btn-text');
+                const btnIcon = submitBtn.querySelector('.btn-icon .material-symbols-outlined');
+                const originalText = btnText.textContent;
                 
-                // Reset after 10 seconds (fallback)
+                btnText.textContent = 'Đang xử lý...';
+                if (btnIcon) {
+                    btnIcon.textContent = 'hourglass_empty';
+                    btnIcon.style.animation = 'spin 1s linear infinite';
+                }
+                
+                // Reset after 15 seconds (fallback)
                 setTimeout(() => {
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('loading');
-                    submitBtn.innerHTML = originalText;
-                }, 10000);
+                    btnText.textContent = originalText;
+                    if (btnIcon) {
+                        btnIcon.textContent = 'arrow_forward';
+                        btnIcon.style.animation = '';
+                    }
+                }, 15000);
             }
         });
     });
 }
 
 /**
- * Auto Dismiss Alerts
+ * Auto Dismiss Alerts with Enhanced Animation
  */
 function autoDismissAlerts() {
     const alerts = document.querySelectorAll('.alert-success');
     
     alerts.forEach(alert => {
-        setTimeout(() => {
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '<span class="material-symbols-outlined">close</span>';
+        closeBtn.className = 'alert-close';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        `;
+        
+        closeBtn.addEventListener('mouseenter', () => closeBtn.style.opacity = '1');
+        closeBtn.addEventListener('mouseleave', () => closeBtn.style.opacity = '0.7');
+        
+        alert.style.position = 'relative';
+        alert.appendChild(closeBtn);
+        
+        function dismissAlert() {
+            alert.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             alert.style.opacity = '0';
-            alert.style.transform = 'translateY(-10px)';
+            alert.style.transform = 'translateY(-15px) scale(0.95)';
             setTimeout(() => {
-                alert.remove();
-            }, 300);
-        }, 5000);
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 400);
+        }
+        
+        // Auto dismiss after 6 seconds
+        setTimeout(dismissAlert, 6000);
+        
+        // Manual dismiss
+        closeBtn.addEventListener('click', dismissAlert);
     });
 }
 
 /**
- * Show Password Strength
+ * Password Strength Indicator
  */
-function showPasswordStrength(input) {
-    const password = input.value;
-    let strength = 0;
+function initPasswordStrength() {
+    const passwordInput = document.getElementById('password');
+    if (!passwordInput) return;
     
-    if (password.length >= 6) strength++;
-    if (password.length >= 10) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    const strengthIndicator = document.getElementById('passwordStrength');
+    if (!strengthIndicator) return;
     
-    const strengthTexts = ['Rất yếu', 'Yếu', 'Trung bình', 'Mạnh', 'Rất mạnh'];
-    const strengthColors = ['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e'];
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        const strength = calculatePasswordStrength(password);
+        updatePasswordStrength(strengthIndicator, strength, password.length > 0);
+    });
+}
+
+function calculatePasswordStrength(password) {
+    let score = 0;
     
-    let strengthDiv = input.parentElement.querySelector('.password-strength');
-    if (!strengthDiv) {
-        strengthDiv = document.createElement('div');
-        strengthDiv.className = 'password-strength text-xs mt-1';
-        input.parentElement.appendChild(strengthDiv);
-    }
+    if (password.length >= 6) score += 1;
+    if (password.length >= 10) score += 1;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+    if (/[0-9]/.test(password)) score += 1;
+    if (/[^a-zA-Z0-9]/.test(password)) score += 1;
     
-    if (password.length > 0) {
-        strengthDiv.innerHTML = `
-            <div class="flex items-center gap-2">
-                <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full transition-all duration-300" 
-                         style="width: ${(strength / 5) * 100}%; background: ${strengthColors[strength - 1]}"></div>
-                </div>
-                <span style="color: ${strengthColors[strength - 1]}">${strengthTexts[strength - 1]}</span>
-            </div>
-        `;
+    return Math.min(score, 4);
+}
+
+function updatePasswordStrength(indicator, strength, show) {
+    const strengthClasses = ['strength-weak', 'strength-fair', 'strength-good', 'strength-strong'];
+    const strengthTexts = ['Yếu', 'Trung bình', 'Tốt', 'Mạnh'];
+    
+    // Remove all strength classes
+    strengthClasses.forEach(cls => indicator.classList.remove(cls));
+    
+    if (show && strength > 0) {
+        indicator.classList.add('show');
+        indicator.classList.add(strengthClasses[strength - 1]);
+        indicator.querySelector('.strength-text').textContent = `Độ mạnh: ${strengthTexts[strength - 1]}`;
     } else {
-        strengthDiv.innerHTML = '';
+        indicator.classList.remove('show');
     }
 }
 
-// Add password strength indicator to password inputs
-document.addEventListener('DOMContentLoaded', function() {
-    const passwordInputs = document.querySelectorAll('input[name="password"]');
-    passwordInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            showPasswordStrength(input);
+/**
+ * Password Match Indicator
+ */
+function initPasswordMatch() {
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const matchIndicator = document.getElementById('passwordMatch');
+    
+    if (!passwordInput || !confirmInput || !matchIndicator) return;
+    
+    function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirm = confirmInput.value;
+        
+        if (confirm.length === 0) {
+            matchIndicator.classList.remove('show');
+            return;
+        }
+        
+        matchIndicator.classList.add('show');
+        
+        if (password === confirm) {
+            matchIndicator.classList.remove('no-match');
+            matchIndicator.classList.add('match');
+            matchIndicator.textContent = '✓ Mật khẩu khớp';
+        } else {
+            matchIndicator.classList.remove('match');
+            matchIndicator.classList.add('no-match');
+            matchIndicator.textContent = '✗ Mật khẩu không khớp';
+        }
+    }
+    
+    confirmInput.addEventListener('input', checkPasswordMatch);
+    passwordInput.addEventListener('input', checkPasswordMatch);
+}
+
+/**
+ * Social Login Handlers
+ */
+function initSocialLogin() {
+    const googleBtn = document.getElementById('googleLoginBtn');
+    const facebookBtn = document.querySelector('.facebook-btn');
+    
+    if (googleBtn) {
+        googleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Add loading state
+            const originalText = this.textContent;
+            this.disabled = true;
+            this.innerHTML = `
+                <svg viewBox="0 0 24 24" width="20" height="20" style="animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+                Đang chuyển hướng...
+            `;
+            
+            // Redirect to Google OAuth
+            setTimeout(() => {
+                window.location.href = './login-google.php';
+            }, 500);
         });
+    }
+    
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', function() {
+            // Placeholder for Facebook OAuth integration
+            console.log('Facebook login clicked');
+            // window.location.href = '/auth/facebook';
+        });
+    }
+}
+
+/**
+ * Enhanced Animations
+ */
+function initAnimations() {
+    // Stagger animation for form fields
+    const formFields = document.querySelectorAll('.form-group');
+    formFields.forEach((field, index) => {
+        field.style.animationDelay = `${index * 0.1}s`;
+        field.classList.add('animate-fade-in-up');
     });
-});
+    
+    // Floating label effect
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+        }
+    });
+}
+
+/**
+ * Enhanced Form Validation with Better UX
+ */
+function validateInput(input) {
+    const value = input.value.trim();
+    const type = input.type;
+    const name = input.name;
+    
+    // Remove previous validation states
+    input.classList.remove('is-invalid', 'is-valid');
+    removeError(input);
+    
+    // Required check
+    if (input.hasAttribute('required') && !value) {
+        setInvalid(input);
+        return false;
+    }
+    
+    // Email validation
+    if (type === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            setInvalid(input);
+            return false;
+        }
+    }
+    
+    // Phone validation (Vietnamese format)
+    if (name === 'phone' && value) {
+        const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
+        if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+            setInvalid(input);
+            return false;
+        }
+    }
+    
+    // Password validation
+    if (name === 'password' && value) {
+        if (value.length < 6) {
+            setInvalid(input);
+            return false;
+        }
+    }
+    
+    // Confirm password validation
+    if (name === 'confirm_password' && value) {
+        const passwordInput = document.querySelector('input[name="password"]');
+        if (passwordInput && value !== passwordInput.value) {
+            setInvalid(input);
+            return false;
+        }
+    }
+    
+    // Full name validation
+    if (name === 'full_name' && value) {
+        if (value.length < 2) {
+            setInvalid(input);
+            return false;
+        }
+    }
+    
+    setValid(input);
+    return true;
+}

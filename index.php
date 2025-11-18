@@ -1,3 +1,7 @@
+<?php
+// Start session for user authentication
+session_start();
+?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
 <head>

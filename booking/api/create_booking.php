@@ -10,11 +10,16 @@ $room_type_id = $_POST['room_type_id'] ?? null;
 $check_in_date = $_POST['check_in_date'] ?? null;
 $check_out_date = $_POST['check_out_date'] ?? null;
 $num_guests = $_POST['num_guests'] ?? 1;
-$guest_name = $_POST['guest_name'] ?? '';
-$guest_email = $_POST['guest_email'] ?? '';
-$guest_phone = $_POST['guest_phone'] ?? '';
+$guest_name = trim($_POST['guest_name'] ?? '');
+$guest_email = trim($_POST['guest_email'] ?? '');
+$guest_phone = trim($_POST['guest_phone'] ?? '');
 $special_requests = $_POST['special_requests'] ?? '';
 $payment_method = $_POST['payment_method'] ?? 'cash';
+
+// Get calculated values from frontend
+$calculated_total = floatval($_POST['calculated_total'] ?? 0);
+$calculated_nights = intval($_POST['calculated_nights'] ?? 0);
+$frontend_room_price = floatval($_POST['room_price'] ?? 0);
 
 // Validate required fields
 if (!$room_type_id || !$check_in_date || !$check_out_date || !$guest_name || !$guest_email || !$guest_phone) {
@@ -47,8 +52,24 @@ try {
         throw new Exception('Số đêm phải lớn hơn 0');
     }
     
+    // Validate calculated values from frontend
+    if ($calculated_nights !== $num_nights) {
+        error_log("Nights mismatch: frontend=$calculated_nights, backend=$num_nights");
+    }
+    
     $room_price = $room_type['base_price'];
+    
+    // Validate frontend price matches backend
+    if (abs($frontend_room_price - $room_price) > 0.01) {
+        error_log("Price mismatch: frontend=$frontend_room_price, backend=$room_price");
+    }
+    
+    // Use backend calculation for security, but log discrepancies
     $total_amount = $room_price * $num_nights;
+    
+    if (abs($calculated_total - $total_amount) > 0.01) {
+        error_log("Total mismatch: frontend=$calculated_total, backend=$total_amount");
+    }
     
     // Generate booking code
     $booking_code = 'BK' . date('Ymd') . strtoupper(substr(uniqid(), -6));
@@ -136,6 +157,33 @@ try {
     // Store booking info in session
     $_SESSION['pending_booking_id'] = $booking_id;
     $_SESSION['pending_booking_code'] = $booking_code;
+    
+    // Send booking confirmation email
+    try {
+        require_once '../../helpers/email.php';
+        
+        // Get complete booking data for email
+        $stmt = $db->prepare("
+            SELECT b.*, rt.type_name, rt.category 
+            FROM bookings b 
+            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id 
+            WHERE b.booking_id = ?
+        ");
+        $stmt->execute([$booking_id]);
+        $booking_data = $stmt->fetch();
+        
+        if ($booking_data) {
+            $emailHelper = getEmailHelper();
+            $email_sent = $emailHelper->sendBookingConfirmation($booking_data);
+            
+            if (!$email_sent) {
+                error_log("Failed to send booking confirmation email for booking: $booking_code");
+            }
+        }
+    } catch (Exception $emailError) {
+        error_log("Email sending error: " . $emailError->getMessage());
+        // Don't fail the booking if email fails
+    }
     
     // Prepare response
     $response = [

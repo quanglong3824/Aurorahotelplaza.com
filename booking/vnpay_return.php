@@ -108,6 +108,35 @@ try {
                 
                 $message = 'Thanh toán thành công! Bạn đã nhận được ' . $points_earned . ' điểm thưởng.';
                 
+                // Send payment confirmation email
+                try {
+                    require_once '../helpers/email.php';
+                    
+                    // Get complete booking data
+                    $stmt = $db->prepare("
+                        SELECT b.*, rt.type_name, rt.category 
+                        FROM bookings b 
+                        LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id 
+                        WHERE b.booking_id = ?
+                    ");
+                    $stmt->execute([$booking['booking_id']]);
+                    $booking_data = $stmt->fetch();
+                    
+                    if ($booking_data) {
+                        $payment_data = [
+                            'payment_method' => 'vnpay',
+                            'transaction_id' => $vnp_TransactionNo,
+                            'amount' => $vnp_Amount / 100,
+                            'paid_at' => date('Y-m-d H:i:s')
+                        ];
+                        
+                        $emailHelper = getEmailHelper();
+                        $emailHelper->sendPaymentConfirmation($booking_data, $payment_data);
+                    }
+                } catch (Exception $emailError) {
+                    error_log("Payment email error: " . $emailError->getMessage());
+                }
+                
                 // Log payment success
                 $logger = getLogger();
                 $logger->logPaymentSuccess($vnp_TransactionNo, [

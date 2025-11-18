@@ -1,167 +1,136 @@
 <?php
 /**
- * Activity Logger Helper
- * Logs user activities to database
+ * Simple Logger Helper for Aurora Hotel
  */
-
-require_once __DIR__ . '/../config/database.php';
 
 class Logger {
     private $db;
     
-    public function __construct() {
-        $this->db = getDB();
-    }
-    
-    /**
-     * Log user registration
-     */
-    public function logUserRegister($userId, $data = []) {
-        try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent)
-                VALUES (?, 'register', 'user', ?, ?, ?, ?)
-            ");
-            
-            $description = json_encode($data);
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $userId, $description, $ipAddress, $userAgent]);
-            return true;
-        } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+    public function __construct($database = null) {
+        if ($database) {
+            $this->db = $database;
+        } else {
+            require_once __DIR__ . '/../config/database.php';
+            $this->db = getDB();
         }
     }
     
     /**
-     * Log user login
+     * Log user login activity
      */
-    public function logUserLogin($userId, $data = []) {
+    public function logUserLogin($user_id, $details = []) {
         try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent)
-                VALUES (?, 'login', 'user', ?, ?, ?, ?)
-            ");
+            $description = 'User logged in';
+            if (isset($details['login_method'])) {
+                $description .= ' via ' . $details['login_method'];
+            }
             
-            $description = json_encode($data);
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $userId, $description, $ipAddress, $userAgent]);
-            return true;
+            $this->logActivity($user_id, 'login', 'user', $user_id, $description, $details);
         } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+            error_log("Logger error in logUserLogin: " . $e->getMessage());
         }
     }
     
     /**
-     * Log user logout
+     * Log user registration activity
      */
-    public function logUserLogout($userId) {
+    public function logUserRegistration($user_id, $details = []) {
         try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent)
-                VALUES (?, 'logout', 'user', ?, ?, ?)
-            ");
+            $description = 'New user registered';
+            if (isset($details['registration_method'])) {
+                $description .= ' via ' . $details['registration_method'];
+            }
             
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $userId, $ipAddress, $userAgent]);
-            return true;
+            $this->logActivity($user_id, 'register', 'user', $user_id, $description, $details);
         } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+            error_log("Logger error in logUserRegistration: " . $e->getMessage());
         }
     }
     
     /**
-     * Log booking action
+     * Log booking activity
      */
-    public function logBooking($userId, $bookingId, $action, $data = []) {
+    public function logBooking($user_id, $booking_id, $action, $details = []) {
         try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent)
-                VALUES (?, ?, 'booking', ?, ?, ?, ?)
-            ");
-            
-            $description = json_encode($data);
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $action, $bookingId, $description, $ipAddress, $userAgent]);
-            return true;
+            $description = "Booking {$action}";
+            $this->logActivity($user_id, $action, 'booking', $booking_id, $description, $details);
         } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+            error_log("Logger error in logBooking: " . $e->getMessage());
         }
     }
     
     /**
-     * Log payment action
+     * Log payment success
      */
-    public function logPayment($userId, $paymentId, $action, $data = []) {
+    public function logPaymentSuccess($transaction_id, $details = [], $user_id = null) {
         try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent)
-                VALUES (?, ?, 'payment', ?, ?, ?, ?)
-            ");
-            
-            $description = json_encode($data);
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $action, $paymentId, $description, $ipAddress, $userAgent]);
-            return true;
+            $description = "Payment successful - Transaction: {$transaction_id}";
+            $this->logActivity($user_id, 'payment_success', 'payment', null, $description, $details);
         } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+            error_log("Logger error in logPaymentSuccess: " . $e->getMessage());
         }
     }
     
     /**
-     * Log admin action
+     * Generic activity logging
      */
-    public function logAdminAction($userId, $action, $entityType, $entityId, $data = []) {
-        try {
-            $stmt = $this->db->prepare("
-                INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ");
-            
-            $description = json_encode($data);
-            $ipAddress = $this->getClientIP();
-            $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            
-            $stmt->execute([$userId, $action, $entityType, $entityId, $description, $ipAddress, $userAgent]);
-            return true;
-        } catch (Exception $e) {
-            error_log("Logger error: " . $e->getMessage());
-            return false;
+    public function logActivity($user_id, $action, $entity_type, $entity_id, $description, $details = []) {
+        if (!$this->db) {
+            throw new Exception("Database connection not available");
         }
+        
+        $ip_address = $this->getClientIP();
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+        
+        // Add details as JSON if provided
+        if (!empty($details)) {
+            $description .= ' - Details: ' . json_encode($details);
+        }
+        
+        $stmt = $this->db->prepare("
+            INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+        
+        $stmt->execute([
+            $user_id,
+            $action,
+            $entity_type,
+            $entity_id,
+            $description,
+            $ip_address,
+            $user_agent
+        ]);
     }
     
     /**
      * Get client IP address
      */
     private function getClientIP() {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        $ip_keys = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
+        
+        foreach ($ip_keys as $key) {
+            if (!empty($_SERVER[$key])) {
+                $ip = $_SERVER[$key];
+                // Handle comma-separated IPs (from proxies)
+                if (strpos($ip, ',') !== false) {
+                    $ip = trim(explode(',', $ip)[0]);
+                }
+                // Validate IP
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    return $ip;
+                }
+            }
         }
-        return trim($ip);
+        
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     }
 }
 
 /**
- * Helper function to get logger instance
+ * Get logger instance
  */
-function getLogger() {
-    return new Logger();
+function getLogger($database = null) {
+    return new Logger($database);
 }
+?>

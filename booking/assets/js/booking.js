@@ -2,16 +2,75 @@
 
 let currentStep = 1;
 
+// Test function to verify elements exist
+function testElements() {
+    const elements = {
+        'room_type_id': document.getElementById('room_type_id'),
+        'check_in_date': document.getElementById('check_in_date'),
+        'check_out_date': document.getElementById('check_out_date'),
+        'num_nights': document.getElementById('num_nights'),
+        'room_price_display': document.getElementById('room_price_display'),
+        'estimated_total': document.getElementById('estimated_total')
+    };
+    
+    console.log('Element check:', elements);
+    
+    for (const [name, element] of Object.entries(elements)) {
+        if (!element) {
+            console.error(`Element ${name} not found!`);
+        }
+    }
+    
+    return elements;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing booking form...');
+    
+    // Test elements
+    testElements();
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('check_in_date').min = today;
     
+    // Set default check-in to today and check-out to tomorrow
+    if (!document.getElementById('check_in_date').value) {
+        document.getElementById('check_in_date').value = today;
+        
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('check_out_date').value = tomorrow.toISOString().split('T')[0];
+        
+        updateCheckoutMin();
+    }
+    
+    // Initial calculation with default dates
+    setTimeout(() => {
+        console.log('Running initial calculation...');
+        calculateTotal();
+        
+        // Test with first room type if available
+        const roomSelect = document.getElementById('room_type_id');
+        if (roomSelect && roomSelect.options.length > 1) {
+            console.log('Testing with first room type...');
+            roomSelect.selectedIndex = 1; // Select first room type
+            calculateTotal();
+        }
+    }, 500);
+    
     // Event listeners
-    document.getElementById('check_in_date').addEventListener('change', updateCheckoutMin);
-    document.getElementById('check_out_date').addEventListener('change', calculateNights);
+    document.getElementById('check_in_date').addEventListener('change', function() {
+        updateCheckoutMin();
+        calculateTotal();
+    });
+    document.getElementById('check_out_date').addEventListener('change', calculateTotal);
     document.getElementById('room_type_id').addEventListener('change', calculateTotal);
+    
+    // Calculate initial values if room type is pre-selected
+    if (document.getElementById('room_type_id').value) {
+        calculateTotal();
+    }
     
     // Form submission
     document.getElementById('bookingForm').addEventListener('submit', handleSubmit);
@@ -24,7 +83,12 @@ function updateCheckoutMin() {
         const minCheckout = new Date(checkinDate);
         minCheckout.setDate(minCheckout.getDate() + 1);
         document.getElementById('check_out_date').min = minCheckout.toISOString().split('T')[0];
-        calculateNights();
+        
+        // If checkout date is before the new minimum, update it
+        const checkoutDate = document.getElementById('check_out_date').value;
+        if (checkoutDate && new Date(checkoutDate) <= new Date(checkinDate)) {
+            document.getElementById('check_out_date').value = minCheckout.toISOString().split('T')[0];
+        }
     }
 }
 
@@ -33,42 +97,100 @@ function calculateNights() {
     const checkin = document.getElementById('check_in_date').value;
     const checkout = document.getElementById('check_out_date').value;
     
+    console.log('calculateNights:', { checkin, checkout });
+    
     if (checkin && checkout) {
         const date1 = new Date(checkin);
         const date2 = new Date(checkout);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
+        console.log('Date calculation:', { date1, date2, diffTime, diffDays });
+        
         if (diffDays > 0) {
-            document.getElementById('num_nights').textContent = diffDays + ' đêm';
-            calculateTotal();
+            const nightsElement = document.getElementById('num_nights');
+            if (nightsElement) {
+                nightsElement.textContent = diffDays + ' đêm';
+            }
             return diffDays;
         }
     }
     
-    document.getElementById('num_nights').textContent = '0 đêm';
+    const nightsElement = document.getElementById('num_nights');
+    if (nightsElement) {
+        nightsElement.textContent = '0 đêm';
+    }
     return 0;
 }
 
 // Calculate total price
 function calculateTotal() {
+    console.log('calculateTotal() called'); // Debug log
+    
     const roomSelect = document.getElementById('room_type_id');
+    const roomPriceDisplay = document.getElementById('room_price_display');
+    const estimatedTotal = document.getElementById('estimated_total');
+    
+    if (!roomSelect || !roomPriceDisplay || !estimatedTotal) {
+        console.error('Required elements not found');
+        return 0;
+    }
+    
+    if (!roomSelect.value) {
+        roomPriceDisplay.textContent = '0 VNĐ';
+        estimatedTotal.textContent = '0 VNĐ';
+        console.log('No room selected');
+        return 0;
+    }
+    
     const selectedOption = roomSelect.options[roomSelect.selectedIndex];
     const price = parseFloat(selectedOption.dataset.price) || 0;
     const nights = calculateNights();
     
+    console.log('Calculation data:', { 
+        selectedIndex: roomSelect.selectedIndex,
+        price: price,
+        nights: nights,
+        dataPrice: selectedOption.dataset.price
+    });
+    
+    // Update room price display
+    roomPriceDisplay.textContent = formatCurrency(price);
+    
+    if (nights <= 0) {
+        estimatedTotal.textContent = '0 VNĐ';
+        console.log('No nights calculated');
+        return 0;
+    }
+    
     const total = price * nights;
-    document.getElementById('estimated_total').textContent = formatCurrency(total);
+    estimatedTotal.textContent = formatCurrency(total);
+    
+    // Store values for form submission
+    roomSelect.setAttribute('data-calculated-total', total);
+    roomSelect.setAttribute('data-calculated-nights', nights);
+    roomSelect.setAttribute('data-room-price', price);
+    
+    console.log('Final calculation:', { price, nights, total, formattedTotal: formatCurrency(total) });
     
     return total;
 }
 
 // Format currency
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(amount);
+    if (isNaN(amount) || amount === null || amount === undefined) {
+        return '0 VNĐ';
+    }
+    
+    try {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    } catch (error) {
+        console.error('Currency formatting error:', error);
+        return new Intl.NumberFormat('vi-VN').format(amount) + ' VNĐ';
+    }
 }
 
 // Navigate to next step
@@ -233,6 +355,17 @@ async function handleSubmit(e) {
     
     // Get form data
     const formData = new FormData(e.target);
+    
+    // Add calculated values to form data
+    const roomSelect = document.getElementById('room_type_id');
+    const calculatedTotal = roomSelect.getAttribute('data-calculated-total') || '0';
+    const calculatedNights = roomSelect.getAttribute('data-calculated-nights') || '0';
+    const roomPrice = roomSelect.getAttribute('data-room-price') || '0';
+    
+    formData.append('calculated_total', calculatedTotal);
+    formData.append('calculated_nights', calculatedNights);
+    formData.append('room_price', roomPrice);
+    
     const submitBtn = document.getElementById('submitBtn');
     
     // Disable submit button

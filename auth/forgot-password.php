@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Quên mật khẩu - Aurora Hotel Plaza</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="./assets/css/auth.css">
@@ -96,10 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Header -->
         <div class="text-center mb-10">
             <div class="icon-badge">
-                <span class="material-symbols-outlined text-4xl text-accent">lock_reset</span>
+                <span class="material-symbols-outlined">lock_reset</span>
             </div>
-            <h1 class="text-4xl font-bold mb-3">Quên mật khẩu?</h1>
-            <p class="text-text-secondary-light dark:text-text-secondary-dark">
+            <h1 class="auth-title">Quên mật khẩu?</h1>
+            <p class="auth-subtitle">
                 Nhập email của bạn để nhận link đặt lại mật khẩu
             </p>
         </div>
@@ -109,39 +109,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <?php if ($success): ?>
             <div class="alert alert-success">
-                ✓ <?php echo htmlspecialchars($success); ?>
+                <span class="material-symbols-outlined">check_circle</span>
+                <div>
+                    <strong>Thành công!</strong>
+                    <p><?php echo htmlspecialchars($success); ?></p>
+                </div>
             </div>
             <?php endif; ?>
             
             <?php if ($error): ?>
             <div class="alert alert-error">
-                ✕ <?php echo htmlspecialchars($error); ?>
+                <span class="material-symbols-outlined">error</span>
+                <div>
+                    <strong>Lỗi!</strong>
+                    <p><?php echo htmlspecialchars($error); ?></p>
+                </div>
             </div>
             <?php endif; ?>
 
             <?php if (!$success): ?>
-            <form method="POST" action="">
-                <div class="space-y-4">
+            <form method="POST" action="" id="forgotForm">
+                <div class="form-fields">
                     <!-- Email -->
                     <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" required 
-                               value="<?php echo htmlspecialchars($email ?? ''); ?>"
-                               placeholder="email@example.com">
+                        <label class="form-label">
+                            <span class="material-symbols-outlined">email</span>
+                            Email
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="email" name="email" class="form-input" required 
+                                   value="<?php echo htmlspecialchars($email ?? ''); ?>"
+                                   placeholder="Nhập địa chỉ email của bạn">
+                        </div>
                     </div>
 
                     <!-- Submit -->
-                    <button type="submit" class="btn-primary w-full">
-                        Gửi link đặt lại mật khẩu
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">Gửi link đặt lại mật khẩu</span>
+                        <span class="btn-icon">
+                            <span class="material-symbols-outlined">send</span>
+                        </span>
                     </button>
                 </div>
             </form>
+            <?php else: ?>
+            <!-- Success Actions -->
+            <div class="text-center space-y-4">
+                <div class="success-actions">
+                    <a href="./login.php" class="btn-primary">
+                        <span class="btn-text">Đăng nhập</span>
+                        <span class="btn-icon">
+                            <span class="material-symbols-outlined">login</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
             <?php endif; ?>
 
             <!-- Back to Login -->
-            <div class="mt-6 text-center">
-                <a href="./login.php" class="text-sm text-accent hover:underline flex items-center justify-center gap-1">
-                    <span class="material-symbols-outlined text-sm">arrow_back</span>
+            <div class="auth-footer">
+                <a href="./login.php" class="back-link">
+                    <span class="material-symbols-outlined">arrow_back</span>
                     Quay lại đăng nhập
                 </a>
             </div>

@@ -2,11 +2,30 @@
 session_start();
 require_once '../config/database.php';
 
+// Get user information if logged in
+$user_info = null;
+if (isset($_SESSION['user_id'])) {
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT * FROM users WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user_info = $stmt->fetch();
+    } catch (Exception $e) {
+        error_log("Error fetching user info: " . $e->getMessage());
+    }
+}
+
 // Get room types for selection
 $db = getDB();
 $stmt = $db->prepare("SELECT * FROM room_types WHERE status = 'active' ORDER BY sort_order, base_price");
 $stmt->execute();
 $room_types = $stmt->fetchAll();
+
+// Debug: Log room types
+error_log("Room types loaded: " . count($room_types));
+foreach ($room_types as $room) {
+    error_log("Room: " . $room['type_name'] . " - Price: " . $room['base_price']);
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
@@ -106,39 +125,74 @@ $room_types = $stmt->fetchAll();
                     <!-- Price Summary -->
                     <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg">
                         <div class="flex justify-between items-center">
+                            <span class="font-semibold">Giá phòng/đêm:</span>
+                            <span id="room_price_display">0 VNĐ</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
                             <span class="font-semibold">Số đêm:</span>
                             <span id="num_nights">0</span>
                         </div>
-                        <div class="flex justify-between items-center mt-2">
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
                             <span class="font-semibold">Tổng tiền tạm tính:</span>
                             <span id="estimated_total" class="text-xl font-bold text-accent">0 VNĐ</span>
                         </div>
                     </div>
 
-                    <button type="button" class="btn-primary mt-4" onclick="nextStep(2)">Tiếp tục</button>
+                    <div class="flex gap-4 mt-4">
+                        <button type="button" class="btn-secondary" onclick="calculateTotal()">Test Tính giá</button>
+                        <button type="button" class="btn-primary flex-1" onclick="nextStep(2)">Tiếp tục</button>
+                    </div>
                 </div>
 
                 <!-- Step 2: Guest Information -->
                 <div class="form-step" id="step2">
                     <h3 class="text-xl font-bold mb-4">Thông tin khách hàng</h3>
                     
+                    <?php if (!$user_info): ?>
+                    <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5">info</span>
+                            <div>
+                                <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-1">Đăng nhập để có trải nghiệm tốt hơn</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                                    Khi đăng nhập, thông tin của bạn sẽ được tự động điền và bạn có thể theo dõi lịch sử đặt phòng.
+                                </p>
+                                <a href="../auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
+                                   class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">login</span>
+                                    Đăng nhập ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Full Name -->
                         <div class="form-group">
                             <label class="form-label">Họ và tên *</label>
-                            <input type="text" name="guest_name" id="guest_name" class="form-input" required>
+                            <input type="text" name="guest_name" id="guest_name" class="form-input" 
+                                   value="<?php echo $user_info ? htmlspecialchars($user_info['full_name']) : ''; ?>" required>
                         </div>
 
                         <!-- Phone -->
                         <div class="form-group">
                             <label class="form-label">Số điện thoại *</label>
-                            <input type="tel" name="guest_phone" id="guest_phone" class="form-input" required>
+                            <input type="tel" name="guest_phone" id="guest_phone" class="form-input" 
+                                   value="<?php echo $user_info ? htmlspecialchars($user_info['phone'] ?? '') : ''; ?>" required>
                         </div>
 
                         <!-- Email -->
                         <div class="form-group md:col-span-2">
                             <label class="form-label">Email *</label>
-                            <input type="email" name="guest_email" id="guest_email" class="form-input" required>
+                            <input type="email" name="guest_email" id="guest_email" class="form-input" 
+                                   value="<?php echo $user_info ? htmlspecialchars($user_info['email']) : ''; ?>" required>
+                            <?php if ($user_info): ?>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+                                <span class="material-symbols-outlined text-sm">info</span>
+                                Thông tin được lấy từ tài khoản đã đăng nhập
+                            </p>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Special Requests -->
