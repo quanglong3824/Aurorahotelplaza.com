@@ -4,6 +4,9 @@
  * Handles email sending and templates
  */
 
+// Load environment helper for URL functions
+require_once __DIR__ . '/../config/environment.php';
+
 class EmailHelper {
     private $from_email;
     private $from_name;
@@ -157,7 +160,7 @@ class EmailHelper {
                     " . ($booking['special_requests'] ? "<p><strong>Yêu cầu đặc biệt:</strong><br>{$booking['special_requests']}</p>" : "") . "
                     
                     <div style='text-align: center; margin: 30px 0;'>
-                        <a href='http://localhost/GitHub/Aurorahotelplaza.com/profile/booking-detail.php?code={$booking['booking_code']}' class='button'>
+                        <a href='" . url("profile/booking-detail.php?code={$booking['booking_code']}") . "' class='button'>
                             Xem chi tiết đặt phòng
                         </a>
                     </div>
@@ -225,7 +228,7 @@ LƯU Ý QUAN TRỌNG:
 - Thời gian trả phòng: 06:00 - 12:00
 - Liên hệ: +84 123 456 789 nếu cần hỗ trợ
 
-Tra cứu đặt phòng: http://localhost/GitHub/Aurorahotelplaza.com/profile/booking-detail.php?code={$booking['booking_code']}
+Tra cứu đặt phòng: " . url("profile/booking-detail.php?code={$booking['booking_code']}") . "
 
 Chúng tôi rất mong được phục vụ bạn tại Aurora Hotel Plaza!
 

@@ -15,10 +15,14 @@ function isLocalhost() {
 // Lấy base URL
 function getBaseUrl() {
     if (isLocalhost()) {
-        // Localhost
-        return 'http://localhost/GitHub/Aurorahotelplaza.com';
+        // Localhost - Tự động phát hiện đường dẫn
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+        // Lấy root path của project (loại bỏ các thư mục con)
+        $rootPath = preg_replace('#/(admin|auth|booking|payment|profile|services-pages|apartment-details|room-details).*#', '', $scriptName);
+        return $protocol . '://' . $_SERVER['HTTP_HOST'] . $rootPath;
     } else {
-        // Production
+        // Production - aurorahotelplaza.com
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
         return $protocol . '://' . $host;

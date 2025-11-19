@@ -4,6 +4,9 @@
  * Quản lý các template email cho Aurora Hotel Plaza
  */
 
+// Load environment helper for URL functions
+require_once __DIR__ . '/../config/environment.php';
+
 class EmailTemplates {
     
     /**
@@ -228,11 +231,9 @@ HTML;
     }
     
     /**
-     * Get base URL
+     * Get base URL - Sử dụng hàm từ environment.php
      */
     private static function getBaseUrl() {
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        return $protocol . '://' . $host;
+        return getBaseUrl();
     }
 }

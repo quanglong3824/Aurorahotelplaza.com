@@ -4,6 +4,7 @@
  * Sử dụng thư viện PHPMailer từ config/PHPMailler
  */
 
+require_once __DIR__ . '/../config/environment.php';
 require_once __DIR__ . '/../config/email.php';
 require_once __DIR__ . '/../config/PHPMailler/PHPMailer.php';
 require_once __DIR__ . '/../config/PHPMailler/SMTP.php';
@@ -141,10 +142,8 @@ class Mailer {
         try {
             $subject = "Đặt lại mật khẩu - Aurora Hotel Plaza";
             
-            // Build reset link
-            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-            $resetLink = $protocol . "://" . $host . "/auth/reset-password.php?token=" . urlencode($resetToken);
+            // Build reset link - Sử dụng hàm url() từ environment.php
+            $resetLink = url("auth/reset-password.php?token=" . urlencode($resetToken));
             
             $body = EmailTemplates::getPasswordResetTemplate($userName, $resetLink);
             
