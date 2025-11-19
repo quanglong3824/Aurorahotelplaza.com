@@ -101,7 +101,7 @@ $category_names = [
                     <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent);">Dịch vụ tiện ích</h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <?php foreach ($additional_services as $service): ?>
-                            <a href="<?php echo $service['slug']; ?>.php" 
+                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" 
                                class="bg-white dark:bg-slate-800 rounded-xl p-8 text-center hover:shadow-xl transition-all border border-gray-100 dark:border-slate-700 hover:scale-105 block">
                                 <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-white text-4xl"><?php echo $service['icon']; ?></span>
@@ -136,7 +136,7 @@ $category_names = [
                                      alt="<?php echo htmlspecialchars($service['service_name']); ?>" 
                                      class="service-image">
                                 <div class="service-overlay">
-                                    <a href="<?php echo $service['slug']; ?>.php" class="service-link">
+                                    <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="service-link">
                                         <span class="material-symbols-outlined">arrow_forward</span>
                                     </a>
                                 </div>
@@ -190,7 +190,7 @@ $category_names = [
                                 </ul>
                             <?php endif; ?>
                             
-                            <a href="<?php echo $service['slug']; ?>.php" class="service-button">Xem chi tiết</a>
+                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="service-button">Xem chi tiết</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

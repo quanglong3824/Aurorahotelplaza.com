@@ -208,11 +208,29 @@ class Booking {
         }
         
         if (!empty($filters['search'])) {
-            $where_conditions[] = '(b.booking_code LIKE ? OR b.guest_name LIKE ? OR rt.type_name LIKE ?)';
+            // Smart search - support short code
+            require_once __DIR__ . '/../helpers/booking-helper.php';
+            $possible_codes = \BookingHelper::parseSmartCode($filters['search']);
+            
+            $search_conditions = [];
+            foreach ($possible_codes as $index => $code) {
+                if (strpos($code, '%') !== false) {
+                    $search_conditions[] = 'b.booking_code LIKE ?';
+                    $params[] = $code;
+                } else {
+                    $search_conditions[] = 'b.booking_code = ?';
+                    $params[] = $code;
+                }
+            }
+            
+            // Add regular text search
             $search_param = '%' . $filters['search'] . '%';
+            $search_conditions[] = 'b.guest_name LIKE ?';
             $params[] = $search_param;
+            $search_conditions[] = 'rt.type_name LIKE ?';
             $params[] = $search_param;
-            $params[] = $search_param;
+            
+            $where_conditions[] = '(' . implode(' OR ', $search_conditions) . ')';
         }
         
         $where_clause = 'WHERE ' . implode(' AND ', $where_conditions);

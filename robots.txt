@@ -1,0 +1,28 @@
+# Aurora Hotel Plaza - Robots.txt
+User-agent: *
+Allow: /
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /old-pages/
+Disallow: /services-pages/
+Disallow: /auth/
+Disallow: /api/
+
+# Disallow sensitive file types
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.json$
+Disallow: /*.md$
+
+# Allow specific paths
+Allow: /assets/
+Allow: /uploads/
+
+# Sitemap
+Sitemap: https://aurorahotelplaza.com/sitemap.xml
+
+# Crawl-delay (optional)
+# Crawl-delay: 10

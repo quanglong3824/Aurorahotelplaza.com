@@ -1,0 +1,82 @@
+# Aurora Hotel Plaza - Git Ignore
+
+# Sensitive files
+config/database.php
+auth/key-google-web-app.json
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+error_log
+debug.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.old
+backup_*
+
+# Node modules (if using)
+node_modules/
+package-lock.json
+
+# Composer (if using)
+vendor/
+composer.lock
+
+# Cache
+cache/
+*.cache
+
+# Build files
+dist/
+build/
+
+# Documentation builds
+docs/_build/
+
+# Test files
+phpunit.xml
+.phpunit.result.cache
+
+# Coverage
+coverage/
+.coverage
+
+# Database
+*.sql
+!docs/*.sql
+!docs/CREATE_*.sql
+!docs/SETUP_*.sql
+!docs/UPDATE_*.sql
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z

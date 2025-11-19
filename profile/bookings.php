@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once '../config/database.php';
 require_once '../models/Booking.php';
+require_once '../helpers/booking-helper.php';
 
 // Get filter parameters
 $filters = [
@@ -186,11 +187,22 @@ $payment_labels = [
             <form method="GET" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <!-- Search -->
-                    <div>
+                    <div class="relative group">
                         <label class="block text-sm font-medium mb-2">Tìm kiếm</label>
                         <input type="text" name="search" value="<?php echo htmlspecialchars($filters['search']); ?>"
-                               placeholder="Mã đặt phòng, tên khách..."
+                               placeholder="VD: 6C320B hoặc BK20251119..."
+                               title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
+                        
+                        <!-- Tooltip -->
+                        <div class="hidden group-hover:block absolute top-full left-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-3 z-50">
+                            <p class="font-semibold mb-2 text-xs">🔍 Tìm kiếm thông minh:</p>
+                            <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-400">
+                                <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">6C320B</span> - Chỉ 6 ký tự cuối</li>
+                                <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK20251119</span> - Tất cả đơn trong ngày</li>
+                                <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK202511196C320B</span> - Mã đầy đủ</li>
+                            </ul>
+                        </div>
                     </div>
                     
                     <!-- Status Filter -->
@@ -278,7 +290,10 @@ $payment_labels = [
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                         <div>
                                             <span class="font-medium">Mã đặt phòng:</span>
-                                            <span class="font-mono text-accent"><?php echo $booking['booking_code']; ?></span>
+                                            <span class="font-mono text-accent"><?php echo BookingHelper::formatBookingCode($booking['booking_code'], true); ?></span>
+                                            <div class="text-xs mt-1">
+                                                Mã ngắn: <span class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
+                                            </div>
                                         </div>
                                         <div>
                                             <span class="font-medium">Nhận phòng:</span>

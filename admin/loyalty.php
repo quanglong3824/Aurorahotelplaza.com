@@ -76,10 +76,16 @@ include 'includes/admin-header.php';
             <h3 class="font-bold text-lg">Hạng thành viên</h3>
             <p class="text-sm text-gray-500 mt-1">Cấu hình các hạng và quyền lợi</p>
         </div>
-        <button onclick="openTierModal()" class="btn btn-primary btn-sm">
-            <span class="material-symbols-outlined text-sm">add</span>
-            Thêm hạng
-        </button>
+        <div class="flex gap-2">
+            <a href="members.php" class="btn btn-secondary btn-sm">
+                <span class="material-symbols-outlined text-sm">people</span>
+                Xem thành viên
+            </a>
+            <button onclick="openTierModal()" class="btn btn-primary btn-sm">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Thêm hạng
+            </button>
+        </div>
     </div>
     <div class="card-body">
         <?php if (empty($tiers)): ?>

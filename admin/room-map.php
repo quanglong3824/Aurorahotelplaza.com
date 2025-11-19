@@ -88,6 +88,31 @@ $status_colors = [
 include 'includes/admin-header.php';
 ?>
 
+<!-- Quick Jump Box -->
+<div class="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+    <div class="flex items-center gap-4">
+        <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl">search</span>
+            </div>
+        </div>
+        <div class="flex-1">
+            <h3 class="text-xl font-bold mb-2">Tìm phòng nhanh</h3>
+            <div class="flex gap-2">
+                <input type="number" 
+                       id="quickJumpInput" 
+                       placeholder="Nhập số phòng (VD: 701, 712)..." 
+                       class="flex-1 px-4 py-3 rounded-lg text-gray-900 font-semibold text-lg"
+                       onkeypress="if(event.key==='Enter') quickJumpToRoom()">
+                <button onclick="quickJumpToRoom()" class="px-6 py-3 bg-white text-blue-600 rounded-lg font-bold hover:bg-blue-50 transition-colors">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+            <p class="text-sm text-blue-100 mt-2">💡 Nhấn Enter hoặc click → để xem chi tiết phòng</p>
+        </div>
+    </div>
+</div>
+
 <style>
 .room-card {
     position: relative;
@@ -633,26 +658,35 @@ async function changeRoomType(roomId) {
     }
 }
 
-// Đổi trạng thái phòng
+// Đổi trạng thái phòng - Rút gọn bằng số
 async function changeRoomStatus(roomId, currentStatus) {
     const statuses = {
+        '1': 'available',
+        '2': 'occupied', 
+        '3': 'maintenance',
+        '4': 'cleaning'
+    };
+    
+    const statusLabels = {
         'available': 'Trống',
         'occupied': 'Đang ở',
         'maintenance': 'Bảo trì',
         'cleaning': 'Dọn dẹp'
     };
     
-    const statusOptions = Object.keys(statuses)
-        .filter(s => s !== currentStatus)
-        .map((s, i) => `${i + 1}. ${statuses[s]} (${s})`)
-        .join('\n');
-    
-    const newStatus = prompt(
-        `Trạng thái hiện tại: ${statuses[currentStatus]}\n\nChọn trạng thái mới:\n${statusOptions}\n\nNhập tên trạng thái (available/occupied/maintenance/cleaning):`
+    const choice = prompt(
+        `Trạng thái hiện tại: ${statusLabels[currentStatus]}\n\n` +
+        `Chọn trạng thái mới (nhập số):\n` +
+        `1. Trống (available)\n` +
+        `2. Đang ở (occupied)\n` +
+        `3. Bảo trì (maintenance)\n` +
+        `4. Dọn dẹp (cleaning)`
     );
     
-    if (!newStatus || !statuses[newStatus]) {
-        if (newStatus) alert('Trạng thái không hợp lệ!');
+    const newStatus = statuses[choice];
+    
+    if (!newStatus) {
+        if (choice) alert('Lựa chọn không hợp lệ! Vui lòng nhập số 1-4');
         return;
     }
     
@@ -675,6 +709,74 @@ async function changeRoomStatus(roomId, currentStatus) {
         alert('Có lỗi xảy ra: ' + error.message);
     }
 }
+
+// Quick Jump to Room by Number
+async function quickJumpToRoom() {
+    const input = document.getElementById('quickJumpInput');
+    const roomNumber = input.value.trim();
+    
+    if (!roomNumber) {
+        input.focus();
+        return;
+    }
+    
+    try {
+        // Tìm phòng theo số
+        const response = await fetch(`api/get-room-by-number.php?room_number=${roomNumber}`);
+        const data = await response.json();
+        
+        if (data.success && data.room) {
+            // Mở modal chi tiết phòng
+            viewRoom(data.room.room_id);
+            
+            // Highlight phòng trên map
+            highlightRoom(roomNumber);
+            
+            // Clear input
+            input.value = '';
+        } else {
+            alert(`Không tìm thấy phòng số ${roomNumber}`);
+            input.select();
+        }
+    } catch (error) {
+        alert('Có lỗi xảy ra: ' + error.message);
+    }
+}
+
+// Highlight room on map
+function highlightRoom(roomNumber) {
+    // Remove previous highlights
+    document.querySelectorAll('.room-card').forEach(card => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+    });
+    
+    // Find and highlight the room
+    const roomCards = document.querySelectorAll('.room-card');
+    roomCards.forEach(card => {
+        const cardNumber = card.querySelector('.room-number')?.textContent;
+        if (cardNumber === roomNumber) {
+            card.style.transform = 'scale(1.1)';
+            card.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.8)';
+            card.style.zIndex = '10';
+            
+            // Scroll to room
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Remove highlight after 3 seconds
+            setTimeout(() => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+                card.style.zIndex = '';
+            }, 3000);
+        }
+    });
+}
+
+// Auto-focus on input when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('quickJumpInput')?.focus();
+});
 </script>
 
 <?php include 'includes/admin-footer.php'; ?>

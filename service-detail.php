@@ -48,59 +48,95 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title><?php echo htmlspecialchars($page_title); ?></title>
+<meta name="description" content="<?php echo htmlspecialchars(substr($service['description'], 0, 160)); ?>">
+<meta property="og:title" content="<?php echo htmlspecialchars($service['service_name']); ?> - Aurora Hotel Plaza">
+<meta property="og:description" content="<?php echo htmlspecialchars(substr($service['description'], 0, 160)); ?>">
+<?php if ($service['thumbnail']): ?>
+<meta property="og:image" content="<?php echo htmlspecialchars($service['thumbnail']); ?>">
+<?php endif; ?>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/service-detail-new.css">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include 'includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col pt-20">
-    <!-- Hero Section -->
-    <section class="py-16 bg-gray-50 dark:bg-slate-900">
-        <div class="container-custom">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Left: Content -->
-                <div>
-                    <h1 class="text-4xl lg:text-5xl font-bold mb-6"><?php echo htmlspecialchars($service['service_name']); ?></h1>
-                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-                        <?php echo htmlspecialchars($service['description']); ?>
-                    </p>
-                    
-                    <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-6">
-                        <div class="text-center">
-                            <div class="text-4xl font-bold mb-2" style="color: var(--accent);">
-                                <?php echo count($packages); ?>
-                            </div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                <?php echo count($packages) > 0 ? 'Gói dịch vụ' : 'Dịch vụ'; ?>
-                            </div>
+<main class="flex h-full grow flex-col">
+    <!-- Hero Section - Full Width -->
+    <section class="service-hero relative overflow-hidden">
+        <?php if ($service['thumbnail']): ?>
+            <div class="service-hero-bg" style="background-image: url('<?php echo htmlspecialchars($service['thumbnail']); ?>');"></div>
+        <?php else: ?>
+            <div class="service-hero-bg" style="background: linear-gradient(135deg, #1A237E 0%, #cc9a2c 100%);"></div>
+        <?php endif; ?>
+        <div class="service-hero-overlay"></div>
+        
+        <div class="service-hero-content">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="text-white space-y-6">
+                        <div class="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                            <span class="material-symbols-outlined text-2xl"><?php echo htmlspecialchars($service['icon']); ?></span>
+                            <span class="font-semibold">Dịch vụ cao cấp</span>
                         </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold mb-2" style="color: var(--accent);">300</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Người tối đa</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold mb-2" style="color: var(--accent);">24/7</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Hỗ trợ kỹ thuật</div>
+                        
+                        <h1 class="service-hero-title">
+                            <?php echo htmlspecialchars($service['service_name']); ?>
+                        </h1>
+                        
+                        <p class="service-hero-description">
+                            <?php echo htmlspecialchars($service['description']); ?>
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#packages" class="btn-primary">
+                                <span>Xem gói dịch vụ</span>
+                                <span class="material-symbols-outlined">arrow_downward</span>
+                            </a>
+                            <a href="contact.php" class="btn-secondary">
+                                <span class="material-symbols-outlined">phone</span>
+                                <span>Liên hệ tư vấn</span>
+                            </a>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Right: Image -->
-                <div class="relative">
-                    <?php if ($service['thumbnail']): ?>
-                        <img src="<?php echo htmlspecialchars($service['thumbnail']); ?>" 
-                             alt="<?php echo htmlspecialchars($service['service_name']); ?>"
-                             class="w-full h-96 object-cover rounded-2xl shadow-2xl">
-                    <?php else: ?>
-                        <div class="w-full h-96 bg-gradient-to-br from-accent to-accent/80 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-white text-9xl"><?php echo $service['icon']; ?></span>
+                    
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">inventory_2</span>
+                            </div>
+                            <div class="stat-number"><?php echo count($packages); ?>+</div>
+                            <div class="stat-label">Gói dịch vụ</div>
                         </div>
-                    <?php endif; ?>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">groups</span>
+                            </div>
+                            <div class="stat-number">300+</div>
+                            <div class="stat-label">Khách hàng</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <div class="stat-number">5.0</div>
+                            <div class="stat-label">Đánh giá</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">support_agent</span>
+                            </div>
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Hỗ trợ</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,125 +144,175 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
 
     <!-- Packages Section -->
     <?php if (!empty($packages)): ?>
-    <section class="py-16">
-        <div class="container-custom">
-            <h2 class="text-4xl font-bold mb-12 text-center">Gói dịch vụ hội nghị</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    <section id="packages" class="packages-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="section-header">
+                <span class="section-badge">Bảng giá</span>
+                <h2 class="section-title">Gói dịch vụ của chúng tôi</h2>
+                <p class="section-description">
+                    Lựa chọn gói dịch vụ phù hợp với nhu cầu và ngân sách của bạn
+                </p>
+            </div>
+            
+            <div class="packages-grid">
                 <?php foreach ($packages as $index => $pkg): 
                     $features = !empty($pkg['features']) ? explode(',', $pkg['features']) : [];
                 ?>
-                    <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all <?php echo $pkg['is_featured'] ? 'border-4 border-accent' : 'border border-gray-200 dark:border-slate-700'; ?>">
+                    <div class="package-card <?php echo $pkg['is_featured'] ? 'package-featured' : ''; ?>">
                         <?php if ($pkg['is_featured']): ?>
-                            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-accent text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                                Phổ biến
+                            <div class="package-badge">
+                                <span class="material-symbols-outlined">star</span>
+                                <span>Phổ biến nhất</span>
                             </div>
                         <?php endif; ?>
                         
-                        <h3 class="text-2xl font-bold mb-6 text-center mt-2"><?php echo htmlspecialchars($pkg['package_name']); ?></h3>
-                        
-                        <div class="text-center mb-8">
-                            <div class="text-5xl font-bold mb-2" style="color: var(--accent);">
-                                <?php echo number_format($pkg['price'], 0, ',', '.'); ?>đ
+                        <div class="package-header">
+                            <h3 class="package-name"><?php echo htmlspecialchars($pkg['package_name']); ?></h3>
+                            <div class="package-price">
+                                <span class="price-currency">đ</span>
+                                <span class="price-amount"><?php echo number_format($pkg['price'], 0, ',', '.'); ?></span>
                             </div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                <?php echo htmlspecialchars($pkg['price_unit']); ?>
-                            </div>
+                            <div class="package-unit"><?php echo htmlspecialchars($pkg['price_unit']); ?></div>
                         </div>
                         
                         <?php if (!empty($features)): ?>
-                            <ul class="space-y-4 mb-8">
+                            <ul class="package-features">
                                 <?php foreach ($features as $feature): ?>
-                                    <li class="flex items-start gap-3">
-                                        <span class="material-symbols-outlined text-green-500 text-xl flex-shrink-0 mt-0.5">check</span>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300"><?php echo htmlspecialchars(trim($feature)); ?></span>
+                                    <li class="feature-item">
+                                        <span class="feature-icon">
+                                            <span class="material-symbols-outlined">check_circle</span>
+                                        </span>
+                                        <span class="feature-text"><?php echo htmlspecialchars(trim($feature)); ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         <?php endif; ?>
                         
                         <a href="booking/index.php?service=<?php echo $service['slug']; ?>&package=<?php echo $pkg['slug']; ?>" 
-                           class="block w-full text-center px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-all">
-                            Liên hệ đặt phòng
+                           class="package-button <?php echo $pkg['is_featured'] ? 'package-button-featured' : ''; ?>">
+                            <span>Đặt dịch vụ ngay</span>
+                            <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 <?php endforeach; ?>
             </div>
-            
-            <!-- Amenities Section -->
-            <?php 
-            // Get all features from packages and create unique amenities
-            $all_features = [];
-            foreach ($packages as $pkg) {
-                if (!empty($pkg['features'])) {
-                    $features = explode(',', $pkg['features']);
-                    foreach ($features as $feature) {
-                        $feature = trim($feature);
-                        if (!in_array($feature, $all_features)) {
-                            $all_features[] = $feature;
-                        }
-                    }
-                }
-            }
-            
-            // Map features to icons
-            $feature_icons = [
-                'Màn hình LED' => 'tv',
-                'Màn hình LED lớn' => 'tv',
-                'Màn hình LED 3D' => 'tv',
-                'Âm thanh' => 'mic',
-                'Âm thanh cao cấp' => 'mic',
-                'Âm thanh chuyên nghiệp' => 'mic',
-                'Hệ thống âm thanh' => 'mic',
-                'WiFi' => 'wifi',
-                'WiFi tốc độ cao' => 'wifi',
-                'WiFi doanh nghiệp' => 'wifi',
-                'Coffee break' => 'coffee',
-                'Điều hòa' => 'ac_unit',
-                'Điều hòa trung tâm' => 'ac_unit',
-                'Hỗ trợ kỹ thuật' => 'support_agent'
-            ];
-            
-            if (!empty($all_features)):
-            ?>
-            <div class="mt-16">
-                <h2 class="text-4xl font-bold mb-12 text-center">Tiện nghi hội nghị</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <?php foreach (array_slice($all_features, 0, 6) as $feature): 
-                        $icon = 'check_circle';
-                        foreach ($feature_icons as $key => $value) {
-                            if (stripos($feature, $key) !== false) {
-                                $icon = $value;
-                                break;
-                            }
-                        }
-                    ?>
-                        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 text-center hover:shadow-lg transition-all border border-gray-100 dark:border-slate-700">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-3xl"><?php echo $icon; ?></span>
-                            </div>
-                            <h3 class="font-bold text-lg mb-2"><?php echo htmlspecialchars($feature); ?></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                <?php 
-                                if (stripos($feature, 'LED') !== false) echo 'Màn hình LED lớn, projector độ phân giải cao';
-                                elseif (stripos($feature, 'âm thanh') !== false) echo 'Hệ thống micro không dây, loa chất lượng cao';
-                                elseif (stripos($feature, 'WiFi') !== false) echo 'Internet tốc độ cao, ổn định cho mọi thiết bị';
-                                elseif (stripos($feature, 'Coffee') !== false) echo 'Dịch vụ trà, cà phê và đồ ăn nhẹ';
-                                elseif (stripos($feature, 'Điều hòa') !== false) echo 'Hệ thống điều hòa hiện đại, mát mẻ';
-                                else echo 'Đội ngũ kỹ thuật viên hỗ trợ suốt sự kiện';
-                                ?>
-                            </p>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-            <?php endif; ?>
         </div>
     </section>
     <?php endif; ?>
+    
+    <!-- Amenities Section -->
+    <?php 
+    // Get all features from packages and create unique amenities
+    $all_features = [];
+    foreach ($packages as $pkg) {
+        if (!empty($pkg['features'])) {
+            $features = explode(',', $pkg['features']);
+            foreach ($features as $feature) {
+                $feature = trim($feature);
+                if (!in_array($feature, $all_features)) {
+                    $all_features[] = $feature;
+                }
+            }
+        }
+    }
+    
+    // Map features to icons and descriptions
+    $feature_data = [
+        'Màn hình LED' => ['icon' => 'tv', 'desc' => 'Màn hình LED lớn, projector độ phân giải cao'],
+        'Màn hình LED lớn' => ['icon' => 'tv', 'desc' => 'Màn hình LED lớn, projector độ phân giải cao'],
+        'Màn hình LED 3D' => ['icon' => 'tv', 'desc' => 'Công nghệ màn hình LED 3D hiện đại'],
+        'Âm thanh' => ['icon' => 'mic', 'desc' => 'Hệ thống âm thanh chuyên nghiệp'],
+        'Âm thanh cao cấp' => ['icon' => 'mic', 'desc' => 'Hệ thống micro không dây, loa chất lượng cao'],
+        'Hệ thống âm thanh' => ['icon' => 'volume_up', 'desc' => 'Âm thanh vòm chất lượng cao'],
+        'WiFi' => ['icon' => 'wifi', 'desc' => 'Internet tốc độ cao, ổn định'],
+        'WiFi tốc độ cao' => ['icon' => 'wifi', 'desc' => 'Internet tốc độ cao cho mọi thiết bị'],
+        'WiFi doanh nghiệp' => ['icon' => 'wifi', 'desc' => 'Mạng doanh nghiệp bảo mật cao'],
+        'Coffee break' => ['icon' => 'coffee', 'desc' => 'Dịch vụ trà, cà phê và đồ ăn nhẹ'],
+        'Điều hòa' => ['icon' => 'ac_unit', 'desc' => 'Hệ thống điều hòa hiện đại'],
+        'Điều hòa trung tâm' => ['icon' => 'ac_unit', 'desc' => 'Điều hòa trung tâm mát mẻ'],
+        'Hỗ trợ kỹ thuật' => ['icon' => 'support_agent', 'desc' => 'Đội ngũ kỹ thuật hỗ trợ 24/7']
+    ];
+    
+    if (!empty($all_features)):
+    ?>
+    <section class="amenities-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="section-header">
+                <span class="section-badge">Tiện nghi</span>
+                <h2 class="section-title">Trang thiết bị hiện đại</h2>
+                <p class="section-description">
+                    Đầy đủ tiện nghi và trang thiết bị cao cấp cho sự kiện hoàn hảo
+                </p>
+            </div>
+            
+            <div class="amenities-grid">
+                <?php foreach (array_slice($all_features, 0, 6) as $feature): 
+                    $icon = 'check_circle';
+                    $desc = 'Tiện nghi cao cấp';
+                    
+                    foreach ($feature_data as $key => $data) {
+                        if (stripos($feature, $key) !== false) {
+                            $icon = $data['icon'];
+                            $desc = $data['desc'];
+                            break;
+                        }
+                    }
+                ?>
+                    <div class="amenity-card">
+                        <div class="amenity-icon">
+                            <span class="material-symbols-outlined"><?php echo $icon; ?></span>
+                        </div>
+                        <h3 class="amenity-title"><?php echo htmlspecialchars($feature); ?></h3>
+                        <p class="amenity-description"><?php echo $desc; ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center">
+            <div class="cta-icon">
+                <span class="material-symbols-outlined">phone_in_talk</span>
+            </div>
+            <h2 class="cta-title">Sẵn sàng đặt dịch vụ?</h2>
+            <p class="cta-description">
+                Liên hệ với chúng tôi ngay hôm nay để được tư vấn miễn phí và nhận ưu đãi đặc biệt
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="tel:+842513918888" class="cta-button cta-button-primary">
+                    <span class="material-symbols-outlined">phone</span>
+                    <span>(+84-251) 391.8888</span>
+                </a>
+                <a href="contact.php" class="cta-button cta-button-secondary">
+                    <span class="material-symbols-outlined">mail</span>
+                    <span>Gửi yêu cầu</span>
+                </a>
+            </div>
+        </div>
+    </section>
 </main>
 
 <?php include 'includes/footer.php'; ?>
 </div>
+
+<script>
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
 
 </body>
 </html>

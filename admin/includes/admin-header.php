@@ -176,6 +176,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 <span class="material-symbols-outlined">calendar_month</span>
                 <span>Lịch đặt phòng</span>
             </a>
+            <a href="refunds.php" class="sidebar-link <?php echo $current_page === 'refunds' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">payments</span>
+                <span>Hoàn tiền</span>
+            </a>
 
             <!-- Rooms -->
             <div class="mt-6 mb-2">
@@ -219,9 +223,13 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             <div class="mt-6 mb-2">
                 <p class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">Dịch vụ</p>
             </div>
+            <a href="service-packages.php" class="sidebar-link <?php echo $current_page === 'service-packages' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">inventory_2</span>
+                <span>Dịch vụ & Gói</span>
+            </a>
             <a href="services.php" class="sidebar-link <?php echo $current_page === 'services' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">room_service</span>
-                <span>Dịch vụ</span>
+                <span>Dịch vụ phụ</span>
             </a>
             <a href="service-bookings.php" class="sidebar-link <?php echo $current_page === 'service-bookings' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">list_alt</span>
@@ -267,17 +275,25 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 <span class="material-symbols-outlined">manage_accounts</span>
                 <span>Người dùng</span>
             </a>
+            <a href="permissions.php" class="sidebar-link <?php echo $current_page === 'permissions' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span>Phân quyền</span>
+            </a>
+            <a href="activity-logs.php" class="sidebar-link <?php echo $current_page === 'activity-logs' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">history</span>
+                <span>Nhật ký hoạt động</span>
+            </a>
             <a href="reports.php" class="sidebar-link <?php echo $current_page === 'reports' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">analytics</span>
                 <span>Báo cáo</span>
             </a>
+            <a href="notifications.php" class="sidebar-link <?php echo $current_page === 'notifications' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">notifications</span>
+                <span>Thông báo</span>
+            </a>
             <a href="settings.php" class="sidebar-link <?php echo $current_page === 'settings' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">settings</span>
                 <span>Cài đặt</span>
-            </a>
-            <a href="logs.php" class="sidebar-link <?php echo $current_page === 'logs' ? 'active' : ''; ?>">
-                <span class="material-symbols-outlined">history</span>
-                <span>Nhật ký</span>
             </a>
             <?php endif; ?>
 
@@ -305,10 +321,26 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             </div>
             <div class="flex items-center gap-3">
                 <!-- Notifications -->
-                <button class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
-                    <span class="material-symbols-outlined text-gray-600 dark:text-gray-300">notifications</span>
-                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
-                </button>
+                <div class="relative notification-dropdown">
+                    <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300">notifications</span>
+                        <span id="notificationBadge" class="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full ring-2 ring-white dark:ring-slate-900 flex items-center justify-center font-bold hidden">0</span>
+                    </button>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-200 dark:border-slate-700 z-50">
+                        <div class="p-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                            <h3 class="font-bold text-gray-900 dark:text-white">Thông báo</h3>
+                            <a href="notifications.php" class="text-sm text-accent hover:underline">Xem tất cả</a>
+                        </div>
+                        <div id="notificationList" class="max-h-96 overflow-y-auto">
+                            <div class="p-8 text-center text-gray-500">
+                                <span class="material-symbols-outlined text-4xl mb-2">notifications_off</span>
+                                <p>Đang tải...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Theme Toggle -->
                 <button id="themeToggle" class="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
@@ -327,3 +359,141 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
     <!-- Page Content -->
     <main class="p-8 min-h-screen">
+
+<script>
+// Notification System
+let notificationDropdownOpen = false;
+
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    notificationDropdownOpen = !notificationDropdownOpen;
+    
+    if (notificationDropdownOpen) {
+        dropdown.classList.remove('hidden');
+        loadNotifications();
+    } else {
+        dropdown.classList.add('hidden');
+    }
+}
+
+function loadNotifications() {
+    fetch('api/get-notifications.php?limit=5')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayNotifications(data.notifications);
+                updateNotificationBadge(data.unread_count);
+            }
+        })
+        .catch(error => console.error('Error loading notifications:', error));
+}
+
+function displayNotifications(notifications) {
+    const list = document.getElementById('notificationList');
+    
+    if (notifications.length === 0) {
+        list.innerHTML = `
+            <div class="p-8 text-center text-gray-500">
+                <span class="material-symbols-outlined text-4xl mb-2">notifications_off</span>
+                <p>Không có thông báo mới</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const typeColors = {
+        'booking': 'blue',
+        'payment': 'green',
+        'review': 'yellow',
+        'service': 'purple',
+        'system': 'gray',
+        'user': 'indigo'
+    };
+    
+    list.innerHTML = notifications.map(notif => {
+        const color = typeColors[notif.type] || 'gray';
+        const timeAgo = getTimeAgo(notif.created_at);
+        const unreadClass = notif.is_read == 0 ? 'bg-blue-50 dark:bg-blue-900/20' : '';
+        
+        return `
+            <div class="p-4 border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors ${unreadClass}">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-${color}-100 dark:bg-${color}-900 flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-${color}-600 text-xl">${notif.icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                            <h4 class="font-semibold text-sm text-gray-900 dark:text-white">
+                                ${notif.title}
+                                ${notif.is_read == 0 ? '<span class="inline-block w-2 h-2 bg-red-500 rounded-full ml-1"></span>' : ''}
+                            </h4>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">${notif.message}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-xs text-gray-500">${timeAgo}</span>
+                            ${notif.link ? `<a href="${notif.link}" class="text-xs text-accent hover:underline">Xem chi tiết</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateNotificationBadge(count) {
+    const badge = document.getElementById('notificationBadge');
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+function getTimeAgo(datetime) {
+    const time = new Date(datetime).getTime();
+    const now = new Date().getTime();
+    const diff = Math.floor((now - time) / 1000);
+    
+    if (diff < 60) return 'Vừa xong';
+    if (diff < 3600) return Math.floor(diff / 60) + ' phút trước';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' giờ trước';
+    if (diff < 604800) return Math.floor(diff / 86400) + ' ngày trước';
+    
+    return new Date(time).toLocaleDateString('vi-VN');
+}
+
+// Load notifications on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load initial count
+    fetch('api/get-notifications.php?limit=1&unread_only=true')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateNotificationBadge(data.unread_count);
+            }
+        });
+    
+    // Refresh every 30 seconds
+    setInterval(() => {
+        fetch('api/get-notifications.php?limit=1&unread_only=true')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateNotificationBadge(data.unread_count);
+                }
+            });
+    }, 30000);
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('notificationDropdown');
+    const button = event.target.closest('.notification-dropdown');
+    
+    if (!button && notificationDropdownOpen) {
+        dropdown.classList.add('hidden');
+        notificationDropdownOpen = false;
+    }
+});
+</script>

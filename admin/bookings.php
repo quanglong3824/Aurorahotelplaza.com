@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../helpers/booking-helper.php';
 
 $page_title = 'Quản lý đặt phòng';
 $page_subtitle = 'Danh sách và quản lý các đơn đặt phòng';
@@ -24,8 +25,27 @@ if ($status_filter !== 'all') {
 }
 
 if (!empty($search)) {
-    $where_clauses[] = "(b.booking_code LIKE :search OR b.guest_name LIKE :search OR b.guest_email LIKE :search OR b.guest_phone LIKE :search)";
-    $params[':search'] = "%$search%";
+    // Smart search - hỗ trợ mã ngắn
+    $possible_codes = BookingHelper::parseSmartCode($search);
+    
+    $search_conditions = [];
+    foreach ($possible_codes as $index => $code) {
+        if (strpos($code, '%') !== false) {
+            $search_conditions[] = "b.booking_code LIKE :code{$index}";
+            $params[":code{$index}"] = $code;
+        } else {
+            $search_conditions[] = "b.booking_code = :code{$index}";
+            $params[":code{$index}"] = $code;
+        }
+    }
+    
+    // Thêm tìm kiếm theo tên, email, SĐT
+    $search_conditions[] = "b.guest_name LIKE :search_text";
+    $search_conditions[] = "b.guest_email LIKE :search_text";
+    $search_conditions[] = "b.guest_phone LIKE :search_text";
+    $params[':search_text'] = "%$search%";
+    
+    $where_clauses[] = "(" . implode(' OR ', $search_conditions) . ")";
 }
 
 if (!empty($date_from)) {
@@ -99,10 +119,22 @@ include 'includes/admin-header.php';
 <div class="filter-bar">
     <form method="GET" class="flex flex-wrap items-center gap-4 w-full">
         <!-- Search -->
-        <div class="search-box flex-1 min-w-[200px]">
+        <div class="search-box flex-1 min-w-[200px] relative group">
             <span class="search-icon material-symbols-outlined">search</span>
             <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
-                   placeholder="Tìm mã đơn, tên, email, SĐT..." class="form-input">
+                   placeholder="VD: 6C320B hoặc BK20251119..." class="form-input"
+                   title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ">
+            
+            <!-- Tooltip -->
+            <div class="hidden group-hover:block absolute top-full left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-50">
+                <p class="font-semibold mb-2 text-sm">🔍 Tìm kiếm thông minh:</p>
+                <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-400">
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">6C320B</span> - Chỉ 6 ký tự cuối (tự động thêm ngày hôm nay)</li>
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK20251119</span> - Tìm tất cả đơn trong ngày</li>
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK202511196C320B</span> - Mã đầy đủ</li>
+                    <li>✅ Tên khách, email, số điện thoại</li>
+                </ul>
+            </div>
         </div>
         
         <!-- Status Filter -->
@@ -134,6 +166,12 @@ include 'includes/admin-header.php';
             Reset
         </a>
     </form>
+    
+    <!-- Create Booking Button -->
+    <a href="create-booking.php" class="btn btn-success">
+        <span class="material-symbols-outlined text-sm">add</span>
+        Tạo đặt phòng
+    </a>
 </div>
 
 <!-- Status Tabs -->
@@ -211,10 +249,22 @@ include 'includes/admin-header.php';
                     <?php foreach ($bookings as $booking): ?>
                         <tr>
                             <td class="font-medium">
-                                <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" 
-                                   class="text-accent hover:underline">
-                                    <?php echo htmlspecialchars($booking['booking_code']); ?>
-                                </a>
+                                <div class="flex items-center gap-2">
+                                    <div>
+                                        <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" 
+                                           class="text-accent hover:underline">
+                                            <?php echo BookingHelper::formatBookingCode($booking['booking_code'], true); ?>
+                                        </a>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            Mã ngắn: <span class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
+                                        </div>
+                                    </div>
+                                    <button onclick="quickView(<?php echo $booking['booking_id']; ?>)" 
+                                            class="p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                            title="Xem nhanh">
+                                        <span class="material-symbols-outlined text-sm text-blue-600">visibility</span>
+                                    </button>
+                                </div>
                             </td>
                             <td>
                                 <div>
@@ -361,7 +411,214 @@ include 'includes/admin-header.php';
     <?php endif; ?>
 </div>
 
+<!-- Quick View Modal -->
+<div id="quickViewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Xem nhanh</h3>
+            <button onclick="closeQuickView()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <!-- Content -->
+        <div id="quickViewContent" class="flex-1 overflow-y-auto p-6">
+            <div class="flex items-center justify-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+// Quick View Function
+function quickView(bookingId) {
+    const modal = document.getElementById('quickViewModal');
+    const content = document.getElementById('quickViewContent');
+    
+    modal.classList.remove('hidden');
+    content.innerHTML = '<div class="flex items-center justify-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div></div>';
+    
+    fetch(`api/quick-view-booking.php?booking_id=${bookingId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                renderQuickView(data);
+            } else {
+                content.innerHTML = `<div class="text-center text-red-600 py-12">${data.message}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            content.innerHTML = '<div class="text-center text-red-600 py-12">Có lỗi xảy ra</div>';
+        });
+}
+
+function closeQuickView() {
+    document.getElementById('quickViewModal').classList.add('hidden');
+}
+
+function renderQuickView(data) {
+    const { booking, customer, customer_stats, recent_bookings, payments } = data;
+    
+    const statusLabels = {
+        'pending': { label: 'Chờ xác nhận', class: 'bg-yellow-100 text-yellow-800' },
+        'confirmed': { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+        'checked_in': { label: 'Đã nhận phòng', class: 'bg-green-100 text-green-800' },
+        'checked_out': { label: 'Đã trả phòng', class: 'bg-gray-100 text-gray-800' },
+        'cancelled': { label: 'Đã hủy', class: 'bg-red-100 text-red-800' }
+    };
+    
+    const html = `
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Booking Info -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Booking Card -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="text-2xl font-bold" style="color: #d4af37;">${booking.booking_code}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mã ngắn: <span class="font-mono font-bold">${booking.short_code}</span></p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusLabels[booking.status].class}">
+                            ${statusLabels[booking.status].label}
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Loại phòng</p>
+                            <p class="font-semibold">${booking.type_name}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Phòng số</p>
+                            <p class="font-semibold">${booking.room_number || 'Chưa phân'}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Check-in</p>
+                            <p class="font-semibold">${new Date(booking.check_in_date).toLocaleDateString('vi-VN')}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Check-out</p>
+                            <p class="font-semibold">${new Date(booking.check_out_date).toLocaleDateString('vi-VN')}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Số đêm</p>
+                            <p class="font-semibold">${booking.total_nights} đêm</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Tổng tiền</p>
+                            <p class="font-bold text-lg" style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(booking.total_amount)}đ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-2">
+                        <a href="booking-detail.php?id=${booking.booking_id}" class="btn btn-primary btn-sm flex-1">
+                            <span class="material-symbols-outlined text-sm">open_in_new</span>
+                            Xem chi tiết
+                        </a>
+                        <a href="view-qrcode.php?id=${booking.booking_id}" class="btn btn-secondary btn-sm">
+                            <span class="material-symbols-outlined text-sm">qr_code</span>
+                            QR
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Recent Bookings -->
+                ${recent_bookings.length > 0 ? `
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h5 class="font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-accent">history</span>
+                        Lịch sử đặt phòng gần đây
+                    </h5>
+                    <div class="space-y-2">
+                        ${recent_bookings.map(rb => `
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-sm">${rb.booking_code}</p>
+                                    <p class="text-xs text-gray-500">${rb.type_name} • ${new Date(rb.check_in_date).toLocaleDateString('vi-VN')}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-sm">${new Intl.NumberFormat('vi-VN').format(rb.total_amount)}đ</p>
+                                    <span class="text-xs px-2 py-0.5 rounded ${statusLabels[rb.status].class}">${statusLabels[rb.status].label}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+            
+            <!-- Customer Info -->
+            <div class="space-y-6">
+                <!-- Customer Card -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            ${customer.full_name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-bold text-lg">${customer.full_name}</h5>
+                            ${customer.tier_name ? `
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold" style="background-color: ${customer.tier_color}20; color: ${customer.tier_color};">
+                                    <span class="material-symbols-outlined text-xs">workspace_premium</span>
+                                    ${customer.tier_name}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-gray-600">email</span>
+                            <span>${customer.email}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-gray-600">phone</span>
+                            <span>${customer.phone}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-gray-600">stars</span>
+                            <span>${new Intl.NumberFormat('vi-VN').format(customer.current_points)} điểm</span>
+                        </div>
+                    </div>
+                    
+                    <a href="customer-detail.php?id=${customer.user_id}" class="btn btn-secondary btn-sm w-full mt-4">
+                        <span class="material-symbols-outlined text-sm">person</span>
+                        Xem profile đầy đủ
+                    </a>
+                </div>
+                
+                <!-- Stats Card -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h5 class="font-bold mb-4">Thống kê khách hàng</h5>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Tổng đơn</span>
+                            <span class="font-bold">${customer_stats.total_bookings}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Hoàn thành</span>
+                            <span class="font-bold text-green-600">${customer_stats.completed_bookings}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Đã hủy</span>
+                            <span class="font-bold text-red-600">${customer_stats.cancelled_bookings}</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Tổng chi tiêu</span>
+                            <span class="font-bold" style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(customer_stats.total_spent)}đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('quickViewContent').innerHTML = html;
+}
+
 function confirmBooking(id) {
     if (confirm('Xác nhận đơn đặt phòng này?')) {
         updateBookingStatus(id, 'confirmed');

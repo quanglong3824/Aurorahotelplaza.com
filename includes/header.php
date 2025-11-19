@@ -56,10 +56,10 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>wedding.php" class="submenu-item">Tổ chức tiệc cưới</a>
-                    <a href="<?php echo $base_path; ?>conference.php" class="submenu-item">Tổ chức hội nghị</a>
-                    <a href="<?php echo $base_path; ?>restaurant.php" class="submenu-item">Nhà hàng</a>
-                    <a href="<?php echo $base_path; ?>office.php" class="submenu-item">Văn phòng cho thuê</a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service" class="submenu-item">Tổ chức tiệc cưới</a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service" class="submenu-item">Tổ chức hội nghị</a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant" class="submenu-item">Nhà hàng</a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="submenu-item">Văn phòng cho thuê</a>
                 </div>
             </div>
 

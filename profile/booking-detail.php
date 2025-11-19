@@ -2,25 +2,42 @@
 session_start();
 require_once '../config/database.php';
 require_once '../models/Booking.php';
+require_once '../helpers/refund-policy.php';
 
 $booking_code = $_GET['code'] ?? '';
+$booking_id = $_GET['id'] ?? 0;
 $error = '';
 $booking = null;
 $booking_history = [];
 $can_cancel = false;
+$refund_info = null;
 
-if (!$booking_code) {
+if (!$booking_code && !$booking_id) {
     $error = 'Mã đặt phòng không hợp lệ';
 } else {
     try {
         $db = getDB();
         $bookingModel = new Booking($db);
         
-        // Get booking details
-        $booking = $bookingModel->getByCode($booking_code);
+        // Get booking details by code or id
+        if ($booking_id) {
+            $stmt = $db->prepare("
+                SELECT b.*, rt.type_name, rt.category, r.room_number,
+                       u.full_name as guest_name, u.email, u.phone
+                FROM bookings b
+                JOIN room_types rt ON b.room_type_id = rt.room_type_id
+                LEFT JOIN rooms r ON b.room_id = r.room_id
+                LEFT JOIN users u ON b.user_id = u.user_id
+                WHERE b.booking_id = :booking_id
+            ");
+            $stmt->execute([':booking_id' => $booking_id]);
+            $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            $booking = $bookingModel->getByCode($booking_code);
+        }
         
         if (!$booking) {
-            $error = 'Không tìm thấy đặt phòng với mã này';
+            $error = 'Không tìm thấy đặt phòng';
         } elseif (isset($_SESSION['user_id']) && $booking['user_id'] != $_SESSION['user_id']) {
             // If user is logged in but not the owner, don't show
             $error = 'Bạn không có quyền xem đặt phòng này';
@@ -28,9 +45,12 @@ if (!$booking_code) {
             // Get booking history
             $booking_history = $bookingModel->getHistory($booking['booking_id']);
             
-            // Check if booking can be cancelled
+            // Check if booking can be cancelled and calculate refund
             if (isset($_SESSION['user_id'])) {
                 $can_cancel = $bookingModel->canBeCancelled($booking['booking_id']);
+                if ($can_cancel) {
+                    $refund_info = calculateRefundAmount($booking);
+                }
             }
         }
         
@@ -375,20 +395,57 @@ $payment_labels = [
                             Chia sẻ
                         </button>
                         
-                        <!-- QR Code Button (Inactive) -->
-                        <button disabled 
-                                class="w-full px-4 py-3 border border-gray-300 text-gray-400 rounded-lg cursor-not-allowed opacity-50">
+                        <!-- QR Code Button -->
+                        <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>" 
+                           class="w-full px-4 py-3 border-2 border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-colors flex items-center justify-center">
                             <span class="material-symbols-outlined mr-2">qr_code</span>
-                            Tạo QR Code (Sắp có)
-                        </button>
+                            Xem QR Code
+                        </a>
                         
-                        <?php if ($can_cancel): ?>
-                        <button onclick="cancelBooking()" 
-                                class="w-full px-4 py-3 border-2 border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
-                            <span class="material-symbols-outlined mr-2">cancel</span>
-                            Hủy đặt phòng
-                        </button>
-                        <?php elseif ($booking['status'] === 'confirmed'): ?>
+                        <!-- Cancellation Policy & Refund Info -->
+                        <?php if ($can_cancel && $refund_info): ?>
+                        <div class="space-y-3">
+                            <!-- Refund Information -->
+                            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                <h4 class="font-bold text-sm mb-2 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">info</span>
+                                    Thông tin hoàn tiền
+                                </h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span>Thời gian còn lại:</span>
+                                        <span class="font-bold"><?php echo round($refund_info['days_until_checkin'], 1); ?> ngày</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Tổng tiền đặt phòng:</span>
+                                        <span class="font-bold"><?php echo number_format($refund_info['total_amount']); ?> VNĐ</span>
+                                    </div>
+                                    <div class="flex justify-between text-green-600 dark:text-green-400">
+                                        <span>Số tiền hoàn lại:</span>
+                                        <span class="font-bold text-lg"><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</span>
+                                    </div>
+                                    <?php if ($refund_info['processing_fee'] > 0): ?>
+                                    <div class="flex justify-between text-xs text-gray-600">
+                                        <span>Phí xử lý (5%):</span>
+                                        <span>-<?php echo number_format($refund_info['processing_fee']); ?> VNĐ</span>
+                                    </div>
+                                    <?php endif; ?>
+                                    <div class="pt-2 border-t border-blue-200 dark:border-blue-800">
+                                        <p class="text-xs text-blue-800 dark:text-blue-200">
+                                            <?php echo $refund_info['policy_message']; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cancel Button -->
+                            <button onclick="showCancelModal()" 
+                                    class="w-full px-4 py-3 border-2 border-red-500 text-red-600 rounded-lg hover:bg-red-50 transition-colors font-semibold">
+                                <span class="material-symbols-outlined mr-2">cancel</span>
+                                Hủy đặt phòng
+                            </button>
+                        </div>
+                        <?php elseif ($booking['status'] === 'confirmed' || $booking['status'] === 'pending'): ?>
                         <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-sm text-yellow-800 dark:text-yellow-200">
                             <span class="material-symbols-outlined text-sm mr-1">info</span>
                             Không thể hủy trong vòng 24 giờ trước check-in
@@ -465,47 +522,140 @@ function shareBooking() {
     }
 }
 
-function cancelBooking() {
-    const reason = prompt('Vui lòng nhập lý do hủy đặt phòng (không bắt buộc):');
+// Cancel Modal
+function showCancelModal() {
+    const modal = document.createElement('div');
+    modal.id = 'cancelModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-red-600">cancel</span>
+                        Xác nhận hủy đặt phòng
+                    </h3>
+                    <button onclick="closeCancelModal()" class="text-gray-500 hover:text-gray-700">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <!-- Refund Summary -->
+                <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <h4 class="font-bold mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">payments</span>
+                        Thông tin hoàn tiền
+                    </h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Tổng tiền đặt phòng:</span>
+                            <span class="font-bold"><?php echo number_format($refund_info['total_amount']); ?> VNĐ</span>
+                        </div>
+                        <?php if ($refund_info['processing_fee'] > 0): ?>
+                        <div class="flex justify-between text-red-600">
+                            <span>Phí xử lý (5%):</span>
+                            <span>-<?php echo number_format($refund_info['processing_fee']); ?> VNĐ</span>
+                        </div>
+                        <?php endif; ?>
+                        <div class="flex justify-between text-lg font-bold text-green-600 pt-2 border-t border-blue-300">
+                            <span>Số tiền hoàn lại:</span>
+                            <span><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</span>
+                        </div>
+                        <div class="pt-2 text-xs text-blue-800 dark:text-blue-200">
+                            <p><strong>Chính sách:</strong> <?php echo $refund_info['policy_message']; ?></p>
+                            <p class="mt-1"><strong>Thời gian hoàn tiền:</strong> 5-7 ngày làm việc</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cancellation Policy -->
+                <div class="mb-6">
+                    <?php echo getRefundPolicyText(); ?>
+                </div>
+                
+                <!-- Reason Input -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">Lý do hủy phòng (không bắt buộc)</label>
+                    <textarea id="cancelReason" rows="3" 
+                              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent"
+                              placeholder="VD: Thay đổi kế hoạch, có việc đột xuất..."></textarea>
+                </div>
+                
+                <!-- Confirmation Checkbox -->
+                <div class="mb-6">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="confirmCancel" class="mt-1">
+                        <span class="text-sm">
+                            Tôi đã đọc và đồng ý với chính sách hủy phòng. Tôi hiểu rằng số tiền hoàn lại sẽ là 
+                            <strong class="text-green-600"><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</strong>
+                            và sẽ được xử lý trong vòng 5-7 ngày làm việc.
+                        </span>
+                    </label>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <button onclick="closeCancelModal()" 
+                            class="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        Quay lại
+                    </button>
+                    <button onclick="confirmCancellation()" 
+                            class="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold">
+                        Xác nhận hủy phòng
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function closeCancelModal() {
+    const modal = document.getElementById('cancelModal');
+    if (modal) modal.remove();
+}
+
+function confirmCancellation() {
+    const checkbox = document.getElementById('confirmCancel');
+    const reason = document.getElementById('cancelReason').value;
     
-    if (reason !== null) { // User didn't click Cancel
-        if (confirm('Bạn có chắc chắn muốn hủy đặt phòng <?php echo $booking_code; ?>?\n\nLưu ý: Bạn chỉ có thể hủy đặt phòng trước 24 giờ check-in.')) {
-            // Show loading
-            const btn = event.target;
-            const originalHTML = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
-            
-            // Send cancel request
-            fetch('api/cancel-booking.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    booking_id: <?php echo $booking['booking_id']; ?>,
-                    reason: reason
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Đã hủy đặt phòng thành công!');
-                    location.reload();
-                } else {
-                    alert('Lỗi: ' + data.message);
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi hủy đặt phòng. Vui lòng thử lại.');
-                btn.disabled = false;
-                btn.innerHTML = originalHTML;
-            });
-        }
+    if (!checkbox.checked) {
+        alert('Vui lòng xác nhận bạn đã đọc và đồng ý với chính sách hủy phòng');
+        return;
     }
+    
+    // Disable button
+    const btn = event.target;
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
+    
+    // Send cancel request
+    const formData = new FormData();
+    formData.append('booking_id', <?php echo $booking['booking_id']; ?>);
+    formData.append('reason', reason);
+    
+    fetch('api/cancel-booking-with-refund.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ ' + data.message);
+            location.reload();
+        } else {
+            alert('❌ Lỗi: ' + data.message);
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi hủy đặt phòng. Vui lòng thử lại.');
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+    });
 }
 
 // Print styles

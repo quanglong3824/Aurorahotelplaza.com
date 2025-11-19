@@ -14,10 +14,10 @@ try {
     
     // Get seasonal pricing
     $stmt = $db->query("
-        SELECT sp.*, rt.type_name
-        FROM seasonal_pricing sp
-        LEFT JOIN room_types rt ON sp.room_type_id = rt.room_type_id
-        ORDER BY sp.start_date DESC
+        SELECT rp.*, rt.type_name, rt.base_price
+        FROM room_pricing rp
+        LEFT JOIN room_types rt ON rp.room_type_id = rt.room_type_id
+        ORDER BY rp.start_date DESC
     ");
     $seasonal_pricing = $stmt->fetchAll(PDO::FETCH_ASSOC);
     

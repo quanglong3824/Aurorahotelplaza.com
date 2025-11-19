@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../helpers/security.php';
 
 $booking_id = $_GET['id'] ?? null;
 
@@ -119,9 +120,9 @@ include 'includes/admin-header.php';
             In
         </button>
         
-        <a href="../profile/api/download-qrcode.php?booking_id=<?php echo $booking_id; ?>" class="btn btn-secondary">
+        <a href="view-qrcode.php?id=<?php echo $booking_id; ?>" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">qr_code</span>
-            Tải QR
+            Xem QR
         </a>
     </div>
 </div>
@@ -337,6 +338,19 @@ include 'includes/admin-header.php';
                     </div>
                 </div>
                 
+                <!-- Confirm Payment Button -->
+                <?php if ($booking['payment_status'] === 'unpaid' && !in_array($booking['status'], ['cancelled', 'checked_out'])): ?>
+                    <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark">
+                        <button onclick="showConfirmPaymentModal()" class="btn btn-success w-full">
+                            <span class="material-symbols-outlined text-sm">payments</span>
+                            Xác nhận thanh toán & Cộng điểm thưởng
+                        </button>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-2 text-center">
+                            Khách hàng sẽ nhận được <strong><?php echo number_format(floor($booking['total_amount'] / 100)); ?> điểm</strong> thưởng
+                        </p>
+                    </div>
+                <?php endif; ?>
+                
                 <?php if (!empty($payments)): ?>
                     <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark">
                         <p class="font-medium mb-3">Lịch sử thanh toán</p>
@@ -357,6 +371,11 @@ include 'includes/admin-header.php';
                                             ?>
                                             - <?php echo date('d/m/Y H:i', strtotime($payment['created_at'])); ?>
                                         </p>
+                                        <?php if ($payment['notes']): ?>
+                                            <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+                                                Ghi chú: <?php echo htmlspecialchars($payment['notes']); ?>
+                                            </p>
+                                        <?php endif; ?>
                                     </div>
                                     <span class="badge <?php echo $payment['status'] === 'completed' ? 'badge-success' : 'badge-warning'; ?>">
                                         <?php echo $payment['status'] === 'completed' ? 'Thành công' : ucfirst($payment['status']); ?>
@@ -499,9 +518,324 @@ function updateBookingStatus(id, status, reason = '') {
 }
 
 function assignRoom(bookingId) {
-    // TODO: Implement room assignment modal
-    alert('Chức năng phân phòng đang được phát triển');
+    // Load available rooms
+    fetch(`api/get-available-rooms.php?booking_id=${bookingId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showAssignRoomModal(bookingId, data.booking, data.rooms);
+            } else {
+                showToast(data.message || 'Không thể tải danh sách phòng', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Có lỗi xảy ra', 'error');
+        });
+}
+
+function showAssignRoomModal(bookingId, booking, rooms) {
+    const modal = document.getElementById('assignRoomModal');
+    
+    // Update booking info
+    document.getElementById('assign_booking_code').textContent = booking.booking_code;
+    document.getElementById('assign_room_type').textContent = booking.type_name;
+    document.getElementById('assign_check_in').textContent = new Date(booking.check_in_date).toLocaleDateString('vi-VN');
+    document.getElementById('assign_check_out').textContent = new Date(booking.check_out_date).toLocaleDateString('vi-VN');
+    
+    // Populate rooms list
+    const roomsList = document.getElementById('rooms_list');
+    roomsList.innerHTML = '';
+    
+    if (rooms.length === 0) {
+        roomsList.innerHTML = '<p class="text-center text-gray-500 py-4">Không có phòng khả dụng</p>';
+    } else {
+        rooms.forEach(room => {
+            const isAvailable = room.is_available == 1;
+            const roomCard = document.createElement('div');
+            roomCard.className = `p-4 border rounded-lg cursor-pointer transition-all ${
+                isAvailable 
+                    ? 'border-green-300 hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20' 
+                    : 'border-gray-300 bg-gray-100 dark:bg-gray-700 opacity-60 cursor-not-allowed'
+            }`;
+            
+            if (isAvailable) {
+                roomCard.onclick = () => selectRoom(bookingId, room.room_id, room.room_number);
+            }
+            
+            roomCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center ${
+                            isAvailable ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-500'
+                        }">
+                            <span class="material-symbols-outlined">meeting_room</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg">Phòng ${room.room_number}</p>
+                            <p class="text-sm text-gray-600">
+                                ${room.floor ? `Tầng ${room.floor}` : ''}
+                                ${room.building ? ` - ${room.building}` : ''}
+                            </p>
+                            <p class="text-xs ${isAvailable ? 'text-green-600' : 'text-red-600'}">
+                                ${isAvailable ? '✓ Khả dụng' : '✗ Đã được đặt'}
+                            </p>
+                        </div>
+                    </div>
+                    ${isAvailable ? `
+                        <span class="material-symbols-outlined text-green-600">arrow_forward</span>
+                    ` : ''}
+                </div>
+            `;
+            
+            roomsList.appendChild(roomCard);
+        });
+    }
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeAssignRoomModal() {
+    const modal = document.getElementById('assignRoomModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function selectRoom(bookingId, roomId, roomNumber) {
+    if (!confirm(`Xác nhận phân phòng ${roomNumber} cho đơn này?`)) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('booking_id', bookingId);
+    formData.append('room_id', roomId);
+    
+    fetch('api/assign-room.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            closeAssignRoomModal();
+            showToast('Phân phòng thành công!', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Có lỗi xảy ra', 'error');
+    });
+}
+
+// Confirm Payment Modal
+function showConfirmPaymentModal() {
+    const modal = document.getElementById('confirmPaymentModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeConfirmPaymentModal() {
+    const modal = document.getElementById('confirmPaymentModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function confirmPayment() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const notes = document.getElementById('paymentNotes').value;
+    const bookingId = <?php echo $booking_id; ?>;
+    
+    if (!paymentMethod) {
+        showToast('Vui lòng chọn phương thức thanh toán', 'error');
+        return;
+    }
+    
+    // Disable button to prevent double submission
+    const submitBtn = document.getElementById('confirmPaymentBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Đang xử lý...';
+    
+    const formData = new FormData();
+    formData.append('booking_id', bookingId);
+    formData.append('payment_method', paymentMethod);
+    formData.append('notes', notes);
+    formData.append('csrf_token', '<?php echo Security::generateCSRFToken(); ?>');
+    
+    fetch('api/confirm-payment.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeConfirmPaymentModal();
+            
+            // Show success message with points info
+            const message = `Xác nhận thanh toán thành công!\n\n` +
+                          `Khách hàng: ${data.data.customer_name}\n` +
+                          `Số tiền: ${new Intl.NumberFormat('vi-VN').format(data.data.amount)} VND\n` +
+                          `Điểm thưởng: +${new Intl.NumberFormat('vi-VN').format(data.data.points_earned)} điểm\n` +
+                          (data.data.tier_upgraded ? `\n🎉 Đã lên hạng: ${data.data.new_tier}` : '');
+            
+            alert(message);
+            
+            // Reload page to show updated info
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận thanh toán';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Có lỗi xảy ra khi xử lý thanh toán', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận thanh toán';
+    });
 }
 </script>
+
+<!-- Assign Room Modal -->
+<div id="assignRoomModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <span class="material-symbols-outlined text-2xl align-middle mr-2">meeting_room</span>
+                    Phân phòng
+                </h3>
+                <button onclick="closeAssignRoomModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6 space-y-4 overflow-y-auto flex-1">
+            <!-- Booking Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Thông tin đơn hàng:</p>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Mã đơn:</span>
+                        <span class="font-semibold ml-2" id="assign_booking_code"></span>
+                    </div>
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Loại phòng:</span>
+                        <span class="font-semibold ml-2" id="assign_room_type"></span>
+                    </div>
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Check-in:</span>
+                        <span class="font-semibold ml-2" id="assign_check_in"></span>
+                    </div>
+                    <div>
+                        <span class="text-gray-600 dark:text-gray-400">Check-out:</span>
+                        <span class="font-semibold ml-2" id="assign_check_out"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rooms List -->
+            <div>
+                <p class="font-semibold mb-3 text-gray-900 dark:text-white">Chọn phòng:</p>
+                <div id="rooms_list" class="space-y-2">
+                    <!-- Rooms will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+            <button onclick="closeAssignRoomModal()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium">
+                Đóng
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Payment Modal -->
+<div id="confirmPaymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <span class="material-symbols-outlined text-2xl align-middle mr-2">payments</span>
+                    Xác nhận thanh toán
+                </h3>
+                <button onclick="closeConfirmPaymentModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6 space-y-4">
+            <!-- Booking Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Thông tin đơn hàng:</p>
+                <p class="font-semibold text-gray-900 dark:text-white">
+                    <?php echo htmlspecialchars($booking['booking_code']); ?>
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Khách hàng: <?php echo htmlspecialchars($booking['guest_name']); ?>
+                </p>
+                <p class="text-lg font-bold text-accent mt-2">
+                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>đ
+                </p>
+            </div>
+            
+            <!-- Points Info -->
+            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">stars</span>
+                    <p class="font-semibold text-gray-900 dark:text-white">Điểm thưởng</p>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Khách hàng sẽ nhận được:
+                </p>
+                <p class="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
+                    +<?php echo number_format(floor($booking['total_amount'] / 100)); ?> điểm
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    (1% giá trị đơn hàng<?php echo $booking['status'] === 'confirmed' ? ' + 10% bonus' : ''; ?>)
+                </p>
+            </div>
+            
+            <!-- Payment Method -->
+            <div>
+                <label for="paymentMethod" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Phương thức thanh toán <span class="text-red-500">*</span>
+                </label>
+                <select id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    <option value="">-- Chọn phương thức --</option>
+                    <option value="cash">Tiền mặt</option>
+                    <option value="bank_transfer">Chuyển khoản ngân hàng</option>
+                    <option value="credit_card">Thẻ tín dụng</option>
+                    <option value="vnpay">VNPay</option>
+                </select>
+            </div>
+            
+            <!-- Notes -->
+            <div>
+                <label for="paymentNotes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Ghi chú (tùy chọn)
+                </label>
+                <textarea id="paymentNotes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white" placeholder="Nhập ghi chú về thanh toán..."></textarea>
+            </div>
+        </div>
+        
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+            <button onclick="closeConfirmPaymentModal()" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium">
+                Hủy
+            </button>
+            <button id="confirmPaymentBtn" onclick="confirmPayment()" class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                Xác nhận thanh toán
+            </button>
+        </div>
+    </div>
+</div>
 
 <?php include 'includes/admin-footer.php'; ?>
