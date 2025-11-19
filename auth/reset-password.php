@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/environment.php';
 
 $token = $_GET['token'] ?? '';
 $success = '';
@@ -86,11 +87,11 @@ if (empty($token)) {
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Đặt lại mật khẩu - Aurora Hotel Plaza</title>
-<script src="../assets/js/tailwindcss-cdn.js"></script>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
-<script src="../assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="stylesheet" href="./assets/css/auth.css">
+<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
+<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('auth/assets/css/auth.css'); ?>?v=<?php echo time(); ?>">
 </head>
 <body class="auth-reset">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -117,7 +118,7 @@ if (empty($token)) {
             <div class="alert alert-success">
                 ✓ <?php echo htmlspecialchars($success); ?>
             </div>
-            <a href="./login.php" class="btn-primary w-full block text-center">
+            <a href="<?php echo url('auth/login.php'); ?>" class="btn-primary w-full block text-center">
                 Đăng nhập ngay
             </a>
             <?php elseif ($error): ?>
@@ -125,7 +126,7 @@ if (empty($token)) {
                 ✕ <?php echo htmlspecialchars($error); ?>
             </div>
             <?php if (!$valid_token): ?>
-            <a href="./forgot-password.php" class="btn-primary w-full block text-center">
+            <a href="<?php echo url('auth/forgot-password.php'); ?>" class="btn-primary w-full block text-center">
                 Yêu cầu link mới
             </a>
             <?php endif; ?>
@@ -160,7 +161,7 @@ if (empty($token)) {
 
             <!-- Back to Login -->
             <div class="mt-6 text-center">
-                <a href="./login.php" class="text-sm text-accent hover:underline flex items-center justify-center gap-1">
+                <a href="<?php echo url('auth/login.php'); ?>" class="text-sm text-accent hover:underline flex items-center justify-center gap-1">
                     <span class="material-symbols-outlined text-sm">arrow_back</span>
                     Quay lại đăng nhập
                 </a>
@@ -173,7 +174,7 @@ if (empty($token)) {
 
 </div>
 
-<script src="../assets/js/main.js"></script>
-<script src="./assets/js/auth.js"></script>
+<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
+<script src="<?php echo asset('auth/assets/js/auth.js'); ?>?v=<?php echo time(); ?>"></script>
 </body>
 </html>

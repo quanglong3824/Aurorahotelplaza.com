@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/environment.php';
 
 $success = '';
 $error = '';
@@ -79,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Quên mật khẩu - Aurora Hotel Plaza</title>
-<script src="../assets/js/tailwindcss-cdn.js"></script>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
+<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
 
-<script src="../assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="stylesheet" href="./assets/css/auth.css">
+<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('auth/assets/css/auth.css'); ?>?v=<?php echo time(); ?>">
 </head>
 <body class="auth-forgot">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -156,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Success Actions -->
             <div class="text-center space-y-4">
                 <div class="success-actions">
-                    <a href="./login.php" class="btn-primary">
+                    <a href="<?php echo url('auth/login.php'); ?>" class="btn-primary">
                         <span class="btn-text">Đăng nhập</span>
                         <span class="btn-icon">
                             <span class="material-symbols-outlined">login</span>
@@ -168,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Back to Login -->
             <div class="auth-footer">
-                <a href="./login.php" class="back-link">
+                <a href="<?php echo url('auth/login.php'); ?>" class="back-link">
                     <span class="material-symbols-outlined">arrow_back</span>
                     Quay lại đăng nhập
                 </a>
@@ -181,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </div>
 
-<script src="../assets/js/main.js"></script>
-<script src="./assets/js/auth.js"></script>
+<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
+<script src="<?php echo asset('auth/assets/js/auth.js'); ?>?v=<?php echo time(); ?>"></script>
 </body>
 </html>

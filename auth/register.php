@@ -3,10 +3,11 @@
 ob_start();
 
 session_start();
+require_once '../config/environment.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
-    header('Location: ../index.php');
+    header('Location: ' . url('index.php'));
     exit;
 }
 
@@ -97,13 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Đăng ký - Aurora Hotel Plaza</title>
-<script src="../assets/js/tailwindcss-cdn.js"></script>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
+<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
 
-<script src="../assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="stylesheet" href="./assets/css/auth.css">
-<link rel="stylesheet" href="./assets/css/success-modal.css">
+<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('auth/assets/css/auth.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('auth/assets/css/success-modal.css'); ?>?v=<?php echo time(); ?>">
 </head>
 <body class="auth-register">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -135,10 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h2>Đăng ký thành công!</h2>
                     <p>Tài khoản của bạn đã được tạo thành công. Vui lòng đăng nhập để tiếp tục.</p>
                     <div class="modal-buttons">
-                        <button class="modal-btn modal-btn-primary" onclick="window.location.href='./login.php'">
+                        <button class="modal-btn modal-btn-primary" onclick="window.location.href='<?php echo url('auth/login.php'); ?>'">
                             Đăng nhập ngay
                         </button>
-                        <button class="modal-btn modal-btn-secondary" onclick="window.location.href='../index.php'">
+                        <button class="modal-btn modal-btn-secondary" onclick="window.location.href='<?php echo url('index.php'); ?>'">
                             Quay lại trang chủ
                         </button>
                     </div>
@@ -294,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Login Link -->
             <div class="auth-footer">
                 <p>Đã có tài khoản? 
-                    <a href="./login.php" class="auth-link">
+                    <a href="<?php echo url('auth/login.php'); ?>" class="auth-link">
                         Đăng nhập
                     </a>
                 </p>
@@ -307,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </div>
 
-<script src="../assets/js/main.js"></script>
-<script src="./assets/js/auth.js"></script>
+<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
+<script src="<?php echo asset('auth/assets/js/auth.js'); ?>?v=<?php echo time(); ?>"></script>
 </body>
 </html>
