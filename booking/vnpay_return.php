@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/environment.php';
 require_once '../config/database.php';
 require_once '../payment/config.php';
 require_once '../helpers/logger.php';
@@ -177,11 +178,10 @@ try {
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title><?php echo $payment_success ? 'Thanh toán thành công' : 'Thanh toán thất bại'; ?> - Aurora Hotel Plaza</title>
 
-<script src="../assets/js/tailwindcss-cdn.js"></script>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
-<script src="../assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="../assets/css/style.css">
+<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
+<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -223,10 +223,10 @@ try {
             </div>
             
             <div class="flex gap-4 justify-center">
-                <a href="./confirmation.php?booking_code=<?php echo $vnp_TxnRef; ?>" class="btn-primary">
+                <a href="<?php echo url('booking/confirmation.php?booking_code=' . $vnp_TxnRef); ?>" class="btn-primary">
                     Xem chi tiết đặt phòng
                 </a>
-                <a href="../index.php" class="btn-secondary">
+                <a href="<?php echo url('index.php'); ?>" class="btn-secondary">
                     Về trang chủ
                 </a>
             </div>
@@ -241,10 +241,10 @@ try {
             </div>
             
             <div class="flex gap-4 justify-center">
-                <a href="./index.php" class="btn-primary">
+                <a href="<?php echo url('booking/index.php'); ?>" class="btn-primary">
                     Đặt phòng lại
                 </a>
-                <a href="../contact.php" class="btn-secondary">
+                <a href="<?php echo url('contact.php'); ?>" class="btn-secondary">
                     Liên hệ hỗ trợ
                 </a>
             </div>
@@ -257,7 +257,7 @@ try {
 
 </div>
 
-<script src="../assets/js/main.js"></script>
+<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
 
 <style>
 .btn-primary {
