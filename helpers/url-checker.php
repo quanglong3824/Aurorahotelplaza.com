@@ -10,23 +10,22 @@ require_once __DIR__ . '/../config/environment.php';
 class URLChecker {
     
     /**
-     * Kiểm tra xem có đang ở môi trường localhost không
+     * Kiểm tra thông tin môi trường production
      * 
      * @return array Thông tin môi trường
      */
     public static function checkEnvironment() {
-        $isLocal = isLocalhost();
         $baseUrl = getBaseUrl();
         $domain = getDomain();
         
         return [
-            'is_localhost' => $isLocal,
-            'environment' => getEnvironment(),
+            'environment' => ENVIRONMENT,
             'base_url' => $baseUrl,
             'domain' => $domain,
             'server_name' => $_SERVER['SERVER_NAME'] ?? 'unknown',
             'http_host' => $_SERVER['HTTP_HOST'] ?? 'unknown',
-            'remote_addr' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+            'remote_addr' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+            'document_root' => $_SERVER['DOCUMENT_ROOT'] ?? 'unknown'
         ];
     }
     
@@ -41,45 +40,11 @@ class URLChecker {
     }
     
     /**
-     * Kiểm tra xem một URL có phải là localhost không
-     * 
-     * @param string $url URL cần kiểm tra
-     * @return bool
-     */
-    public static function isLocalhostUrl($url) {
-        return (
-            strpos($url, 'localhost') !== false ||
-            strpos($url, '127.0.0.1') !== false ||
-            strpos($url, '::1') !== false
-        );
-    }
-    
-    /**
-     * Chuyển đổi localhost URL sang production URL
-     * 
-     * @param string $url URL cần chuyển đổi
-     * @param string $productionDomain Domain production (mặc định: aurorahotelplaza.com)
-     * @return string URL đã chuyển đổi
-     */
-    public static function convertToProductionUrl($url, $productionDomain = 'aurorahotelplaza.com') {
-        // Loại bỏ localhost và path cụ thể
-        $url = preg_replace('#https?://localhost(:\d+)?/[^/]+/#', 'https://' . $productionDomain . '/', $url);
-        $url = preg_replace('#https?://127\.0\.0\.1(:\d+)?/[^/]+/#', 'https://' . $productionDomain . '/', $url);
-        
-        return $url;
-    }
-    
-    /**
-     * Hiển thị thông tin môi trường (chỉ dùng cho development)
+     * Hiển thị thông tin môi trường production
      * 
      * @return string HTML output
      */
     public static function displayEnvironmentInfo() {
-        if (!isLocalhost()) {
-            return '<div style="padding: 20px; background: #fee; border: 2px solid #c00; color: #c00; border-radius: 5px;">
-                <strong>⚠️ Cảnh báo:</strong> Công cụ này chỉ khả dụng trong môi trường development!
-            </div>';
-        }
         
         $info = self::checkEnvironment();
         
@@ -136,7 +101,6 @@ class URLChecker {
         $html .= '<li><code>SITE_URL</code> - ' . SITE_URL . '</li>';
         $html .= '<li><code>ASSETS_URL</code> - ' . ASSETS_URL . '</li>';
         $html .= '<li><code>ADMIN_URL</code> - ' . ADMIN_URL . '</li>';
-        $html .= '<li><code>IS_LOCALHOST</code> - ' . (IS_LOCALHOST ? 'true' : 'false') . '</li>';
         $html .= '<li><code>ENVIRONMENT</code> - ' . ENVIRONMENT . '</li>';
         $html .= '<li><code>DOMAIN</code> - ' . DOMAIN . '</li>';
         $html .= '</ul>';
@@ -159,7 +123,7 @@ class URLChecker {
         $tests[] = [
             'name' => 'getBaseUrl()',
             'result' => getBaseUrl(),
-            'expected' => isLocalhost() ? 'http://localhost/...' : 'https://aurorahotelplaza.com',
+            'expected' => 'https://aurorahotelplaza.com',
             'status' => 'pass'
         ];
         
@@ -181,13 +145,6 @@ class URLChecker {
             'status' => asset($testAsset) === ASSETS_URL . '/' . $testAsset ? 'pass' : 'fail'
         ];
         
-        // Test 4: isLocalhost()
-        $tests[] = [
-            'name' => 'isLocalhost()',
-            'result' => isLocalhost() ? 'true' : 'false',
-            'expected' => 'Depends on environment',
-            'status' => 'pass'
-        ];
         
         return $tests;
     }
@@ -197,9 +154,6 @@ class URLChecker {
  * Helper function để hiển thị trang test
  */
 function displayURLCheckerPage() {
-    if (!isLocalhost()) {
-        die('Access denied. This tool is only available in development environment.');
-    }
     
     ?>
     <!DOCTYPE html>

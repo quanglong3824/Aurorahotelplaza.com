@@ -2,6 +2,11 @@
 # Enable Rewrite Engine
 RewriteEngine On
 
+# Set RewriteBase for subdirectory support (adjust if needed)
+# For root: RewriteBase /
+# For subdirectory: RewriteBase /2025/
+RewriteBase /2025/
+
 # Force HTTPS (Production only - không áp dụng cho localhost)
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP_HOST} !^localhost [NC]

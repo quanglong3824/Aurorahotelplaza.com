@@ -1,32 +1,30 @@
 <?php
 /**
- * Environment Configuration
- * Tự động phát hiện môi trường (localhost hoặc production)
+ * Environment Configuration - Production Only
+ * Cấu hình cho môi trường production trên hosting
  */
 
-// Phát hiện môi trường
-function isLocalhost() {
-    $whitelist = ['127.0.0.1', '::1', 'localhost'];
-    return in_array($_SERVER['REMOTE_ADDR'] ?? '', $whitelist) || 
-           in_array($_SERVER['SERVER_NAME'] ?? '', $whitelist) ||
-           strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false;
-}
-
-// Lấy base URL
+// Lấy base URL - Production with subdirectory support
 function getBaseUrl() {
-    if (isLocalhost()) {
-        // Localhost - Tự động phát hiện đường dẫn
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
-        // Lấy root path của project (loại bỏ các thư mục con)
-        $rootPath = preg_replace('#/(admin|auth|booking|payment|profile|services-pages|apartment-details|room-details).*#', '', $scriptName);
-        return $protocol . '://' . $_SERVER['HTTP_HOST'] . $rootPath;
-    } else {
-        // Production - aurorahotelplaza.com
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
+    // Production - Tự động phát hiện protocol và host
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
+    
+    // Lấy root path của project (loại bỏ các thư mục con như admin, auth, etc.)
+    $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+    
+    // Danh sách các subdirectories cần loại bỏ để tìm root
+    $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details'];
+    $pattern = '#/(' . implode('|', $subdirs) . ').*#';
+    $rootPath = preg_replace($pattern, '', $scriptName);
+    
+    // Nếu ở root thì không thêm path
+    if ($rootPath === '/' || $rootPath === '') {
         return $protocol . '://' . $host;
     }
+    
+    // Trả về URL với subdirectory (ví dụ: https://aurorahotelplaza.com/2025)
+    return $protocol . '://' . $host . $rootPath;
 }
 
 // Lấy site URL (với trailing slash)
@@ -54,16 +52,8 @@ function getApiUrl() {
     return getBaseUrl() . '/api';
 }
 
-// Kiểm tra môi trường
-function getEnvironment() {
-    return isLocalhost() ? 'development' : 'production';
-}
-
 // Lấy domain chính (không có protocol)
 function getDomain() {
-    if (isLocalhost()) {
-        return 'localhost';
-    }
     return $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
 }
 
@@ -74,28 +64,19 @@ define('ASSETS_URL', getAssetsUrl());
 define('UPLOADS_URL', getUploadsUrl());
 define('ADMIN_URL', getAdminUrl());
 define('API_URL', getApiUrl());
-define('ENVIRONMENT', getEnvironment());
-define('IS_LOCALHOST', isLocalhost());
+define('ENVIRONMENT', 'production');
 define('DOMAIN', getDomain());
 
-// Debug mode (chỉ bật trên localhost)
-if (IS_LOCALHOST) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    define('DEBUG_MODE', true);
-} else {
-    error_reporting(0);
-    ini_set('display_errors', 0);
-    define('DEBUG_MODE', false);
-}
+// Production: Disable error display, log only
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+define('DEBUG_MODE', false);
 
-// Session configuration
-if (!IS_LOCALHOST) {
-    // Production: Secure cookies
-    ini_set('session.cookie_secure', '1');
-    ini_set('session.cookie_httponly', '1');
-    ini_set('session.cookie_samesite', 'Lax');
-}
+// Production: Secure cookies
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax');
 
 /**
  * Helper function để tạo URL

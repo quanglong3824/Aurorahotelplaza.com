@@ -4,6 +4,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Load environment configuration if not loaded
+if (!defined('BASE_URL')) {
+    $current_dir = basename(dirname($_SERVER['PHP_SELF']));
+    $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin', 'services-pages', 'payment'];
+    $config_path = in_array($current_dir, $subdirs) ? '../config/environment.php' : 'config/environment.php';
+    require_once __DIR__ . '/../config/environment.php';
+}
+
 // Determine base path based on current directory
 $current_dir = basename(dirname($_SERVER['PHP_SELF']));
 $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin'];
@@ -155,5 +163,5 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 </header>
 
 <!-- Header Styles & Script -->
-<link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/header-styles.css">
-<script src="<?php echo $base_path; ?>assets/js/header-scroll.js" defer></script>
+<link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo time(); ?>">
+<script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo time(); ?>" defer></script>

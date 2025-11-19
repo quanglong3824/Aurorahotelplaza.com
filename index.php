@@ -1,6 +1,9 @@
 <?php
 // Start session for user authentication
 session_start();
+
+// Load environment configuration
+require_once __DIR__ . '/config/environment.php';
 ?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
@@ -10,14 +13,14 @@ session_start();
 <title>Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa</title>
 
 <!-- Tailwind CSS -->
-<script src="assets/js/tailwindcss-cdn.js"></script>
-<link href="assets/css/fonts.css" rel="stylesheet"/>
+<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
 
 <!-- Tailwind Configuration -->
-<script src="assets/js/tailwind-config.js"></script>
+<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -68,7 +71,7 @@ session_start();
 </div>
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("<?php echo asset('img/deluxe/DELUXE-ROOM-AURORA-1.jpg'); ?>?v=<?php echo time(); ?>");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">Phòng Deluxe</h3>
@@ -80,7 +83,7 @@ session_start();
 </div>
 </div>
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("<?php echo asset('img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg'); ?>?v=<?php echo time(); ?>");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">Premium Deluxe</h3>
@@ -92,7 +95,7 @@ session_start();
 </div>
 </div>
 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("assets/img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg");'></div>
+<div class="aspect-video w-full bg-cover bg-center" style='background-image: url("<?php echo asset('img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg'); ?>?v=<?php echo time(); ?>");'></div>
 <div class="flex flex-1 flex-col justify-between p-6">
 <div>
 <h3 class="text-xl font-bold">VIP Suite</h3>
@@ -140,7 +143,7 @@ session_start();
 </div>
 
 <!-- Main JavaScript -->
-<script src="assets/js/main.js"></script>
+<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
 
 </body>
 </html>

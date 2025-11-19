@@ -4,24 +4,15 @@
  * ===============================================
  */
 
-// Database configuration
-/** The name of the database for WordPress */
-define( 'DB_NAME', 'auroraho_aurorahotelplaza.com' ); //auroraho_web_2025
-define( 'DB_USER', 'auroraho_longdev' ); //auroraho_longdev
-define( 'DB_PASSWORD', '@longdev3824' ); //@longdev3824
-define( 'DB_HOST', 'localhost:3306' ); //localhost:3306
+// Database configuration - Production Only
+define( 'DB_NAME', 'auroraho_aurorahotelplaza.com' );
+define( 'DB_USER', 'auroraho_longdev' );
+define( 'DB_PASSWORD', '@longdev3824' );
+define( 'DB_HOST', 'localhost:3306' );
  
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
-define( 'DB_DEBUG', true );
-
-// Fallback cấu hình cho localhost (XAMPP)
-// Sử dụng khi kết nối cơ sở dữ liệu chính thất bại
-define( 'DB_LOCAL_NAME', 'aurorahotelplaza.com' ); //auroraho_web_2025
-define( 'DB_LOCAL_USER', 'root' ); //auroraho_longdev
-define( 'DB_LOCAL_PASSWORD', '' ); //@longdev3824
-define( 'DB_LOCAL_HOST', 'localhost' );
-define( 'DB_LOCAL_CHARSET', 'utf8' );
+define( 'DB_DEBUG', false );
 
 
 //////
@@ -48,31 +39,13 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
-            // Ghi nhận lỗi kết nối chính
-            $primaryError = $exception->getMessage();
-            $primaryCode = $exception->getCode();
+            // Ghi nhận lỗi kết nối
+            $this->last_error = $exception->getMessage();
+            $this->last_error_code = $exception->getCode();
             if (defined('DB_DEBUG') && DB_DEBUG) {
-                error_log("Primary DB connection error: " . $primaryError);
+                error_log("DB connection error: " . $this->last_error);
             }
-
-            // Thử fallback sang localhost (XAMPP)
-            try {
-                $localHost = DB_LOCAL_HOST;
-                $hostWithoutPort = $this->parseHostAndPort($localHost); // cập nhật $this->port theo host
-                $dsn = "mysql:host=" . $hostWithoutPort . ";port=" . $this->port . ";dbname=" . DB_LOCAL_NAME . ";charset=" . DB_LOCAL_CHARSET;
-                $this->conn = new PDO($dsn, DB_LOCAL_USER, DB_LOCAL_PASSWORD);
-                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-                $this->fallback_used = true;
-            } catch (PDOException $fallbackException) {
-                // Cả chính và fallback đều lỗi
-                $this->last_error = $primaryError . " | Fallback error: " . $fallbackException->getMessage();
-                $this->last_error_code = $fallbackException->getCode() ?: $primaryCode;
-                if (defined('DB_DEBUG') && DB_DEBUG) {
-                    error_log("DB fallback connection error: " . $fallbackException->getMessage());
-                }
-                return false;
-            }
+            return false;
         }
         
         return $this->conn;
@@ -151,14 +124,9 @@ function checkDBConnection($echo = true) {
         }
         return [ 'success' => false, 'message' => $output ];
     }
-    $fallHosting = $database->isFallbackUsed() ? DB_LOCAL_HOST : DB_HOST;
-
-    $fallbackNote = $database->isFallbackUsed()
-        ? "\nChú ý: Đã chuyển sang kết nối localhost (XAMPP)."
-        : "\nTrạng thái: Đã chuyển sang kết nối host Cpanel Công khai.";
     if ($echo) {
-        echo "<pre>Kết nối thành công. Host: {$fallHosting}{$fallbackNote}</pre>";
+        echo "<pre>Kết nối thành công. Host: " . DB_HOST . "</pre>";
     }
-    return [ 'success' => true, 'message' => 'OK', 'fallback' => $database->isFallbackUsed() ];
+    return [ 'success' => true, 'message' => 'OK' ];
 }
 ?>
