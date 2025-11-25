@@ -220,7 +220,7 @@ try {
                                 </div>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold mbold -2">Giá cạnh tranh</h3>
+                                <h3 class="text-lg font-bold mb-2">Giá cạnh tranh</h3>
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark">Cung cấp dịch vụ 5 sao với giá hợp lý, có nhiều gói khuyến mãi.</p>
                             </div>
                         </div>
@@ -272,9 +272,4 @@ try {
 
 </body>
 
-</html>text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            Phòng & Suite cao cấp
-                        </h2>
-                        <p class="mt-3 text-base text-text-secondary-light dark:text-text-secondary-dark">
-                            Không gian nghỉ dưỡng sang trọng, được thiết kế để mang lại sự thoải mái tối đa
-                        </p>
+</html>
