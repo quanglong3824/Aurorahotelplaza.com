@@ -1,12 +1,12 @@
 <!-- Hero Slider Section -->
 <section class="hero-slider relative flex min-h-screen w-full items-center justify-center">
     <!-- Slider Images -->
-    <div class="hero-slide active" style="background-image: url('assets/img/classical family apartment/classical-family-apartment6.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/classical premium apartment/classical-premium-apartment-2.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/indochine family apartment/indochine-family-apartment-12.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/indochine studio apartment/indochine-studio-apartment-3.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/modern premium apartment/modern-premium-apartment-4.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/modern studio apartment/modern-studio-apartment-5.jpg');"></div>
+    <div class="hero-slide active" style="background-image: url('assets/img/classical-family-apartment/classical-family-apartment6.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg');"></div>
+    <div class="hero-slide" style="background-image: url('assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg');"></div>
     <div class="hero-slide" style="background-image: url('assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg');"></div>
     <div class="hero-slide" style="background-image: url('assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg');"></div>
     <div class="hero-slide" style="background-image: url('assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg');"></div>

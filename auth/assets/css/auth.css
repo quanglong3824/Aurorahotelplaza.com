@@ -1043,19 +1043,19 @@ body.auth-reset::before {
 
 /* Specific Background for Each Page */
 body.auth-login {
-    background-image: url('../../../assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
+    background-image: url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
 }
 
 body.auth-register {
-    background-image: url('../../../assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-2.jpg');
+    background-image: url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg');
 }
 
 body.auth-forgot {
-    background-image: url('../../../assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-3.jpg');
+    background-image: url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg');
 }
 
 body.auth-reset {
-    background-image: url('../../../assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-4.jpg');
+    background-image: url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg');
 }
 
 /* Ensure Content is Above Overlay */
