@@ -15,7 +15,7 @@
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/classical family apartment/classical-family-apartment1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/classical-family-apartment/classical-family-apartment1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Classical</span>
@@ -82,12 +82,12 @@
         <div class="container-custom">
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment1.jpg" alt="Classical Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment2.jpg" alt="Classical Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment3.jpg" alt="Classical Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment4.jpg" alt="Classical Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment5.jpg" alt="Classical Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical family apartment/classical-family-apartment6.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment1.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment2.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment3.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment4.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment5.jpg" alt="Classical Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-family-apartment/classical-family-apartment6.jpg" alt="Classical Family Apartment"></div>
             </div>
         </div>
     </section>

@@ -13,7 +13,7 @@
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include '../includes/header.php'; ?>
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/classical premium apartment/classical-premium-apartment-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Classical</span>
@@ -56,9 +56,9 @@
         <div class="container-custom">
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/classical premium apartment/classical-premium-apartment-1.jpg" alt="Classical Premium Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical premium apartment/classical-premium-apartment-2.jpg" alt="Classical Premium Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical premium apartment/classical-premium-apartment-3.jpg.jpg" alt="Classical Premium Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg" alt="Classical Premium Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg" alt="Classical Premium Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-3.jpg.jpg" alt="Classical Premium Apartment"></div>
             </div>
         </div>
     </section>

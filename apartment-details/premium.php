@@ -16,7 +16,7 @@
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" style="background-image: url('../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Phổ biến</span>
@@ -139,22 +139,22 @@
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-1.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-1.jpg" alt="Premium Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-2.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-2.jpg" alt="Premium Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-3.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-3.jpg" alt="Premium Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-4.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-4.jpg" alt="Premium Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-5.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-5.jpg" alt="Premium Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium apartment/CAN-HO-PREMIUM-AURORA-HOTEL-6.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-6.jpg" alt="Premium Apartment">
                 </div>
             </div>
         </div>

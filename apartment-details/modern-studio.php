@@ -13,7 +13,7 @@
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include '../includes/header.php'; ?>
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/modern studio apartment/modern-studio-apartment-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Modern</span>
@@ -56,12 +56,12 @@
         <div class="container-custom">
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-1.jpg" alt="Modern Studio Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-2.jpg" alt="Modern Studio Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-3.jpg" alt="Modern Studio Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-4.jpg" alt="Modern Studio Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-5.jpg" alt="Modern Studio Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/modern studio apartment/modern-studio-apartment-6.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-3.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-4.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg" alt="Modern Studio Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/modern-studio-apartment/modern-studio-apartment-6.jpg" alt="Modern Studio Apartment"></div>
             </div>
         </div>
     </section>

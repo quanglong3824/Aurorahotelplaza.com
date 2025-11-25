@@ -15,7 +15,7 @@
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Gia đình</span>
@@ -94,10 +94,10 @@
         <div class="container-custom">
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-4.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-5.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-6.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-4.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-5.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-6.jpg" alt="Family Apartment"></div>
             </div>
         </div>
     </section>

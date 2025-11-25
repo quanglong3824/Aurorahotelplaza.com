@@ -13,7 +13,7 @@
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include '../includes/header.php'; ?>
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/indochine family apartment/indochine-family-apartment-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header">Indochine</span>
@@ -56,12 +56,12 @@
         <div class="container-custom">
             <h2 class="section-title-center">Hình ảnh căn hộ</h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-1.jpg" alt="Indochine Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-2.jpg" alt="Indochine Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-3.jpg" alt="Indochine Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-4.jpg" alt="Indochine Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-5.jpg" alt="Indochine Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/indochine family apartment/indochine-family-apartment-6.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-3.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-4.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-5.jpg" alt="Indochine Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/indochine-family-apartment/indochine-family-apartment-6.jpg" alt="Indochine Family Apartment"></div>
             </div>
         </div>
     </section>
