@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/image-helper.php';
 
 try {
     $db = getDB();
@@ -76,12 +77,14 @@ try {
                             <?php foreach ($new_apartments as $apt): 
                                 $amenities = !empty($apt['amenities']) ? explode(',', $apt['amenities']) : [];
                                 $amenities = array_slice($amenities, 0, 8);
+                                $thumbnail = normalizeImagePath($apt['thumbnail']);
+                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
                             ?>
                         <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-slate-700">
                             <!-- Image -->
                             <div class="relative h-56 overflow-hidden">
                                 <?php if ($apt['thumbnail']): ?>
-                                    <img src="<?php echo htmlspecialchars($apt['thumbnail']); ?>" 
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>" 
                                          alt="<?php echo htmlspecialchars($apt['type_name']); ?>" 
                                          class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
                                 <?php else: ?>
@@ -185,12 +188,14 @@ try {
                             <?php foreach ($old_apartments as $apt): 
                                 $amenities = !empty($apt['amenities']) ? explode(',', $apt['amenities']) : [];
                                 $amenities = array_slice($amenities, 0, 8);
+                                $thumbnail = normalizeImagePath($apt['thumbnail']);
+                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
                             ?>
                         <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-slate-700">
                             <!-- Image -->
                             <div class="relative h-56 overflow-hidden">
                                 <?php if ($apt['thumbnail']): ?>
-                                    <img src="<?php echo htmlspecialchars($apt['thumbnail']); ?>" 
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>" 
                                          alt="<?php echo htmlspecialchars($apt['type_name']); ?>" 
                                          class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
                                 <?php else: ?>

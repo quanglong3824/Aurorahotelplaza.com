@@ -160,38 +160,14 @@
         </div>
     </section>
 
-    <!-- Related Rooms -->
-    <section class="related-section">
-        <div class="container-custom">
-            <h2 class="section-title-center">Căn hộ khác</h2>
-            <div class="related-grid">
-                <div class="related-card">
-                    <img src="../assets/img/studio apartment/CAN-HO-STUDIO-AURORA-HOTEL-1.jpg" alt="Studio Apartment" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">Studio Apartment</h3>
-                        <div class="related-price">2.500.000đ/đêm</div>
-                        <a href="studio.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="related-card">
-                    <img src="../assets/img/family apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg" alt="Family Apartment" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">Family Apartment</h3>
-                        <div class="related-price">6.500.000đ/đêm</div>
-                        <a href="family.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="related-card">
-                    <img src="../assets/img/modern premium apartment/modern-premium-apartment-1.jpg" alt="Modern Premium" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">Modern Premium</h3>
-                        <div class="related-price">5.200.000đ/đêm</div>
-                        <a href="modern-premium.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <?php 
+    // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
+    require_once __DIR__ . '/../helpers/room-helper.php';
+    $currentRoom = getRoomBySlug('premium');
+    $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
+    $sectionTitle = 'Căn hộ khác';
+    include '../includes/related-rooms.php'; 
+    ?>
 </main>
 
 <?php include '../includes/footer.php'; ?>

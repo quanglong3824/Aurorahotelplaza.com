@@ -156,38 +156,14 @@
         </div>
     </section>
 
-    <!-- Related Rooms -->
-    <section class="related-section">
-        <div class="container-custom">
-            <h2 class="section-title-center">Phòng khác</h2>
-            <div class="related-grid">
-                <div class="related-card">
-                    <img src="../assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Deluxe" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">Deluxe</h3>
-                        <div class="related-price">1.200.000đ/đêm</div>
-                        <a href="deluxe.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="related-card">
-                    <img src="../assets/img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg" alt="VIP Suite" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">VIP Suite</h3>
-                        <div class="related-price">3.500.000đ/đêm</div>
-                        <a href="vip-suite.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="related-card">
-                    <img src="../assets/img/premium twin/PREMIUM-DELUXE-TWIN-AURORA-1.jpg" alt="Premium Twin" class="related-image">
-                    <div class="related-content">
-                        <h3 class="related-title">Premium Twin</h3>
-                        <div class="related-price">1.600.000đ/đêm</div>
-                        <a href="premium-twin.php" class="btn-view">Xem chi tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php 
+    // Lấy thông tin phòng hiện tại để loại trừ khỏi danh sách related
+    require_once __DIR__ . '/../helpers/room-helper.php';
+    $currentRoom = getRoomBySlug('premium-deluxe');
+    $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
+    $sectionTitle = 'Phòng khác';
+    include '../includes/related-rooms.php'; 
+    ?>
 </main>
 
 <?php include '../includes/footer.php'; ?>

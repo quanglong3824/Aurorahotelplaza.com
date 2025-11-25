@@ -64,17 +64,14 @@
         </div>
     </section>
 
-    <!-- Related Apartments -->
-    <section class="related-section">
-        <div class="container-custom">
-            <h2 class="section-title-center">Căn hộ khác</h2>
-            <div class="related-grid">
-                <div class="related-card"><img src="../assets/img/modern studio apartment/modern-studio-apartment-1.jpg" alt="Modern Studio" class="related-image"><div class="related-content"><h3 class="related-title">Modern Studio</h3><div class="related-price">2.600.000đ/đêm</div><a href="modern-studio.php" class="btn-view">Xem chi tiết</a></div></div>
-                <div class="related-card"><img src="../assets/img/studio apartment/CAN-HO-STUDIO-AURORA-HOTEL-1.jpg" alt="Studio Apartment" class="related-image"><div class="related-content"><h3 class="related-title">Studio Apartment</h3><div class="related-price">2.500.000đ/đêm</div><a href="studio.php" class="btn-view">Xem chi tiết</a></div></div>
-                <div class="related-card"><img src="../assets/img/indochine family apartment/indochine-family-apartment-1.jpg" alt="Indochine Family" class="related-image"><div class="related-content"><h3 class="related-title">Indochine Family</h3><div class="related-price">7.200.000đ/đêm</div><a href="indochine-family.php" class="btn-view">Xem chi tiết</a></div></div>
-            </div>
-        </div>
-    </section>
+        <?php 
+    // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
+    require_once __DIR__ . '/../helpers/room-helper.php';
+    $currentRoom = getRoomBySlug('indochine-studio');
+    $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
+    $sectionTitle = 'Căn hộ khác';
+    include '../includes/related-rooms.php'; 
+    ?>
 </main>
 <?php include '../includes/footer.php'; ?>
 </div>

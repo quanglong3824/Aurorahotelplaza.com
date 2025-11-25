@@ -99,9 +99,10 @@ try {
                             <?php foreach ($featured_rooms as $room): 
                                 // Parse thumbnail image path
                                 $thumbnail = normalizeImagePath($room['thumbnail']);
+                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
                             ?>
                                 <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
-                                    <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($thumbnail); ?>?v=<?php echo time(); ?>');"></div>
+                                    <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>');"></div>
                                     <div class="flex flex-1 flex-col justify-between p-6">
                                         <div>
                                             <h3 class="text-xl font-bold"><?php echo htmlspecialchars($room['type_name']); ?></h3>

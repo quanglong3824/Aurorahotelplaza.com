@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/image-helper.php';
 
 try {
     $db = getDB();
@@ -59,11 +60,13 @@ try {
                         // Parse amenities
                         $amenities = !empty($room['amenities']) ? explode(',', $room['amenities']) : [];
                         $amenities = array_slice($amenities, 0, 6); // Chỉ hiển thị 6 tiện nghi đầu
+                        $thumbnail = normalizeImagePath($room['thumbnail']);
+                        $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
                     ?>
                         <div class="room-card" data-category="<?php echo $room['category']; ?>">
                             <div class="room-image-wrapper">
                                 <?php if ($room['thumbnail']): ?>
-                                    <img src="<?php echo htmlspecialchars($room['thumbnail']); ?>" 
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>" 
                                          alt="<?php echo htmlspecialchars($room['type_name']); ?>" 
                                          class="room-image">
                                 <?php else: ?>
