@@ -2,17 +2,47 @@
 /**
  * Aurora Booking Website - Database Configuration
  * ===============================================
+ * Hỗ trợ kết nối song song: Local (XAMPP) và Host (Production)
  */
 
-// Database configuration - Production Only
-define( 'DB_NAME', 'auroraho_aurorahotelplaza.com' );
-define( 'DB_USER', 'auroraho_longdev' );
-define( 'DB_PASSWORD', '@longdev3824' );
-define( 'DB_HOST', 'localhost:3306' );
+// Tự động phát hiện môi trường
+$isLocal = (
+    $_SERVER['SERVER_NAME'] === 'localhost' || 
+    $_SERVER['SERVER_ADDR'] === '127.0.0.1' || 
+    $_SERVER['SERVER_ADDR'] === '::1' ||
+    strpos($_SERVER['HTTP_HOST'], 'localhost') !== false
+);
+
+// Cấu hình Local (XAMPP)
+define('DB_LOCAL_NAME', 'auroraho_aurorahotelplaza.com');
+define('DB_LOCAL_USER', 'root');
+define('DB_LOCAL_PASSWORD', '');
+define('DB_LOCAL_HOST', 'localhost:3306');
+
+// Cấu hình Host/Production
+define('DB_HOST_NAME', 'auroraho_aurorahotelplaza.com');
+define('DB_HOST_USER', 'auroraho_longdev');
+define('DB_HOST_PASSWORD', '@longdev3824');
+define('DB_HOST_HOST', 'localhost:3306');
+
+// Chọn cấu hình dựa trên môi trường
+if ($isLocal) {
+    define('DB_NAME', DB_LOCAL_NAME);
+    define('DB_USER', DB_LOCAL_USER);
+    define('DB_PASSWORD', DB_LOCAL_PASSWORD);
+    define('DB_HOST', DB_LOCAL_HOST);
+    define('DB_ENVIRONMENT', 'LOCAL');
+} else {
+    define('DB_NAME', DB_HOST_NAME);
+    define('DB_USER', DB_HOST_USER);
+    define('DB_PASSWORD', DB_HOST_PASSWORD);
+    define('DB_HOST', DB_HOST_HOST);
+    define('DB_ENVIRONMENT', 'PRODUCTION');
+}
  
 /** Database charset to use in creating database tables. */
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_DEBUG', false );
+define('DB_CHARSET', 'utf8');
+define('DB_DEBUG', false);
 
 
 //////
