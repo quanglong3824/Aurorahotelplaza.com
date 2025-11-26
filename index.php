@@ -22,6 +22,40 @@ try {
 } catch (Exception $e) {
     error_log("Index page error: " . $e->getMessage());
 }
+
+// Fetch featured apartments from database
+$featured_apartments = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT * FROM room_types 
+        WHERE status = 'active' AND category = 'apartment'
+        ORDER BY sort_order ASC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $featured_apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (apartments) error: " . $e->getMessage());
+}
+
+// Fetch latest blog posts
+$latest_posts = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT p.title, p.slug, p.excerpt, p.featured_image, p.published_at, u.full_name as author_name
+        FROM blog_posts p
+        LEFT JOIN users u ON p.author_id = u.user_id
+        WHERE p.status = 'published'
+        ORDER BY p.published_at DESC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $latest_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (blog) error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
@@ -101,7 +135,7 @@ try {
                                 $thumbnail = normalizeImagePath($room['thumbnail']);
                                 $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
                             ?>
-                                <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
+                                <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700 transform translate-y-0 transition-transform duration-300 hover:-translate-y-1">
                                     <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>');"></div>
                                     <div class="flex flex-1 flex-col justify-between p-6">
                                         <div>
@@ -133,6 +167,59 @@ try {
                     <div class="flex justify-center pt-4">
                         <a href="rooms.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
                             Xem tất cả phòng
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Apartments Section -->
+            <section class="w-full justify-center py-16 sm:py-24" id="apartments">
+                <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
+                    <div class="flex flex-col gap-2 text-center">
+                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            Căn Hộ Nổi Bật</h2>
+                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">Không gian sống hiện đại và tiện nghi.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <?php if (!empty($featured_apartments)): ?>
+                            <?php foreach ($featured_apartments as $apartment): 
+                                // Parse thumbnail image path
+                                $thumbnail = normalizeImagePath($apartment['thumbnail']);
+                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                            ?>
+                                <div class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-shadow hover:shadow-xl dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700 transform translate-y-0 transition-transform duration-300 hover:-translate-y-1">
+                                    <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>');"></div>
+                                    <div class="flex flex-1 flex-col justify-between p-6">
+                                        <div>
+                                            <h3 class="text-xl font-bold"><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
+                                            <p class="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                                <?php echo number_format($apartment['size_sqm'], 0); ?> m², 
+                                                <?php echo htmlspecialchars($apartment['bed_type']); ?>, 
+                                                <?php echo $apartment['max_occupancy']; ?> người
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 flex flex-col gap-2">
+                                            <div class="text-lg font-bold text-accent">
+                                                <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ <span class="text-sm font-normal">/đêm</span>
+                                            </div>
+                                            <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php" 
+                                               class="flex h-10 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary-light text-primary dark:bg-gray-700 dark:text-primary-light text-sm font-bold transition-colors hover:bg-primary/20 dark:hover:bg-gray-600">
+                                                <span class="truncate">Xem chi tiết</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-span-full text-center py-12">
+                                <p class="text-gray-500 text-lg">Chưa có căn hộ nào được giới thiệu.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="flex justify-center pt-4">
+                        <a href="apartments.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                            Xem tất cả căn hộ
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
                     </div>
@@ -236,6 +323,57 @@ try {
                      </div>
                         </div>
                 </div>
+                </div>
+            </section>
+
+            <!-- Blog Section -->
+            <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="blog">
+                <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
+                    <div class="flex flex-col gap-2 text-center">
+                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            Tin Tức &amp; Sự Kiện</h2>
+                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">Cập nhật những thông tin mới nhất từ chúng tôi.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        <?php if (!empty($latest_posts)): ?>
+                            <?php foreach ($latest_posts as $post): 
+                                $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg';
+                            ?>
+                                <article class="flex flex-col overflow-hidden rounded-xl bg-surface-light shadow-md transition-transform duration-300 hover:-translate-y-1 dark:bg-background-dark dark:shadow-none dark:ring-1 dark:ring-gray-700">
+                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="block">
+                                        <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo $post_image; ?>?v=<?php echo time(); ?>');"></div>
+                                    </a>
+                                    <div class="flex flex-1 flex-col justify-between p-6">
+                                        <div>
+                                            <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="block">
+                                                <h3 class="text-lg font-bold hover:text-accent transition-colors"><?php echo htmlspecialchars($post['title']); ?></h3>
+                                            </a>
+                                            <p class="mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                                <?php echo htmlspecialchars($post['excerpt']); ?>
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 flex items-center gap-2 text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                                            <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                            <span><?php echo date('d/m/Y', strtotime($post['published_at'])); ?></span>
+                                            <span class="mx-1">|</span>
+                                            <span class="material-symbols-outlined text-sm">person</span>
+                                            <span><?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?></span>
+                                        </div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-span-full text-center py-12">
+                                <p class="text-gray-500 text-lg">Chưa có bài viết nào.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="flex justify-center pt-4">
+                        <a href="blog.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                            Xem tất cả bài viết
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </a>
+                    </div>
                 </div>
             </section>
 

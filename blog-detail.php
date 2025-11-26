@@ -16,9 +16,10 @@ try {
     
     // Get post
     $stmt = $db->prepare("
-        SELECT p.*, u.full_name as author_name, u.avatar_url
-        FROM posts p
-        LEFT JOIN users u ON p.author_id = u.id
+        SELECT p.*, u.full_name as author_name, u.avatar, bc.category_name, bc.slug as category_slug
+        FROM blog_posts p
+        LEFT JOIN users u ON p.author_id = u.user_id
+        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id
         WHERE p.slug = ? AND p.status = 'published'
     ");
     $stmt->execute([$slug]);
@@ -30,28 +31,28 @@ try {
     }
     
     // Update views
-    $stmt = $db->prepare("UPDATE posts SET views = views + 1 WHERE id = ?");
-    $stmt->execute([$post['id']]);
+    $stmt = $db->prepare("UPDATE blog_posts SET views = views + 1 WHERE post_id = ?");
+    $stmt->execute([$post['post_id']]);
     
-    // Get comments
+    // Get blog_comments
     $stmt = $db->prepare("
-        SELECT c.*, u.full_name as user_name, u.avatar_url
-        FROM comments c
-        LEFT JOIN users u ON c.user_id = u.id
+        SELECT c.*, u.full_name as user_name, u.avatar
+        FROM blog_comments c
+        LEFT JOIN users u ON c.user_id = u.user_id
         WHERE c.post_id = ? AND c.status = 'approved'
         ORDER BY c.created_at DESC
     ");
-    $stmt->execute([$post['id']]);
-    $comments = $stmt->fetchAll();
+    $stmt->execute([$post['post_id']]);
+    $blog_comments = $stmt->fetchAll();
     
     // Get related posts
     $stmt = $db->prepare("
-        SELECT * FROM posts
-        WHERE status = 'published' AND id != ? AND category = ?
+        SELECT * FROM blog_posts
+        WHERE status = 'published' AND post_id != ? AND category_id = ?
         ORDER BY published_at DESC
         LIMIT 3
     ");
-    $stmt->execute([$post['id'], $post['category']]);
+    $stmt->execute([$post['post_id'], $post['category_id']]);
     $related_posts = $stmt->fetchAll();
     
     // Handle comment submission
@@ -65,10 +66,10 @@ try {
                 $error = 'Vui lòng nhập nội dung bình luận';
             } else {
                 $stmt = $db->prepare("
-                    INSERT INTO comments (post_id, user_id, content, status)
+                    INSERT INTO blog_comments (post_id, user_id, content, status)
                     VALUES (?, ?, ?, 'pending')
                 ");
-                $stmt->execute([$post['id'], $_SESSION['user_id'], $content]);
+                $stmt->execute([$post['post_id'], $_SESSION['user_id'], $content]);
                 $success = 'Bình luận của bạn đang chờ duyệt';
             }
         }
@@ -114,9 +115,9 @@ try {
             </nav>
 
             <!-- Category -->
-            <?php if ($post['category']): ?>
+            <?php if ($post['category_name']): ?>
             <span class="blog-category inline-block mb-4">
-                <?php echo htmlspecialchars($post['category']); ?>
+                <?php echo htmlspecialchars($post['category_name']); ?>
             </span>
             <?php endif; ?>
 
@@ -149,7 +150,7 @@ try {
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">comment</span>
-                    <span><?php echo count($comments); ?> bình luận</span>
+                    <span><?php echo count($blog_comments); ?> bình luận</span>
                 </div>
             </div>
 
@@ -200,7 +201,7 @@ try {
             <!-- Comments Section -->
             <div class="mb-12">
                 <h3 class="text-2xl font-bold mb-6">
-                    Bình luận (<?php echo count($comments); ?>)
+                    Bình luận (<?php echo count($blog_comments); ?>)
                 </h3>
 
                 <!-- Comment Form -->
@@ -238,9 +239,9 @@ try {
                 <?php endif; ?>
 
                 <!-- Comments List -->
-                <?php if (!empty($comments)): ?>
+                <?php if (!empty($blog_comments)): ?>
                 <div class="space-y-6">
-                    <?php foreach ($comments as $comment): ?>
+                    <?php foreach ($blog_comments as $comment): ?>
                     <div class="comment-item">
                         <div class="flex gap-4">
                             <?php if ($comment['avatar_url']): ?>

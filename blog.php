@@ -7,49 +7,61 @@ $per_page = 9;
 $offset = ($page - 1) * $per_page;
 
 // Get category filter
-$category = isset($_GET['category']) ? $_GET['category'] : '';
+$category_slug = isset($_GET['category']) ? $_GET['category'] : '';
 
 try {
     $db = getDB();
     
     // Build query
-    $where = "status = 'published'";
+    $select_from = "
+        SELECT p.*, u.full_name as author_name, bc.category_name, bc.slug as category_slug,
+               (SELECT COUNT(*) FROM blog_comments WHERE post_id = p.post_id AND status = 'approved') as comment_count
+        FROM blog_posts p
+        LEFT JOIN users u ON p.author_id = u.user_id
+        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id
+    ";
+    
+    $where = "p.status = 'published'";
     $params = [];
     
-    if ($category) {
-        $where .= " AND category = ?";
-        $params[] = $category;
+    if ($category_slug) {
+        $where .= " AND bc.slug = ?";
+        $params[] = $category_slug;
     }
     
     // Get total posts
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM posts WHERE $where");
+    // To properly count with the join, we need a slightly different query
+    $count_query = "
+        SELECT COUNT(p.post_id) as total 
+        FROM blog_posts p 
+        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id 
+        WHERE $where
+    ";
+    $stmt = $db->prepare($count_query);
     $stmt->execute($params);
     $total_posts = $stmt->fetch()['total'];
     $total_pages = ceil($total_posts / $per_page);
     
     // Get posts
-    $stmt = $db->prepare("
-        SELECT p.*, u.full_name as author_name,
-               (SELECT COUNT(*) FROM comments WHERE post_id = p.id AND status = 'approved') as comment_count
-        FROM posts p
-        LEFT JOIN users u ON p.author_id = u.id
-        WHERE $where
-        ORDER BY p.published_at DESC
-        LIMIT ? OFFSET ?
-    ");
-    $params[] = $per_page;
-    $params[] = $offset;
-    $stmt->execute($params);
+    $query = $select_from . " WHERE $where ORDER BY p.published_at DESC LIMIT ? OFFSET ?";
+    $stmt = $db->prepare($query);
+    
+    $all_params = array_merge($params, [$per_page, $offset]);
+    $stmt->execute($all_params);
     $posts = $stmt->fetchAll();
     
-    // Get categories
-    $stmt = $db->query("SELECT DISTINCT category FROM posts WHERE status = 'published' AND category IS NOT NULL");
-    $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    // Get categories from the blog_categories table
+    $stmt = $db->query("SELECT category_name, slug FROM blog_categories ORDER BY sort_order ASC, category_name ASC");
+    $categories = $stmt->fetchAll();
     
 } catch (Exception $e) {
+    // Basic error logging
+    error_log("Blog page error: " . $e->getMessage());
     $posts = [];
     $categories = [];
     $total_pages = 0;
+    // You could set an error message to display to the user
+    $error_message = "Could not load posts. Please try again later.";
 }
 ?>
 <!DOCTYPE html>
@@ -89,13 +101,13 @@ try {
             <!-- Category Filter -->
             <?php if (!empty($categories)): ?>
             <div class="mb-8 flex flex-wrap gap-3 justify-center">
-                <a href="blog.php" class="category-tag <?php echo empty($category) ? 'active' : ''; ?>">
+                <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
                     Tất cả
                 </a>
                 <?php foreach ($categories as $cat): ?>
-                <a href="blog.php?category=<?php echo urlencode($cat); ?>" 
-                   class="category-tag <?php echo $category === $cat ? 'active' : ''; ?>">
-                    <?php echo htmlspecialchars($cat); ?>
+                <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
+                   class="category-tag <?php echo $category_slug === $cat['slug'] ? 'active' : ''; ?>">
+                    <?php echo htmlspecialchars($cat['category_name']); ?>
                 </a>
                 <?php endforeach; ?>
             </div>
@@ -114,8 +126,8 @@ try {
                         <?php endif; ?>
                         
                         <div class="blog-card-content">
-                            <?php if ($post['category']): ?>
-                            <span class="blog-category"><?php echo htmlspecialchars($post['category']); ?></span>
+                            <?php if (!empty($post['category_name'])): ?>
+                            <span class="blog-category"><?php echo htmlspecialchars($post['category_name']); ?></span>
                             <?php endif; ?>
                             
                             <h3 class="blog-card-title"><?php echo htmlspecialchars($post['title']); ?></h3>
@@ -148,7 +160,7 @@ try {
             <?php if ($total_pages > 1): ?>
             <div class="mt-12 flex justify-center gap-2">
                 <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?><?php echo $category ? '&category=' . urlencode($category) : ''; ?>" 
+                <a href="?page=<?php echo $page - 1; ?><?php echo $category_slug ? '&category=' . urlencode($category_slug) : ''; ?>"
                    class="pagination-btn">
                     <span class="material-symbols-outlined">chevron_left</span>
                 </a>
@@ -158,13 +170,13 @@ try {
                     <?php if ($i == $page): ?>
                     <span class="pagination-btn active"><?php echo $i; ?></span>
                     <?php else: ?>
-                    <a href="?page=<?php echo $i; ?><?php echo $category ? '&category=' . urlencode($category) : ''; ?>" 
+                    <a href="?page=<?php echo $i; ?><?php echo $category_slug ? '&category=' . urlencode($category_slug) : ''; ?>"
                        class="pagination-btn"><?php echo $i; ?></a>
                     <?php endif; ?>
                 <?php endfor; ?>
                 
                 <?php if ($page < $total_pages): ?>
-                <a href="?page=<?php echo $page + 1; ?><?php echo $category ? '&category=' . urlencode($category) : ''; ?>" 
+                <a href="?page=<?php echo $page + 1; ?><?php echo $category_slug ? '&category=' . urlencode($category_slug) : ''; ?>"
                    class="pagination-btn">
                     <span class="material-symbols-outlined">chevron_right</span>
                 </a>

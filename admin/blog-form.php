@@ -9,9 +9,14 @@ $page_title = $is_edit ? 'Sửa bài viết' : 'Viết bài mới';
 $page_subtitle = $is_edit ? 'Cập nhật nội dung bài viết' : 'Tạo bài viết mới';
 
 $post = null;
-if ($is_edit) {
-    try {
-        $db = getDB();
+$categories = [];
+try {
+    $db = getDB();
+    // Fetch categories
+    $stmt_cat = $db->query("SELECT * FROM blog_categories ORDER BY category_name ASC");
+    $categories = $stmt_cat->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($is_edit) {
         $stmt = $db->prepare("SELECT * FROM blog_posts WHERE post_id = :id");
         $stmt->execute([':id' => $post_id]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,8 +25,12 @@ if ($is_edit) {
             header('Location: blog.php');
             exit;
         }
-    } catch (Exception $e) {
-        error_log("Load post error: " . $e->getMessage());
+    }
+} catch (Exception $e) {
+    error_log("Load post/categories error: " . $e->getMessage());
+    // Redirect or show an error, but for simplicity, we continue
+    // so the rest of the page can render.
+    if ($is_edit) {
         header('Location: blog.php');
         exit;
     }
@@ -50,12 +59,26 @@ include 'includes/admin-header.php';
                 <input type="text" name="title" class="form-input" 
                        value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>" required>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label">Slug (URL thân thiện)</label>
-                <input type="text" name="slug" class="form-input" 
-                       value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" 
-                       placeholder="tu-dong-tao-neu-de-trong">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label">Slug (URL thân thiện)</label>
+                    <input type="text" name="slug" class="form-input" 
+                           value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" 
+                           placeholder="tự động tạo nếu để trống">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Danh mục</label>
+                    <select name="category_id" class="form-select">
+                        <option value="">Chọn danh mục</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category['category_id']; ?>" 
+                                <?php echo (isset($post['category_id']) && $post['category_id'] == $category['category_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['category_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </div>
             
             <div class="form-group">
@@ -65,8 +88,8 @@ include 'includes/admin-header.php';
             
             <div class="form-group">
                 <label class="form-label">Nội dung *</label>
-                <textarea name="content" class="form-textarea" rows="15" required><?php echo htmlspecialchars($post['content'] ?? ''); ?></textarea>
-                <p class="text-xs text-gray-500 mt-1">Hỗ trợ HTML</p>
+                <textarea name="content" id="content-editor" class="form-textarea" rows="15" required><?php echo htmlspecialchars($post['content'] ?? ''); ?></textarea>
+                <p class="text-xs text-gray-500 mt-1">Hỗ trợ HTML. Sử dụng trình soạn thảo để định dạng.</p>
             </div>
         </div>
     </div>
@@ -83,11 +106,7 @@ include 'includes/admin-header.php';
                        placeholder="https://...">
             </div>
             
-            <div class="form-group">
-                <label class="form-label">Meta Description (SEO)</label>
-                <textarea name="meta_description" class="form-textarea" rows="2"><?php echo htmlspecialchars($post['meta_description'] ?? ''); ?></textarea>
-            </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Tags (phân cách bằng dấu phẩy)</label>
                 <input type="text" name="tags" class="form-input" 
@@ -108,6 +127,13 @@ include 'includes/admin-header.php';
                     <option value="draft" <?php echo ($post['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>Nháp</option>
                     <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>Xuất bản</option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Ngày xuất bản</label>
+                <input type="datetime-local" name="published_at" class="form-input"
+                       value="<?php echo isset($post['published_at']) ? date('Y-m-d\TH:i', strtotime($post['published_at'])) : ''; ?>">
+                <p class="text-xs text-gray-500 mt-1">Để trống sẽ tự động đặt ngày giờ hiện tại khi xuất bản.</p>
             </div>
             
             <div class="form-group">

@@ -1,3 +1,20 @@
+<?php
+require_once 'config/database.php';
+
+$blog_images = [];
+try {
+    $db = getDB();
+    $stmt = $db->query("
+        SELECT title, slug, featured_image 
+        FROM blog_posts 
+        WHERE status = 'published' AND featured_image IS NOT NULL
+        ORDER BY published_at DESC
+    ");
+    $blog_images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Gallery page error: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
@@ -34,10 +51,27 @@
                 <button class="filter-tab" data-filter="restaurant">Nhà hàng</button>
                 <button class="filter-tab" data-filter="facilities">Tiện nghi</button>
                 <button class="filter-tab" data-filter="events">Sự kiện</button>
+                <button class="filter-tab" data-filter="blog">Blog</button>
             </div>
 
             <!-- Gallery Grid -->
             <div class="gallery-grid">
+                <!-- Blog Images -->
+                <?php foreach ($blog_images as $image): ?>
+                <div class="gallery-item" data-category="blog">
+                    <div class="gallery-image-wrapper">
+                        <img src="<?php echo htmlspecialchars($image['featured_image']); ?>" alt="<?php echo htmlspecialchars($image['title']); ?>" class="gallery-image">
+                        <a href="blog-detail.php?slug=<?php echo urlencode($image['slug']); ?>" class="gallery-overlay">
+                            <h3 class="gallery-title"><?php echo htmlspecialchars($image['title']); ?></h3>
+                            <p class="gallery-category">Blog</p>
+                        </a>
+                        <div class="gallery-zoom-icon">
+                            <span class="material-symbols-outlined">zoom_in</span>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+
                 <!-- Rooms -->
                 <div class="gallery-item" data-category="rooms">
                     <div class="gallery-image-wrapper">
