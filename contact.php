@@ -19,13 +19,27 @@
     <section class="page-header-contact">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">support_agent</span>
+                Hỗ trợ 24/7
+            </span>
             <h1 class="page-title">Liên hệ với chúng tôi</h1>
             <p class="page-subtitle">Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="tel:+842513918888" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">phone</span>
+                    Gọi ngay
+                </a>
+                <a href="#contact-form" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Gửi tin nhắn
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section class="section-padding">
+    <section id="contact-form" class="section-padding">
         <div class="container-custom">
             <div class="contact-wrapper">
                 <!-- Contact Info -->

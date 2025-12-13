@@ -82,13 +82,27 @@ $category_names = [
     <section class="page-header-services">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">room_service</span>
+                Dịch vụ 5 sao
+            </span>
             <h1 class="page-title">Dịch vụ của chúng tôi</h1>
             <p class="page-subtitle">Trải nghiệm đẳng cấp với các dịch vụ chuyên nghiệp và tiện nghi hiện đại</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="contact.php" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">mail</span>
+                    Liên hệ ngay
+                </a>
+                <a href="#services-list" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Xem dịch vụ
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Services Grid -->
-    <section class="section-padding">
+    <section id="services-list" class="section-padding">
         <div class="container-custom">
             <!-- Additional Services (icon blocks) - Moved to top -->
             <?php 

@@ -36,13 +36,27 @@ try {
     <section class="page-header-gallery">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">photo_library</span>
+                Thư viện ảnh
+            </span>
             <h1 class="page-title">Thư viện ảnh</h1>
             <p class="page-subtitle">Khám phá không gian sang trọng và tiện nghi tại Aurora Hotel Plaza</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="booking/index.php" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    Đặt phòng ngay
+                </a>
+                <a href="#gallery" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Xem ảnh
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Gallery Section -->
-    <section class="section-padding">
+    <section id="gallery" class="section-padding">
         <div class="container-custom">
             <!-- Filter Tabs -->
             <div class="filter-tabs">

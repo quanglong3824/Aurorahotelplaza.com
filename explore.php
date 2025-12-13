@@ -63,6 +63,7 @@ try {
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/liquid-glass.css">
 <style>
 .explore-hero {
     background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
@@ -139,7 +140,7 @@ try {
     <!-- Hero Section -->
     <section class="explore-hero flex items-center justify-center pt-20">
         <div class="mx-auto max-w-7xl px-4 py-20 text-center">
-            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
+            <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">explore</span>
                 Khám phá Aurora Hotel Plaza
             </span>
@@ -150,11 +151,11 @@ try {
                 Khám phá không gian sang trọng, dịch vụ 5 sao và những trải nghiệm tuyệt vời đang chờ đón bạn tại Aurora Hotel Plaza
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
-                <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white rounded-xl font-bold hover:bg-accent/90 transition-all shadow-lg hover:shadow-xl">
+                <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
                     Đặt phòng ngay
                 </a>
-                <a href="#quick-links" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-bold hover:bg-white/20 transition-all border border-white/30">
+                <a href="#quick-links" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
                     Khám phá thêm
                 </a>
@@ -541,21 +542,21 @@ try {
     </section>
     <?php endif; ?>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-accent to-primary">
-        <div class="mx-auto max-w-7xl px-4 text-center">
-            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
+    <!-- CTA Section - Dark Style -->
+    <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
+        <div class="mx-auto max-w-7xl px-4 text-center relative z-10">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 border border-white/20">
                 <span class="material-symbols-outlined">support_agent</span>
                 Hỗ trợ 24/7
             </span>
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt phòng?</h2>
             <p class="text-white/80 max-w-2xl mx-auto mb-8">Liên hệ ngay với chúng tôi để được tư vấn và đặt phòng với giá tốt nhất</p>
             <div class="flex flex-wrap gap-4 justify-center">
-                <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-accent rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg">
+                <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
                     Đặt phòng ngay
                 </a>
-                <a href="tel:+842513918888" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-bold hover:bg-white/20 transition-all border border-white/30">
+                <a href="tel:+842513918888" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">phone</span>
                     (+84-251) 391.8888
                 </a>

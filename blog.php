@@ -85,13 +85,27 @@ try {
     <!-- Hero Section -->
     <section class="page-header-blog">
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">article</span>
+                Tin tức & Bài viết
+            </span>
             <h1 class="page-title">Tin tức & Bài viết</h1>
             <p class="page-subtitle">Khám phá những câu chuyện, mẹo du lịch và tin tức mới nhất từ Aurora Hotel Plaza</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="booking/index.php" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    Đặt phòng ngay
+                </a>
+                <a href="#blog-posts" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Xem bài viết
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Blog Content -->
-    <section class="py-16">
+    <section id="blog-posts" class="py-16">
         <div class="mx-auto max-w-7xl px-4">
             
             <!-- Category Filter -->

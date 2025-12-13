@@ -30,6 +30,7 @@ try {
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/liquid-glass.css">
 <link rel="stylesheet" href="assets/css/rooms.css">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -41,13 +42,27 @@ try {
     <section class="page-header-rooms">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">hotel</span>
+                Phòng nghỉ cao cấp
+            </span>
             <h1 class="page-title">Phòng nghỉ</h1>
             <p class="page-subtitle">Trải nghiệm không gian nghỉ dưỡng sang trọng với đầy đủ tiện nghi hiện đại</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="booking/index.php" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    Đặt phòng ngay
+                </a>
+                <a href="#rooms-list" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Xem danh sách
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Rooms Section -->
-    <section class="section-padding">
+    <section id="rooms-list" class="section-padding">
         <div class="container-custom">
             <!-- Rooms Grid -->
             <div class="rooms-grid">

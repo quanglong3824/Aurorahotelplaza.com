@@ -19,13 +19,27 @@
     <section class="page-header-about">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">info</span>
+                Về chúng tôi
+            </span>
             <h1 class="page-title">Về Aurora Hotel Plaza</h1>
             <p class="page-subtitle">Nơi sang trọng gặp gỡ sự thoải mái, tạo nên trải nghiệm nghỉ dưỡng đẳng cấp tại trung tâm Biên Hòa</p>
+            <div class="flex flex-wrap gap-4 justify-center mt-8">
+                <a href="booking/index.php" class="btn-liquid-primary">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    Đặt phòng ngay
+                </a>
+                <a href="#story" class="btn-liquid-glass">
+                    <span class="material-symbols-outlined">arrow_downward</span>
+                    Tìm hiểu thêm
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Story Section -->
-    <section class="section-padding">
+    <section id="story" class="section-padding">
         <div class="container-custom">
             <div class="story-section">
                 <div class="story-image-wrapper">
@@ -184,14 +198,24 @@
     <section class="cta-section">
         <div class="container-custom">
             <div class="cta-content">
+                <span class="badge-liquid-glass mb-6">
+                    <span class="material-symbols-outlined text-accent">support_agent</span>
+                    Hỗ trợ 24/7
+                </span>
                 <h2 class="cta-title">Sẵn sàng trải nghiệm?</h2>
                 <p class="cta-description">
                     Đặt phòng ngay hôm nay để nhận ưu đãi đặc biệt và trải nghiệm dịch vụ đẳng cấp 5 sao
                 </p>
-                <a href="contact.php" class="cta-button">
-                    <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
-                </a>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="booking/index.php" class="btn-liquid-primary">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        Đặt phòng ngay
+                    </a>
+                    <a href="tel:+842513918888" class="btn-liquid-glass">
+                        <span class="material-symbols-outlined">phone</span>
+                        (+84-251) 391.8888
+                    </a>
+                </div>
             </div>
         </div>
     </section>

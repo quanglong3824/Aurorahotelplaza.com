@@ -164,4 +164,5 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 
 <!-- Header Styles & Script -->
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo time(); ?>" defer></script>

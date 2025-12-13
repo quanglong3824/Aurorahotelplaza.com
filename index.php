@@ -147,6 +147,7 @@ try {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -157,24 +158,24 @@ try {
         <main class="flex h-full grow flex-col">
             <?php include 'includes/hero-slider.php'; ?>
 
-            <!-- Quick Info Bar -->
-            <section class="w-full bg-accent py-4">
+            <!-- Quick Info Bar - Liquid Glass -->
+            <section class="w-full py-4 glass-info-bar">
                 <div class="mx-auto max-w-7xl px-4">
-                    <div class="flex flex-wrap items-center justify-center gap-6 md:gap-12 text-white text-sm">
-                        <a href="tel:+842513918888" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <span class="material-symbols-outlined text-lg">phone</span>
+                    <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-white text-sm">
+                        <a href="tel:+842513918888" class="glass-tag hover:bg-white/20 transition-all">
+                            <span class="material-symbols-outlined text-accent text-base">phone</span>
                             <span class="font-medium">(+84-251) 391.8888</span>
                         </a>
-                        <a href="mailto:booking@aurorahotelplaza.com" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <span class="material-symbols-outlined text-lg">email</span>
+                        <a href="mailto:booking@aurorahotelplaza.com" class="glass-tag hover:bg-white/20 transition-all">
+                            <span class="material-symbols-outlined text-accent text-base">email</span>
                             <span class="font-medium">booking@aurorahotelplaza.com</span>
                         </a>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-lg">location_on</span>
-                            <span class="font-medium">253 Phạm Văn Thuận, Biên Hòa, Đồng Nai</span>
+                        <div class="glass-tag">
+                            <span class="material-symbols-outlined text-accent text-base">location_on</span>
+                            <span class="font-medium">253 Phạm Văn Thuận, Biên Hòa</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-lg">schedule</span>
+                        <div class="glass-tag">
+                            <span class="material-symbols-outlined text-accent text-base">schedule</span>
                             <span class="font-medium">Lễ tân 24/7</span>
                         </div>
                     </div>
@@ -194,80 +195,82 @@ try {
                             mang đến dịch vụ 5 sao với giá cả hợp lý nhất.</p>
                     </div>
                     
-                    <!-- Stats Counter -->
+                    <!-- Stats Counter - Liquid Glass -->
                     <div class="grid grid-cols-2 gap-6 md:grid-cols-4 my-8">
-                        <div class="flex flex-col items-center gap-2 p-6 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-                            <span class="text-4xl md:text-5xl font-bold text-accent"><?php echo $stats['total_rooms']; ?>+</span>
-                            <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Phòng & Căn hộ</span>
+                        <div class="glass-stat-card-light glass-glow">
+                            <span class="stat-value"><?php echo $stats['total_rooms']; ?>+</span>
+                            <span class="stat-label">Phòng & Căn hộ</span>
                         </div>
-                        <div class="flex flex-col items-center gap-2 p-6 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-                            <span class="text-4xl md:text-5xl font-bold text-accent"><?php echo number_format($stats['happy_customers']); ?>+</span>
-                            <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Khách hàng hài lòng</span>
+                        <div class="glass-stat-card-light glass-glow">
+                            <span class="stat-value"><?php echo number_format($stats['happy_customers']); ?>+</span>
+                            <span class="stat-label">Khách hàng hài lòng</span>
                         </div>
-                        <div class="flex flex-col items-center gap-2 p-6 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-                            <span class="text-4xl md:text-5xl font-bold text-accent"><?php echo $stats['years_experience']; ?>+</span>
-                            <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Năm kinh nghiệm</span>
+                        <div class="glass-stat-card-light glass-glow">
+                            <span class="stat-value"><?php echo $stats['years_experience']; ?>+</span>
+                            <span class="stat-label">Năm kinh nghiệm</span>
                         </div>
-                        <div class="flex flex-col items-center gap-2 p-6 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-                            <span class="text-4xl md:text-5xl font-bold text-accent">24/7</span>
-                            <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Hỗ trợ khách hàng</span>
+                        <div class="glass-stat-card-light glass-glow">
+                            <span class="stat-value">24/7</span>
+                            <span class="stat-label">Hỗ trợ khách hàng</span>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        <div class="flex flex-col items-center gap-3 rounded-xl bg-surface-light p-6 text-center dark:bg-surface-dark shadow-sm hover:shadow-md transition-shadow">
-                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
+                        <div class="glass-card-solid p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">restaurant</span>
                             </div>
-                            <h3 class="text-lg font-bold">Ẩm thực tinh tế</h3>
+                            <h3 class="text-lg font-bold mb-2">Ẩm thực tinh tế</h3>
                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Nhà hàng Aurora phục vụ ẩm thực Á - Âu với đầu bếp giàu kinh nghiệm.</p>
                         </div>
-                        <div class="flex flex-col items-center gap-3 rounded-xl bg-surface-light p-6 text-center dark:bg-surface-dark shadow-sm hover:shadow-md transition-shadow">
-                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
+                        <div class="glass-card-solid p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">celebration</span>
                             </div>
-                            <h3 class="text-lg font-bold">Tiệc cưới & Sự kiện</h3>
+                            <h3 class="text-lg font-bold mb-2">Tiệc cưới & Sự kiện</h3>
                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổ chức tiệc cưới, hội nghị với sảnh tiệc sang trọng lên đến 500 khách.</p>
                         </div>
-                        <div class="flex flex-col items-center gap-3 rounded-xl bg-surface-light p-6 text-center dark:bg-surface-dark shadow-sm hover:shadow-md transition-shadow">
-                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
+                        <div class="glass-card-solid p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">apartment</span>
                             </div>
-                            <h3 class="text-lg font-bold">Căn hộ dịch vụ</h3>
+                            <h3 class="text-lg font-bold mb-2">Căn hộ dịch vụ</h3>
                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Căn hộ cao cấp cho thuê dài hạn với đầy đủ tiện nghi như ở nhà.</p>
                         </div>
-                        <div class="flex flex-col items-center gap-3 rounded-xl bg-surface-light p-6 text-center dark:bg-surface-dark shadow-sm hover:shadow-md transition-shadow">
-                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
+                        <div class="glass-card-solid p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">business_center</span>
                             </div>
-                            <h3 class="text-lg font-bold">Văn phòng cho thuê</h3>
+                            <h3 class="text-lg font-bold mb-2">Văn phòng cho thuê</h3>
                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Không gian văn phòng chuyên nghiệp với vị trí đắc địa tại trung tâm.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Promotions Section -->
+            <!-- Promotions Section - Liquid Glass -->
             <?php if (!empty($active_promotions)): ?>
-            <section class="w-full py-12 bg-gradient-to-r from-red-600 to-red-500">
-                <div class="mx-auto max-w-7xl px-4">
+            <section class="w-full py-12 glass-promo-banner">
+                <div class="mx-auto max-w-7xl px-4 relative z-10">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center gap-4 text-white">
-                            <span class="material-symbols-outlined text-5xl animate-pulse">local_offer</span>
+                            <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                <span class="material-symbols-outlined text-4xl animate-pulse">local_offer</span>
+                            </div>
                             <div>
                                 <h3 class="text-2xl font-bold">Ưu đãi đặc biệt!</h3>
                                 <p class="text-white/90">Giảm đến <?php echo max(array_column($active_promotions, 'discount_percent')); ?>% cho đặt phòng trực tuyến</p>
                             </div>
                         </div>
-                        <div class="flex flex-wrap gap-4">
+                        <div class="flex flex-wrap gap-3">
                             <?php foreach ($active_promotions as $promo): ?>
-                            <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 text-white">
-                                <span class="font-bold"><?php echo htmlspecialchars($promo['code']); ?></span>
-                                <span class="text-sm ml-2">-<?php echo $promo['discount_percent']; ?>%</span>
+                            <div class="glass-promo-code">
+                                <span><?php echo htmlspecialchars($promo['code']); ?></span>
+                                <span class="text-sm opacity-80">-<?php echo $promo['discount_percent']; ?>%</span>
                             </div>
                             <?php endforeach; ?>
                         </div>
-                        <a href="booking/index.php" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center gap-2">
+                        <a href="booking/index.php" class="btn-glass-secondary">
                             Đặt ngay
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
@@ -321,7 +324,7 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="rooms.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                        <a href="rooms.php" class="btn-glass-primary">
                             Xem tất cả phòng
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -333,6 +336,10 @@ try {
             <section class="w-full justify-center py-16 sm:py-24" id="apartments">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
+                        <span class="glass-badge-solid mx-auto mb-2">
+                            <span class="material-symbols-outlined text-accent text-sm">apartment</span>
+                            Căn hộ cao cấp
+                        </span>
                         <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
                             Căn Hộ Nổi Bật</h2>
                         <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">Không gian sống hiện đại và tiện nghi.</p>
@@ -393,16 +400,16 @@ try {
                             Aurora Hotel Plaza cung cấp đầy đủ các dịch vụ tiện ích để đáp ứng mọi nhu cầu của quý khách trong suốt thời gian lưu trú.</p>
                     </div>
                     
-                    <!-- Main Services Grid -->
+                    <!-- Main Services Grid - Liquid Glass -->
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
-                        <a href="service-detail.php?slug=wedding-service" class="block relative overflow-hidden rounded-2xl h-[300px]">
-                            <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tiệc cưới" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="material-symbols-outlined text-accent">celebration</span>
-                                    <span class="text-accent text-sm font-medium">Dịch vụ nổi bật</span>
+                        <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
+                            <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="Tiệc cưới">
+                            <div class="glass-service-overlay"></div>
+                            <div class="glass-service-content">
+                                <div class="glass-service-badge">
+                                    <span class="material-symbols-outlined">celebration</span>
+                                    Dịch vụ nổi bật
                                 </div>
                                 <h3 class="text-xl font-bold mb-2">Tổ chức Tiệc Cưới</h3>
                                 <p class="text-white/80 text-sm">Sảnh tiệc sang trọng, sức chứa lên đến 500 khách với dịch vụ trọn gói chuyên nghiệp.</p>
@@ -410,13 +417,13 @@ try {
                         </a>
 
                         <!-- Conference Service -->
-                        <a href="service-detail.php?slug=conference-service" class="block relative overflow-hidden rounded-2xl h-[300px]">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Hội nghị" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="material-symbols-outlined text-accent">groups</span>
-                                    <span class="text-accent text-sm font-medium">Dịch vụ nổi bật</span>
+                        <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
+                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="Hội nghị">
+                            <div class="glass-service-overlay"></div>
+                            <div class="glass-service-content">
+                                <div class="glass-service-badge">
+                                    <span class="material-symbols-outlined">groups</span>
+                                    Dịch vụ nổi bật
                                 </div>
                                 <h3 class="text-xl font-bold mb-2">Hội nghị &amp; Sự kiện</h3>
                                 <p class="text-white/80 text-sm">Phòng họp hiện đại với đầy đủ trang thiết bị, phù hợp cho mọi quy mô sự kiện.</p>
@@ -424,13 +431,13 @@ try {
                         </a>
 
                         <!-- Restaurant Service -->
-                        <a href="service-detail.php?slug=aurora-restaurant" class="block relative overflow-hidden rounded-2xl h-[300px]">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg" alt="Nhà hàng" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="material-symbols-outlined text-accent">restaurant</span>
-                                    <span class="text-accent text-sm font-medium">Ẩm thực</span>
+                        <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
+                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg" alt="Nhà hàng">
+                            <div class="glass-service-overlay"></div>
+                            <div class="glass-service-content">
+                                <div class="glass-service-badge">
+                                    <span class="material-symbols-outlined">restaurant</span>
+                                    Ẩm thực
                                 </div>
                                 <h3 class="text-xl font-bold mb-2">Nhà hàng Aurora</h3>
                                 <p class="text-white/80 text-sm">Thưởng thức ẩm thực Á - Âu tinh tế với không gian sang trọng và view đẹp.</p>
@@ -438,36 +445,36 @@ try {
                         </a>
                     </div>
 
-                    <!-- Amenities Grid -->
+                    <!-- Amenities Grid - Liquid Glass -->
                     <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 mb-8">
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">wifi</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">wifi</span>
                             <span class="text-sm font-medium text-center">WiFi miễn phí</span>
                         </div>
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">local_parking</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">local_parking</span>
                             <span class="text-sm font-medium text-center">Bãi đỗ xe</span>
                         </div>
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">room_service</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">room_service</span>
                             <span class="text-sm font-medium text-center">Phục vụ phòng 24/7</span>
                         </div>
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">fitness_center</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">fitness_center</span>
                             <span class="text-sm font-medium text-center">Phòng Gym</span>
                         </div>
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">local_laundry_service</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">local_laundry_service</span>
                             <span class="text-sm font-medium text-center">Giặt ủi</span>
                         </div>
-                        <div class="flex flex-col items-center gap-3 p-4 rounded-xl bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-700 hover:border-accent transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-accent">airport_shuttle</span>
+                        <div class="glass-amenity-card">
+                            <span class="material-symbols-outlined">airport_shuttle</span>
                             <span class="text-sm font-medium text-center">Đưa đón sân bay</span>
                         </div>
                     </div>
 
                     <div class="flex justify-center">
-                        <a href="services.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                        <a href="services.php" class="btn-glass-primary">
                             Xem tất cả dịch vụ
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -486,7 +493,7 @@ try {
                             Với cam kết mang đến trải nghiệm tốt nhất, Aurora Hotel Plaza là lựa chọn hàng đầu cho kỳ nghỉ và công tác của bạn.</p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">location_on</span>
@@ -497,7 +504,7 @@ try {
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Tọa lạc tại 253 Phạm Văn Thuận - trung tâm Biên Hòa, gần các điểm du lịch, trung tâm thương mại và khu công nghiệp.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">support_agent</span>
@@ -508,7 +515,7 @@ try {
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Đội ngũ nhân viên được đào tạo bài bản, thân thiện và tận tâm phục vụ 24/7.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">payments</span>
@@ -519,7 +526,7 @@ try {
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Dịch vụ 5 sao với mức giá cạnh tranh, nhiều chương trình khuyến mãi hấp dẫn quanh năm.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">verified</span>
@@ -530,7 +537,7 @@ try {
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Phòng ốc sạch sẽ, trang thiết bị hiện đại, được bảo trì thường xuyên đảm bảo chất lượng.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">security</span>
@@ -541,7 +548,7 @@ try {
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Hệ thống camera giám sát, bảo vệ chuyên nghiệp đảm bảo an toàn tuyệt đối cho khách hàng.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 p-6 rounded-xl bg-white dark:bg-background-dark shadow-sm">
+                        <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
                                 <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">diversity_3</span>

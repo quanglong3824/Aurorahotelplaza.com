@@ -25,20 +25,23 @@
     <!-- Hero Content -->
     <div class="relative z-10 flex flex-col items-center gap-8 text-center text-white px-4">
         <div class="flex flex-col gap-4">
-            <p class="text-accent font-semibold text-sm uppercase tracking-wider">★★★★★ Khách sạn 5 sao tại Biên Hòa</p>
+            <span class="glass-badge-accent mx-auto">
+                <span class="text-accent">★★★★★</span>
+                Khách sạn 5 sao tại Biên Hòa
+            </span>
             <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza</h1>
             <p class="text-xl font-light text-white/90 max-w-2xl">Trải nghiệm đẳng cấp sang trọng với dịch vụ hoàn hảo tại trung tâm thành phố Biên Hòa, Đồng Nai</p>
         </div>
         
-        <!-- Quick Booking Form -->
-        <div class="mt-4 w-full max-w-4xl rounded-2xl bg-white/10 p-6 backdrop-blur-md border border-white/20">
+        <!-- Quick Booking Form - Liquid Glass -->
+        <div class="mt-4 w-full max-w-4xl glass-booking-form">
             <form action="booking/index.php" method="GET" class="grid grid-cols-1 items-end gap-4 md:grid-cols-5">
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkin">
                         <span class="material-symbols-outlined text-sm">calendar_today</span>
                         Ngày nhận phòng
                     </label>
-                    <input class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" 
+                    <input class="glass-input-solid h-12" 
                            id="checkin" name="check_in" type="date" 
                            min="<?php echo date('Y-m-d'); ?>" 
                            value="<?php echo date('Y-m-d'); ?>"/>
@@ -48,7 +51,7 @@
                         <span class="material-symbols-outlined text-sm">event</span>
                         Ngày trả phòng
                     </label>
-                    <input class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" 
+                    <input class="glass-input-solid h-12" 
                            id="checkout" name="check_out" type="date" 
                            min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
                            value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"/>
@@ -58,7 +61,7 @@
                         <span class="material-symbols-outlined text-sm">person</span>
                         Người lớn
                     </label>
-                    <select class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" id="adults" name="adults">
+                    <select class="glass-input-solid glass-select h-12" id="adults" name="adults">
                         <option value="1">1 người</option>
                         <option value="2" selected>2 người</option>
                         <option value="3">3 người</option>
@@ -70,32 +73,32 @@
                         <span class="material-symbols-outlined text-sm">child_care</span>
                         Trẻ em
                     </label>
-                    <select class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" id="children" name="children">
+                    <select class="glass-input-solid glass-select h-12" id="children" name="children">
                         <option value="0" selected>0 trẻ em</option>
                         <option value="1">1 trẻ em</option>
                         <option value="2">2 trẻ em</option>
                         <option value="3">3 trẻ em</option>
                     </select>
                 </div>
-                <button type="submit" class="col-span-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-accent text-base font-bold text-white transition-all hover:bg-accent/90 hover:shadow-lg">
+                <button type="submit" class="btn-glass-primary h-12 w-full">
                     <span class="material-symbols-outlined">search</span>
                     Tìm phòng
                 </button>
             </form>
         </div>
 
-        <!-- Trust Badges -->
-        <div class="flex flex-wrap justify-center gap-6 mt-4 text-white/80 text-sm">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-accent">verified</span>
+        <!-- Trust Badges - Liquid Glass -->
+        <div class="flex flex-wrap justify-center gap-4 mt-6">
+            <div class="glass-trust-badge">
+                <span class="material-symbols-outlined">verified</span>
                 <span>Giá tốt nhất đảm bảo</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-accent">credit_card_off</span>
+            <div class="glass-trust-badge">
+                <span class="material-symbols-outlined">credit_card_off</span>
                 <span>Không cần thanh toán trước</span>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-accent">event_available</span>
+            <div class="glass-trust-badge">
+                <span class="material-symbols-outlined">event_available</span>
                 <span>Hủy miễn phí trong 24h</span>
             </div>
         </div>

@@ -271,22 +271,23 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     </section>
     <?php endif; ?>
     
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center">
-            <div class="cta-icon">
-                <span class="material-symbols-outlined">phone_in_talk</span>
-            </div>
-            <h2 class="cta-title">Sẵn sàng đặt dịch vụ?</h2>
-            <p class="cta-description">
+    <!-- CTA Section - Dark Style -->
+    <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
+        <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center relative z-10">
+            <span class="badge-liquid-glass mb-6">
+                <span class="material-symbols-outlined text-accent">support_agent</span>
+                Hỗ trợ 24/7
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt dịch vụ?</h2>
+            <p class="text-white/80 max-w-2xl mx-auto mb-8">
                 Liên hệ với chúng tôi ngay hôm nay để được tư vấn miễn phí và nhận ưu đãi đặc biệt
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
-                <a href="tel:+842513918888" class="cta-button cta-button-primary">
+                <a href="tel:+842513918888" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">phone</span>
                     <span>(+84-251) 391.8888</span>
                 </a>
-                <a href="contact.php" class="cta-button cta-button-secondary">
+                <a href="contact.php" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">mail</span>
                     <span>Gửi yêu cầu</span>
                 </a>

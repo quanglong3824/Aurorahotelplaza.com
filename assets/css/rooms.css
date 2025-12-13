@@ -63,8 +63,10 @@
 
 .category-btn {
     padding: 12px 32px;
-    background: white;
-    border: 2px solid #e5e5e5;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(229, 229, 229, 0.5);
     border-radius: 30px;
     font-size: 15px;
     font-weight: 600;
@@ -73,16 +75,23 @@
     transition: all 0.3s ease;
 }
 
+.dark .category-btn {
+    background: rgba(55, 65, 81, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
+}
+
 .category-btn:hover {
     border-color: #cc9a2c;
     color: #cc9a2c;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .category-btn.active {
     background: linear-gradient(135deg, #cc9a2c 0%, #b8882a 100%);
     border-color: #cc9a2c;
     color: white;
-    box-shadow: 0 4px 12px rgba(204, 154, 44, 0.3);
+    box-shadow: 0 4px 15px rgba(204, 154, 44, 0.4);
 }
 
 /* Rooms Grid */
@@ -99,16 +108,25 @@
 }
 
 .room-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .room-card {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .room-card:hover {
     transform: translateY(-12px);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .room-image-wrapper {
@@ -133,13 +151,15 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    background: #cc9a2c;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: white;
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 700;
-    box-shadow: 0 4px 12px rgba(204, 154, 44, 0.4);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 .room-content {
@@ -176,8 +196,23 @@
     font-size: 14px;
     color: #666;
     padding: 8px 16px;
-    background: #f8f9fa;
+    background: rgba(249, 250, 251, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.feature-item:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.dark .feature-item {
+    background: rgba(55, 65, 81, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
 }
 
 .feature-item .material-symbols-outlined {
@@ -306,17 +341,23 @@
     }
 }
 
-/* CTA Section */
+/* CTA Section - Dark Style */
 .cta-section {
-    background: linear-gradient(135deg, #1A237E 0%, #cc9a2c 100%);
+    position: relative;
     padding: 80px 0;
     text-align: center;
     color: white;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
 }
 
 .cta-content {
     max-width: 700px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 .cta-title {
@@ -337,20 +378,43 @@
     align-items: center;
     gap: 10px;
     padding: 18px 40px;
-    background: white;
-    color: #1A237E;
+    background: var(--accent, #d4af37);
+    color: white;
     border-radius: 10px;
     font-size: 17px;
     font-weight: 700;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .cta-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
 }
 
 .cta-button .material-symbols-outlined {
     font-size: 24px;
+}
+
+/* Liquid Glass Button for CTA */
+.cta-button-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.cta-button-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
 }

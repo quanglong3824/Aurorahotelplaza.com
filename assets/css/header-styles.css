@@ -36,15 +36,18 @@
     border-color: white;
 }
 
-/* Solid State (Scrolled or no-hero pages) */
+/* Solid State (Scrolled or no-hero pages) - Liquid Glass */
 .header-solid {
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
 }
 
 .header-solid.header-scrolled {
-    background-color: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
 }
 
 .header-solid .nav-link,
@@ -69,14 +72,17 @@
     box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
-/* Dark Mode Support */
+/* Dark Mode Support - Liquid Glass */
 .dark .header-solid {
-    background-color: rgba(30, 41, 59, 0.95);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    background-color: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .dark .header-solid.header-scrolled {
-    background-color: rgba(30, 41, 59, 0.98);
+    background-color: rgba(17, 24, 39, 0.9);
 }
 
 .dark .header-solid .nav-link,
@@ -88,10 +94,13 @@
     color: #f3f4f6 !important;
 }
 
-/* Submenu Styles */
+/* Submenu Styles - Liquid Glass */
 .header-transparent .submenu {
-    background-color: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
 
 .header-transparent .submenu-item {
@@ -99,11 +108,16 @@
 }
 
 .header-solid .submenu {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
 
 .dark .header-solid .submenu {
-    background-color: rgba(30, 41, 59, 0.98);
+    background-color: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Mobile Menu Button */
