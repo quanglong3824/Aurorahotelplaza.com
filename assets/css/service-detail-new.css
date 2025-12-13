@@ -212,10 +212,23 @@
 
 .packages-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
+    align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+    .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .packages-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .package-card {
@@ -226,6 +239,9 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .package-card::before {
@@ -324,6 +340,7 @@
     list-style: none;
     padding: 0;
     margin: 0 0 1.5rem;
+    flex: 1;
 }
 
 .feature-item {
@@ -366,6 +383,8 @@
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 16px rgba(26, 35, 126, 0.3);
+    white-space: nowrap;
+    margin-top: auto;
 }
 
 .package-button:hover {
@@ -550,7 +569,7 @@
    RESPONSIVE DESIGN
    ============================================ */
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .service-hero-title {
         font-size: 2.25rem;
     }
@@ -561,11 +580,6 @@
     
     .cta-title {
         font-size: 2rem;
-    }
-    
-    .packages-grid {
-        grid-template-columns: 1fr;
-        max-width: 500px;
     }
     
     .package-featured {

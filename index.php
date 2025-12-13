@@ -283,8 +283,7 @@ try {
             <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="rooms">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl"></h2>
-                            Phòng &amp; Suite</h2>
+                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">Phòng &amp; Suite</h2>
                         <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">Được thiết kế cho sự thoải mái, tạo nên những giấc mơ.</p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -298,7 +297,7 @@ try {
                                     <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>');"></div>
                                     <div class="flex flex-1 flex-col justify-between p-6">
                                         <div>
-                                            <h3 class="text-xl font-bold"><?php echo htmlspecialchars($room['type_name']); ?></h3>
+                                            <h3 class="font-display text-xl font-bold"><?php echo htmlspecialchars($room['type_name']); ?></h3>
                                             <p class="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                                 <?php echo number_format($room['size_sqm'], 0); ?> m², 
                                                 <?php echo htmlspecialchars($room['bed_type']); ?>, 
@@ -310,8 +309,8 @@ try {
                                                 <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ <span class="text-sm font-normal">/đêm</span>
                                             </div>
                                             <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" 
-                                               class="flex h-10 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary-light text-primary dark:bg-gray-700 dark:text-primary-light text-sm font-bold transition-colors hover:bg-primary/20 dark:hover:bg-gray-600">
-                                                <span class="truncate">Xem chi tiết</span>
+                                               class="flex h-11 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary-light text-primary dark:bg-gray-700 dark:text-primary-light text-sm font-bold transition-colors hover:bg-primary/20 dark:hover:bg-gray-600">
+                                                <span>Xem chi tiết</span>
                                             </a>
                                         </div>
                                     </div>
@@ -355,7 +354,7 @@ try {
                                     <div class="aspect-video w-full bg-cover bg-center" style="background-image: url('<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>');"></div>
                                     <div class="flex flex-1 flex-col justify-between p-6">
                                         <div>
-                                            <h3 class="text-xl font-bold"><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
+                                            <h3 class="font-display text-xl font-bold"><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
                                             <p class="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                                 <?php echo number_format($apartment['size_sqm'], 0); ?> m², 
                                                 <?php echo htmlspecialchars($apartment['bed_type']); ?>, 
@@ -367,8 +366,8 @@ try {
                                                 <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ <span class="text-sm font-normal">/đêm</span>
                                             </div>
                                             <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php" 
-                                               class="flex h-10 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary-light text-primary dark:bg-gray-700 dark:text-primary-light text-sm font-bold transition-colors hover:bg-primary/20 dark:hover:bg-gray-600">
-                                                <span class="truncate">Xem chi tiết</span>
+                                               class="flex h-11 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary-light text-primary dark:bg-gray-700 dark:text-primary-light text-sm font-bold transition-colors hover:bg-primary/20 dark:hover:bg-gray-600">
+                                                <span>Xem chi tiết</span>
                                             </a>
                                         </div>
                                     </div>
@@ -769,7 +768,7 @@ try {
                         <!-- Map -->
                         <div class="rounded-2xl overflow-hidden shadow-lg h-[400px]">
                             <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942113!2d106.84213347417513!3d10.957145355836081!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1764044215451!5m2!1svi!2s"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897!5m2!1svi!2s"
                                 class="w-full h-full"
                                 style="border:0;"
                                 allowfullscreen=""

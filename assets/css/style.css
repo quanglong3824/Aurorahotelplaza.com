@@ -802,3 +802,22 @@ header.scrolled .auth-btn {
     position: relative;
     z-index: 1;
 }
+
+/* ============================================
+   INDEX PAGE - ROOM CARDS STYLES
+   ============================================ */
+
+/* Room card title in index.php */
+.room-card-title,
+section#rooms .text-xl.font-bold,
+section#apartments .text-xl.font-bold {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* Room card button alignment */
+section#rooms .flex.h-10,
+section#apartments .flex.h-10 {
+    min-height: 44px;
+}

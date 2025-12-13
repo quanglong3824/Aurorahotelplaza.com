@@ -97,9 +97,9 @@ if (!isset($base_path)) {
                     © 2025 Aurora Hotel Plaza. Bản quyền thuộc về Aurora Hotel Plaza.
                 </p>
                 <div class="flex gap-6 text-sm">
-                    <a href="#" class="text-white/60 hover:text-accent transition-colors">Chính sách bảo mật</a>
-                    <a href="#" class="text-white/60 hover:text-accent transition-colors">Điều khoản sử dụng</a>
-                    <a href="#" class="text-white/60 hover:text-accent transition-colors">Chính sách hủy phòng</a>
+                    <a href="<?php echo $base_path; ?>privacy.php" class="text-white/60 hover:text-accent transition-colors">Chính sách bảo mật</a>
+                    <a href="<?php echo $base_path; ?>terms.php" class="text-white/60 hover:text-accent transition-colors">Điều khoản sử dụng</a>
+                    <a href="<?php echo $base_path; ?>cancellation-policy.php" class="text-white/60 hover:text-accent transition-colors">Chính sách hủy phòng</a>
                 </div>
             </div>
         </div>

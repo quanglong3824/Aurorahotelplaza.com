@@ -167,10 +167,32 @@
 }
 
 .room-title {
+    font-family: 'Playfair Display', serif;
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 12px;
     color: #1a1a1a;
+    line-height: 1.3;
+}
+
+.dark .room-title {
+    color: #f3f4f6;
+}
+
+.dark .room-description {
+    color: #9ca3af;
+}
+
+.dark .amenities-title {
+    color: #f3f4f6;
+}
+
+.dark .amenity-item {
+    color: #9ca3af;
+}
+
+.dark .room-features {
+    border-bottom-color: #374151;
 }
 
 .room-description {
@@ -287,21 +309,29 @@
     width: 100%;
 }
 
-.btn-book-now {
+.btn-book-now,
+.btn-view-details {
     flex: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     padding: 14px 20px;
-    background: linear-gradient(135deg, #cc9a2c 0%, #b8882a 100%);
-    color: white;
     border-radius: 10px;
     font-weight: 600;
     font-size: 15px;
     transition: all 0.3s ease;
     text-decoration: none;
     text-align: center;
+    white-space: nowrap;
+    min-height: 52px;
+    box-sizing: border-box;
+}
+
+.btn-book-now {
+    background: linear-gradient(135deg, #cc9a2c 0%, #b8882a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(204, 154, 44, 0.3);
 }
 
 .btn-book-now:hover {
@@ -310,20 +340,9 @@
 }
 
 .btn-view-details {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 20px;
     background: linear-gradient(135deg, #1A237E 0%, #0d1642 100%);
     color: white;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
+    box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
 }
 
 .btn-view-details:hover {

@@ -80,9 +80,9 @@
                         <option value="3">3 trẻ em</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-glass-primary h-12 w-full">
+                <button type="submit" class="btn-glass-primary h-12 w-full whitespace-nowrap">
                     <span class="material-symbols-outlined">search</span>
-                    Tìm phòng
+                    <span>Tìm phòng</span>
                 </button>
             </form>
         </div>

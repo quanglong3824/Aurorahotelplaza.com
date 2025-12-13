@@ -107,6 +107,7 @@
     transition: all 0.3s ease;
     text-decoration: none;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    white-space: nowrap;
 }
 
 .btn-glass-primary:hover {
@@ -312,11 +313,12 @@
 /* Glass Select */
 .glass-select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 1rem center;
+    background-position: right 0.75rem center;
     background-size: 1rem;
     padding-right: 2.5rem;
+    cursor: pointer;
 }
 
 /* ============================================
@@ -331,6 +333,36 @@
     border-radius: 1.5rem;
     padding: 2rem;
     box-shadow: var(--glass-shadow-lg);
+}
+
+/* Booking form grid layout */
+.glass-booking-form form {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    align-items: end;
+}
+
+@media (max-width: 768px) {
+    .glass-booking-form form {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .glass-booking-form form > div:last-child,
+    .glass-booking-form form > button {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-booking-form form {
+        grid-template-columns: 1fr;
+    }
+    
+    .glass-booking-form form > div:last-child,
+    .glass-booking-form form > button {
+        grid-column: span 1;
+    }
 }
 
 
