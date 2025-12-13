@@ -1,5 +1,44 @@
 /* Blog Styles */
 
+/* Page Header */
+.page-header-blog {
+    position: relative;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7)), url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 180px 20px 100px;
+    text-align: center;
+    color: white;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+    font-size: 18px;
+    opacity: 0.85;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
 /* Category Tags */
 .category-tag {
     display: inline-block;

@@ -80,17 +80,13 @@ try {
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include 'includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col pt-20">
+<main class="flex h-full grow flex-col">
     
     <!-- Hero Section -->
-    <section class="relative bg-primary-light/30 dark:bg-surface-dark py-16">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="text-center">
-                <h1 class="font-display text-4xl font-bold md:text-5xl mb-4">Tin tức & Bài viết</h1>
-                <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
-                    Khám phá những câu chuyện, mẹo du lịch và tin tức mới nhất từ Aurora Hotel Plaza
-                </p>
-            </div>
+    <section class="page-header-blog">
+        <div class="page-header-content">
+            <h1 class="page-title">Tin tức & Bài viết</h1>
+            <p class="page-subtitle">Khám phá những câu chuyện, mẹo du lịch và tin tức mới nhất từ Aurora Hotel Plaza</p>
         </div>
     </section>
 

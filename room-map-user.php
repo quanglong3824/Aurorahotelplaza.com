@@ -62,6 +62,51 @@ try {
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
+/* Page Header */
+.page-header-roommap {
+    position: relative;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 180px 20px 100px;
+    text-align: center;
+    color: white;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+    font-size: 18px;
+    opacity: 0.85;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.container-custom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
 .room-box {
     width: 50px;
     height: 50px;
@@ -130,12 +175,12 @@ try {
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include 'includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col pt-20">
+<main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="bg-gradient-to-br from-[#d4af37] to-[#b8941f] py-8">
-        <div class="container-custom">
-            <h1 class="text-3xl font-bold text-white mb-1">Sơ đồ phòng</h1>
-            <p class="text-white/90 text-sm">Xem tình trạng phòng real-time</p>
+    <section class="page-header-roommap">
+        <div class="page-header-content">
+            <h1 class="page-title">Sơ đồ phòng</h1>
+            <p class="page-subtitle">Xem tình trạng phòng real-time tại Aurora Hotel Plaza</p>
         </div>
     </section>
 

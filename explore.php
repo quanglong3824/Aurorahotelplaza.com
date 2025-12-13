@@ -71,28 +71,63 @@ try {
     min-height: 500px;
 }
 .quick-link-card {
-    @apply relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-2xl transition-all duration-300 group;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+.dark .quick-link-card {
+    background: #1e293b;
 }
 .quick-link-card:hover {
     transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 .quick-link-icon {
-    @apply w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white shadow-lg;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    background: linear-gradient(to bottom right, #d4af37, #cc9a2c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 .category-card {
-    @apply relative overflow-hidden rounded-2xl h-[280px] group cursor-pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    height: 280px;
+    cursor: pointer;
+    display: block;
 }
 .category-card img {
-    @apply w-full h-full object-cover transition-transform duration-500;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 .category-card:hover img {
     transform: scale(1.1);
 }
 .category-overlay {
-    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4) 50%, transparent);
 }
 .feature-badge {
-    @apply inline-flex items-center gap-1 px-3 py-1 bg-accent/20 text-accent rounded-full text-xs font-bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 </style>
 </head>
@@ -407,4 +442,184 @@ try {
                 <?php foreach ($featured_services as $service): ?>
                 <a href="service-detail.php?slug=<?php echo htmlspecialchars($service['slug']); ?>" class="group">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-ac
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center group-hover:from-accent group-hover:to-primary transition-all">
+                            <span class="material-symbols-outlined text-3xl text-accent group-hover:text-white transition-colors"><?php echo htmlspecialchars($service['icon']); ?></span>
+                        </div>
+                        <h3 class="font-bold text-sm text-gray-900 dark:text-white mb-1 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($service['service_name']); ?></h3>
+                        <?php if ($service['price'] > 0): ?>
+                        <p class="text-xs text-accent font-bold">Từ <?php echo number_format($service['price'], 0, ',', '.'); ?>đ</p>
+                        <?php else: ?>
+                        <p class="text-xs text-green-600 font-bold">Miễn phí</p>
+                        <?php endif; ?>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gradient-to-r from-gray-900 to-gray-800">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['total_rooms']; ?>+</div>
+                    <p class="text-white/80">Phòng & Căn hộ</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo number_format($stats['happy_customers']); ?>+</div>
+                    <p class="text-white/80">Khách hàng hài lòng</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['years_experience']; ?>+</div>
+                    <p class="text-white/80">Năm kinh nghiệm</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2">24/7</div>
+                    <p class="text-white/80">Hỗ trợ khách hàng</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Blog Section -->
+    <?php if (!empty($latest_posts)): ?>
+    <section class="py-16">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
+                <div>
+                    <span class="feature-badge mb-4">
+                        <span class="material-symbols-outlined text-sm">article</span>
+                        Tin tức
+                    </span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Bài viết mới nhất</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Cập nhật tin tức và mẹo du lịch từ Aurora Hotel Plaza</p>
+                </div>
+                <a href="blog.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                    Xem tất cả bài viết
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <?php foreach ($latest_posts as $post): ?>
+                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+                        <div class="relative h-48 overflow-hidden">
+                            <?php if ($post['featured_image']): ?>
+                            <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <?php else: ?>
+                            <div class="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-5xl text-accent">article</span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-base">calendar_today</span>
+                                    <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                                </span>
+                                <?php if ($post['author_name']): ?>
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-base">person</span>
+                                    <?php echo htmlspecialchars($post['author_name']); ?>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-accent transition-colors line-clamp-2"><?php echo htmlspecialchars($post['title']); ?></h3>
+                            <?php if ($post['excerpt']): ?>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2"><?php echo htmlspecialchars($post['excerpt']); ?></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-accent to-primary">
+        <div class="mx-auto max-w-7xl px-4 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
+                <span class="material-symbols-outlined">support_agent</span>
+                Hỗ trợ 24/7
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt phòng?</h2>
+            <p class="text-white/80 max-w-2xl mx-auto mb-8">Liên hệ ngay với chúng tôi để được tư vấn và đặt phòng với giá tốt nhất</p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-accent rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    Đặt phòng ngay
+                </a>
+                <a href="tel:+842513918888" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-bold hover:bg-white/20 transition-all border border-white/30">
+                    <span class="material-symbols-outlined">phone</span>
+                    (+84-251) 391.8888
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- More Links Section -->
+    <section class="py-16 bg-surface-light dark:bg-surface-dark">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Khám phá thêm</h2>
+                <p class="text-gray-600 dark:text-gray-400">Các trang hữu ích khác</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <a href="about.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
+                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">info</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Về chúng tôi</h3>
+                        <p class="text-xs md:text-sm text-gray-500 truncate">Giới thiệu Aurora</p>
+                    </div>
+                </a>
+                
+                <a href="room-map-user.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
+                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">map</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Sơ đồ phòng</h3>
+                        <p class="text-xs md:text-sm text-gray-500 truncate">Xem vị trí phòng</p>
+                    </div>
+                </a>
+                
+                <a href="gallery.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
+                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">photo_library</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Thư viện ảnh</h3>
+                        <p class="text-xs md:text-sm text-gray-500 truncate">Hình ảnh khách sạn</p>
+                    </div>
+                </a>
+                
+                <a href="contact.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
+                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">mail</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Liên hệ</h3>
+                        <p class="text-xs md:text-sm text-gray-500 truncate">Gửi yêu cầu</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<?php include 'includes/footer.php'; ?>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
+

@@ -53,14 +53,18 @@ foreach ($room_types as $room) {
 
 <?php include '../includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col pt-20">
+<main class="flex h-full grow flex-col">
+    <!-- Page Header -->
+    <section class="page-header-booking">
+        <div class="page-header-content">
+            <h1 class="page-title">Đặt phòng</h1>
+            <p class="page-subtitle">Hoàn tất thông tin để đặt phòng tại Aurora Hotel Plaza</p>
+        </div>
+    </section>
+
     <!-- Booking Form Section -->
     <section class="w-full justify-center py-16">
         <div class="mx-auto flex max-w-5xl flex-col gap-8 px-4">
-            <div class="flex flex-col gap-2 text-center">
-                <h1 class="font-display text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Đặt phòng</h1>
-                <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">Hoàn tất thông tin để đặt phòng tại Aurora Hotel Plaza</p>
-            </div>
 
             <!-- Booking Form -->
             <form id="bookingForm" class="flex flex-col gap-6 rounded-xl bg-surface-light p-8 shadow-lg dark:bg-surface-dark">
