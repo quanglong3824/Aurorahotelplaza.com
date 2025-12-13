@@ -25,32 +25,79 @@
     <!-- Hero Content -->
     <div class="relative z-10 flex flex-col items-center gap-8 text-center text-white px-4">
         <div class="flex flex-col gap-4">
+            <p class="text-accent font-semibold text-sm uppercase tracking-wider">★★★★★ Khách sạn 5 sao tại Biên Hòa</p>
             <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza</h1>
-            <p class="text-lg font-light text-white/90">Trải nghiệm đẳng cấp sang trọng tại trung tâm Biên Hòa</p>
+            <p class="text-xl font-light text-white/90 max-w-2xl">Trải nghiệm đẳng cấp sang trọng với dịch vụ hoàn hảo tại trung tâm thành phố Biên Hòa, Đồng Nai</p>
         </div>
-        <div class="mt-4 w-full max-w-4xl rounded-xl bg-white/10 p-4 backdrop-blur-md">
-            <form class="grid grid-cols-1 items-end gap-3 md:grid-cols-4">
+        
+        <!-- Quick Booking Form -->
+        <div class="mt-4 w-full max-w-4xl rounded-2xl bg-white/10 p-6 backdrop-blur-md border border-white/20">
+            <form action="booking/index.php" method="GET" class="grid grid-cols-1 items-end gap-4 md:grid-cols-5">
                 <div class="flex flex-col text-left">
-                    <label class="mb-1 text-sm font-medium" for="checkin">Ngày nhận phòng</label>
-                    <input class="h-12 rounded-lg border-0 bg-white/90 px-3 text-gray-800 shadow-sm" id="checkin" type="date"/>
+                    <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkin">
+                        <span class="material-symbols-outlined text-sm">calendar_today</span>
+                        Ngày nhận phòng
+                    </label>
+                    <input class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" 
+                           id="checkin" name="check_in" type="date" 
+                           min="<?php echo date('Y-m-d'); ?>" 
+                           value="<?php echo date('Y-m-d'); ?>"/>
                 </div>
                 <div class="flex flex-col text-left">
-                    <label class="mb-1 text-sm font-medium" for="checkout">Ngày trả phòng</label>
-                    <input class="h-12 rounded-lg border-0 bg-white/90 px-3 text-gray-800 shadow-sm" id="checkout" type="date"/>
+                    <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkout">
+                        <span class="material-symbols-outlined text-sm">event</span>
+                        Ngày trả phòng
+                    </label>
+                    <input class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" 
+                           id="checkout" name="check_out" type="date" 
+                           min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                           value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"/>
                 </div>
                 <div class="flex flex-col text-left">
-                    <label class="mb-1 text-sm font-medium" for="guests">Số khách</label>
-                    <select class="h-12 rounded-lg border-0 bg-white/90 px-3 text-gray-800 shadow-sm" id="guests">
-                        <option>1 Người lớn</option>
-                        <option selected="">2 Người lớn</option>
-                        <option>2 Người lớn, 1 Trẻ em</option>
-                        <option>2 Người lớn, 2 Trẻ em</option>
+                    <label class="mb-2 text-sm font-medium flex items-center gap-1" for="adults">
+                        <span class="material-symbols-outlined text-sm">person</span>
+                        Người lớn
+                    </label>
+                    <select class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" id="adults" name="adults">
+                        <option value="1">1 người</option>
+                        <option value="2" selected>2 người</option>
+                        <option value="3">3 người</option>
+                        <option value="4">4 người</option>
                     </select>
                 </div>
-                <button class="col-span-1 flex h-12 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-accent text-base font-bold text-white transition-opacity hover:opacity-90">
-                    Kiểm tra phòng trống
+                <div class="flex flex-col text-left">
+                    <label class="mb-2 text-sm font-medium flex items-center gap-1" for="children">
+                        <span class="material-symbols-outlined text-sm">child_care</span>
+                        Trẻ em
+                    </label>
+                    <select class="h-12 rounded-lg border-0 bg-white/95 px-4 text-gray-800 shadow-sm focus:ring-2 focus:ring-accent" id="children" name="children">
+                        <option value="0" selected>0 trẻ em</option>
+                        <option value="1">1 trẻ em</option>
+                        <option value="2">2 trẻ em</option>
+                        <option value="3">3 trẻ em</option>
+                    </select>
+                </div>
+                <button type="submit" class="col-span-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-accent text-base font-bold text-white transition-all hover:bg-accent/90 hover:shadow-lg">
+                    <span class="material-symbols-outlined">search</span>
+                    Tìm phòng
                 </button>
             </form>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="flex flex-wrap justify-center gap-6 mt-4 text-white/80 text-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent">verified</span>
+                <span>Giá tốt nhất đảm bảo</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent">credit_card_off</span>
+                <span>Không cần thanh toán trước</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent">event_available</span>
+                <span>Hủy miễn phí trong 24h</span>
+            </div>
         </div>
     </div>
 
@@ -58,4 +105,33 @@
     <div class="slider-dots" id="slider-dots-container">
         <!-- Dots will be generated dynamically by JavaScript -->
     </div>
+
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <a href="#about" class="flex flex-col items-center gap-2 text-white/70 hover:text-white transition-colors">
+            <span class="text-sm">Khám phá thêm</span>
+            <span class="material-symbols-outlined text-2xl">keyboard_arrow_down</span>
+        </a>
+    </div>
 </section>
+
+<script>
+// Set minimum dates for booking form
+document.addEventListener('DOMContentLoaded', function() {
+    const checkinInput = document.getElementById('checkin');
+    const checkoutInput = document.getElementById('checkout');
+    
+    if (checkinInput && checkoutInput) {
+        checkinInput.addEventListener('change', function() {
+            const checkinDate = new Date(this.value);
+            checkinDate.setDate(checkinDate.getDate() + 1);
+            const minCheckout = checkinDate.toISOString().split('T')[0];
+            checkoutInput.min = minCheckout;
+            
+            if (checkoutInput.value && checkoutInput.value <= this.value) {
+                checkoutInput.value = minCheckout;
+            }
+        });
+    }
+});
+</script>
