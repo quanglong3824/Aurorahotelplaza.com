@@ -5,12 +5,55 @@
  * Features:
  * - Lazy loading images
  * - Defer non-critical resources
- * - Optimize animations
+ * - Optimize animations with requestAnimationFrame
  * - Preload critical resources
+ * - Smooth scroll optimization
+ * - GPU acceleration management
  */
 
 (function() {
     'use strict';
+
+    // ============================================
+    // 0. SMOOTH SCROLL & RAF OPTIMIZATION
+    // ============================================
+    
+    let ticking = false;
+    let lastScrollY = 0;
+    
+    /**
+     * Throttle using requestAnimationFrame for smooth 60fps
+     */
+    const rafThrottle = (callback) => {
+        return function(...args) {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    callback.apply(this, args);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+    };
+
+    /**
+     * Passive event listener support check
+     */
+    let passiveSupported = false;
+    try {
+        const options = {
+            get passive() {
+                passiveSupported = true;
+                return false;
+            }
+        };
+        window.addEventListener('test', null, options);
+        window.removeEventListener('test', null, options);
+    } catch (err) {
+        passiveSupported = false;
+    }
+
+    const passiveOption = passiveSupported ? { passive: true } : false;
 
     // ============================================
     // 1. LAZY LOADING IMAGES
@@ -132,7 +175,7 @@
     };
 
     // ============================================
-    // 5. OPTIMIZE ANIMATIONS
+    // 5. OPTIMIZE ANIMATIONS & GPU ACCELERATION
     // ============================================
     
     const optimizeAnimations = () => {
@@ -153,6 +196,71 @@
             `;
             document.head.appendChild(style);
         }
+        
+        // Remove will-change after animations complete to free GPU memory
+        document.addEventListener('transitionend', (e) => {
+            if (e.target.style.willChange) {
+                requestAnimationFrame(() => {
+                    e.target.style.willChange = 'auto';
+                });
+            }
+        });
+        
+        document.addEventListener('animationend', (e) => {
+            e.target.classList.add('animation-complete');
+        });
+    };
+
+    /**
+     * Smooth scroll to element with RAF
+     */
+    const smoothScrollTo = (target, duration = 500) => {
+        const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
+        if (!targetElement) return;
+        
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
+        
+        const animation = (currentTime) => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+            
+            // Easing function for smooth feel
+            const ease = progress < 0.5 
+                ? 4 * progress * progress * progress 
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+            
+            window.scrollTo(0, startPosition + distance * ease);
+            
+            if (timeElapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        };
+        
+        requestAnimationFrame(animation);
+    };
+
+    /**
+     * Optimize scroll event handlers
+     */
+    const optimizeScrollHandlers = () => {
+        // Use passive listeners for scroll
+        const scrollHandler = rafThrottle(() => {
+            lastScrollY = window.scrollY;
+            document.dispatchEvent(new CustomEvent('optimizedScroll', { detail: { scrollY: lastScrollY } }));
+        });
+        
+        window.addEventListener('scroll', scrollHandler, passiveOption);
+        
+        // Optimize resize events
+        const resizeHandler = debounce(() => {
+            document.dispatchEvent(new CustomEvent('optimizedResize'));
+        }, 150);
+        
+        window.addEventListener('resize', resizeHandler, passiveOption);
     };
 
     // ============================================
@@ -321,13 +429,88 @@
     };
 
     // ============================================
+    // 12. INTERSECTION OBSERVER FOR ANIMATIONS
+    // ============================================
+    
+    const initScrollAnimations = () => {
+        const animatedElements = document.querySelectorAll('.fade-in, [data-animate]');
+        
+        if ('IntersectionObserver' in window && animatedElements.length > 0) {
+            const animationObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        requestAnimationFrame(() => {
+                            entry.target.classList.add('animated');
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        });
+                        animationObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1
+            });
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                animationObserver.observe(el);
+            });
+        }
+    };
+
+    // ============================================
+    // 13. PREVENT LAYOUT THRASHING
+    // ============================================
+    
+    const batchDOMReads = (callback) => {
+        requestAnimationFrame(() => {
+            const reads = callback();
+            requestAnimationFrame(() => {
+                if (typeof reads === 'function') reads();
+            });
+        });
+    };
+
+    // ============================================
+    // 14. OPTIMIZE HOVER STATES
+    // ============================================
+    
+    const optimizeHoverStates = () => {
+        // Disable hover on touch devices to prevent sticky hover
+        let hasTouch = false;
+        
+        window.addEventListener('touchstart', function onFirstTouch() {
+            hasTouch = true;
+            document.body.classList.add('touch-device');
+            window.removeEventListener('touchstart', onFirstTouch);
+        }, passiveOption);
+        
+        // Add hover class only on mouse enter for better performance
+        document.addEventListener('mouseenter', (e) => {
+            if (!hasTouch && e.target.classList) {
+                e.target.classList.add('hover-active');
+            }
+        }, true);
+        
+        document.addEventListener('mouseleave', (e) => {
+            if (e.target.classList) {
+                e.target.classList.remove('hover-active');
+            }
+        }, true);
+    };
+
+    // ============================================
     // INITIALIZE ALL OPTIMIZATIONS
     // ============================================
     
     const init = () => {
-        // Run immediately
+        // Run immediately - critical optimizations
         addResourceHints();
         optimizeAnimations();
+        optimizeScrollHandlers();
         
         // Run on DOM ready
         if (document.readyState === 'loading') {
@@ -336,18 +519,22 @@
                 lazyLoadBackgrounds();
                 optimizeImages();
                 loadDeferredCSS();
+                initScrollAnimations();
+                optimizeHoverStates();
             });
         } else {
             lazyLoadImages();
             lazyLoadBackgrounds();
             optimizeImages();
             loadDeferredCSS();
+            initScrollAnimations();
+            optimizeHoverStates();
         }
         
-        // Run on load
+        // Run on load - non-critical
         window.addEventListener('load', () => {
             preloadCriticalResources();
-            monitorPerformance();
+            // monitorPerformance(); // Uncomment for debugging
             // registerServiceWorker(); // Uncomment when sw.js is ready
         });
     };
@@ -360,7 +547,10 @@
         lazyLoadImages,
         lazyLoadBackgrounds,
         optimizeImages,
-        debounce
+        debounce,
+        rafThrottle,
+        smoothScrollTo,
+        batchDOMReads
     };
 
 })();

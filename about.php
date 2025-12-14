@@ -194,6 +194,30 @@
         </div>
     </section>
 
+    <!-- Map Section -->
+    <section class="section-padding bg-surface-light dark:bg-surface-dark">
+        <div class="container-custom">
+            <div class="text-center mb-12">
+                <span class="section-label">Vị trí</span>
+                <h2 class="section-title">Tìm đường đến Aurora Hotel Plaza</h2>
+                <p class="section-description">
+                    Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, TP. Biên Hòa, Tỉnh Đồng Nai
+                </p>
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-xl">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824378097523!2d106.84009497093794!3d10.957145331996388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s"
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container-custom">

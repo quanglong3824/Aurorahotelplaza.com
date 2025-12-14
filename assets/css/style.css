@@ -2,7 +2,25 @@
 
 /* Global Scale - Zoom toàn bộ website */
 html {
-    zoom: 90%;
+    zoom: 85%;
+    scroll-behavior: smooth;
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZED SMOOTH TRANSITIONS
+   ============================================ */
+
+/* Focus styles - no transition needed */
+*:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* GPU-accelerated properties only */
+.gpu-accelerate {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 /* Alternative method using transform (uncomment if zoom doesn't work) */
@@ -820,4 +838,345 @@ section#apartments .text-xl.font-bold {
 section#rooms .flex.h-10,
 section#apartments .flex.h-10 {
     min-height: 44px;
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZED SMOOTH ANIMATIONS
+   ============================================ */
+
+/* 
+ * PERFORMANCE RULES:
+ * 1. Only use transform & opacity for animations (GPU accelerated)
+ * 2. Avoid animating layout properties (width, height, margin, padding)
+ * 3. Use will-change sparingly and only when needed
+ * 4. Prefer shorter durations (0.2s-0.3s) for snappy feel
+ */
+
+/* Interactive elements - ONLY color and shadow transitions */
+a, button {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Form elements - minimal transitions */
+input, select, textarea {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Card hover effects - GPU accelerated */
+.card, .room-card, .service-card, .blog-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    will-change: transform;
+}
+
+.card:hover, .room-card:hover, .service-card:hover, .blog-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Image hover - GPU accelerated */
+.image-hover {
+    overflow: hidden;
+}
+
+.image-hover img {
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.image-hover:hover img {
+    transform: scale(1.03);
+}
+
+/* Modal - GPU accelerated */
+.modal {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    will-change: opacity, transform;
+}
+
+.modal.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Dropdown - GPU accelerated */
+.dropdown-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    will-change: opacity, transform;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Tab content - simple fade */
+.tab-content {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.tab-content.active {
+    opacity: 1;
+}
+
+/* Form focus - shadow only, no transform */
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+/* Progress bar */
+.progress-bar {
+    transition: width 0.4s ease;
+}
+
+/* Notification - GPU accelerated */
+.notification {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+/* Accordion - use max-height carefully */
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion-content.open {
+    max-height: 500px;
+}
+
+/* Gallery item - GPU accelerated */
+.gallery-item {
+    transition: transform 0.25s ease;
+    will-change: transform;
+}
+
+.gallery-item:hover {
+    transform: scale(1.02);
+    z-index: 10;
+}
+
+/* Back to top - GPU accelerated */
+.back-to-top {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    will-change: opacity, transform;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Skeleton loading - optimized animation */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.2s ease infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Mobile menu - GPU accelerated */
+.mobile-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* Search overlay - GPU accelerated */
+.search-overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+}
+
+.search-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tooltip - GPU accelerated */
+.tooltip {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    will-change: opacity, transform;
+}
+
+.tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Calendar date - minimal */
+.calendar-date {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Booking steps - GPU accelerated */
+.booking-step {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    will-change: opacity, transform;
+}
+
+.booking-step.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Filter items - GPU accelerated */
+.filter-item {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.filter-item.hidden {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+}
+
+/* Rating stars - minimal */
+.rating-star {
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.rating-star:hover {
+    transform: scale(1.15);
+}
+
+/* Testimonial carousel - GPU accelerated */
+.testimonial-slide {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    will-change: opacity, transform;
+}
+
+.testimonial-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Feature highlight - optimized */
+.feature-highlight {
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    transition: transform 0.5s ease;
+    transform: translateX(0);
+}
+
+.feature-highlight:hover::before {
+    transform: translateX(200%);
+}
+
+/* Fade in animation - optimized */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered delays - shorter */
+.fade-in:nth-child(1) { animation-delay: 0.05s; }
+.fade-in:nth-child(2) { animation-delay: 0.1s; }
+.fade-in:nth-child(3) { animation-delay: 0.15s; }
+.fade-in:nth-child(4) { animation-delay: 0.2s; }
+.fade-in:nth-child(5) { animation-delay: 0.25s; }
+.fade-in:nth-child(6) { animation-delay: 0.3s; }
+
+/* Loading shimmer - optimized */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 1s ease infinite;
+    transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* Page transition overlay */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    z-index: 9999;
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    will-change: transform;
+}
+
+.page-transition.active {
+    transform: translateX(0);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Remove will-change after animation completes to free GPU memory */
+.animation-complete {
+    will-change: auto;
 }
