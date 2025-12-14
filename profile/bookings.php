@@ -10,6 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 require_once '../config/database.php';
 require_once '../models/Booking.php';
 require_once '../helpers/booking-helper.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 // Get filter parameters
 $filters = [
@@ -51,27 +53,27 @@ try {
 
 // Status labels and colors
 $status_labels = [
-    'pending' => ['label' => 'Chờ xác nhận', 'color' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'],
-    'confirmed' => ['label' => 'Đã xác nhận', 'color' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'],
-    'checked_in' => ['label' => 'Đã nhận phòng', 'color' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'],
-    'checked_out' => ['label' => 'Đã trả phòng', 'color' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'],
-    'cancelled' => ['label' => 'Đã hủy', 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
-    'no_show' => ['label' => 'Không đến', 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
+    'pending' => ['label' => __('booking_status.pending'), 'color' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'],
+    'confirmed' => ['label' => __('booking_status.confirmed'), 'color' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'],
+    'checked_in' => ['label' => __('booking_status.checked_in'), 'color' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'],
+    'checked_out' => ['label' => __('booking_status.checked_out'), 'color' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'],
+    'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
+    'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
 ];
 
 $payment_labels = [
-    'unpaid' => ['label' => 'Chưa thanh toán', 'color' => 'bg-red-100 text-red-800'],
-    'partial' => ['label' => 'Thanh toán một phần', 'color' => 'bg-yellow-100 text-yellow-800'],
-    'paid' => ['label' => 'Đã thanh toán', 'color' => 'bg-green-100 text-green-800'],
-    'refunded' => ['label' => 'Đã hoàn tiền', 'color' => 'bg-gray-100 text-gray-800']
+    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-red-100 text-red-800'],
+    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-yellow-100 text-yellow-800'],
+    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-green-100 text-green-800'],
+    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-gray-100 text-gray-800']
 ];
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Lịch sử đặt phòng - Aurora Hotel Plaza</title>
+    <title><?php _e('profile_bookings.title'); ?></title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
     
@@ -91,14 +93,14 @@ $payment_labels = [
             <div class="flex items-center gap-4 mb-4">
                 <a href="index.php" class="inline-flex items-center gap-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-accent transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
-                    Quay lại
+                    <?php _e('profile_bookings.back'); ?>
                 </a>
             </div>
             <h1 class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                Lịch sử đặt phòng
+                <?php _e('profile_bookings.page_title'); ?>
             </h1>
             <p class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">
-                Xem và quản lý các đặt phòng của bạn
+                <?php _e('profile_bookings.page_subtitle'); ?>
             </p>
         </div>
 
@@ -119,7 +121,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">hotel</span>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổng đặt phòng</p>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('profile_bookings.total_bookings'); ?></p>
                         <p class="text-2xl font-bold"><?php echo $stats['total_bookings']; ?></p>
                     </div>
                 </div>
@@ -131,7 +133,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400">pending</span>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Chờ xác nhận</p>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('profile_bookings.pending'); ?></p>
                         <p class="text-2xl font-bold"><?php echo $stats['pending_bookings']; ?></p>
                     </div>
                 </div>
@@ -143,7 +145,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Hoàn thành</p>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('profile_bookings.completed'); ?></p>
                         <p class="text-2xl font-bold"><?php echo $stats['completed_bookings']; ?></p>
                     </div>
                 </div>
@@ -155,7 +157,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined text-red-600 dark:text-red-400">cancel</span>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Đã hủy</p>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('profile_bookings.cancelled'); ?></p>
                         <p class="text-2xl font-bold"><?php echo $stats['cancelled_bookings']; ?></p>
                     </div>
                 </div>
@@ -167,7 +169,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined text-accent">payments</span>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổng chi tiêu</p>
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('profile_bookings.total_spent'); ?></p>
                         <p class="text-xl font-bold text-accent"><?php echo number_format($stats['total_spent']); ?> VNĐ</p>
                     </div>
                 </div>
@@ -177,18 +179,18 @@ $payment_labels = [
         <!-- Filters -->
         <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6 mb-8">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold">Bộ lọc</h2>
+                <h2 class="text-lg font-bold"><?php _e('profile_bookings.filters'); ?></h2>
                 <a href="api/export-bookings.php?<?php echo http_build_query($filters); ?>" 
                    class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                     <span class="material-symbols-outlined mr-2 text-sm">download</span>
-                    Xuất CSV
+                    <?php _e('profile_bookings.export_csv'); ?>
                 </a>
             </div>
             <form method="GET" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <!-- Search -->
                     <div class="relative group">
-                        <label class="block text-sm font-medium mb-2">Tìm kiếm</label>
+                        <label class="block text-sm font-medium mb-2"><?php _e('profile_bookings.search'); ?></label>
                         <input type="text" name="search" value="<?php echo htmlspecialchars($filters['search']); ?>"
                                placeholder="VD: 6C320B hoặc BK20251119..."
                                title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ"
@@ -207,9 +209,9 @@ $payment_labels = [
                     
                     <!-- Status Filter -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái đặt phòng</label>
+                        <label class="block text-sm font-medium mb-2"><?php _e('profile_bookings.booking_status'); ?></label>
                         <select name="status" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
-                            <option value="">Tất cả</option>
+                            <option value=""><?php _e('profile_bookings.all'); ?></option>
                             <?php foreach ($status_labels as $status => $info): ?>
                             <option value="<?php echo $status; ?>" <?php echo $filters['status'] === $status ? 'selected' : ''; ?>>
                                 <?php echo $info['label']; ?>
@@ -220,9 +222,9 @@ $payment_labels = [
                     
                     <!-- Payment Status Filter -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Thanh toán</label>
+                        <label class="block text-sm font-medium mb-2"><?php _e('profile_bookings.payment'); ?></label>
                         <select name="payment_status" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
-                            <option value="">Tất cả</option>
+                            <option value=""><?php _e('profile_bookings.all'); ?></option>
                             <?php foreach ($payment_labels as $status => $info): ?>
                             <option value="<?php echo $status; ?>" <?php echo $filters['payment_status'] === $status ? 'selected' : ''; ?>>
                                 <?php echo $info['label']; ?>
@@ -233,14 +235,14 @@ $payment_labels = [
                     
                     <!-- Date From -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Từ ngày</label>
+                        <label class="block text-sm font-medium mb-2"><?php _e('profile_bookings.from_date'); ?></label>
                         <input type="date" name="date_from" value="<?php echo htmlspecialchars($filters['date_from']); ?>"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
                     </div>
                     
                     <!-- Date To -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Đến ngày</label>
+                        <label class="block text-sm font-medium mb-2"><?php _e('profile_bookings.to_date'); ?></label>
                         <input type="date" name="date_to" value="<?php echo htmlspecialchars($filters['date_to']); ?>"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
                     </div>
@@ -249,7 +251,7 @@ $payment_labels = [
                     <div class="flex items-end gap-2">
                         <button type="submit" class="px-6 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
                             <span class="material-symbols-outlined mr-1">search</span>
-                            Lọc
+                            <?php _e('profile_bookings.filter'); ?>
                         </button>
                         <a href="bookings.php" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <span class="material-symbols-outlined">refresh</span>
@@ -289,31 +291,31 @@ $payment_labels = [
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                         <div>
-                                            <span class="font-medium">Mã đặt phòng:</span>
+                                            <span class="font-medium"><?php _e('profile_bookings.booking_code'); ?>:</span>
                                             <span class="font-mono text-accent"><?php echo BookingHelper::formatBookingCode($booking['booking_code'], true); ?></span>
                                             <div class="text-xs mt-1">
-                                                Mã ngắn: <span class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
+                                                <?php _e('profile_bookings.short_code'); ?>: <span class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Nhận phòng:</span>
+                                            <span class="font-medium"><?php _e('profile_bookings.check_in'); ?>:</span>
                                             <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Trả phòng:</span>
+                                            <span class="font-medium"><?php _e('profile_bookings.check_out'); ?>:</span>
                                             <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Số khách:</span>
-                                            <?php echo $booking['num_adults']; ?> người
+                                            <span class="font-medium"><?php _e('profile_bookings.num_guests'); ?>:</span>
+                                            <?php echo $booking['num_adults']; ?> <?php _e('profile_bookings.persons'); ?>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Số đêm:</span>
-                                            <?php echo $booking['total_nights']; ?> đêm
+                                            <span class="font-medium"><?php _e('profile_bookings.num_nights'); ?>:</span>
+                                            <?php echo $booking['total_nights']; ?> <?php _e('profile_bookings.nights'); ?>
                                         </div>
                                         <?php if ($booking['room_number']): ?>
                                         <div>
-                                            <span class="font-medium">Phòng:</span>
+                                            <span class="font-medium"><?php _e('profile_bookings.room'); ?>:</span>
                                             <?php echo $booking['room_number']; ?>
                                         </div>
                                         <?php endif; ?>
@@ -327,7 +329,7 @@ $payment_labels = [
                             <div class="text-right">
                                 <p class="text-2xl font-bold text-accent"><?php echo number_format($booking['total_amount']); ?> VNĐ</p>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                                    Đặt ngày <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
+                                    <?php _e('profile_bookings.booked_on'); ?> <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
                                 </p>
                             </div>
                             
@@ -336,21 +338,21 @@ $payment_labels = [
                                 <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>" 
                                    class="px-4 py-2 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg hover:opacity-90 transition-all text-sm inline-flex items-center">
                                     <span class="material-symbols-outlined mr-1 text-sm">check_circle</span>
-                                    Xác nhận
+                                    <?php _e('profile_bookings.confirm'); ?>
                                 </a>
                                 <?php endif; ?>
                                 
                                 <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
                                    class="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors text-sm">
                                     <span class="material-symbols-outlined mr-1 text-sm">visibility</span>
-                                    Chi tiết
+                                    <?php _e('profile_bookings.details'); ?>
                                 </a>
                                 
                                 <?php if ($booking['status'] === 'confirmed' && strtotime($booking['check_in_date']) > time()): ?>
                                 <button onclick="cancelBooking(<?php echo $booking['booking_id']; ?>, '<?php echo $booking['booking_code']; ?>')"
                                         class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm">
                                     <span class="material-symbols-outlined mr-1 text-sm">cancel</span>
-                                    Hủy
+                                    <?php _e('profile_bookings.cancel'); ?>
                                 </button>
                                 <?php endif; ?>
                                 
@@ -360,12 +362,12 @@ $payment_labels = [
                                    download="booking-<?php echo $booking['booking_code']; ?>-qrcode.png"
                                    class="px-4 py-2 border border-accent text-accent rounded-lg hover:bg-accent hover:text-white transition-colors text-sm inline-flex items-center">
                                     <span class="material-symbols-outlined mr-1 text-sm">qr_code</span>
-                                    Tải QR
+                                    <?php _e('profile_bookings.download_qr'); ?>
                                 </a>
                                 <?php else: ?>
                                 <button disabled class="px-4 py-2 border border-gray-300 text-gray-400 rounded-lg cursor-not-allowed text-sm opacity-50">
                                     <span class="material-symbols-outlined mr-1 text-sm">qr_code</span>
-                                    QR Code
+                                    <?php _e('profile_bookings.qr_code'); ?>
                                 </button>
                                 <?php endif; ?>
                             </div>
@@ -380,8 +382,8 @@ $payment_labels = [
             <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        Hiển thị <?php echo (($page - 1) * $per_page) + 1; ?> - <?php echo min($page * $per_page, $total_bookings); ?> 
-                        trong tổng số <?php echo $total_bookings; ?> đặt phòng
+                        <?php _e('profile_bookings.showing'); ?> <?php echo (($page - 1) * $per_page) + 1; ?> - <?php echo min($page * $per_page, $total_bookings); ?> 
+                        <?php _e('profile_bookings.of_total'); ?> <?php echo $total_bookings; ?> <?php _e('profile_bookings.bookings'); ?>
                     </div>
                     
                     <div class="flex gap-2">
@@ -415,14 +417,14 @@ $payment_labels = [
             <div class="p-12 text-center">
                 <span class="material-symbols-outlined text-6xl text-gray-400 mb-4 block">hotel_class</span>
                 <h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-2">
-                    Chưa có đặt phòng nào
+                    <?php _e('profile_bookings.no_bookings'); ?>
                 </h3>
                 <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6">
-                    Bạn chưa có lịch sử đặt phòng. Hãy đặt phòng đầu tiên của bạn!
+                    <?php _e('profile_bookings.no_bookings_desc'); ?>
                 </p>
                 <a href="../booking/index.php" class="inline-flex items-center px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
                     <span class="material-symbols-outlined mr-2">add</span>
-                    Đặt phòng ngay
+                    <?php _e('profile_bookings.book_now'); ?>
                 </a>
             </div>
             <?php endif; ?>

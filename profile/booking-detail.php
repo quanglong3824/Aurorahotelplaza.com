@@ -3,6 +3,8 @@ session_start();
 require_once '../config/database.php';
 require_once '../models/Booking.php';
 require_once '../helpers/refund-policy.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 $booking_code = $_GET['code'] ?? '';
 $booking_id = $_GET['id'] ?? 0;
@@ -13,7 +15,7 @@ $can_cancel = false;
 $refund_info = null;
 
 if (!$booking_code && !$booking_id) {
-    $error = 'Mã đặt phòng không hợp lệ';
+    $error = __('booking_detail.invalid_code');
 } else {
     try {
         $db = getDB();
@@ -37,10 +39,10 @@ if (!$booking_code && !$booking_id) {
         }
         
         if (!$booking) {
-            $error = 'Không tìm thấy đặt phòng';
+            $error = __('booking_detail.not_found');
         } elseif (isset($_SESSION['user_id']) && $booking['user_id'] != $_SESSION['user_id']) {
             // If user is logged in but not the owner, don't show
-            $error = 'Bạn không có quyền xem đặt phòng này';
+            $error = __('booking_detail.no_permission');
         } else {
             // Get booking history
             $booking_history = $bookingModel->getHistory($booking['booking_id']);
@@ -56,33 +58,33 @@ if (!$booking_code && !$booking_id) {
         
     } catch (Exception $e) {
         error_log("Booking detail error: " . $e->getMessage());
-        $error = 'Có lỗi xảy ra khi tải thông tin đặt phòng';
+        $error = __('booking_detail.error_loading');
     }
 }
 
 // Status labels and colors
 $status_labels = [
-    'pending' => ['label' => 'Chờ xác nhận', 'color' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'],
-    'confirmed' => ['label' => 'Đã xác nhận', 'color' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'],
-    'checked_in' => ['label' => 'Đã nhận phòng', 'color' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'],
-    'checked_out' => ['label' => 'Đã trả phòng', 'color' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'],
-    'cancelled' => ['label' => 'Đã hủy', 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
-    'no_show' => ['label' => 'Không đến', 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
+    'pending' => ['label' => __('booking_status.pending'), 'color' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'],
+    'confirmed' => ['label' => __('booking_status.confirmed'), 'color' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'],
+    'checked_in' => ['label' => __('booking_status.checked_in'), 'color' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'],
+    'checked_out' => ['label' => __('booking_status.checked_out'), 'color' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'],
+    'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
+    'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
 ];
 
 $payment_labels = [
-    'unpaid' => ['label' => 'Chưa thanh toán', 'color' => 'bg-red-100 text-red-800'],
-    'partial' => ['label' => 'Thanh toán một phần', 'color' => 'bg-yellow-100 text-yellow-800'],
-    'paid' => ['label' => 'Đã thanh toán', 'color' => 'bg-green-100 text-green-800'],
-    'refunded' => ['label' => 'Đã hoàn tiền', 'color' => 'bg-gray-100 text-gray-800']
+    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-red-100 text-red-800'],
+    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-yellow-100 text-yellow-800'],
+    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-green-100 text-green-800'],
+    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-gray-100 text-gray-800']
 ];
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Chi tiết đặt phòng <?php echo htmlspecialchars($booking_code); ?> - Aurora Hotel Plaza</title>
+    <title><?php _e('booking_detail.title'); ?></title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
     
@@ -103,20 +105,20 @@ $payment_labels = [
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="bookings.php" class="inline-flex items-center gap-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-accent transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
-                    Quay lại danh sách
+                    <?php _e('booking_detail.back_to_list'); ?>
                 </a>
                 <?php else: ?>
                 <a href="../index.php" class="inline-flex items-center gap-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-accent transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
-                    Về trang chủ
+                    <?php _e('booking_detail.back_to_home'); ?>
                 </a>
                 <?php endif; ?>
             </div>
             <h1 class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                Chi tiết đặt phòng
+                <?php _e('booking_detail.page_title'); ?>
             </h1>
             <p class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">
-                Mã đặt phòng: <span class="font-mono text-accent"><?php echo htmlspecialchars($booking_code); ?></span>
+                <?php _e('booking_detail.booking_code'); ?>: <span class="font-mono text-accent"><?php echo htmlspecialchars($booking_code); ?></span>
             </p>
         </div>
 
@@ -130,14 +132,14 @@ $payment_labels = [
         
         <!-- Booking Code Lookup Form -->
         <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
-            <h2 class="text-xl font-bold mb-4">Tra cứu đặt phòng</h2>
+            <h2 class="text-xl font-bold mb-4"><?php _e('booking_detail.lookup_title'); ?></h2>
             <form method="GET" class="flex gap-4">
-                <input type="text" name="code" placeholder="Nhập mã đặt phòng..." 
+                <input type="text" name="code" placeholder="<?php _e('booking_detail.lookup_placeholder'); ?>" 
                        value="<?php echo htmlspecialchars($booking_code); ?>"
                        class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-accent focus:border-accent">
                 <button type="submit" class="px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
                     <span class="material-symbols-outlined mr-2">search</span>
-                    Tra cứu
+                    <?php _e('booking_detail.lookup_btn'); ?>
                 </button>
             </form>
         </div>
@@ -147,7 +149,7 @@ $payment_labels = [
         <!-- Booking Status -->
         <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6 mb-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold">Trạng thái đặt phòng</h2>
+                <h2 class="text-xl font-bold"><?php _e('booking_detail.booking_status'); ?></h2>
                 <div class="flex gap-2">
                     <span class="px-4 py-2 text-sm font-medium rounded-full <?php echo $status_labels[$booking['status']]['color']; ?>">
                         <?php echo $status_labels[$booking['status']]['label']; ?>
@@ -162,24 +164,24 @@ $payment_labels = [
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div>
-                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Ngày đặt:</span>
+                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.booked_date'); ?>:</span>
                     <p><?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?></p>
                 </div>
                 <?php if ($booking['checked_in_at']): ?>
                 <div>
-                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Nhận phòng:</span>
+                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.checked_in_date'); ?>:</span>
                     <p><?php echo date('d/m/Y H:i', strtotime($booking['checked_in_at'])); ?></p>
                 </div>
                 <?php endif; ?>
                 <?php if ($booking['checked_out_at']): ?>
                 <div>
-                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Trả phòng:</span>
+                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.checked_out_date'); ?>:</span>
                     <p><?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?></p>
                 </div>
                 <?php endif; ?>
                 <?php if ($booking['cancelled_at']): ?>
                 <div>
-                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Ngày hủy:</span>
+                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.cancelled_date'); ?>:</span>
                     <p><?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?></p>
                 </div>
                 <?php endif; ?>
@@ -187,7 +189,7 @@ $payment_labels = [
             
             <?php if ($booking['cancellation_reason']): ?>
             <div class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Lý do hủy:</span>
+                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.cancel_reason'); ?>:</span>
                 <p class="mt-1"><?php echo htmlspecialchars($booking['cancellation_reason']); ?></p>
             </div>
             <?php endif; ?>
@@ -203,7 +205,7 @@ $payment_labels = [
                         <span class="material-symbols-outlined">
                             <?php echo $booking['category'] === 'apartment' ? 'apartment' : 'hotel'; ?>
                         </span>
-                        Thông tin phòng
+                        <?php _e('booking_detail.room_info'); ?>
                     </h3>
                     
                     <div class="space-y-4">
@@ -218,43 +220,43 @@ $payment_labels = [
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Nhận phòng:</span>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.check_in'); ?>:</span>
                                 <p class="text-lg font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
                             </div>
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Trả phòng:</span>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.check_out'); ?>:</span>
                                 <p class="text-lg font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
                             </div>
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Số khách:</span>
-                                <p><?php echo $booking['num_adults']; ?> người lớn<?php echo $booking['num_children'] ? ', ' . $booking['num_children'] . ' trẻ em' : ''; ?></p>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.num_guests'); ?>:</span>
+                                <p><?php echo $booking['num_adults']; ?> <?php _e('booking_detail.adults'); ?><?php echo $booking['num_children'] ? ', ' . $booking['num_children'] . ' ' . __('booking_detail.children') : ''; ?></p>
                             </div>
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Số đêm:</span>
-                                <p><?php echo $booking['total_nights']; ?> đêm</p>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.num_nights'); ?>:</span>
+                                <p><?php echo $booking['total_nights']; ?> <?php _e('profile_bookings.nights'); ?></p>
                             </div>
                             <?php if ($booking['room_number']): ?>
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Số phòng:</span>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.room_number'); ?>:</span>
                                 <p class="text-lg font-semibold text-accent"><?php echo $booking['room_number']; ?></p>
                             </div>
                             <div>
-                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Tầng:</span>
-                                <p>Tầng <?php echo $booking['floor']; ?>, <?php echo $booking['building']; ?></p>
+                                <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.floor'); ?>:</span>
+                                <p><?php _e('booking_detail.floor'); ?> <?php echo $booking['floor']; ?>, <?php echo $booking['building']; ?></p>
                             </div>
                             <?php endif; ?>
                         </div>
                         
                         <?php if ($booking['amenities']): ?>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Tiện nghi:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.amenities'); ?>:</span>
                             <p class="mt-1"><?php echo htmlspecialchars($booking['amenities']); ?></p>
                         </div>
                         <?php endif; ?>
                         
                         <?php if ($booking['special_requests']): ?>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Yêu cầu đặc biệt:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.special_requests'); ?>:</span>
                             <p class="mt-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <?php echo htmlspecialchars($booking['special_requests']); ?>
                             </p>
@@ -267,25 +269,25 @@ $payment_labels = [
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined">person</span>
-                        Thông tin khách hàng
+                        <?php _e('booking_detail.guest_info'); ?>
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Họ và tên:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.full_name'); ?>:</span>
                             <p class="text-lg font-semibold"><?php echo htmlspecialchars($booking['guest_name']); ?></p>
                         </div>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Email:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.email'); ?>:</span>
                             <p><?php echo htmlspecialchars($booking['guest_email']); ?></p>
                         </div>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Số điện thoại:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.phone'); ?>:</span>
                             <p><?php echo htmlspecialchars($booking['guest_phone']); ?></p>
                         </div>
                         <?php if ($booking['guest_id_number']): ?>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">CMND/CCCD:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.id_number'); ?>:</span>
                             <p><?php echo htmlspecialchars($booking['guest_id_number']); ?></p>
                         </div>
                         <?php endif; ?>
@@ -300,40 +302,40 @@ $payment_labels = [
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined">receipt</span>
-                        Chi tiết giá
+                        <?php _e('booking_detail.price_detail'); ?>
                     </h3>
                     
                     <div class="space-y-3">
                         <div class="flex justify-between">
-                            <span>Giá phòng (<?php echo $booking['total_nights']; ?> đêm)</span>
+                            <span><?php _e('booking_detail.room_price'); ?> (<?php echo $booking['total_nights']; ?> <?php _e('profile_bookings.nights'); ?>)</span>
                             <span><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?> VNĐ</span>
                         </div>
                         
                         <?php if ($booking['service_charges'] > 0): ?>
                         <div class="flex justify-between">
-                            <span>Phí dịch vụ</span>
+                            <span><?php _e('booking_detail.service_charges'); ?></span>
                             <span><?php echo number_format($booking['service_charges']); ?> VNĐ</span>
                         </div>
                         <?php endif; ?>
                         
                         <?php if ($booking['discount_amount'] > 0): ?>
                         <div class="flex justify-between text-green-600">
-                            <span>Giảm giá</span>
+                            <span><?php _e('booking_detail.discount'); ?></span>
                             <span>-<?php echo number_format($booking['discount_amount']); ?> VNĐ</span>
                         </div>
                         <?php endif; ?>
                         
                         <?php if ($booking['points_used'] > 0): ?>
                         <div class="flex justify-between text-green-600">
-                            <span>Điểm thưởng sử dụng</span>
-                            <span>-<?php echo $booking['points_used']; ?> điểm</span>
+                            <span><?php _e('booking_detail.points_used'); ?></span>
+                            <span>-<?php echo $booking['points_used']; ?> <?php _e('profile_loyalty.points'); ?></span>
                         </div>
                         <?php endif; ?>
                         
                         <hr class="border-gray-300 dark:border-gray-600">
                         
                         <div class="flex justify-between text-lg font-bold">
-                            <span>Tổng cộng</span>
+                            <span><?php _e('booking_detail.total'); ?></span>
                             <span class="text-accent"><?php echo number_format($booking['total_amount']); ?> VNĐ</span>
                         </div>
                     </div>
@@ -344,25 +346,25 @@ $payment_labels = [
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined">payment</span>
-                        Thông tin thanh toán
+                        <?php _e('booking_detail.payment_info'); ?>
                     </h3>
                     
                     <div class="space-y-3">
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Phương thức:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.payment_method'); ?>:</span>
                             <p class="capitalize"><?php echo $booking['payment_method']; ?></p>
                         </div>
                         
                         <?php if ($booking['transaction_id']): ?>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Mã giao dịch:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.transaction_id'); ?>:</span>
                             <p class="font-mono text-sm"><?php echo htmlspecialchars($booking['transaction_id']); ?></p>
                         </div>
                         <?php endif; ?>
                         
                         <?php if ($booking['paid_at']): ?>
                         <div>
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Thời gian thanh toán:</span>
+                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark"><?php _e('booking_detail.paid_at'); ?>:</span>
                             <p><?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?></p>
                         </div>
                         <?php endif; ?>
@@ -372,34 +374,34 @@ $payment_labels = [
 
                 <!-- Actions -->
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
-                    <h3 class="text-xl font-bold mb-4">Hành động</h3>
+                    <h3 class="text-xl font-bold mb-4"><?php _e('booking_detail.actions'); ?></h3>
                     
                     <div class="space-y-3">
                         <?php if ($booking['status'] === 'pending'): ?>
                         <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>" 
                            class="w-full px-4 py-3 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 font-semibold">
                             <span class="material-symbols-outlined">check_circle</span>
-                            Xác nhận đặt phòng
+                            <?php _e('booking_detail.confirm_booking'); ?>
                         </a>
                         <?php endif; ?>
                         
                         <button onclick="window.print()" 
                                 class="w-full px-4 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
                             <span class="material-symbols-outlined mr-2">print</span>
-                            In thông tin đặt phòng
+                            <?php _e('booking_detail.print'); ?>
                         </button>
                         
                         <button onclick="shareBooking()" 
                                 class="w-full px-4 py-3 border-2 border-accent text-accent rounded-lg hover:bg-accent/5 transition-colors">
                             <span class="material-symbols-outlined mr-2">share</span>
-                            Chia sẻ
+                            <?php _e('booking_detail.share'); ?>
                         </button>
                         
                         <!-- QR Code Button -->
                         <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>" 
                            class="w-full px-4 py-3 border-2 border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-colors flex items-center justify-center">
                             <span class="material-symbols-outlined mr-2">qr_code</span>
-                            Xem QR Code
+                            <?php _e('booking_detail.view_qr'); ?>
                         </a>
                         
                         <!-- Cancellation Policy & Refund Info -->
@@ -409,24 +411,24 @@ $payment_labels = [
                             <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                                 <h4 class="font-bold text-sm mb-2 flex items-center gap-2">
                                     <span class="material-symbols-outlined text-sm">info</span>
-                                    Thông tin hoàn tiền
+                                    <?php _e('booking_detail.refund_info'); ?>
                                 </h4>
                                 <div class="space-y-2 text-sm">
                                     <div class="flex justify-between">
-                                        <span>Thời gian còn lại:</span>
-                                        <span class="font-bold"><?php echo round($refund_info['days_until_checkin'], 1); ?> ngày</span>
+                                        <span><?php _e('booking_detail.time_remaining'); ?>:</span>
+                                        <span class="font-bold"><?php echo round($refund_info['days_until_checkin'], 1); ?> <?php _e('booking_detail.days'); ?></span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span>Tổng tiền đặt phòng:</span>
+                                        <span><?php _e('booking_detail.total_booking'); ?>:</span>
                                         <span class="font-bold"><?php echo number_format($refund_info['total_amount']); ?> VNĐ</span>
                                     </div>
                                     <div class="flex justify-between text-green-600 dark:text-green-400">
-                                        <span>Số tiền hoàn lại:</span>
+                                        <span><?php _e('booking_detail.refund_amount'); ?>:</span>
                                         <span class="font-bold text-lg"><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</span>
                                     </div>
                                     <?php if ($refund_info['processing_fee'] > 0): ?>
                                     <div class="flex justify-between text-xs text-gray-600">
-                                        <span>Phí xử lý (5%):</span>
+                                        <span><?php _e('booking_detail.processing_fee'); ?>:</span>
                                         <span>-<?php echo number_format($refund_info['processing_fee']); ?> VNĐ</span>
                                     </div>
                                     <?php endif; ?>
@@ -442,13 +444,13 @@ $payment_labels = [
                             <button onclick="showCancelModal()" 
                                     class="w-full px-4 py-3 border-2 border-red-500 text-red-600 rounded-lg hover:bg-red-50 transition-colors font-semibold">
                                 <span class="material-symbols-outlined mr-2">cancel</span>
-                                Hủy đặt phòng
+                                <?php _e('booking_detail.cancel_booking'); ?>
                             </button>
                         </div>
                         <?php elseif ($booking['status'] === 'confirmed' || $booking['status'] === 'pending'): ?>
                         <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-sm text-yellow-800 dark:text-yellow-200">
                             <span class="material-symbols-outlined text-sm mr-1">info</span>
-                            Không thể hủy trong vòng 24 giờ trước check-in
+                            <?php _e('booking_detail.cannot_cancel'); ?>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -459,7 +461,7 @@ $payment_labels = [
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined">history</span>
-                        Lịch sử thay đổi
+                        <?php _e('booking_detail.history'); ?>
                     </h3>
                     
                     <div class="space-y-4">
@@ -642,10 +644,10 @@ function confirmCancellation() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('✅ ' + data.message);
+            alert('' + data.message);
             location.reload();
         } else {
-            alert('❌ Lỗi: ' + data.message);
+            alert(' Lỗi: ' + data.message);
             btn.disabled = false;
             btn.innerHTML = originalHTML;
         }

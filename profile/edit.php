@@ -15,6 +15,8 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
 
 require_once '../config/database.php';
 require_once '../helpers/logger.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 $success = '';
 $error = '';
@@ -114,11 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Chỉnh sửa thông tin - Aurora Hotel Plaza</title>
+    <title><?php _e('profile_edit.title'); ?></title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
     
@@ -138,14 +140,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="flex items-center gap-4 mb-4">
                 <a href="index.php" class="inline-flex items-center gap-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-accent transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
-                    Quay lại
+                    <?php _e('profile_edit.back'); ?>
                 </a>
             </div>
             <h1 class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                Chỉnh sửa thông tin cá nhân
+                <?php _e('profile_edit.page_title'); ?>
             </h1>
             <p class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">
-                Cập nhật thông tin tài khoản và mật khẩu của bạn
+                <?php _e('profile_edit.page_subtitle'); ?>
             </p>
         </div>
 
@@ -173,14 +175,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                 <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
                     <span class="material-symbols-outlined">person</span>
-                    Thông tin cá nhân
+                    <?php _e('profile_edit.personal_info'); ?>
                 </h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Full Name -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Họ và tên *
+                            <?php _e('profile_edit.full_name'); ?> *
                         </label>
                         <input type="text" name="full_name" 
                                value="<?php echo htmlspecialchars($user['full_name']); ?>"
@@ -191,21 +193,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Email (Read-only) -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Email
+                            <?php _e('profile_edit.email'); ?>
                         </label>
                         <input type="email" 
                                value="<?php echo htmlspecialchars($user['email']); ?>"
                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-text-secondary-light dark:text-text-secondary-dark cursor-not-allowed"
                                readonly>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
-                            Email không thể thay đổi
+                            <?php _e('profile_edit.email_readonly'); ?>
                         </p>
                     </div>
 
                     <!-- Phone -->
                     <div>
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Số điện thoại
+                            <?php _e('profile_edit.phone'); ?>
                         </label>
                         <input type="tel" name="phone" 
                                value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>"
@@ -216,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Date of Birth -->
                     <div>
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Ngày sinh
+                            <?php _e('profile_edit.dob'); ?>
                         </label>
                         <input type="date" name="date_of_birth" 
                                value="<?php echo $user['date_of_birth']; ?>"
@@ -226,25 +228,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Gender -->
                     <div>
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Giới tính
+                            <?php _e('profile_edit.gender'); ?>
                         </label>
                         <select name="gender" 
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-text-primary-light dark:text-text-primary-dark focus:ring-2 focus:ring-accent focus:border-accent transition-colors">
-                            <option value="">-- Chọn giới tính --</option>
-                            <option value="male" <?php echo $user['gender'] === 'male' ? 'selected' : ''; ?>>Nam</option>
-                            <option value="female" <?php echo $user['gender'] === 'female' ? 'selected' : ''; ?>>Nữ</option>
-                            <option value="other" <?php echo $user['gender'] === 'other' ? 'selected' : ''; ?>>Khác</option>
+                            <option value="">-- <?php _e('profile_edit.select_gender'); ?> --</option>
+                            <option value="male" <?php echo $user['gender'] === 'male' ? 'selected' : ''; ?>><?php _e('profile_edit.male'); ?></option>
+                            <option value="female" <?php echo $user['gender'] === 'female' ? 'selected' : ''; ?>><?php _e('profile_edit.female'); ?></option>
+                            <option value="other" <?php echo $user['gender'] === 'other' ? 'selected' : ''; ?>><?php _e('profile_edit.other'); ?></option>
                         </select>
                     </div>
 
                     <!-- Address -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                            Địa chỉ
+                            <?php _e('profile_edit.address'); ?>
                         </label>
                         <textarea name="address" rows="3"
                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-text-primary-light dark:text-text-primary-dark focus:ring-2 focus:ring-accent focus:border-accent transition-colors"
-                                  placeholder="Nhập địa chỉ của bạn"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                                  placeholder="<?php _e('profile_edit.enter_address'); ?>"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                     </div>
                 </div>
             </div>
@@ -253,19 +255,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6">
                 <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
                     <span class="material-symbols-outlined">lock</span>
-                    Thay đổi mật khẩu
+                    <?php _e('profile_edit.change_password'); ?>
                 </h2>
                 
                 <div class="space-y-4">
                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        Để thay đổi mật khẩu, vui lòng nhập mật khẩu hiện tại và mật khẩu mới.
+                        <?php _e('profile_edit.password_hint'); ?>
                     </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Current Password -->
                         <div>
                             <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                                Mật khẩu hiện tại
+                                <?php _e('profile_edit.current_password'); ?>
                             </label>
                             <div class="relative">
                                 <input type="password" name="current_password" id="current_password"
@@ -280,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- New Password -->
                         <div>
                             <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                                Mật khẩu mới
+                                <?php _e('profile_edit.new_password'); ?>
                             </label>
                             <div class="relative">
                                 <input type="password" name="new_password" id="new_password"
@@ -295,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- Confirm Password -->
                         <div>
                             <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">
-                                Xác nhận mật khẩu mới
+                                <?php _e('profile_edit.confirm_password'); ?>
                             </label>
                             <div class="relative">
                                 <input type="password" name="confirm_password" id="confirm_password"
@@ -313,11 +315,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Submit Button -->
             <div class="flex gap-4">
                 <a href="index.php" class="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-text-secondary-light dark:text-text-secondary-dark rounded-lg hover:border-accent hover:text-accent transition-colors">
-                    Hủy bỏ
+                    <?php _e('profile_edit.cancel'); ?>
                 </a>
                 <button type="submit" class="flex-1 px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 transition-colors flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">save</span>
-                    Lưu thay đổi
+                    <?php _e('profile_edit.save_changes'); ?>
                 </button>
             </div>
         </form>
