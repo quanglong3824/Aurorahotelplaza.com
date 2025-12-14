@@ -101,17 +101,38 @@ try {
     $payments = $stmt->fetchAll();
     
     // Get contact history
-    $stmt = $db->prepare("
-        SELECT 
-            c.*,
-            COALESCE(c.contact_code, LPAD(c.id, 8, '0')) as display_code
-        FROM contact_submissions c
-        WHERE c.user_id = ?
-        ORDER BY c.created_at DESC
-        LIMIT 20
-    ");
-    $stmt->execute([$user_id]);
-    $contacts = $stmt->fetchAll();
+    $contacts = [];
+    try {
+        $stmt = $db->prepare("
+            SELECT 
+                c.*,
+                COALESCE(c.contact_code, LPAD(c.id, 8, '0')) as display_code
+            FROM contact_submissions c
+            WHERE c.user_id = ?
+            ORDER BY c.created_at DESC
+            LIMIT 20
+        ");
+        $stmt->execute([$user_id]);
+        $contacts = $stmt->fetchAll();
+    } catch (Exception $e) {
+        // Nếu bảng chưa có cột id, thử query khác
+        try {
+            $stmt = $db->prepare("
+                SELECT * FROM contact_submissions 
+                WHERE user_id = ?
+                ORDER BY created_at DESC
+                LIMIT 20
+            ");
+            $stmt->execute([$user_id]);
+            $contacts = $stmt->fetchAll();
+            // Thêm display_code
+            foreach ($contacts as &$c) {
+                $c['display_code'] = str_pad($c['submission_id'] ?? rand(10000000, 99999999), 8, '0', STR_PAD_LEFT);
+            }
+        } catch (Exception $e2) {
+            error_log("Contact history error: " . $e2->getMessage());
+        }
+    }
     
 } catch (Exception $e) {
     die("Lỗi: " . $e->getMessage());
@@ -632,6 +653,42 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Auto switch to contacts tab if hash or localStorage
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash.replace('#', '');
+    const savedTab = localStorage.getItem('profileTab');
+    
+    if (hash === 'contacts' || savedTab === 'contacts') {
+        switchTabByName('contacts');
+        localStorage.removeItem('profileTab');
+    }
+});
+
+function switchTabByName(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active from all buttons
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const tabContent = document.getElementById('tab-' + tabName);
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
+    
+    // Find and activate the correct button
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        if (btn.textContent.toLowerCase().includes(tabName === 'contacts' ? 'liên hệ' : tabName)) {
+            btn.classList.add('active');
+        }
+    });
 }
 </script>
 

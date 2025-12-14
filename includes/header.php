@@ -157,6 +157,10 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
                         <span class="material-symbols-outlined">stars</span>
                         Điểm thưởng
                     </a>
+                    <a href="<?php echo $base_path; ?>profile.php#contacts" class="user-menu-item" onclick="localStorage.setItem('profileTab', 'contacts')">
+                        <span class="material-symbols-outlined">mail</span>
+                        Lịch sử liên hệ
+                    </a>
                     <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
                         <span class="material-symbols-outlined">map</span>
                         Sơ đồ phòng
