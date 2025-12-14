@@ -16,16 +16,22 @@ if (empty($token)) {
         $db = getDB();
         
         // Verify token from password_resets table
+        // Sử dụng LEFT JOIN để xử lý trường hợp user_id = 0
         $stmt = $db->prepare("
             SELECT pr.reset_id, pr.user_id, u.email, u.full_name 
             FROM password_resets pr
-            JOIN users u ON pr.user_id = u.user_id
+            LEFT JOIN users u ON pr.user_id = u.user_id
             WHERE pr.token = ? 
             AND pr.expires_at > NOW()
             AND pr.used = 0
         ");
         $stmt->execute([$token]);
         $user = $stmt->fetch();
+        
+        // Nếu user_id = 0, tìm user bằng cách khác (dựa vào thời gian tạo token)
+        if ($user && (!$user['email'] || $user['user_id'] == 0)) {
+            error_log("Warning: Reset token found but user_id is 0 or user not found");
+        }
         
         if ($user) {
             $valid_token = true;

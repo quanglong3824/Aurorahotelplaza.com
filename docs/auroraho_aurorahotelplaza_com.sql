@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 14, 2025 lúc 08:13 AM
+-- Thời gian đã tạo: Th12 14, 2025 lúc 11:19 AM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -119,74 +118,24 @@ CREATE TABLE `activity_logs` (
 --
 
 INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `entity_id`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES
-(1, 22, 'database_reset', NULL, NULL, 'Reset toàn bộ database (giữ admin)', '::1', NULL, '2025-11-18 17:30:15'),
-(2, 22, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 48 sang loại: 4', '::1', NULL, '2025-11-18 18:27:55'),
-(3, 22, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 59 sang loại: 4', '::1', NULL, '2025-11-18 18:28:04'),
-(4, 22, 'logout', 'user', 22, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 00:46:48'),
-(5, 23, 'register', 'user', 23, 'New user registered via google - Details: {\"email\":\"quanglong.3824@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 00:47:09'),
-(6, 23, 'logout', 'user', 23, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 00:49:07'),
-(7, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 00:50:28'),
-(8, 22, 'confirm_payment', 'booking', 1, 'Confirmed payment for booking BK20251119E8EFA7. Amount: 3,900,000 VND. Points awarded: 42,900', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:01:14'),
-(9, 22, 'create_booking_admin', 'booking', 2, 'Admin tạo booking BK202511196C320B cho khách Long Meo Meo. Tổng tiền: 3,000,000 VND', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:40:54'),
-(10, 22, 'assign_room', 'booking', 2, 'Phân phòng 712 cho đơn BK202511196C320B', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:43:47'),
-(11, 22, 'update_booking_status', 'booking', 2, 'Changed booking BK202511196C320B status from confirmed to checked_in', '::1', NULL, '2025-11-19 01:43:53'),
-(12, 22, 'update_booking_status', 'booking', 1, 'Changed booking BK20251119E8EFA7 status from confirmed to checked_in', '::1', NULL, '2025-11-19 01:44:14'),
-(13, 22, 'update_booking_status', 'booking', 2, 'Changed booking BK202511196C320B status from checked_in to checked_out', '::1', NULL, '2025-11-19 01:45:28'),
-(14, 22, 'update_user', 'user', 25, 'Thêm nhân viên thành công: Lễ Tân', '::1', NULL, '2025-11-19 01:51:28'),
-(15, 22, 'logout', 'user', 22, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:53:31'),
-(16, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:53:42'),
-(17, 25, 'logout', 'user', 25, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:54:25'),
-(18, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 01:57:17'),
-(19, 22, 'update_booking_status', 'booking', 1, 'Changed booking BK20251119E8EFA7 status from checked_in to checked_out', '::1', NULL, '2025-11-19 02:15:53'),
-(20, 22, 'update_room_status', 'room', 1, 'Updated room status to available', '::1', NULL, '2025-11-19 02:16:26'),
-(21, 22, 'update_room_status', 'room', 1, 'Updated room status to cleaning', '::1', NULL, '2025-11-19 02:23:49'),
-(22, 22, 'logout', 'user', 22, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 02:26:17'),
-(23, 24, 'login', 'user', 24, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long Meo Meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 02:26:25'),
-(24, 24, 'logout', 'user', 24, 'User logged out', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-19 02:46:49'),
-(25, 26, 'register', 'user', 26, 'New user registered via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '183.80.215.63', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1', '2025-11-19 03:46:06'),
-(26, 26, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15270095 - Details: {\"booking_id\":\"6\",\"booking_code\":\"BK20251119A1664F\",\"amount\":4500000,\"currency\":\"VND\",\"transaction_id\":\"15270095\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":450,\"payment_method\":\"vnpay\"}', '183.80.215.63', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1', '2025-11-19 04:10:55'),
-(27, 26, 'login', 'user', 26, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '183.80.215.63', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1', '2025-11-19 04:14:05'),
-(28, 26, 'logout', 'user', 26, 'User logged out', '183.80.215.63', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1', '2025-11-19 04:14:51'),
-(29, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 06:40:35'),
-(30, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-19 08:12:23'),
-(31, 26, 'login', 'user', 26, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.55.155', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-21 06:00:07'),
-(32, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 07:55:09'),
-(33, 22, 'update_booking_status', 'booking', 5, 'Changed booking BK20251119184169 status from confirmed to checked_in', '14.164.1.44', NULL, '2025-11-22 07:55:54'),
-(34, 22, 'update_booking_status', 'booking', 6, 'Changed booking BK20251119A1664F status from confirmed to checked_in', '14.164.1.44', NULL, '2025-11-22 07:55:58'),
-(35, 22, 'update_booking_status', 'booking', 6, 'Changed booking BK20251119A1664F status from checked_in to checked_out', '14.164.1.44', NULL, '2025-11-22 07:56:03'),
-(36, 22, 'update_booking_status', 'booking', 5, 'Changed booking BK20251119184169 status from checked_in to checked_out', '14.164.1.44', NULL, '2025-11-22 07:56:07'),
-(37, 22, 'update_booking_status', 'booking', 4, 'Changed booking BK20251119569EAF status from pending to confirmed', '14.164.1.44', NULL, '2025-11-22 07:56:12'),
-(38, 22, 'update_booking_status', 'booking', 4, 'Changed booking BK20251119569EAF status from confirmed to checked_in', '14.164.1.44', NULL, '2025-11-22 07:56:16'),
-(39, 22, 'update_booking_status', 'booking', 4, 'Changed booking BK20251119569EAF status from checked_in to checked_in', '14.164.1.44', NULL, '2025-11-22 07:56:18'),
-(40, 22, 'update_booking_status', 'booking', 4, 'Changed booking BK20251119569EAF status from checked_in to checked_out', '14.164.1.44', NULL, '2025-11-22 07:56:21'),
-(41, 22, 'update_booking_status', 'booking', 3, 'Changed booking BK20251119C00FE8 status from pending to cancelled', '14.164.1.44', NULL, '2025-11-22 07:56:27'),
-(42, 22, 'update_room_status', 'room', 3, 'Updated room status to available', '14.164.1.44', NULL, '2025-11-22 07:56:40'),
-(43, 22, 'update_room_status', 'room', 4, 'Updated room status to available', '14.164.1.44', NULL, '2025-11-22 07:56:46'),
-(44, 22, 'update_room_status', 'room', 1, 'Updated room status to available', '14.164.1.44', NULL, '2025-11-22 07:56:56'),
-(45, 22, 'update_room_status', 'room', 12, 'Updated room status to cleaning', '14.164.1.44', NULL, '2025-11-22 07:57:06'),
-(46, 22, 'update_room_status', 'room', 12, 'Updated room status to available', '14.164.1.44', NULL, '2025-11-22 07:57:12'),
-(47, 22, 'logout', 'user', 22, 'User logged out', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 07:57:58'),
-(48, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 07:58:11'),
-(49, 25, 'logout', 'user', 25, 'User logged out', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 07:58:53'),
-(50, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 07:59:21'),
-(51, 22, 'update_user', 'user', 28, 'Thêm nhân viên thành công: Phòng Kinh Doanh', '14.164.1.44', NULL, '2025-11-22 08:00:46'),
-(52, 22, 'logout', 'user', 22, 'User logged out', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 08:01:04'),
-(53, 28, 'login', 'user', 28, 'User logged in - Details: {\"email\":\"booking@aurorahotelplaza.com\",\"user_name\":\"Ph\\u00f2ng Kinh Doanh\",\"role\":\"sale\",\"remember_me\":false}', '14.164.1.44', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-22 08:01:11'),
-(0, 23, 'login', 'user', 23, 'User logged in via google - Details: {\"email\":\"quanglong.3824@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '115.74.225.100', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-11-26 07:34:33'),
-(0, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 08:40:46'),
-(0, 25, 'logout', 'user', 25, 'User logged out', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 08:53:04'),
-(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"Thanh V\\u00e0ng Nguy\\u1ec5n\",\"registration_method\":\"google\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 09:22:50'),
-(0, 0, 'profile_update', 'user', 0, 'User updated profile information - Details: {\"updated_fields\":[\"full_name\",\"phone\",\"user_id\"],\"password_changed\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 09:23:24'),
-(0, 0, 'profile_update', 'user', 0, 'User updated profile information - Details: {\"updated_fields\":[\"full_name\",\"phone\",\"user_id\"],\"password_changed\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 09:23:29'),
-(0, 0, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15305547 - Details: {\"booking_id\":\"0\",\"booking_code\":\"BK202511272C145F\",\"amount\":1400000,\"currency\":\"VND\",\"transaction_id\":\"15305547\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":140,\"payment_method\":\"vnpay\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-11-27 09:24:59'),
-(0, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-12-01 09:12:30'),
-(0, 25, 'update_room_status', 'room', 3, 'Updated room status to available', '115.74.225.100', NULL, '2025-12-01 09:14:49'),
-(0, 25, 'update_room_status', 'room', 2, 'Updated room status to available', '115.74.225.100', NULL, '2025-12-01 09:15:06'),
-(0, 25, 'update_room_status', 'room', 1, 'Updated room status to available', '115.74.225.100', NULL, '2025-12-01 09:15:12'),
-(0, 25, 'login', 'user', 25, 'User logged in - Details: {\"email\":\"info@aurorahotelplaza.com\",\"user_name\":\"L\\u1ec5 T\\u00e2n\",\"role\":\"receptionist\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-12-06 07:11:04'),
-(0, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '113.161.147.9', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-06 13:09:49'),
-(0, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-13 07:31:13'),
-(0, 22, 'login', 'user', 22, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.76.49.30', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-13 10:41:29');
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:50:38'),
+(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 03:53:06'),
+(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:15'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:40'),
+(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:59'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:44'),
+(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:51'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:16'),
+(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:36'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:47'),
+(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:00:11'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:01:05'),
+(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:03:49'),
+(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:06:41'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:07:57'),
+(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"thuylinh.80902@gmail.com\",\"user_name\":\"Linh\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:08:07'),
+(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:12:26'),
+(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"23810067@student.hcmute.edu.vn\",\"user_name\":\"Le Quang Long\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:13:48');
 
 -- --------------------------------------------------------
 
@@ -323,21 +272,6 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`, `room_id`, `check_in_date`, `check_out_date`, `num_adults`, `num_children`, `num_rooms`, `total_nights`, `room_price`, `service_charges`, `discount_amount`, `points_used`, `total_amount`, `special_requests`, `guest_name`, `guest_email`, `guest_phone`, `guest_id_number`, `status`, `payment_status`, `qr_code`, `confirmation_sent`, `checked_in_at`, `checked_out_at`, `checked_in_by`, `cancelled_at`, `cancelled_by`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
-(1, 'BK20251119E8EFA7', 23, 1, 1, '2025-11-19', '2025-11-22', 2, 0, 1, 3, 1300000.00, 0.00, 0.00, 0, 3900000.00, '', 'Long Quang', 'quanglong.3824@gmail.com', '0969875278', NULL, 'checked_out', 'paid', NULL, 0, '2025-11-19 01:44:14', '2025-11-19 02:15:53', 22, NULL, NULL, NULL, '2025-11-19 00:47:42', '2025-11-19 02:15:53'),
-(2, 'BK202511196C320B', 24, 2, 12, '2025-11-20', '2025-11-22', 2, 0, 1, 2, 3000000.00, 0.00, 0.00, 0, 6000000.00, '', 'Long Meo Meo', '15.lequanglong@gmail.com', '0987566338', '098765432123', 'checked_out', 'paid', NULL, 0, '2025-11-19 01:43:53', '2025-11-19 01:45:28', 22, NULL, NULL, NULL, '2025-11-19 01:40:54', '2025-11-19 01:45:28'),
-(3, 'BK20251119C00FE8', 24, 1, 2, '2025-11-19', '2025-11-20', 2, 0, 1, 1, 1300000.00, 0.00, 0.00, 0, 1300000.00, '', 'Long Meo Meo', '15.lequanglong@gmail.com', '0987566338', NULL, 'cancelled', 'unpaid', NULL, 0, NULL, NULL, NULL, '2025-11-22 07:56:27', 22, '.', '2025-11-19 02:43:56', '2025-11-22 07:56:27'),
-(4, 'BK20251119569EAF', 24, 1, 3, '2025-11-19', '2025-11-20', 2, 0, 1, 1, 1300000.00, 0.00, 0.00, 0, 1300000.00, '', 'Long Meo Meo', '15.lequanglong@gmail.com', '0987566338', NULL, 'checked_out', 'unpaid', NULL, 0, '2025-11-22 07:56:18', '2025-11-22 07:56:21', 22, NULL, NULL, NULL, '2025-11-19 02:46:13', '2025-11-22 07:56:21'),
-(5, 'BK20251119184169', 26, 1, 4, '2025-11-19', '2025-11-20', 2, 0, 1, 1, 1300000.00, 0.00, 0.00, 0, 1300000.00, '', 'Long Quang', 'long.lequang308@gmail.com', '0969875278', NULL, 'checked_out', 'unpaid', NULL, 0, '2025-11-22 07:55:54', '2025-11-22 07:56:07', 22, NULL, NULL, NULL, '2025-11-19 03:46:25', '2025-11-22 07:56:07'),
-(6, 'BK20251119A1664F', 26, 4, 30, '2025-11-19', '2025-11-20', 2, 0, 1, 1, 4500000.00, 0.00, 0.00, 0, 4500000.00, '', 'Long Quang', 'long.lequang308@gmail.com', '0969875278', NULL, 'checked_out', 'paid', NULL, 0, '2025-11-22 07:55:58', '2025-11-22 07:56:03', 22, NULL, NULL, NULL, '2025-11-19 04:10:18', '2025-11-22 07:56:03'),
-(0, 'BK202511267A7286', 23, 1, 1, '2025-11-26', '2025-11-27', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Long Quang', 'quanglong.3824@gmail.com', '0987654321', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-11-26 07:35:51', '2025-11-27 09:24:59'),
-(0, 'BK20251127C90AD7', 25, 1, 2, '2025-11-27', '2025-11-28', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Lễ Tân', 'info@aurorahotelplaza.com', '0987654321', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-11-27 08:41:48', '2025-11-27 09:24:59'),
-(0, 'BK202511272C145F', 0, 1, 3, '2025-11-27', '2025-11-28', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Thanh Vàng Nguyễn', 'thuvienanhvang@gmail.com', '0123456789', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-11-27 09:23:46', '2025-11-27 09:24:59');
-
---
 -- Bẫy `bookings`
 --
 DELIMITER $$
@@ -381,62 +315,6 @@ CREATE TABLE `booking_history` (
   `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `booking_history`
---
-
-INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_status`, `changed_by`, `notes`, `created_at`) VALUES
-(3, 5, 'pending', 'cancelled', NULL, NULL, '2025-11-18 06:38:26'),
-(4, 6, 'pending', 'cancelled', NULL, NULL, '2025-11-18 10:15:36'),
-(5, 7, 'pending', 'confirmed', NULL, NULL, '2025-11-18 10:23:27'),
-(6, 9, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:18:19'),
-(7, 9, 'pending', 'confirmed', 20, 'Booking confirmed by user', '2025-11-18 15:18:19'),
-(8, 10, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:25:32'),
-(9, 10, 'pending', 'confirmed', 16, 'Booking confirmed by user', '2025-11-18 15:25:32'),
-(10, 11, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:27:51'),
-(11, 11, 'pending', 'confirmed', 16, 'Booking confirmed by user', '2025-11-18 15:27:51'),
-(12, 12, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:33:29'),
-(13, 12, 'pending', 'confirmed', 16, 'Booking confirmed by user', '2025-11-18 15:33:29'),
-(14, 13, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:39:43'),
-(15, 13, 'pending', 'confirmed', 21, 'Booking confirmed by user', '2025-11-18 15:39:43'),
-(16, 14, 'pending', 'confirmed', NULL, NULL, '2025-11-18 15:50:14'),
-(17, 14, 'pending', 'confirmed', 21, 'Booking confirmed by user', '2025-11-18 15:50:14'),
-(18, 1, 'pending', 'confirmed', NULL, NULL, '2025-11-19 00:47:50'),
-(19, 1, 'pending', 'confirmed', 23, 'Booking confirmed by user', '2025-11-19 00:47:50'),
-(20, 2, NULL, 'confirmed', 22, 'Đơn được tạo bởi admin', '2025-11-19 01:40:54'),
-(21, 2, 'confirmed', 'confirmed', 22, 'Phân phòng 712', '2025-11-19 01:43:47'),
-(22, 2, 'confirmed', 'checked_in', 22, NULL, '2025-11-19 01:43:53'),
-(23, 2, 'confirmed', 'checked_in', 22, 'Status changed from confirmed to checked_in', '2025-11-19 01:43:53'),
-(24, 1, 'confirmed', 'checked_in', 22, NULL, '2025-11-19 01:44:14'),
-(25, 1, 'confirmed', 'checked_in', 22, 'Status changed from confirmed to checked_in', '2025-11-19 01:44:14'),
-(26, 2, 'checked_in', 'checked_out', 22, NULL, '2025-11-19 01:45:28'),
-(27, 2, 'checked_in', 'checked_out', 22, 'Status changed from checked_in to checked_out', '2025-11-19 01:45:28'),
-(28, 1, 'checked_in', 'checked_out', 22, NULL, '2025-11-19 02:15:53'),
-(29, 1, 'checked_in', 'checked_out', 22, 'Status changed from checked_in to checked_out', '2025-11-19 02:15:53'),
-(30, 6, 'pending', 'confirmed', NULL, NULL, '2025-11-19 04:10:55'),
-(31, 5, 'pending', 'confirmed', NULL, NULL, '2025-11-19 04:12:10'),
-(32, 5, 'pending', 'confirmed', 26, 'Booking confirmed by user', '2025-11-19 04:12:10'),
-(33, 5, 'confirmed', 'checked_in', 22, NULL, '2025-11-22 07:55:54'),
-(34, 5, 'confirmed', 'checked_in', 22, 'Status changed from confirmed to checked_in', '2025-11-22 07:55:54'),
-(35, 6, 'confirmed', 'checked_in', 22, NULL, '2025-11-22 07:55:58'),
-(36, 6, 'confirmed', 'checked_in', 22, 'Status changed from confirmed to checked_in', '2025-11-22 07:55:58'),
-(37, 6, 'checked_in', 'checked_out', 22, NULL, '2025-11-22 07:56:03'),
-(38, 6, 'checked_in', 'checked_out', 22, 'Status changed from checked_in to checked_out', '2025-11-22 07:56:03'),
-(39, 5, 'checked_in', 'checked_out', 22, NULL, '2025-11-22 07:56:07'),
-(40, 5, 'checked_in', 'checked_out', 22, 'Status changed from checked_in to checked_out', '2025-11-22 07:56:07'),
-(41, 4, 'pending', 'confirmed', NULL, NULL, '2025-11-22 07:56:12'),
-(42, 4, 'pending', 'confirmed', 22, 'Status changed from pending to confirmed', '2025-11-22 07:56:12'),
-(43, 4, 'confirmed', 'checked_in', 22, NULL, '2025-11-22 07:56:16'),
-(44, 4, 'confirmed', 'checked_in', 22, 'Status changed from confirmed to checked_in', '2025-11-22 07:56:16'),
-(45, 4, 'checked_in', 'checked_in', 22, 'Status changed from checked_in to checked_in', '2025-11-22 07:56:18'),
-(46, 4, 'checked_in', 'checked_out', 22, NULL, '2025-11-22 07:56:21'),
-(47, 4, 'checked_in', 'checked_out', 22, 'Status changed from checked_in to checked_out', '2025-11-22 07:56:21'),
-(48, 3, 'pending', 'cancelled', NULL, NULL, '2025-11-22 07:56:27'),
-(49, 3, 'pending', 'cancelled', 22, '.', '2025-11-22 07:56:27'),
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-11-27 09:24:59'),
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-11-27 09:24:59'),
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-11-27 09:24:59');
 
 -- --------------------------------------------------------
 
@@ -489,6 +367,7 @@ CREATE TABLE `contact_submissions` (
   `status` enum('new','in_progress','resolved','closed') DEFAULT 'new',
   `assigned_to` int(11) DEFAULT NULL,
   `ip_address` varchar(45) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -569,6 +448,94 @@ CREATE TABLE `gallery` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `gallery`
+--
+
+INSERT INTO `gallery` (`gallery_id`, `title`, `description`, `image_url`, `thumbnail_url`, `category`, `sort_order`, `status`, `uploaded_by`, `created_at`) VALUES
+(0, 'Phòng Deluxe', 'Phòng Deluxe sang trọng với đầy đủ tiện nghi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', NULL, 'rooms', 1, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Góc nhìn', 'Góc nhìn tổng quan phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg', NULL, 'rooms', 2, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Nội thất', 'Nội thất phòng Deluxe hiện đại', 'assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', NULL, 'rooms', 3, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Giường', 'Giường ngủ êm ái phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-4.jpg', NULL, 'rooms', 4, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Phòng tắm', 'Phòng tắm sang trọng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-5.jpg', NULL, 'rooms', 5, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Tiện nghi', 'Tiện nghi đầy đủ trong phòng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-6.jpg', NULL, 'rooms', 6, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Giường đôi', 'Phòng Deluxe với giường đôi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-7.jpg', NULL, 'rooms', 7, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - View', 'View đẹp từ phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-8.jpg', NULL, 'rooms', 8, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Không gian', 'Không gian rộng rãi phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-9.jpg', NULL, 'rooms', 9, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Deluxe - Toàn cảnh', 'Toàn cảnh phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-10.jpg', NULL, 'rooms', 10, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Deluxe', 'Phòng Premium Deluxe cao cấp', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', NULL, 'rooms', 11, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Deluxe - Nội thất', 'Nội thất Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', NULL, 'rooms', 12, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Deluxe - Giường', 'Giường ngủ Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg', NULL, 'rooms', 13, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Deluxe - View', 'View từ phòng Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg', NULL, 'rooms', 14, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Deluxe - Phòng tắm', 'Phòng tắm Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg', NULL, 'rooms', 15, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Twin', 'Phòng Premium Twin 2 giường', 'assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', NULL, 'rooms', 16, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Twin - Giường đôi', 'Hai giường đơn Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', NULL, 'rooms', 17, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium Twin - Nội thất', 'Nội thất phòng Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-3.jpg', NULL, 'rooms', 18, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng VIP', 'Phòng VIP đẳng cấp nhất', 'assets/img/vip/vip-room-aurora-hotel-1.jpg', NULL, 'rooms', 19, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng VIP - Sang trọng', 'Không gian sang trọng phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-3.jpg', NULL, 'rooms', 20, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng VIP - Nội thất', 'Nội thất cao cấp phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-4.jpg', NULL, 'rooms', 21, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng VIP - Phòng khách', 'Phòng khách riêng VIP', 'assets/img/vip/vip-room-aurora-hotel-5.jpg', NULL, 'rooms', 22, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng VIP - Phòng tắm', 'Phòng tắm VIP sang trọng', 'assets/img/vip/vip-room-aurora-hotel-6.jpg', NULL, 'rooms', 23, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Căn hộ Studio', 'Căn hộ Studio tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg', NULL, 'apartments', 24, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Studio - Phòng khách', 'Phòng khách căn hộ Studio', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg', NULL, 'apartments', 25, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Studio - Bếp', 'Bếp đầy đủ tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg', NULL, 'apartments', 26, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Căn hộ Family', 'Căn hộ Family rộng rãi', 'assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', NULL, 'apartments', 27, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Family - Phòng ngủ', 'Phòng ngủ căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg', NULL, 'apartments', 28, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Family - Phòng khách', 'Phòng khách căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', NULL, 'apartments', 29, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Căn hộ Premium', 'Căn hộ Premium cao cấp', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg', NULL, 'apartments', 30, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium - Nội thất', 'Nội thất căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg', NULL, 'apartments', 31, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Premium - Phòng ngủ', 'Phòng ngủ căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg', NULL, 'apartments', 32, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Indochine Family', 'Căn hộ phong cách Indochine', 'assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', NULL, 'apartments', 33, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Indochine - Phong cách', 'Phong cách Đông Dương đặc trưng', 'assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', NULL, 'apartments', 34, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Indochine - Nội thất', 'Nội thất Indochine tinh tế', 'assets/img/indochine-family-apartment/indochine-family-apartment-3.jpg', NULL, 'apartments', 35, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Indochine Studio', 'Căn hộ Studio Indochine', 'assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg', NULL, 'apartments', 36, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Modern Studio', 'Căn hộ Studio hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg', NULL, 'apartments', 37, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Modern - Thiết kế', 'Thiết kế hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg', NULL, 'apartments', 38, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Modern Premium', 'Căn hộ Premium hiện đại', 'assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg', NULL, 'apartments', 39, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Classical Family', 'Căn hộ phong cách cổ điển', 'assets/img/classical-family-apartment/classical-family-apartment1.jpg', NULL, 'apartments', 40, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Classical - Cổ điển', 'Nét đẹp cổ điển sang trọng', 'assets/img/classical-family-apartment/classical-family-apartment2.jpg', NULL, 'apartments', 41, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Nhà hàng Aurora', 'Nhà hàng sang trọng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-1.jpg', NULL, 'restaurant', 42, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Không gian nhà hàng', 'Không gian ẩm thực đẳng cấp', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-2.jpg', NULL, 'restaurant', 43, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Khu vực ăn uống', 'Khu vực ăn uống thoáng đãng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-3.jpg', NULL, 'restaurant', 44, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Buffet sáng', 'Buffet sáng phong phú', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg', NULL, 'restaurant', 45, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Bàn tiệc', 'Bàn tiệc sang trọng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-5.jpg', NULL, 'restaurant', 46, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Nội thất nhà hàng', 'Nội thất nhà hàng tinh tế', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg', NULL, 'restaurant', 47, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Khu vực VIP', 'Khu vực VIP riêng tư', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-7.jpg', NULL, 'restaurant', 48, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Quầy bar', 'Quầy bar hiện đại', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-8.jpg', NULL, 'restaurant', 49, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Góc nhìn nhà hàng', 'Góc nhìn đẹp nhà hàng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-9.jpg', NULL, 'restaurant', 50, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc buffet', 'Tiệc buffet đa dạng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-10.jpg', NULL, 'restaurant', 51, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Khu vực buffet', 'Khu vực buffet rộng rãi', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-11.jpg', NULL, 'restaurant', 52, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Toàn cảnh nhà hàng', 'Toàn cảnh nhà hàng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-14.jpg', NULL, 'restaurant', 53, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Lễ tân', 'Quầy lễ tân chuyên nghiệp', 'assets/img/src/ui/horizontal/Le_tan_Aurora.jpg', NULL, 'facilities', 54, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Sảnh khách sạn', 'Sảnh đón tiếp sang trọng', 'assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg', NULL, 'facilities', 55, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Studio', 'Phòng Studio tiện nghi', 'assets/img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg', NULL, 'facilities', 56, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng Gym', 'Phòng tập Gym hiện đại', 'assets/img/service/gym/GYM-AURORA-HOTEL-1.jpg', NULL, 'facilities', 57, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Thiết bị Gym', 'Thiết bị tập luyện chất lượng', 'assets/img/service/gym/GYM-AURORA-HOTEL-2.jpg', NULL, 'facilities', 58, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Khu vực tập luyện', 'Khu vực tập luyện rộng rãi', 'assets/img/service/gym/GYM-AURORA-HOTEL-3.jpg', NULL, 'facilities', 59, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Hồ bơi', 'Hồ bơi ngoài trời', 'assets/img/service/pool/pool.jpg', NULL, 'facilities', 60, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Văn phòng cho thuê', 'Văn phòng cho thuê chuyên nghiệp', 'assets/img/service/office/Van-phong-cho-thue-Aurora-1.jpg', NULL, 'facilities', 61, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Không gian làm việc', 'Không gian làm việc hiện đại', 'assets/img/service/office/Van-phong-cho-thue-Aurora-2.jpg', NULL, 'facilities', 62, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng họp', 'Phòng họp đầy đủ tiện nghi', 'assets/img/service/office/Van-phong-cho-thue-Aurora-3.jpg', NULL, 'facilities', 63, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc cưới Aurora', 'Tiệc cưới sang trọng tại Aurora', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-1.jpg', NULL, 'events', 64, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Sảnh tiệc cưới', 'Sảnh tiệc cưới rộng lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-2.jpg', NULL, 'events', 65, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Trang trí tiệc cưới', 'Trang trí tiệc cưới tinh tế', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-3.jpg', NULL, 'events', 66, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Bàn tiệc cưới', 'Bàn tiệc cưới sang trọng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-4.jpg', NULL, 'events', 67, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Không gian tiệc cưới', 'Không gian tiệc cưới lãng mạn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg', NULL, 'events', 68, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Sân khấu tiệc cưới', 'Sân khấu tiệc cưới hoành tráng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-6.jpg', NULL, 'events', 69, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc cưới sang trọng', 'Tiệc cưới đẳng cấp 5 sao', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-7.jpg', NULL, 'events', 70, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc cưới hoành tráng', 'Tiệc cưới quy mô lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-Aurora-8.jpg', NULL, 'events', 71, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc cưới đẳng cấp', 'Tiệc cưới phong cách hiện đại', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-9.jpg', NULL, 'events', 72, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Tiệc cưới lãng mạn', 'Tiệc cưới lãng mạn và ấm cúng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-10.jpg', NULL, 'events', 73, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng hội nghị', 'Phòng hội nghị chuyên nghiệp', 'assets/img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg', NULL, 'events', 74, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Sự kiện hội nghị', 'Tổ chức sự kiện hội nghị', 'assets/img/src/ui/horizontal/Hoi-nghi-aurora-8.jpg', NULL, 'events', 75, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Hội nghị Aurora', 'Hội nghị tại Aurora Hotel', 'assets/img/service/meet/Hoi-nghi-aurora-5.jpg', NULL, 'events', 76, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Phòng họp lớn', 'Phòng họp quy mô lớn', 'assets/img/service/meet/Hoi-nghi-aurora-6.jpg', NULL, 'events', 77, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Aurora Hotel Plaza', 'Toàn cảnh Aurora Hotel Plaza', 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg', NULL, 'exterior', 78, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Mặt tiền khách sạn', 'Mặt tiền khách sạn ấn tượng', 'assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg', NULL, 'exterior', 79, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Khách sạn về đêm', 'Aurora Hotel lung linh về đêm', 'assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg', NULL, 'exterior', 80, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Toàn cảnh Aurora', 'Toàn cảnh khách sạn từ xa', 'assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg', NULL, 'exterior', 81, 'active', NULL, '2025-12-14 02:33:32'),
+(0, 'Cafe Aurora', 'Quán cafe Aurora Hotel', 'assets/img/hero-banner/caffe-aurora-hotel-1.jpg', NULL, 'exterior', 82, 'active', NULL, '2025-12-14 02:33:32');
+
 -- --------------------------------------------------------
 
 --
@@ -606,15 +573,6 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Đang đổ dữ liệu cho bảng `notifications`
---
-
-INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `title`, `message`, `link`, `icon`, `is_read`, `read_at`, `created_at`) VALUES
-(4, 23, 'payment_confirmed', 'Payment Confirmed', 'Your payment of 3,900,000 VND for booking BK20251119E8EFA7 has been confirmed. You earned 42,900 loyalty points!', '/profile/bookings.php?id=1', 'payment', 0, NULL, '2025-11-19 01:01:14'),
-(5, 24, 'booking_created', 'Đặt phòng mới', 'Đơn đặt phòng BK202511196C320B đã được tạo. Check-in: 20/11/2025. Tổng tiền: 3,000,000 VND', '/profile/bookings.php?id=2', 'hotel', 0, NULL, '2025-11-19 01:40:54'),
-(6, 24, 'room_assigned', 'Đã phân phòng', 'Đơn đặt phòng BK202511196C320B đã được phân phòng 712. Check-in: 20/11/2025', '/profile/bookings.php?id=2', 'meeting_room', 0, NULL, '2025-11-19 01:43:47');
-
 -- --------------------------------------------------------
 
 --
@@ -648,15 +606,6 @@ CREATE TABLE `password_resets` (
   `used` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `password_resets`
---
-
-INSERT INTO `password_resets` (`reset_id`, `user_id`, `token`, `expires_at`, `used`, `created_at`) VALUES
-(4, 16, '56f51754edbc9d433aae7ed64e17232fca9027d6f6f6e3dacfe7930d9ad8738c', '2025-11-18 01:48:21', 0, '2025-11-18 06:48:21'),
-(5, 26, 'b0023a01f7ef9244cb9c4f1de9d1ceea52ab0bdcc10623a8a1a129c499a5f9c2', '2025-11-18 22:15:07', 0, '2025-11-19 04:15:07'),
-(6, 27, '76d0b41756397f4ad391ff8cb68ec90225bd1e7a2868c1550c7ac91c732a3cb2', '2025-11-18 22:21:56', 0, '2025-11-19 04:21:56');
 
 -- --------------------------------------------------------
 
@@ -708,17 +657,6 @@ CREATE TABLE `points_transactions` (
   `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `points_transactions`
---
-
-INSERT INTO `points_transactions` (`transaction_id`, `user_id`, `points`, `transaction_type`, `reference_type`, `reference_id`, `description`, `created_by`, `created_at`) VALUES
-(4, 20, 480, 'earn', 'booking', 7, 'Tích điểm từ đặt phòng BK20251118E85343', NULL, '2025-11-18 10:23:27'),
-(5, 23, 42900, 'earn', 'booking_payment', 1, 'Earned 42,900 points from booking BK20251119E8EFA7 (Total: 3,900,000 VND)', 22, '2025-11-19 01:01:14'),
-(6, 24, 33000, 'earn', 'booking_payment', 2, 'Nhận 33000 điểm từ booking BK202511196C320B', 22, '2025-11-19 01:40:54'),
-(7, 26, 450, 'earn', 'booking', 6, 'Tích điểm từ đặt phòng BK20251119A1664F', NULL, '2025-11-19 04:10:55'),
-(0, 0, 140, 'earn', 'booking', 0, 'Tích điểm từ đặt phòng BK202511272C145F', NULL, '2025-11-27 09:24:59');
 
 -- --------------------------------------------------------
 
@@ -1013,7 +951,6 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (3, 1, '703', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:14:49'),
 (4, 1, '704', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-22 07:56:46'),
 (5, 1, '705', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(6, 1, '706', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (7, 1, '707', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (8, 1, '708', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (9, 1, '709', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1372,14 +1309,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`) VALUES
-(22, 'admin@aurorahotelplaza.com', '$2y$10$Yr9.h8wltQuns01/904PeeXNOw9ZbivBh/2FVNU9yIoLyW/lIltAC', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-11-18 16:15:15', '2025-12-13 10:41:29', '2025-12-13 10:41:29'),
-(23, 'quanglong.3824@gmail.com', '$2y$10$8GDBb06CilXQsMrAYYCpAusiI5cWRHGdOQb2nOnTqI6sSWiTQPdvS', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocLn_ThubLaAq44AbKSFFGdXu0tR-NVGTWsOddLM7B_OTE3OyFI=s96-c', 'customer', 'active', 1, '2025-11-19 00:47:09', '2025-11-26 07:34:33', '2025-11-26 07:34:33'),
-(24, '15.lequanglong@gmail.com', '$2y$10$RM4hXNACccVQZRjXsnMnUeOrkdQtxqRZ3hKqVdDspeOc9.2OA.mPG', 'Long Meo Meo', '0987566338', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-11-19 01:40:54', '2025-11-19 02:26:25', '2025-11-19 02:26:25'),
-(25, 'info@aurorahotelplaza.com', '$2y$10$T7AkMLlRjAxdTuw.rF7Gk.84Reg7GHWt3oi2yfndAvJ/5vvbfS4/O', 'Lễ Tân', '0987654321', NULL, NULL, NULL, NULL, 'receptionist', 'active', 1, '2025-11-19 01:51:28', '2025-12-06 07:11:04', '2025-12-06 07:11:04'),
-(26, 'long.lequang308@gmail.com', '$2y$10$14e3PV8xO7s79Wlp8t3vv.5WD3iKo8PMHyHNS6be7gcv..POM8IVi', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKOkiVeZmvgg6JT_uXnZk_IxejyzgK0E1oQfCWN9xa4391JemNp=s96-c', 'customer', 'active', 1, '2025-11-19 03:46:06', '2025-11-21 06:00:07', '2025-11-21 06:00:07'),
-(27, '23810067@student.hcmute.edu.vn', '$2y$10$6FeixsnHfA8Xgv9rdpDhaebs2Vafue2i3GN0RrdTLeX2lZajHwg9K', 'Quang Long UTE', '0969875278', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-11-19 04:16:43', '2025-11-19 04:16:43', NULL),
-(28, 'booking@aurorahotelplaza.com', '$2y$10$sZQVgNFmTntHsuFIZRWyhetiYu17H8V/W7yr2P59NqkMVTPyuTm4.', 'Phòng Kinh Doanh', '0987654321', NULL, NULL, NULL, NULL, 'sale', 'active', 1, '2025-11-22 08:00:46', '2025-11-22 08:01:11', '2025-11-22 08:01:11'),
-(0, 'thuvienanhvang@gmail.com', '$2y$10$1tta/Unnr3nBe9xJbefeT.iy2N8hcmGgLpTdg6KAAQUeN2eUywCl2', 'Thanh Vàng Nguyễn', '0123456789', NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKjgoQZ11gZAB2fPKACxMnaS304672e5_K_SwIYeudTzemhE6k=s96-c', 'customer', 'active', 1, '2025-11-27 09:22:50', '2025-11-27 09:23:29', NULL);
+(0, 'admin@aurorahotelplaza.com', '$2y$10$CKftn0hq/CpY0h9GmO3siu4T2bydgNesYNZfPzgt/LEBX8HzGvfmK', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 03:53:00', '2025-12-14 04:06:41', '2025-12-14 04:06:41'),
+(0, 'longdev.08@gmail.com', '$2y$10$L9GHSn/95z71PQdcIKh0VeTXpZT/yP9Y/Y.4X1wn2/xn524dcWbIG', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 03:53:59', '2025-12-14 04:06:41', '2025-12-14 04:06:41'),
+(0, 'thuylinh.80902@gmail.com', '$2y$10$7WT.yGtFvcgfcTQS/pvfe.0WweDA.0iLPeeW0aPUXZ211DhnLXx/G', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:08:07', '2025-12-14 04:08:07', NULL),
+(0, '23810067@student.hcmute.edu.vn', '$2y$10$cK1mhFEgS4.c7ZfzgMxLZ.t/gVn7DCUoMVeT22JrPshCxYyO3gL.u', 'Le Quang Long', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocL88K2CMnTw8MkI77vN2M4o5Dtkar8-VUTA4Hm0HBx29wURzA=s96-c', 'customer', 'active', 1, '2025-12-14 04:13:48', '2025-12-14 04:13:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -1403,12 +1336,10 @@ CREATE TABLE `user_loyalty` (
 --
 
 INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime_points`, `tier_id`, `tier_updated_at`, `created_at`, `updated_at`) VALUES
-(9, 22, 0, 0, NULL, NULL, '2025-11-18 16:15:15', '2025-11-18 16:15:15'),
-(10, 23, 42900, 42900, NULL, NULL, '2025-11-19 00:47:09', '2025-11-19 01:01:14'),
-(11, 24, 33000, 33000, NULL, NULL, '2025-11-19 01:40:54', '2025-11-19 01:40:54'),
-(12, 26, 450, 450, NULL, NULL, '2025-11-19 03:46:06', '2025-11-19 04:10:55'),
-(0, 0, 0, 0, NULL, NULL, '2025-11-27 09:22:50', '2025-11-27 09:22:50'),
-(0, 0, 140, 140, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59');
+(0, 0, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 03:53:00'),
+(0, 0, 0, 0, NULL, NULL, '2025-12-14 03:53:59', '2025-12-14 03:53:59'),
+(0, 0, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:08:07'),
+(0, 0, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:13:48');
 
 -- --------------------------------------------------------
 
@@ -1488,7 +1419,16 @@ CREATE TABLE `v_user_loyalty_summary` (
   `total_bookings` bigint(21) NOT NULL DEFAULT 0,
   `total_spent` decimal(32,2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-SET FOREIGN_KEY_CHECKS=1;
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `contact_submissions`
+--
+ALTER TABLE `contact_submissions`
+  ADD KEY `idx_contact_user_id` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

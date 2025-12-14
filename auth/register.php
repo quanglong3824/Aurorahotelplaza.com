@@ -4,9 +4,13 @@ ob_start();
 
 session_start();
 require_once '../config/environment.php';
+require_once '../helpers/session-helper.php';
 
-// Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
+// Kiểm tra và xóa session không hợp lệ (user_id = 0)
+validateAndCleanSession();
+
+// Redirect if already logged in với session hợp lệ
+if (isValidSession()) {
     header('Location: ' . url('index.php'));
     exit;
 }
@@ -55,11 +59,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified, created_at)
                     VALUES (?, ?, ?, ?, 'customer', 'active', 0, NOW())
                 ");
-                $stmt->execute([$email, $password_hash, $full_name, $phone]);
+                $result = $stmt->execute([$email, $password_hash, $full_name, $phone]);
+                
+                if (!$result) {
+                    throw new Exception("Không thể tạo tài khoản - INSERT failed");
+                }
+                
                 $user_id = $db->lastInsertId();
                 
+                // Nếu lastInsertId trả về 0, có thể do bảng thiếu AUTO_INCREMENT
+                // Lấy user_id bằng cách query lại
+                if (!$user_id || $user_id == 0) {
+                    $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ? ORDER BY created_at DESC LIMIT 1");
+                    $stmt->execute([$email]);
+                    $new_user = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $user_id = $new_user['user_id'] ?? 0;
+                }
+                
                 if (!$user_id) {
-                    throw new Exception("Không thể tạo tài khoản");
+                    error_log("Warning: user_id is 0 after registration for email: $email - Database may be missing AUTO_INCREMENT");
+                }
+                
+                // Tạo loyalty record cho user mới
+                try {
+                    $stmt = $db->prepare("
+                        INSERT INTO user_loyalty (user_id, current_points, lifetime_points, created_at) 
+                        VALUES (?, 0, 0, NOW())
+                    ");
+                    $stmt->execute([$user_id]);
+                } catch (Exception $loyaltyError) {
+                    // Ignore if loyalty table doesn't exist or duplicate
+                    error_log("Loyalty insert failed: " . $loyaltyError->getMessage());
                 }
                 
                 // Log registration (optional - don't block if fails)
@@ -68,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (file_exists($loggerPath)) {
                         require_once $loggerPath;
                         if (function_exists('getLogger')) {
-                            $logger = getLogger($db);
+                            $logger = getLogger();
                             $logger->logUserRegistration($user_id, [
                                 'email' => $email,
                                 'user_name' => $full_name,

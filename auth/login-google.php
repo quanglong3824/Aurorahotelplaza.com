@@ -16,8 +16,11 @@ if (!isset($_GET['code']) && !isset($_GET['error'])) {
     }
 }
 
-// Redirect if already logged in (chỉ khi không phải callback)
-if (isset($_SESSION['user_id']) && !isset($_GET['code'])) {
+// Kiểm tra và xóa session không hợp lệ
+validateAndCleanSession();
+
+// Redirect if already logged in với session hợp lệ (chỉ khi không phải callback)
+if (isValidSession() && !isset($_GET['code'])) {
     header('Location: ../index.php');
     exit;
 }
@@ -203,6 +206,18 @@ if (isset($_GET['code'])) {
             $stmt->execute([$user_info['email'], $password_hash, $full_name, $avatar]);
             
             $user_id = $db->lastInsertId();
+            
+            // Nếu lastInsertId trả về 0, query lại để lấy user_id thực
+            if (!$user_id || $user_id == 0) {
+                $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ? ORDER BY created_at DESC LIMIT 1");
+                $stmt->execute([$user_info['email']]);
+                $new_user = $stmt->fetch(PDO::FETCH_ASSOC);
+                $user_id = $new_user['user_id'] ?? 0;
+                
+                if (!$user_id) {
+                    error_log("CRITICAL: user_id is 0 after Google registration for email: " . $user_info['email']);
+                }
+            }
             
             // Create loyalty record for new user
             try {

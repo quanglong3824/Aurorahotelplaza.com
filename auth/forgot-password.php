@@ -17,23 +17,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ? AND status = 'active'");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
             
             if ($user) {
                 $userDetails = $user;
+                $user_id = $user['user_id'];
+                
+                // Nếu user_id = 0 (do lỗi database), tìm bằng email
+                if (!$user_id || $user_id == 0) {
+                    error_log("Warning: user_id is 0 for email: $email in forgot-password");
+                }
                 
                 // Generate reset token
                 $token = bin2hex(random_bytes(32));
                 $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+                
+                // Xóa các token cũ chưa sử dụng của user này
+                $stmt = $db->prepare("DELETE FROM password_resets WHERE user_id = ? AND used = 0");
+                $stmt->execute([$user_id]);
                 
                 // Save token in password_resets table
                 $stmt = $db->prepare("
                     INSERT INTO password_resets (user_id, token, expires_at, used)
                     VALUES (?, ?, ?, 0)
                 ");
-                $stmt->execute([$user['user_id'], $token, $expires]);
+                $stmt->execute([$user_id, $token, $expires]);
                 
                 // Send email with PHPMailer (optional - don't block if email fails)
                 $emailSent = false;

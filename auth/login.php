@@ -3,8 +3,11 @@ session_start();
 require_once '../config/environment.php';
 require_once '../helpers/session-helper.php';
 
-// Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
+// Kiểm tra và xóa session không hợp lệ (user_id = 0)
+validateAndCleanSession();
+
+// Redirect if already logged in với session hợp lệ
+if (isValidSession()) {
     header('Location: ' . url('index.php'));
     exit;
 }

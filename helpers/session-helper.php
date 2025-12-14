@@ -105,3 +105,82 @@ function getCurrentUser() {
         'role' => $_SESSION['user_role'] ?? 'customer'
     ];
 }
+
+/**
+ * Kiểm tra xem session có hợp lệ không
+ * Session không hợp lệ nếu user_id = 0 hoặc không tồn tại
+ * 
+ * @return bool
+ */
+function isValidSession() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Kiểm tra user_id tồn tại và khác 0
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id']) || $_SESSION['user_id'] == 0) {
+        return false;
+    }
+    
+    // Kiểm tra các thông tin cần thiết khác
+    if (empty($_SESSION['user_email'])) {
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Xóa session nếu không hợp lệ (user_id = 0)
+ * Gọi function này ở đầu các trang cần authentication
+ * 
+ * @return bool True nếu session hợp lệ, False nếu đã xóa session
+ */
+function validateAndCleanSession() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Nếu có session nhưng user_id = 0, xóa session
+    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == 0) {
+        error_log("Invalid session detected: user_id = 0, clearing session");
+        destroySessionCompletely(false);
+        return false;
+    }
+    
+    return isValidSession();
+}
+
+/**
+ * Refresh session data từ database
+ * Sử dụng khi cần đảm bảo session data đồng bộ với database
+ * 
+ * @param PDO $db Database connection
+ * @return bool
+ */
+function refreshSessionFromDB($db) {
+    if (!isLoggedIn()) {
+        return false;
+    }
+    
+    try {
+        $stmt = $db->prepare("SELECT user_id, email, full_name, user_role, status FROM users WHERE user_id = ? AND status = 'active'");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user) {
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_name'] = $user['full_name'];
+            $_SESSION['user_role'] = $user['user_role'];
+            return true;
+        } else {
+            // User không tồn tại hoặc bị banned, xóa session
+            destroySessionCompletely(false);
+            return false;
+        }
+    } catch (Exception $e) {
+        error_log("refreshSessionFromDB error: " . $e->getMessage());
+        return false;
+    }
+}
