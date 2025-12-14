@@ -100,6 +100,19 @@ try {
     $stmt->execute([$user_id]);
     $payments = $stmt->fetchAll();
     
+    // Get contact history
+    $stmt = $db->prepare("
+        SELECT 
+            c.*,
+            COALESCE(c.contact_code, LPAD(c.id, 8, '0')) as display_code
+        FROM contact_submissions c
+        WHERE c.user_id = ?
+        ORDER BY c.created_at DESC
+        LIMIT 20
+    ");
+    $stmt->execute([$user_id]);
+    $contacts = $stmt->fetchAll();
+    
 } catch (Exception $e) {
     die("Lỗi: " . $e->getMessage());
 }
@@ -121,6 +134,16 @@ function getPaymentStatusBadge($status) {
         'unpaid' => '<span class="badge badge-warning">Chưa thanh toán</span>',
         'paid' => '<span class="badge badge-success">Đã thanh toán</span>',
         'refunded' => '<span class="badge badge-info">Đã hoàn tiền</span>',
+    ];
+    return $badges[$status] ?? $status;
+}
+
+function getContactStatusBadge($status) {
+    $badges = [
+        'new' => '<span class="badge badge-info">Chờ phản hồi</span>',
+        'in_progress' => '<span class="badge badge-warning">Đang xử lý</span>',
+        'resolved' => '<span class="badge badge-success">Đã phản hồi</span>',
+        'closed' => '<span class="badge badge-secondary">Đã đóng</span>',
     ];
     return $badges[$status] ?? $status;
 }
@@ -301,6 +324,10 @@ function getPaymentStatusBadge($status) {
                     <span class="material-symbols-outlined" style="vertical-align: middle;">receipt</span>
                     Thanh toán (<?php echo count($payments); ?>)
                 </button>
+                <button class="tab-button" onclick="switchTab('contacts')">
+                    <span class="material-symbols-outlined" style="vertical-align: middle;">mail</span>
+                    Liên hệ (<?php echo count($contacts); ?>)
+                </button>
             </div>
 
             <!-- Bookings Tab -->
@@ -415,6 +442,65 @@ function getPaymentStatusBadge($status) {
                     </div>
                 <?php endif; ?>
             </div>
+
+            <!-- Contacts Tab -->
+            <div id="tab-contacts" class="tab-content p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">Lịch sử liên hệ</h3>
+                    <a href="contact.php" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        Gửi liên hệ mới
+                    </a>
+                </div>
+                <?php if (empty($contacts)): ?>
+                    <div class="text-center py-12">
+                        <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">mail</span>
+                        <p class="text-gray-500 mb-4">Bạn chưa gửi liên hệ nào</p>
+                        <a href="contact.php" class="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition">
+                            <span class="material-symbols-outlined">send</span>
+                            Gửi liên hệ đầu tiên
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div class="space-y-4">
+                        <?php foreach ($contacts as $contact): ?>
+                        <div class="border rounded-xl p-5 hover:shadow-md transition bg-white">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-accent">mail</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-900"><?php echo htmlspecialchars($contact['subject'] ?? 'Liên hệ chung'); ?></p>
+                                        <p class="text-sm text-gray-500 font-mono">#<?php echo htmlspecialchars($contact['display_code']); ?></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <?php echo getContactStatusBadge($contact['status']); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-lg p-4 mb-3">
+                                <p class="text-gray-700 text-sm leading-relaxed"><?php echo nl2br(htmlspecialchars(mb_substr($contact['message'], 0, 200))); ?><?php echo mb_strlen($contact['message']) > 200 ? '...' : ''; ?></p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center gap-4 text-gray-500">
+                                    <span class="flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">schedule</span>
+                                        <?php echo date('d/m/Y H:i', strtotime($contact['created_at'])); ?>
+                                    </span>
+                                </div>
+                                <button onclick="viewContactDetail(<?php echo $contact['id']; ?>)" class="text-accent hover:underline font-medium flex items-center gap-1">
+                                    Xem chi tiết
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
 
     </div>
@@ -422,6 +508,23 @@ function getPaymentStatusBadge($status) {
 
 <?php include 'includes/footer.php'; ?>
 
+</div>
+
+<!-- Contact Detail Modal -->
+<div id="contactModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800">
+            <h3 class="text-lg font-bold">Chi tiết liên hệ</h3>
+            <button onclick="closeContactModal()" class="text-gray-500 hover:text-gray-700">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div id="contactModalContent" class="p-6">
+            <div class="flex justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="assets/js/main.js"></script>
@@ -442,6 +545,93 @@ function switchTab(tabName) {
     
     // Add active to clicked button
     event.target.closest('.tab-button').classList.add('active');
+}
+
+function viewContactDetail(id) {
+    const modal = document.getElementById('contactModal');
+    const content = document.getElementById('contactModalContent');
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    content.innerHTML = '<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div></div>';
+    
+    fetch('profile/api/contact-detail.php?id=' + id)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const c = data.contact;
+                const statusBadges = {
+                    'new': '<span class="badge badge-info">Chờ phản hồi</span>',
+                    'in_progress': '<span class="badge badge-warning">Đang xử lý</span>',
+                    'resolved': '<span class="badge badge-success">Đã phản hồi</span>',
+                    'closed': '<span class="badge badge-secondary">Đã đóng</span>'
+                };
+                
+                content.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Mã liên hệ</p>
+                                <p class="text-2xl font-bold font-mono text-accent">#${c.display_code}</p>
+                            </div>
+                            ${statusBadges[c.status] || c.status}
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-sm text-gray-500 mb-1">Chủ đề</p>
+                                <p class="font-semibold">${escapeHtml(c.subject || 'Liên hệ chung')}</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-sm text-gray-500 mb-1">Thời gian gửi</p>
+                                <p class="font-semibold">${c.created_at}</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Nội dung tin nhắn</p>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-gray-700 whitespace-pre-wrap leading-relaxed">${escapeHtml(c.message)}</p>
+                            </div>
+                        </div>
+                        
+                        ${c.admin_note ? `
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Phản hồi từ khách sạn</p>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <p class="text-green-800 whitespace-pre-wrap">${escapeHtml(c.admin_note)}</p>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="pt-4 border-t flex justify-end gap-3">
+                            <button onclick="closeContactModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Đóng</button>
+                            <a href="contact.php" class="px-4 py-2 bg-accent text-white rounded-lg hover:opacity-90">Gửi liên hệ mới</a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = '<p class="text-center text-red-500 py-8">Không thể tải thông tin liên hệ</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            content.innerHTML = '<p class="text-center text-red-500 py-8">Có lỗi xảy ra</p>';
+        });
+}
+
+function closeContactModal() {
+    const modal = document.getElementById('contactModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 </script>
 

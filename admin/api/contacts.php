@@ -52,10 +52,11 @@ function getContact($db) {
     }
     
     $stmt = $db->prepare("
-        SELECT c.*, u.full_name as assigned_name
+        SELECT c.*, u.full_name as assigned_name,
+               COALESCE(c.contact_code, LPAD(c.id, 8, '0')) as display_code
         FROM contact_submissions c
         LEFT JOIN users u ON c.assigned_to = u.user_id
-        WHERE c.submission_id = :id
+        WHERE c.id = :id
     ");
     $stmt->execute([':id' => $id]);
     $contact = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -75,7 +76,7 @@ function getContact($db) {
  * Cập nhật trạng thái liên hệ
  */
 function updateStatus($db) {
-    $id = (int)($_POST['submission_id'] ?? 0);
+    $id = (int)($_POST['submission_id'] ?? $_POST['id'] ?? 0);
     $status = $_POST['status'] ?? '';
     $note = trim($_POST['note'] ?? '');
     
@@ -87,7 +88,7 @@ function updateStatus($db) {
     }
     
     // Lấy thông tin liên hệ hiện tại
-    $stmt = $db->prepare("SELECT * FROM contact_submissions WHERE submission_id = :id");
+    $stmt = $db->prepare("SELECT * FROM contact_submissions WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $contact = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -102,7 +103,7 @@ function updateStatus($db) {
         SET status = :status, 
             assigned_to = :assigned_to,
             updated_at = NOW()
-        WHERE submission_id = :id
+        WHERE id = :id
     ");
     $stmt->execute([
         ':status' => $status,
@@ -147,7 +148,7 @@ function deleteContact($db) {
     }
     
     // Lấy thông tin trước khi xóa
-    $stmt = $db->prepare("SELECT * FROM contact_submissions WHERE submission_id = :id");
+    $stmt = $db->prepare("SELECT * FROM contact_submissions WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $contact = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -157,7 +158,7 @@ function deleteContact($db) {
     }
     
     // Xóa
-    $stmt = $db->prepare("DELETE FROM contact_submissions WHERE submission_id = :id");
+    $stmt = $db->prepare("DELETE FROM contact_submissions WHERE id = :id");
     $stmt->execute([':id' => $id]);
     
     // Log activity

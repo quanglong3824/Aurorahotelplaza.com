@@ -54,7 +54,8 @@ try {
     
     // Get contacts with pagination
     $stmt = $db->prepare("
-        SELECT c.*, u.full_name as assigned_name
+        SELECT c.*, u.full_name as assigned_name,
+               COALESCE(c.contact_code, LPAD(c.id, 8, '0')) as display_code
         FROM contact_submissions c
         LEFT JOIN users u ON c.assigned_to = u.user_id
         WHERE {$where_sql}
@@ -178,7 +179,7 @@ include 'includes/admin-header.php';
                 <?php else: ?>
                 <?php foreach ($contacts as $contact): ?>
                 <tr class="<?= $contact['status'] === 'new' ? 'bg-blue-50 dark:bg-blue-900/20' : '' ?>">
-                    <td class="font-medium">#<?= $contact['submission_id'] ?></td>
+                    <td class="font-medium font-mono">#<?= htmlspecialchars($contact['display_code'] ?? str_pad($contact['id'] ?? 0, 8, '0', STR_PAD_LEFT)) ?></td>
                     <td>
                         <div class="font-medium"><?= htmlspecialchars($contact['name']) ?></div>
                         <div class="text-sm text-gray-500"><?= htmlspecialchars($contact['email']) ?></div>
@@ -214,13 +215,13 @@ include 'includes/admin-header.php';
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="action-btn" onclick="viewContact(<?= $contact['submission_id'] ?>)" title="Xem chi tiết">
+                            <button class="action-btn" onclick="viewContact(<?= $contact['id'] ?>)" title="Xem chi tiết">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
                             </button>
-                            <button class="action-btn" onclick="updateStatus(<?= $contact['submission_id'] ?>)" title="Cập nhật trạng thái">
+                            <button class="action-btn" onclick="updateStatus(<?= $contact['id'] ?>)" title="Cập nhật trạng thái">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                             </button>
-                            <button class="action-btn text-red-600" onclick="deleteContact(<?= $contact['submission_id'] ?>)" title="Xóa">
+                            <button class="action-btn text-red-600" onclick="deleteContact(<?= $contact['id'] ?>)" title="Xóa">
                                 <span class="material-symbols-outlined text-sm">delete</span>
                             </button>
                         </div>
