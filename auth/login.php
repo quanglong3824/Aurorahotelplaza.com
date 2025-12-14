@@ -58,9 +58,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
             
             if ($user && password_verify($password, $user['password_hash'])) {
-                // Login successful - Xóa session cũ trước khi set mới
+                // Login successful - Xóa session cũ hoàn toàn trước khi set mới
                 $intended_url = $_SESSION['intended_url'] ?? null;
-                session_unset();
+                
+                // Xóa session cũ hoàn toàn
+                $_SESSION = array();
+                
+                // Xóa session cookie
+                if (ini_get("session.use_cookies")) {
+                    $params = session_get_cookie_params();
+                    setcookie(session_name(), '', time() - 42000,
+                        $params["path"], $params["domain"],
+                        $params["secure"], $params["httponly"]
+                    );
+                }
+                
+                session_destroy();
+                
+                // Tạo session mới hoàn toàn
+                session_start();
                 session_regenerate_id(true);
                 
                 $_SESSION['user_id'] = $user['user_id'];

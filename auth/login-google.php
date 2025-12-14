@@ -1,11 +1,33 @@
 <?php
 session_start();
 
-// Nếu đang có session cũ và đang bắt đầu flow OAuth mới (không có code), xóa session cũ
+// Nếu đang có session cũ và đang bắt đầu flow OAuth mới (không có code), xóa session cũ hoàn toàn
 if (!isset($_GET['code']) && !isset($_GET['error'])) {
-    // Bắt đầu flow mới - xóa session cũ để tránh lẫn lộn
-    session_unset();
+    // Lưu intended_url nếu có
+    $intended_url = $_SESSION['intended_url'] ?? null;
+    
+    // Xóa session cũ hoàn toàn
+    $_SESSION = array();
+    
+    // Xóa session cookie
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    
+    session_destroy();
+    
+    // Tạo session mới
+    session_start();
     session_regenerate_id(true);
+    
+    // Khôi phục intended_url
+    if ($intended_url) {
+        $_SESSION['intended_url'] = $intended_url;
+    }
 }
 
 // Redirect if already logged in (chỉ khi không phải callback)
@@ -125,8 +147,22 @@ if (isset($_GET['code'])) {
         // Lưu lại intended_url nếu có
         $intended_url = $_SESSION['intended_url'] ?? null;
         
-        // Xóa session cũ hoàn toàn
-        session_unset();
+        // Xóa session cũ hoàn toàn - destroy và tạo mới
+        $_SESSION = array();
+        
+        // Xóa session cookie
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        
+        session_destroy();
+        
+        // Tạo session mới hoàn toàn
+        session_start();
         session_regenerate_id(true);
         
         // Khôi phục intended_url

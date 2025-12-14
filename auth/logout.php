@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
 // Clear all session data
 $_SESSION = array();
 
-// Destroy the session cookie
+// Destroy the session cookie - xóa hoàn toàn cookie session
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000,
@@ -33,6 +33,11 @@ session_destroy();
 if (isset($_COOKIE['remember_token'])) {
     setcookie('remember_token', '', time() - 3600, '/');
 }
+
+// Tạo session mới hoàn toàn để tránh session fixation
+session_start();
+session_regenerate_id(true);
+session_destroy();
 
 // Redirect to login page with success message
 header('Location: login.php?logged_out=1');
