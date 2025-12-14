@@ -58,11 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
             
             if ($user && password_verify($password, $user['password_hash'])) {
-                // Login successful
+                // Login successful - Xóa session cũ trước khi set mới
+                $intended_url = $_SESSION['intended_url'] ?? null;
+                session_unset();
+                session_regenerate_id(true);
+                
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_name'] = $user['full_name'];
                 $_SESSION['user_role'] = $user['user_role'];
+                
+                if ($intended_url) {
+                    $_SESSION['intended_url'] = $intended_url;
+                }
                 
                 // Update last login
                 $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");

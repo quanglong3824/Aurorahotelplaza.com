@@ -7,13 +7,15 @@
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_secret": "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",
         "redirect_uris": [
+            "http://localhost/Aurorahotelplaza.com/auth/login-google.php",
             "https://aurorahotelplaza.com/2025/auth/login-google.php",
             "https://www.aurorahotelplaza.com/2025/auth/login-google.php"
         ],
         "javascript_origins": [
-           
+            "http://localhost",
             "https://aurorahotelplaza.com",
             "https://www.aurorahotelplaza.com"
+            
         ]
     }
 }

@@ -218,6 +218,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 <span class="material-symbols-outlined">star</span>
                 <span>Đánh giá</span>
             </a>
+            <a href="contacts.php" class="sidebar-link <?php echo $current_page === 'contacts' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">contact_mail</span>
+                <span>Liên hệ</span>
+            </a>
 
             <!-- Services -->
             <div class="mt-6 mb-2">

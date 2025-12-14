@@ -1,0 +1,71 @@
+-- =====================================================
+-- Script xóa toàn bộ users và dữ liệu liên quan
+-- Aurora Hotel Plaza
+-- =====================================================
+
+-- Tắt kiểm tra foreign key để tránh lỗi constraint
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 1. Xóa dữ liệu từ các bảng phụ thuộc trước
+
+-- Xóa sessions
+DELETE FROM user_sessions;
+
+-- Xóa loyalty points
+DELETE FROM user_loyalty;
+
+-- Xóa points transactions
+DELETE FROM points_transactions;
+
+-- Xóa password resets
+DELETE FROM password_resets;
+
+-- Xóa CSRF tokens
+DELETE FROM csrf_tokens;
+
+-- Xóa notifications
+DELETE FROM notifications;
+
+-- Xóa push subscriptions
+DELETE FROM push_subscriptions;
+
+-- Xóa reviews
+DELETE FROM reviews;
+
+-- Xóa blog comments
+DELETE FROM blog_comments;
+
+-- Xóa promotion usage
+DELETE FROM promotion_usage;
+
+-- Xóa service bookings
+DELETE FROM service_bookings;
+
+-- Xóa booking history (nếu có)
+DELETE FROM booking_history;
+
+-- Xóa bookings
+DELETE FROM bookings;
+
+-- Xóa activity logs
+DELETE FROM activity_logs;
+
+-- Xóa contact submissions (nếu có user_id)
+UPDATE contact_submissions SET user_id = NULL;
+
+-- 2. Cuối cùng xóa users
+DELETE FROM users;
+
+-- Bật lại kiểm tra foreign key
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Reset AUTO_INCREMENT cho các bảng (tùy chọn)
+ALTER TABLE users AUTO_INCREMENT = 1;
+ALTER TABLE user_loyalty AUTO_INCREMENT = 1;
+ALTER TABLE user_sessions AUTO_INCREMENT = 1;
+ALTER TABLE bookings AUTO_INCREMENT = 1;
+ALTER TABLE activity_logs AUTO_INCREMENT = 1;
+ALTER TABLE notifications AUTO_INCREMENT = 1;
+ALTER TABLE reviews AUTO_INCREMENT = 1;
+ALTER TABLE points_transactions AUTO_INCREMENT = 1;
+ALTER TABLE service_bookings AUTO_INCREMENT = 1;

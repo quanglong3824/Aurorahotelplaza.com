@@ -38,6 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $db = getDB();
             
+            if (!$db) {
+                throw new Exception("Không thể kết nối database");
+            }
+            
             // Check if email exists
             $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ?");
             $stmt->execute([$email]);
@@ -48,36 +52,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
                 
                 $stmt = $db->prepare("
-                    INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified)
-                    VALUES (?, ?, ?, ?, 'customer', 'active', 0)
+                    INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified, created_at)
+                    VALUES (?, ?, ?, ?, 'customer', 'active', 0, NOW())
                 ");
                 $stmt->execute([$email, $password_hash, $full_name, $phone]);
                 $user_id = $db->lastInsertId();
                 
-                // Send welcome email (optional - don't block registration if email fails)
-                $emailSent = false;
-                try {
-                    require_once '../helpers/mailer.php';
-                    $mailer = getMailer();
-                    $emailSent = $mailer->sendWelcomeEmail($email, $full_name, $user_id);
-                } catch (Exception $emailError) {
-                    // Log email error but don't stop registration
-                    error_log("Email send failed: " . $emailError->getMessage());
+                if (!$user_id) {
+                    throw new Exception("Không thể tạo tài khoản");
                 }
                 
-                // Log registration
+                // Log registration (optional - don't block if fails)
                 try {
-                    require_once '../helpers/logger.php';
-                    $logger = getLogger();
-                    $logger->logUserRegister($user_id, [
-                        'email' => $email,
-                        'full_name' => $full_name,
-                        'phone' => $phone,
-                        'email_sent' => $emailSent
-                    ]);
+                    $loggerPath = __DIR__ . '/../helpers/logger.php';
+                    if (file_exists($loggerPath)) {
+                        require_once $loggerPath;
+                        if (function_exists('getLogger')) {
+                            $logger = getLogger($db);
+                            $logger->logUserRegistration($user_id, [
+                                'email' => $email,
+                                'user_name' => $full_name,
+                                'registration_method' => 'manual'
+                            ]);
+                        }
+                    }
                 } catch (Exception $logError) {
-                    // Log error but don't stop registration
                     error_log("Logger failed: " . $logError->getMessage());
+                }
+                
+                // Send welcome email (optional - don't block registration)
+                try {
+                    $mailerPath = __DIR__ . '/../helpers/mailer.php';
+                    if (file_exists($mailerPath)) {
+                        require_once $mailerPath;
+                        if (function_exists('getMailer')) {
+                            $mailer = getMailer();
+                            $mailer->sendWelcomeEmail($email, $full_name, $user_id);
+                        }
+                    }
+                } catch (Exception $emailError) {
+                    error_log("Email send failed: " . $emailError->getMessage());
                 }
                 
                 // Set success flag to show popup
@@ -85,8 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['registration_email'] = $email;
                 $_SESSION['registration_name'] = $full_name;
             }
+        } catch (PDOException $e) {
+            $errors[] = 'Lỗi database. Vui lòng thử lại sau.';
+            error_log("Registration PDO error: " . $e->getMessage());
         } catch (Exception $e) {
-            $errors[] = 'Có lỗi xảy ra: ' . $e->getMessage();
+            $errors[] = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
             error_log("Registration error: " . $e->getMessage());
         }
     }

@@ -1,0 +1,254 @@
+/*
+ * Tailwind CSS Preflight - Base Styles
+ * Aurora Hotel Plaza
+ * 
+ * Note: This project uses Tailwind CSS via CDN (tailwindcss-cdn.js)
+ * This file contains only the preflight/reset styles for fallback
+ */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/* Remove default margin and set base styles */
+html,
+:host {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+}
+
+/* Headings reset */
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Links reset */
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/* Bold elements */
+b, strong {
+  font-weight: bolder;
+}
+
+/* Code elements */
+code, kbd, samp, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1em;
+}
+
+/* Small text */
+small {
+  font-size: 80%;
+}
+
+/* Subscript and superscript */
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Table reset */
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+/* Form elements reset */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+/* Focus styles */
+:-moz-focusring {
+  outline: auto;
+}
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/* Progress element */
+progress {
+  vertical-align: baseline;
+}
+
+/* Spinner buttons */
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/* Search input */
+[type='search'] {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+  outline-offset: -2px;
+}
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/* File upload button */
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+/* Summary element */
+summary {
+  display: list-item;
+}
+
+/* Reset spacing */
+blockquote,
+dl,
+dd,
+h1, h2, h3, h4, h5, h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Dialog reset */
+dialog {
+  padding: 0;
+}
+
+/* Textarea */
+textarea {
+  resize: vertical;
+}
+
+/* Placeholder styles */
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+/* Button cursor */
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Disabled cursor */
+:disabled {
+  cursor: default;
+}
+
+/* Media elements */
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+}
+
+/* Responsive images */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hidden attribute */
+[hidden] {
+  display: none;
+}
+
+/* HR element */
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+/* Abbreviation */
+abbr:where([title]) {
+  text-decoration: underline dotted;
+}

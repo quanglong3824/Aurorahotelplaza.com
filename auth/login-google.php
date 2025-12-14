@@ -1,8 +1,15 @@
 <?php
 session_start();
 
-// Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
+// Nếu đang có session cũ và đang bắt đầu flow OAuth mới (không có code), xóa session cũ
+if (!isset($_GET['code']) && !isset($_GET['error'])) {
+    // Bắt đầu flow mới - xóa session cũ để tránh lẫn lộn
+    session_unset();
+    session_regenerate_id(true);
+}
+
+// Redirect if already logged in (chỉ khi không phải callback)
+if (isset($_SESSION['user_id']) && !isset($_GET['code'])) {
     header('Location: ../index.php');
     exit;
 }
@@ -22,7 +29,29 @@ if (!$google_config || !isset($google_config['web'])) {
 
 $client_id = $google_config['web']['client_id'];
 $client_secret = $google_config['web']['client_secret'];
-$redirect_uri = $google_config['web']['redirect_uris'][0];
+
+// Tự động chọn redirect URI dựa trên môi trường
+$is_localhost = (
+    strpos($_SERVER['HTTP_HOST'], 'localhost') !== false ||
+    $_SERVER['SERVER_ADDR'] === '127.0.0.1' ||
+    $_SERVER['SERVER_ADDR'] === '::1'
+);
+
+$redirect_uri = null;
+foreach ($google_config['web']['redirect_uris'] as $uri) {
+    if ($is_localhost && strpos($uri, 'localhost') !== false) {
+        $redirect_uri = $uri;
+        break;
+    } elseif (!$is_localhost && strpos($uri, 'localhost') === false) {
+        $redirect_uri = $uri;
+        break;
+    }
+}
+
+// Fallback to first URI if no match
+if (!$redirect_uri) {
+    $redirect_uri = $google_config['web']['redirect_uris'][0];
+}
 
 // Handle OAuth callback
 if (isset($_GET['code'])) {
@@ -91,6 +120,19 @@ if (isset($_GET['code'])) {
         $stmt = $db->prepare("SELECT * FROM users WHERE email = ? AND status = 'active'");
         $stmt->execute([$user_info['email']]);
         $user = $stmt->fetch();
+        
+        // QUAN TRỌNG: Xóa toàn bộ session cũ trước khi set session mới
+        // Lưu lại intended_url nếu có
+        $intended_url = $_SESSION['intended_url'] ?? null;
+        
+        // Xóa session cũ hoàn toàn
+        session_unset();
+        session_regenerate_id(true);
+        
+        // Khôi phục intended_url
+        if ($intended_url) {
+            $_SESSION['intended_url'] = $intended_url;
+        }
         
         if ($user) {
             // User exists, log them in

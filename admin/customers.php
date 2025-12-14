@@ -259,6 +259,10 @@ include 'includes/admin-header.php';
                                             <span class="material-symbols-outlined text-sm">check_circle</span>
                                         </button>
                                     <?php endif; ?>
+                                    <button onclick="deleteCustomer(<?php echo $customer['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($customer['full_name'])); ?>')" 
+                                            class="action-btn text-red-600" title="Xóa vĩnh viễn">
+                                        <span class="material-symbols-outlined text-sm">delete_forever</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -329,6 +333,50 @@ function updateCustomerStatus(userId, status, reason = '') {
         if (data.success) {
             showToast('Cập nhật thành công!', 'success');
             setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Có lỗi xảy ra', 'error');
+    });
+}
+
+function deleteCustomer(userId, userName) {
+    // Hiển thị confirm với thông tin chi tiết
+    const confirmMsg = `⚠️ XÓA VĨNH VIỄN KHÁCH HÀNG ⚠️\n\n` +
+        `Bạn sắp xóa khách hàng: ${userName}\n\n` +
+        `Hành động này sẽ XÓA TẤT CẢ dữ liệu liên quan:\n` +
+        `- Thông tin tài khoản\n` +
+        `- Lịch sử đặt phòng\n` +
+        `- Điểm tích lũy\n` +
+        `- Đánh giá\n` +
+        `- Thông báo\n` +
+        `- Liên hệ\n\n` +
+        `⛔ KHÔNG THỂ HOÀN TÁC!\n\n` +
+        `Nhập "XOA" để xác nhận:`;
+    
+    const confirmation = prompt(confirmMsg);
+    if (confirmation !== 'XOA') {
+        if (confirmation !== null) {
+            showToast('Bạn cần nhập "XOA" để xác nhận', 'warning');
+        }
+        return;
+    }
+    
+    fetch('api/delete-customer.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'user_id=' + encodeURIComponent(userId)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Đã xóa khách hàng và tất cả dữ liệu liên quan!', 'success');
+            setTimeout(() => location.reload(), 1500);
         } else {
             showToast(data.message || 'Có lỗi xảy ra', 'error');
         }

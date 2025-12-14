@@ -1,3 +1,40 @@
+<?php
+session_start();
+require_once 'config/database.php';
+require_once 'config/environment.php';
+
+// Lấy thông tin user từ session và database nếu đã đăng nhập
+$is_logged_in = isset($_SESSION['user_id']);
+$user_name = '';
+$user_email = '';
+$user_phone = '';
+
+if ($is_logged_in) {
+    try {
+        $db = getDB();
+        if ($db) {
+            $stmt = $db->prepare("SELECT full_name, email, phone FROM users WHERE user_id = :user_id");
+            $stmt->execute([':user_id' => $_SESSION['user_id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($user) {
+                $user_name = $user['full_name'] ?? '';
+                $user_email = $user['email'] ?? '';
+                $user_phone = $user['phone'] ?? '';
+            }
+        } else {
+            // Fallback to session if DB fails
+            $user_name = $_SESSION['user_name'] ?? '';
+            $user_email = $_SESSION['user_email'] ?? '';
+        }
+    } catch (Exception $e) {
+        error_log("Contact page - Get user info error: " . $e->getMessage());
+        // Fallback to session data
+        $user_name = $_SESSION['user_name'] ?? '';
+        $user_email = $_SESSION['user_email'] ?? '';
+    }
+}
+?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
@@ -112,42 +149,79 @@
                 <!-- Contact Form -->
                 <div class="contact-form-wrapper">
                     <h2 class="section-title">Gửi tin nhắn cho chúng tôi</h2>
+                    
+                    <?php if ($is_logged_in): ?>
+                    <div class="logged-in-notice">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <span>Bạn đang đăng nhập với tài khoản <strong><?php echo htmlspecialchars($user_email); ?></strong></span>
+                    </div>
+                    <?php endif; ?>
+                    
                     <form class="contact-form" id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Họ và tên *</label>
-                                <input type="text" class="form-input" placeholder="Nhập họ và tên" required>
+                                <label class="form-label">Họ và tên <span class="text-red-500">*</span></label>
+                                <input type="text" 
+                                       name="name" 
+                                       class="form-input <?php echo $is_logged_in && $user_name ? 'readonly-input' : ''; ?>" 
+                                       placeholder="Nhập họ và tên" 
+                                       value="<?php echo htmlspecialchars($user_name); ?>"
+                                       <?php echo $is_logged_in && $user_name ? 'readonly' : ''; ?>
+                                       required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Email *</label>
-                                <input type="email" class="form-input" placeholder="Nhập email" required>
+                                <label class="form-label">Email <span class="text-red-500">*</span></label>
+                                <input type="email" 
+                                       name="email" 
+                                       class="form-input <?php echo $is_logged_in && $user_email ? 'readonly-input' : ''; ?>" 
+                                       placeholder="Nhập email" 
+                                       value="<?php echo htmlspecialchars($user_email); ?>"
+                                       <?php echo $is_logged_in && $user_email ? 'readonly' : ''; ?>
+                                       required>
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Số điện thoại *</label>
-                                <input type="tel" class="form-input" placeholder="Nhập số điện thoại" required>
+                                <label class="form-label">Số điện thoại <span class="text-red-500">*</span></label>
+                                <input type="tel" 
+                                       name="phone" 
+                                       class="form-input <?php echo $is_logged_in && $user_phone ? 'readonly-input' : ''; ?>" 
+                                       placeholder="Nhập số điện thoại" 
+                                       value="<?php echo htmlspecialchars($user_phone); ?>"
+                                       <?php echo $is_logged_in && $user_phone ? 'readonly' : ''; ?>
+                                       required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Chủ đề</label>
-                                <select class="form-input">
-                                    <option>Đặt phòng</option>
-                                    <option>Tổ chức sự kiện</option>
-                                    <option>Dịch vụ khác</option>
-                                    <option>Góp ý</option>
+                                <select name="subject" class="form-input">
+                                    <option value="Đặt phòng">Đặt phòng</option>
+                                    <option value="Tổ chức sự kiện">Tổ chức sự kiện</option>
+                                    <option value="Dịch vụ khác">Dịch vụ khác</option>
+                                    <option value="Góp ý">Góp ý</option>
+                                    <option value="Khiếu nại">Khiếu nại</option>
                                 </select>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">Tin nhắn *</label>
-                            <textarea class="form-textarea" rows="6" placeholder="Nhập nội dung tin nhắn của bạn..." required></textarea>
+                            <label class="form-label">Tin nhắn <span class="text-red-500">*</span></label>
+                            <textarea name="message" class="form-textarea" rows="6" placeholder="Nhập nội dung tin nhắn của bạn..." required minlength="10"></textarea>
+                            <p class="form-hint">Tối thiểu 10 ký tự</p>
                         </div>
                         
-                        <button type="submit" class="btn-submit">
-                            <span class="material-symbols-outlined">send</span>
-                            Gửi tin nhắn
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <span class="btn-text">
+                                <span class="material-symbols-outlined">send</span>
+                                Gửi tin nhắn
+                            </span>
+                            <span class="btn-loading hidden">
+                                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Đang gửi...
+                            </span>
                         </button>
                     </form>
                 </div>
@@ -170,6 +244,10 @@
 
 <?php include 'includes/footer.php'; ?>
 </div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2"></div>
+
 <script src="assets/js/main.js"></script>
 <script src="assets/js/contact.js"></script>
 </body>

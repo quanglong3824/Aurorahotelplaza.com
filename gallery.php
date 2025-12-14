@@ -115,7 +115,9 @@ $category_names = [
         <div class="relative z-10 text-center px-4 py-32">
             <!-- Glass Badge -->
             <div class="inline-flex items-center gap-2 px-6 py-3 mb-8 rounded-full 
-                        bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl">
+                        bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%] 
+                        border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.12)]
+                        [box-shadow:inset_0_1px_0_rgba(255,255,255,0.2)]">
                 <span class="material-symbols-outlined text-accent">photo_library</span>
                 <span class="text-white font-medium">Bộ sưu tập hình ảnh</span>
             </div>
@@ -133,8 +135,9 @@ $category_names = [
             <!-- Stats Glass Cards -->
             <div class="flex flex-wrap justify-center gap-4 mb-10">
                 <?php foreach (array_slice($categories, 1, 4) as $key => $cat): ?>
-                <div class="px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 transition-all duration-300 cursor-pointer group"
+                <div class="px-6 py-4 rounded-2xl bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%]
+                            border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.12)]
+                            hover:bg-white/[0.15] hover:border-white/[0.25] transition-all duration-300 cursor-pointer group"
                      onclick="window.location.href='?category=<?php echo $key; ?>'">
                     <span class="material-symbols-outlined text-accent text-2xl mb-1 
                                 group-hover:scale-110 transition-transform"><?php echo $cat['icon']; ?></span>
@@ -155,9 +158,10 @@ $category_names = [
                     Xem thư viện
                 </a>
                 <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
-                                                   bg-white/10 backdrop-blur-xl border border-white/30
-                                                   text-white font-bold text-lg
-                                                   hover:bg-white/20 transition-all duration-300
+                                                   bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%]
+                                                   border border-white/[0.18] text-white font-bold text-lg
+                                                   shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]
+                                                   hover:bg-white/[0.15] hover:border-white/[0.3] transition-all duration-300
                                                    hover:-translate-y-1">
                     <span class="material-symbols-outlined">calendar_month</span>
                     Đặt phòng ngay
@@ -167,9 +171,9 @@ $category_names = [
         
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <a href="#gallery" class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl 
-                                      border border-white/20 flex items-center justify-center
-                                      hover:bg-white/20 transition-all">
+            <a href="#gallery" class="w-12 h-12 rounded-full bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%]
+                                      border border-white/[0.15] flex items-center justify-center
+                                      shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:bg-white/[0.15] transition-all">
                 <span class="material-symbols-outlined text-white">expand_more</span>
             </a>
         </div>
@@ -254,8 +258,9 @@ $category_names = [
                         
                         <!-- Zoom Icon -->
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                                    w-16 h-16 rounded-full bg-white/20 backdrop-blur-xl border border-white/30
-                                    flex items-center justify-center
+                                    w-16 h-16 rounded-full bg-white/[0.12] backdrop-blur-[20px] backdrop-saturate-[180%]
+                                    border border-white/[0.2] flex items-center justify-center
+                                    shadow-[0_8px_32px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]
                                     scale-0 group-hover:scale-100 transition-transform duration-300">
                             <span class="material-symbols-outlined text-white text-3xl">zoom_in</span>
                         </div>
@@ -279,8 +284,9 @@ $category_names = [
                     
                     <!-- Category Badge -->
                     <div class="absolute top-4 left-4 px-3 py-1.5 rounded-full
-                                bg-white/20 backdrop-blur-xl border border-white/30
-                                text-white text-xs font-semibold
+                                bg-white/[0.1] backdrop-blur-[16px] backdrop-saturate-[180%]
+                                border border-white/[0.2] text-white text-xs font-semibold
+                                shadow-[0_4px_16px_rgba(0,0,0,0.1)]
                                 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <?php echo $category_names[$image['category']] ?? 'Khác'; ?>
                     </div>
@@ -406,30 +412,33 @@ $category_names = [
 </div>
 
 <!-- Lightbox Modal - Liquid Glass -->
-<div id="lightbox" class="lightbox-modal fixed inset-0 z-[9999] hidden p-4 bg-black/95 backdrop-blur-xl" style="display: none;">
+<div id="lightbox" class="lightbox-modal fixed inset-0 z-[9999] hidden p-4 bg-black/80 backdrop-blur-[12px]" style="display: none;">
     <!-- Close Button -->
     <button onclick="closeLightbox()" 
             class="absolute top-6 right-6 w-12 h-12 rounded-full
-                   bg-white/10 backdrop-blur-xl border border-white/20
-                   flex items-center justify-center text-white
-                   hover:bg-white/20 transition-all duration-300 z-50">
+                   bg-white/[0.1] backdrop-blur-[20px] backdrop-saturate-[180%]
+                   border border-white/[0.18] flex items-center justify-center text-white
+                   shadow-[0_4px_16px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.15)]
+                   hover:bg-white/[0.18] hover:border-white/[0.3] transition-all duration-300 z-50">
         <span class="material-symbols-outlined text-2xl">close</span>
     </button>
     
     <!-- Navigation -->
     <button onclick="prevImage()" 
             class="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full
-                   bg-white/10 backdrop-blur-xl border border-white/20
-                   flex items-center justify-center text-white
-                   hover:bg-white/20 transition-all duration-300 z-50">
+                   bg-white/[0.1] backdrop-blur-[20px] backdrop-saturate-[180%]
+                   border border-white/[0.18] flex items-center justify-center text-white
+                   shadow-[0_4px_16px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.15)]
+                   hover:bg-white/[0.18] hover:border-white/[0.3] transition-all duration-300 z-50">
         <span class="material-symbols-outlined text-3xl">chevron_left</span>
     </button>
     
     <button onclick="nextImage()" 
             class="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full
-                   bg-white/10 backdrop-blur-xl border border-white/20
-                   flex items-center justify-center text-white
-                   hover:bg-white/20 transition-all duration-300 z-50">
+                   bg-white/[0.1] backdrop-blur-[20px] backdrop-saturate-[180%]
+                   border border-white/[0.18] flex items-center justify-center text-white
+                   shadow-[0_4px_16px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.15)]
+                   hover:bg-white/[0.18] hover:border-white/[0.3] transition-all duration-300 z-50">
         <span class="material-symbols-outlined text-3xl">chevron_right</span>
     </button>
     
