@@ -179,3 +179,132 @@
 .header-solid .submenu-trigger:hover {
     color: #d4af37 !important;
 }
+
+
+/* ============================================
+   LANGUAGE SWITCHER STYLES
+   ============================================ */
+
+.lang-switcher-wrapper {
+    position: relative;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.header-transparent .lang-btn {
+    color: white;
+}
+
+.header-solid .lang-btn {
+    color: #1f2937;
+}
+
+.dark .header-solid .lang-btn {
+    color: #f3f4f6;
+}
+
+.lang-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.lang-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    min-width: 160px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.dark .lang-menu {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    color: #1f2937;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.dark .lang-option {
+    color: #f3f4f6;
+}
+
+.lang-option:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.lang-option.active {
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.lang-option .material-symbols-outlined {
+    color: #d4af37;
+    font-size: 18px;
+}
+
+/* Auth Button */
+.auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.header-transparent .auth-btn {
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-transparent .auth-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.header-solid .auth-btn {
+    color: #1f2937;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.header-solid .auth-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #d4af37;
+    color: #d4af37;
+}
+
+.dark .header-solid .auth-btn {
+    color: #f3f4f6;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .header-solid .auth-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}

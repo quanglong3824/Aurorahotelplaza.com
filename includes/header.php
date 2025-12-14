@@ -19,6 +19,10 @@ if (!defined('BASE_URL')) {
     require_once __DIR__ . '/../config/environment.php';
 }
 
+// Load language helper
+require_once __DIR__ . '/../helpers/language.php';
+$current_lang = initLanguage();
+
 // Load session helper và kiểm tra user còn tồn tại
 require_once __DIR__ . '/../helpers/session-helper.php';
 
@@ -68,19 +72,19 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
                  class="h-16 w-auto transition-all duration-300">
         </div>
         <nav class="hidden items-center gap-10 md:flex">
-            <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>index.php">Trang chủ</a>
+            <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>index.php"><?php _e('nav.home'); ?></a>
             
             <!-- Phòng & Căn hộ with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>rooms.php">
-                    Phòng & Căn hộ
+                    <?php _e('nav.rooms'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>rooms.php" class="submenu-item">Phòng</a>
+                    <a href="<?php echo $base_path; ?>rooms.php" class="submenu-item"><?php _e('nav.rooms_only'); ?></a>
                     <a href="<?php echo $base_path; ?>apartments.php" class="submenu-item submenu-item-badge">
-                        Căn hộ
-                        <span class="badge-new">Mới</span>
+                        <?php _e('nav.apartments'); ?>
+                        <span class="badge-new"><?php _e('common.new'); ?></span>
                     </a>
                 </div>
             </div>
@@ -88,34 +92,34 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
             <!-- Dịch vụ with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>services.php">
-                    Dịch vụ
+                    <?php _e('nav.services'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service" class="submenu-item">Tổ chức tiệc cưới</a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service" class="submenu-item">Tổ chức hội nghị</a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant" class="submenu-item">Nhà hàng</a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="submenu-item">Văn phòng cho thuê</a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service" class="submenu-item"><?php _e('services_menu.wedding'); ?></a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service" class="submenu-item"><?php _e('services_menu.conference'); ?></a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant" class="submenu-item"><?php _e('services_menu.restaurant'); ?></a>
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="submenu-item"><?php _e('services_menu.office'); ?></a>
                 </div>
             </div>
 
             <!-- Khám phá with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>explore.php">
-                    Khám phá
+                    <?php _e('nav.explore'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>about.php" class="submenu-item">Giới thiệu</a>
-                    <a href="<?php echo $base_path; ?>gallery.php" class="submenu-item">Thư viện ảnh</a>
-                    <a href="<?php echo $base_path; ?>blog.php" class="submenu-item">Bài viết</a>
+                    <a href="<?php echo $base_path; ?>about.php" class="submenu-item"><?php _e('nav.about'); ?></a>
+                    <a href="<?php echo $base_path; ?>gallery.php" class="submenu-item"><?php _e('nav.gallery'); ?></a>
+                    <a href="<?php echo $base_path; ?>blog.php" class="submenu-item"><?php _e('nav.blog'); ?></a>
                 </div>
             </div>
-            <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>contact.php">Liên hệ</a>
+            <a class="text-base font-medium nav-link" href="<?php echo $base_path; ?>contact.php"><?php _e('nav.contact'); ?></a>
         </nav>
         <div class="flex items-center gap-2">
             <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
-                <span class="truncate">Đặt phòng</span>
+                <span class="truncate"><?php _e('nav.book_now'); ?></span>
             </a>
             
             <?php if ($is_logged_in): ?>
@@ -132,50 +136,34 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
                         <div>
                             <div class="font-semibold"><?php echo htmlspecialchars($user_name); ?></div>
                             <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                <?php 
-                                $role_names = [
-                                    'customer' => 'Khách hàng',
-                                    'receptionist' => 'Lễ tân',
-                                    'sale' => 'Sale',
-                                    'admin' => 'Quản trị viên'
-                                ];
-                                echo $role_names[$user_role] ?? 'Khách hàng';
-                                ?>
+                                <?php echo __('roles.' . $user_role); ?>
                             </div>
                         </div>
                     </div>
                     <div class="user-menu-divider"></div>
                     <a href="<?php echo $base_path; ?>profile/index.php" class="user-menu-item">
                         <span class="material-symbols-outlined">person</span>
-                        Thông tin cá nhân
+                        <?php _e('nav.profile'); ?>
                     </a>
                     <a href="<?php echo $base_path; ?>profile/bookings.php" class="user-menu-item">
                         <span class="material-symbols-outlined">hotel</span>
-                        Lịch sử đặt phòng
+                        <?php _e('nav.my_bookings'); ?>
                     </a>
                     <a href="<?php echo $base_path; ?>profile/loyalty.php" class="user-menu-item">
                         <span class="material-symbols-outlined">stars</span>
-                        Điểm thưởng
-                    </a>
-                    <a href="<?php echo $base_path; ?>profile.php#contacts" class="user-menu-item" onclick="localStorage.setItem('profileTab', 'contacts')">
-                        <span class="material-symbols-outlined">mail</span>
-                        Lịch sử liên hệ
-                    </a>
-                    <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
-                        <span class="material-symbols-outlined">map</span>
-                        Sơ đồ phòng
+                        <?php _e('nav.loyalty'); ?>
                     </a>
                     <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                     <div class="user-menu-divider"></div>
                     <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
                         <span class="material-symbols-outlined">dashboard</span>
-                        Quản trị
+                        <?php _e('nav.admin'); ?>
                     </a>
                     <?php endif; ?>
                     <div class="user-menu-divider"></div>
                     <a href="<?php echo $base_path; ?>auth/logout.php" class="user-menu-item text-red-600 dark:text-red-400">
                         <span class="material-symbols-outlined">logout</span>
-                        Đăng xuất
+                        <?php _e('nav.logout'); ?>
                     </a>
                 </div>
             </div>
@@ -183,13 +171,28 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
             <!-- Login/Register Buttons -->
             <a href="<?php echo $base_path; ?>auth/login.php" class="auth-btn">
                 <span class="material-symbols-outlined text-xl">login</span>
-                <span class="hidden md:inline">Đăng nhập</span>
+                <span class="hidden md:inline"><?php _e('nav.login'); ?></span>
             </a>
             <?php endif; ?>
             
-            <button class="lang-btn">
-                <span class="material-symbols-outlined text-xl">language</span>
-            </button>
+            <!-- Language Switcher -->
+            <div class="relative lang-switcher-wrapper">
+                <button class="lang-btn" onclick="toggleLangMenu()">
+                    <?php echo $current_lang === 'vi' ? '🇻🇳' : '🇺🇸'; ?>
+                    <span class="hidden md:inline text-sm"><?php echo strtoupper($current_lang); ?></span>
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+                </button>
+                <div id="langMenu" class="lang-menu hidden">
+                    <a href="?lang=vi" class="lang-option <?php echo $current_lang === 'vi' ? 'active' : ''; ?>">
+                        🇻🇳 Tiếng Việt
+                        <?php if ($current_lang === 'vi'): ?><span class="material-symbols-outlined text-sm">check</span><?php endif; ?>
+                    </a>
+                    <a href="?lang=en" class="lang-option <?php echo $current_lang === 'en' ? 'active' : ''; ?>">
+                        🇺🇸 English
+                        <?php if ($current_lang === 'en'): ?><span class="material-symbols-outlined text-sm">check</span><?php endif; ?>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </header>

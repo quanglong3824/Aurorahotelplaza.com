@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 14, 2025 lúc 11:19 AM
+-- Thời gian đã tạo: Th12 14, 2025 lúc 03:14 PM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
@@ -118,24 +118,33 @@ CREATE TABLE `activity_logs` (
 --
 
 INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `entity_id`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:50:38'),
-(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 03:53:06'),
-(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:15'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:40'),
-(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:59'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:44'),
-(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:51'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:16'),
-(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:36'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:47'),
-(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:00:11'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:01:05'),
-(0, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:03:49'),
-(0, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:06:41'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:07:57'),
-(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"thuylinh.80902@gmail.com\",\"user_name\":\"Linh\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:08:07'),
-(0, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:12:26'),
-(0, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"23810067@student.hcmute.edu.vn\",\"user_name\":\"Le Quang Long\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:13:48');
+(1, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:50:38'),
+(2, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 03:53:06'),
+(3, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:15'),
+(4, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:40'),
+(5, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:53:59'),
+(6, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:44'),
+(7, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:58:51'),
+(8, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:16'),
+(9, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:36'),
+(10, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 03:59:47'),
+(11, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:00:11'),
+(12, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:01:05'),
+(13, 0, 'login', 'user', 0, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:03:49'),
+(14, 0, 'login', 'user', 0, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:06:41'),
+(15, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:07:57'),
+(16, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"thuylinh.80902@gmail.com\",\"user_name\":\"Linh\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:08:07'),
+(17, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:12:26'),
+(18, 0, 'register', 'user', 0, 'New user registered via google - Details: {\"email\":\"23810067@student.hcmute.edu.vn\",\"user_name\":\"Le Quang Long\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:13:48'),
+(65, 0, 'logout', 'user', 0, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:28:00'),
+(66, NULL, 'register', 'user', 2, 'New user registered via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:28:19'),
+(67, 3, 'register', 'user', 3, 'New user registered via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:34:55'),
+(68, 3, 'profile_update', 'user', 3, 'User updated profile information - Details: {\"updated_fields\":[\"full_name\",\"phone\",\"address\",\"date_of_birth\",\"gender\",\"user_id\"],\"password_changed\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:35:28'),
+(69, 3, 'logout', 'user', 3, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:36:31'),
+(70, 4, 'register', 'user', 4, 'New user registered via google - Details: {\"email\":\"thuylinh.80902@gmail.com\",\"user_name\":\"Linh\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:36:38'),
+(71, 4, 'logout', 'user', 4, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:41:58'),
+(72, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:42:36'),
+(73, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 04:45:07');
 
 -- --------------------------------------------------------
 
@@ -272,6 +281,14 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Đang đổ dữ liệu cho bảng `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`, `room_id`, `check_in_date`, `check_out_date`, `num_adults`, `num_children`, `num_rooms`, `total_nights`, `room_price`, `service_charges`, `discount_amount`, `points_used`, `total_amount`, `special_requests`, `guest_name`, `guest_email`, `guest_phone`, `guest_id_number`, `status`, `payment_status`, `qr_code`, `confirmation_sent`, `checked_in_at`, `checked_out_at`, `checked_in_by`, `cancelled_at`, `cancelled_by`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
+(0, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'pending', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-14 04:20:17'),
+(0, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'confirmed', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-14 04:50:49');
+
+--
 -- Bẫy `bookings`
 --
 DELIMITER $$
@@ -316,6 +333,14 @@ CREATE TABLE `booking_history` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `booking_history`
+--
+
+INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_status`, `changed_by`, `notes`, `created_at`) VALUES
+(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-14 04:50:49'),
+(0, 0, 'pending', 'confirmed', 3, 'Booking confirmed by user', '2025-12-14 04:50:49');
+
 -- --------------------------------------------------------
 
 --
@@ -358,6 +383,8 @@ CREATE TABLE `chat_messages` (
 --
 
 CREATE TABLE `contact_submissions` (
+  `id` int(11) NOT NULL,
+  `contact_code` varchar(20) DEFAULT NULL,
   `submission_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -371,6 +398,13 @@ CREATE TABLE `contact_submissions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `contact_submissions`
+--
+
+INSERT INTO `contact_submissions` (`id`, `contact_code`, `submission_id`, `name`, `email`, `phone`, `subject`, `message`, `status`, `assigned_to`, `ip_address`, `user_id`, `created_at`, `updated_at`) VALUES
+(4, '85669175', 0, 'Long Quang', 'longdev.08@gmail.com', '0969875278', 'Đặt phòng', 'Mình cần đặt phòng trước', 'new', NULL, '123.31.116.145', 3, '2025-12-14 05:03:42', '2025-12-14 05:03:42');
 
 -- --------------------------------------------------------
 
@@ -946,7 +980,7 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `building`, `status`, `notes`, `last_cleaned`, `created_at`, `updated_at`) VALUES
-(1, 1, '701', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:15:12'),
+(1, 1, '701', 7, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-14 04:20:17'),
 (2, 1, '702', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:15:06'),
 (3, 1, '703', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:14:49'),
 (4, 1, '704', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-22 07:56:46'),
@@ -964,7 +998,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (17, 2, '718', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (18, 2, '719', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (19, 2, '720', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(20, 3, '801', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(20, 3, '801', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-14 04:50:24'),
 (21, 3, '802', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (22, 3, '803', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (23, 3, '804', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1309,10 +1343,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`) VALUES
-(0, 'admin@aurorahotelplaza.com', '$2y$10$CKftn0hq/CpY0h9GmO3siu4T2bydgNesYNZfPzgt/LEBX8HzGvfmK', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 03:53:00', '2025-12-14 04:06:41', '2025-12-14 04:06:41'),
-(0, 'longdev.08@gmail.com', '$2y$10$L9GHSn/95z71PQdcIKh0VeTXpZT/yP9Y/Y.4X1wn2/xn524dcWbIG', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 03:53:59', '2025-12-14 04:06:41', '2025-12-14 04:06:41'),
-(0, 'thuylinh.80902@gmail.com', '$2y$10$7WT.yGtFvcgfcTQS/pvfe.0WweDA.0iLPeeW0aPUXZ211DhnLXx/G', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:08:07', '2025-12-14 04:08:07', NULL),
-(0, '23810067@student.hcmute.edu.vn', '$2y$10$cK1mhFEgS4.c7ZfzgMxLZ.t/gVn7DCUoMVeT22JrPshCxYyO3gL.u', 'Le Quang Long', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocL88K2CMnTw8MkI77vN2M4o5Dtkar8-VUTA4Hm0HBx29wURzA=s96-c', 'customer', 'active', 1, '2025-12-14 04:13:48', '2025-12-14 04:13:48', NULL);
+(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-14 04:45:07', '2025-12-14 04:45:07'),
+(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-14 04:42:36', '2025-12-14 04:42:36'),
+(4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -1336,10 +1369,9 @@ CREATE TABLE `user_loyalty` (
 --
 
 INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime_points`, `tier_id`, `tier_updated_at`, `created_at`, `updated_at`) VALUES
-(0, 0, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 03:53:00'),
-(0, 0, 0, 0, NULL, NULL, '2025-12-14 03:53:59', '2025-12-14 03:53:59'),
-(0, 0, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:08:07'),
-(0, 0, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:13:48');
+(1, 1, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 04:22:12'),
+(3, 3, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:22:12'),
+(4, 4, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:22:12');
 
 -- --------------------------------------------------------
 
@@ -1425,10 +1457,59 @@ CREATE TABLE `v_user_loyalty_summary` (
 --
 
 --
+-- Chỉ mục cho bảng `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD PRIMARY KEY (`log_id`);
+
+--
 -- Chỉ mục cho bảng `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `idx_contact_user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Chỉ mục cho bảng `user_loyalty`
+--
+ALTER TABLE `user_loyalty`
+  ADD PRIMARY KEY (`loyalty_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+
+--
+-- AUTO_INCREMENT cho bảng `contact_submissions`
+--
+ALTER TABLE `contact_submissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `user_loyalty`
+--
+ALTER TABLE `user_loyalty`
+  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

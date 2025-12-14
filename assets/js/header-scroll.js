@@ -48,3 +48,36 @@
     // Handle window resize
     window.addEventListener('resize', updateHeader);
 })();
+
+
+// Language Switcher Toggle
+function toggleLangMenu() {
+    const menu = document.getElementById('langMenu');
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
+}
+
+// Close language menu when clicking outside
+document.addEventListener('click', function(e) {
+    const langWrapper = document.querySelector('.lang-switcher-wrapper');
+    const langMenu = document.getElementById('langMenu');
+    
+    if (langWrapper && langMenu && !langWrapper.contains(e.target)) {
+        langMenu.classList.add('hidden');
+    }
+});
+
+// Preserve current URL params when switching language
+document.addEventListener('DOMContentLoaded', function() {
+    const langOptions = document.querySelectorAll('.lang-option');
+    langOptions.forEach(function(option) {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.href.split('lang=')[1];
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url.toString();
+        });
+    });
+});
