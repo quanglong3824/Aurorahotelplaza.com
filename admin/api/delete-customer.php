@@ -25,6 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $user_id = (int)($_POST['user_id'] ?? $_REQUEST['user_id'] ?? 0);
 
+// QUAN TRỌNG: Không cho phép xóa user_id = 0 vì có thể xóa nhiều users
+if ($user_id === 0) {
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Không thể xóa user với ID = 0. Database cần được sửa trước (thiếu AUTO_INCREMENT). Vui lòng truy cập /admin/fix-database.php để sửa.'
+    ]);
+    exit;
+}
+
 if (!$user_id) {
     echo json_encode(['success' => false, 'message' => 'User ID không hợp lệ']);
     exit;
@@ -65,51 +74,79 @@ try {
     $deleted_counts = [];
     
     // 1. Xóa service_bookings liên quan đến bookings của user
-    $stmt = $db->prepare("
-        DELETE sb FROM service_bookings sb
-        INNER JOIN bookings b ON sb.booking_id = b.booking_id
-        WHERE b.user_id = ?
-    ");
-    $stmt->execute([$user_id]);
-    $deleted_counts['service_bookings'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("
+            DELETE sb FROM service_bookings sb
+            INNER JOIN bookings b ON sb.booking_id = b.booking_id
+            WHERE b.user_id = ?
+        ");
+        $stmt->execute([$user_id]);
+        $deleted_counts['service_bookings'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['service_bookings'] = 0;
+    }
     
-    // 2. Xóa booking_services liên quan đến bookings của user
-    $stmt = $db->prepare("
-        DELETE bs FROM booking_services bs
-        INNER JOIN bookings b ON bs.booking_id = b.booking_id
-        WHERE b.user_id = ?
-    ");
-    $stmt->execute([$user_id]);
-    $deleted_counts['booking_services'] = $stmt->rowCount();
+    // 2. Xóa booking_services liên quan đến bookings của user (nếu bảng tồn tại)
+    try {
+        $stmt = $db->prepare("
+            DELETE bs FROM booking_services bs
+            INNER JOIN bookings b ON bs.booking_id = b.booking_id
+            WHERE b.user_id = ?
+        ");
+        $stmt->execute([$user_id]);
+        $deleted_counts['booking_services'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['booking_services'] = 0;
+    }
     
     // 3. Xóa payments liên quan đến bookings của user
-    $stmt = $db->prepare("
-        DELETE p FROM payments p
-        INNER JOIN bookings b ON p.booking_id = b.booking_id
-        WHERE b.user_id = ?
-    ");
-    $stmt->execute([$user_id]);
-    $deleted_counts['payments'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("
+            DELETE p FROM payments p
+            INNER JOIN bookings b ON p.booking_id = b.booking_id
+            WHERE b.user_id = ?
+        ");
+        $stmt->execute([$user_id]);
+        $deleted_counts['payments'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['payments'] = 0;
+    }
     
     // 4. Xóa bookings của user
-    $stmt = $db->prepare("DELETE FROM bookings WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['bookings'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("DELETE FROM bookings WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['bookings'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['bookings'] = 0;
+    }
     
     // 5. Xóa user_loyalty
-    $stmt = $db->prepare("DELETE FROM user_loyalty WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['user_loyalty'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("DELETE FROM user_loyalty WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['user_loyalty'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['user_loyalty'] = 0;
+    }
     
     // 6. Xóa reviews của user
-    $stmt = $db->prepare("DELETE FROM reviews WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['reviews'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("DELETE FROM reviews WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['reviews'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['reviews'] = 0;
+    }
     
     // 7. Xóa notifications của user
-    $stmt = $db->prepare("DELETE FROM notifications WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['notifications'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("DELETE FROM notifications WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['notifications'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['notifications'] = 0;
+    }
     
     // 8. Xóa contact_submissions của user (nếu có cột user_id)
     try {
@@ -122,14 +159,22 @@ try {
     }
     
     // 9. Xóa blog_comments của user
-    $stmt = $db->prepare("DELETE FROM blog_comments WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['blog_comments'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("DELETE FROM blog_comments WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['blog_comments'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['blog_comments'] = 0;
+    }
     
     // 10. Cập nhật activity_logs - set user_id = NULL thay vì xóa (để giữ lịch sử)
-    $stmt = $db->prepare("UPDATE activity_logs SET user_id = NULL WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $deleted_counts['activity_logs_updated'] = $stmt->rowCount();
+    try {
+        $stmt = $db->prepare("UPDATE activity_logs SET user_id = NULL WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $deleted_counts['activity_logs_updated'] = $stmt->rowCount();
+    } catch (Exception $e) {
+        $deleted_counts['activity_logs_updated'] = 0;
+    }
     
     // 11. Cuối cùng, xóa user
     $stmt = $db->prepare("DELETE FROM users WHERE user_id = ?");
