@@ -1,13 +1,8 @@
 <?php
 session_start();
-
-// Prevent caching - quan trọng để tránh hiển thị data cũ
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
-header('Expires: 0');
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     header('Location: ../auth/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
     exit;
@@ -15,21 +10,67 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
 
 require_once '../config/database.php';
 
-// Get user information
+$user_id = $_SESSION['user_id'];
+$active_tab = $_GET['tab'] ?? 'info';
+
 try {
     $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM users WHERE user_id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
+    
+    // Get user + loyalty info
+    $stmt = $db->prepare("
+        SELECT u.*, ul.current_points, ul.lifetime_points, mt.tier_name, mt.discount_percentage, mt.color_code, mt.benefits
+        FROM users u
+        LEFT JOIN user_loyalty ul ON u.user_id = ul.user_id
+        LEFT JOIN membership_tiers mt ON ul.tier_id = mt.tier_id
+        WHERE u.user_id = ?
+    ");
+    $stmt->execute([$user_id]);
     $user = $stmt->fetch();
     
     if (!$user) {
-        // User not found, logout
         header('Location: ../auth/logout.php');
         exit;
     }
+    
+    // Get booking stats
+    $stmt = $db->prepare("
+        SELECT COUNT(*) as total, 
+               SUM(CASE WHEN status IN ('confirmed','checked_in') THEN 1 ELSE 0 END) as active,
+               SUM(CASE WHEN payment_status = 'paid' THEN total_amount ELSE 0 END) as spent
+        FROM bookings WHERE user_id = ?
+    ");
+    $stmt->execute([$user_id]);
+    $stats = $stmt->fetch();
+    
+    // Get recent bookings (limit 5)
+    $stmt = $db->prepare("
+        SELECT b.*, rt.type_name FROM bookings b
+        LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
+        WHERE b.user_id = ? ORDER BY b.created_at DESC LIMIT 5
+    ");
+    $stmt->execute([$user_id]);
+    $bookings = $stmt->fetchAll();
+    
+    // Get points history (limit 5)
+    $stmt = $db->prepare("SELECT * FROM points_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+    $stmt->execute([$user_id]);
+    $points_history = $stmt->fetchAll();
+    
 } catch (Exception $e) {
     error_log("Profile error: " . $e->getMessage());
-    $error = "Có lỗi xảy ra khi tải thông tin người dùng.";
+    $error = "Có lỗi xảy ra.";
+}
+
+function getStatusBadge($status) {
+    $map = [
+        'pending' => ['Chờ xác nhận', 'bg-yellow-100 text-yellow-800'],
+        'confirmed' => ['Đã xác nhận', 'bg-blue-100 text-blue-800'],
+        'checked_in' => ['Đang ở', 'bg-green-100 text-green-800'],
+        'checked_out' => ['Đã trả phòng', 'bg-gray-100 text-gray-800'],
+        'cancelled' => ['Đã hủy', 'bg-red-100 text-red-800'],
+    ];
+    $info = $map[$status] ?? [$status, 'bg-gray-100 text-gray-800'];
+    return '<span class="px-2 py-1 text-xs font-medium rounded-full '.$info[1].'">'.$info[0].'</span>';
 }
 ?>
 <!DOCTYPE html>
@@ -37,13 +78,17 @@ try {
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Thông tin cá nhân - Aurora Hotel Plaza</title>
+    <title>Tài khoản - Aurora Hotel Plaza</title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>
-<link href="../assets/css/fonts.css" rel="stylesheet"/>
-    
+    <link href="../assets/css/fonts.css" rel="stylesheet"/>
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/profile.css">
+    <style>
+        .tab-btn { padding: 0.75rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .tab-btn.active { border-color: #d4af37; color: #d4af37; font-weight: 600; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -51,170 +96,160 @@ try {
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col pt-24 pb-16">
-    <div class="mx-auto max-w-4xl px-4 py-8">
-        <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                Thông tin cá nhân
-            </h1>
-            <p class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">
-                Quản lý thông tin tài khoản và cài đặt của bạn
-            </p>
-        </div>
-
-        <?php if (isset($error)): ?>
-        <div class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4">
-            <div class="flex">
-                <span class="material-symbols-outlined text-red-400 mr-2">error</span>
-                <p class="text-red-700"><?php echo htmlspecialchars($error); ?></p>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- User Information Card -->
-        <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm p-6 mb-6">
-            <div class="flex items-center space-x-4 mb-6">
-                <?php if ($user['avatar']): ?>
-                    <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
-                         alt="Avatar" class="w-20 h-20 rounded-full object-cover">
-                <?php else: ?>
-                    <div class="w-20 h-20 bg-accent rounded-full flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">
-                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
-                        </span>
+    <div class="mx-auto max-w-5xl w-full px-4 py-6">
+        
+        <!-- User Header -->
+        <div class="bg-gradient-to-r from-primary-light to-accent p-6 rounded-xl text-white mb-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-accent text-2xl font-bold">
+                        <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
                     </div>
+                    <div>
+                        <h1 class="text-2xl font-bold"><?php echo htmlspecialchars($user['full_name']); ?></h1>
+                        <p class="text-white/80 text-sm"><?php echo htmlspecialchars($user['email']); ?></p>
+                    </div>
+                </div>
+                <?php if ($user['tier_name']): ?>
+                <div class="px-4 py-2 rounded-lg font-bold" style="background: <?php echo $user['color_code']; ?>20; border: 2px solid <?php echo $user['color_code']; ?>;">
+                    <span class="material-symbols-outlined align-middle mr-1">workspace_premium</span>
+                    <?php echo $user['tier_name']; ?>
+                </div>
                 <?php endif; ?>
-                <div>
-                    <h2 class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo htmlspecialchars($user['full_name']); ?>
-                    </h2>
-                    <p class="text-text-secondary-light dark:text-text-secondary-dark">
-                        <?php echo htmlspecialchars($user['email']); ?>
-                    </p>
-                    <div class="flex items-center mt-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                            <?php echo $user['user_role'] === 'admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
-                                       ($user['user_role'] === 'staff' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'); ?>">
-                            <?php 
-                            $roles = [
-                                'customer' => 'Khách hàng',
-                                'receptionist' => 'Lễ tân',
-                                'sale' => 'Nhân viên bán hàng',
-                                'admin' => 'Quản trị viên'
-                            ];
-                            echo $roles[$user['user_role']] ?? $user['user_role'];
-                            ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Account Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Họ và tên
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo htmlspecialchars($user['full_name']); ?>
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Email
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo htmlspecialchars($user['email']); ?>
-                        <?php if ($user['email_verified']): ?>
-                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                <span class="material-symbols-outlined text-xs mr-1">verified</span>
-                                Đã xác thực
-                            </span>
-                        <?php endif; ?>
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Số điện thoại
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo $user['phone'] ? htmlspecialchars($user['phone']) : 'Chưa cập nhật'; ?>
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Ngày sinh
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo $user['date_of_birth'] ? date('d/m/Y', strtotime($user['date_of_birth'])) : 'Chưa cập nhật'; ?>
-                    </p>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Địa chỉ
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo $user['address'] ? htmlspecialchars($user['address']) : 'Chưa cập nhật'; ?>
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Ngày tham gia
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo date('d/m/Y', strtotime($user['created_at'])); ?>
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                        Lần đăng nhập cuối
-                    </label>
-                    <p class="text-text-primary-light dark:text-text-primary-dark">
-                        <?php echo $user['last_login'] ? date('d/m/Y H:i', strtotime($user['last_login'])) : 'Chưa có'; ?>
-                    </p>
-                </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="bookings.php" class="block p-6 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <span class="material-symbols-outlined text-2xl text-accent mr-4">hotel</span>
-                    <div>
-                        <h3 class="font-semibold text-text-primary-light dark:text-text-primary-dark">Lịch sử đặt phòng</h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Xem các đặt phòng của bạn</p>
-                    </div>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
+                <p class="text-gray-500 text-xs">Điểm hiện tại</p>
+                <p class="text-2xl font-bold text-accent"><?php echo number_format($user['current_points'] ?? 0); ?></p>
+            </div>
+            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
+                <p class="text-gray-500 text-xs">Tổng điểm</p>
+                <p class="text-2xl font-bold text-primary-light"><?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
+            </div>
+            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
+                <p class="text-gray-500 text-xs">Đặt phòng</p>
+                <p class="text-2xl font-bold text-blue-600"><?php echo $stats['total'] ?? 0; ?></p>
+            </div>
+            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
+                <p class="text-gray-500 text-xs">Chi tiêu</p>
+                <p class="text-xl font-bold text-green-600"><?php echo number_format($stats['spent'] ?? 0); ?>đ</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+            <div class="border-b flex overflow-x-auto">
+                <button class="tab-btn <?php echo $active_tab == 'info' ? 'active' : ''; ?>" onclick="switchTab('info')">
+                    <span class="material-symbols-outlined align-middle text-sm mr-1">person</span>Thông tin
+                </button>
+                <button class="tab-btn <?php echo $active_tab == 'bookings' ? 'active' : ''; ?>" onclick="switchTab('bookings')">
+                    <span class="material-symbols-outlined align-middle text-sm mr-1">hotel</span>Đặt phòng
+                </button>
+                <button class="tab-btn <?php echo $active_tab == 'points' ? 'active' : ''; ?>" onclick="switchTab('points')">
+                    <span class="material-symbols-outlined align-middle text-sm mr-1">stars</span>Điểm thưởng
+                </button>
+            </div>
+
+            <!-- Tab: Thông tin -->
+            <div id="tab-info" class="tab-content <?php echo $active_tab == 'info' ? 'active' : ''; ?> p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Thông tin cá nhân</h3>
+                    <a href="edit.php" class="text-accent hover:underline text-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">edit</span>Chỉnh sửa
+                    </a>
                 </div>
-            </a>
-            
-            <a href="loyalty.php" class="block p-6 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <span class="material-symbols-outlined text-2xl text-accent mr-4">stars</span>
-                    <div>
-                        <h3 class="font-semibold text-text-primary-light dark:text-text-primary-dark">Điểm thưởng</h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Quản lý điểm tích lũy</p>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">Email:</span> <?php echo htmlspecialchars($user['email']); ?></div>
+                    <div><span class="text-gray-500">SĐT:</span> <?php echo $user['phone'] ?: 'Chưa cập nhật'; ?></div>
+                    <div><span class="text-gray-500">Ngày sinh:</span> <?php echo $user['date_of_birth'] ? date('d/m/Y', strtotime($user['date_of_birth'])) : 'Chưa cập nhật'; ?></div>
+                    <div><span class="text-gray-500">Tham gia:</span> <?php echo date('d/m/Y', strtotime($user['created_at'])); ?></div>
+                    <div class="md:col-span-2"><span class="text-gray-500">Địa chỉ:</span> <?php echo $user['address'] ? htmlspecialchars($user['address']) : 'Chưa cập nhật'; ?></div>
                 </div>
-            </a>
-            
-            <a href="edit.php" class="block p-6 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <span class="material-symbols-outlined text-2xl text-accent mr-4">edit</span>
-                    <div>
-                        <h3 class="font-semibold text-text-primary-light dark:text-text-primary-dark">Chỉnh sửa thông tin</h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Cập nhật hồ sơ cá nhân</p>
-                    </div>
+                
+                <?php if ($user['tier_name'] && $user['benefits']): ?>
+                <div class="mt-6 p-4 bg-accent/10 rounded-lg">
+                    <h4 class="font-semibold mb-2">🎁 Quyền lợi <?php echo $user['tier_name']; ?> (Giảm <?php echo $user['discount_percentage']; ?>%)</h4>
+                    <p class="text-sm text-gray-600"><?php echo htmlspecialchars($user['benefits']); ?></p>
                 </div>
-            </a>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tab: Đặt phòng -->
+            <div id="tab-bookings" class="tab-content <?php echo $active_tab == 'bookings' ? 'active' : ''; ?> p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Đặt phòng gần đây</h3>
+                    <a href="bookings.php" class="text-accent hover:underline text-sm">Xem tất cả →</a>
+                </div>
+                <?php if (empty($bookings)): ?>
+                    <p class="text-center text-gray-500 py-8">Chưa có đặt phòng nào</p>
+                <?php else: ?>
+                <div class="space-y-3">
+                    <?php foreach ($bookings as $b): ?>
+                    <div class="border rounded-lg p-4 hover:shadow-sm transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold"><?php echo htmlspecialchars($b['type_name']); ?></p>
+                                <p class="text-sm text-gray-500"><?php echo $b['booking_code']; ?> • <?php echo date('d/m/Y', strtotime($b['check_in_date'])); ?> - <?php echo date('d/m/Y', strtotime($b['check_out_date'])); ?></p>
+                            </div>
+                            <div class="text-right">
+                                <?php echo getStatusBadge($b['status']); ?>
+                                <p class="text-accent font-bold mt-1"><?php echo number_format($b['total_amount']); ?>đ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tab: Điểm thưởng -->
+            <div id="tab-points" class="tab-content <?php echo $active_tab == 'points' ? 'active' : ''; ?> p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Lịch sử điểm</h3>
+                    <a href="loyalty.php" class="text-accent hover:underline text-sm">Chi tiết →</a>
+                </div>
+                <?php if (empty($points_history)): ?>
+                    <p class="text-center text-gray-500 py-8">Chưa có giao dịch điểm</p>
+                <?php else: ?>
+                <div class="space-y-3">
+                    <?php foreach ($points_history as $p): ?>
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined <?php echo $p['transaction_type'] == 'earn' ? 'text-green-600' : 'text-red-600'; ?>">
+                                <?php echo $p['transaction_type'] == 'earn' ? 'add_circle' : 'remove_circle'; ?>
+                            </span>
+                            <div>
+                                <p class="font-medium text-sm"><?php echo htmlspecialchars($p['description']); ?></p>
+                                <p class="text-xs text-gray-500"><?php echo date('d/m/Y H:i', strtotime($p['created_at'])); ?></p>
+                            </div>
+                        </div>
+                        <span class="font-bold <?php echo $p['transaction_type'] == 'earn' ? 'text-green-600' : 'text-red-600'; ?>">
+                            <?php echo $p['transaction_type'] == 'earn' ? '+' : '-'; ?><?php echo number_format($p['points']); ?>
+                        </span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </main>
 
 <?php include '../includes/footer.php'; ?>
-
 </div>
 
 <script src="../assets/js/main.js"></script>
+<script>
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.closest('.tab-btn').classList.add('active');
+    history.replaceState(null, '', '?tab=' + tab);
+}
+</script>
 </body>
 </html>
