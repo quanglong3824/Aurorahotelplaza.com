@@ -54,13 +54,13 @@ try {
 }
 
 $category_names = [
-    'room_service' => 'Dịch vụ phòng',
-    'spa' => 'Spa & Wellness',
-    'restaurant' => 'Ẩm thực',
-    'event' => 'Sự kiện',
-    'transport' => 'Vận chuyển',
-    'laundry' => 'Giặt ủi',
-    'other' => 'Khác'
+    'room_service' => __('services_page.cat_room_service'),
+    'spa' => __('services_page.cat_spa'),
+    'restaurant' => __('services_page.cat_restaurant'),
+    'event' => __('services_page.cat_event'),
+    'transport' => __('services_page.cat_transport'),
+    'laundry' => __('services_page.cat_laundry'),
+    'other' => __('services_page.cat_other')
 ];
 ?>
 <!DOCTYPE html>

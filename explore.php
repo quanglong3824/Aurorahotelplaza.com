@@ -2,6 +2,8 @@
 session_start();
 require_once 'config/database.php';
 require_once 'helpers/image-helper.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Fetch featured rooms
 $featured_rooms = [];
@@ -54,11 +56,11 @@ try {
 } catch (Exception $e) {}
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Khám phá - Aurora Hotel Plaza</title>
+<title><?php _e('explore_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -142,22 +144,22 @@ try {
         <div class="mx-auto max-w-7xl px-4 py-20 text-center">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">explore</span>
-                Khám phá Aurora Hotel Plaza
+                <?php _e('explore_page.badge'); ?>
             </span>
             <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                Trải nghiệm <span class="text-accent">đẳng cấp</span><br>tại trung tâm Biên Hòa
+                <?php _e('explore_page.hero_title'); ?>
             </h1>
             <p class="text-lg text-white/80 max-w-2xl mx-auto mb-10">
-                Khám phá không gian sang trọng, dịch vụ 5 sao và những trải nghiệm tuyệt vời đang chờ đón bạn tại Aurora Hotel Plaza
+                <?php _e('explore_page.hero_desc'); ?>
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
                 <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('explore_page.book_now'); ?>
                 </a>
                 <a href="#quick-links" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Khám phá thêm
+                    <?php _e('explore_page.explore_more'); ?>
                 </a>
             </div>
         </div>
@@ -169,10 +171,10 @@ try {
             <div class="text-center mb-12">
                 <span class="feature-badge mb-4">
                     <span class="material-symbols-outlined text-sm">bolt</span>
-                    Truy cập nhanh
+                    <?php _e('explore_page.quick_access'); ?>
                 </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Bạn muốn tìm gì?</h2>
-                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">Chọn danh mục bên dưới để khám phá những gì Aurora Hotel Plaza mang đến cho bạn</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"><?php _e('explore_page.what_looking_for'); ?></h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto"><?php _e('explore_page.quick_access_desc'); ?></p>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -181,8 +183,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">hotel</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Phòng nghỉ</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Phòng sang trọng</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.rooms'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.rooms_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
                 
@@ -191,8 +193,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">apartment</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Căn hộ</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Căn hộ dịch vụ</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.apartments'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.apartments_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
                 
@@ -201,8 +203,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">room_service</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Dịch vụ</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Dịch vụ 5 sao</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.services'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.services_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
                 
@@ -211,8 +213,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">photo_library</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Thư viện</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Hình ảnh đẹp</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.gallery'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.gallery_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
                 
@@ -221,8 +223,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">article</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Tin tức</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Bài viết mới</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.news'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.news_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
                 
@@ -231,8 +233,8 @@ try {
                     <div class="quick-link-icon mx-auto mb-4">
                         <span class="material-symbols-outlined text-2xl">contact_support</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Liên hệ</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Hỗ trợ 24/7</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.contact'); ?></h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.contact_desc'); ?></p>
                     <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </a>
             </div>
@@ -245,66 +247,66 @@ try {
             <div class="text-center mb-12">
                 <span class="feature-badge mb-4">
                     <span class="material-symbols-outlined text-sm">category</span>
-                    Danh mục
+                    <?php _e('explore_page.categories'); ?>
                 </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Khám phá theo danh mục</h2>
-                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">Lựa chọn phù hợp với nhu cầu của bạn</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"><?php _e('explore_page.explore_by_category'); ?></h2>
+                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto"><?php _e('explore_page.category_desc'); ?></p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Phòng nghỉ -->
                 <a href="rooms.php" class="category-card">
-                    <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg" alt="Phòng nghỉ">
+                    <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg" alt="<?php _e('explore_page.rooms'); ?>">
                     <div class="category-overlay"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
                             <span class="material-symbols-outlined text-sm">hotel</span>
-                            <?php echo count($featured_rooms); ?>+ loại phòng
+                            <?php _e('explore_page.room_types_count', ['count' => count($featured_rooms)]); ?>
                         </span>
-                        <h3 class="text-xl font-bold mb-2">Phòng nghỉ</h3>
-                        <p class="text-white/80 text-sm">Phòng Deluxe, Superior, Suite với đầy đủ tiện nghi hiện đại</p>
+                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.rooms'); ?></h3>
+                        <p class="text-white/80 text-sm"><?php _e('explore_page.rooms_category_desc'); ?></p>
                     </div>
                 </a>
                 
                 <!-- Căn hộ -->
                 <a href="apartments.php" class="category-card">
-                    <img src="assets/img/apartment/can-ho-aurora-1.jpg" alt="Căn hộ" onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
+                    <img src="assets/img/apartment/can-ho-aurora-1.jpg" alt="<?php _e('explore_page.apartments'); ?>" onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
                     <div class="category-overlay"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
                             <span class="material-symbols-outlined text-sm">apartment</span>
-                            <?php echo count($featured_apartments); ?>+ căn hộ
+                            <?php _e('explore_page.apartments_count', ['count' => count($featured_apartments)]); ?>
                         </span>
-                        <h3 class="text-xl font-bold mb-2">Căn hộ dịch vụ</h3>
-                        <p class="text-white/80 text-sm">Không gian sống hiện đại, tiện nghi như ở nhà</p>
+                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.service_apartments'); ?></h3>
+                        <p class="text-white/80 text-sm"><?php _e('explore_page.apartments_category_desc'); ?></p>
                     </div>
                 </a>
                 
                 <!-- Nhà hàng -->
                 <a href="services.php?category=restaurant" class="category-card">
-                    <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg" alt="Nhà hàng">
+                    <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg" alt="<?php _e('explore_page.restaurant_aurora'); ?>">
                     <div class="category-overlay"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
                             <span class="material-symbols-outlined text-sm">restaurant</span>
-                            Ẩm thực
+                            <?php _e('explore_page.cuisine'); ?>
                         </span>
-                        <h3 class="text-xl font-bold mb-2">Nhà hàng Aurora</h3>
-                        <p class="text-white/80 text-sm">Ẩm thực Á - Âu tinh tế với đầu bếp giàu kinh nghiệm</p>
+                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.restaurant_aurora'); ?></h3>
+                        <p class="text-white/80 text-sm"><?php _e('explore_page.restaurant_desc'); ?></p>
                     </div>
                 </a>
                 
                 <!-- Sự kiện -->
                 <a href="services.php?category=event" class="category-card">
-                    <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg" alt="Sự kiện">
+                    <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg" alt="<?php _e('explore_page.events'); ?>">
                     <div class="category-overlay"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
                             <span class="material-symbols-outlined text-sm">celebration</span>
-                            Sự kiện
+                            <?php _e('explore_page.events'); ?>
                         </span>
-                        <h3 class="text-xl font-bold mb-2">Tiệc cưới & Hội nghị</h3>
-                        <p class="text-white/80 text-sm">Sảnh tiệc sang trọng, sức chứa lên đến 500 khách</p>
+                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.wedding_conference'); ?></h3>
+                        <p class="text-white/80 text-sm"><?php _e('explore_page.events_desc'); ?></p>
                     </div>
                 </a>
             </div>
@@ -319,13 +321,13 @@ try {
                 <div>
                     <span class="feature-badge mb-4">
                         <span class="material-symbols-outlined text-sm">hotel</span>
-                        Phòng nghỉ
+                        <?php _e('explore_page.rooms'); ?>
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Phòng nổi bật</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Không gian nghỉ dưỡng sang trọng với tiện nghi hiện đại</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.featured_rooms'); ?></h2>
+                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.featured_rooms_desc'); ?></p>
                 </div>
                 <a href="rooms.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    Xem tất cả phòng
+                    <?php _e('explore_page.view_all_rooms'); ?>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
@@ -340,7 +342,7 @@ try {
                         <div class="relative h-48 overflow-hidden">
                             <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="<?php echo htmlspecialchars($room['type_name']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-3 right-3 px-3 py-1 bg-accent text-white text-xs font-bold rounded-full">
-                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ/đêm
+                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
                             </div>
                         </div>
                         <div class="p-5">
@@ -352,7 +354,7 @@ try {
                                 </span>
                                 <span class="flex items-center gap-1">
                                     <span class="material-symbols-outlined text-base text-accent">person</span>
-                                    <?php echo $room['max_occupancy']; ?> người
+                                    <?php echo $room['max_occupancy']; ?> <?php _e('explore_page.guests'); ?>
                                 </span>
                             </div>
                         </div>
@@ -372,13 +374,13 @@ try {
                 <div>
                     <span class="feature-badge mb-4">
                         <span class="material-symbols-outlined text-sm">apartment</span>
-                        Căn hộ
+                        <?php _e('explore_page.apartments'); ?>
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Căn hộ dịch vụ</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Không gian sống hiện đại với đầy đủ tiện nghi như ở nhà</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.service_apartments'); ?></h2>
+                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.apartments_section_desc'); ?></p>
                 </div>
                 <a href="apartments.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    Xem tất cả căn hộ
+                    <?php _e('explore_page.view_all_apartments'); ?>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
@@ -393,10 +395,10 @@ try {
                         <div class="relative h-48 overflow-hidden">
                             <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="<?php echo htmlspecialchars($apt['type_name']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             <div class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
-                                Căn hộ
+                                <?php _e('explore_page.apartment_badge'); ?>
                             </div>
                             <div class="absolute top-3 right-3 px-3 py-1 bg-white/90 text-accent text-xs font-bold rounded-full">
-                                <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ/đêm
+                                <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
                             </div>
                         </div>
                         <div class="p-5">
@@ -408,7 +410,7 @@ try {
                                 </span>
                                 <span class="flex items-center gap-1">
                                     <span class="material-symbols-outlined text-base text-accent">person</span>
-                                    <?php echo $apt['max_occupancy']; ?> người
+                                    <?php echo $apt['max_occupancy']; ?> <?php _e('explore_page.guests'); ?>
                                 </span>
                             </div>
                         </div>
@@ -428,13 +430,13 @@ try {
                 <div>
                     <span class="feature-badge mb-4">
                         <span class="material-symbols-outlined text-sm">star</span>
-                        Dịch vụ nổi bật
+                        <?php _e('explore_page.featured_services'); ?>
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Dịch vụ 5 sao</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Trải nghiệm đẳng cấp với các dịch vụ chuyên nghiệp</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.five_star_services'); ?></h2>
+                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.services_section_desc'); ?></p>
                 </div>
                 <a href="services.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    Xem tất cả dịch vụ
+                    <?php _e('explore_page.view_all_services'); ?>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
@@ -448,9 +450,9 @@ try {
                         </div>
                         <h3 class="font-bold text-sm text-gray-900 dark:text-white mb-1 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($service['service_name']); ?></h3>
                         <?php if ($service['price'] > 0): ?>
-                        <p class="text-xs text-accent font-bold">Từ <?php echo number_format($service['price'], 0, ',', '.'); ?>đ</p>
+                        <p class="text-xs text-accent font-bold"><?php _e('explore_page.from_price'); ?> <?php echo number_format($service['price'], 0, ',', '.'); ?>đ</p>
                         <?php else: ?>
-                        <p class="text-xs text-green-600 font-bold">Miễn phí</p>
+                        <p class="text-xs text-green-600 font-bold"><?php _e('explore_page.free'); ?></p>
                         <?php endif; ?>
                     </div>
                 </a>
@@ -466,19 +468,19 @@ try {
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['total_rooms']; ?>+</div>
-                    <p class="text-white/80">Phòng & Căn hộ</p>
+                    <p class="text-white/80"><?php _e('home.rooms_apartments'); ?></p>
                 </div>
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo number_format($stats['happy_customers']); ?>+</div>
-                    <p class="text-white/80">Khách hàng hài lòng</p>
+                    <p class="text-white/80"><?php _e('home.happy_customers'); ?></p>
                 </div>
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['years_experience']; ?>+</div>
-                    <p class="text-white/80">Năm kinh nghiệm</p>
+                    <p class="text-white/80"><?php _e('home.years_experience'); ?></p>
                 </div>
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-bold text-accent mb-2">24/7</div>
-                    <p class="text-white/80">Hỗ trợ khách hàng</p>
+                    <p class="text-white/80"><?php _e('home.customer_support'); ?></p>
                 </div>
             </div>
         </div>
@@ -492,13 +494,13 @@ try {
                 <div>
                     <span class="feature-badge mb-4">
                         <span class="material-symbols-outlined text-sm">article</span>
-                        Tin tức
+                        <?php _e('explore_page.news'); ?>
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">Bài viết mới nhất</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Cập nhật tin tức và mẹo du lịch từ Aurora Hotel Plaza</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.latest_posts'); ?></h2>
+                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.latest_posts_desc'); ?></p>
                 </div>
                 <a href="blog.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    Xem tất cả bài viết
+                    <?php _e('explore_page.view_all_posts'); ?>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
