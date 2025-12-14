@@ -1,9 +1,13 @@
+<?php
+require_once __DIR__ . '/../helpers/language.php';
+initLanguage();
+?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Phòng Deluxe - Aurora Hotel Plaza</title>
+<title><?php _e('room_detail.deluxe_title'); ?></title>
 <script src="../assets/js/tailwindcss-cdn.js"></script>
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
 <script src="../assets/js/tailwind-config.js"></script>
@@ -19,9 +23,9 @@
     <section class="page-header-room" style="background-image: url('../assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
-            <span class="room-badge-header">Phổ biến</span>
-            <h1 class="page-title">Phòng Deluxe</h1>
-            <p class="page-subtitle">Không gian sang trọng với đầy đủ tiện nghi hiện đại</p>
+            <span class="room-badge-header"><?php _e('room_detail.popular'); ?></span>
+            <h1 class="page-title"><?php _e('room_detail.deluxe_name'); ?></h1>
+            <p class="page-subtitle"><?php _e('room_detail.deluxe_subtitle'); ?></p>
         </div>
     </section>
 
@@ -42,8 +46,8 @@
                                 <span class="material-symbols-outlined">bed</span>
                             </div>
                             <div class="spec-content">
-                                <div class="spec-label">Loại giường</div>
-                                <div class="spec-value">1 Giường King</div>
+                                <div class="spec-label"><?php _e('room_detail.bed_type'); ?></div>
+                                <div class="spec-value"><?php _e('room_detail.bed_king'); ?></div>
                             </div>
                         </div>
                         <div class="spec-item">
@@ -51,7 +55,7 @@
                                 <span class="material-symbols-outlined">square_foot</span>
                             </div>
                             <div class="spec-content">
-                                <div class="spec-label">Diện tích</div>
+                                <div class="spec-label"><?php _e('room_detail.area'); ?></div>
                                 <div class="spec-value">35 m²</div>
                             </div>
                         </div>
@@ -60,8 +64,8 @@
                                 <span class="material-symbols-outlined">person</span>
                             </div>
                             <div class="spec-content">
-                                <div class="spec-label">Sức chứa</div>
-                                <div class="spec-value">2 người</div>
+                                <div class="spec-label"><?php _e('room_detail.capacity'); ?></div>
+                                <div class="spec-value">2 <?php _e('room_detail.guests'); ?></div>
                             </div>
                         </div>
                         <div class="spec-item">
@@ -69,59 +73,59 @@
                                 <span class="material-symbols-outlined">visibility</span>
                             </div>
                             <div class="spec-content">
-                                <div class="spec-label">Tầm nhìn</div>
-                                <div class="spec-value">Thành phố</div>
+                                <div class="spec-label"><?php _e('room_detail.view'); ?></div>
+                                <div class="spec-value"><?php _e('room_detail.city_view'); ?></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="amenities-section">
-                        <h3 class="section-title">Tiện nghi phòng</h3>
+                        <h3 class="section-title"><?php _e('room_detail.amenities'); ?></h3>
                         <div class="amenities-grid">
-                            <div class="amenity-item">WiFi miễn phí tốc độ cao</div>
-                            <div class="amenity-item">TV màn hình phẳng 43"</div>
-                            <div class="amenity-item">Điều hòa nhiệt độ</div>
-                            <div class="amenity-item">Minibar đầy đủ</div>
-                            <div class="amenity-item">Két an toàn</div>
-                            <div class="amenity-item">Bàn làm việc</div>
-                            <div class="amenity-item">Phòng tắm riêng</div>
-                            <div class="amenity-item">Vòi sen massage</div>
-                            <div class="amenity-item">Máy sấy tóc</div>
-                            <div class="amenity-item">Đồ vệ sinh cá nhân</div>
-                            <div class="amenity-item">Dép đi trong phòng</div>
-                            <div class="amenity-item">Ấm đun nước</div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_wifi'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_tv'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_ac'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_minibar'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_safe'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_desk'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_bathroom'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_shower'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_hairdryer'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_toiletries'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_slippers'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_kettle'); ?></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="booking-card">
                     <div class="price-section">
-                        <div class="price-label">Giá phòng</div>
+                        <div class="price-label"><?php _e('room_detail.room_price'); ?></div>
                         <div>
                             <span class="price-amount">1.200.000đ</span>
-                            <span class="price-unit">/đêm</span>
+                            <span class="price-unit">/<?php _e('room_detail.night'); ?></span>
                         </div>
                     </div>
                     <form class="booking-form">
                         <div class="form-group">
-                            <label class="form-label">Ngày nhận phòng</label>
+                            <label class="form-label"><?php _e('room_detail.check_in_date'); ?></label>
                             <input type="date" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Ngày trả phòng</label>
+                            <label class="form-label"><?php _e('room_detail.check_out_date'); ?></label>
                             <input type="date" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Số khách</label>
+                            <label class="form-label"><?php _e('room_detail.num_guests'); ?></label>
                             <select class="form-input">
-                                <option>1 người</option>
-                                <option selected>2 người</option>
+                                <option>1 <?php _e('room_detail.person'); ?></option>
+                                <option selected>2 <?php _e('room_detail.person'); ?></option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-book">Đặt phòng ngay</button>
+                        <button type="submit" class="btn-book"><?php _e('room_detail.book_now'); ?></button>
                     </form>
                     <div class="contact-info">
-                        <div class="contact-text">Hoặc gọi đặt phòng</div>
+                        <div class="contact-text"><?php _e('room_detail.or_call'); ?></div>
                         <div class="contact-phone">(+84-251) 391.8888</div>
                     </div>
                 </div>
@@ -132,7 +136,7 @@
     <!-- Gallery -->
     <section class="gallery-section">
         <div class="container-custom">
-            <h2 class="section-title-center">Hình ảnh phòng</h2>
+            <h2 class="section-title-center"><?php _e('room_detail.room_gallery'); ?></h2>
             <div class="room-gallery">
                 <div class="gallery-item">
                     <img src="../assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg" alt="Phòng Deluxe">
@@ -161,7 +165,7 @@
     require_once __DIR__ . '/../helpers/room-helper.php';
     $currentRoom = getRoomBySlug('deluxe');
     $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
-    $sectionTitle = 'Phòng khác';
+    $sectionTitle = __('room_detail.other_rooms');
     include '../includes/related-rooms.php'; 
     ?>
 </main>

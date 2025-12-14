@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 // Get user information if logged in
 $user_info = null;
@@ -32,7 +34,7 @@ foreach ($room_types as $room) {
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Đặt phòng - Aurora Hotel Plaza</title>
+<title><?php _e('booking_page.title'); ?></title>
 
 <!-- Tailwind CSS -->
 <script src="../assets/js/tailwindcss-cdn.js"></script>
@@ -57,8 +59,8 @@ foreach ($room_types as $room) {
     <!-- Page Header -->
     <section class="page-header-booking">
         <div class="page-header-content">
-            <h1 class="page-title">Đặt phòng</h1>
-            <p class="page-subtitle">Hoàn tất thông tin để đặt phòng tại Aurora Hotel Plaza</p>
+            <h1 class="page-title"><?php _e('booking_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('booking_page.page_subtitle'); ?></p>
         </div>
     </section>
 
@@ -73,30 +75,30 @@ foreach ($room_types as $room) {
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-2 step-item active" data-step="1">
                         <div class="step-circle">1</div>
-                        <span class="hidden sm:inline">Chọn phòng</span>
+                        <span class="hidden sm:inline"><?php _e('booking_page.step_select_room'); ?></span>
                     </div>
                     <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
                     <div class="flex items-center gap-2 step-item" data-step="2">
                         <div class="step-circle">2</div>
-                        <span class="hidden sm:inline">Thông tin</span>
+                        <span class="hidden sm:inline"><?php _e('booking_page.step_info'); ?></span>
                     </div>
                     <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
                     <div class="flex items-center gap-2 step-item" data-step="3">
                         <div class="step-circle">3</div>
-                        <span class="hidden sm:inline">Thanh toán</span>
+                        <span class="hidden sm:inline"><?php _e('booking_page.step_payment'); ?></span>
                     </div>
                 </div>
 
                 <!-- Step 1: Room Selection -->
                 <div class="form-step active" id="step1">
-                    <h3 class="text-xl font-bold mb-4">Chọn phòng và ngày</h3>
+                    <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.select_room_date'); ?></h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Room Type -->
                         <div class="form-group">
-                            <label class="form-label">Loại phòng *</label>
+                            <label class="form-label"><?php _e('booking_page.room_type'); ?> *</label>
                             <select name="room_type_id" id="room_type_id" class="form-input" required>
-                                <option value="">-- Chọn loại phòng --</option>
+                                <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
                                 <?php foreach($room_types as $room): ?>
                                 <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
@@ -109,19 +111,19 @@ foreach ($room_types as $room) {
 
                         <!-- Number of Guests -->
                         <div class="form-group">
-                            <label class="form-label">Số khách *</label>
+                            <label class="form-label"><?php _e('booking_page.num_guests'); ?> *</label>
                             <input type="number" name="num_guests" id="num_guests" class="form-input" min="1" max="10" value="2" required>
                         </div>
 
                         <!-- Check-in Date -->
                         <div class="form-group">
-                            <label class="form-label">Ngày nhận phòng *</label>
+                            <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
                             <input type="date" name="check_in_date" id="check_in_date" class="form-input" required>
                         </div>
 
                         <!-- Check-out Date -->
                         <div class="form-group">
-                            <label class="form-label">Ngày trả phòng *</label>
+                            <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
                             <input type="date" name="check_out_date" id="check_out_date" class="form-input" required>
                         </div>
                     </div>
@@ -129,43 +131,43 @@ foreach ($room_types as $room) {
                     <!-- Price Summary -->
                     <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg">
                         <div class="flex justify-between items-center">
-                            <span class="font-semibold">Giá phòng/đêm:</span>
+                            <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
                             <span id="room_price_display">0 VNĐ</span>
                         </div>
                         <div class="flex justify-between items-center mt-2">
-                            <span class="font-semibold">Số đêm:</span>
+                            <span class="font-semibold"><?php _e('booking_page.num_nights'); ?>:</span>
                             <span id="num_nights">0</span>
                         </div>
                         <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
-                            <span class="font-semibold">Tổng tiền tạm tính:</span>
+                            <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
                             <span id="estimated_total_display" class="text-xl font-bold text-accent">0 VNĐ</span>
                             <input type="hidden" id="estimated_total" value="0">
                         </div>
                     </div>
 
                     <div class="flex gap-4 mt-4">
-                        <button type="button" class="btn-secondary" onclick="calculateTotal()">Test Tính giá</button>
-                        <button type="button" class="btn-primary flex-1" onclick="nextStep(2)">Tiếp tục</button>
+                        <button type="button" class="btn-secondary" onclick="calculateTotal()"><?php _e('booking_page.test_calculate'); ?></button>
+                        <button type="button" class="btn-primary flex-1" onclick="nextStep(2)"><?php _e('booking_page.continue'); ?></button>
                     </div>
                 </div>
 
                 <!-- Step 2: Guest Information -->
                 <div class="form-step" id="step2">
-                    <h3 class="text-xl font-bold mb-4">Thông tin khách hàng</h3>
+                    <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.guest_info'); ?></h3>
                     
                     <?php if (!$user_info): ?>
                     <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5">info</span>
                             <div>
-                                <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-1">Đăng nhập để có trải nghiệm tốt hơn</h4>
+                                <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-1"><?php _e('booking_page.login_for_better'); ?></h4>
                                 <p class="text-sm text-blue-700 dark:text-blue-300 mb-3">
-                                    Khi đăng nhập, thông tin của bạn sẽ được tự động điền và bạn có thể theo dõi lịch sử đặt phòng.
+                                    <?php _e('booking_page.login_benefit'); ?>
                                 </p>
                                 <a href="../auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
                                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                     <span class="material-symbols-outlined text-sm">login</span>
-                                    Đăng nhập ngay
+                                    <?php _e('booking_page.login_now'); ?>
                                 </a>
                             </div>
                         </div>
@@ -175,97 +177,97 @@ foreach ($room_types as $room) {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Full Name -->
                         <div class="form-group">
-                            <label class="form-label">Họ và tên *</label>
+                            <label class="form-label"><?php _e('booking_page.full_name'); ?> *</label>
                             <input type="text" name="guest_name" id="guest_name" class="form-input" 
                                    value="<?php echo $user_info ? htmlspecialchars($user_info['full_name']) : ''; ?>" required>
                         </div>
 
                         <!-- Phone -->
                         <div class="form-group">
-                            <label class="form-label">Số điện thoại *</label>
+                            <label class="form-label"><?php _e('booking_page.phone'); ?> *</label>
                             <input type="tel" name="guest_phone" id="guest_phone" class="form-input" 
                                    value="<?php echo $user_info ? htmlspecialchars($user_info['phone'] ?? '') : ''; ?>" required>
                         </div>
 
                         <!-- Email -->
                         <div class="form-group md:col-span-2">
-                            <label class="form-label">Email *</label>
+                            <label class="form-label"><?php _e('booking_page.email'); ?> *</label>
                             <input type="email" name="guest_email" id="guest_email" class="form-input" 
                                    value="<?php echo $user_info ? htmlspecialchars($user_info['email']) : ''; ?>" required>
                             <?php if ($user_info): ?>
                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
                                 <span class="material-symbols-outlined text-sm">info</span>
-                                Thông tin được lấy từ tài khoản đã đăng nhập
+                                <?php _e('booking_page.info_from_account'); ?>
                             </p>
                             <?php endif; ?>
                         </div>
 
                         <!-- Special Requests -->
                         <div class="form-group md:col-span-2">
-                            <label class="form-label">Yêu cầu đặc biệt</label>
-                            <textarea name="special_requests" id="special_requests" class="form-input" rows="3" placeholder="Ví dụ: Phòng tầng cao, giường đôi..."></textarea>
+                            <label class="form-label"><?php _e('booking_page.special_requests'); ?></label>
+                            <textarea name="special_requests" id="special_requests" class="form-input" rows="3" placeholder="<?php _e('booking_page.special_requests_placeholder'); ?>"></textarea>
                         </div>
                     </div>
 
                     <div class="flex gap-4 mt-4">
-                        <button type="button" class="btn-secondary" onclick="prevStep(1)">Quay lại</button>
-                        <button type="button" class="btn-primary flex-1" onclick="nextStep(3)">Tiếp tục</button>
+                        <button type="button" class="btn-secondary" onclick="prevStep(1)"><?php _e('booking_page.back'); ?></button>
+                        <button type="button" class="btn-primary flex-1" onclick="nextStep(3)"><?php _e('booking_page.continue'); ?></button>
                     </div>
                 </div>
 
                 <!-- Step 3: Payment -->
                 <div class="form-step" id="step3">
-                    <h3 class="text-xl font-bold mb-4">Xác nhận và thanh toán</h3>
+                    <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.confirm_payment'); ?></h3>
                     
                     <!-- Booking Summary -->
                     <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
-                        <h4 class="font-bold text-lg mb-4">Thông tin đặt phòng</h4>
+                        <h4 class="font-bold text-lg mb-4"><?php _e('booking_page.booking_info'); ?></h4>
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
-                                <span>Loại phòng:</span>
+                                <span><?php _e('booking_page.room_type'); ?>:</span>
                                 <span id="summary_room_type" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Số khách:</span>
+                                <span><?php _e('booking_page.num_guests'); ?>:</span>
                                 <span id="summary_guests" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Nhận phòng:</span>
+                                <span><?php _e('booking_page.check_in'); ?>:</span>
                                 <span id="summary_checkin" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Trả phòng:</span>
+                                <span><?php _e('booking_page.check_out'); ?>:</span>
                                 <span id="summary_checkout" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Số đêm:</span>
+                                <span><?php _e('booking_page.num_nights'); ?>:</span>
                                 <span id="summary_nights" class="font-semibold"></span>
                             </div>
                             <hr class="my-3 border-gray-300 dark:border-gray-600">
                             <div class="flex justify-between">
-                                <span>Họ tên:</span>
+                                <span><?php _e('booking_page.full_name'); ?>:</span>
                                 <span id="summary_name" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Email:</span>
+                                <span><?php _e('booking_page.email'); ?>:</span>
                                 <span id="summary_email" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between">
-                                <span>Điện thoại:</span>
+                                <span><?php _e('booking_page.phone'); ?>:</span>
                                 <span id="summary_phone" class="font-semibold"></span>
                             </div>
                             <hr class="my-3 border-gray-300 dark:border-gray-600">
                             <div class="flex justify-between">
-                                <span>Tạm tính:</span>
+                                <span><?php _e('booking_page.subtotal'); ?>:</span>
                                 <span id="summary_subtotal" class="font-semibold"></span>
                             </div>
                             <div class="flex justify-between text-green-600" id="discount_row" style="display: none;">
-                                <span>Giảm giá:</span>
+                                <span><?php _e('booking_page.discount'); ?>:</span>
                                 <span id="summary_discount" class="font-semibold"></span>
                             </div>
                             <hr class="my-3 border-gray-300 dark:border-gray-600">
                             <div class="flex justify-between text-lg font-bold text-accent">
-                                <span>Tổng thanh toán:</span>
+                                <span><?php _e('booking_page.total_payment'); ?>:</span>
                                 <span id="summary_total"></span>
                             </div>
                         </div>
@@ -273,12 +275,12 @@ foreach ($room_types as $room) {
 
                     <!-- Promotion Code -->
                     <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
-                        <h4 class="font-bold text-lg mb-4">Mã giảm giá</h4>
+                        <h4 class="font-bold text-lg mb-4"><?php _e('booking_page.promo_code'); ?></h4>
                         <div class="flex gap-3">
                             <input type="text" id="promo_code" class="form-input flex-1" 
-                                   placeholder="Nhập mã giảm giá" style="text-transform: uppercase;">
+                                   placeholder="<?php _e('booking_page.enter_promo_code'); ?>" style="text-transform: uppercase;">
                             <button type="button" onclick="applyPromoCode()" class="btn-primary whitespace-nowrap">
-                                Áp dụng
+                                <?php _e('booking_page.apply'); ?>
                             </button>
                         </div>
                         <div id="promo_message" class="mt-3 text-sm"></div>
@@ -288,20 +290,20 @@ foreach ($room_types as $room) {
 
                     <!-- Payment Method -->
                     <div class="form-group mb-6">
-                        <label class="form-label">Phương thức thanh toán *</label>
+                        <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
                         <div class="space-y-3">
                             <label class="payment-option">
                                 <input type="radio" name="payment_method" value="vnpay" checked>
                                 <div class="payment-option-content">
                                     <img src="./assets/img/vnpay-logo.png" alt="VNPay" class="h-8">
-                                    <span>Thanh toán qua VNPay</span>
+                                    <span><?php _e('booking_page.pay_vnpay'); ?></span>
                                 </div>
                             </label>
                             <label class="payment-option">
                                 <input type="radio" name="payment_method" value="cash">
                                 <div class="payment-option-content">
                                     <span class="material-symbols-outlined text-2xl">payments</span>
-                                    <span>Thanh toán tại khách sạn</span>
+                                    <span><?php _e('booking_page.pay_at_hotel'); ?></span>
                                 </div>
                             </label>
                         </div>
@@ -311,15 +313,15 @@ foreach ($room_types as $room) {
                     <div class="form-group">
                         <label class="flex items-start gap-2">
                             <input type="checkbox" name="agree_terms" id="agree_terms" class="mt-1" required>
-                            <span class="text-sm">Tôi đồng ý với <a href="#" class="text-accent hover:underline">điều khoản và điều kiện</a> của Aurora Hotel Plaza</span>
+                            <span class="text-sm"><?php _e('booking_page.agree_terms'); ?> <a href="#" class="text-accent hover:underline"><?php _e('booking_page.terms_conditions'); ?></a> <?php _e('booking_page.of_aurora'); ?></span>
                         </label>
                     </div>
 
                     <div class="flex gap-4 mt-4">
-                        <button type="button" class="btn-secondary" onclick="prevStep(2)">Quay lại</button>
+                        <button type="button" class="btn-secondary" onclick="prevStep(2)"><?php _e('booking_page.back'); ?></button>
                         <button type="submit" class="btn-primary flex-1" id="submitBtn">
                             <span class="material-symbols-outlined">lock</span>
-                            Xác nhận đặt phòng
+                            <?php _e('booking_page.confirm_booking'); ?>
                         </button>
                     </div>
                 </div>

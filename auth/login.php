@@ -2,6 +2,8 @@
 session_start();
 require_once '../config/environment.php';
 require_once '../helpers/session-helper.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 // Kiểm tra và xóa session không hợp lệ (user_id = 0)
 validateAndCleanSession();
@@ -17,9 +19,9 @@ $success = $_GET['registered'] ?? '';
 
 // Handle logout success message
 if (isset($_GET['logged_out'])) {
-    $success = 'Bạn đã đăng xuất thành công!';
+    $success = __('auth.logged_out');
 } elseif ($success) {
-    $success = 'Đăng ký thành công! Vui lòng đăng nhập.';
+    $success = __('auth.register_success_login');
 }
 
 // Handle Google login errors
@@ -28,19 +30,19 @@ if (isset($_GET['google_error'])) {
 } elseif (isset($_GET['error'])) {
     switch ($_GET['error']) {
         case 'google_auth_failed':
-            $error = 'Xác thực Google thất bại. Vui lòng thử lại.';
+            $error = __('auth.google_auth_failed');
             break;
         case 'google_token_failed':
-            $error = 'Không thể lấy token từ Google. Vui lòng thử lại.';
+            $error = __('auth.google_token_failed');
             break;
         case 'google_userinfo_failed':
-            $error = 'Không thể lấy thông tin người dùng từ Google.';
+            $error = __('auth.google_userinfo_failed');
             break;
         case 'google_userinfo_invalid':
-            $error = 'Thông tin người dùng từ Google không hợp lệ.';
+            $error = __('auth.google_userinfo_invalid');
             break;
         case 'database_error':
-            $error = 'Lỗi cơ sở dữ liệu. Vui lòng thử lại sau.';
+            $error = __('auth.database_error');
             break;
     }
 }
@@ -53,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $remember = isset($_POST['remember']);
     
     if (empty($email) || empty($password)) {
-        $error = 'Vui lòng nhập đầy đủ thông tin';
+        $error = __('auth.fill_all_fields');
     } else {
         try {
             $db = getDB();
@@ -108,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: ' . $redirect);
                 exit;
             } else {
-                $error = 'Email hoặc mật khẩu không đúng';
+                $error = __('auth.invalid_credentials');
             }
         } catch (Exception $e) {
             $error = 'Có lỗi xảy ra: ' . $e->getMessage();
@@ -118,11 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Đăng nhập - Aurora Hotel Plaza</title>
+<title><?php _e('auth.login_title'); ?></title>
 <script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
 <link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
 <script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
@@ -141,8 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="icon-badge">
                 <span class="material-symbols-outlined">account_circle</span>
             </div>
-            <h1 class="auth-title">Đăng nhập</h1>
-            <p class="auth-subtitle">Chào mừng bạn trở lại Aurora Hotel Plaza</p>
+            <h1 class="auth-title"><?php _e('auth.login'); ?></h1>
+            <p class="auth-subtitle"><?php _e('auth.login_welcome'); ?></p>
         </div>
 
         <!-- Login Form -->
@@ -152,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-success">
                 <span class="material-symbols-outlined">check_circle</span>
                 <div>
-                    <strong>Thành công!</strong>
+                    <strong><?php _e('auth.success'); ?></strong>
                     <p><?php echo htmlspecialchars($success); ?></p>
                 </div>
             </div>
@@ -162,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-error">
                 <span class="material-symbols-outlined">error</span>
                 <div>
-                    <strong>Lỗi!</strong>
+                    <strong><?php _e('auth.error'); ?></strong>
                     <p><?php echo htmlspecialchars($error); ?></p>
                 </div>
             </div>
@@ -174,12 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label class="form-label">
                             <span class="material-symbols-outlined">email</span>
-                            Email
+                            <?php _e('auth.email'); ?>
                         </label>
                         <div class="input-wrapper">
                             <input type="email" name="email" class="form-input" required 
                                    value="<?php echo htmlspecialchars($email ?? ''); ?>"
-                                   placeholder="Nhập địa chỉ email của bạn">
+                                   placeholder="<?php _e('auth.enter_email'); ?>">
                         </div>
                     </div>
 
@@ -187,11 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label class="form-label">
                             <span class="material-symbols-outlined">lock</span>
-                            Mật khẩu
+                            <?php _e('auth.password'); ?>
                         </label>
                         <div class="input-wrapper password-wrapper">
                             <input type="password" name="password" class="form-input" required 
-                                   placeholder="Nhập mật khẩu của bạn" id="password">
+                                   placeholder="<?php _e('auth.enter_password'); ?>" id="password">
                             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                                 <span class="material-symbols-outlined">visibility</span>
                             </button>
@@ -203,16 +205,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="checkbox-wrapper">
                             <input type="checkbox" name="remember">
                             <span class="checkmark"></span>
-                            <span class="checkbox-text">Ghi nhớ đăng nhập</span>
+                            <span class="checkbox-text"><?php _e('auth.remember_me'); ?></span>
                         </label>
                         <a href="<?php echo url('auth/forgot-password.php'); ?>" class="forgot-link">
-                            Quên mật khẩu?
+                            <?php _e('auth.forgot_password'); ?>
                         </a>
                     </div>
 
                     <!-- Submit -->
                     <button type="submit" class="btn-primary" id="loginBtn">
-                        <span class="btn-text">Đăng nhập</span>
+                        <span class="btn-text"><?php _e('auth.login_btn'); ?></span>
                         <span class="btn-icon">
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </span>
@@ -222,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Divider -->
             <div class="auth-divider">
-                <span>Hoặc</span>
+                <span><?php _e('auth.or_login_with'); ?></span>
             </div>
 
             <!-- Social Login -->
@@ -234,21 +236,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    Đăng nhập với Google
+                    <?php _e('auth.login_with_google'); ?>
                 </button>
                 <button type="button" class="social-btn facebook-btn" disabled style="opacity: 0.5;">
                     <svg viewBox="0 0 24 24" width="20" height="20">
                         <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
-                    Đăng nhập với Facebook (Sắp có)
+                    <?php _e('auth.login_with_facebook'); ?>
                 </button>
             </div>
 
             <!-- Register Link -->
             <div class="auth-footer">
-                <p>Chưa có tài khoản? 
+                <p><?php _e('auth.no_account'); ?> 
                     <a href="<?php echo url('auth/register.php'); ?>" class="auth-link">
-                        Đăng ký ngay
+                        <?php _e('auth.register_now'); ?>
                     </a>
                 </p>
             </div>

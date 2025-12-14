@@ -1,5 +1,7 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Get slug from URL
 $slug = $_GET['slug'] ?? '';
@@ -43,7 +45,7 @@ try {
 $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -80,7 +82,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                     <div class="text-white space-y-6">
                         <div class="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
                             <span class="material-symbols-outlined text-2xl"><?php echo htmlspecialchars($service['icon']); ?></span>
-                            <span class="font-semibold">Dịch vụ cao cấp</span>
+                            <span class="font-semibold"><?php _e('service_detail.premium_service'); ?></span>
                         </div>
                         
                         <h1 class="service-hero-title">
@@ -93,12 +95,12 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                         
                         <div class="flex flex-wrap gap-4">
                             <a href="#packages" class="btn-primary">
-                                <span>Xem gói dịch vụ</span>
+                                <span><?php _e('service_detail.view_packages'); ?></span>
                                 <span class="material-symbols-outlined">arrow_downward</span>
                             </a>
                             <a href="contact.php" class="btn-secondary">
                                 <span class="material-symbols-outlined">phone</span>
-                                <span>Liên hệ tư vấn</span>
+                                <span><?php _e('service_detail.contact_consult'); ?></span>
                             </a>
                         </div>
                     </div>
@@ -110,7 +112,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                 <span class="material-symbols-outlined">inventory_2</span>
                             </div>
                             <div class="stat-number"><?php echo count($packages); ?>+</div>
-                            <div class="stat-label">Gói dịch vụ</div>
+                            <div class="stat-label"><?php _e('service_detail.packages'); ?></div>
                         </div>
                         
                         <div class="stat-card">
@@ -118,7 +120,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                 <span class="material-symbols-outlined">groups</span>
                             </div>
                             <div class="stat-number">300+</div>
-                            <div class="stat-label">Khách hàng</div>
+                            <div class="stat-label"><?php _e('service_detail.customers'); ?></div>
                         </div>
                         
                         <div class="stat-card">
@@ -126,7 +128,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                 <span class="material-symbols-outlined">star</span>
                             </div>
                             <div class="stat-number">5.0</div>
-                            <div class="stat-label">Đánh giá</div>
+                            <div class="stat-label"><?php _e('service_detail.rating'); ?></div>
                         </div>
                         
                         <div class="stat-card">
@@ -134,7 +136,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                 <span class="material-symbols-outlined">support_agent</span>
                             </div>
                             <div class="stat-number">24/7</div>
-                            <div class="stat-label">Hỗ trợ</div>
+                            <div class="stat-label"><?php _e('service_detail.support'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -147,10 +149,10 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     <section id="packages" class="packages-section">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="section-header">
-                <span class="section-badge">Bảng giá</span>
-                <h2 class="section-title">Gói dịch vụ của chúng tôi</h2>
+                <span class="section-badge"><?php _e('service_detail.pricing'); ?></span>
+                <h2 class="section-title"><?php _e('service_detail.our_packages'); ?></h2>
                 <p class="section-description">
-                    Lựa chọn gói dịch vụ phù hợp với nhu cầu và ngân sách của bạn
+                    <?php _e('service_detail.packages_desc'); ?>
                 </p>
             </div>
             
@@ -162,7 +164,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                         <?php if ($pkg['is_featured']): ?>
                             <div class="package-badge">
                                 <span class="material-symbols-outlined">star</span>
-                                <span>Phổ biến nhất</span>
+                                <span><?php _e('service_detail.most_popular'); ?></span>
                             </div>
                         <?php endif; ?>
                         
@@ -190,7 +192,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                         
                         <a href="booking/index.php?service=<?php echo $service['slug']; ?>&package=<?php echo $pkg['slug']; ?>" 
                            class="package-button <?php echo $pkg['is_featured'] ? 'package-button-featured' : ''; ?>">
-                            <span>Đặt dịch vụ ngay</span>
+                            <span><?php _e('service_detail.book_now'); ?></span>
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
@@ -238,10 +240,10 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     <section class="amenities-section">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="section-header">
-                <span class="section-badge">Tiện nghi</span>
-                <h2 class="section-title">Trang thiết bị hiện đại</h2>
+                <span class="section-badge"><?php _e('service_detail.amenities'); ?></span>
+                <h2 class="section-title"><?php _e('service_detail.modern_equipment'); ?></h2>
                 <p class="section-description">
-                    Đầy đủ tiện nghi và trang thiết bị cao cấp cho sự kiện hoàn hảo
+                    <?php _e('service_detail.amenities_desc'); ?>
                 </p>
             </div>
             
@@ -276,11 +278,11 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
         <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center relative z-10">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">support_agent</span>
-                Hỗ trợ 24/7
+                <?php _e('service_detail.support_24_7'); ?>
             </span>
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt dịch vụ?</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4"><?php _e('service_detail.ready_to_book'); ?></h2>
             <p class="text-white/80 max-w-2xl mx-auto mb-8">
-                Liên hệ với chúng tôi ngay hôm nay để được tư vấn miễn phí và nhận ưu đãi đặc biệt
+                <?php _e('service_detail.cta_desc'); ?>
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
                 <a href="tel:+842513918888" class="btn-liquid-primary">
@@ -289,7 +291,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                 </a>
                 <a href="contact.php" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">mail</span>
-                    <span>Gửi yêu cầu</span>
+                    <span><?php _e('service_detail.send_request'); ?></span>
                 </a>
             </div>
         </div>

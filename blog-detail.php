@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 $slug = $_GET['slug'] ?? '';
 $success = '';
@@ -58,19 +60,19 @@ try {
     // Handle comment submission
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         if (!isset($_SESSION['user_id'])) {
-            $error = 'Vui lòng đăng nhập để bình luận';
+            $error = __('blog_page.login_required');
         } else {
             $content = trim($_POST['content'] ?? '');
             
             if (empty($content)) {
-                $error = 'Vui lòng nhập nội dung bình luận';
+                $error = __('blog_page.comment_empty');
             } else {
                 $stmt = $db->prepare("
                     INSERT INTO blog_comments (post_id, user_id, content, status)
                     VALUES (?, ?, ?, 'pending')
                 ");
                 $stmt->execute([$post['post_id'], $_SESSION['user_id'], $content]);
-                $success = 'Bình luận của bạn đang chờ duyệt';
+                $success = __('blog_page.comment_pending');
             }
         }
     }
@@ -81,7 +83,7 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -105,9 +107,9 @@ try {
             
             <!-- Breadcrumb -->
             <nav class="mb-8 flex items-center gap-2 text-sm">
-                <a href="index.php" class="text-accent hover:underline">Trang chủ</a>
+                <a href="index.php" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
                 <span class="material-symbols-outlined text-sm">chevron_right</span>
-                <a href="blog.php" class="text-accent hover:underline">Bài viết</a>
+                <a href="blog.php" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
                 <span class="material-symbols-outlined text-sm">chevron_right</span>
                 <span class="text-text-secondary-light dark:text-text-secondary-dark">
                     <?php echo htmlspecialchars($post['title']); ?>
@@ -146,11 +148,11 @@ try {
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">visibility</span>
-                    <span><?php echo number_format($post['views']); ?> lượt xem</span>
+                    <span><?php echo number_format($post['views']); ?> <?php _e('blog_page.views'); ?></span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">comment</span>
-                    <span><?php echo count($blog_comments); ?> bình luận</span>
+                    <span><?php echo count($blog_comments); ?> <?php _e('blog_page.comments'); ?></span>
                 </div>
             </div>
 
@@ -182,7 +184,7 @@ try {
             <!-- Share -->
             <div class="border-t border-b border-gray-200 dark:border-gray-700 py-6 mb-12">
                 <div class="flex items-center justify-between">
-                    <span class="font-semibold">Chia sẻ bài viết:</span>
+                    <span class="font-semibold"><?php _e('blog_page.share_post'); ?></span>
                     <div class="flex gap-3">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" 
                            target="_blank" class="share-btn">
@@ -201,7 +203,7 @@ try {
             <!-- Comments Section -->
             <div class="mb-12">
                 <h3 class="text-2xl font-bold mb-6">
-                    Bình luận (<?php echo count($blog_comments); ?>)
+                    <?php _e('blog_page.comments_title'); ?> (<?php echo count($blog_comments); ?>)
                 </h3>
 
                 <!-- Comment Form -->
@@ -222,18 +224,18 @@ try {
                     <form method="POST" action="">
                         <textarea name="content" rows="4" 
                                   class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 resize-none"
-                                  placeholder="Viết bình luận của bạn..." required></textarea>
+                                  placeholder="<?php _e('blog_page.write_comment'); ?>" required></textarea>
                         <button type="submit" name="submit_comment" class="mt-4 btn-primary">
-                            Gửi bình luận
+                            <?php _e('blog_page.submit_comment'); ?>
                         </button>
                     </form>
                 </div>
                 <?php else: ?>
                 <div class="mb-8 p-6 bg-surface-light dark:bg-surface-dark rounded-xl text-center">
-                    <p class="mb-4">Vui lòng đăng nhập để bình luận</p>
+                    <p class="mb-4"><?php _e('blog_page.login_to_comment'); ?></p>
                     <a href="auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
                        class="btn-primary inline-block">
-                        Đăng nhập
+                        <?php _e('blog_page.login'); ?>
                     </a>
                 </div>
                 <?php endif; ?>
@@ -271,7 +273,7 @@ try {
                 </div>
                 <?php else: ?>
                 <p class="text-center text-text-secondary-light dark:text-text-secondary-dark py-8">
-                    Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
+                    <?php _e('blog_page.no_comments'); ?>
                 </p>
                 <?php endif; ?>
             </div>
@@ -283,7 +285,7 @@ try {
     <?php if (!empty($related_posts)): ?>
     <section class="py-16 bg-primary-light/30 dark:bg-surface-dark">
         <div class="mx-auto max-w-7xl px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Bài viết liên quan</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center"><?php _e('blog_page.related_posts'); ?></h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php foreach ($related_posts as $related): ?>
