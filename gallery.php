@@ -49,9 +49,13 @@ try {
 }
 
 // Lọc theo danh mục
-$filtered_images = $current_category === 'all' 
-    ? $all_images 
-    : array_filter($all_images, fn($img) => $img['category'] === $current_category);
+if ($current_category === 'all') {
+    $filtered_images = $all_images;
+} else {
+    $filtered_images = array_filter($all_images, function($img) use ($current_category) {
+        return $img['category'] === $current_category;
+    });
+}
 $filtered_images = array_values($filtered_images);
 
 // Tính toán phân trang
@@ -355,8 +359,6 @@ $category_names = [
                    style="background: #f9fafb; box-shadow: 4px 4px 10px #d1d5db, -4px -4px 10px #ffffff;">
                     <span class="material-symbols-outlined">chevron_right</span>
                 </a>
-                <?php endif; ?>="material-symbols-outlined">chevron_right</span>
-                </a>
                 <?php endif; ?>
             </div>
             
@@ -455,7 +457,7 @@ const lightboxCounter = document.getElementById('lightbox-counter');
 
 let currentIndex = 0;
 // Chỉ lấy ảnh của trang hiện tại để lightbox hoạt động đúng
-const images = <?php echo json_encode(array_map(fn($img) => ['src' => $img['src'], 'title' => $img['title']], $page_images)); ?>;
+const images = <?php echo json_encode(array_map(function($img) { return ['src' => $img['src'], 'title' => $img['title']]; }, $page_images)); ?>;
 
 
 
