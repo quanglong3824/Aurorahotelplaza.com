@@ -159,11 +159,10 @@
     <section class="map-section">
         <div class="map-container">
             <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824378097523!2d106.84009497093794!3d10.957145331996388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s"
+                src="https://maps.google.com/maps?q=10.957145,106.842134&hl=vi&z=17&output=embed"
                 class="map-iframe"
                 allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
+                loading="lazy">
             </iframe>
         </div>
     </section>
