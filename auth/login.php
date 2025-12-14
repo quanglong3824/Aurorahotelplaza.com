@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/environment.php';
+require_once '../helpers/session-helper.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
@@ -61,28 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Login successful - Xóa session cũ hoàn toàn trước khi set mới
                 $intended_url = $_SESSION['intended_url'] ?? null;
                 
-                // Xóa session cũ hoàn toàn
-                $_SESSION = array();
-                
-                // Xóa session cookie
-                if (ini_get("session.use_cookies")) {
-                    $params = session_get_cookie_params();
-                    setcookie(session_name(), '', time() - 42000,
-                        $params["path"], $params["domain"],
-                        $params["secure"], $params["httponly"]
-                    );
-                }
-                
-                session_destroy();
-                
-                // Tạo session mới hoàn toàn
-                session_start();
-                session_regenerate_id(true);
+                // Sử dụng helper function để xóa session hoàn toàn và tạo mới
+                destroySessionCompletely(true);
                 
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_name'] = $user['full_name'];
                 $_SESSION['user_role'] = $user['user_role'];
+                $_SESSION['login_time'] = time();
                 
                 if ($intended_url) {
                     $_SESSION['intended_url'] = $intended_url;

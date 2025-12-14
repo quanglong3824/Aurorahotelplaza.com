@@ -1,28 +1,14 @@
 <?php
 session_start();
+require_once '../helpers/session-helper.php';
 
 // Nếu đang có session cũ và đang bắt đầu flow OAuth mới (không có code), xóa session cũ hoàn toàn
 if (!isset($_GET['code']) && !isset($_GET['error'])) {
     // Lưu intended_url nếu có
     $intended_url = $_SESSION['intended_url'] ?? null;
     
-    // Xóa session cũ hoàn toàn
-    $_SESSION = array();
-    
-    // Xóa session cookie
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
-    }
-    
-    session_destroy();
-    
-    // Tạo session mới
-    session_start();
-    session_regenerate_id(true);
+    // Xóa session cũ hoàn toàn và tạo mới
+    destroySessionCompletely(true);
     
     // Khôi phục intended_url
     if ($intended_url) {
@@ -147,23 +133,8 @@ if (isset($_GET['code'])) {
         // Lưu lại intended_url nếu có
         $intended_url = $_SESSION['intended_url'] ?? null;
         
-        // Xóa session cũ hoàn toàn - destroy và tạo mới
-        $_SESSION = array();
-        
-        // Xóa session cookie
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-        
-        session_destroy();
-        
-        // Tạo session mới hoàn toàn
-        session_start();
-        session_regenerate_id(true);
+        // Sử dụng helper function để xóa session hoàn toàn
+        destroySessionCompletely(true);
         
         // Khôi phục intended_url
         if ($intended_url) {
@@ -176,6 +147,7 @@ if (isset($_GET['code'])) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_name'] = $user['full_name'];
             $_SESSION['user_role'] = $user['user_role'];
+            $_SESSION['login_time'] = time();
             
             // Update last login
             $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");

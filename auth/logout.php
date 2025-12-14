@@ -14,32 +14,32 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Clear all session data
-$_SESSION = array();
+// Load session helper
+require_once '../helpers/session-helper.php';
 
-// Destroy the session cookie - xóa hoàn toàn cookie session
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
-
-// Destroy the session
-session_destroy();
+// Xóa hoàn toàn session
+destroySessionCompletely(false);
 
 // Clear remember me cookie if it exists
 if (isset($_COOKIE['remember_token'])) {
     setcookie('remember_token', '', time() - 3600, '/');
+    unset($_COOKIE['remember_token']);
 }
 
-// Tạo session mới hoàn toàn để tránh session fixation
-session_start();
-session_regenerate_id(true);
-session_destroy();
+// Clear any other potential cookies
+$cookies_to_clear = ['PHPSESSID', 'remember_token', 'user_session'];
+foreach ($cookies_to_clear as $cookie_name) {
+    if (isset($_COOKIE[$cookie_name])) {
+        setcookie($cookie_name, '', time() - 3600, '/');
+        setcookie($cookie_name, '', time() - 3600, '/', '', false, true);
+        unset($_COOKIE[$cookie_name]);
+    }
+}
 
 // Redirect to login page with success message
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 header('Location: login.php?logged_out=1');
 exit;
 ?>
