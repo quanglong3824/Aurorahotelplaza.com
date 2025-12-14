@@ -111,7 +111,8 @@ try {
         'subject' => $subject,
         'message' => $message,
         'submission_id' => $submission_id,
-        'created_at' => date('d/m/Y H:i')
+        'created_at' => date('d/m/Y H:i'),
+        'user_id' => $user_id
     ];
     
     $customerSubject = "Xác nhận liên hệ - Aurora Hotel Plaza";
