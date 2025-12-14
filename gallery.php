@@ -8,6 +8,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Cấu hình phân trang
 $images_per_page = 12;
@@ -67,32 +69,32 @@ $page_images = array_slice($filtered_images, $offset, $images_per_page);
 
 // Danh mục với số lượng từ database
 $categories = [
-    'all' => ['name' => 'Tất cả', 'icon' => 'apps', 'count' => count($all_images)],
-    'rooms' => ['name' => 'Phòng nghỉ', 'icon' => 'hotel', 'count' => $category_counts['rooms'] ?? 0],
-    'apartments' => ['name' => 'Căn hộ', 'icon' => 'apartment', 'count' => $category_counts['apartments'] ?? 0],
-    'restaurant' => ['name' => 'Nhà hàng', 'icon' => 'restaurant', 'count' => $category_counts['restaurant'] ?? 0],
-    'facilities' => ['name' => 'Tiện nghi', 'icon' => 'fitness_center', 'count' => $category_counts['facilities'] ?? 0],
-    'events' => ['name' => 'Sự kiện', 'icon' => 'celebration', 'count' => $category_counts['events'] ?? 0],
-    'exterior' => ['name' => 'Ngoại cảnh', 'icon' => 'location_city', 'count' => $category_counts['exterior'] ?? 0],
+    'all' => ['name' => __('gallery_page.all'), 'icon' => 'apps', 'count' => count($all_images)],
+    'rooms' => ['name' => __('gallery_page.rooms'), 'icon' => 'hotel', 'count' => $category_counts['rooms'] ?? 0],
+    'apartments' => ['name' => __('gallery_page.apartments'), 'icon' => 'apartment', 'count' => $category_counts['apartments'] ?? 0],
+    'restaurant' => ['name' => __('gallery_page.restaurant'), 'icon' => 'restaurant', 'count' => $category_counts['restaurant'] ?? 0],
+    'facilities' => ['name' => __('gallery_page.facilities'), 'icon' => 'fitness_center', 'count' => $category_counts['facilities'] ?? 0],
+    'events' => ['name' => __('gallery_page.events'), 'icon' => 'celebration', 'count' => $category_counts['events'] ?? 0],
+    'exterior' => ['name' => __('gallery_page.exterior'), 'icon' => 'location_city', 'count' => $category_counts['exterior'] ?? 0],
 ];
 
 // Category names for display
 $category_names = [
-    'rooms' => 'Phòng nghỉ',
-    'apartments' => 'Căn hộ',
-    'restaurant' => 'Nhà hàng',
-    'facilities' => 'Tiện nghi',
-    'events' => 'Sự kiện',
-    'exterior' => 'Ngoại cảnh',
+    'rooms' => __('gallery_page.rooms'),
+    'apartments' => __('gallery_page.apartments'),
+    'restaurant' => __('gallery_page.restaurant'),
+    'facilities' => __('gallery_page.facilities'),
+    'events' => __('gallery_page.events'),
+    'exterior' => __('gallery_page.exterior'),
 ];
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Thư viện ảnh - Aurora Hotel Plaza</title>
-<meta name="description" content="Khám phá không gian sang trọng và tiện nghi tại Aurora Hotel Plaza qua bộ sưu tập hình ảnh đẹp nhất">
+<title><?php _e('gallery_page.title'); ?></title>
+<meta name="description" content="<?php _e('gallery_page.page_subtitle', ['count' => $total_images]); ?>">
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -119,17 +121,16 @@ $category_names = [
                         border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.12)]
                         [box-shadow:inset_0_1px_0_rgba(255,255,255,0.2)]">
                 <span class="material-symbols-outlined text-accent">photo_library</span>
-                <span class="text-white font-medium">Bộ sưu tập hình ảnh</span>
+                <span class="text-white font-medium"><?php _e('gallery_page.collection'); ?></span>
             </div>
             
             <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 
                        drop-shadow-2xl">
-                Thư viện ảnh
+                <?php _e('gallery_page.page_title'); ?>
             </h1>
             
             <p class="text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Khám phá không gian sang trọng và tiện nghi tại Aurora Hotel Plaza 
-                qua <?php echo $total_images; ?>+ hình ảnh đẹp nhất
+                <?php _e('gallery_page.page_subtitle', ['count' => $total_images]); ?>
             </p>
             
             <!-- Stats Glass Cards -->
@@ -155,7 +156,7 @@ $category_names = [
                                          shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/40
                                          hover:-translate-y-1">
                     <span class="material-symbols-outlined">collections</span>
-                    Xem thư viện
+                    <?php _e('gallery_page.view_gallery'); ?>
                 </a>
                 <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                                    bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%]
@@ -164,7 +165,7 @@ $category_names = [
                                                    hover:bg-white/[0.15] hover:border-white/[0.3] transition-all duration-300
                                                    hover:-translate-y-1">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('gallery_page.book_now'); ?>
                 </a>
             </div>
         </div>
@@ -186,10 +187,10 @@ $category_names = [
             <!-- Section Header -->
             <div class="text-center mb-12">
                 <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">
-                    Khám phá Aurora Hotel
+                    <?php _e('gallery_page.explore_aurora'); ?>
                 </h2>
                 <p class="text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
-                    Duyệt qua bộ sưu tập hình ảnh để cảm nhận không gian sang trọng và dịch vụ đẳng cấp
+                    <?php _e('gallery_page.explore_desc'); ?>
                 </p>
             </div>
 
@@ -222,14 +223,14 @@ $category_names = [
             <!-- Results Info -->
             <div class="flex items-center justify-between mb-8 px-2">
                 <p class="text-text-secondary-light dark:text-text-secondary-dark">
-                    Hiển thị <span class="font-semibold text-accent"><?php echo count($page_images); ?></span> 
-                    trong tổng số <span class="font-semibold"><?php echo $total_images; ?></span> ảnh
+                    <?php _e('gallery_page.showing'); ?> <span class="font-semibold text-accent"><?php echo count($page_images); ?></span> 
+                    <?php _e('gallery_page.of_total'); ?> <span class="font-semibold"><?php echo $total_images; ?></span> <?php _e('gallery_page.images'); ?>
                     <?php if ($current_category !== 'all'): ?>
-                    - Danh mục: <span class="font-semibold text-accent"><?php echo $categories[$current_category]['name']; ?></span>
+                    - <?php _e('gallery_page.category'); ?>: <span class="font-semibold text-accent"><?php echo $categories[$current_category]['name']; ?></span>
                     <?php endif; ?>
                 </p>
                 <div class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                    Trang <?php echo $current_page; ?>/<?php echo max(1, $total_pages); ?>
+                    <?php _e('gallery_page.page'); ?> <?php echo $current_page; ?>/<?php echo max(1, $total_pages); ?>
                 </div>
             </div>
 
@@ -301,14 +302,14 @@ $category_names = [
                             flex items-center justify-center">
                     <span class="material-symbols-outlined text-5xl text-gray-400">image_not_supported</span>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Không có ảnh nào</h3>
+                <h3 class="text-xl font-bold mb-2"><?php _e('gallery_page.no_images'); ?></h3>
                 <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6">
-                    Không tìm thấy ảnh trong danh mục này
+                    <?php _e('gallery_page.no_images_desc'); ?>
                 </p>
                 <a href="?category=all" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl
                                               bg-accent text-white font-semibold hover:bg-accent/90 transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
-                    Xem tất cả ảnh
+                    <?php _e('gallery_page.view_all_images'); ?>
                 </a>
             </div>
             <?php endif; ?>
@@ -382,10 +383,10 @@ $category_names = [
         
         <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
             <h2 class="font-heading text-4xl md:text-5xl font-bold text-white mb-6">
-                Trải nghiệm không gian thực tế
+                <?php _e('gallery_page.experience_real'); ?>
             </h2>
             <p class="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-                Đặt phòng ngay hôm nay để tận hưởng không gian sang trọng và dịch vụ đẳng cấp 5 sao
+                <?php _e('gallery_page.experience_desc'); ?>
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
                 <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
@@ -393,7 +394,7 @@ $category_names = [
                                                    hover:bg-accent/90 transition-all duration-300
                                                    shadow-lg shadow-accent/30 hover:-translate-y-1">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('gallery_page.book_now'); ?>
                 </a>
                 <a href="contact.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                              bg-white/10 backdrop-blur-xl border border-white/30
@@ -401,7 +402,7 @@ $category_names = [
                                              hover:bg-white/20 transition-all duration-300
                                              hover:-translate-y-1">
                     <span class="material-symbols-outlined">call</span>
-                    Liên hệ tư vấn
+                    <?php _e('gallery_page.contact_consult'); ?>
                 </a>
             </div>
         </div>
@@ -503,7 +504,7 @@ function updateLightbox() {
         lightboxImage.alt = images[currentIndex].title;
         lightboxTitle.textContent = images[currentIndex].title;
         // Hiển thị số thứ tự trong trang hiện tại
-        lightboxCounter.textContent = `Ảnh ${currentIndex + 1} / ${images.length} (Trang <?php echo $current_page; ?>)`;
+        lightboxCounter.textContent = `<?php _e('gallery_page.image'); ?> ${currentIndex + 1} / ${images.length} (<?php _e('gallery_page.page'); ?> <?php echo $current_page; ?>)`;
     }
 }
 

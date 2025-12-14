@@ -1,6 +1,8 @@
 <?php
 require_once 'config/database.php';
 require_once 'helpers/image-helper.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 try {
     $db = getDB();
@@ -21,11 +23,11 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Căn hộ - Aurora Hotel Plaza</title>
+<title><?php _e('apartments_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -44,18 +46,18 @@ try {
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">apartment</span>
-                Căn hộ cao cấp
+                <?php _e('apartments_page.premium_apartments'); ?>
             </span>
-            <h1 class="page-title">Căn hộ dịch vụ</h1>
-            <p class="page-subtitle">Không gian sống hiện đại với đầy đủ tiện nghi như ở nhà</p>
+            <h1 class="page-title"><?php _e('apartments_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('apartments_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('apartments_page.book_now'); ?>
                 </a>
                 <a href="#apartments-list" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Xem danh sách
+                    <?php _e('apartments_page.view_list'); ?>
                 </a>
             </div>
         </div>
@@ -66,7 +68,7 @@ try {
         <div class="container-custom">
             <?php if (empty($apartments)): ?>
                 <div class="text-center py-12">
-                    <p class="text-gray-500 text-lg">Không có căn hộ nào</p>
+                    <p class="text-gray-500 text-lg"><?php _e('apartments_page.no_apartments'); ?></p>
                 </div>
             <?php else: ?>
                 <?php 
@@ -83,9 +85,9 @@ try {
                 <?php if (!empty($new_apartments)): ?>
                     <div class="mb-12">
                         <div class="flex items-center gap-3 mb-6">
-                            <h2 class="text-2xl font-bold" style="color: #d4af37;">Căn hộ mới</h2>
+                            <h2 class="text-2xl font-bold" style="color: #d4af37;"><?php _e('apartments_page.new_apartments'); ?></h2>
                             <span class="px-3 py-1 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-sm font-semibold rounded-full">
-                                6 căn hộ
+                                <?php _e('apartments_page.apartments_count', ['count' => count($new_apartments)]); ?>
                             </span>
                         </div>
                         <div class="apartments-grid">
@@ -108,7 +110,7 @@ try {
                                     </div>
                                 <?php endif; ?>
                                 <div class="absolute top-4 right-4 px-3 py-1.5 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-xs font-bold rounded-full shadow-lg">
-                                    Căn hộ
+                                    <?php _e('apartments_page.apartment'); ?>
                                 </div>
                             </div>
                             
@@ -140,7 +142,7 @@ try {
                                     <?php endif; ?>
                                     <div class="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
                                         <span class="material-symbols-outlined text-lg" style="color: #d4af37;">person</span>
-                                        <span><?php echo $apt['max_occupancy']; ?> người</span>
+                                        <span><?php echo $apt['max_occupancy']; ?> <?php _e('apartments_page.guests'); ?></span>
                                     </div>
                                 </div>
                                 
@@ -158,7 +160,7 @@ try {
                                             <?php endforeach; ?>
                                         </div>
                                         <?php if (count($amenities) > 4): ?>
-                                            <p class="text-xs text-gray-500 mt-2">+<?php echo count($amenities) - 4; ?> tiện nghi khác</p>
+                                            <p class="text-xs text-gray-500 mt-2"><?php _e('apartments_page.other_amenities', ['count' => count($amenities) - 4]); ?></p>
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
@@ -166,20 +168,20 @@ try {
                                 <!-- Price & Actions -->
                                 <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-slate-700">
                                     <div>
-                                        <p class="text-xs text-gray-500 mb-1">Giá từ</p>
+                                        <p class="text-xs text-gray-500 mb-1"><?php _e('apartments_page.price_from'); ?></p>
                                         <p class="text-2xl font-bold" style="color: #d4af37;">
                                             <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ
-                                            <span class="text-sm font-normal text-gray-500">/đêm</span>
+                                            <span class="text-sm font-normal text-gray-500"><?php _e('common.per_night'); ?></span>
                                         </p>
                                     </div>
                                     <div class="flex gap-2">
                                         <a href="booking.php?room_type=<?php echo $apt['slug']; ?>" 
                                            class="px-4 py-2 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all">
-                                            Đặt ngay
+                                            <?php _e('apartments_page.book'); ?>
                                         </a>
                                         <a href="apartment-details/<?php echo $apt['slug']; ?>.php" 
                                            class="px-4 py-2 border-2 border-[#d4af37] text-[#d4af37] text-sm font-semibold rounded-lg hover:bg-[#d4af37] hover:text-white transition-all">
-                                            Chi tiết
+                                            <?php _e('apartments_page.details'); ?>
                                         </a>
                                     </div>
                                 </div>
@@ -194,9 +196,9 @@ try {
                 <?php if (!empty($old_apartments)): ?>
                     <div>
                         <div class="flex items-center gap-3 mb-6">
-                            <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300">Căn hộ cũ</h2>
+                            <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300"><?php _e('apartments_page.old_apartments'); ?></h2>
                             <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-full">
-                                3 căn hộ
+                                <?php _e('apartments_page.apartments_count', ['count' => count($old_apartments)]); ?>
                             </span>
                         </div>
                         <div class="apartments-grid">
@@ -219,7 +221,7 @@ try {
                                     </div>
                                 <?php endif; ?>
                                 <div class="absolute top-4 right-4 px-3 py-1.5 bg-gray-500 text-white text-xs font-bold rounded-full shadow-lg">
-                                    Căn hộ cũ
+                                    <?php _e('apartments_page.old_apartment'); ?>
                                 </div>
                             </div>
                             
@@ -251,7 +253,7 @@ try {
                                     <?php endif; ?>
                                     <div class="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
                                         <span class="material-symbols-outlined text-lg" style="color: #d4af37;">person</span>
-                                        <span><?php echo $apt['max_occupancy']; ?> người</span>
+                                        <span><?php echo $apt['max_occupancy']; ?> <?php _e('apartments_page.guests'); ?></span>
                                     </div>
                                 </div>
                                 
@@ -269,7 +271,7 @@ try {
                                             <?php endforeach; ?>
                                         </div>
                                         <?php if (count($amenities) > 4): ?>
-                                            <p class="text-xs text-gray-500 mt-2">+<?php echo count($amenities) - 4; ?> tiện nghi khác</p>
+                                            <p class="text-xs text-gray-500 mt-2"><?php _e('apartments_page.other_amenities', ['count' => count($amenities) - 4]); ?></p>
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
@@ -277,20 +279,20 @@ try {
                                 <!-- Price & Actions -->
                                 <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-slate-700">
                                     <div>
-                                        <p class="text-xs text-gray-500 mb-1">Giá từ</p>
+                                        <p class="text-xs text-gray-500 mb-1"><?php _e('apartments_page.price_from'); ?></p>
                                         <p class="text-2xl font-bold" style="color: #d4af37;">
                                             <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ
-                                            <span class="text-sm font-normal text-gray-500">/đêm</span>
+                                            <span class="text-sm font-normal text-gray-500"><?php _e('common.per_night'); ?></span>
                                         </p>
                                     </div>
                                     <div class="flex gap-2">
                                         <a href="booking.php?room_type=<?php echo $apt['slug']; ?>" 
                                            class="px-4 py-2 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all">
-                                            Đặt ngay
+                                            <?php _e('apartments_page.book'); ?>
                                         </a>
                                         <a href="apartment-details/<?php echo $apt['slug']; ?>.php" 
                                            class="px-4 py-2 border-2 border-[#d4af37] text-[#d4af37] text-sm font-semibold rounded-lg hover:bg-[#d4af37] hover:text-white transition-all">
-                                            Chi tiết
+                                            <?php _e('apartments_page.details'); ?>
                                         </a>
                                     </div>
                                 </div>

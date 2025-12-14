@@ -1,9 +1,13 @@
+<?php
+require_once 'helpers/language.php';
+initLanguage();
+?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Giới thiệu - Aurora Hotel Plaza</title>
+<title><?php _e('about_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -21,18 +25,18 @@
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">info</span>
-                Về chúng tôi
+                <?php _e('about_page.about_us'); ?>
             </span>
-            <h1 class="page-title">Về Aurora Hotel Plaza</h1>
-            <p class="page-subtitle">Nơi sang trọng gặp gỡ sự thoải mái, tạo nên trải nghiệm nghỉ dưỡng đẳng cấp tại trung tâm Biên Hòa</p>
+            <h1 class="page-title"><?php _e('about_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('about_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('about_page.book_now'); ?>
                 </a>
                 <a href="#story" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Tìm hiểu thêm
+                    <?php _e('about_page.learn_more'); ?>
                 </a>
             </div>
         </div>
@@ -46,21 +50,16 @@
                     <img src="assets/img/src/ui/horizontal/Le_tan_Aurora.jpg" alt="Aurora Hotel Plaza" class="story-image">
                 </div>
                 <div class="story-content">
-                    <span class="section-label">Câu chuyện của chúng tôi</span>
-                    <h2 class="section-title">Khách sạn sang trọng bậc nhất tại Đồng Nai</h2>
+                    <span class="section-label"><?php _e('about_page.our_story'); ?></span>
+                    <h2 class="section-title"><?php _e('about_page.story_title'); ?></h2>
                     <p class="section-description">
-                        <span class="highlight-text">Aurora Hotel Plaza</span> tọa lạc tại vị trí đắc địa số 253 Phạm Văn Thuận, 
-                        phường Tam Hiệp, thành phố Biên Hòa, tỉnh Đồng Nai. Với thiết kế hiện đại và sang trọng, 
-                        chúng tôi tự hào mang đến cho quý khách những trải nghiệm nghỉ dưỡng đẳng cấp 5 sao.
+                        <span class="highlight-text">Aurora Hotel Plaza</span> <?php _e('about_page.story_p1'); ?>
                     </p>
                     <p class="section-description">
-                        Được xây dựng với tầm nhìn trở thành điểm đến hàng đầu cho cả khách du lịch và doanh nhân, 
-                        Aurora Hotel Plaza kết hợp hoàn hảo giữa sự tiện nghi hiện đại và nét đẹp truyền thống Việt Nam. 
-                        Mỗi chi tiết trong khách sạn đều được chăm chút tỉ mỉ để mang lại sự hài lòng tối đa cho quý khách.
+                        <?php _e('about_page.story_p2'); ?>
                     </p>
                     <p class="section-description">
-                        Với đội ngũ nhân viên chuyên nghiệp, tận tâm và các tiện nghi đẳng cấp quốc tế, 
-                        chúng tôi cam kết mang đến cho bạn một kỳ nghỉ đáng nhớ và trọn vẹn nhất.
+                        <?php _e('about_page.story_p3'); ?>
                     </p>
                 </div>
             </div>
@@ -73,19 +72,19 @@
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-number">150+</div>
-                    <div class="stat-label">Phòng & Căn hộ</div>
+                    <div class="stat-label"><?php _e('about_page.rooms_apartments'); ?></div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">5000+</div>
-                    <div class="stat-label">Khách hàng hài lòng</div>
+                    <div class="stat-label"><?php _e('about_page.happy_customers'); ?></div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">24/7</div>
-                    <div class="stat-label">Dịch vụ hỗ trợ</div>
+                    <div class="stat-label"><?php _e('about_page.support_service'); ?></div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">10+</div>
-                    <div class="stat-label">Năm kinh nghiệm</div>
+                    <div class="stat-label"><?php _e('about_page.years_experience'); ?></div>
                 </div>
             </div>
         </div>
@@ -95,10 +94,10 @@
     <section class="section-padding values-section">
         <div class="container-custom">
             <div class="values-header">
-                <span class="section-label">Giá trị cốt lõi</span>
-                <h2 class="section-title">Những gì chúng tôi mang lại</h2>
+                <span class="section-label"><?php _e('about_page.core_values'); ?></span>
+                <h2 class="section-title"><?php _e('about_page.what_we_offer'); ?></h2>
                 <p class="section-description">
-                    Cam kết của chúng tôi là mang đến trải nghiệm tuyệt vời nhất cho mỗi vị khách
+                    <?php _e('about_page.values_desc'); ?>
                 </p>
             </div>
             
@@ -107,9 +106,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">hotel_class</span>
                     </div>
-                    <h3 class="value-title">Sang trọng</h3>
+                    <h3 class="value-title"><?php _e('about_page.luxury'); ?></h3>
                     <p class="value-description">
-                        Thiết kế tinh tế, nội thất cao cấp và không gian sang trọng trong từng chi tiết
+                        <?php _e('about_page.luxury_desc'); ?>
                     </p>
                 </div>
                 
@@ -117,9 +116,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">support_agent</span>
                     </div>
-                    <h3 class="value-title">Dịch vụ tận tâm</h3>
+                    <h3 class="value-title"><?php _e('about_page.dedicated_service'); ?></h3>
                     <p class="value-description">
-                        Đội ngũ nhân viên chuyên nghiệp, nhiệt tình phục vụ 24/7 với nụ cười thân thiện
+                        <?php _e('about_page.dedicated_service_desc'); ?>
                     </p>
                 </div>
                 
@@ -127,9 +126,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">location_on</span>
                     </div>
-                    <h3 class="value-title">Vị trí đắc địa</h3>
+                    <h3 class="value-title"><?php _e('about_page.prime_location'); ?></h3>
                     <p class="value-description">
-                        Tọa lạc tại trung tâm Biên Hòa, thuận tiện di chuyển đến các điểm đến quan trọng
+                        <?php _e('about_page.prime_location_desc'); ?>
                     </p>
                 </div>
                 
@@ -137,9 +136,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">restaurant</span>
                     </div>
-                    <h3 class="value-title">Ẩm thực đa dạng</h3>
+                    <h3 class="value-title"><?php _e('about_page.diverse_cuisine'); ?></h3>
                     <p class="value-description">
-                        Nhà hàng phục vụ các món ăn Á - Âu với đầu bếp giàu kinh nghiệm
+                        <?php _e('about_page.diverse_cuisine_desc'); ?>
                     </p>
                 </div>
                 
@@ -147,9 +146,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">spa</span>
                     </div>
-                    <h3 class="value-title">Tiện nghi hiện đại</h3>
+                    <h3 class="value-title"><?php _e('about_page.modern_amenities'); ?></h3>
                     <p class="value-description">
-                        Hồ bơi, gym, spa và các tiện ích giải trí đẳng cấp quốc tế
+                        <?php _e('about_page.modern_amenities_desc'); ?>
                     </p>
                 </div>
                 
@@ -157,9 +156,9 @@
                     <div class="value-icon">
                         <span class="material-symbols-outlined">verified</span>
                     </div>
-                    <h3 class="value-title">Chất lượng đảm bảo</h3>
+                    <h3 class="value-title"><?php _e('about_page.quality_guaranteed'); ?></h3>
                     <p class="value-description">
-                        Cam kết chất lượng dịch vụ 5 sao với giá cả hợp lý và cạnh tranh
+                        <?php _e('about_page.quality_guaranteed_desc'); ?>
                     </p>
                 </div>
             </div>
@@ -171,20 +170,20 @@
         <div class="container-custom">
             <div class="story-section">
                 <div class="story-content">
-                    <span class="section-label">Tiện nghi</span>
-                    <h2 class="section-title">Trải nghiệm đẳng cấp 5 sao</h2>
+                    <span class="section-label"><?php _e('about_page.amenities'); ?></span>
+                    <h2 class="section-title"><?php _e('about_page.five_star_experience'); ?></h2>
                     <p class="section-description">
-                        Aurora Hotel Plaza được trang bị đầy đủ các tiện nghi hiện đại nhất để đáp ứng mọi nhu cầu của quý khách:
+                        <?php _e('about_page.amenities_intro'); ?>
                     </p>
                     <ul class="section-description">
-                        <li>✓ Hệ thống phòng nghỉ và căn hộ cao cấp với đầy đủ tiện nghi</li>
-                        <li>✓ Nhà hàng phục vụ ẩm thực Á - Âu đa dạng</li>
-                        <li>✓ Hồ bơi ngoài trời với tầm nhìn panorama</li>
-                        <li>✓ Phòng gym hiện đại với thiết bị tập luyện chuyên nghiệp</li>
-                        <li>✓ Spa & massage thư giãn</li>
-                        <li>✓ Phòng hội nghị và tổ chức sự kiện</li>
-                        <li>✓ Dịch vụ đưa đón sân bay</li>
-                        <li>✓ Bãi đỗ xe rộng rãi và an toàn</li>
+                        <li>✓ <?php _e('about_page.amenity_rooms'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_restaurant'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_pool'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_gym'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_spa'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_conference'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_shuttle'); ?></li>
+                        <li>✓ <?php _e('about_page.amenity_parking'); ?></li>
                     </ul>
                 </div>
                 <div class="story-image-wrapper">
@@ -198,8 +197,8 @@
     <section class="section-padding bg-surface-light dark:bg-surface-dark">
         <div class="container-custom">
             <div class="text-center mb-12">
-                <span class="section-label">Vị trí</span>
-                <h2 class="section-title">Tìm đường đến Aurora Hotel Plaza</h2>
+                <span class="section-label"><?php _e('about_page.location'); ?></span>
+                <h2 class="section-title"><?php _e('about_page.find_us'); ?></h2>
                 <p class="section-description">
                     Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, TP. Biên Hòa, Tỉnh Đồng Nai
                 </p>
@@ -223,16 +222,16 @@
             <div class="cta-content">
                 <span class="badge-liquid-glass mb-6">
                     <span class="material-symbols-outlined text-accent">support_agent</span>
-                    Hỗ trợ 24/7
+                    <?php _e('contact_page.support_24_7'); ?>
                 </span>
-                <h2 class="cta-title">Sẵn sàng trải nghiệm?</h2>
+                <h2 class="cta-title"><?php _e('about_page.ready_to_experience'); ?></h2>
                 <p class="cta-description">
-                    Đặt phòng ngay hôm nay để nhận ưu đãi đặc biệt và trải nghiệm dịch vụ đẳng cấp 5 sao
+                    <?php _e('about_page.cta_desc'); ?>
                 </p>
                 <div class="flex flex-wrap gap-4 justify-center">
                     <a href="booking/index.php" class="btn-liquid-primary">
                         <span class="material-symbols-outlined">calendar_month</span>
-                        Đặt phòng ngay
+                        <?php _e('about_page.book_now'); ?>
                     </a>
                     <a href="tel:+842513918888" class="btn-liquid-glass">
                         <span class="material-symbols-outlined">phone</span>

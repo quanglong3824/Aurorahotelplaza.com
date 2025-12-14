@@ -1,5 +1,7 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -65,11 +67,11 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Bài viết - Aurora Hotel Plaza</title>
+<title><?php _e('blog_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -87,18 +89,18 @@ try {
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">article</span>
-                Tin tức & Bài viết
+                <?php _e('blog_page.news_articles'); ?>
             </span>
-            <h1 class="page-title">Tin tức & Bài viết</h1>
-            <p class="page-subtitle">Khám phá những câu chuyện, mẹo du lịch và tin tức mới nhất từ Aurora Hotel Plaza</p>
+            <h1 class="page-title"><?php _e('blog_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('blog_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('blog_page.book_now'); ?>
                 </a>
                 <a href="#blog-posts" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Xem bài viết
+                    <?php _e('blog_page.view_articles'); ?>
                 </a>
             </div>
         </div>
@@ -112,7 +114,7 @@ try {
             <?php if (!empty($categories)): ?>
             <div class="mb-8 flex flex-wrap gap-3 justify-center">
                 <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
-                    Tất cả
+                    <?php _e('blog_page.all'); ?>
                 </a>
                 <?php foreach ($categories as $cat): ?>
                 <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
@@ -198,7 +200,7 @@ try {
             <div class="text-center py-16">
                 <span class="material-symbols-outlined text-6xl text-gray-400 mb-4">article</span>
                 <p class="text-xl text-text-secondary-light dark:text-text-secondary-dark">
-                    Chưa có bài viết nào
+                    <?php _e('blog_page.no_posts'); ?>
                 </p>
             </div>
             <?php endif; ?>

@@ -2,6 +2,8 @@
 session_start();
 require_once 'config/database.php';
 require_once 'config/environment.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Lấy thông tin user từ session và database nếu đã đăng nhập
 $is_logged_in = isset($_SESSION['user_id']);
@@ -40,7 +42,7 @@ if ($is_logged_in) {
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Liên hệ - Aurora Hotel Plaza</title>
+<title><?php _e('contact_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -58,18 +60,18 @@ if ($is_logged_in) {
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">support_agent</span>
-                Hỗ trợ 24/7
+                <?php _e('contact_page.support_24_7'); ?>
             </span>
-            <h1 class="page-title">Liên hệ với chúng tôi</h1>
-            <p class="page-subtitle">Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+            <h1 class="page-title"><?php _e('contact_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('contact_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="tel:+842513918888" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">phone</span>
-                    Gọi ngay
+                    <?php _e('contact_page.call_now'); ?>
                 </a>
                 <a href="#contact-form" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Gửi tin nhắn
+                    <?php _e('contact_page.send_message'); ?>
                 </a>
             </div>
         </div>
@@ -81,8 +83,8 @@ if ($is_logged_in) {
             <div class="contact-wrapper">
                 <!-- Contact Info -->
                 <div class="contact-info-section">
-                    <h2 class="section-title">Thông tin liên hệ</h2>
-                    <p class="section-description">Hãy liên hệ với chúng tôi qua các kênh dưới đây hoặc điền form bên cạnh</p>
+                    <h2 class="section-title"><?php _e('contact_page.contact_info'); ?></h2>
+                    <p class="section-description"><?php _e('contact_page.contact_info_desc'); ?></p>
                     
                     <div class="info-list">
                         <div class="info-item">
@@ -90,7 +92,7 @@ if ($is_logged_in) {
                                 <span class="material-symbols-outlined">location_on</span>
                             </div>
                             <div class="info-content">
-                                <h3 class="info-title">Địa chỉ</h3>
+                                <h3 class="info-title"><?php _e('contact_page.address'); ?></h3>
                                 <p class="info-text">Số 253, Phạm Văn Thuận, KP2<br>Phường Tam Hiệp, Tỉnh Đồng Nai</p>
                             </div>
                         </div>
@@ -100,7 +102,7 @@ if ($is_logged_in) {
                                 <span class="material-symbols-outlined">phone</span>
                             </div>
                             <div class="info-content">
-                                <h3 class="info-title">Điện thoại</h3>
+                                <h3 class="info-title"><?php _e('contact_page.phone'); ?></h3>
                                 <p class="info-text"><a href="tel:+842513918888">(+84-251) 391.8888</a></p>
                             </div>
                         </div>
@@ -110,7 +112,7 @@ if ($is_logged_in) {
                                 <span class="material-symbols-outlined">email</span>
                             </div>
                             <div class="info-content">
-                                <h3 class="info-title">Email</h3>
+                                <h3 class="info-title"><?php _e('contact_page.email'); ?></h3>
                                 <p class="info-text">
                                     <a href="mailto:info@aurorahotelplaza.com">info@aurorahotelplaza.com</a><br>
                                     <a href="mailto:booking@aurorahotelplaza.com">booking@aurorahotelplaza.com</a>
@@ -123,15 +125,15 @@ if ($is_logged_in) {
                                 <span class="material-symbols-outlined">schedule</span>
                             </div>
                             <div class="info-content">
-                                <h3 class="info-title">Giờ làm việc</h3>
-                                <p class="info-text">Lễ tân: 24/7<br>Nhà hàng: 6:00 - 22:00</p>
+                                <h3 class="info-title"><?php _e('contact_page.working_hours'); ?></h3>
+                                <p class="info-text"><?php _e('contact_page.reception'); ?>: 24/7<br><?php _e('contact_page.restaurant'); ?>: 6:00 - 22:00</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Social Links -->
                     <div class="social-section">
-                        <h3 class="social-title">Theo dõi chúng tôi</h3>
+                        <h3 class="social-title"><?php _e('contact_page.follow_us'); ?></h3>
                         <div class="social-links">
                             <a href="#" class="social-link">
                                 <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -148,33 +150,33 @@ if ($is_logged_in) {
 
                 <!-- Contact Form -->
                 <div class="contact-form-wrapper">
-                    <h2 class="section-title">Gửi tin nhắn cho chúng tôi</h2>
+                    <h2 class="section-title"><?php _e('contact_page.send_us_message'); ?></h2>
                     
                     <?php if ($is_logged_in): ?>
                     <div class="logged-in-notice">
                         <span class="material-symbols-outlined">verified_user</span>
-                        <span>Bạn đang đăng nhập với tài khoản <strong><?php echo htmlspecialchars($user_email); ?></strong></span>
+                        <span><?php _e('contact_page.logged_in_as'); ?> <strong><?php echo htmlspecialchars($user_email); ?></strong></span>
                     </div>
                     <?php endif; ?>
                     
                     <form class="contact-form" id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Họ và tên <span class="text-red-500">*</span></label>
+                                <label class="form-label"><?php _e('contact_page.full_name'); ?> <span class="text-red-500">*</span></label>
                                 <input type="text" 
                                        name="name" 
                                        class="form-input <?php echo $is_logged_in && $user_name ? 'readonly-input' : ''; ?>" 
-                                       placeholder="Nhập họ và tên" 
+                                       placeholder="<?php _e('contact_page.enter_name'); ?>" 
                                        value="<?php echo htmlspecialchars($user_name); ?>"
                                        <?php echo $is_logged_in && $user_name ? 'readonly' : ''; ?>
                                        required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Email <span class="text-red-500">*</span></label>
+                                <label class="form-label"><?php _e('contact_page.email'); ?> <span class="text-red-500">*</span></label>
                                 <input type="email" 
                                        name="email" 
                                        class="form-input <?php echo $is_logged_in && $user_email ? 'readonly-input' : ''; ?>" 
-                                       placeholder="Nhập email" 
+                                       placeholder="<?php _e('contact_page.enter_email'); ?>" 
                                        value="<?php echo htmlspecialchars($user_email); ?>"
                                        <?php echo $is_logged_in && $user_email ? 'readonly' : ''; ?>
                                        required>
@@ -183,44 +185,44 @@ if ($is_logged_in) {
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Số điện thoại <span class="text-red-500">*</span></label>
+                                <label class="form-label"><?php _e('contact_page.phone_number'); ?> <span class="text-red-500">*</span></label>
                                 <input type="tel" 
                                        name="phone" 
                                        class="form-input <?php echo $is_logged_in && $user_phone ? 'readonly-input' : ''; ?>" 
-                                       placeholder="Nhập số điện thoại" 
+                                       placeholder="<?php _e('contact_page.enter_phone'); ?>" 
                                        value="<?php echo htmlspecialchars($user_phone); ?>"
                                        <?php echo $is_logged_in && $user_phone ? 'readonly' : ''; ?>
                                        required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Chủ đề</label>
+                                <label class="form-label"><?php _e('contact_page.subject'); ?></label>
                                 <select name="subject" class="form-input">
-                                    <option value="Đặt phòng">Đặt phòng</option>
-                                    <option value="Tổ chức sự kiện">Tổ chức sự kiện</option>
-                                    <option value="Dịch vụ khác">Dịch vụ khác</option>
-                                    <option value="Góp ý">Góp ý</option>
-                                    <option value="Khiếu nại">Khiếu nại</option>
+                                    <option value="<?php _e('contact_page.subject_booking'); ?>"><?php _e('contact_page.subject_booking'); ?></option>
+                                    <option value="<?php _e('contact_page.subject_event'); ?>"><?php _e('contact_page.subject_event'); ?></option>
+                                    <option value="<?php _e('contact_page.subject_other'); ?>"><?php _e('contact_page.subject_other'); ?></option>
+                                    <option value="<?php _e('contact_page.subject_feedback'); ?>"><?php _e('contact_page.subject_feedback'); ?></option>
+                                    <option value="<?php _e('contact_page.subject_complaint'); ?>"><?php _e('contact_page.subject_complaint'); ?></option>
                                 </select>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">Tin nhắn <span class="text-red-500">*</span></label>
-                            <textarea name="message" class="form-textarea" rows="6" placeholder="Nhập nội dung tin nhắn của bạn..." required minlength="10"></textarea>
-                            <p class="form-hint">Tối thiểu 10 ký tự</p>
+                            <label class="form-label"><?php _e('contact_page.message'); ?> <span class="text-red-500">*</span></label>
+                            <textarea name="message" class="form-textarea" rows="6" placeholder="<?php _e('contact_page.enter_message'); ?>" required minlength="10"></textarea>
+                            <p class="form-hint"><?php _e('contact_page.min_chars', ['count' => 10]); ?></p>
                         </div>
                         
                         <button type="submit" class="btn-submit" id="submitBtn">
                             <span class="btn-text">
                                 <span class="material-symbols-outlined">send</span>
-                                Gửi tin nhắn
+                                <?php _e('contact_page.send_message'); ?>
                             </span>
                             <span class="btn-loading hidden">
                                 <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Đang gửi...
+                                <?php _e('contact_page.sending'); ?>
                             </span>
                         </button>
                     </form>

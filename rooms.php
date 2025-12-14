@@ -1,6 +1,8 @@
 <?php
 require_once 'config/database.php';
 require_once 'helpers/image-helper.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 try {
     $db = getDB();
@@ -21,11 +23,11 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Phòng nghỉ - Aurora Hotel Plaza</title>
+<title><?php _e('rooms_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -44,18 +46,18 @@ try {
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">hotel</span>
-                Phòng nghỉ cao cấp
+                <?php _e('rooms_page.premium_rooms'); ?>
             </span>
-            <h1 class="page-title">Phòng nghỉ</h1>
-            <p class="page-subtitle">Trải nghiệm không gian nghỉ dưỡng sang trọng với đầy đủ tiện nghi hiện đại</p>
+            <h1 class="page-title"><?php _e('rooms_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('rooms_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="booking/index.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
+                    <?php _e('rooms_page.book_now'); ?>
                 </a>
                 <a href="#rooms-list" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Xem danh sách
+                    <?php _e('rooms_page.view_list'); ?>
                 </a>
             </div>
         </div>
@@ -68,7 +70,7 @@ try {
             <div class="rooms-grid">
                 <?php if (empty($room_types)): ?>
                     <div class="col-span-full text-center py-12">
-                        <p class="text-gray-500 text-lg">Không có phòng nào</p>
+                        <p class="text-gray-500 text-lg"><?php _e('rooms_page.no_rooms'); ?></p>
                     </div>
                 <?php else: ?>
                     <?php foreach ($room_types as $room): 
@@ -90,7 +92,7 @@ try {
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($room['category'] === 'apartment'): ?>
-                                    <div class="room-badge">Căn hộ</div>
+                                    <div class="room-badge"><?php _e('rooms_page.apartment_badge'); ?></div>
                                 <?php endif; ?>
                             </div>
                             
@@ -120,13 +122,13 @@ try {
                                     
                                     <span class="feature-item">
                                         <span class="material-symbols-outlined">person</span>
-                                        <?php echo $room['max_occupancy']; ?> người
+                                        <?php echo $room['max_occupancy']; ?> <?php _e('rooms_page.guests'); ?>
                                     </span>
                                 </div>
                                 
                                 <?php if (!empty($amenities)): ?>
                                     <div class="room-amenities">
-                                        <h4 class="amenities-title">Tiện nghi</h4>
+                                        <h4 class="amenities-title"><?php _e('rooms_page.amenities'); ?></h4>
                                         <div class="amenities-list">
                                             <?php foreach ($amenities as $amenity): ?>
                                                 <div class="amenity-item"><?php echo htmlspecialchars(trim($amenity)); ?></div>
@@ -137,16 +139,16 @@ try {
                                 
                                 <div class="room-footer">
                                     <div class="room-price">
-                                        <span class="price-label">Giá từ</span>
+                                        <span class="price-label"><?php _e('rooms_page.price_from'); ?></span>
                                         <div>
                                             <span class="price-amount"><?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ</span>
-                                            <span class="price-unit">/đêm</span>
+                                            <span class="price-unit"><?php _e('common.per_night'); ?></span>
                                         </div>
                                     </div>
                                     <div class="room-actions">
-                                        <a href="booking.php?room_type=<?php echo $room['slug']; ?>" class="btn-book-now">Đặt ngay</a>
+                                        <a href="booking.php?room_type=<?php echo $room['slug']; ?>" class="btn-book-now"><?php _e('rooms_page.book'); ?></a>
                                         <a href="room-details/<?php echo $room['slug']; ?>.php" class="btn-view-details">
-                                            Xem chi tiết
+                                            <?php _e('rooms_page.view_details'); ?>
                                             <span class="material-symbols-outlined">arrow_forward</span>
                                         </a>
                                     </div>

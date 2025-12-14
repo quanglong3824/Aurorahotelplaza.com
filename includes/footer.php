@@ -4,6 +4,12 @@ if (!isset($base_path)) {
     $current_dir = basename(dirname($_SERVER['PHP_SELF']));
     $base_path = ($current_dir == 'room-details' || $current_dir == 'apartment-details') ? '../' : '';
 }
+
+// Load language helper if not loaded
+if (!function_exists('__')) {
+    require_once __DIR__ . '/../helpers/language.php';
+    initLanguage();
+}
 ?>
 <!-- Footer -->
 <footer class="w-full bg-surface-dark text-white/80">
@@ -13,11 +19,10 @@ if (!isset($base_path)) {
             <div class="lg:col-span-2">
                 <img src="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png" alt="Aurora Hotel Plaza Logo" class="h-14 w-auto mb-6">
                 <p class="mt-2 text-base text-white/70 leading-relaxed">
-                    Aurora Hotel Plaza - Khách sạn sang trọng tại trung tâm Biên Hòa, Đồng Nai. 
-                    Chúng tôi mang đến trải nghiệm nghỉ dưỡng đẳng cấp với dịch vụ hoàn hảo và tiện nghi hiện đại.
+                    <?php _e('footer.description'); ?>
                 </p>
                 <div class="mt-6">
-                    <h4 class="font-bold text-white mb-4">Theo dõi chúng tôi</h4>
+                    <h4 class="font-bold text-white mb-4"><?php _e('footer.follow_us'); ?></h4>
                     <div class="flex gap-3">
                         <a class="glass-social-btn" href="#" aria-label="Facebook">
                             <svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
@@ -37,35 +42,35 @@ if (!isset($base_path)) {
 
             <!-- Quick Links -->
             <div class="col-span-1">
-                <h4 class="font-bold text-white text-lg mb-4">Liên kết nhanh</h4>
+                <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.quick_links'); ?></h4>
                 <ul class="space-y-3 text-sm">
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#about">Về chúng tôi</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#rooms">Phòng &amp; Suite</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#services">Dịch vụ</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#dining">Nhà hàng</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#gallery">Thư viện ảnh</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#events">Sự kiện</a></li>
-                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#contact">Liên hệ</a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#about"><?php _e('footer.about_us'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#rooms"><?php _e('footer.rooms_suite'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#services"><?php _e('footer.services'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#dining"><?php _e('footer.restaurant'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#gallery"><?php _e('footer.gallery'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#events"><?php _e('footer.events'); ?></a></li>
+                    <li><a class="text-white/70 hover:text-accent transition-colors" href="#contact"><?php _e('footer.contact'); ?></a></li>
                 </ul>
             </div>
 
             <!-- Services -->
             <div class="col-span-1">
-                <h4 class="font-bold text-white text-lg mb-4">Dịch vụ</h4>
+                <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.services_title'); ?></h4>
                 <ul class="space-y-3 text-sm">
-                    <li class="text-white/70">Đặt phòng trực tuyến</li>
-                    <li class="text-white/70">Nhà hàng &amp; Bar</li>
-                    <li class="text-white/70">Hội nghị &amp; Sự kiện</li>
-                    <li class="text-white/70">Spa &amp; Massage</li>
-                    <li class="text-white/70">Hồ bơi</li>
-                    <li class="text-white/70">Phòng gym</li>
-                    <li class="text-white/70">Dịch vụ đưa đón</li>
+                    <li class="text-white/70"><?php _e('footer.online_booking'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.restaurant_bar'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.conference_events'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.spa_massage'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.swimming_pool'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.gym'); ?></li>
+                    <li class="text-white/70"><?php _e('footer.shuttle_service'); ?></li>
                 </ul>
             </div>
 
             <!-- Contact Info -->
             <div class="col-span-1">
-                <h4 class="font-bold text-white text-lg mb-4">Liên hệ</h4>
+                <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.contact_title'); ?></h4>
                 <ul class="space-y-4 text-sm">
                     <li class="flex items-start gap-3">
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">location_on</span>
@@ -84,7 +89,7 @@ if (!isset($base_path)) {
                     </li>
                     <li class="flex items-start gap-3">
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">schedule</span>
-                        <span class="text-white/70">Lễ tân 24/7</span>
+                        <span class="text-white/70"><?php _e('footer.reception_24_7'); ?></span>
                     </li>
                 </ul>
             </div>
@@ -94,12 +99,12 @@ if (!isset($base_path)) {
         <div class="mt-12 pt-8 border-t border-white/20">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-sm text-white/60 text-center md:text-left">
-                    © 2025 Aurora Hotel Plaza. Bản quyền thuộc về Aurora Hotel Plaza.
+                    <?php _e('footer.copyright', ['year' => date('Y')]); ?>
                 </p>
                 <div class="flex gap-6 text-sm">
-                    <a href="<?php echo $base_path; ?>privacy.php" class="text-white/60 hover:text-accent transition-colors">Chính sách bảo mật</a>
-                    <a href="<?php echo $base_path; ?>terms.php" class="text-white/60 hover:text-accent transition-colors">Điều khoản sử dụng</a>
-                    <a href="<?php echo $base_path; ?>cancellation-policy.php" class="text-white/60 hover:text-accent transition-colors">Chính sách hủy phòng</a>
+                    <a href="<?php echo $base_path; ?>privacy.php" class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.privacy_policy'); ?></a>
+                    <a href="<?php echo $base_path; ?>terms.php" class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.terms_of_service'); ?></a>
+                    <a href="<?php echo $base_path; ?>cancellation-policy.php" class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.cancellation_policy'); ?></a>
                 </div>
             </div>
         </div>

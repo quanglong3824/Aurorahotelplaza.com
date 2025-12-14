@@ -1,5 +1,7 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Get filter
 $category_filter = $_GET['category'] ?? 'all';
@@ -62,11 +64,11 @@ $category_names = [
 ];
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Dịch vụ - Aurora Hotel Plaza</title>
+<title><?php _e('services_page.title'); ?></title>
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
 <script src="assets/js/tailwind-config.js"></script>
@@ -84,18 +86,18 @@ $category_names = [
         <div class="page-header-content">
             <span class="badge-liquid-glass mb-6">
                 <span class="material-symbols-outlined text-accent">room_service</span>
-                Dịch vụ 5 sao
+                <?php _e('services_page.five_star'); ?>
             </span>
-            <h1 class="page-title">Dịch vụ của chúng tôi</h1>
-            <p class="page-subtitle">Trải nghiệm đẳng cấp với các dịch vụ chuyên nghiệp và tiện nghi hiện đại</p>
+            <h1 class="page-title"><?php _e('services_page.page_title'); ?></h1>
+            <p class="page-subtitle"><?php _e('services_page.page_subtitle'); ?></p>
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 <a href="contact.php" class="btn-liquid-primary">
                     <span class="material-symbols-outlined">mail</span>
-                    Liên hệ ngay
+                    <?php _e('services_page.contact_now'); ?>
                 </a>
                 <a href="#services-list" class="btn-liquid-glass">
                     <span class="material-symbols-outlined">arrow_downward</span>
-                    Xem dịch vụ
+                    <?php _e('services_page.view_services'); ?>
                 </a>
             </div>
         </div>
@@ -112,7 +114,7 @@ $category_names = [
             if (!empty($additional_services)): 
             ?>
                 <div class="mb-16">
-                    <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent);">Dịch vụ tiện ích</h2>
+                    <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent);"><?php _e('services_page.utility_services'); ?></h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <?php foreach ($additional_services as $service): ?>
                             <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" 
@@ -134,7 +136,7 @@ $category_names = [
 
             <!-- Main Services (with packages) - Moved to bottom -->
             <div>
-                <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent);">Dịch vụ chính</h2>
+                <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent);"><?php _e('services_page.main_services'); ?></h2>
                 <div class="services-grid">
                 <?php 
                 $main_services = array_filter($services, function($s) {
@@ -156,7 +158,7 @@ $category_names = [
                                 </div>
                                 <?php if ($service['is_featured']): ?>
                                     <div class="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        Nổi bật
+                                        <?php _e('services_page.featured'); ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -174,7 +176,7 @@ $category_names = [
                             <?php if (!empty($service['packages'])): ?>
                                 <!-- Show packages -->
                                 <div class="mt-4 mb-4">
-                                    <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Gói dịch vụ:</p>
+                                    <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"><?php _e('services_page.packages'); ?></p>
                                     <?php foreach (array_slice($service['packages'], 0, 3) as $pkg): ?>
                                         <div class="flex justify-between items-center py-1 text-sm">
                                             <span class="text-gray-600 dark:text-gray-400"><?php echo htmlspecialchars($pkg['package_name']); ?></span>
@@ -184,7 +186,7 @@ $category_names = [
                                         </div>
                                     <?php endforeach; ?>
                                     <?php if (count($service['packages']) > 3): ?>
-                                        <p class="text-xs text-gray-500 mt-1">+<?php echo count($service['packages']) - 3; ?> gói khác</p>
+                                        <p class="text-xs text-gray-500 mt-1"><?php _e('services_page.other_packages', ['count' => count($service['packages']) - 3]); ?></p>
                                     <?php endif; ?>
                                 </div>
                             <?php else: ?>
@@ -204,7 +206,7 @@ $category_names = [
                                 </ul>
                             <?php endif; ?>
                             
-                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="service-button">Xem chi tiết</a>
+                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="service-button"><?php _e('services_page.view_details'); ?></a>
                         </div>
                     </div>
                 <?php endforeach; ?>
