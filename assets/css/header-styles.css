@@ -192,16 +192,25 @@
 .lang-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 50px;
-    font-weight: 600;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 10px;
+    font-weight: 700;
     font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.25);
     position: relative;
     overflow: hidden;
+}
+
+.lang-btn .lang-code {
+    position: relative;
+    z-index: 1;
 }
 
 /* Liquid glass shimmer effect */
@@ -215,7 +224,7 @@
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.3),
         transparent
     );
     transition: left 0.5s ease;
@@ -288,21 +297,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Flag emoji styling */
-.lang-btn .lang-flag {
-    font-size: 16px;
-    line-height: 1;
-}
 
-/* Dropdown arrow animation */
-.lang-btn .material-symbols-outlined {
-    font-size: 16px;
-    transition: transform 0.3s ease;
-}
-
-.lang-btn.active .material-symbols-outlined {
-    transform: rotate(180deg);
-}
 
 /* Language Menu - Liquid Glass Dropdown */
 .lang-menu {
@@ -394,11 +389,6 @@
 .lang-option .lang-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.lang-option .lang-flag {
-    font-size: 18px;
 }
 
 .lang-option .material-symbols-outlined {

@@ -178,21 +178,17 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
             <!-- Language Switcher - Liquid Glass -->
             <div class="relative lang-switcher-wrapper">
                 <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
-                    <span class="lang-flag"><?php echo $current_lang === 'vi' ? '🇻🇳' : '🇺🇸'; ?></span>
-                    <span class="hidden md:inline"><?php echo strtoupper($current_lang); ?></span>
-                    <span class="material-symbols-outlined">expand_more</span>
+                    <span class="lang-code"><?php echo $current_lang === 'vi' ? 'Vi' : 'En'; ?></span>
                 </button>
                 <div id="langMenu" class="lang-menu">
                     <a href="?lang=vi" class="lang-option <?php echo $current_lang === 'vi' ? 'active' : ''; ?>">
                         <span class="lang-info">
-                            <span class="lang-flag">🇻🇳</span>
                             <span>Tiếng Việt</span>
                         </span>
                         <span class="material-symbols-outlined">check</span>
                     </a>
                     <a href="?lang=en" class="lang-option <?php echo $current_lang === 'en' ? 'active' : ''; ?>">
                         <span class="lang-info">
-                            <span class="lang-flag">🇺🇸</span>
                             <span>English</span>
                         </span>
                         <span class="material-symbols-outlined">check</span>
