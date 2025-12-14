@@ -50,11 +50,21 @@
 })();
 
 
-// Language Switcher Toggle
+// Language Switcher Toggle - Liquid Glass Animation
 function toggleLangMenu() {
     const menu = document.getElementById('langMenu');
-    if (menu) {
-        menu.classList.toggle('hidden');
+    const btn = document.getElementById('langBtn');
+    
+    if (menu && btn) {
+        const isOpen = menu.classList.contains('show');
+        
+        if (isOpen) {
+            menu.classList.remove('show');
+            btn.classList.remove('active');
+        } else {
+            menu.classList.add('show');
+            btn.classList.add('active');
+        }
     }
 }
 
@@ -62,9 +72,23 @@ function toggleLangMenu() {
 document.addEventListener('click', function(e) {
     const langWrapper = document.querySelector('.lang-switcher-wrapper');
     const langMenu = document.getElementById('langMenu');
+    const langBtn = document.getElementById('langBtn');
     
     if (langWrapper && langMenu && !langWrapper.contains(e.target)) {
-        langMenu.classList.add('hidden');
+        langMenu.classList.remove('show');
+        if (langBtn) langBtn.classList.remove('active');
+    }
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const langMenu = document.getElementById('langMenu');
+        const langBtn = document.getElementById('langBtn');
+        if (langMenu && langMenu.classList.contains('show')) {
+            langMenu.classList.remove('show');
+            if (langBtn) langBtn.classList.remove('active');
+        }
     }
 });
 

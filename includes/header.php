@@ -175,21 +175,27 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
             </a>
             <?php endif; ?>
             
-            <!-- Language Switcher -->
+            <!-- Language Switcher - Liquid Glass -->
             <div class="relative lang-switcher-wrapper">
-                <button class="lang-btn" onclick="toggleLangMenu()">
-                    <?php echo $current_lang === 'vi' ? '🇻🇳' : '🇺🇸'; ?>
-                    <span class="hidden md:inline text-sm"><?php echo strtoupper($current_lang); ?></span>
-                    <span class="material-symbols-outlined text-sm">expand_more</span>
+                <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                    <span class="lang-flag"><?php echo $current_lang === 'vi' ? '🇻🇳' : '🇺🇸'; ?></span>
+                    <span class="hidden md:inline"><?php echo strtoupper($current_lang); ?></span>
+                    <span class="material-symbols-outlined">expand_more</span>
                 </button>
-                <div id="langMenu" class="lang-menu hidden">
+                <div id="langMenu" class="lang-menu">
                     <a href="?lang=vi" class="lang-option <?php echo $current_lang === 'vi' ? 'active' : ''; ?>">
-                        🇻🇳 Tiếng Việt
-                        <?php if ($current_lang === 'vi'): ?><span class="material-symbols-outlined text-sm">check</span><?php endif; ?>
+                        <span class="lang-info">
+                            <span class="lang-flag">🇻🇳</span>
+                            <span>Tiếng Việt</span>
+                        </span>
+                        <span class="material-symbols-outlined">check</span>
                     </a>
                     <a href="?lang=en" class="lang-option <?php echo $current_lang === 'en' ? 'active' : ''; ?>">
-                        🇺🇸 English
-                        <?php if ($current_lang === 'en'): ?><span class="material-symbols-outlined text-sm">check</span><?php endif; ?>
+                        <span class="lang-info">
+                            <span class="lang-flag">🇺🇸</span>
+                            <span>English</span>
+                        </span>
+                        <span class="material-symbols-outlined">check</span>
                     </a>
                 </div>
             </div>
