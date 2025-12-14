@@ -124,12 +124,7 @@ if (isset($_GET['code'])) {
     try {
         $db = getDB();
         
-        // Check if user exists
-        $stmt = $db->prepare("SELECT * FROM users WHERE email = ? AND status = 'active'");
-        $stmt->execute([$user_info['email']]);
-        $user = $stmt->fetch();
-        
-        // QUAN TRỌNG: Xóa toàn bộ session cũ trước khi set session mới
+        // QUAN TRỌNG: Xóa toàn bộ session cũ trước khi xử lý
         // Lưu lại intended_url nếu có
         $intended_url = $_SESSION['intended_url'] ?? null;
         
@@ -141,17 +136,42 @@ if (isset($_GET['code'])) {
             $_SESSION['intended_url'] = $intended_url;
         }
         
+        // Check if user exists (không filter theo status để tránh duplicate)
+        $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$user_info['email']]);
+        $user = $stmt->fetch();
+        
         if ($user) {
-            // User exists, log them in
+            // User đã tồn tại
+            
+            // Kiểm tra nếu user bị banned
+            if ($user['status'] === 'banned') {
+                header('Location: login.php?error=' . urlencode('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ hỗ trợ.'));
+                exit;
+            }
+            
+            // Nếu user inactive, kích hoạt lại
+            if ($user['status'] === 'inactive') {
+                $stmt = $db->prepare("UPDATE users SET status = 'active' WHERE user_id = ?");
+                $stmt->execute([$user['user_id']]);
+            }
+            
+            // Log them in
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_name'] = $user['full_name'];
             $_SESSION['user_role'] = $user['user_role'];
             $_SESSION['login_time'] = time();
             
-            // Update last login
-            $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
-            $stmt->execute([$user['user_id']]);
+            // Update last login và avatar nếu có thay đổi
+            $avatar = $user_info['picture'] ?? null;
+            if ($avatar && $avatar !== $user['avatar']) {
+                $stmt = $db->prepare("UPDATE users SET last_login = NOW(), avatar = ? WHERE user_id = ?");
+                $stmt->execute([$avatar, $user['user_id']]);
+            } else {
+                $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
+                $stmt->execute([$user['user_id']]);
+            }
             
             // Log login
             try {
@@ -185,17 +205,23 @@ if (isset($_GET['code'])) {
             $user_id = $db->lastInsertId();
             
             // Create loyalty record for new user
-            $stmt = $db->prepare("
-                INSERT INTO user_loyalty (user_id, current_points, lifetime_points, created_at) 
-                VALUES (?, 0, 0, NOW())
-            ");
-            $stmt->execute([$user_id]);
+            try {
+                $stmt = $db->prepare("
+                    INSERT INTO user_loyalty (user_id, current_points, lifetime_points, created_at) 
+                    VALUES (?, 0, 0, NOW())
+                ");
+                $stmt->execute([$user_id]);
+            } catch (Exception $loyaltyError) {
+                // Ignore if loyalty table doesn't exist or duplicate
+                error_log("Loyalty insert failed: " . $loyaltyError->getMessage());
+            }
             
             // Set session
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_email'] = $user_info['email'];
             $_SESSION['user_name'] = $full_name;
             $_SESSION['user_role'] = 'customer';
+            $_SESSION['login_time'] = time();
             
             // Log registration
             try {
