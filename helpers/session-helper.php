@@ -158,16 +158,17 @@ function validateAndCleanSession() {
  * @param PDO $db Database connection
  * @return bool
  */
-function refreshSessionFromDB($db) {
+function refreshSessionFromDB($db)
+{
     if (!isLoggedIn()) {
         return false;
     }
-    
+
     try {
         $stmt = $db->prepare("SELECT user_id, email, full_name, user_role, status FROM users WHERE user_id = ? AND status = 'active'");
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($user) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_email'] = $user['email'];
@@ -182,5 +183,104 @@ function refreshSessionFromDB($db) {
     } catch (Exception $e) {
         error_log("refreshSessionFromDB error: " . $e->getMessage());
         return false;
+    }
+}
+
+/**
+ * Kiểm tra user còn tồn tại và active trong database không
+ * Nếu không, tự động xóa session và redirect về login
+ * 
+ * @param string|null $redirect_url URL để redirect nếu user không hợp lệ
+ * @return bool True nếu user hợp lệ
+ */
+function verifyUserExists($redirect_url = null)
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Nếu chưa đăng nhập, không cần kiểm tra
+    if (!isset($_SESSION['user_id'])) {
+        return true;
+    }
+
+    // Kiểm tra user_id = 0 (database lỗi)
+    if ($_SESSION['user_id'] == 0) {
+        destroySessionCompletely(false);
+        if ($redirect_url) {
+            header('Location: ' . $redirect_url . '?error=session_invalid');
+            exit;
+        }
+        return false;
+    }
+
+    try {
+        require_once __DIR__ . '/../config/database.php';
+        $db = getDB();
+
+        $stmt = $db->prepare("SELECT user_id, status FROM users WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // User không tồn tại (đã bị xóa)
+        if (!$user) {
+            destroySessionCompletely(false);
+            if ($redirect_url) {
+                header('Location: ' . $redirect_url . '?error=account_deleted');
+                exit;
+            }
+            return false;
+        }
+
+        // User bị banned
+        if ($user['status'] === 'banned') {
+            destroySessionCompletely(false);
+            if ($redirect_url) {
+                header('Location: ' . $redirect_url . '?error=account_banned');
+                exit;
+            }
+            return false;
+        }
+
+        // User inactive
+        if ($user['status'] === 'inactive') {
+            destroySessionCompletely(false);
+            if ($redirect_url) {
+                header('Location: ' . $redirect_url . '?error=account_inactive');
+                exit;
+            }
+            return false;
+        }
+
+        return true;
+    } catch (Exception $e) {
+        error_log("verifyUserExists error: " . $e->getMessage());
+        return true; // Không xóa session nếu có lỗi database
+    }
+}
+
+/**
+ * Middleware để kiểm tra authentication
+ * Gọi ở đầu các trang cần đăng nhập
+ * 
+ * @param string $login_url URL trang login
+ * @param bool $verify_db Có kiểm tra database không
+ * @return void
+ */
+function requireAuth($login_url = '/auth/login.php', $verify_db = true)
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Kiểm tra session hợp lệ
+    if (!validateAndCleanSession()) {
+        header('Location: ' . $login_url . '?error=session_expired');
+        exit;
+    }
+
+    // Kiểm tra user còn tồn tại trong database
+    if ($verify_db) {
+        verifyUserExists($login_url);
     }
 }

@@ -19,6 +19,27 @@ if (!defined('BASE_URL')) {
     require_once __DIR__ . '/../config/environment.php';
 }
 
+// Load session helper và kiểm tra user còn tồn tại
+require_once __DIR__ . '/../helpers/session-helper.php';
+
+// Kiểm tra và xóa session không hợp lệ (user_id = 0 hoặc user đã bị xóa/banned)
+if (isset($_SESSION['user_id'])) {
+    // Chỉ verify database mỗi 5 phút để tránh query quá nhiều
+    $last_verify = $_SESSION['last_user_verify'] ?? 0;
+    if (time() - $last_verify > 300) { // 5 phút
+        if (!verifyUserExists()) {
+            // User đã bị xóa hoặc banned, session đã được xóa bởi verifyUserExists
+            // Redirect về trang chủ
+            $current_dir = basename(dirname($_SERVER['PHP_SELF']));
+            $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin', 'services-pages', 'payment'];
+            $redirect_path = in_array($current_dir, $subdirs) ? '../index.php' : 'index.php';
+            header('Location: ' . $redirect_path . '?logged_out=account_removed');
+            exit;
+        }
+        $_SESSION['last_user_verify'] = time();
+    }
+}
+
 // Determine base path based on current directory
 $current_dir = basename(dirname($_SERVER['PHP_SELF']));
 $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin'];

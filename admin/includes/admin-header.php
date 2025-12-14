@@ -1,8 +1,22 @@
 <?php
 // Admin Header with Sidebar Navigation
+
+// Load session helper
+require_once __DIR__ . '/../../helpers/session-helper.php';
+
+// Kiểm tra đăng nhập
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale', 'receptionist'])) {
     header('Location: ../auth/login.php');
     exit;
+}
+
+// Kiểm tra user còn tồn tại và active (mỗi 5 phút)
+$last_verify = $_SESSION['last_user_verify'] ?? 0;
+if (time() - $last_verify > 300) {
+    if (!verifyUserExists('../auth/login.php')) {
+        exit; // verifyUserExists đã redirect
+    }
+    $_SESSION['last_user_verify'] = time();
 }
 
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
