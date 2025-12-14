@@ -102,25 +102,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showSuccessModal(submissionId) {
-        // Create modal
+        // Create modal with liquid glass style
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
         modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="this.parentElement.remove()"></div>
-            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center animate-scale-in">
-                <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span class="material-symbols-outlined text-5xl text-green-600 dark:text-green-400">check_circle</span>
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" onclick="this.parentElement.remove()"></div>
+            <div class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full p-10 text-center animate-scale-in border border-white/20">
+                <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/30">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    </svg>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Gửi thành công!</h3>
-                <p class="text-gray-600 dark:text-gray-300 mb-4">Cảm ơn bạn đã liên hệ với Aurora Hotel Plaza</p>
-                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-6">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Mã liên hệ của bạn</p>
-                    <p class="text-xl font-bold text-accent">CT${submissionId}</p>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Gửi thành công</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">Cảm ơn bạn đã liên hệ với Aurora Hotel Plaza</p>
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100/80 dark:from-amber-900/30 dark:to-amber-800/20 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-amber-200/50 dark:border-amber-700/30">
+                    <p class="text-sm text-amber-700 dark:text-amber-300 mb-2 uppercase tracking-wider font-semibold">Mã liên hệ của bạn</p>
+                    <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 tracking-widest font-mono">${submissionId}</p>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
                     Chúng tôi đã gửi email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư.
                 </p>
-                <button onclick="this.closest('.fixed').remove()" class="w-full bg-accent text-white rounded-lg px-6 py-3 font-semibold hover:opacity-90 transition-opacity">
+                <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-accent to-amber-500 text-white rounded-xl px-6 py-4 font-bold hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:-translate-y-0.5">
                     Đóng
                 </button>
             </div>

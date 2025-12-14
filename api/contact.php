@@ -96,7 +96,18 @@ try {
         ]);
     }
     
-    $submission_id = $db->lastInsertId();
+    $db_submission_id = $db->lastInsertId();
+    
+    // Tạo mã liên hệ random 8 số
+    $submission_id = str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+    
+    // Cập nhật mã liên hệ vào database (nếu có cột contact_code)
+    try {
+        $db->prepare("UPDATE contact_submissions SET contact_code = :code WHERE id = :id")
+           ->execute([':code' => $submission_id, ':id' => $db_submission_id]);
+    } catch (Exception $e) {
+        // Nếu không có cột contact_code, bỏ qua
+    }
     
     // Load contact email templates
     require_once '../includes/email-templates/contact-templates.php';
