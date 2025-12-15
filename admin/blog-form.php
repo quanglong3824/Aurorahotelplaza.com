@@ -494,15 +494,18 @@ include 'includes/admin-header.php';
                 <?php else: ?>
                     <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3" id="modalImageGrid">
                         <?php foreach ($uploaded_images as $img): ?>
-                            <div class="modal-image-item aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative group"
+                            <div class="modal-image-item aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-[#d4af37] transition-all relative group"
                                  data-src="uploads/<?php echo htmlspecialchars($img); ?>"
-                                 onclick="selectImageFromModal(this)">
+                                 data-filename="<?php echo htmlspecialchars($img); ?>">
                                 <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
                                      alt="<?php echo htmlspecialchars($img); ?>"
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-[#d4af37]/0 group-hover:bg-[#d4af37]/20 transition-colors flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-white text-2xl opacity-0 group-hover:opacity-100 drop-shadow-lg">check_circle</span>
-                                </div>
+                                     class="w-full h-full object-cover cursor-pointer"
+                                     onclick="selectImageFromModal(this.parentElement)">
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors pointer-events-none"></div>
+                                <button type="button" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full items-center justify-center hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity flex z-10"
+                                        onclick="deleteImageFromServer(this, '<?php echo htmlspecialchars($img); ?>')">
+                                    <span class="material-symbols-outlined text-xs">delete</span>
+                                </button>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -510,6 +513,26 @@ include 'includes/admin-header.php';
             </div>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
                 <button type="button" onclick="closeImageModal()" class="btn btn-secondary">Đóng</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== LAYOUT PREVIEW MODAL ========== -->
+    <div id="layoutPreviewModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h3 class="font-bold text-lg">
+                    <span class="material-symbols-outlined align-middle mr-1">preview</span>
+                    Xem trước Layout: <span id="previewLayoutName" class="text-[#d4af37]">Standard</span>
+                </h3>
+                <button type="button" onclick="closePreviewModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto bg-gray-100 dark:bg-slate-800" style="max-height: calc(90vh - 80px);">
+                <div id="previewContent" class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-lg">
+                    <!-- Preview content will be injected here -->
+                </div>
             </div>
         </div>
     </div>
@@ -584,6 +607,10 @@ include 'includes/admin-header.php';
     
     <div class="flex justify-end gap-3">
         <a href="blog.php" class="btn btn-secondary">Hủy</a>
+        <button type="button" onclick="openPreviewModal()" class="btn btn-info">
+            <span class="material-symbols-outlined text-sm">preview</span>
+            Xem trước
+        </button>
         <button type="submit" name="save_draft" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">save</span>
             Lưu nháp
@@ -794,13 +821,279 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close modal on escape
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeImageModal();
+        if (e.key === 'Escape') {
+            closeImageModal();
+            closePreviewModal();
+        }
     });
     
     // Close modal on backdrop click
     document.getElementById('imageSelectModal')?.addEventListener('click', function(e) {
         if (e.target === this) closeImageModal();
     });
+    
+    document.getElementById('layoutPreviewModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closePreviewModal();
+    });
+    
+    // ========== DELETE IMAGE FROM SERVER ==========
+    window.deleteImageFromServer = function(btn, filename) {
+        if (!confirm('Xóa ảnh "' + filename + '" khỏi server?\nHành động này không thể hoàn tác!')) {
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-xs animate-spin">sync</span>';
+        
+        fetch('api/delete-image.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'filename=' + encodeURIComponent(filename)
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Remove from modal grid
+                const item = btn.closest('.modal-image-item');
+                if (item) {
+                    item.style.transition = 'all 0.3s';
+                    item.style.transform = 'scale(0)';
+                    item.style.opacity = '0';
+                    setTimeout(() => item.remove(), 300);
+                }
+            } else {
+                alert('Lỗi: ' + (data.message || 'Không thể xóa ảnh'));
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-symbols-outlined text-xs">delete</span>';
+            }
+        })
+        .catch(err => {
+            alert('Lỗi kết nối: ' + err.message);
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined text-xs">delete</span>';
+        });
+    };
+    
+    // ========== LAYOUT PREVIEW ==========
+    window.openPreviewModal = function() {
+        const layout = document.querySelector('input[name="layout"]:checked')?.value || 'standard';
+        const title = document.querySelector('input[name="title"]')?.value || 'Tiêu đề bài viết';
+        const content = document.querySelector('textarea[name="content"]')?.value || '<p>Nội dung bài viết sẽ hiển thị ở đây...</p>';
+        const excerpt = document.querySelector('textarea[name="excerpt"]')?.value || '';
+        const videoUrl = document.getElementById('videoUrlInput')?.value || '';
+        
+        // Get images
+        const images = [];
+        document.querySelectorAll('.image-picker-card:not(.hidden)').forEach(card => {
+            const preview = card.querySelector('.picker-preview');
+            if (preview && preview.src && !preview.classList.contains('hidden')) {
+                images.push(preview.src);
+            }
+        });
+        
+        // Layout names
+        const layoutNames = {
+            'standard': 'Tiêu chuẩn',
+            'hero': 'Hero Banner',
+            'fullwidth': 'Full Width',
+            'sidebar': 'Có Sidebar',
+            'gallery': 'Gallery',
+            'slider': 'Slider',
+            'apartment': 'Căn hộ',
+            'masonry': 'Masonry',
+            'magazine': 'Magazine',
+            'timeline': 'Timeline',
+            'video': 'Video'
+        };
+        
+        document.getElementById('previewLayoutName').textContent = layoutNames[layout] || layout;
+        
+        // Generate preview HTML based on layout
+        let previewHTML = generateLayoutPreview(layout, title, content, excerpt, images, videoUrl);
+        document.getElementById('previewContent').innerHTML = previewHTML;
+        
+        document.getElementById('layoutPreviewModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+    
+    window.closePreviewModal = function() {
+        document.getElementById('layoutPreviewModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    };
+    
+    function generateLayoutPreview(layout, title, content, excerpt, images, videoUrl) {
+        const featuredImg = images[0] || 'https://placehold.co/800x400/1a1a2e/d4af37?text=No+Image';
+        const galleryImgs = images.slice(1);
+        
+        let html = '';
+        
+        switch(layout) {
+            case 'hero':
+                html = `
+                    <div class="relative -mx-6 -mt-6 mb-6">
+                        <img src="${featuredImg}" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <h1 class="absolute bottom-4 left-6 right-6 text-2xl font-bold text-white">${title}</h1>
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'fullwidth':
+                html = `
+                    <div class="-mx-6 -mt-6 mb-6">
+                        <img src="${featuredImg}" class="w-full h-auto">
+                        <div class="h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'gallery':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <img src="${featuredImg}" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="grid grid-cols-4 gap-2 mb-6">
+                        ${galleryImgs.slice(0, 12).map(img => `<img src="${img}" class="aspect-square object-cover rounded-lg">`).join('')}
+                        ${galleryImgs.length < 4 ? '<div class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">Thêm ảnh</div>'.repeat(4 - galleryImgs.length) : ''}
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'slider':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <div class="relative mb-6 rounded-xl overflow-hidden">
+                        <img src="${featuredImg}" class="w-full h-56 object-cover">
+                        <div class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">chevron_left</span>
+                        </div>
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">chevron_right</span>
+                        </div>
+                        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                            <span class="w-2 h-2 rounded-full bg-[#d4af37]"></span>
+                            ${galleryImgs.slice(0, 5).map(() => '<span class="w-2 h-2 rounded-full bg-white/60"></span>').join('')}
+                        </div>
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'apartment':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="col-span-2">
+                            <img src="${featuredImg}" class="w-full h-48 object-cover rounded-xl">
+                        </div>
+                        <div class="space-y-3">
+                            <img src="${galleryImgs[0] || 'https://placehold.co/400x200/eee/999?text=+'}" class="w-full h-[94px] object-cover rounded-xl">
+                            <img src="${galleryImgs[1] || 'https://placehold.co/400x200/eee/999?text=+'}" class="w-full h-[94px] object-cover rounded-xl">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 mb-6">
+                        ${galleryImgs.slice(2, 6).map(img => `<img src="${img}" class="aspect-video object-cover rounded-lg">`).join('')}
+                        ${galleryImgs.length < 6 ? '<div class="aspect-video bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">+</div>'.repeat(Math.max(0, 4 - galleryImgs.slice(2).length)) : ''}
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'masonry':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <img src="${featuredImg}" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="columns-3 gap-3 mb-6">
+                        ${galleryImgs.slice(0, 10).map((img, i) => `<img src="${img}" class="w-full mb-3 rounded-lg ${i % 3 === 0 ? 'aspect-[3/4]' : i % 3 === 1 ? 'aspect-square' : 'aspect-[4/3]'} object-cover">`).join('')}
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'magazine':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <img src="${featuredImg}" class="w-full aspect-[3/4] object-cover rounded-xl">
+                        <div>
+                            ${excerpt ? `<p class="text-lg italic border-l-4 border-[#d4af37] pl-4 mb-4">${excerpt}</p>` : ''}
+                            <div class="grid grid-cols-3 gap-2">
+                                ${galleryImgs.slice(0, 3).map(img => `<img src="${img}" class="aspect-square object-cover rounded-lg">`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'timeline':
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <img src="${featuredImg}" class="w-full h-40 object-cover rounded-lg mb-6">
+                    <div class="relative pl-6 border-l-2 border-[#d4af37] space-y-6 mb-6">
+                        ${galleryImgs.slice(0, 5).map((img, i) => `
+                            <div class="relative">
+                                <div class="absolute -left-[29px] w-3 h-3 bg-[#d4af37] rounded-full border-2 border-white"></div>
+                                <p class="text-xs text-gray-500 mb-1">Mốc ${i + 1}</p>
+                                <img src="${img}" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'video':
+                let embedUrl = '';
+                if (videoUrl) {
+                    const ytMatch = videoUrl.match(/youtube\.com\/watch\?v=([^&]+)/) || videoUrl.match(/youtu\.be\/([^?]+)/);
+                    const vimeoMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
+                    if (ytMatch) embedUrl = 'https://www.youtube.com/embed/' + ytMatch[1];
+                    else if (vimeoMatch) embedUrl = 'https://player.vimeo.com/video/' + vimeoMatch[1];
+                }
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <div class="aspect-video bg-black rounded-xl mb-4 overflow-hidden">
+                        ${embedUrl ? `<iframe src="${embedUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>` : `<div class="w-full h-full flex items-center justify-center text-white"><span class="material-symbols-outlined text-5xl">play_circle</span></div>`}
+                    </div>
+                    ${featuredImg && !featuredImg.includes('placehold') ? `<img src="${featuredImg}" class="w-full h-32 object-cover rounded-lg mb-4">` : ''}
+                    <div class="prose max-w-none">${content}</div>
+                `;
+                break;
+                
+            case 'sidebar':
+                html = `
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2">
+                            <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                            <img src="${featuredImg}" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <div class="prose max-w-none">${content}</div>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-slate-800 rounded-xl p-4">
+                            <h3 class="font-bold mb-3">Sidebar</h3>
+                            <div class="space-y-3 text-sm text-gray-600">
+                                <div class="p-3 bg-white dark:bg-slate-700 rounded-lg">Widget 1</div>
+                                <div class="p-3 bg-white dark:bg-slate-700 rounded-lg">Widget 2</div>
+                                <div class="p-3 bg-white dark:bg-slate-700 rounded-lg">Bài viết liên quan</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+                
+            default: // standard
+                html = `
+                    <h1 class="text-2xl font-bold mb-4">${title}</h1>
+                    <img src="${featuredImg}" class="w-full h-48 object-cover rounded-lg mb-6">
+                    <div class="prose max-w-none">${content}</div>
+                `;
+        }
+        
+        return html;
+    }
     
     // Toggle upload zone
     uploadNewBtn?.addEventListener('click', function() {
