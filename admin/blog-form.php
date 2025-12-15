@@ -29,6 +29,7 @@ $page_subtitle = $is_edit ? 'Cập nhật nội dung bài viết' : 'Tạo bài 
 
 $post = null;
 $categories = [];
+$db_error = null;
 try {
     $db = getDB();
     // Fetch categories
@@ -41,18 +42,12 @@ try {
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$post) {
-            header('Location: blog.php');
-            exit;
+            $db_error = "Không tìm thấy bài viết với ID: " . htmlspecialchars($post_id);
         }
     }
 } catch (Exception $e) {
     error_log("Load post/categories error: " . $e->getMessage());
-    // Redirect or show an error, but for simplicity, we continue
-    // so the rest of the page can render.
-    if ($is_edit) {
-        header('Location: blog.php');
-        exit;
-    }
+    $db_error = "Lỗi database: " . $e->getMessage();
 }
 
 include 'includes/admin-header.php';
@@ -64,6 +59,33 @@ include 'includes/admin-header.php';
         Quay lại
     </a>
 </div>
+
+<?php if ($db_error): ?>
+<div class="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-300">
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined">error</span>
+        <strong>Lỗi:</strong> <?php echo $db_error; ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error_message'])): ?>
+<div class="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-300">
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined">error</span>
+        <strong>Lỗi lưu bài:</strong> <?php echo htmlspecialchars($_SESSION['error_message']); ?>
+    </div>
+</div>
+<?php unset($_SESSION['error_message']); endif; ?>
+
+<?php if (isset($_SESSION['success_message'])): ?>
+<div class="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-xl text-green-700 dark:text-green-300">
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined">check_circle</span>
+        <?php echo htmlspecialchars($_SESSION['success_message']); ?>
+    </div>
+</div>
+<?php unset($_SESSION['success_message']); endif; ?>
 
 <form action="api/save-post.php" method="POST" class="max-w-4xl">
     <input type="hidden" name="post_id" value="<?php echo $post['post_id'] ?? ''; ?>">
