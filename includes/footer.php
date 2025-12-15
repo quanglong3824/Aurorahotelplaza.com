@@ -74,16 +74,14 @@ if (!function_exists('__')) {
             <div class="lg:col-span-2 order-last lg:order-none">
                 <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.our_location'); ?></h4>
                 <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765781376843!5m2!1svi!2s" 
-                        width="100%" 
-                        height="250" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        class="w-full h-full">
-                    </iframe>
+                    <?php 
+                    $mapFile = __DIR__ . '/map-embed.html';
+                    if (file_exists($mapFile)) {
+                        echo file_get_contents($mapFile);
+                    } else {
+                        echo '<!-- Map content could not be loaded -->';
+                    }
+                    ?>
                 </div>
             </div>
 
