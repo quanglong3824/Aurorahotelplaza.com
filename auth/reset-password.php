@@ -16,7 +16,6 @@ if (empty($token)) {
         $db = getDB();
         
         // Verify token from password_resets table
-        // Sử dụng LEFT JOIN để xử lý trường hợp user_id = 0
         $stmt = $db->prepare("
             SELECT pr.reset_id, pr.user_id, u.email, u.full_name 
             FROM password_resets pr
@@ -27,11 +26,6 @@ if (empty($token)) {
         ");
         $stmt->execute([$token]);
         $user = $stmt->fetch();
-        
-        // Nếu user_id = 0, tìm user bằng cách khác (dựa vào thời gian tạo token)
-        if ($user && (!$user['email'] || $user['user_id'] == 0)) {
-            error_log("Warning: Reset token found but user_id is 0 or user not found");
-        }
         
         if ($user) {
             $valid_token = true;
@@ -51,7 +45,7 @@ if (empty($token)) {
                     $password_hash = password_hash($password, PASSWORD_DEFAULT);
                     $stmt = $db->prepare("
                         UPDATE users 
-                        SET password_hash = ?
+                        SET password_hash = ?, updated_at = NOW()
                         WHERE user_id = ?
                     ");
                     $stmt->execute([$password_hash, $user['user_id']]);

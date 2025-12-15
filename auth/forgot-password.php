@@ -22,35 +22,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
             
             if ($user) {
-                $userDetails = $user;
                 $user_id = $user['user_id'];
-                
-                // Nếu user_id = 0 (do lỗi database), tìm bằng email
-                if (!$user_id || $user_id == 0) {
-                    error_log("Warning: user_id is 0 for email: $email in forgot-password");
-                }
                 
                 // Generate reset token
                 $token = bin2hex(random_bytes(32));
                 $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
                 
-                // Xóa các token cũ chưa sử dụng của user này
+                // Delete old unused tokens for this user
                 $stmt = $db->prepare("DELETE FROM password_resets WHERE user_id = ? AND used = 0");
                 $stmt->execute([$user_id]);
                 
-                // Save token in password_resets table
+                // Save new token
                 $stmt = $db->prepare("
                     INSERT INTO password_resets (user_id, token, expires_at, used)
                     VALUES (?, ?, ?, 0)
                 ");
                 $stmt->execute([$user_id, $token, $expires]);
                 
-                // Send email with PHPMailer (optional - don't block if email fails)
+                // Generate reset link
+                $reset_link = BASE_URL . '/auth/reset-password.php?token=' . $token;
+                
+                // Try to send email (optional - don't block if email fails)
                 $emailSent = false;
                 try {
                     require_once '../helpers/mailer.php';
                     $mailer = getMailer();
-                    $emailSent = $mailer->sendPasswordReset($email, $userDetails['full_name'], $token);
+                    $emailSent = $mailer->sendPasswordReset($email, $user['full_name'], $token);
                 } catch (Exception $emailError) {
                     error_log("Email send failed: " . $emailError->getMessage());
                 }
@@ -68,11 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("Logger failed: " . $logError->getMessage());
                 }
                 
+                // Show reset link for testing (remove in production)
                 if ($emailSent) {
                     $success = 'Đã gửi link đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư (có thể trong thư mục Spam).';
                 } else {
-                    // Show success anyway for security (don't reveal if email exists)
-                    $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu.';
+                    // For testing purposes, show the link directly
+                    $success = 'Link đặt lại mật khẩu của bạn: <a href="' . htmlspecialchars($reset_link) . '" target="_blank">' . htmlspecialchars($reset_link) . '</a><br>Bạn cũng có thể kiểm tra email (có thể trong thư mục Spam).';
                 }
             } else {
                 // Don't reveal if email exists or not (security)
@@ -123,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span class="material-symbols-outlined">check_circle</span>
                 <div>
                     <strong>Thành công!</strong>
-                    <p><?php echo htmlspecialchars($success); ?></p>
+                    <p><?php echo $success; ?></p>
                 </div>
             </div>
             <?php endif; ?>
