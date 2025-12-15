@@ -130,6 +130,10 @@ if (!function_exists('__')) {
     </div>
 </footer>
 
+ <button id="backToTopBtn" type="button" aria-label="Back to top" class="fixed bottom-6 right-6 z-50 hidden h-12 w-12 items-center justify-center rounded-full bg-[#d4af37] text-white shadow-lg transition-all hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50">
+     <span class="material-symbols-outlined">arrow_upward</span>
+ </button>
+
 <!-- Footer Popup Modal -->
 <div id="footerPopupModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.5);">
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
@@ -173,5 +177,25 @@ function closeFooterPopup() {
 // Close on backdrop click
 document.getElementById('footerPopupModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeFooterPopup();
+});
+
+const backToTopBtn = document.getElementById('backToTopBtn');
+
+function updateBackToTopVisibility() {
+    if (!backToTopBtn) return;
+    if (window.scrollY > 300) {
+        backToTopBtn.classList.remove('hidden');
+        backToTopBtn.classList.add('flex');
+    } else {
+        backToTopBtn.classList.add('hidden');
+        backToTopBtn.classList.remove('flex');
+    }
+}
+
+updateBackToTopVisibility();
+window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+
+backToTopBtn?.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 </script>
