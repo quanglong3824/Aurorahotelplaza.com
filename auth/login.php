@@ -122,8 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // TODO: Store token in user_sessions table
                 }
                 
-                // Check if must change password (temp password login)
-                if ($using_temp_password || (isset($user['requires_password_change']) && $user['requires_password_change'])) {
+                // Check if must change password - ONLY if using temp password
+                // Don't redirect if user logs in with regular password (even if requires_password_change is set)
+                if ($using_temp_password) {
                     $_SESSION['must_change_password'] = true;
                     header('Location: ' . url('auth/change-password.php'));
                     exit;

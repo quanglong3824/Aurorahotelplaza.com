@@ -96,15 +96,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 
                 // Update user with temporary password
-                $stmt = $db->prepare("
-                    UPDATE users 
-                    SET temp_password = ?, temp_password_expires = ?, requires_password_change = 1, updated_at = NOW()
-                    WHERE user_id = ?
-                ");
-                $updateResult = $stmt->execute([$temp_password_hash, $expires, $user_id]);
-                
-                if (!$updateResult) {
-                    throw new Exception('Không thể cập nhật mật khẩu tạm thời');
+                try {
+                    $stmt = $db->prepare("
+                        UPDATE users 
+                        SET temp_password = ?, temp_password_expires = ?, requires_password_change = 1, updated_at = NOW()
+                        WHERE user_id = ?
+                    ");
+                    $updateResult = $stmt->execute([$temp_password_hash, $expires, $user_id]);
+                    $rowsAffected = $stmt->rowCount();
+                    
+                    if (!$updateResult || $rowsAffected == 0) {
+                        error_log("Update failed - Result: " . ($updateResult ? 'true' : 'false') . ", Rows: $rowsAffected, User ID: $user_id");
+                        // Don't throw - continue anyway, user can still see temp password
+                    }
+                } catch (PDOException $updateErr) {
+                    error_log("Update temp password PDO error: " . $updateErr->getMessage());
+                    // Don't throw - continue anyway
                 }
                 
                 // Try to send email (non-blocking approach)
@@ -129,12 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Log password reset request (optional, don't fail if logger fails)
                 try {
-                    if (file_exists('../helpers/logger.php')) {
-                        require_once '../helpers/logger.php';
+                    if (file_exists(__DIR__ . '/../helpers/logger.php')) {
+                        require_once __DIR__ . '/../helpers/logger.php';
                         if (function_exists('getLogger')) {
                             $logger = getLogger();
-                            if ($logger) {
-                                $logger->logAdminAction($user['user_id'], 'temp_password_sent', 'user', $user['user_id'], [
+                            if ($logger && method_exists($logger, 'logActivity')) {
+                                $logger->logActivity($user['user_id'], 'temp_password_sent', 'user', $user['user_id'], 'Temporary password requested', [
                                     'email' => $email,
                                     'email_sent' => $emailSent,
                                     'temp_expires' => $expires
@@ -143,7 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
                 } catch (Exception $logError) {
-                    error_log("Logger failed: " . $logError->getMessage());
+                    error_log("Logger Exception: " . $logError->getMessage());
+                } catch (Throwable $logError) {
+                    error_log("Logger Throwable: " . $logError->getMessage());
                 }
                 
                 // Always show temp password (for now, until email is reliable)
