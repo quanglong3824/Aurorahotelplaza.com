@@ -138,9 +138,10 @@ include 'includes/admin-header.php';
     <div class="card mb-6">
         <div class="card-header">
             <h3 class="font-bold text-lg">Chọn Layout bài viết</h3>
+            <p class="text-sm text-gray-500 mt-1">Chọn kiểu hiển thị phù hợp với nội dung bài viết</p>
         </div>
         <div class="card-body">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="layoutSelector">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="layoutSelector">
                 <label class="layout-option cursor-pointer">
                     <input type="radio" name="layout" value="standard" class="hidden" <?php echo ($post['layout'] ?? 'standard') === 'standard' ? 'checked' : ''; ?>>
                     <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
@@ -235,6 +236,104 @@ include 'includes/admin-header.php';
                         <p class="text-xs text-center font-medium">Căn hộ</p>
                     </div>
                 </label>
+                
+                <!-- New Layouts -->
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="fullwidth" class="hidden" <?php echo ($post['layout'] ?? '') === 'fullwidth' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                            <div class="w-full">
+                                <div class="h-12 bg-gray-400 dark:bg-slate-500 rounded-t"></div>
+                                <div class="h-1 bg-[#d4af37]"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Full Width</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="magazine" class="hidden" <?php echo ($post['layout'] ?? '') === 'magazine' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                            <div class="w-full px-1 flex gap-1">
+                                <div class="w-1/2 h-10 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                <div class="w-1/2 flex flex-col gap-0.5">
+                                    <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                                    <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded w-3/4"></div>
+                                    <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded w-1/2"></div>
+                                    <div class="h-2 bg-[#d4af37]/50 rounded w-1/3 mt-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Magazine</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="video" class="hidden" <?php echo ($post['layout'] ?? '') === 'video' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center relative">
+                            <div class="w-full h-full bg-gray-400 dark:bg-slate-500 rounded flex items-center justify-center">
+                                <div class="w-4 h-4 bg-white/80 rounded-full flex items-center justify-center">
+                                    <div class="w-0 h-0 border-l-[6px] border-l-gray-600 border-y-[4px] border-y-transparent ml-0.5"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Video</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="timeline" class="hidden" <?php echo ($post['layout'] ?? '') === 'timeline' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                            <div class="w-full px-2 flex">
+                                <div class="w-0.5 bg-[#d4af37] mr-2"></div>
+                                <div class="flex-1 space-y-1">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
+                                        <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded flex-1"></div>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
+                                        <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded flex-1"></div>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
+                                        <div class="h-2 bg-gray-300 dark:bg-slate-600 rounded flex-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Timeline</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="masonry" class="hidden" <?php echo ($post['layout'] ?? '') === 'masonry' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                            <div class="w-full px-1 grid grid-cols-3 gap-0.5">
+                                <div class="space-y-0.5">
+                                    <div class="h-5 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                    <div class="h-3 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <div class="h-3 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                    <div class="h-5 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <div class="h-4 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                    <div class="h-4 bg-gray-400 dark:bg-slate-500 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Masonry</p>
+                    </div>
+                </label>
+            </div>
+            
+            <!-- Layout descriptions -->
+            <div class="mt-4 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg text-sm" id="layoutDescription">
+                <p class="text-gray-600 dark:text-gray-400">
+                    <strong>Tiêu chuẩn:</strong> Bố cục cơ bản với ảnh đại diện và nội dung văn bản.
+                </p>
             </div>
         </div>
     </div>
@@ -276,12 +375,18 @@ include 'includes/admin-header.php';
             <input type="hidden" name="featured_image" id="featuredImageInput" 
                    value="<?php echo htmlspecialchars($stored_img); ?>">
             
-            <!-- Upload Zone -->
+            <!-- Upload Zone - Multiple files support -->
             <div id="uploadZone" class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl p-6 text-center hover:border-[#d4af37] transition-colors cursor-pointer hidden">
-                <input type="file" id="fileInput" accept="image/*" class="hidden">
+                <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
                 <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">cloud_upload</span>
                 <p class="text-gray-600 dark:text-gray-400">Kéo thả ảnh vào đây hoặc <span class="text-[#d4af37] font-medium">click để chọn</span></p>
-                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: JPG, PNG, GIF, WebP (tối đa 5MB)</p>
+                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: JPG, PNG, GIF, WebP (tối đa 5MB mỗi ảnh) - <strong>Có thể chọn nhiều ảnh</strong></p>
+            </div>
+            
+            <!-- Multiple Upload Progress -->
+            <div id="multiUploadProgress" class="hidden space-y-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Đang upload <span id="uploadingCount">0</span> ảnh...</p>
+                <div class="space-y-1" id="uploadProgressList"></div>
             </div>
             
             <!-- Upload Progress -->
@@ -361,6 +466,23 @@ include 'includes/admin-header.php';
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Video URL Section (for video layout) -->
+    <div class="card mb-6" id="videoUrlSection" style="display: none;">
+        <div class="card-header">
+            <h3 class="font-bold text-lg">Video URL</h3>
+            <p class="text-xs text-gray-500 mt-1">Dành cho layout Video - nhập link YouTube hoặc Vimeo</p>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-label">URL Video (YouTube/Vimeo)</label>
+                <input type="url" name="video_url" class="form-input" 
+                       value="<?php echo htmlspecialchars($post['video_url'] ?? ''); ?>" 
+                       placeholder="https://www.youtube.com/watch?v=... hoặc https://vimeo.com/...">
+                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: YouTube, Vimeo. Video sẽ được nhúng tự động.</p>
             </div>
         </div>
     </div>
@@ -455,6 +577,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressText = document.getElementById('progressText');
     const imageGallery = document.getElementById('imageGallery');
     
+    // ========== LAYOUT SELECTOR ==========
+    const layoutDescription = document.getElementById('layoutDescription');
+    const layoutDescriptions = {
+        'standard': '<strong>Tiêu chuẩn:</strong> Bố cục cơ bản với ảnh đại diện và nội dung văn bản. Phù hợp cho bài viết tin tức thông thường.',
+        'hero': '<strong>Hero Banner:</strong> Ảnh đại diện lớn chiếm toàn bộ phần đầu bài viết. Tạo ấn tượng mạnh cho bài viết nổi bật.',
+        'sidebar': '<strong>Có Sidebar:</strong> Nội dung chính bên trái, sidebar bên phải hiển thị thông tin bổ sung, bài viết liên quan.',
+        'gallery': '<strong>Gallery:</strong> Hiển thị nhiều ảnh dạng lưới. Phù hợp cho bài viết giới thiệu phòng, sự kiện có nhiều hình ảnh.',
+        'slider': '<strong>Slider ảnh:</strong> Trình chiếu ảnh tự động với điều hướng. Lý tưởng cho tour ảo, giới thiệu không gian.',
+        'apartment': '<strong>Căn hộ:</strong> Layout chuyên biệt cho giới thiệu căn hộ/phòng với ảnh hero lớn và gallery thumbnail bên dưới.',
+        'fullwidth': '<strong>Full Width:</strong> Nội dung trải rộng toàn màn hình, không có sidebar. Tạo trải nghiệm đọc immersive.',
+        'magazine': '<strong>Magazine:</strong> Bố cục kiểu tạp chí với ảnh và text song song. Phù hợp cho bài phỏng vấn, feature story.',
+        'video': '<strong>Video:</strong> Tập trung vào video chính với nội dung mô tả bên dưới. Dành cho bài viết có video YouTube/Vimeo.',
+        'timeline': '<strong>Timeline:</strong> Hiển thị nội dung theo dòng thời gian. Phù hợp cho lịch sử khách sạn, sự kiện theo ngày.',
+        'masonry': '<strong>Masonry:</strong> Bố cục ảnh kiểu Pinterest với các ảnh kích thước khác nhau. Tạo hiệu ứng thị giác độc đáo.'
+    };
+    
+    document.querySelectorAll('input[name="layout"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const layout = this.value;
+            if (layoutDescription && layoutDescriptions[layout]) {
+                layoutDescription.innerHTML = `<p class="text-gray-600 dark:text-gray-400">${layoutDescriptions[layout]}</p>`;
+            }
+            
+            // Show/hide gallery section based on layout
+            const gallerySection = document.getElementById('galleryImagesSection');
+            if (gallerySection) {
+                const needsGallery = ['gallery', 'slider', 'apartment', 'masonry'].includes(layout);
+                gallerySection.style.display = needsGallery ? 'block' : 'none';
+            }
+            
+            // Show/hide video URL section based on layout
+            const videoSection = document.getElementById('videoUrlSection');
+            if (videoSection) {
+                videoSection.style.display = layout === 'video' ? 'block' : 'none';
+            }
+        });
+        
+        // Trigger for initially selected layout
+        if (radio.checked) {
+            radio.dispatchEvent(new Event('change'));
+        }
+    });
+    
     // Toggle upload zone
     uploadNewBtn?.addEventListener('click', function() {
         uploadZone.classList.toggle('hidden');
@@ -481,34 +646,90 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.remove('border-[#d4af37]', 'bg-[#d4af37]/5');
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            uploadFile(files[0]);
+            uploadMultipleFiles(files);
         }
     });
     
-    // File input change
+    // File input change - support multiple files
     fileInput?.addEventListener('change', function() {
         if (this.files.length > 0) {
-            uploadFile(this.files[0]);
+            uploadMultipleFiles(this.files);
         }
     });
     
-    // Upload file function
-    function uploadFile(file) {
-        if (!file.type.startsWith('image/')) {
-            alert('Vui lòng chọn file ảnh!');
-            return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            alert('File quá lớn! Tối đa 5MB.');
+    // Upload multiple files
+    const multiUploadProgress = document.getElementById('multiUploadProgress');
+    const uploadProgressList = document.getElementById('uploadProgressList');
+    const uploadingCount = document.getElementById('uploadingCount');
+    
+    function uploadMultipleFiles(files) {
+        const validFiles = Array.from(files).filter(file => {
+            if (!file.type.startsWith('image/')) {
+                console.warn(`${file.name} is not an image`);
+                return false;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                console.warn(`${file.name} is too large`);
+                return false;
+            }
+            return true;
+        });
+        
+        if (validFiles.length === 0) {
+            alert('Không có file ảnh hợp lệ! (Tối đa 5MB mỗi ảnh)');
             return;
         }
         
+        // Show multi-upload progress
+        multiUploadProgress.classList.remove('hidden');
+        uploadingCount.textContent = validFiles.length;
+        uploadProgressList.innerHTML = '';
+        
+        let completedCount = 0;
+        let firstUploadedUrl = null;
+        
+        validFiles.forEach((file, index) => {
+            // Create progress item
+            const progressItem = document.createElement('div');
+            progressItem.className = 'flex items-center gap-2 text-sm';
+            progressItem.innerHTML = `
+                <span class="truncate w-32">${file.name}</span>
+                <div class="flex-1 h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="progress-bar h-full bg-[#d4af37] transition-all" style="width: 0%"></div>
+                </div>
+                <span class="progress-text w-10 text-right">0%</span>
+            `;
+            uploadProgressList.appendChild(progressItem);
+            
+            const progressBar = progressItem.querySelector('.progress-bar');
+            const progressText = progressItem.querySelector('.progress-text');
+            
+            // Upload file
+            uploadSingleFile(file, progressBar, progressText, (url, filename) => {
+                completedCount++;
+                if (!firstUploadedUrl) {
+                    firstUploadedUrl = url;
+                    selectImage(url);
+                }
+                addImageToGallery(url, filename);
+                
+                // Also add to gallery images for slider/masonry layouts
+                addToGallery(url);
+                
+                if (completedCount === validFiles.length) {
+                    setTimeout(() => {
+                        multiUploadProgress.classList.add('hidden');
+                        uploadZone.classList.add('hidden');
+                    }, 1000);
+                }
+            });
+        });
+    }
+    
+    // Upload single file with progress callback
+    function uploadSingleFile(file, progressBar, progressText, onSuccess) {
         const formData = new FormData();
         formData.append('image', file);
-        
-        uploadProgress.classList.remove('hidden');
-        progressBar.style.width = '0%';
-        progressText.textContent = '0%';
         
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'api/upload-image.php', true);
@@ -522,28 +743,35 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         xhr.onload = function() {
-            uploadProgress.classList.add('hidden');
             try {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                    selectImage(response.url);
-                    // Add to gallery
-                    addImageToGallery(response.url, response.filename);
-                    uploadZone.classList.add('hidden');
+                    progressBar.classList.remove('bg-[#d4af37]');
+                    progressBar.classList.add('bg-green-500');
+                    progressText.textContent = '✓';
+                    if (onSuccess) onSuccess(response.url, response.filename);
                 } else {
-                    alert(response.message || 'Upload thất bại!');
+                    progressBar.classList.remove('bg-[#d4af37]');
+                    progressBar.classList.add('bg-red-500');
+                    progressText.textContent = '✗';
                 }
             } catch (e) {
-                alert('Có lỗi xảy ra khi upload!');
+                progressBar.classList.add('bg-red-500');
+                progressText.textContent = '✗';
             }
         };
         
         xhr.onerror = function() {
-            uploadProgress.classList.add('hidden');
-            alert('Có lỗi xảy ra khi upload!');
+            progressBar.classList.add('bg-red-500');
+            progressText.textContent = '✗';
         };
         
         xhr.send(formData);
+    }
+    
+    // Legacy single file upload (kept for compatibility)
+    function uploadFile(file) {
+        uploadMultipleFiles([file]);
     }
     
     // Add image to gallery after upload

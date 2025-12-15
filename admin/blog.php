@@ -93,8 +93,15 @@ include 'includes/admin-header.php';
             <div class="space-y-4">
                 <?php foreach ($posts as $post): ?>
                     <div class="flex gap-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-xl hover:shadow-md transition-all">
+                        <?php 
+                            $img_src = $post['featured_image'];
+                            // Fix path for admin display
+                            if ($img_src && strpos($img_src, 'uploads/') === 0) {
+                                $img_src = '../' . $img_src;
+                            }
+                        ?>
                         <?php if ($post['featured_image']): ?>
-                            <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                            <img src="<?php echo htmlspecialchars($img_src); ?>" 
                                  alt="Featured" class="w-32 h-24 object-cover rounded-lg flex-shrink-0">
                         <?php else: ?>
                             <div class="w-32 h-24 bg-gray-200 dark:bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -139,6 +146,11 @@ include 'includes/admin-header.php';
                                    class="btn btn-sm btn-secondary">
                                     <span class="material-symbols-outlined text-sm">edit</span>
                                     Sửa
+                                </a>
+                                <a href="blog-comments.php?post_id=<?php echo $post['post_id']; ?>&status=all" 
+                                   class="btn btn-sm btn-info">
+                                    <span class="material-symbols-outlined text-sm">comment</span>
+                                    <?php echo $post['comment_count']; ?>
                                 </a>
                                 <?php if ($post['status'] === 'draft'): ?>
                                     <button onclick="publishPost(<?php echo $post['post_id']; ?>)" 

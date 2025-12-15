@@ -4,20 +4,34 @@
  */
 session_start();
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET');
 
 require_once '../config/database.php';
+
+try {
+    $db = getDB();
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+    exit;
+}
+
+// Ensure tables exist
+ensureTablesExist($db);
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 $post_id = (int)($_POST['post_id'] ?? $_GET['post_id'] ?? 0);
 
 if (!$post_id) {
-    echo json_encode(['success' => false, 'message' => 'Invalid post ID']);
+    echo json_encode(['success' => false, 'message' => 'Invalid post ID', 'debug' => ['action' => $action, 'post_id' => $post_id]]);
     exit;
 }
 
-$db = getDB();
 $user_id = $_SESSION['user_id'] ?? null;
 $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? null;
+
+// Ensure blog_posts has required columns
+ensureColumnsExist($db);
 
 switch ($action) {
     case 'like':
@@ -210,5 +224,82 @@ function getInteractionStatus($db, $post_id, $user_id, $ip_address) {
         ]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+// Auto-create tables if not exist
+function ensureTablesExist($db) {
+    try {
+        // Check if blog_likes table exists
+        $result = $db->query("SHOW TABLES LIKE 'blog_likes'");
+        if ($result->rowCount() == 0) {
+            $db->exec("CREATE TABLE IF NOT EXISTS `blog_likes` (
+                `like_id` INT(11) NOT NULL AUTO_INCREMENT,
+                `post_id` INT(11) NOT NULL,
+                `user_id` INT(11) DEFAULT NULL,
+                `ip_address` VARCHAR(45) DEFAULT NULL,
+                `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`like_id`),
+                KEY `idx_post_id` (`post_id`),
+                KEY `idx_user_post` (`post_id`, `user_id`),
+                KEY `idx_ip_post` (`post_id`, `ip_address`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        }
+        
+        // Check if blog_ratings table exists
+        $result = $db->query("SHOW TABLES LIKE 'blog_ratings'");
+        if ($result->rowCount() == 0) {
+            $db->exec("CREATE TABLE IF NOT EXISTS `blog_ratings` (
+                `rating_id` INT(11) NOT NULL AUTO_INCREMENT,
+                `post_id` INT(11) NOT NULL,
+                `user_id` INT(11) DEFAULT NULL,
+                `ip_address` VARCHAR(45) DEFAULT NULL,
+                `rating` TINYINT(1) NOT NULL,
+                `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`rating_id`),
+                KEY `idx_post_id` (`post_id`),
+                KEY `idx_user_post` (`post_id`, `user_id`),
+                KEY `idx_ip_post` (`post_id`, `ip_address`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        }
+        
+        // Check if blog_shares table exists
+        $result = $db->query("SHOW TABLES LIKE 'blog_shares'");
+        if ($result->rowCount() == 0) {
+            $db->exec("CREATE TABLE IF NOT EXISTS `blog_shares` (
+                `share_id` INT(11) NOT NULL AUTO_INCREMENT,
+                `post_id` INT(11) NOT NULL,
+                `user_id` INT(11) DEFAULT NULL,
+                `platform` VARCHAR(50) DEFAULT 'other',
+                `ip_address` VARCHAR(45) DEFAULT NULL,
+                `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`share_id`),
+                KEY `idx_post_id` (`post_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        }
+    } catch (Exception $e) {
+        // Silently fail - tables might already exist
+    }
+}
+
+// Auto-add columns to blog_posts if not exist
+function ensureColumnsExist($db) {
+    try {
+        $columns = $db->query("SHOW COLUMNS FROM blog_posts")->fetchAll(PDO::FETCH_COLUMN);
+        
+        if (!in_array('likes_count', $columns)) {
+            $db->exec("ALTER TABLE blog_posts ADD COLUMN `likes_count` INT(11) DEFAULT 0");
+        }
+        if (!in_array('shares_count', $columns)) {
+            $db->exec("ALTER TABLE blog_posts ADD COLUMN `shares_count` INT(11) DEFAULT 0");
+        }
+        if (!in_array('rating_avg', $columns)) {
+            $db->exec("ALTER TABLE blog_posts ADD COLUMN `rating_avg` DECIMAL(2,1) DEFAULT 0.0");
+        }
+        if (!in_array('rating_count', $columns)) {
+            $db->exec("ALTER TABLE blog_posts ADD COLUMN `rating_count` INT(11) DEFAULT 0");
+        }
+    } catch (Exception $e) {
+        // Silently fail
     }
 }

@@ -7,6 +7,7 @@ $page_subtitle = 'Duyệt và quản lý bình luận blog';
 
 $status_filter = $_GET['status'] ?? 'pending';
 $search = $_GET['search'] ?? '';
+$post_filter = $_GET['post_id'] ?? '';
 
 $where_clauses = [];
 $params = [];
@@ -19,6 +20,11 @@ if ($status_filter !== 'all') {
 if (!empty($search)) {
     $where_clauses[] = "(c.content LIKE :search OR c.author_name LIKE :search OR c.author_email LIKE :search OR p.title LIKE :search)";
     $params[':search'] = "%$search%";
+}
+
+if (!empty($post_filter)) {
+    $where_clauses[] = "c.post_id = :post_id";
+    $params[':post_id'] = (int)$post_filter;
 }
 
 $where_sql = !empty($where_clauses) ? 'WHERE ' . implode(' AND ', $where_clauses) : '';
