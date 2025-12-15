@@ -1,6 +1,19 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
+
+$room_slug = 'family';
+$room_price = 6500000;
+try {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT base_price FROM room_types WHERE slug = ? AND status = 'active' LIMIT 1");
+    $stmt->execute([$room_slug]);
+    $room_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($room_data) $room_price = $room_data['base_price'];
+} catch (Exception $e) {
+    error_log("Apartment detail error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
@@ -19,7 +32,7 @@ initLanguage();
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('apartment_detail.badge_family'); ?></span>
@@ -78,7 +91,7 @@ initLanguage();
                 <div class="booking-card">
                     <div class="price-section">
                         <div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div>
-                        <div><span class="price-amount">6.500.000đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
+                        <div><span class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
                         <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_30_7days'); ?></p>
                     </div>
                     <form class="booking-form" action="../booking/index.php" method="get">

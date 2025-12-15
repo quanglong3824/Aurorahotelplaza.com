@@ -1,6 +1,19 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
+
+$room_slug = 'classical-family';
+$room_price = 6800000;
+try {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT base_price FROM room_types WHERE slug = ? AND status = 'active' LIMIT 1");
+    $stmt->execute([$room_slug]);
+    $room_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($room_data) $room_price = $room_data['base_price'];
+} catch (Exception $e) {
+    error_log("Apartment detail error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
@@ -68,7 +81,7 @@ initLanguage();
                     </div>
                 </div>
                 <div class="booking-card">
-                    <div class="price-section"><div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div><div><span class="price-amount">6.800.000đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div></div>
+                    <div class="price-section"><div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div><div><span class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div></div>
                     <form class="booking-form" action="../booking/index.php" method="get">
                         <input type="hidden" name="room_type" value="classical-family">
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" name="check_in" class="form-input" required></div>

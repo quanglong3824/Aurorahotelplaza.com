@@ -1,6 +1,22 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
+
+// Lấy thông tin phòng từ database
+$room_slug = 'deluxe';
+$room_price = 1200000; // Default price
+try {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT base_price FROM room_types WHERE slug = ? AND status = 'active' LIMIT 1");
+    $stmt->execute([$room_slug]);
+    $room_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($room_data) {
+        $room_price = $room_data['base_price'];
+    }
+} catch (Exception $e) {
+    error_log("Room detail error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
@@ -20,7 +36,7 @@ initLanguage();
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" style="background-image: url('../assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/deluxe/deluxe-room-aurora-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('room_detail.popular'); ?></span>
@@ -100,7 +116,7 @@ initLanguage();
                     <div class="price-section">
                         <div class="price-label"><?php _e('room_detail.room_price'); ?></div>
                         <div>
-                            <span class="price-amount">1.200.000đ</span>
+                            <span class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
                             <span class="price-unit">/<?php _e('room_detail.night'); ?></span>
                         </div>
                     </div>

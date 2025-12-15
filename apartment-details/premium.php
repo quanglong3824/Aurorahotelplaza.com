@@ -1,6 +1,19 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
+
+$room_slug = 'premium';
+$room_price = 4200000;
+try {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT base_price FROM room_types WHERE slug = ? AND status = 'active' LIMIT 1");
+    $stmt->execute([$room_slug]);
+    $room_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($room_data) $room_price = $room_data['base_price'];
+} catch (Exception $e) {
+    error_log("Apartment detail error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
@@ -20,7 +33,7 @@ initLanguage();
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" style="background-image: url('../assets/img/premium-apartment/CAN-HO-PREMIUM-AURORA-HOTEL-1.jpg');">
+    <section class="page-header-room" style="background-image: url('../assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('apartment_detail.badge_premium'); ?></span>
@@ -100,7 +113,7 @@ initLanguage();
                     <div class="price-section">
                         <div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div>
                         <div>
-                            <span class="price-amount">4.200.000đ</span>
+                            <span class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
                             <span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span>
                         </div>
                         <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_25_7days'); ?></p>
