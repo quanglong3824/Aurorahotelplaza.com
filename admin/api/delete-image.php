@@ -5,9 +5,9 @@
 session_start();
 header('Content-Type: application/json');
 
-// Check admin login
-if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+// Check admin login - same as upload-image.php
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'] ?? '', ['admin', 'sale', 'receptionist'])) {
+    echo json_encode(['success' => false, 'message' => 'Bạn không có quyền thực hiện chức năng này.']);
     exit;
 }
 
