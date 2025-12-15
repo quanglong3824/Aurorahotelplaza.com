@@ -70,10 +70,19 @@ try {
     ");
     $stats = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    // Get floor maintenance status
+    $stmt = $db->query("SELECT * FROM floor_maintenance ORDER BY floor ASC");
+    $floor_maintenance_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $floor_maintenance = [];
+    foreach ($floor_maintenance_list as $fm) {
+        $floor_maintenance[$fm['floor']] = $fm;
+    }
+    
 } catch (Exception $e) {
     error_log("Room map error: " . $e->getMessage());
     $rooms_by_floor = [];
     $stats = ['total_rooms' => 0, 'available' => 0, 'occupied' => 0, 'maintenance' => 0, 'cleaning' => 0];
+    $floor_maintenance = [];
 }
 
 // Room status colors
@@ -153,6 +162,26 @@ include 'includes/admin-header.php';
 
 .room-card.reserved {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+/* Floor Maintenance Styles */
+.floor-maintenance-active {
+    border: 2px dashed #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
+}
+
+.floor-maintenance-active .floor-badge {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
 .room-number {
@@ -321,19 +350,38 @@ foreach ($floor_configs as $floor => $config):
         $room_num = (int)substr($room['room_number'], -2);
         $rooms_map[$room_num] = $room;
     }
+
+    $is_floor_maintenance = isset($floor_maintenance[$floor]) && $floor_maintenance[$floor]['is_maintenance'];
+    $floor_note = $floor_maintenance[$floor]['maintenance_note'] ?? '';
 ?>
-    <div class="floor-section">
+    <div class="floor-section <?php echo $is_floor_maintenance ? 'floor-maintenance-active' : ''; ?>">
         <div class="floor-header">
-            <span class="floor-badge">Tầng <?php echo $floor; ?></span>
+            <span class="floor-badge <?php echo $is_floor_maintenance ? 'bg-orange-500' : ''; ?>">
+                Tầng <?php echo $floor; ?>
+                <?php if ($is_floor_maintenance): ?>
+                    <span class="material-symbols-outlined text-sm ml-1">construction</span>
+                <?php endif; ?>
+            </span>
             <div class="flex-1">
-                <div class="text-sm text-gray-600">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
                     <?php 
                     $floor_room_count = count($floor_rooms);
                     $floor_available = count(array_filter($floor_rooms, fn($r) => $r['status'] === 'available'));
                     echo "$floor_available/$floor_room_count phòng trống";
                     ?>
                 </div>
+                <?php if ($is_floor_maintenance && $floor_note): ?>
+                    <div class="text-xs text-orange-600 dark:text-orange-400 mt-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">info</span>
+                        <?php echo htmlspecialchars($floor_note); ?>
+                    </div>
+                <?php endif; ?>
             </div>
+            <button onclick="toggleFloorMaintenance(<?php echo $floor; ?>, <?php echo $is_floor_maintenance ? 'true' : 'false'; ?>)" 
+                    class="btn btn-sm <?php echo $is_floor_maintenance ? 'btn-warning' : 'btn-secondary'; ?> flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm"><?php echo $is_floor_maintenance ? 'build_circle' : 'construction'; ?></span>
+                <?php echo $is_floor_maintenance ? 'Đang bảo trì' : 'Bảo trì tầng'; ?>
+            </button>
         </div>
         
         <!-- Row 1 -->
@@ -496,6 +544,61 @@ foreach ($floor_configs as $floor => $config):
                 <div class="flex items-center justify-center py-8">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floor Maintenance Modal -->
+<div id="floorMaintenanceModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden" style="background: rgba(0,0,0,0.6);">
+    <div class="absolute inset-0" onclick="closeFloorMaintenanceModal()"></div>
+    <div class="relative z-10 bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-orange-500 to-orange-600">
+            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                <span class="material-symbols-outlined">construction</span>
+                Bảo trì tầng <span id="maintenanceFloorNumber"></span>
+            </h3>
+            <button onclick="closeFloorMaintenanceModal()" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <input type="hidden" id="maintenanceFloor">
+            <input type="hidden" id="maintenanceCurrentStatus">
+            
+            <div class="mb-4">
+                <label class="form-label">Ghi chú bảo trì</label>
+                <textarea id="maintenanceNote" class="form-input w-full" rows="3" placeholder="VD: Sửa chữa hệ thống điện, nước..."></textarea>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input type="date" id="maintenanceStartDate" class="form-input w-full">
+                </div>
+                <div>
+                    <label class="form-label">Ngày kết thúc (dự kiến)</label>
+                    <input type="date" id="maintenanceEndDate" class="form-input w-full">
+                </div>
+            </div>
+            
+            <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 mb-6">
+                <p class="text-sm text-orange-800 dark:text-orange-200 flex items-start gap-2">
+                    <span class="material-symbols-outlined text-sm mt-0.5">warning</span>
+                    <span>Khi bật bảo trì tầng, tất cả phòng trống trên tầng sẽ chuyển sang trạng thái "Bảo trì" và không thể đặt phòng.</span>
+                </p>
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="closeFloorMaintenanceModal()" class="btn btn-secondary flex-1">Hủy</button>
+                <button onclick="saveFloorMaintenance()" id="btnSaveMaintenance" class="btn btn-primary flex-1 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Bật bảo trì
+                </button>
+                <button onclick="disableFloorMaintenance()" id="btnDisableMaintenance" class="btn btn-success flex-1 hidden flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    Tắt bảo trì
+                </button>
             </div>
         </div>
     </div>
@@ -797,6 +900,86 @@ async function selectStatus(status) {
 
 function closeStatusModal() {
     document.getElementById('statusModal').classList.add('hidden');
+}
+
+// Floor Maintenance Functions
+function toggleFloorMaintenance(floor, isCurrentlyMaintenance) {
+    document.getElementById('maintenanceFloor').value = floor;
+    document.getElementById('maintenanceFloorNumber').textContent = floor;
+    document.getElementById('maintenanceCurrentStatus').value = isCurrentlyMaintenance ? '1' : '0';
+    
+    // Reset form
+    document.getElementById('maintenanceNote').value = '';
+    document.getElementById('maintenanceStartDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('maintenanceEndDate').value = '';
+    
+    // Toggle buttons based on current status
+    if (isCurrentlyMaintenance) {
+        document.getElementById('btnSaveMaintenance').classList.add('hidden');
+        document.getElementById('btnDisableMaintenance').classList.remove('hidden');
+    } else {
+        document.getElementById('btnSaveMaintenance').classList.remove('hidden');
+        document.getElementById('btnDisableMaintenance').classList.add('hidden');
+    }
+    
+    document.getElementById('floorMaintenanceModal').classList.remove('hidden');
+}
+
+async function saveFloorMaintenance() {
+    const floor = document.getElementById('maintenanceFloor').value;
+    const note = document.getElementById('maintenanceNote').value;
+    const startDate = document.getElementById('maintenanceStartDate').value;
+    const endDate = document.getElementById('maintenanceEndDate').value;
+    
+    try {
+        const response = await fetch('api/floor-maintenance.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `floor=${floor}&is_maintenance=1&maintenance_note=${encodeURIComponent(note)}&start_date=${startDate}&end_date=${endDate}`
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            closeFloorMaintenanceModal();
+            showToast(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    } catch (error) {
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
+    }
+}
+
+async function disableFloorMaintenance() {
+    const floor = document.getElementById('maintenanceFloor').value;
+    
+    if (!confirm(`Bạn có chắc muốn tắt bảo trì tầng ${floor}?`)) return;
+    
+    try {
+        const response = await fetch('api/floor-maintenance.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `floor=${floor}&is_maintenance=0`
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            closeFloorMaintenanceModal();
+            showToast(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    } catch (error) {
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
+    }
+}
+
+function closeFloorMaintenanceModal() {
+    document.getElementById('floorMaintenanceModal').classList.add('hidden');
 }
 
 // Toast notification

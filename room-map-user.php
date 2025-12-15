@@ -13,22 +13,14 @@ $page_title = 'Sơ đồ phòng';
 try {
     $db = getDB();
     
-    // Get all rooms with their types and current booking status
+    // Get all rooms with their types - use status directly from database (synced with admin)
     $stmt = $db->query("
         SELECT 
             r.*,
             rt.type_name,
             rt.category,
             rt.base_price,
-            CASE 
-                WHEN EXISTS (
-                    SELECT 1 FROM bookings b 
-                    WHERE b.room_id = r.room_id 
-                    AND b.status IN ('confirmed', 'checked_in')
-                    AND CURDATE() BETWEEN b.check_in_date AND b.check_out_date
-                ) THEN 'occupied'
-                ELSE r.status
-            END as display_status
+            r.status as display_status
         FROM rooms r
         LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
         ORDER BY r.floor ASC, r.room_number ASC
@@ -53,10 +45,19 @@ try {
         }
     }
     
+    // Get floor maintenance status
+    $stmt = $db->query("SELECT * FROM floor_maintenance ORDER BY floor ASC");
+    $floor_maintenance_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $floor_maintenance = [];
+    foreach ($floor_maintenance_list as $fm) {
+        $floor_maintenance[$fm['floor']] = $fm;
+    }
+    
 } catch (Exception $e) {
     error_log("Room map user error: " . $e->getMessage());
     $rooms_by_floor = [];
     $stats = ['available' => 0, 'occupied' => 0, 'maintenance' => 0, 'cleaning' => 0];
+    $floor_maintenance = [];
 }
 
 $total_rooms = array_sum($stats);
@@ -156,24 +157,48 @@ $total_rooms = array_sum($stats);
 
             <!-- Floors Grid -->
             <div class="space-y-8">
-                <?php foreach ($rooms_by_floor as $floor => $rooms): ?>
-                    <div class="floor-section glass-card-solid p-6" data-floor="<?php echo $floor; ?>">
+                <?php foreach ($rooms_by_floor as $floor => $rooms): 
+                    $is_floor_maintenance = isset($floor_maintenance[$floor]) && $floor_maintenance[$floor]['is_maintenance'];
+                    $floor_note = $floor_maintenance[$floor]['maintenance_note'] ?? '';
+                ?>
+                    <div class="floor-section glass-card-solid p-6 <?php echo $is_floor_maintenance ? 'floor-maintenance-user' : ''; ?>" data-floor="<?php echo $floor; ?>">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center text-white font-bold">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br <?php echo $is_floor_maintenance ? 'from-orange-500 to-orange-600' : 'from-accent to-accent/80'; ?> flex items-center justify-center text-white font-bold">
                                 <?php echo $floor; ?>
                             </div>
-                            <div>
-                                <h3 class="font-display text-xl font-bold">Tầng <?php echo $floor; ?></h3>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <h3 class="font-display text-xl font-bold">Tầng <?php echo $floor; ?></h3>
+                                    <?php if ($is_floor_maintenance): ?>
+                                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-xs font-semibold">
+                                            <span class="material-symbols-outlined text-xs">construction</span>
+                                            Đang bảo trì
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                     <?php echo count($rooms); ?> phòng
                                 </p>
+                                <?php if ($is_floor_maintenance && $floor_note): ?>
+                                    <p class="text-xs text-orange-600 dark:text-orange-400 mt-1 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">info</span>
+                                        <?php echo htmlspecialchars($floor_note); ?>
+                                    </p>
+                                <?php endif; ?>
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
+                        <?php if ($is_floor_maintenance): ?>
+                            <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 mb-4 text-sm text-orange-700 dark:text-orange-300 flex items-center gap-2">
+                                <span class="material-symbols-outlined">warning</span>
+                                Tầng này đang bảo trì, không thể đặt phòng. Vui lòng chọn tầng khác.
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3 <?php echo $is_floor_maintenance ? 'opacity-60 pointer-events-none' : ''; ?>">
                             <?php foreach ($rooms as $room): ?>
                                 <div class="room-box-glass <?php echo $room['display_status']; ?>" 
-                                     onclick="showRoomModal(<?php echo htmlspecialchars(json_encode($room)); ?>)"
+                                     <?php if (!$is_floor_maintenance): ?>onclick="showRoomModal(<?php echo htmlspecialchars(json_encode($room)); ?>)"<?php endif; ?>
                                      title="<?php echo $room['room_number']; ?> - <?php echo $room['type_name']; ?>">
                                     <span class="room-number"><?php echo $room['room_number']; ?></span>
                                     <span class="room-status-icon">
@@ -321,6 +346,12 @@ $total_rooms = array_sum($stats);
     opacity: 0.9;
     max-width: 500px;
     margin: 0 auto;
+}
+
+/* Floor Maintenance User Style */
+.floor-maintenance-user {
+    border: 2px dashed rgba(245, 158, 11, 0.5);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
 }
 
 /* Glass Stat Card - Lighter */

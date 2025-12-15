@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 15, 2025 lúc 10:59 AM
+-- Thời gian đã tạo: Th12 15, 2025 lúc 12:25 PM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
@@ -170,7 +170,27 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `enti
 (96, 5, 'password_changed', 'user', 5, 'Password changed after reset - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:56:41'),
 (97, 6, 'register', 'user', 6, 'New user registered via manual - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"V\\u00e0ng\",\"registration_method\":\"manual\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-12-15 03:37:57'),
 (98, 6, 'login', 'user', 6, 'User logged in - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"V\\u00e0ng\",\"role\":\"customer\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-12-15 03:38:15'),
-(99, 5, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15345129 - Details: {\"booking_id\":\"0\",\"booking_code\":\"BK202512158079E0\",\"amount\":4500000,\"currency\":\"VND\",\"transaction_id\":\"15345129\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":450,\"payment_method\":\"vnpay\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 03:56:38');
+(99, 5, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15345129 - Details: {\"booking_id\":\"0\",\"booking_code\":\"BK202512158079E0\",\"amount\":4500000,\"currency\":\"VND\",\"transaction_id\":\"15345129\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":450,\"payment_method\":\"vnpay\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 03:56:38'),
+(100, 5, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15345192 - Details: {\"booking_id\":\"5\",\"booking_code\":\"BK20251215CD6C9D\",\"amount\":9000000,\"currency\":\"VND\",\"transaction_id\":\"15345192\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":900,\"payment_method\":\"vnpay\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 04:27:55'),
+(101, 6, 'login', 'user', 6, 'User logged in - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"V\\u00e0ng\",\"role\":\"customer\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 04:45:34'),
+(102, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 04:49:07'),
+(103, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:00:23'),
+(104, 1, 'update_booking_status', 'booking', 5, 'Changed booking BK20251215CD6C9D status from confirmed to checked_in', '1.53.200.212', NULL, '2025-12-15 05:00:55'),
+(105, 1, 'update_booking_status', 'booking', 3, 'Changed booking BK202512158079E0 status from confirmed to checked_in', '1.53.200.212', NULL, '2025-12-15 05:01:02'),
+(106, 1, 'update_booking_status', 'booking', 2, 'Changed booking BK20251214087E52 status from confirmed to checked_in', '1.53.200.212', NULL, '2025-12-15 05:01:04'),
+(107, 1, 'update_booking_status', 'booking', 1, 'Changed booking BK202512141A72E8 status from confirmed to checked_in', '1.53.200.212', NULL, '2025-12-15 05:01:06'),
+(108, 1, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 7 sang loại: 11', '1.53.200.212', NULL, '2025-12-15 05:05:29'),
+(109, 1, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 2 sang loại: 8', '1.53.200.212', NULL, '2025-12-15 05:05:40'),
+(110, 1, 'update_booking_status', 'booking', 5, 'Changed booking BK20251215CD6C9D status from checked_in to checked_out', '1.53.200.212', NULL, '2025-12-15 05:16:48'),
+(111, 1, 'update_booking_status', 'booking', 3, 'Changed booking BK202512158079E0 status from checked_in to checked_out', '1.53.200.212', NULL, '2025-12-15 05:16:52'),
+(112, 1, 'update_booking_status', 'booking', 2, 'Changed booking BK20251214087E52 status from checked_in to checked_out', '1.53.200.212', NULL, '2025-12-15 05:16:56'),
+(113, 1, 'update_room_status', 'room', 1, 'Updated room status to available', '1.53.200.212', NULL, '2025-12-15 05:17:42'),
+(114, 1, 'update_room_status', 'room', 20, 'Updated room status to available', '1.53.200.212', NULL, '2025-12-15 05:17:50'),
+(115, 1, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 1 sang loại: 2', '1.53.200.212', NULL, '2025-12-15 05:21:51'),
+(116, 1, 'update_room_status', 'room', 1, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:22:34'),
+(117, 1, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 83 sang loại: 4', '1.53.200.212', NULL, '2025-12-15 05:23:52'),
+(118, 1, 'logout', 'user', 1, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:24:33'),
+(119, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:24:42');
 
 -- --------------------------------------------------------
 
@@ -334,9 +354,11 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`, `room_id`, `check_in_date`, `check_out_date`, `num_adults`, `num_children`, `num_rooms`, `total_nights`, `room_price`, `service_charges`, `discount_amount`, `points_used`, `total_amount`, `special_requests`, `guest_name`, `guest_email`, `guest_phone`, `guest_id_number`, `status`, `payment_status`, `qr_code`, `confirmation_sent`, `checked_in_at`, `checked_out_at`, `checked_in_by`, `cancelled_at`, `cancelled_by`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
-(0, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-15 03:56:38'),
-(0, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-15 03:56:38'),
-(0, 'BK202512158079E0', 5, 4, 31, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 4500000.00, 0.00, 0.00, 0, 4500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 03:55:36', '2025-12-15 03:56:38');
+(1, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'checked_in', 'paid', NULL, 0, '2025-12-15 05:01:06', NULL, 1, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-15 05:01:06'),
+(2, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:01:04', '2025-12-15 05:16:56', 1, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-15 05:16:56'),
+(3, 'BK202512158079E0', 5, 4, 31, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 4500000.00, 0.00, 0.00, 0, 4500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:01:02', '2025-12-15 05:16:52', 1, NULL, NULL, NULL, '2025-12-15 03:55:36', '2025-12-15 05:16:52'),
+(4, 'BK202512157ED3F6', 5, 7, 60, '2025-12-26', '2025-12-30', 2, 0, 1, 4, 3000000.00, 0.00, 0.00, 0, 12000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'cancelled', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 04:17:59', '2025-12-15 04:24:53'),
+(5, 'BK20251215CD6C9D', 5, 4, 32, '2025-12-15', '2025-12-17', 2, 0, 1, 2, 4500000.00, 0.00, 0.00, 0, 9000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:00:55', '2025-12-15 05:16:48', 1, NULL, NULL, NULL, '2025-12-15 04:26:52', '2025-12-15 05:16:48');
 
 --
 -- Bẫy `bookings`
@@ -388,10 +410,26 @@ CREATE TABLE `booking_history` (
 --
 
 INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_status`, `changed_by`, `notes`, `created_at`) VALUES
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-14 04:50:49'),
-(0, 0, 'pending', 'confirmed', 3, 'Booking confirmed by user', '2025-12-14 04:50:49'),
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38'),
-(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38');
+(1, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-14 04:50:49'),
+(2, 0, 'pending', 'confirmed', 3, 'Booking confirmed by user', '2025-12-14 04:50:49'),
+(3, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38'),
+(4, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38'),
+(5, 4, 'pending', 'cancelled', NULL, NULL, '2025-12-15 04:24:53'),
+(6, 5, 'pending', 'confirmed', NULL, NULL, '2025-12-15 04:27:55'),
+(7, 5, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 05:00:55'),
+(8, 5, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 05:00:55'),
+(9, 3, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 05:01:02'),
+(10, 3, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 05:01:02'),
+(11, 2, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 05:01:04'),
+(12, 2, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 05:01:04'),
+(13, 1, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 05:01:06'),
+(14, 1, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 05:01:06'),
+(15, 5, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:16:48'),
+(16, 5, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:48'),
+(17, 3, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:16:52'),
+(18, 3, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:52'),
+(19, 2, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:16:56'),
+(20, 2, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:56');
 
 -- --------------------------------------------------------
 
@@ -495,8 +533,9 @@ CREATE TABLE `email_logs` (
 
 INSERT INTO `email_logs` (`email_log_id`, `recipient`, `subject`, `template`, `status`, `error_message`, `sent_at`, `created_at`) VALUES
 (1, 'long.lequang308@gmail.com', 'Xác nhận thanh toán - Mã: BK20251119A1664F', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-19 04:10:55'),
-(0, 'quanglong.3824@gmail.com', 'Xác nhận thanh toán - Mã: BK202511267A7286', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-27 09:24:59'),
-(0, 'admin@aurorahotelplaza.com', 'Xác nhận thanh toán - Mã: BK202512141A72E8', 'booking_confirmation', 'pending', NULL, NULL, '2025-12-15 03:56:38');
+(2, 'quanglong.3824@gmail.com', 'Xác nhận thanh toán - Mã: BK202511267A7286', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-27 09:24:59'),
+(3, 'admin@aurorahotelplaza.com', 'Xác nhận thanh toán - Mã: BK202512141A72E8', 'booking_confirmation', 'pending', NULL, NULL, '2025-12-15 03:56:38'),
+(5, '15.lequanglong@gmail.com', 'Xác nhận thanh toán - Mã: BK20251215CD6C9D', 'booking_confirmation', 'pending', NULL, NULL, '2025-12-15 04:27:55');
 
 -- --------------------------------------------------------
 
@@ -542,88 +581,88 @@ CREATE TABLE `gallery` (
 --
 
 INSERT INTO `gallery` (`gallery_id`, `title`, `description`, `image_url`, `thumbnail_url`, `category`, `sort_order`, `status`, `uploaded_by`, `created_at`) VALUES
-(0, 'Phòng Deluxe', 'Phòng Deluxe sang trọng với đầy đủ tiện nghi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', NULL, 'rooms', 1, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Góc nhìn', 'Góc nhìn tổng quan phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg', NULL, 'rooms', 2, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Nội thất', 'Nội thất phòng Deluxe hiện đại', 'assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', NULL, 'rooms', 3, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Giường', 'Giường ngủ êm ái phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-4.jpg', NULL, 'rooms', 4, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Phòng tắm', 'Phòng tắm sang trọng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-5.jpg', NULL, 'rooms', 5, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Tiện nghi', 'Tiện nghi đầy đủ trong phòng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-6.jpg', NULL, 'rooms', 6, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Giường đôi', 'Phòng Deluxe với giường đôi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-7.jpg', NULL, 'rooms', 7, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - View', 'View đẹp từ phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-8.jpg', NULL, 'rooms', 8, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Không gian', 'Không gian rộng rãi phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-9.jpg', NULL, 'rooms', 9, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Deluxe - Toàn cảnh', 'Toàn cảnh phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-10.jpg', NULL, 'rooms', 10, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Deluxe', 'Phòng Premium Deluxe cao cấp', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', NULL, 'rooms', 11, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Deluxe - Nội thất', 'Nội thất Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', NULL, 'rooms', 12, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Deluxe - Giường', 'Giường ngủ Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg', NULL, 'rooms', 13, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Deluxe - View', 'View từ phòng Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg', NULL, 'rooms', 14, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Deluxe - Phòng tắm', 'Phòng tắm Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg', NULL, 'rooms', 15, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Twin', 'Phòng Premium Twin 2 giường', 'assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', NULL, 'rooms', 16, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Twin - Giường đôi', 'Hai giường đơn Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', NULL, 'rooms', 17, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium Twin - Nội thất', 'Nội thất phòng Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-3.jpg', NULL, 'rooms', 18, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng VIP', 'Phòng VIP đẳng cấp nhất', 'assets/img/vip/vip-room-aurora-hotel-1.jpg', NULL, 'rooms', 19, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng VIP - Sang trọng', 'Không gian sang trọng phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-3.jpg', NULL, 'rooms', 20, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng VIP - Nội thất', 'Nội thất cao cấp phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-4.jpg', NULL, 'rooms', 21, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng VIP - Phòng khách', 'Phòng khách riêng VIP', 'assets/img/vip/vip-room-aurora-hotel-5.jpg', NULL, 'rooms', 22, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng VIP - Phòng tắm', 'Phòng tắm VIP sang trọng', 'assets/img/vip/vip-room-aurora-hotel-6.jpg', NULL, 'rooms', 23, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Căn hộ Studio', 'Căn hộ Studio tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg', NULL, 'apartments', 24, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Studio - Phòng khách', 'Phòng khách căn hộ Studio', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg', NULL, 'apartments', 25, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Studio - Bếp', 'Bếp đầy đủ tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg', NULL, 'apartments', 26, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Căn hộ Family', 'Căn hộ Family rộng rãi', 'assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', NULL, 'apartments', 27, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Family - Phòng ngủ', 'Phòng ngủ căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg', NULL, 'apartments', 28, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Family - Phòng khách', 'Phòng khách căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', NULL, 'apartments', 29, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Căn hộ Premium', 'Căn hộ Premium cao cấp', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg', NULL, 'apartments', 30, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium - Nội thất', 'Nội thất căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg', NULL, 'apartments', 31, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Premium - Phòng ngủ', 'Phòng ngủ căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg', NULL, 'apartments', 32, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Indochine Family', 'Căn hộ phong cách Indochine', 'assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', NULL, 'apartments', 33, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Indochine - Phong cách', 'Phong cách Đông Dương đặc trưng', 'assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', NULL, 'apartments', 34, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Indochine - Nội thất', 'Nội thất Indochine tinh tế', 'assets/img/indochine-family-apartment/indochine-family-apartment-3.jpg', NULL, 'apartments', 35, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Indochine Studio', 'Căn hộ Studio Indochine', 'assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg', NULL, 'apartments', 36, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Modern Studio', 'Căn hộ Studio hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg', NULL, 'apartments', 37, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Modern - Thiết kế', 'Thiết kế hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg', NULL, 'apartments', 38, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Modern Premium', 'Căn hộ Premium hiện đại', 'assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg', NULL, 'apartments', 39, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Classical Family', 'Căn hộ phong cách cổ điển', 'assets/img/classical-family-apartment/classical-family-apartment1.jpg', NULL, 'apartments', 40, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Classical - Cổ điển', 'Nét đẹp cổ điển sang trọng', 'assets/img/classical-family-apartment/classical-family-apartment2.jpg', NULL, 'apartments', 41, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Nhà hàng Aurora', 'Nhà hàng sang trọng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-1.jpg', NULL, 'restaurant', 42, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Không gian nhà hàng', 'Không gian ẩm thực đẳng cấp', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-2.jpg', NULL, 'restaurant', 43, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Khu vực ăn uống', 'Khu vực ăn uống thoáng đãng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-3.jpg', NULL, 'restaurant', 44, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Buffet sáng', 'Buffet sáng phong phú', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg', NULL, 'restaurant', 45, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Bàn tiệc', 'Bàn tiệc sang trọng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-5.jpg', NULL, 'restaurant', 46, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Nội thất nhà hàng', 'Nội thất nhà hàng tinh tế', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg', NULL, 'restaurant', 47, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Khu vực VIP', 'Khu vực VIP riêng tư', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-7.jpg', NULL, 'restaurant', 48, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Quầy bar', 'Quầy bar hiện đại', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-8.jpg', NULL, 'restaurant', 49, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Góc nhìn nhà hàng', 'Góc nhìn đẹp nhà hàng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-9.jpg', NULL, 'restaurant', 50, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc buffet', 'Tiệc buffet đa dạng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-10.jpg', NULL, 'restaurant', 51, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Khu vực buffet', 'Khu vực buffet rộng rãi', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-11.jpg', NULL, 'restaurant', 52, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Toàn cảnh nhà hàng', 'Toàn cảnh nhà hàng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-14.jpg', NULL, 'restaurant', 53, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Lễ tân', 'Quầy lễ tân chuyên nghiệp', 'assets/img/src/ui/horizontal/Le_tan_Aurora.jpg', NULL, 'facilities', 54, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Sảnh khách sạn', 'Sảnh đón tiếp sang trọng', 'assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg', NULL, 'facilities', 55, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Studio', 'Phòng Studio tiện nghi', 'assets/img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg', NULL, 'facilities', 56, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng Gym', 'Phòng tập Gym hiện đại', 'assets/img/service/gym/GYM-AURORA-HOTEL-1.jpg', NULL, 'facilities', 57, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Thiết bị Gym', 'Thiết bị tập luyện chất lượng', 'assets/img/service/gym/GYM-AURORA-HOTEL-2.jpg', NULL, 'facilities', 58, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Khu vực tập luyện', 'Khu vực tập luyện rộng rãi', 'assets/img/service/gym/GYM-AURORA-HOTEL-3.jpg', NULL, 'facilities', 59, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Hồ bơi', 'Hồ bơi ngoài trời', 'assets/img/service/pool/pool.jpg', NULL, 'facilities', 60, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Văn phòng cho thuê', 'Văn phòng cho thuê chuyên nghiệp', 'assets/img/service/office/Van-phong-cho-thue-Aurora-1.jpg', NULL, 'facilities', 61, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Không gian làm việc', 'Không gian làm việc hiện đại', 'assets/img/service/office/Van-phong-cho-thue-Aurora-2.jpg', NULL, 'facilities', 62, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng họp', 'Phòng họp đầy đủ tiện nghi', 'assets/img/service/office/Van-phong-cho-thue-Aurora-3.jpg', NULL, 'facilities', 63, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc cưới Aurora', 'Tiệc cưới sang trọng tại Aurora', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-1.jpg', NULL, 'events', 64, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Sảnh tiệc cưới', 'Sảnh tiệc cưới rộng lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-2.jpg', NULL, 'events', 65, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Trang trí tiệc cưới', 'Trang trí tiệc cưới tinh tế', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-3.jpg', NULL, 'events', 66, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Bàn tiệc cưới', 'Bàn tiệc cưới sang trọng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-4.jpg', NULL, 'events', 67, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Không gian tiệc cưới', 'Không gian tiệc cưới lãng mạn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg', NULL, 'events', 68, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Sân khấu tiệc cưới', 'Sân khấu tiệc cưới hoành tráng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-6.jpg', NULL, 'events', 69, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc cưới sang trọng', 'Tiệc cưới đẳng cấp 5 sao', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-7.jpg', NULL, 'events', 70, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc cưới hoành tráng', 'Tiệc cưới quy mô lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-Aurora-8.jpg', NULL, 'events', 71, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc cưới đẳng cấp', 'Tiệc cưới phong cách hiện đại', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-9.jpg', NULL, 'events', 72, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Tiệc cưới lãng mạn', 'Tiệc cưới lãng mạn và ấm cúng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-10.jpg', NULL, 'events', 73, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng hội nghị', 'Phòng hội nghị chuyên nghiệp', 'assets/img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg', NULL, 'events', 74, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Sự kiện hội nghị', 'Tổ chức sự kiện hội nghị', 'assets/img/src/ui/horizontal/Hoi-nghi-aurora-8.jpg', NULL, 'events', 75, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Hội nghị Aurora', 'Hội nghị tại Aurora Hotel', 'assets/img/service/meet/Hoi-nghi-aurora-5.jpg', NULL, 'events', 76, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Phòng họp lớn', 'Phòng họp quy mô lớn', 'assets/img/service/meet/Hoi-nghi-aurora-6.jpg', NULL, 'events', 77, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Aurora Hotel Plaza', 'Toàn cảnh Aurora Hotel Plaza', 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg', NULL, 'exterior', 78, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Mặt tiền khách sạn', 'Mặt tiền khách sạn ấn tượng', 'assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg', NULL, 'exterior', 79, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Khách sạn về đêm', 'Aurora Hotel lung linh về đêm', 'assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg', NULL, 'exterior', 80, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Toàn cảnh Aurora', 'Toàn cảnh khách sạn từ xa', 'assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg', NULL, 'exterior', 81, 'active', NULL, '2025-12-14 02:33:32'),
-(0, 'Cafe Aurora', 'Quán cafe Aurora Hotel', 'assets/img/hero-banner/caffe-aurora-hotel-1.jpg', NULL, 'exterior', 82, 'active', NULL, '2025-12-14 02:33:32');
+(1, 'Phòng Deluxe', 'Phòng Deluxe sang trọng với đầy đủ tiện nghi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', NULL, 'rooms', 1, 'active', NULL, '2025-12-14 02:33:32'),
+(2, 'Phòng Deluxe - Góc nhìn', 'Góc nhìn tổng quan phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg', NULL, 'rooms', 2, 'active', NULL, '2025-12-14 02:33:32'),
+(3, 'Phòng Deluxe - Nội thất', 'Nội thất phòng Deluxe hiện đại', 'assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', NULL, 'rooms', 3, 'active', NULL, '2025-12-14 02:33:32'),
+(4, 'Phòng Deluxe - Giường', 'Giường ngủ êm ái phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-4.jpg', NULL, 'rooms', 4, 'active', NULL, '2025-12-14 02:33:32'),
+(5, 'Phòng Deluxe - Phòng tắm', 'Phòng tắm sang trọng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-5.jpg', NULL, 'rooms', 5, 'active', NULL, '2025-12-14 02:33:32'),
+(6, 'Phòng Deluxe - Tiện nghi', 'Tiện nghi đầy đủ trong phòng', 'assets/img/deluxe/DELUXE-ROOM-AURORA-6.jpg', NULL, 'rooms', 6, 'active', NULL, '2025-12-14 02:33:32'),
+(7, 'Phòng Deluxe - Giường đôi', 'Phòng Deluxe với giường đôi', 'assets/img/deluxe/DELUXE-ROOM-AURORA-7.jpg', NULL, 'rooms', 7, 'active', NULL, '2025-12-14 02:33:32'),
+(8, 'Phòng Deluxe - View', 'View đẹp từ phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-8.jpg', NULL, 'rooms', 8, 'active', NULL, '2025-12-14 02:33:32'),
+(9, 'Phòng Deluxe - Không gian', 'Không gian rộng rãi phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-9.jpg', NULL, 'rooms', 9, 'active', NULL, '2025-12-14 02:33:32'),
+(10, 'Phòng Deluxe - Toàn cảnh', 'Toàn cảnh phòng Deluxe', 'assets/img/deluxe/DELUXE-ROOM-AURORA-10.jpg', NULL, 'rooms', 10, 'active', NULL, '2025-12-14 02:33:32'),
+(11, 'Premium Deluxe', 'Phòng Premium Deluxe cao cấp', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', NULL, 'rooms', 11, 'active', NULL, '2025-12-14 02:33:32'),
+(12, 'Premium Deluxe - Nội thất', 'Nội thất Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', NULL, 'rooms', 12, 'active', NULL, '2025-12-14 02:33:32'),
+(13, 'Premium Deluxe - Giường', 'Giường ngủ Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg', NULL, 'rooms', 13, 'active', NULL, '2025-12-14 02:33:32'),
+(14, 'Premium Deluxe - View', 'View từ phòng Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg', NULL, 'rooms', 14, 'active', NULL, '2025-12-14 02:33:32'),
+(15, 'Premium Deluxe - Phòng tắm', 'Phòng tắm Premium Deluxe', 'assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg', NULL, 'rooms', 15, 'active', NULL, '2025-12-14 02:33:32'),
+(16, 'Premium Twin', 'Phòng Premium Twin 2 giường', 'assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', NULL, 'rooms', 16, 'active', NULL, '2025-12-14 02:33:32'),
+(17, 'Premium Twin - Giường đôi', 'Hai giường đơn Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', NULL, 'rooms', 17, 'active', NULL, '2025-12-14 02:33:32'),
+(18, 'Premium Twin - Nội thất', 'Nội thất phòng Premium Twin', 'assets/img/premium-twin/premium-deluxe-twin-aurora-3.jpg', NULL, 'rooms', 18, 'active', NULL, '2025-12-14 02:33:32'),
+(19, 'Phòng VIP', 'Phòng VIP đẳng cấp nhất', 'assets/img/vip/vip-room-aurora-hotel-1.jpg', NULL, 'rooms', 19, 'active', NULL, '2025-12-14 02:33:32'),
+(20, 'Phòng VIP - Sang trọng', 'Không gian sang trọng phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-3.jpg', NULL, 'rooms', 20, 'active', NULL, '2025-12-14 02:33:32'),
+(21, 'Phòng VIP - Nội thất', 'Nội thất cao cấp phòng VIP', 'assets/img/vip/vip-room-aurora-hotel-4.jpg', NULL, 'rooms', 21, 'active', NULL, '2025-12-14 02:33:32'),
+(22, 'Phòng VIP - Phòng khách', 'Phòng khách riêng VIP', 'assets/img/vip/vip-room-aurora-hotel-5.jpg', NULL, 'rooms', 22, 'active', NULL, '2025-12-14 02:33:32'),
+(23, 'Phòng VIP - Phòng tắm', 'Phòng tắm VIP sang trọng', 'assets/img/vip/vip-room-aurora-hotel-6.jpg', NULL, 'rooms', 23, 'active', NULL, '2025-12-14 02:33:32'),
+(24, 'Căn hộ Studio', 'Căn hộ Studio tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg', NULL, 'apartments', 24, 'active', NULL, '2025-12-14 02:33:32'),
+(25, 'Studio - Phòng khách', 'Phòng khách căn hộ Studio', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg', NULL, 'apartments', 25, 'active', NULL, '2025-12-14 02:33:32'),
+(26, 'Studio - Bếp', 'Bếp đầy đủ tiện nghi', 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg', NULL, 'apartments', 26, 'active', NULL, '2025-12-14 02:33:32'),
+(27, 'Căn hộ Family', 'Căn hộ Family rộng rãi', 'assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', NULL, 'apartments', 27, 'active', NULL, '2025-12-14 02:33:32'),
+(28, 'Family - Phòng ngủ', 'Phòng ngủ căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg', NULL, 'apartments', 28, 'active', NULL, '2025-12-14 02:33:32'),
+(29, 'Family - Phòng khách', 'Phòng khách căn hộ Family', 'assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', NULL, 'apartments', 29, 'active', NULL, '2025-12-14 02:33:32'),
+(30, 'Căn hộ Premium', 'Căn hộ Premium cao cấp', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg', NULL, 'apartments', 30, 'active', NULL, '2025-12-14 02:33:32'),
+(31, 'Premium - Nội thất', 'Nội thất căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg', NULL, 'apartments', 31, 'active', NULL, '2025-12-14 02:33:32'),
+(32, 'Premium - Phòng ngủ', 'Phòng ngủ căn hộ Premium', 'assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg', NULL, 'apartments', 32, 'active', NULL, '2025-12-14 02:33:32'),
+(33, 'Indochine Family', 'Căn hộ phong cách Indochine', 'assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', NULL, 'apartments', 33, 'active', NULL, '2025-12-14 02:33:32'),
+(34, 'Indochine - Phong cách', 'Phong cách Đông Dương đặc trưng', 'assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', NULL, 'apartments', 34, 'active', NULL, '2025-12-14 02:33:32'),
+(35, 'Indochine - Nội thất', 'Nội thất Indochine tinh tế', 'assets/img/indochine-family-apartment/indochine-family-apartment-3.jpg', NULL, 'apartments', 35, 'active', NULL, '2025-12-14 02:33:32'),
+(36, 'Indochine Studio', 'Căn hộ Studio Indochine', 'assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg', NULL, 'apartments', 36, 'active', NULL, '2025-12-14 02:33:32'),
+(37, 'Modern Studio', 'Căn hộ Studio hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg', NULL, 'apartments', 37, 'active', NULL, '2025-12-14 02:33:32'),
+(38, 'Modern - Thiết kế', 'Thiết kế hiện đại', 'assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg', NULL, 'apartments', 38, 'active', NULL, '2025-12-14 02:33:32'),
+(39, 'Modern Premium', 'Căn hộ Premium hiện đại', 'assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg', NULL, 'apartments', 39, 'active', NULL, '2025-12-14 02:33:32'),
+(40, 'Classical Family', 'Căn hộ phong cách cổ điển', 'assets/img/classical-family-apartment/classical-family-apartment1.jpg', NULL, 'apartments', 40, 'active', NULL, '2025-12-14 02:33:32'),
+(41, 'Classical - Cổ điển', 'Nét đẹp cổ điển sang trọng', 'assets/img/classical-family-apartment/classical-family-apartment2.jpg', NULL, 'apartments', 41, 'active', NULL, '2025-12-14 02:33:32'),
+(42, 'Nhà hàng Aurora', 'Nhà hàng sang trọng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-1.jpg', NULL, 'restaurant', 42, 'active', NULL, '2025-12-14 02:33:32'),
+(43, 'Không gian nhà hàng', 'Không gian ẩm thực đẳng cấp', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-2.jpg', NULL, 'restaurant', 43, 'active', NULL, '2025-12-14 02:33:32'),
+(44, 'Khu vực ăn uống', 'Khu vực ăn uống thoáng đãng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-3.jpg', NULL, 'restaurant', 44, 'active', NULL, '2025-12-14 02:33:32'),
+(45, 'Buffet sáng', 'Buffet sáng phong phú', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg', NULL, 'restaurant', 45, 'active', NULL, '2025-12-14 02:33:32'),
+(46, 'Bàn tiệc', 'Bàn tiệc sang trọng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-5.jpg', NULL, 'restaurant', 46, 'active', NULL, '2025-12-14 02:33:32'),
+(47, 'Nội thất nhà hàng', 'Nội thất nhà hàng tinh tế', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg', NULL, 'restaurant', 47, 'active', NULL, '2025-12-14 02:33:32'),
+(48, 'Khu vực VIP', 'Khu vực VIP riêng tư', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-7.jpg', NULL, 'restaurant', 48, 'active', NULL, '2025-12-14 02:33:32'),
+(49, 'Quầy bar', 'Quầy bar hiện đại', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-8.jpg', NULL, 'restaurant', 49, 'active', NULL, '2025-12-14 02:33:32'),
+(50, 'Góc nhìn nhà hàng', 'Góc nhìn đẹp nhà hàng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-9.jpg', NULL, 'restaurant', 50, 'active', NULL, '2025-12-14 02:33:32'),
+(51, 'Tiệc buffet', 'Tiệc buffet đa dạng', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-10.jpg', NULL, 'restaurant', 51, 'active', NULL, '2025-12-14 02:33:32'),
+(52, 'Khu vực buffet', 'Khu vực buffet rộng rãi', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-11.jpg', NULL, 'restaurant', 52, 'active', NULL, '2025-12-14 02:33:32'),
+(53, 'Toàn cảnh nhà hàng', 'Toàn cảnh nhà hàng Aurora', 'assets/img/restaurant/NHA-HANG-AURORA-HOTEL-14.jpg', NULL, 'restaurant', 53, 'active', NULL, '2025-12-14 02:33:32'),
+(54, 'Lễ tân', 'Quầy lễ tân chuyên nghiệp', 'assets/img/src/ui/horizontal/Le_tan_Aurora.jpg', NULL, 'facilities', 54, 'active', NULL, '2025-12-14 02:33:32'),
+(55, 'Sảnh khách sạn', 'Sảnh đón tiếp sang trọng', 'assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg', NULL, 'facilities', 55, 'active', NULL, '2025-12-14 02:33:32'),
+(56, 'Phòng Studio', 'Phòng Studio tiện nghi', 'assets/img/src/ui/horizontal/phong-studio-khach-san-aurora-bien-hoa.jpg', NULL, 'facilities', 56, 'active', NULL, '2025-12-14 02:33:32'),
+(57, 'Phòng Gym', 'Phòng tập Gym hiện đại', 'assets/img/service/gym/GYM-AURORA-HOTEL-1.jpg', NULL, 'facilities', 57, 'active', NULL, '2025-12-14 02:33:32'),
+(58, 'Thiết bị Gym', 'Thiết bị tập luyện chất lượng', 'assets/img/service/gym/GYM-AURORA-HOTEL-2.jpg', NULL, 'facilities', 58, 'active', NULL, '2025-12-14 02:33:32'),
+(59, 'Khu vực tập luyện', 'Khu vực tập luyện rộng rãi', 'assets/img/service/gym/GYM-AURORA-HOTEL-3.jpg', NULL, 'facilities', 59, 'active', NULL, '2025-12-14 02:33:32'),
+(60, 'Hồ bơi', 'Hồ bơi ngoài trời', 'assets/img/service/pool/pool.jpg', NULL, 'facilities', 60, 'active', NULL, '2025-12-14 02:33:32'),
+(61, 'Văn phòng cho thuê', 'Văn phòng cho thuê chuyên nghiệp', 'assets/img/service/office/Van-phong-cho-thue-Aurora-1.jpg', NULL, 'facilities', 61, 'active', NULL, '2025-12-14 02:33:32'),
+(62, 'Không gian làm việc', 'Không gian làm việc hiện đại', 'assets/img/service/office/Van-phong-cho-thue-Aurora-2.jpg', NULL, 'facilities', 62, 'active', NULL, '2025-12-14 02:33:32'),
+(63, 'Phòng họp', 'Phòng họp đầy đủ tiện nghi', 'assets/img/service/office/Van-phong-cho-thue-Aurora-3.jpg', NULL, 'facilities', 63, 'active', NULL, '2025-12-14 02:33:32'),
+(64, 'Tiệc cưới Aurora', 'Tiệc cưới sang trọng tại Aurora', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-1.jpg', NULL, 'events', 64, 'active', NULL, '2025-12-14 02:33:32'),
+(65, 'Sảnh tiệc cưới', 'Sảnh tiệc cưới rộng lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-2.jpg', NULL, 'events', 65, 'active', NULL, '2025-12-14 02:33:32'),
+(66, 'Trang trí tiệc cưới', 'Trang trí tiệc cưới tinh tế', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-3.jpg', NULL, 'events', 66, 'active', NULL, '2025-12-14 02:33:32'),
+(67, 'Bàn tiệc cưới', 'Bàn tiệc cưới sang trọng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-4.jpg', NULL, 'events', 67, 'active', NULL, '2025-12-14 02:33:32'),
+(68, 'Không gian tiệc cưới', 'Không gian tiệc cưới lãng mạn', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg', NULL, 'events', 68, 'active', NULL, '2025-12-14 02:33:32'),
+(69, 'Sân khấu tiệc cưới', 'Sân khấu tiệc cưới hoành tráng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-6.jpg', NULL, 'events', 69, 'active', NULL, '2025-12-14 02:33:32'),
+(70, 'Tiệc cưới sang trọng', 'Tiệc cưới đẳng cấp 5 sao', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-7.jpg', NULL, 'events', 70, 'active', NULL, '2025-12-14 02:33:32'),
+(71, 'Tiệc cưới hoành tráng', 'Tiệc cưới quy mô lớn', 'assets/img/post/wedding/Tiec-cuoi-tai-Aurora-8.jpg', NULL, 'events', 71, 'active', NULL, '2025-12-14 02:33:32'),
+(72, 'Tiệc cưới đẳng cấp', 'Tiệc cưới phong cách hiện đại', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-9.jpg', NULL, 'events', 72, 'active', NULL, '2025-12-14 02:33:32'),
+(73, 'Tiệc cưới lãng mạn', 'Tiệc cưới lãng mạn và ấm cúng', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-10.jpg', NULL, 'events', 73, 'active', NULL, '2025-12-14 02:33:32'),
+(74, 'Phòng hội nghị', 'Phòng hội nghị chuyên nghiệp', 'assets/img/src/ui/horizontal/hoi-nghi-khach-san-o-bien-hoa.jpg', NULL, 'events', 74, 'active', NULL, '2025-12-14 02:33:32'),
+(75, 'Sự kiện hội nghị', 'Tổ chức sự kiện hội nghị', 'assets/img/src/ui/horizontal/Hoi-nghi-aurora-8.jpg', NULL, 'events', 75, 'active', NULL, '2025-12-14 02:33:32'),
+(76, 'Hội nghị Aurora', 'Hội nghị tại Aurora Hotel', 'assets/img/service/meet/Hoi-nghi-aurora-5.jpg', NULL, 'events', 76, 'active', NULL, '2025-12-14 02:33:32'),
+(77, 'Phòng họp lớn', 'Phòng họp quy mô lớn', 'assets/img/service/meet/Hoi-nghi-aurora-6.jpg', NULL, 'events', 77, 'active', NULL, '2025-12-14 02:33:32'),
+(78, 'Aurora Hotel Plaza', 'Toàn cảnh Aurora Hotel Plaza', 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg', NULL, 'exterior', 78, 'active', NULL, '2025-12-14 02:33:32'),
+(79, 'Mặt tiền khách sạn', 'Mặt tiền khách sạn ấn tượng', 'assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg', NULL, 'exterior', 79, 'active', NULL, '2025-12-14 02:33:32'),
+(80, 'Khách sạn về đêm', 'Aurora Hotel lung linh về đêm', 'assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg', NULL, 'exterior', 80, 'active', NULL, '2025-12-14 02:33:32'),
+(81, 'Toàn cảnh Aurora', 'Toàn cảnh khách sạn từ xa', 'assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg', NULL, 'exterior', 81, 'active', NULL, '2025-12-14 02:33:32'),
+(82, 'Cafe Aurora', 'Quán cafe Aurora Hotel', 'assets/img/hero-banner/caffe-aurora-hotel-1.jpg', NULL, 'exterior', 82, 'active', NULL, '2025-12-14 02:33:32');
 
 -- --------------------------------------------------------
 
@@ -703,7 +742,7 @@ CREATE TABLE `password_resets` (
 --
 
 INSERT INTO `password_resets` (`reset_id`, `user_id`, `token`, `expires_at`, `used`, `created_at`) VALUES
-(0, 5, '8d3a0d013970955b645eb08a88706d613825e260b3b1092144e23e3f31ff05c9', '2025-12-14 19:57:35', 0, '2025-12-15 01:57:35');
+(1, 5, '8d3a0d013970955b645eb08a88706d613825e260b3b1092144e23e3f31ff05c9', '2025-12-14 19:57:35', 0, '2025-12-15 01:57:35');
 
 -- --------------------------------------------------------
 
@@ -736,8 +775,9 @@ INSERT INTO `payments` (`payment_id`, `booking_id`, `payment_method`, `amount`, 
 (1, 1, 'credit_card', 3900000.00, 'VND', NULL, NULL, 'completed', '2025-11-19 01:01:14', NULL, NULL, '', '2025-11-19 01:01:14', '2025-11-19 01:01:14'),
 (2, 2, 'cash', 3000000.00, 'VND', NULL, NULL, 'completed', '2025-11-19 01:40:54', NULL, NULL, NULL, '2025-11-19 01:40:54', '2025-11-19 01:40:54'),
 (3, 6, 'vnpay', 4500000.00, 'VND', '15270095', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15270095\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251119A1664F\",\"vnp_PayDate\":\"20251119111050\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15270095\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251119A1664F\",\"vnp_SecureHash\":\"7539e3f2bb647c4883f91d3716eff27387d84199b1f98728319e26ceb57fefdba6023389b95967f2e4ac468d2a959bf335d4b8d932fcde9734a54317a1d44175\"}', 'completed', '2025-11-19 04:10:55', NULL, NULL, NULL, '2025-11-19 04:10:55', '2025-11-19 04:10:55'),
-(0, 0, 'vnpay', 1400000.00, 'VND', '15305547', '{\"vnp_Amount\":\"140000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15305547\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202511272C145F\",\"vnp_PayDate\":\"20251127162450\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15305547\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202511272C145F\",\"vnp_SecureHash\":\"dc96cb1d6e6cde142b9306042620126661b7206ec0327ecea881898185244b917d0e2876ab0b54907b6533edf2c3fe0bf25e4901c6415c344ed1344dc7665319\"}', 'completed', '2025-11-27 09:24:59', NULL, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59'),
-(0, 0, 'vnpay', 4500000.00, 'VND', '15345129', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345129\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202512158079E0\",\"vnp_PayDate\":\"20251215105635\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345129\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202512158079E0\",\"vnp_SecureHash\":\"ac2f6401028a07784b9633faf34a377970159f3269b8959fba704ab0864244b22b7f77b07e5436ec4a832246b722a23cc28c80d976c2141f68c32e41797167f8\"}', 'completed', '2025-12-15 03:56:38', NULL, NULL, NULL, '2025-12-15 03:56:38', '2025-12-15 03:56:38');
+(4, 0, 'vnpay', 1400000.00, 'VND', '15305547', '{\"vnp_Amount\":\"140000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15305547\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202511272C145F\",\"vnp_PayDate\":\"20251127162450\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15305547\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202511272C145F\",\"vnp_SecureHash\":\"dc96cb1d6e6cde142b9306042620126661b7206ec0327ecea881898185244b917d0e2876ab0b54907b6533edf2c3fe0bf25e4901c6415c344ed1344dc7665319\"}', 'completed', '2025-11-27 09:24:59', NULL, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59'),
+(5, 0, 'vnpay', 4500000.00, 'VND', '15345129', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345129\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202512158079E0\",\"vnp_PayDate\":\"20251215105635\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345129\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202512158079E0\",\"vnp_SecureHash\":\"ac2f6401028a07784b9633faf34a377970159f3269b8959fba704ab0864244b22b7f77b07e5436ec4a832246b722a23cc28c80d976c2141f68c32e41797167f8\"}', 'completed', '2025-12-15 03:56:38', NULL, NULL, NULL, '2025-12-15 03:56:38', '2025-12-15 03:56:38'),
+(7, 5, 'vnpay', 9000000.00, 'VND', '15345192', '{\"vnp_Amount\":\"900000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345192\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251215CD6C9D\",\"vnp_PayDate\":\"20251215112751\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345192\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251215CD6C9D\",\"vnp_SecureHash\":\"4eca69d8a8db984379bdee9bacc768f55e8135a5a97eaf3150b9eb249b1c2f74b49b485f78cf9c7dd09e562756ed3b6bd8f2db46902a93ffa69f5217a3a69d05\"}', 'completed', '2025-12-15 04:27:55', NULL, NULL, NULL, '2025-12-15 04:27:55', '2025-12-15 04:27:55');
 
 -- --------------------------------------------------------
 
@@ -762,7 +802,8 @@ CREATE TABLE `points_transactions` (
 --
 
 INSERT INTO `points_transactions` (`transaction_id`, `user_id`, `points`, `transaction_type`, `reference_type`, `reference_id`, `description`, `created_by`, `created_at`) VALUES
-(0, 5, 450, 'earn', 'booking', 0, 'Tích điểm từ đặt phòng BK202512158079E0', NULL, '2025-12-15 03:56:38');
+(1, 5, 450, 'earn', 'booking', 0, 'Tích điểm từ đặt phòng BK202512158079E0', NULL, '2025-12-15 03:56:38'),
+(2, 5, 900, 'earn', 'booking', 5, 'Tích điểm từ đặt phòng BK20251215CD6C9D', NULL, '2025-12-15 04:27:55');
 
 -- --------------------------------------------------------
 
@@ -1054,12 +1095,12 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `building`, `status`, `notes`, `last_cleaned`, `created_at`, `updated_at`) VALUES
-(1, 1, '701', 7, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-14 04:20:17'),
-(2, 1, '702', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:15:06'),
+(1, 2, '701', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:22:34'),
+(2, 8, '702', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:05:40'),
 (3, 1, '703', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:14:49'),
 (4, 1, '704', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-22 07:56:46'),
 (5, 1, '705', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(7, 1, '707', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(7, 11, '707', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:05:29'),
 (8, 1, '708', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (9, 1, '709', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (10, 1, '710', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1072,7 +1113,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (17, 2, '718', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (18, 2, '719', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (19, 2, '720', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(20, 3, '801', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-14 04:50:24'),
+(20, 3, '801', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:17:50'),
 (21, 3, '802', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (22, 3, '803', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (23, 3, '804', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1084,7 +1125,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (29, 3, '810', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (30, 4, '811', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-11-19 04:10:18'),
 (31, 4, '812', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 03:55:36'),
-(32, 4, '814', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(32, 4, '814', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 04:26:52'),
 (33, 4, '815', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (34, 4, '816', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (35, 4, '817', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1112,7 +1153,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (57, 6, '921', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (58, 6, '922', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (59, 4, '923', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 18:28:04'),
-(60, 7, '1001', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(60, 7, '1001', 10, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 04:17:59'),
 (61, 7, '1002', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (62, 7, '1003', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (63, 7, '1004', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1135,7 +1176,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (80, 8, '1022', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (81, 8, '1023', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (82, 9, '1101', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(83, 9, '1102', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(83, 4, '1102', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:23:52'),
 (84, 9, '1103', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (85, 9, '1104', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (86, 9, '1105', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1174,7 +1215,8 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (119, 13, '1217', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (120, 13, '1218', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (121, 13, '1219', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(122, 13, '1220', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29');
+(122, 13, '1220', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(0, 10, '706', 7, 'Main', 'available', '', '0000-00-00 00:00:00', '2025-12-15 05:02:40', '2025-12-15 05:02:40');
 
 -- --------------------------------------------------------
 
@@ -1445,11 +1487,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`, `temp_password`, `temp_password_expires`, `requires_password_change`) VALUES
-(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-14 09:17:55', '2025-12-14 09:17:55', NULL, NULL, 0),
-(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-14 23:56:44', '2025-12-14 23:56:44', NULL, NULL, 0),
+(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-15 05:00:23', '2025-12-15 05:00:23', NULL, NULL, 0),
+(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-15 05:24:42', '2025-12-15 05:24:42', NULL, NULL, 0),
 (4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL, NULL, NULL, 0),
 (5, '15.lequanglong@gmail.com', '$2y$10$/hqCPtwg7jUCSes5mkbD8eG2.YU5/FFf3FPjOkuyFH9OmZL3LEy6K', 'Long meo meo', '0987654321', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-15 02:56:41', '2025-12-15 02:56:30', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
-(6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 03:38:15', '2025-12-15 03:38:15', NULL, NULL, 0);
+(6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 04:45:34', '2025-12-15 04:45:34', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1476,7 +1518,7 @@ INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime
 (1, 1, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 04:22:12'),
 (3, 3, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:22:12'),
 (4, 4, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:22:12'),
-(11, 5, 450, 450, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 03:56:38'),
+(11, 5, 1350, 1350, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 04:27:55'),
 (12, 6, 0, 0, NULL, NULL, '2025-12-15 03:37:57', '2025-12-15 03:37:57');
 
 -- --------------------------------------------------------
@@ -1575,11 +1617,65 @@ ALTER TABLE `amenities`
   ADD PRIMARY KEY (`amenity_id`);
 
 --
+-- Chỉ mục cho bảng `banners`
+--
+ALTER TABLE `banners`
+  ADD PRIMARY KEY (`banner_id`);
+
+--
+-- Chỉ mục cho bảng `blog_comments`
+--
+ALTER TABLE `blog_comments`
+  ADD PRIMARY KEY (`comment_id`);
+
+--
+-- Chỉ mục cho bảng `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`);
+
+--
+-- Chỉ mục cho bảng `booking_history`
+--
+ALTER TABLE `booking_history`
+  ADD PRIMARY KEY (`history_id`);
+
+--
 -- Chỉ mục cho bảng `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_contact_user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `email_logs`
+--
+ALTER TABLE `email_logs`
+  ADD PRIMARY KEY (`email_log_id`);
+
+--
+-- Chỉ mục cho bảng `gallery`
+--
+ALTER TABLE `gallery`
+  ADD PRIMARY KEY (`gallery_id`);
+
+--
+-- Chỉ mục cho bảng `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`reset_id`);
+
+--
+-- Chỉ mục cho bảng `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`payment_id`);
+
+--
+-- Chỉ mục cho bảng `points_transactions`
+--
+ALTER TABLE `points_transactions`
+  ADD PRIMARY KEY (`transaction_id`);
 
 --
 -- Chỉ mục cho bảng `translations`
@@ -1611,7 +1707,7 @@ ALTER TABLE `user_loyalty`
 -- AUTO_INCREMENT cho bảng `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT cho bảng `amenities`
@@ -1620,10 +1716,64 @@ ALTER TABLE `amenities`
   MODIFY `amenity_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `banners`
+--
+ALTER TABLE `banners`
+  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `blog_comments`
+--
+ALTER TABLE `blog_comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `booking_history`
+--
+ALTER TABLE `booking_history`
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
 -- AUTO_INCREMENT cho bảng `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `email_logs`
+--
+ALTER TABLE `email_logs`
+  MODIFY `email_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `gallery`
+--
+ALTER TABLE `gallery`
+  MODIFY `gallery_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
+--
+-- AUTO_INCREMENT cho bảng `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `reset_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT cho bảng `points_transactions`
+--
+ALTER TABLE `points_transactions`
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `translations`
@@ -1641,7 +1791,42 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `user_loyalty`
 --
 ALTER TABLE `user_loyalty`
-  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `floor_maintenance`
+--
+
+CREATE TABLE `floor_maintenance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `floor` int(11) NOT NULL,
+  `is_maintenance` tinyint(1) NOT NULL DEFAULT 0,
+  `maintenance_note` text DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_floor` (`floor`),
+  KEY `fk_floor_maintenance_user` (`created_by`),
+  CONSTRAINT `fk_floor_maintenance_user` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `floor_maintenance`
+--
+
+INSERT INTO `floor_maintenance` (`floor`, `is_maintenance`, `maintenance_note`, `start_date`, `end_date`) VALUES
+(7, 0, NULL, NULL, NULL),
+(8, 0, NULL, NULL, NULL),
+(9, 0, NULL, NULL, NULL),
+(10, 0, NULL, NULL, NULL),
+(11, 0, NULL, NULL, NULL),
+(12, 0, NULL, NULL, NULL);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
