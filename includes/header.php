@@ -214,3 +214,17 @@ $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo time(); ?>" defer></script>
+
+<script>
+(function() {
+    try {
+        if (!document.querySelector('link[rel="icon"]')) {
+            const link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/png';
+            link.href = '<?php echo $base_path; ?>assets/img/src/logo/favicon.png';
+            document.head.appendChild(link);
+        }
+    } catch (e) {}
+})();
+</script>

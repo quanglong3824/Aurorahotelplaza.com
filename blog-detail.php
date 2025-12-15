@@ -61,17 +61,23 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         if (!isset($_SESSION['user_id'])) {
             $error = __('blog_page.login_required');
+        } elseif (isset($post['allow_comments']) && (int)$post['allow_comments'] === 0) {
+            $error = __('blog_page.comments_disabled');
         } else {
             $content = trim($_POST['content'] ?? '');
             
             if (empty($content)) {
                 $error = __('blog_page.comment_empty');
             } else {
+                $author_name = $_SESSION['user_name'] ?? 'User';
+                $author_email = $_SESSION['user_email'] ?? '';
+                $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? ($_SERVER['REMOTE_ADDR'] ?? null);
+
                 $stmt = $db->prepare("
-                    INSERT INTO blog_comments (post_id, user_id, content, status)
-                    VALUES (?, ?, ?, 'pending')
+                    INSERT INTO blog_comments (post_id, user_id, author_name, author_email, content, status, ip_address)
+                    VALUES (?, ?, ?, ?, ?, 'pending', ?)
                 ");
-                $stmt->execute([$post['post_id'], $_SESSION['user_id'], $content]);
+                $stmt->execute([$post['post_id'], $_SESSION['user_id'], $author_name, $author_email, $content, $ip_address]);
                 $success = __('blog_page.comment_pending');
             }
         }
@@ -131,8 +137,8 @@ try {
             <!-- Meta -->
             <div class="flex flex-wrap items-center gap-6 mb-8 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                 <div class="flex items-center gap-2">
-                    <?php if ($post['avatar_url']): ?>
-                    <img src="<?php echo htmlspecialchars($post['avatar_url']); ?>" 
+                    <?php if (!empty($post['avatar'])): ?>
+                    <img src="<?php echo htmlspecialchars($post['avatar']); ?>" 
                          alt="<?php echo htmlspecialchars($post['author_name']); ?>"
                          class="w-10 h-10 rounded-full object-cover">
                     <?php else: ?>
@@ -207,7 +213,7 @@ try {
                 </h3>
 
                 <!-- Comment Form -->
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['user_id']) && (!isset($post['allow_comments']) || (int)$post['allow_comments'] === 1)): ?>
                 <div class="mb-8 p-6 bg-surface-light dark:bg-surface-dark rounded-xl">
                     <?php if ($success): ?>
                     <div class="mb-4 p-4 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg">
@@ -230,6 +236,10 @@ try {
                         </button>
                     </form>
                 </div>
+                <?php elseif (isset($_SESSION['user_id']) && isset($post['allow_comments']) && (int)$post['allow_comments'] === 0): ?>
+                <div class="mb-8 p-6 bg-surface-light dark:bg-surface-dark rounded-xl text-center">
+                    <p class="mb-0"><?php _e('blog_page.comments_disabled'); ?></p>
+                </div>
                 <?php else: ?>
                 <div class="mb-8 p-6 bg-surface-light dark:bg-surface-dark rounded-xl text-center">
                     <p class="mb-4"><?php _e('blog_page.login_to_comment'); ?></p>
@@ -246,8 +256,8 @@ try {
                     <?php foreach ($blog_comments as $comment): ?>
                     <div class="comment-item">
                         <div class="flex gap-4">
-                            <?php if ($comment['avatar_url']): ?>
-                            <img src="<?php echo htmlspecialchars($comment['avatar_url']); ?>" 
+                            <?php if (!empty($comment['avatar'])): ?>
+                            <img src="<?php echo htmlspecialchars($comment['avatar']); ?>" 
                                  alt="<?php echo htmlspecialchars($comment['user_name']); ?>"
                                  class="w-12 h-12 rounded-full object-cover">
                             <?php else: ?>

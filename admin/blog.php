@@ -68,6 +68,11 @@ include 'includes/admin-header.php';
             Lọc
         </button>
     </form>
+
+    <a href="blog-comments.php" class="btn btn-secondary">
+        <span class="material-symbols-outlined text-sm">comment</span>
+        Bình luận
+    </a>
     
     <a href="blog-form.php" class="btn btn-primary">
         <span class="material-symbols-outlined text-sm">add</span>

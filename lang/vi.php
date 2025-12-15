@@ -624,6 +624,7 @@ return [
         'comments_title' => 'Bình luận',
         'write_comment' => 'Viết bình luận của bạn...',
         'submit_comment' => 'Gửi bình luận',
+        'comments_disabled' => 'Bình luận đã bị tắt cho bài viết này.',
         'login_to_comment' => 'Vui lòng đăng nhập để bình luận',
         'login' => 'Đăng nhập',
         'no_comments' => 'Chưa có bình luận nào. Hãy là người đầu tiên bình luận!',

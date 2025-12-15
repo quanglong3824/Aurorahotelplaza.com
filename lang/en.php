@@ -624,6 +624,7 @@ return [
         'comments_title' => 'Comments',
         'write_comment' => 'Write your comment...',
         'submit_comment' => 'Submit Comment',
+        'comments_disabled' => 'Comments are disabled for this post.',
         'login_to_comment' => 'Please login to comment',
         'login' => 'Login',
         'no_comments' => 'No comments yet. Be the first to comment!',

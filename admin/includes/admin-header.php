@@ -27,6 +27,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title><?php echo $page_title ?? 'Quản trị'; ?> - Aurora Hotel Plaza</title>
+    <link rel="icon" type="image/png" href="../assets/img/src/logo/favicon.png">
     <script src="../assets/js/tailwindcss-cdn.js"></script>
     <link href="../assets/css/fonts.css" rel="stylesheet"/>
     <script src="../assets/js/tailwind-config.js"></script>

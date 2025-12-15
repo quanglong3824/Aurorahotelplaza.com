@@ -10,6 +10,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (!in_array($_SESSION['user_role'] ?? '', ['admin', 'sale', 'receptionist'])) {
+    echo json_encode(['success' => false, 'message' => 'Bạn không có quyền thực hiện chức năng này.']);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Yêu cầu không hợp lệ.']);
     exit;

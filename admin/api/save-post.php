@@ -41,6 +41,10 @@ if (!isset($_SESSION['user_id'])) {
     jsonResponse(['success' => false, 'message' => 'Bạn cần đăng nhập để thực hiện chức năng này.']);
 }
 
+if (!in_array($_SESSION['user_role'] ?? '', ['admin', 'sale', 'receptionist'])) {
+    jsonResponse(['success' => false, 'message' => 'Bạn không có quyền thực hiện chức năng này.']);
+}
+
 // Lấy dữ liệu từ POST
 $post_id = !empty($_POST['post_id']) ? $_POST['post_id'] : null;
 $title = sanitize($_POST['title']);
