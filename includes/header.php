@@ -58,6 +58,10 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 $pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password'];
 $has_hero = in_array($current_page, $pages_with_hero);
+
+// Pages without hero need solid header with dark logo on white background
+$pages_solid_header = ['profile', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
+$is_solid_page = in_array($current_page, $pages_solid_header) || $current_dir === 'profile';
 $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 ?>
 <!-- TopNavBar - Smart Header -->
@@ -65,7 +69,7 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
             <img id="header-logo" 
-                 src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo $has_hero ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>" 
+                 src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>" 
                  data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
                  data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
                  alt="Aurora Hotel Plaza Logo" 
