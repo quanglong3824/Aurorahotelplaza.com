@@ -148,6 +148,14 @@
     color: white;
 }
 
+ .header-transparent .user-menu .material-symbols-outlined {
+     color: #111827 !important;
+ }
+
+ .dark .header-transparent .user-menu .material-symbols-outlined {
+     color: #d1d5db !important;
+ }
+
 .header-solid .material-symbols-outlined {
     color: #1f2937;
 }
