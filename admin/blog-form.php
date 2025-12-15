@@ -118,7 +118,7 @@ include 'includes/admin-header.php';
             <h3 class="font-bold text-lg">Chọn Layout bài viết</h3>
         </div>
         <div class="card-body">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="layoutSelector">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="layoutSelector">
                 <label class="layout-option cursor-pointer">
                     <input type="radio" name="layout" value="standard" class="hidden" <?php echo ($post['layout'] ?? 'standard') === 'standard' ? 'checked' : ''; ?>>
                     <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
@@ -178,6 +178,39 @@ include 'includes/admin-header.php';
                             </div>
                         </div>
                         <p class="text-xs text-center font-medium">Gallery</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="slider" class="hidden" <?php echo ($post['layout'] ?? '') === 'slider' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center relative overflow-hidden">
+                            <div class="w-full h-full bg-gray-400 dark:bg-slate-500 rounded"></div>
+                            <div class="absolute left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full"></div>
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full"></div>
+                            <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+                                <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                <div class="w-1.5 h-1.5 bg-white/50 rounded-full"></div>
+                                <div class="w-1.5 h-1.5 bg-white/50 rounded-full"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Slider ảnh</p>
+                    </div>
+                </label>
+                <label class="layout-option cursor-pointer">
+                    <input type="radio" name="layout" value="apartment" class="hidden" <?php echo ($post['layout'] ?? '') === 'apartment' ? 'checked' : ''; ?>>
+                    <div class="border-2 rounded-lg p-3 transition-all hover:border-[#d4af37] layout-card">
+                        <div class="aspect-video bg-gray-200 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                            <div class="w-full px-1">
+                                <div class="h-6 bg-gray-400 dark:bg-slate-500 rounded mb-1"></div>
+                                <div class="grid grid-cols-4 gap-0.5">
+                                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                                    <div class="h-3 bg-gray-300 dark:bg-slate-600 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center font-medium">Căn hộ</p>
                     </div>
                 </label>
             </div>
@@ -246,6 +279,49 @@ include 'includes/admin-header.php';
                                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="material-symbols-outlined text-white">check_circle</span>
                                 </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Images Section (for slider/apartment layouts) -->
+    <div class="card mb-6" id="galleryImagesSection">
+        <div class="card-header flex items-center justify-between">
+            <div>
+                <h3 class="font-bold text-lg">Ảnh Gallery / Slider</h3>
+                <p class="text-xs text-gray-500 mt-1">Chọn nhiều ảnh cho layout Slider hoặc Căn hộ. Kéo thả để sắp xếp thứ tự.</p>
+            </div>
+            <span class="badge badge-info" id="galleryCount">0 ảnh</span>
+        </div>
+        <div class="card-body space-y-4">
+            <!-- Selected Gallery Images -->
+            <div id="selectedGalleryImages" class="min-h-[80px] p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600">
+                <p class="text-sm text-gray-500 text-center py-4" id="galleryPlaceholder">Click vào ảnh bên dưới để thêm vào gallery</p>
+                <div id="galleryImagesList" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2"></div>
+            </div>
+            
+            <input type="hidden" name="gallery_images" id="galleryImagesInput" 
+                   value="<?php echo htmlspecialchars($post['gallery_images'] ?? ''); ?>">
+            
+            <!-- Available Images -->
+            <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Click để thêm ảnh vào gallery:</p>
+                <?php if (empty($uploaded_images)): ?>
+                    <div class="text-center py-6 bg-gray-100 dark:bg-slate-700 rounded-xl">
+                        <span class="material-symbols-outlined text-3xl text-gray-400 mb-2">photo_library</span>
+                        <p class="text-gray-500 text-sm">Chưa có ảnh. Upload ảnh mới ở phần trên.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-100 dark:bg-slate-700 rounded-xl" id="gallerySourceImages">
+                        <?php foreach ($uploaded_images as $img): ?>
+                            <div class="gallery-source-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative"
+                                 data-src="../uploads/<?php echo htmlspecialchars($img); ?>">
+                                <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
+                                     alt="<?php echo htmlspecialchars($img); ?>"
+                                     class="w-full h-full object-cover">
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -503,6 +579,104 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentThumb = document.querySelector(`.image-thumb[data-src="${currentImage}"]`);
         if (currentThumb) currentThumb.classList.add('selected');
     }
+    
+    // ========== GALLERY IMAGES (for slider/apartment layouts) ==========
+    const galleryImagesInput = document.getElementById('galleryImagesInput');
+    const galleryImagesList = document.getElementById('galleryImagesList');
+    const galleryPlaceholder = document.getElementById('galleryPlaceholder');
+    const galleryCount = document.getElementById('galleryCount');
+    const gallerySourceImages = document.getElementById('gallerySourceImages');
+    
+    let galleryImages = [];
+    
+    // Load existing gallery images
+    if (galleryImagesInput.value) {
+        try {
+            galleryImages = JSON.parse(galleryImagesInput.value);
+            renderGalleryImages();
+        } catch (e) {
+            galleryImages = [];
+        }
+    }
+    
+    // Add image to gallery
+    function addToGallery(src) {
+        if (galleryImages.includes(src)) {
+            // Remove if already exists
+            galleryImages = galleryImages.filter(img => img !== src);
+        } else {
+            galleryImages.push(src);
+        }
+        updateGalleryInput();
+        renderGalleryImages();
+    }
+    
+    // Remove from gallery
+    function removeFromGallery(src) {
+        galleryImages = galleryImages.filter(img => img !== src);
+        updateGalleryInput();
+        renderGalleryImages();
+    }
+    
+    // Update hidden input
+    function updateGalleryInput() {
+        galleryImagesInput.value = JSON.stringify(galleryImages);
+        galleryCount.textContent = galleryImages.length + ' ảnh';
+    }
+    
+    // Render gallery images
+    function renderGalleryImages() {
+        if (galleryImages.length === 0) {
+            galleryPlaceholder.classList.remove('hidden');
+            galleryImagesList.innerHTML = '';
+            return;
+        }
+        
+        galleryPlaceholder.classList.add('hidden');
+        galleryImagesList.innerHTML = galleryImages.map((src, index) => `
+            <div class="gallery-item aspect-square rounded-lg overflow-hidden relative group border-2 border-[#d4af37]" data-src="${src}" data-index="${index}">
+                <img src="${src}" alt="Gallery ${index + 1}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                    <span class="text-white text-xs font-bold bg-black/50 px-1 rounded">${index + 1}</span>
+                    <button type="button" class="remove-gallery-btn w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600" data-src="${src}">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        
+        // Bind remove buttons
+        galleryImagesList.querySelectorAll('.remove-gallery-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                removeFromGallery(this.dataset.src);
+            });
+        });
+        
+        // Update source images selected state
+        updateSourceImagesState();
+    }
+    
+    // Update source images selected state
+    function updateSourceImagesState() {
+        document.querySelectorAll('.gallery-source-thumb').forEach(thumb => {
+            if (galleryImages.includes(thumb.dataset.src)) {
+                thumb.classList.add('ring-2', 'ring-[#d4af37]', 'ring-offset-2');
+            } else {
+                thumb.classList.remove('ring-2', 'ring-[#d4af37]', 'ring-offset-2');
+            }
+        });
+    }
+    
+    // Bind click to source images
+    document.querySelectorAll('.gallery-source-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            addToGallery(this.dataset.src);
+        });
+    });
+    
+    // Initial render
+    updateSourceImagesState();
 });
 </script>
 
