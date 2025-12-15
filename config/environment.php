@@ -73,10 +73,12 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 define('DEBUG_MODE', false);
 
-// Production: Secure cookies
-ini_set('session.cookie_secure', '1');
-ini_set('session.cookie_httponly', '1');
-ini_set('session.cookie_samesite', 'Lax');
+// Production: Secure cookies (only set if session not started yet)
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_secure', '1');
+    ini_set('session.cookie_httponly', '1');
+    ini_set('session.cookie_samesite', 'Lax');
+}
 
 /**
  * Helper function để tạo URL

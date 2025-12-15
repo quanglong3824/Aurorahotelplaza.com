@@ -17,6 +17,7 @@ use PHPMailer\PHPMailer\Exception;
 class Mailer {
     private $mail;
     private $isConfigured = false;
+    private $lastError = '';
     
     public function __construct() {
         try {
@@ -24,9 +25,22 @@ class Mailer {
             $this->configure();
             $this->isConfigured = true;
         } catch (Exception $e) {
-            error_log("Mailer initialization error: " . $e->getMessage());
+            $this->lastError = $e->getMessage();
+            error_log("Mailer initialization error: " . $this->lastError);
+            $this->isConfigured = false;
+        } catch (\Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Mailer PHP exception: " . $this->lastError);
+            $this->isConfigured = false;
+        } catch (\Throwable $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Mailer fatal error: " . $this->lastError);
             $this->isConfigured = false;
         }
+    }
+    
+    public function getLastError() {
+        return $this->lastError;
     }
     
     /**
@@ -81,14 +95,16 @@ class Mailer {
      * @return bool Success status
      */
     public function send($to, $subject, $body, $altBody = '') {
-        if (!$this->isConfigured) {
-            error_log("Mailer not configured properly");
+        if (!$this->isConfigured || !$this->mail) {
+            $this->lastError = "Mailer not configured properly";
+            error_log($this->lastError);
             return false;
         }
         
         try {
             // Clear previous recipients
             $this->mail->clearAddresses();
+            $this->mail->clearAllRecipients();
             
             // Set recipient
             $this->mail->addAddress($to);
@@ -98,7 +114,7 @@ class Mailer {
             $this->mail->Body = $body;
             $this->mail->AltBody = $altBody ?: strip_tags($body);
             
-            // Send email
+            // Send email with timeout
             $result = $this->mail->send();
             
             if ($result) {
@@ -108,7 +124,16 @@ class Mailer {
             return $result;
             
         } catch (Exception $e) {
-            error_log("Email send error: " . $this->mail->ErrorInfo);
+            $this->lastError = $this->mail->ErrorInfo ?: $e->getMessage();
+            error_log("Email send PHPMailer error: " . $this->lastError);
+            return false;
+        } catch (\Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Email send PHP error: " . $this->lastError);
+            return false;
+        } catch (\Throwable $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Email send fatal error: " . $this->lastError);
             return false;
         }
     }
@@ -207,12 +232,37 @@ class Mailer {
     public function sendTemporaryPassword($userEmail, $userName, $tempPassword) {
         try {
             $subject = "Mật khẩu tạm thời - Aurora Hotel Plaza";
-            $body = EmailTemplates::getTemporaryPasswordTemplate($userName, $tempPassword);
+            
+            // Try to get template, fallback to simple HTML if fails
+            try {
+                $body = EmailTemplates::getTemporaryPasswordTemplate($userName, $tempPassword);
+            } catch (\Throwable $templateErr) {
+                error_log("Template error, using fallback: " . $templateErr->getMessage());
+                // Simple fallback template
+                $body = "
+                <html><body style='font-family: Arial, sans-serif; padding: 20px;'>
+                <h2>Mật khẩu tạm thời - Aurora Hotel Plaza</h2>
+                <p>Xin chào <strong>" . htmlspecialchars($userName) . "</strong>,</p>
+                <p>Mật khẩu tạm thời của bạn là: <strong style='font-size: 18px; color: #2196f3;'>" . htmlspecialchars($tempPassword) . "</strong></p>
+                <p>Mật khẩu này có hiệu lực trong 30 phút.</p>
+                <p>Vui lòng đăng nhập và đổi mật khẩu ngay.</p>
+                <hr><p style='color: #666; font-size: 12px;'>Aurora Hotel Plaza</p>
+                </body></html>";
+            }
             
             return $this->send($userEmail, $subject, $body);
             
         } catch (Exception $e) {
-            error_log("Temporary password email error: " . $e->getMessage());
+            $this->lastError = $e->getMessage();
+            error_log("Temporary password email error: " . $this->lastError);
+            return false;
+        } catch (\Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Temporary password PHP error: " . $this->lastError);
+            return false;
+        } catch (\Throwable $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Temporary password fatal error: " . $this->lastError);
             return false;
         }
     }

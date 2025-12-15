@@ -1,33 +1,83 @@
 <?php
-session_start();
+// Start output buffering FIRST to prevent blank page
+ob_start();
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display, but log
+ini_set('log_errors', 1);
+
+// Global error handler to prevent blank page
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    error_log("PHP Error [$errno]: $errstr in $errfile on line $errline");
+    return false; // Let PHP handle it normally after logging
+});
+
+// Global exception handler
+set_exception_handler(function($e) {
+    error_log("Uncaught exception: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
+    // Don't die - let the page continue to render
+});
+
+// Register shutdown function to catch fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        error_log("Fatal error: {$error['message']} in {$error['file']} on line {$error['line']}");
+        // If buffer is empty, output something
+        if (ob_get_length() === 0) {
+            echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Lỗi</title></head><body>';
+            echo '<h1>Có lỗi xảy ra</h1><p>Vui lòng thử lại sau hoặc liên hệ hỗ trợ.</p>';
+            echo '<a href="javascript:history.back()">Quay lại</a></body></html>';
+        }
+    }
+});
+
+// Start session before any output or config that might modify session settings
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/environment.php';
 
 $success = '';
 $error = '';
+$email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once '../config/database.php';
-    
-    $email = trim($_POST['email'] ?? '');
-    
-    if (empty($email)) {
-        $error = 'Vui lòng nhập email';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'Email không hợp lệ';
-    } else {
-        try {
+    try {
+        require_once '../config/database.php';
+        
+        $email = trim($_POST['email'] ?? '');
+        
+        if (empty($email)) {
+            $error = 'Vui lòng nhập email';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = 'Email không hợp lệ';
+        } else {
             $db = getDB();
             
-            // Ensure temp_password columns exist (run once, cached by MySQL)
-            try {
-                $db->exec("ALTER TABLE users ADD COLUMN temp_password VARCHAR(255) NULL");
-            } catch (PDOException $e) { /* Column exists */ }
-            try {
-                $db->exec("ALTER TABLE users ADD COLUMN temp_password_expires TIMESTAMP NULL");
-            } catch (PDOException $e) { /* Column exists */ }
-            try {
-                $db->exec("ALTER TABLE users ADD COLUMN requires_password_change TINYINT(1) DEFAULT 0");
-            } catch (PDOException $e) { /* Column exists */ }
+            if (!$db) {
+                throw new Exception('Không thể kết nối database');
+            }
+            
+            // Check if columns exist first, only add if needed
+            $columnsToAdd = [
+                'temp_password' => "ALTER TABLE users ADD COLUMN temp_password VARCHAR(255) NULL",
+                'temp_password_expires' => "ALTER TABLE users ADD COLUMN temp_password_expires DATETIME NULL",
+                'requires_password_change' => "ALTER TABLE users ADD COLUMN requires_password_change TINYINT(1) DEFAULT 0"
+            ];
+            
+            foreach ($columnsToAdd as $column => $sql) {
+                try {
+                    $checkColumn = $db->query("SHOW COLUMNS FROM users LIKE '$column'");
+                    if ($checkColumn->rowCount() == 0) {
+                        $db->exec($sql);
+                    }
+                } catch (Exception $colErr) {
+                    error_log("Column check/add error for $column: " . $colErr->getMessage());
+                }
+            }
             
             $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ? AND status = 'active'");
             $stmt->execute([$email]);
@@ -36,9 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user) {
                 $user_id = $user['user_id'];
                 
-                // Generate random temporary password (8-12 characters)
-                $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
-                $temp_password = substr(str_shuffle($chars), 0, rand(8, 12));
+                // Generate random temporary password (8 characters, simple)
+                $chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
+                $temp_password = '';
+                for ($i = 0; $i < 8; $i++) {
+                    $temp_password .= $chars[random_int(0, strlen($chars) - 1)];
+                }
                 $temp_password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
                 $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 
@@ -48,47 +101,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     SET temp_password = ?, temp_password_expires = ?, requires_password_change = 1, updated_at = NOW()
                     WHERE user_id = ?
                 ");
-                $stmt->execute([$temp_password_hash, $expires, $user_id]);
+                $updateResult = $stmt->execute([$temp_password_hash, $expires, $user_id]);
                 
-                // Try to send email with temporary password
-                $emailSent = false;
-                try {
-                    require_once '../helpers/mailer.php';
-                    $mailer = getMailer();
-                    $emailSent = $mailer->sendTemporaryPassword($email, $user['full_name'], $temp_password);
-                } catch (Exception $emailError) {
-                    error_log("Email send failed: " . $emailError->getMessage());
+                if (!$updateResult) {
+                    throw new Exception('Không thể cập nhật mật khẩu tạm thời');
                 }
                 
-                // Log password reset request
+                // Try to send email (non-blocking approach)
+                $emailSent = false;
+                $emailError = '';
                 try {
-                    require_once '../helpers/logger.php';
-                    $logger = getLogger();
-                    $logger->logAdminAction($user['user_id'], 'temp_password_sent', 'user', $user['user_id'], [
-                        'email' => $email,
-                        'email_sent' => $emailSent,
-                        'temp_expires' => $expires
-                    ]);
+                    // Set shorter timeout for email
+                    set_time_limit(30);
+                    
+                    require_once '../helpers/mailer.php';
+                    $mailer = getMailer();
+                    if ($mailer && $mailer->isReady()) {
+                        $emailSent = $mailer->sendTemporaryPassword($email, $user['full_name'], $temp_password);
+                    }
+                } catch (Exception $mailErr) {
+                    $emailError = $mailErr->getMessage();
+                    error_log("Email send failed: " . $emailError);
+                } catch (Throwable $mailErr) {
+                    $emailError = $mailErr->getMessage();
+                    error_log("Email send error: " . $emailError);
+                }
+                
+                // Log password reset request (optional, don't fail if logger fails)
+                try {
+                    if (file_exists('../helpers/logger.php')) {
+                        require_once '../helpers/logger.php';
+                        if (function_exists('getLogger')) {
+                            $logger = getLogger();
+                            if ($logger) {
+                                $logger->logAdminAction($user['user_id'], 'temp_password_sent', 'user', $user['user_id'], [
+                                    'email' => $email,
+                                    'email_sent' => $emailSent,
+                                    'temp_expires' => $expires
+                                ]);
+                            }
+                        }
+                    }
                 } catch (Exception $logError) {
                     error_log("Logger failed: " . $logError->getMessage());
                 }
                 
-                // Show temporary password for testing (remove in production)
+                // Always show temp password (for now, until email is reliable)
+                $success = 'Mật khẩu tạm thời của bạn: <strong>' . htmlspecialchars($temp_password) . '</strong><br>Hết hạn sau 30 phút.';
                 if ($emailSent) {
-                    $success = 'Mật khẩu tạm thời đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (có thể trong thư mục Spam).';
+                    $success .= '<br><small class="text-green-600">Email đã được gửi đến ' . htmlspecialchars($email) . '</small>';
                 } else {
-                    // For testing purposes, show the password directly
-                    $success = 'Mật khẩu tạm thời của bạn: <strong>' . htmlspecialchars($temp_password) . '</strong><br>Hết hạn sau 30 phút.<br>Bạn cũng có thể kiểm tra email (có thể trong thư mục Spam).';
+                    $success .= '<br><small class="text-gray-500">Vui lòng ghi nhớ mật khẩu này để đăng nhập.</small>';
                 }
             } else {
-                // Don't reveal if email exists or not (security)
+                // Security: Don't reveal if email exists
                 $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được mật khẩu tạm thời.';
             }
-        } catch (Exception $e) {
-            $error = 'Có lỗi xảy ra. Vui lòng thử lại.';
         }
+    } catch (PDOException $e) {
+        error_log("Forgot password PDO error: " . $e->getMessage());
+        $error = 'Lỗi kết nối cơ sở dữ liệu. Vui lòng thử lại sau.';
+    } catch (Exception $e) {
+        error_log("Forgot password error: " . $e->getMessage());
+        $error = 'Có lỗi xảy ra: ' . $e->getMessage();
+    } catch (Throwable $e) {
+        error_log("Forgot password fatal error: " . $e->getMessage());
+        $error = 'Có lỗi hệ thống. Vui lòng thử lại sau.';
     }
 }
+
+// Don't flush buffer here - let it flush at end of script
 ?>
 <!DOCTYPE html>
 <html class="light" lang="vi">

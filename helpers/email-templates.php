@@ -160,8 +160,16 @@ HTML;
         $currentDate = date('d/m/Y H:i');
         $hotelUrl = self::getBaseUrl();
         
-        // Load CSS
-        $css = file_get_contents(__DIR__ . '/../includes/email-templates/email-styles.css');
+        // Load CSS with fallback
+        $cssFile = __DIR__ . '/../includes/email-templates/email-styles.css';
+        $css = '';
+        if (file_exists($cssFile)) {
+            $css = @file_get_contents($cssFile);
+        }
+        if (empty($css)) {
+            // Fallback inline CSS
+            $css = 'body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f5f5f5}.email-wrapper{padding:20px}.email-container{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden}.email-header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:30px;text-align:center}.email-header h1{margin:0;font-size:24px}.email-content{padding:30px}.email-greeting{font-size:16px;margin-bottom:20px}.email-text{color:#333;line-height:1.6}.info-box{background:#f8f9fa;border-left:4px solid #667eea;padding:15px;margin:20px 0}.info-box-title{font-weight:bold;margin-bottom:10px}.button-wrapper{text-align:center;margin:25px 0}.email-button{display:inline-block;background:#667eea;color:#fff;padding:12px 30px;text-decoration:none;border-radius:5px}.alert-box{background:#fff3cd;border-left:4px solid #f59e0b;padding:15px;margin:20px 0}.alert-box-title{font-weight:bold;color:#856404}.email-footer{background:#f8f9fa;padding:20px;text-align:center;font-size:12px;color:#666}.footer-text{margin:5px 0}';
+        }
         
         return <<<HTML
 <!DOCTYPE html>
