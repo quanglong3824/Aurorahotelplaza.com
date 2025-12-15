@@ -5,9 +5,18 @@
     const header = document.getElementById('main-header');
     const logo = document.getElementById('header-logo');
     const hasHero = header.dataset.hasHero === 'true';
+    const forceScrolled = header.dataset.forceScrolled === 'true';
     
     function updateHeader() {
         const scrolled = window.scrollY > 50;
+        
+        // Pages with force-scrolled (profile, etc.): Always keep scrolled state
+        if (forceScrolled) {
+            header.classList.remove('header-transparent');
+            header.classList.add('header-solid', 'header-scrolled');
+            logo.src = logo.dataset.logoWhite;
+            return;
+        }
         
         if (hasHero) {
             // Pages with hero banner

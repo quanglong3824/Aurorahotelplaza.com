@@ -63,9 +63,12 @@ $has_hero = in_array($current_page, $pages_with_hero);
 $pages_solid_header = ['profile', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
 $is_solid_page = in_array($current_page, $pages_solid_header) || $current_dir === 'profile';
 $header_class = $has_hero ? 'header-transparent' : 'header-solid';
+
+// Force scrolled state for solid pages (profile, etc.)
+$force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 ?>
 <!-- TopNavBar - Smart Header -->
-<header id="main-header" class="fixed top-0 z-50 w-full transition-all duration-300 <?php echo $header_class; ?>" data-has-hero="<?php echo $has_hero ? 'true' : 'false'; ?>">
+<header id="main-header" class="fixed top-0 z-50 w-full transition-all duration-300 <?php echo $header_class; ?> <?php echo $force_scrolled; ?>" data-has-hero="<?php echo $has_hero ? 'true' : 'false'; ?>" data-force-scrolled="<?php echo $is_solid_page ? 'true' : 'false'; ?>">
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
             <img id="header-logo" 
