@@ -22,6 +22,7 @@ return [
         'profile' => 'Thông tin cá nhân',
         'my_bookings' => 'Lịch sử đặt phòng',
         'loyalty' => 'Điểm thưởng',
+        'room_map' => 'Sơ đồ phòng',
         'admin' => 'Quản trị',
     ],
     

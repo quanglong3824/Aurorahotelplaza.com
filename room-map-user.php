@@ -273,14 +273,14 @@ $total_rooms = array_sum($stats);
 </div>
 
 <style>
-/* Hero Section */
+/* Hero Section - Lighter */
 .roommap-hero {
     position: relative;
-    min-height: 450px;
+    min-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 140px 20px 80px;
+    padding: 120px 20px 60px;
     overflow: hidden;
 }
 
@@ -296,7 +296,7 @@ $total_rooms = array_sum($stats);
 .roommap-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.75), rgba(17, 24, 39, 0.5));
     z-index: 1;
 }
 
@@ -310,31 +310,56 @@ $total_rooms = array_sum($stats);
 
 .roommap-hero-title {
     font-family: 'Playfair Display', serif;
-    font-size: 48px;
+    font-size: 42px;
     font-weight: 700;
-    margin-bottom: 16px;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 12px;
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
 }
 
 .roommap-hero-subtitle {
-    font-size: 18px;
+    font-size: 16px;
     opacity: 0.9;
-    max-width: 600px;
+    max-width: 500px;
     margin: 0 auto;
 }
 
-/* Floor Tabs - Liquid Glass */
+/* Glass Stat Card - Lighter */
+.glass-stat-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.glass-stat-card .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    display: block;
+}
+
+.glass-stat-card .stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Floor Tabs - Liquid Glass (Lighter) */
 .floor-tab-glass {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    font-size: 14px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-primary-light);
     cursor: pointer;
@@ -342,24 +367,24 @@ $total_rooms = array_sum($stats);
 }
 
 .dark .floor-tab-glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
     border-color: rgba(255, 255, 255, 0.1);
     color: var(--text-primary-dark);
 }
 
 .floor-tab-glass:hover {
-    background: rgba(212, 175, 55, 0.1);
-    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.08);
+    border-color: rgba(212, 175, 55, 0.2);
 }
 
 .floor-tab-glass.active {
     background: linear-gradient(135deg, #d4af37, #b8941f);
     border-color: transparent;
     color: white;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
 }
 
-/* Room Box - Liquid Glass */
+/* Room Box - Lighter Glass */
 .room-box-glass {
     position: relative;
     width: 100%;
@@ -368,12 +393,10 @@ $total_rooms = array_sum($stats);
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
 }
 
@@ -382,13 +405,13 @@ $total_rooms = array_sum($stats);
     position: absolute;
     inset: 0;
     opacity: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
     transition: opacity 0.3s ease;
 }
 
 .room-box-glass:hover {
-    transform: scale(1.1) translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: scale(1.08) translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     z-index: 10;
 }
 
@@ -397,72 +420,111 @@ $total_rooms = array_sum($stats);
 }
 
 .room-box-glass .room-number {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: white;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     position: relative;
     z-index: 1;
 }
 
 .room-box-glass .room-status-icon {
     position: absolute;
-    bottom: 4px;
-    right: 4px;
-    opacity: 0.8;
+    bottom: 3px;
+    right: 3px;
+    opacity: 0.7;
     color: white;
 }
 
 .room-box-glass.available {
-    background: linear-gradient(135deg, #10b981, #059669);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.85), rgba(5, 150, 105, 0.9));
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.2);
 }
 
 .room-box-glass.occupied {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.85), rgba(220, 38, 38, 0.9));
+    box-shadow: 0 3px 12px rgba(239, 68, 68, 0.2);
 }
 
 .room-box-glass.maintenance {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.85), rgba(217, 119, 6, 0.9));
+    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.2);
 }
 
 .room-box-glass.cleaning {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(37, 99, 235, 0.9));
+    box-shadow: 0 3px 12px rgba(59, 130, 246, 0.2);
 }
 
-/* Modal Styles */
+/* Modal Styles - Lighter Glass */
 .glass-modal {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 450px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 1.5rem;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.88));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     z-index: 1001;
     overflow: hidden;
 }
 
 .dark .glass-modal {
-    background: rgba(30, 41, 59, 0.95);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.92), rgba(30, 41, 59, 0.88));
     border-color: rgba(255, 255, 255, 0.1);
 }
 
+.glass-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1000;
+}
+
+/* Glass Card Solid - Lighter */
+.glass-card-solid {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.dark .glass-card-solid {
+    background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(30,41,59,0.9));
+    border-color: rgba(255,255,255,0.08);
+}
+
 @media (max-width: 768px) {
+    .roommap-hero {
+        min-height: 320px;
+        padding: 100px 16px 50px;
+    }
+    
     .roommap-hero-title {
-        font-size: 32px;
+        font-size: 28px;
+    }
+    
+    .roommap-hero-subtitle {
+        font-size: 14px;
+    }
+    
+    .glass-stat-card {
+        padding: 12px;
+    }
+    
+    .glass-stat-card .stat-value {
+        font-size: 22px;
     }
     
     .room-box-glass .room-number {
-        font-size: 12px;
+        font-size: 11px;
     }
 }
 </style>

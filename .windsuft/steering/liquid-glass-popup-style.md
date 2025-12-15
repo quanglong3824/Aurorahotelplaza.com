@@ -100,27 +100,47 @@ document.addEventListener('keydown', function(e) {
 
 ## Đặc điểm kỹ thuật
 
-### Liquid Glass Effect
+### Liquid Glass Effect (Cập nhật mới - trong suốt hơn)
 ```css
 .qr-popup-glass {
     background: linear-gradient(
         135deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0.05) 100%
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 50%,
+        rgba(255, 255, 255, 0.03) 100%
     );
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-        0 32px 64px -12px rgba(0, 0, 0, 0.4);
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 32px 64px -12px rgba(0, 0, 0, 0.25);
 }
 ```
 
-### Animation Shimmer
+### Highlight Effect (::before)
 ```css
+.qr-popup-glass::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+```
+
+### Animation Shimmer (::after)
+```css
+.qr-popup-glass::after {
+    background: radial-gradient(
+        circle at 30% 20%,
+        rgba(212, 175, 55, 0.08) 0%,
+        transparent 50%
+    );
+    animation: liquidShimmer 8s ease-in-out infinite;
+}
+
 @keyframes liquidShimmer {
     0%, 100% { transform: translate(0, 0) rotate(0deg); }
     25% { transform: translate(5%, 5%) rotate(2deg); }
@@ -136,7 +156,7 @@ document.addEventListener('keydown', function(e) {
 ## Màu sắc
 - **Primary (vàng Aurora)**: `#d4af37` → `#b8941f`
 - **Text trắng**: `rgba(255, 255, 255, 0.8)` đến `white`
-- **Border**: `rgba(255, 255, 255, 0.3)`
+- **Border**: `rgba(255, 255, 255, 0.18)`
 - **Background overlay**: `rgba(0, 0, 0, 0.5)`
 
 ## Dark Mode
@@ -145,8 +165,8 @@ Style tự động hỗ trợ dark mode với class `.dark`:
 .dark .qr-popup-glass {
     background: linear-gradient(
         135deg,
-        rgba(30, 30, 30, 0.8) 0%,
-        rgba(20, 20, 20, 0.9) 100%
+        rgba(30, 30, 30, 0.5) 0%,
+        rgba(20, 20, 20, 0.6) 100%
     );
     border-color: rgba(255, 255, 255, 0.1);
 }
@@ -244,11 +264,85 @@ Style tự động hỗ trợ dark mode với class `.dark`:
 </div>
 ```
 
-## Nguyên tắc thiết kế
+## Quy tắc thiết kế Liquid Glass
 
-1. **Luôn có backdrop blur** - Tạo cảm giác nổi và tách biệt với nền
-2. **Gradient trong suốt** - Không dùng màu solid, luôn có độ trong suốt
-3. **Border mờ** - `rgba(255, 255, 255, 0.3)` để tạo viền nhẹ
-4. **Animation mượt** - Sử dụng cubic-bezier cho transition
-5. **Màu vàng Aurora** - `#d4af37` cho accent color
-6. **Dark mode ready** - Luôn test với `.dark` class
+### Nguyên tắc cốt lõi
+
+| # | Nguyên tắc | Mô tả | Giá trị |
+|---|------------|-------|---------|
+| 1 | **Trong suốt là ưu tiên** | Luôn để người dùng thấy được nội dung phía sau | Opacity max `0.12` |
+| 2 | **Blur vừa phải** | Đủ để tạo hiệu ứng glass nhưng không che mất nền | `blur(16px)` |
+| 3 | **Gradient 3 điểm** | Từ sáng → trung → tối theo hướng 135deg | `0.12 → 0.06 → 0.03` |
+| 4 | **Border siêu nhẹ** | Tạo viền phân cách mà không gây chú ý | `rgba(255,255,255,0.18)` |
+| 5 | **Shadow nhiều lớp** | Tạo chiều sâu với 3 lớp shadow | Xem CSS bên dưới |
+| 6 | **Animation tinh tế** | Shimmer nhẹ nhàng, không gây rối mắt | `8s ease-in-out` |
+
+### Công thức opacity
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  LIQUID GLASS OPACITY FORMULA                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Background Gradient:  0.12 → 0.06 → 0.03                   │
+│  Highlight (::before): 0.08 → 0                             │
+│  Shimmer (::after):    0.08 (vàng Aurora)                   │
+│  Border:               0.18                                 │
+│  Shadow:               0.12, 0.08, 0.25                     │
+│                                                             │
+│  Dark Mode:            0.5 → 0.6 (đậm hơn để đọc được)      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Quy tắc màu sắc
+
+| Thành phần | Light Mode | Dark Mode |
+|------------|------------|-----------|
+| Background | `rgba(255,255,255, 0.03-0.12)` | `rgba(20-30,20-30,20-30, 0.5-0.6)` |
+| Border | `rgba(255,255,255, 0.18)` | `rgba(255,255,255, 0.1)` |
+| Text | `white` hoặc `rgba(255,255,255, 0.8-0.9)` | Giữ nguyên |
+| Accent | `#d4af37` (vàng Aurora) | Giữ nguyên |
+| Shadow | `rgba(0,0,0, 0.12-0.25)` | Giữ nguyên |
+
+### Quy tắc animation
+
+```css
+/* Transition mở/đóng - bounce effect */
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+/* Shimmer - chậm và tinh tế */
+animation: liquidShimmer 8s ease-in-out infinite;
+
+/* Hover effects - nhanh và nhẹ */
+transition: all 0.3s ease;
+```
+
+### Quy tắc responsive
+
+| Breakpoint | Điều chỉnh |
+|------------|------------|
+| Desktop | `max-width: 420px`, `padding: 32px` |
+| Tablet | `max-width: 90%`, `padding: 24px` |
+| Mobile | `width: 95%`, `padding: 20px`, `border-radius: 20px` |
+
+### Checklist khi tạo UI mới với Liquid Glass
+
+- [ ] Sử dụng class `.qr-popup-glass` hoặc copy CSS
+- [ ] Đảm bảo có `backdrop-filter` VÀ `-webkit-backdrop-filter`
+- [ ] Gradient 3 điểm với opacity thấp (max 0.12)
+- [ ] Border với opacity 0.18
+- [ ] Box-shadow 3 lớp
+- [ ] Test trên nền có hình ảnh để đảm bảo trong suốt
+- [ ] Test dark mode với class `.dark`
+- [ ] Test animation không gây lag
+- [ ] Đảm bảo text vẫn đọc được rõ ràng
+
+### Không nên làm
+
+❌ Dùng opacity cao hơn 0.2 cho background  
+❌ Blur quá 20px (gây lag trên mobile)  
+❌ Animation nhanh hơn 4s (gây rối mắt)  
+❌ Dùng màu solid thay vì gradient  
+❌ Quên `-webkit-backdrop-filter` (Safari)  
+❌ Shadow quá đậm (opacity > 0.3)

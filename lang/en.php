@@ -22,6 +22,7 @@ return [
         'profile' => 'My Profile',
         'my_bookings' => 'My Bookings',
         'loyalty' => 'Rewards',
+        'room_map' => 'Room Map',
         'admin' => 'Admin Panel',
     ],
     

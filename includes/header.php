@@ -160,6 +160,10 @@ $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
                         <span class="material-symbols-outlined">stars</span>
                         <?php _e('nav.loyalty'); ?>
                     </a>
+                    <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
+                        <span class="material-symbols-outlined">map</span>
+                        <?php _e('nav.room_map'); ?>
+                    </a>
                     <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                     <div class="user-menu-divider"></div>
                     <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
