@@ -193,6 +193,27 @@ class Mailer {
     }
     
     /**
+     * Send temporary password email
+     * 
+     * @param string $userEmail User email address
+     * @param string $userName User full name
+     * @param string $tempPassword Temporary password
+     * @return bool Success status
+     */
+    public function sendTemporaryPassword($userEmail, $userName, $tempPassword) {
+        try {
+            $subject = "Mật khẩu tạm thời - Aurora Hotel Plaza";
+            $body = EmailTemplates::getTemporaryPasswordTemplate($userName, $tempPassword);
+            
+            return $this->send($userEmail, $subject, $body);
+            
+        } catch (Exception $e) {
+            error_log("Temporary password email error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
      * Send custom email
      * 
      * @param string $to Recipient email
