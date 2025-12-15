@@ -44,6 +44,10 @@ class Mailer {
             $this->mail->Port = SMTP_PORT;
             $this->mail->CharSet = MAIL_CHARSET;
             
+            // Timeout settings for faster response
+            $this->mail->Timeout = 10; // 10 seconds timeout
+            $this->mail->SMTPKeepAlive = false; // Don't keep connection alive
+            
             // Debug level
             $this->mail->SMTPDebug = MAIL_DEBUG;
             

@@ -18,10 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $db = getDB();
             
-            // Check if temp_password column exists, add if not
-            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS temp_password VARCHAR(255) NULL");
-            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS temp_password_expires TIMESTAMP NULL");
-            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS requires_password_change TINYINT(1) DEFAULT 0");
+            // Ensure temp_password columns exist (run once, cached by MySQL)
+            try {
+                $db->exec("ALTER TABLE users ADD COLUMN temp_password VARCHAR(255) NULL");
+            } catch (PDOException $e) { /* Column exists */ }
+            try {
+                $db->exec("ALTER TABLE users ADD COLUMN temp_password_expires TIMESTAMP NULL");
+            } catch (PDOException $e) { /* Column exists */ }
+            try {
+                $db->exec("ALTER TABLE users ADD COLUMN requires_password_change TINYINT(1) DEFAULT 0");
+            } catch (PDOException $e) { /* Column exists */ }
             
             $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ? AND status = 'active'");
             $stmt->execute([$email]);
@@ -96,6 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
 <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/auth/assets/css/auth.css?v=<?php echo time(); ?>">
+<style>
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.animate-spin { animation: spin 1s linear infinite; }
+</style>
 </head>
 <body class="auth-forgot">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -155,14 +168,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <!-- Submit -->
-                    <button type="submit" class="btn-primary">
-                        <span class="btn-text">Gửi mật khẩu tạm thời</span>
-                        <span class="btn-icon">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <span class="btn-text" id="btnText">Gửi mật khẩu tạm thời</span>
+                        <span class="btn-icon" id="btnIcon">
                             <span class="material-symbols-outlined">send</span>
+                        </span>
+                        <span class="btn-loading" id="btnLoading" style="display: none;">
+                            <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span style="margin-left: 8px;">Đang gửi...</span>
                         </span>
                     </button>
                 </div>
             </form>
+            
+            <script>
+            document.getElementById('forgotForm').addEventListener('submit', function(e) {
+                var btn = document.getElementById('submitBtn');
+                var btnText = document.getElementById('btnText');
+                var btnIcon = document.getElementById('btnIcon');
+                var btnLoading = document.getElementById('btnLoading');
+                
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+                btnText.style.display = 'none';
+                btnIcon.style.display = 'none';
+                btnLoading.style.display = 'flex';
+                btnLoading.style.alignItems = 'center';
+                btnLoading.style.justifyContent = 'center';
+            });
+            </script>
             <?php else: ?>
             <!-- Success Actions -->
             <div class="text-center space-y-4">

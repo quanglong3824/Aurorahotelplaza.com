@@ -122,6 +122,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // TODO: Store token in user_sessions table
                 }
                 
+                // Check if must change password (temp password login)
+                if ($using_temp_password || (isset($user['requires_password_change']) && $user['requires_password_change'])) {
+                    $_SESSION['must_change_password'] = true;
+                    header('Location: ' . url('auth/change-password.php'));
+                    exit;
+                }
+                
                 // Redirect to main page or intended destination
                 $redirect = $_GET['redirect'] ?? '../index.php';
                 header('Location: ' . $redirect);
