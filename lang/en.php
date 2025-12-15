@@ -1161,6 +1161,7 @@ return [
         'privacy_policy' => 'Privacy Policy',
         'terms_of_service' => 'Terms of Service',
         'cancellation_policy' => 'Cancellation Policy',
+        'our_location' => 'Our Location',
         'events_coming_soon' => 'Events page is being updated. Please check back later!',
     ],
 
