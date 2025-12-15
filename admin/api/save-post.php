@@ -56,6 +56,7 @@ $status = sanitize($_POST['status']);
 $featured_image = sanitize($_POST['featured_image']);
 // $meta_description = sanitize($_POST['meta_description']);
 $tags = sanitize($_POST['tags']);
+$layout = sanitize($_POST['layout'] ?? 'standard');
 $is_featured = isset($_POST['is_featured']) ? 1 : 0;
 $allow_comments = isset($_POST['allow_comments']) ? 1 : 0;
 $author_id = $_SESSION['user_id'];
@@ -84,6 +85,7 @@ if ($post_id) {
                 status = :status, 
                 featured_image = :featured_image, 
                 tags = :tags, 
+                layout = :layout,
                 is_featured = :is_featured, 
                 allow_comments = :allow_comments,
                 published_at = :published_at,
@@ -99,6 +101,7 @@ if ($post_id) {
         ':status' => $status,
         ':featured_image' => $featured_image,
         ':tags' => $tags,
+        ':layout' => $layout,
         ':is_featured' => $is_featured,
         ':allow_comments' => $allow_comments,
         ':published_at' => $published_at,
@@ -107,9 +110,9 @@ if ($post_id) {
 } else {
     // Tạo bài viết mới
     $sql = "INSERT INTO blog_posts 
-                (author_id, title, slug, category_id, excerpt, content, status, featured_image, tags, is_featured, allow_comments, published_at, created_at, updated_at) 
+                (author_id, title, slug, category_id, excerpt, content, status, featured_image, tags, layout, is_featured, allow_comments, published_at, created_at, updated_at) 
             VALUES 
-                (:author_id, :title, :slug, :category_id, :excerpt, :content, :status, :featured_image, :tags, :is_featured, :allow_comments, :published_at, NOW(), NOW())";
+                (:author_id, :title, :slug, :category_id, :excerpt, :content, :status, :featured_image, :tags, :layout, :is_featured, :allow_comments, :published_at, NOW(), NOW())";
     $stmt = $db->prepare($sql);
     $params = [
         ':author_id' => $author_id,
@@ -121,6 +124,7 @@ if ($post_id) {
         ':status' => $status,
         ':featured_image' => $featured_image,
         ':tags' => $tags,
+        ':layout' => $layout,
         ':is_featured' => $is_featured,
         ':allow_comments' => $allow_comments,
         ':published_at' => $published_at,
