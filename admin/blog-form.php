@@ -338,151 +338,355 @@ include 'includes/admin-header.php';
         </div>
     </div>
 
-    <div class="card mb-6">
+    <!-- ========== DYNAMIC IMAGE FORM BASED ON LAYOUT ========== -->
+    <?php 
+        // Fix image paths for display
+        $preview_img = $post['featured_image'] ?? '';
+        $display_img = $preview_img;
+        if ($preview_img && strpos($preview_img, 'uploads/') === 0) {
+            $display_img = '../' . $preview_img;
+        }
+        $stored_img = $preview_img;
+        if ($stored_img && strpos($stored_img, '../uploads/') === 0) {
+            $stored_img = str_replace('../uploads/', 'uploads/', $stored_img);
+        }
+        
+        // Parse gallery images
+        $gallery_arr = [];
+        if (!empty($post['gallery_images'])) {
+            $gallery_arr = json_decode($post['gallery_images'], true) ?: [];
+        }
+    ?>
+    
+    <div class="card mb-6" id="dynamicImageSection">
         <div class="card-header flex items-center justify-between">
-            <h3 class="font-bold text-lg">Ảnh đại diện</h3>
+            <div>
+                <h3 class="font-bold text-lg" id="imageFormTitle">Ảnh bài viết</h3>
+                <p class="text-xs text-gray-500 mt-1" id="imageFormSubtitle">Chọn ảnh phù hợp với layout đã chọn</p>
+            </div>
             <button type="button" id="uploadNewBtn" class="btn btn-sm btn-secondary">
                 <span class="material-symbols-outlined text-sm">upload</span>
                 Upload ảnh mới
             </button>
         </div>
-        <div class="card-body space-y-4">
-            <!-- Selected Image Preview -->
-            <?php 
-                // Fix image path for display in admin
-                $preview_img = $post['featured_image'] ?? '';
-                $display_img = $preview_img;
-                if ($preview_img && strpos($preview_img, 'uploads/') === 0) {
-                    $display_img = '../' . $preview_img; // uploads/ -> ../uploads/ for admin display
-                }
-                // Normalize stored value to uploads/ format
-                $stored_img = $preview_img;
-                if ($stored_img && strpos($stored_img, '../uploads/') === 0) {
-                    $stored_img = str_replace('../uploads/', 'uploads/', $stored_img);
-                }
-            ?>
-            <div id="selectedImagePreview" class="mb-4 <?php echo empty($post['featured_image']) ? 'hidden' : ''; ?>">
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Ảnh đã chọn:</p>
-                <div class="relative inline-block">
-                    <img id="previewImg" src="<?php echo htmlspecialchars($display_img); ?>" 
-                         alt="Preview" class="h-32 w-auto rounded-lg object-cover border-2 border-[#d4af37]">
-                    <button type="button" id="clearImageBtn" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            </div>
+        <div class="card-body space-y-6">
             
-            <input type="hidden" name="featured_image" id="featuredImageInput" 
-                   value="<?php echo htmlspecialchars($stored_img); ?>">
-            
-            <!-- Upload Zone - Multiple files support -->
+            <!-- Upload Zone -->
             <div id="uploadZone" class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl p-6 text-center hover:border-[#d4af37] transition-colors cursor-pointer hidden">
                 <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
                 <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">cloud_upload</span>
                 <p class="text-gray-600 dark:text-gray-400">Kéo thả ảnh vào đây hoặc <span class="text-[#d4af37] font-medium">click để chọn</span></p>
-                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: JPG, PNG, GIF, WebP (tối đa 5MB mỗi ảnh) - <strong>Có thể chọn nhiều ảnh</strong></p>
+                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: JPG, PNG, GIF, WebP (tối đa 5MB) - <strong>Có thể chọn nhiều ảnh</strong></p>
             </div>
             
-            <!-- Multiple Upload Progress -->
+            <!-- Upload Progress -->
             <div id="multiUploadProgress" class="hidden space-y-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Đang upload <span id="uploadingCount">0</span> ảnh...</p>
                 <div class="space-y-1" id="uploadProgressList"></div>
             </div>
             
-            <!-- Upload Progress -->
-            <div id="uploadProgress" class="hidden">
-                <div class="flex items-center gap-3">
-                    <div class="flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                        <div id="progressBar" class="h-full bg-[#d4af37] transition-all" style="width: 0%"></div>
+            <!-- ========== LAYOUT-SPECIFIC IMAGE FORMS ========== -->
+            
+            <!-- STANDARD/HERO/FULLWIDTH: Single Featured Image -->
+            <div id="layoutForm_single" class="layout-form">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">image</span>
+                        Ảnh đại diện (Hero)
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Ảnh chính hiển thị đầu bài viết</p>
+                </div>
+                <div id="singleImageBox" class="aspect-video max-w-2xl bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured">
+                    <div class="empty-state text-center p-8">
+                        <span class="material-symbols-outlined text-5xl text-gray-400 mb-2">add_photo_alternate</span>
+                        <p class="text-gray-500">Click để chọn ảnh đại diện</p>
                     </div>
-                    <span id="progressText" class="text-sm text-gray-600">0%</span>
+                    <img src="<?php echo htmlspecialchars($display_img); ?>" class="absolute inset-0 w-full h-full object-cover <?php echo empty($preview_img) ? 'hidden' : ''; ?>" id="singlePreview">
+                    <button type="button" class="clear-slot-btn absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full items-center justify-center hover:bg-red-600 <?php echo empty($preview_img) ? 'hidden' : 'flex'; ?>">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
                 </div>
             </div>
             
-            <!-- Image Gallery from /uploads -->
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Chọn từ thư viện ảnh đã upload:</p>
+            <!-- APARTMENT: Hero + 2 Side + 4 Bottom Thumbnails -->
+            <div id="layoutForm_apartment" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">apartment</span>
+                        Ảnh giới thiệu căn hộ/phòng
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">1 ảnh hero lớn + 2 ảnh bên + 4 ảnh thumbnail</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <!-- Main Hero -->
+                    <div class="col-span-2">
+                        <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh chính (Hero)</p>
+                        <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-3xl text-gray-400">add_photo_alternate</span>
+                                <p class="text-xs text-gray-500 mt-1">Ảnh chính</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Side Images -->
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh phụ 1</p>
+                            <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="0">
+                                <div class="empty-state text-center">
+                                    <span class="material-symbols-outlined text-2xl text-gray-400">add</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh phụ 2</p>
+                            <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="1">
+                                <div class="empty-state text-center">
+                                    <span class="material-symbols-outlined text-2xl text-gray-400">add</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bottom Thumbnails -->
+                <div class="mt-4">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh thumbnail (tùy chọn)</p>
+                    <div class="grid grid-cols-4 gap-3">
+                        <?php for ($i = 2; $i < 6; $i++): ?>
+                        <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-xl text-gray-400">add</span>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GALLERY: Grid of images -->
+            <div id="layoutForm_gallery" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">grid_view</span>
+                        Ảnh Gallery (Lưới)
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">1 ảnh đại diện + nhiều ảnh hiển thị dạng lưới</p>
+                </div>
+                <!-- Featured -->
+                <div class="mb-4">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh đại diện</p>
+                    <div class="image-slot aspect-video max-w-md bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                        <div class="empty-state text-center">
+                            <span class="material-symbols-outlined text-3xl text-gray-400">add_photo_alternate</span>
+                            <p class="text-xs text-gray-500 mt-1">Ảnh chính</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Grid -->
+                <div>
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh gallery (tối đa 12 ảnh)</p>
+                    <div class="grid grid-cols-4 md:grid-cols-6 gap-3" id="galleryGrid">
+                        <?php for ($i = 0; $i < 12; $i++): ?>
+                        <div class="image-slot aspect-square bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-xl text-gray-400">add</span>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SLIDER: Carousel images -->
+            <div id="layoutForm_slider" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">view_carousel</span>
+                        Ảnh Slider (Carousel)
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Các ảnh sẽ hiển thị dạng trình chiếu tự động</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Slide 1 (Ảnh đại diện)</p>
+                    <div class="image-slot aspect-[21/9] max-w-3xl bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                        <div class="empty-state text-center">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">add_photo_alternate</span>
+                            <p class="text-sm text-gray-500 mt-1">Slide 1 - Ảnh chính</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mt-4">Các slide tiếp theo</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="sliderGrid">
+                        <?php for ($i = 0; $i < 6; $i++): ?>
+                        <div class="image-slot aspect-[21/9] bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-2xl text-gray-400">add</span>
+                                <p class="text-xs text-gray-500">Slide <?php echo $i + 2; ?></p>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MASONRY: Pinterest-style -->
+            <div id="layoutForm_masonry" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">dashboard</span>
+                        Ảnh Masonry (Pinterest)
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Ảnh hiển thị dạng Pinterest với kích thước đa dạng</p>
+                </div>
+                <!-- Featured -->
+                <div class="mb-4">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh đại diện</p>
+                    <div class="image-slot aspect-video max-w-lg bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                        <div class="empty-state text-center">
+                            <span class="material-symbols-outlined text-3xl text-gray-400">add_photo_alternate</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Masonry Grid -->
+                <div>
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh masonry (tối đa 10 ảnh)</p>
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-3" id="masonryGrid">
+                        <?php for ($i = 0; $i < 10; $i++): ?>
+                        <div class="image-slot <?php echo $i % 3 === 0 ? 'aspect-[3/4]' : ($i % 3 === 1 ? 'aspect-square' : 'aspect-[4/3]'); ?> bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-xl text-gray-400">add</span>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MAGAZINE: Side by side -->
+            <div id="layoutForm_magazine" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">menu_book</span>
+                        Ảnh Magazine
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">1 ảnh lớn bên trái + 3 ảnh nhỏ bên phải</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh chính</p>
+                        <div class="image-slot aspect-[3/4] bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-4xl text-gray-400">add_photo_alternate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh phụ</p>
+                        <?php for ($i = 0; $i < 3; $i++): ?>
+                        <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-xl text-gray-400">add</span>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TIMELINE: Vertical timeline -->
+            <div id="layoutForm_timeline" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">timeline</span>
+                        Ảnh Timeline
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Ảnh hiển thị theo dòng thời gian dọc</p>
+                </div>
+                <!-- Featured -->
+                <div class="mb-4">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh đại diện</p>
+                    <div class="image-slot aspect-video max-w-lg bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                        <div class="empty-state text-center">
+                            <span class="material-symbols-outlined text-3xl text-gray-400">add_photo_alternate</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline items -->
+                <div class="relative pl-8 border-l-2 border-[#d4af37] space-y-4">
+                    <?php for ($i = 0; $i < 5; $i++): ?>
+                    <div class="relative">
+                        <div class="absolute -left-[25px] w-3 h-3 bg-[#d4af37] rounded-full border-2 border-white dark:border-gray-900"></div>
+                        <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Mốc <?php echo $i + 1; ?></p>
+                        <div class="image-slot aspect-video bg-gray-100 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="gallery" data-index="<?php echo $i; ?>">
+                            <div class="empty-state text-center">
+                                <span class="material-symbols-outlined text-xl text-gray-400">add</span>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            
+            <!-- VIDEO: Video + thumbnail -->
+            <div id="layoutForm_video" class="layout-form hidden">
+                <div class="mb-4">
+                    <label class="form-label flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">play_circle</span>
+                        Video Layout
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Nhúng video YouTube/Vimeo + ảnh thumbnail</p>
+                </div>
+                <!-- Video URL -->
+                <div class="mb-4">
+                    <label class="form-label">URL Video</label>
+                    <input type="url" name="video_url" id="videoUrlInput" class="form-input" 
+                           value="<?php echo htmlspecialchars($post['video_url'] ?? ''); ?>" 
+                           placeholder="https://www.youtube.com/watch?v=... hoặc https://vimeo.com/...">
+                    <p class="text-xs text-gray-500 mt-1">Hỗ trợ: YouTube, Vimeo</p>
+                </div>
+                <!-- Thumbnail -->
+                <div>
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Ảnh thumbnail (hiển thị khi video chưa load)</p>
+                    <div class="image-slot aspect-video max-w-lg bg-gray-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-[#d4af37] transition-all overflow-hidden relative" data-slot="featured" data-index="0">
+                        <div class="empty-state text-center">
+                            <span class="material-symbols-outlined text-3xl text-gray-400">add_photo_alternate</span>
+                            <p class="text-xs text-gray-500 mt-1">Thumbnail</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hidden inputs -->
+            <input type="hidden" name="featured_image" id="featuredImageInput" value="<?php echo htmlspecialchars($stored_img); ?>">
+            <input type="hidden" name="gallery_images" id="galleryImagesInput" value="<?php echo htmlspecialchars($post['gallery_images'] ?? ''); ?>">
+            
+            <!-- Image Library -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <span class="material-symbols-outlined text-sm align-middle mr-1">photo_library</span>
+                    Thư viện ảnh - Click để chọn
+                </p>
                 <?php if (empty($uploaded_images)): ?>
                     <div class="text-center py-8 bg-gray-50 dark:bg-slate-800 rounded-xl">
                         <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">photo_library</span>
-                        <p class="text-gray-500">Chưa có ảnh nào trong thư viện</p>
-                        <p class="text-xs text-gray-400 mt-1">Upload ảnh mới để bắt đầu</p>
+                        <p class="text-gray-500">Chưa có ảnh nào</p>
+                        <p class="text-xs text-gray-400 mt-1">Click "Upload ảnh mới" để thêm</p>
                     </div>
                 <?php else: ?>
-                    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto p-2 bg-gray-50 dark:bg-slate-800 rounded-xl" id="imageGallery">
+                    <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 max-h-48 overflow-y-auto p-3 bg-gray-50 dark:bg-slate-800 rounded-xl" id="imageLibrary">
                         <?php foreach ($uploaded_images as $img): ?>
-                            <div class="image-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative group"
+                            <div class="library-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative group"
                                  data-src="uploads/<?php echo htmlspecialchars($img); ?>">
                                 <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
                                      alt="<?php echo htmlspecialchars($img); ?>"
                                      class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-white">check_circle</span>
+                                    <span class="material-symbols-outlined text-white text-sm">check</span>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
-    <!-- Gallery Images Section (for slider/apartment layouts) -->
-    <div class="card mb-6" id="galleryImagesSection">
-        <div class="card-header flex items-center justify-between">
-            <div>
-                <h3 class="font-bold text-lg">Ảnh Gallery / Slider</h3>
-                <p class="text-xs text-gray-500 mt-1">Chọn nhiều ảnh cho layout Slider hoặc Căn hộ. Kéo thả để sắp xếp thứ tự.</p>
-            </div>
-            <span class="badge badge-info" id="galleryCount">0 ảnh</span>
-        </div>
-        <div class="card-body space-y-4">
-            <!-- Selected Gallery Images -->
-            <div id="selectedGalleryImages" class="min-h-[80px] p-3 bg-gray-50 dark:bg-slate-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-slate-600">
-                <p class="text-sm text-gray-500 text-center py-4" id="galleryPlaceholder">Click vào ảnh bên dưới để thêm vào gallery</p>
-                <div id="galleryImagesList" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2"></div>
-            </div>
-            
-            <input type="hidden" name="gallery_images" id="galleryImagesInput" 
-                   value="<?php echo htmlspecialchars($post['gallery_images'] ?? ''); ?>">
-            
-            <!-- Available Images -->
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Click để thêm ảnh vào gallery:</p>
-                <?php if (empty($uploaded_images)): ?>
-                    <div class="text-center py-6 bg-gray-100 dark:bg-slate-700 rounded-xl">
-                        <span class="material-symbols-outlined text-3xl text-gray-400 mb-2">photo_library</span>
-                        <p class="text-gray-500 text-sm">Chưa có ảnh. Upload ảnh mới ở phần trên.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-100 dark:bg-slate-700 rounded-xl" id="gallerySourceImages">
-                        <?php foreach ($uploaded_images as $img): ?>
-                            <div class="gallery-source-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative"
-                                 data-src="uploads/<?php echo htmlspecialchars($img); ?>">
-                                <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
-                                     alt="<?php echo htmlspecialchars($img); ?>"
-                                     class="w-full h-full object-cover">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Video URL Section (for video layout) -->
-    <div class="card mb-6" id="videoUrlSection" style="display: none;">
-        <div class="card-header">
-            <h3 class="font-bold text-lg">Video URL</h3>
-            <p class="text-xs text-gray-500 mt-1">Dành cho layout Video - nhập link YouTube hoặc Vimeo</p>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label class="form-label">URL Video (YouTube/Vimeo)</label>
-                <input type="url" name="video_url" class="form-input" 
-                       value="<?php echo htmlspecialchars($post['video_url'] ?? ''); ?>" 
-                       placeholder="https://www.youtube.com/watch?v=... hoặc https://vimeo.com/...">
-                <p class="text-xs text-gray-500 mt-1">Hỗ trợ: YouTube, Vimeo. Video sẽ được nhúng tự động.</p>
             </div>
         </div>
     </div>
@@ -600,18 +804,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 layoutDescription.innerHTML = `<p class="text-gray-600 dark:text-gray-400">${layoutDescriptions[layout]}</p>`;
             }
             
-            // Show/hide gallery section based on layout
-            const gallerySection = document.getElementById('galleryImagesSection');
-            if (gallerySection) {
-                const needsGallery = ['gallery', 'slider', 'apartment', 'masonry'].includes(layout);
-                gallerySection.style.display = needsGallery ? 'block' : 'none';
-            }
-            
-            // Show/hide video URL section based on layout
-            const videoSection = document.getElementById('videoUrlSection');
-            if (videoSection) {
-                videoSection.style.display = layout === 'video' ? 'block' : 'none';
-            }
+            // Switch layout form
+            switchLayoutForm(layout);
         });
         
         // Trigger for initially selected layout
@@ -619,6 +813,247 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.dispatchEvent(new Event('change'));
         }
     });
+    
+    // ========== DYNAMIC LAYOUT FORM SWITCHING ==========
+    const layoutFormMap = {
+        'standard': 'single',
+        'hero': 'single',
+        'fullwidth': 'single',
+        'sidebar': 'single',
+        'apartment': 'apartment',
+        'gallery': 'gallery',
+        'slider': 'slider',
+        'masonry': 'masonry',
+        'magazine': 'magazine',
+        'timeline': 'timeline',
+        'video': 'video'
+    };
+    
+    function switchLayoutForm(layout) {
+        // Hide all layout forms
+        document.querySelectorAll('.layout-form').forEach(form => {
+            form.classList.add('hidden');
+        });
+        
+        // Show the appropriate form
+        const formId = layoutFormMap[layout] || 'single';
+        const targetForm = document.getElementById('layoutForm_' + formId);
+        if (targetForm) {
+            targetForm.classList.remove('hidden');
+        }
+        
+        // Update title and subtitle
+        const titles = {
+            'single': { title: 'Ảnh đại diện', subtitle: 'Chọn 1 ảnh chính cho bài viết' },
+            'apartment': { title: 'Ảnh căn hộ/phòng', subtitle: '1 ảnh hero + 6 ảnh thumbnail' },
+            'gallery': { title: 'Ảnh Gallery', subtitle: '1 ảnh đại diện + tối đa 12 ảnh lưới' },
+            'slider': { title: 'Ảnh Slider', subtitle: 'Các ảnh sẽ trình chiếu tự động' },
+            'masonry': { title: 'Ảnh Masonry', subtitle: 'Ảnh hiển thị kiểu Pinterest' },
+            'magazine': { title: 'Ảnh Magazine', subtitle: '1 ảnh lớn + 3 ảnh phụ' },
+            'timeline': { title: 'Ảnh Timeline', subtitle: 'Ảnh theo dòng thời gian' },
+            'video': { title: 'Video & Thumbnail', subtitle: 'Nhúng video YouTube/Vimeo' }
+        };
+        
+        const info = titles[formId] || titles['single'];
+        document.getElementById('imageFormTitle').textContent = info.title;
+        document.getElementById('imageFormSubtitle').textContent = info.subtitle;
+        
+        // Populate existing images into slots
+        populateImageSlots();
+    }
+    
+    // ========== IMAGE SLOT MANAGEMENT ==========
+    let activeSlot = null;
+    let galleryImages = [];
+    
+    // Initialize gallery images from hidden input
+    try {
+        const savedGallery = document.getElementById('galleryImagesInput').value;
+        if (savedGallery) {
+            galleryImages = JSON.parse(savedGallery) || [];
+        }
+    } catch (e) {
+        galleryImages = [];
+    }
+    
+    // Populate image slots with existing data
+    function populateImageSlots() {
+        const featuredImg = document.getElementById('featuredImageInput').value;
+        
+        // Populate featured image slots
+        document.querySelectorAll('.layout-form:not(.hidden) .image-slot[data-slot="featured"]').forEach(slot => {
+            if (featuredImg) {
+                setSlotImage(slot, featuredImg);
+            }
+        });
+        
+        // Populate gallery image slots
+        document.querySelectorAll('.layout-form:not(.hidden) .image-slot[data-slot="gallery"]').forEach(slot => {
+            const index = parseInt(slot.dataset.index);
+            if (galleryImages[index]) {
+                setSlotImage(slot, galleryImages[index]);
+            }
+        });
+    }
+    
+    // Set image in a slot
+    function setSlotImage(slot, src) {
+        // Remove empty state
+        const emptyState = slot.querySelector('.empty-state');
+        if (emptyState) emptyState.classList.add('hidden');
+        
+        // Add or update image
+        let img = slot.querySelector('img.slot-img');
+        if (!img) {
+            img = document.createElement('img');
+            img.className = 'slot-img absolute inset-0 w-full h-full object-cover';
+            slot.appendChild(img);
+        }
+        
+        // Display path (add ../ for admin)
+        const displaySrc = src.startsWith('uploads/') ? '../' + src : src;
+        img.src = displaySrc;
+        img.classList.remove('hidden');
+        
+        // Add clear button
+        let clearBtn = slot.querySelector('.clear-slot-btn');
+        if (!clearBtn) {
+            clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.className = 'clear-slot-btn absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 z-10';
+            clearBtn.innerHTML = '<span class="material-symbols-outlined text-xs">close</span>';
+            clearBtn.onclick = (e) => {
+                e.stopPropagation();
+                clearSlot(slot);
+            };
+            slot.appendChild(clearBtn);
+        }
+        clearBtn.classList.remove('hidden');
+        
+        // Update border
+        slot.classList.remove('border-dashed');
+        slot.classList.add('border-solid', 'border-[#d4af37]');
+    }
+    
+    // Clear a slot
+    function clearSlot(slot) {
+        const slotType = slot.dataset.slot;
+        const index = parseInt(slot.dataset.index) || 0;
+        
+        if (slotType === 'featured') {
+            document.getElementById('featuredImageInput').value = '';
+            // Clear all featured slots across all forms
+            document.querySelectorAll('.image-slot[data-slot="featured"]').forEach(s => {
+                resetSlotUI(s);
+            });
+        } else {
+            galleryImages[index] = null;
+            updateGalleryInput();
+            // Clear this specific gallery slot across all forms
+            document.querySelectorAll(`.image-slot[data-slot="gallery"][data-index="${index}"]`).forEach(s => {
+                resetSlotUI(s);
+            });
+        }
+    }
+    
+    // Reset slot UI
+    function resetSlotUI(slot) {
+        const emptyState = slot.querySelector('.empty-state');
+        if (emptyState) emptyState.classList.remove('hidden');
+        
+        const img = slot.querySelector('img.slot-img');
+        if (img) img.classList.add('hidden');
+        
+        const clearBtn = slot.querySelector('.clear-slot-btn');
+        if (clearBtn) clearBtn.classList.add('hidden');
+        
+        slot.classList.add('border-dashed');
+        slot.classList.remove('border-solid', 'border-[#d4af37]');
+    }
+    
+    // Update gallery images hidden input
+    function updateGalleryInput() {
+        // Filter out null/empty values but keep array structure
+        const cleanGallery = galleryImages.filter(img => img);
+        document.getElementById('galleryImagesInput').value = JSON.stringify(cleanGallery);
+    }
+    
+    // Click on image slot to select
+    document.querySelectorAll('.image-slot').forEach(slot => {
+        slot.addEventListener('click', function(e) {
+            if (e.target.closest('.clear-slot-btn')) return;
+            activeSlot = this;
+            // Highlight active slot
+            document.querySelectorAll('.image-slot').forEach(s => s.classList.remove('ring-2', 'ring-[#d4af37]'));
+            this.classList.add('ring-2', 'ring-[#d4af37]');
+        });
+    });
+    
+    // Click on library image to fill active slot
+    document.querySelectorAll('.library-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            const src = this.dataset.src;
+            if (!activeSlot) {
+                // If no slot selected, find first empty slot in current form
+                activeSlot = document.querySelector('.layout-form:not(.hidden) .image-slot:not(:has(img.slot-img:not(.hidden)))');
+            }
+            
+            if (activeSlot) {
+                const slotType = activeSlot.dataset.slot;
+                const index = parseInt(activeSlot.dataset.index) || 0;
+                
+                if (slotType === 'featured') {
+                    document.getElementById('featuredImageInput').value = src;
+                    // Update all featured slots
+                    document.querySelectorAll('.image-slot[data-slot="featured"]').forEach(s => {
+                        setSlotImage(s, src);
+                    });
+                } else {
+                    galleryImages[index] = src;
+                    updateGalleryInput();
+                    // Update this specific gallery slot
+                    document.querySelectorAll(`.image-slot[data-slot="gallery"][data-index="${index}"]`).forEach(s => {
+                        setSlotImage(s, src);
+                    });
+                }
+                
+                // Move to next empty slot
+                const allSlots = document.querySelectorAll('.layout-form:not(.hidden) .image-slot');
+                let foundCurrent = false;
+                for (const slot of allSlots) {
+                    if (slot === activeSlot) {
+                        foundCurrent = true;
+                        continue;
+                    }
+                    if (foundCurrent && !slot.querySelector('img.slot-img:not(.hidden)')) {
+                        activeSlot = slot;
+                        document.querySelectorAll('.image-slot').forEach(s => s.classList.remove('ring-2', 'ring-[#d4af37]'));
+                        slot.classList.add('ring-2', 'ring-[#d4af37]');
+                        break;
+                    }
+                }
+            }
+        });
+    });
+    
+    // Handle single image box (for standard/hero/fullwidth layouts)
+    const singleImageBox = document.getElementById('singleImageBox');
+    if (singleImageBox) {
+        singleImageBox.addEventListener('click', function(e) {
+            if (e.target.closest('.clear-slot-btn')) return;
+            activeSlot = this;
+            document.querySelectorAll('.image-slot').forEach(s => s.classList.remove('ring-2', 'ring-[#d4af37]'));
+            this.classList.add('ring-2', 'ring-[#d4af37]');
+        });
+    }
+    
+    // Initialize on page load
+    setTimeout(() => {
+        const selectedLayout = document.querySelector('input[name="layout"]:checked');
+        if (selectedLayout) {
+            switchLayoutForm(selectedLayout.value);
+        }
+    }, 100);
     
     // Toggle upload zone
     uploadNewBtn?.addEventListener('click', function() {

@@ -175,13 +175,272 @@ try {
                 </div>
             </div>
 
-            <!-- Featured Image -->
+            <!-- Dynamic Layout Based on Post Layout Type -->
+            <?php 
+            $layout = $post['layout'] ?? 'standard';
+            $gallery_images = !empty($post['gallery_images']) ? json_decode($post['gallery_images'], true) : [];
+            $video_url = $post['video_url'] ?? '';
+            ?>
+            
+            <?php if ($layout === 'hero' && $post['featured_image']): ?>
+            <!-- HERO LAYOUT - Full width hero image with overlay -->
+            <div class="relative -mx-4 md:-mx-8 lg:-mx-16 mb-12">
+                <div class="aspect-[21/9] overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
+            
+            <?php elseif ($layout === 'fullwidth' && $post['featured_image']): ?>
+            <!-- FULLWIDTH LAYOUT - Edge to edge image -->
+            <div class="-mx-4 md:-mx-8 lg:-mx-16 xl:-mx-24 mb-12">
+                <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                     alt="<?php echo htmlspecialchars($post['title']); ?>"
+                     class="w-full h-auto">
+                <div class="h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
+            </div>
+            
+            <?php elseif ($layout === 'gallery' && !empty($gallery_images)): ?>
+            <!-- GALLERY LAYOUT - Grid of images -->
+            <div class="mb-12">
+                <?php if ($post['featured_image']): ?>
+                <div class="mb-4 rounded-xl overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-auto cursor-pointer hover:scale-105 transition-transform duration-500"
+                         onclick="openLightbox(0)">
+                </div>
+                <?php endif; ?>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <?php foreach ($gallery_images as $index => $img): ?>
+                    <div class="aspect-square rounded-lg overflow-hidden group cursor-pointer" onclick="openLightbox(<?php echo $index + 1; ?>)">
+                        <img src="<?php echo htmlspecialchars($img); ?>" 
+                             alt="Gallery image <?php echo $index + 1; ?>"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            
+            <?php elseif ($layout === 'slider' && !empty($gallery_images)): ?>
+            <!-- SLIDER LAYOUT - Image carousel -->
+            <div class="mb-12 relative" id="imageSlider">
+                <div class="overflow-hidden rounded-xl">
+                    <div class="slider-track flex transition-transform duration-500" id="sliderTrack">
+                        <?php if ($post['featured_image']): ?>
+                        <div class="slider-slide min-w-full">
+                            <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($post['title']); ?>"
+                                 class="w-full h-[400px] md:h-[500px] object-cover">
+                        </div>
+                        <?php endif; ?>
+                        <?php foreach ($gallery_images as $index => $img): ?>
+                        <div class="slider-slide min-w-full">
+                            <img src="<?php echo htmlspecialchars($img); ?>" 
+                                 alt="Slide <?php echo $index + 1; ?>"
+                                 class="w-full h-[400px] md:h-[500px] object-cover">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <!-- Slider Controls -->
+                <button class="slider-btn slider-prev absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-gray-800/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-all" onclick="slideImage(-1)">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="slider-btn slider-next absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-gray-800/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-all" onclick="slideImage(1)">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <!-- Slider Dots -->
+                <div class="flex justify-center gap-2 mt-4" id="sliderDots">
+                    <?php 
+                    $totalSlides = ($post['featured_image'] ? 1 : 0) + count($gallery_images);
+                    for ($i = 0; $i < $totalSlides; $i++): 
+                    ?>
+                    <button class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-[#d4af37] transition-colors <?php echo $i === 0 ? 'bg-[#d4af37]' : ''; ?>" onclick="goToSlide(<?php echo $i; ?>)"></button>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            
+            <?php elseif ($layout === 'apartment' && $post['featured_image']): ?>
+            <!-- APARTMENT LAYOUT - Hero + thumbnail gallery -->
+            <div class="mb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- Main Image -->
+                    <div class="lg:col-span-2 rounded-xl overflow-hidden cursor-pointer" onclick="openLightbox(0)">
+                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                             alt="<?php echo htmlspecialchars($post['title']); ?>"
+                             class="w-full h-[300px] md:h-[400px] object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <!-- Side Thumbnails -->
+                    <div class="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                        <?php 
+                        $sideImages = array_slice($gallery_images, 0, 2);
+                        foreach ($sideImages as $index => $img): 
+                        ?>
+                        <div class="rounded-xl overflow-hidden cursor-pointer" onclick="openLightbox(<?php echo $index + 1; ?>)">
+                            <img src="<?php echo htmlspecialchars($img); ?>" 
+                                 alt="Gallery <?php echo $index + 1; ?>"
+                                 class="w-full h-[140px] md:h-[190px] object-cover hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php if (count($gallery_images) > 2): ?>
+                <!-- More Images Row -->
+                <div class="grid grid-cols-4 gap-3 mt-4">
+                    <?php 
+                    $moreImages = array_slice($gallery_images, 2, 4);
+                    foreach ($moreImages as $index => $img): 
+                    ?>
+                    <div class="aspect-video rounded-lg overflow-hidden cursor-pointer relative group" onclick="openLightbox(<?php echo $index + 3; ?>)">
+                        <img src="<?php echo htmlspecialchars($img); ?>" 
+                             alt="Gallery <?php echo $index + 3; ?>"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <?php if ($index === 3 && count($gallery_images) > 6): ?>
+                        <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">+<?php echo count($gallery_images) - 6; ?></span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+            
+            <?php elseif ($layout === 'masonry' && !empty($gallery_images)): ?>
+            <!-- MASONRY LAYOUT - Pinterest-style grid -->
+            <div class="mb-12">
+                <?php if ($post['featured_image']): ?>
+                <div class="mb-4 rounded-xl overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-auto cursor-pointer hover:brightness-110 transition-all"
+                         onclick="openLightbox(0)">
+                </div>
+                <?php endif; ?>
+                <div class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                    <?php foreach ($gallery_images as $index => $img): ?>
+                    <div class="break-inside-avoid rounded-lg overflow-hidden cursor-pointer group" onclick="openLightbox(<?php echo $index + 1; ?>)">
+                        <img src="<?php echo htmlspecialchars($img); ?>" 
+                             alt="Gallery <?php echo $index + 1; ?>"
+                             class="w-full h-auto group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            
+            <?php elseif ($layout === 'magazine' && $post['featured_image']): ?>
+            <!-- MAGAZINE LAYOUT - Side by side image and intro -->
+            <div class="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="rounded-xl overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-[350px] object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
+                         onclick="openLightbox(0)">
+                </div>
+                <div class="space-y-4">
+                    <?php if (!empty($post['excerpt'])): ?>
+                    <p class="text-xl leading-relaxed text-gray-700 dark:text-gray-300 italic border-l-4 border-[#d4af37] pl-4">
+                        <?php echo htmlspecialchars($post['excerpt']); ?>
+                    </p>
+                    <?php endif; ?>
+                    <?php if (!empty($gallery_images)): ?>
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <?php foreach (array_slice($gallery_images, 0, 3) as $index => $img): ?>
+                        <div class="aspect-square rounded-lg overflow-hidden cursor-pointer" onclick="openLightbox(<?php echo $index + 1; ?>)">
+                            <img src="<?php echo htmlspecialchars($img); ?>" 
+                                 alt="Gallery <?php echo $index + 1; ?>"
+                                 class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <?php elseif ($layout === 'video' && !empty($video_url)): ?>
+            <!-- VIDEO LAYOUT - Embedded video player -->
+            <div class="mb-12">
+                <div class="aspect-video rounded-xl overflow-hidden bg-black">
+                    <?php
+                    // Parse YouTube/Vimeo URL
+                    $embed_url = '';
+                    if (preg_match('/youtube\.com\/watch\?v=([^&]+)/', $video_url, $matches)) {
+                        $embed_url = 'https://www.youtube.com/embed/' . $matches[1];
+                    } elseif (preg_match('/youtu\.be\/([^?]+)/', $video_url, $matches)) {
+                        $embed_url = 'https://www.youtube.com/embed/' . $matches[1];
+                    } elseif (preg_match('/vimeo\.com\/(\d+)/', $video_url, $matches)) {
+                        $embed_url = 'https://player.vimeo.com/video/' . $matches[1];
+                    }
+                    ?>
+                    <?php if ($embed_url): ?>
+                    <iframe src="<?php echo htmlspecialchars($embed_url); ?>" 
+                            class="w-full h-full"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                    <?php else: ?>
+                    <div class="w-full h-full flex items-center justify-center text-white">
+                        <p>Video không hợp lệ</p>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php if ($post['featured_image']): ?>
+                <div class="mt-4 rounded-lg overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-auto">
+                </div>
+                <?php endif; ?>
+            </div>
+            
+            <?php elseif ($layout === 'timeline'): ?>
+            <!-- TIMELINE LAYOUT - Images with timeline style -->
+            <div class="mb-12">
+                <?php if ($post['featured_image']): ?>
+                <div class="mb-6 rounded-xl overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($post['title']); ?>"
+                         class="w-full h-auto">
+                </div>
+                <?php endif; ?>
+                <?php if (!empty($gallery_images)): ?>
+                <div class="relative pl-8 border-l-2 border-[#d4af37] space-y-8">
+                    <?php foreach ($gallery_images as $index => $img): ?>
+                    <div class="relative">
+                        <div class="absolute -left-[41px] w-4 h-4 bg-[#d4af37] rounded-full border-4 border-white dark:border-gray-900"></div>
+                        <div class="rounded-xl overflow-hidden cursor-pointer" onclick="openLightbox(<?php echo $index + 1; ?>)">
+                            <img src="<?php echo htmlspecialchars($img); ?>" 
+                                 alt="Timeline <?php echo $index + 1; ?>"
+                                 class="w-full h-auto hover:brightness-110 transition-all">
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+            
+            <?php elseif ($layout === 'sidebar'): ?>
+            <!-- SIDEBAR LAYOUT handled separately in main content area -->
             <?php if ($post['featured_image']): ?>
             <div class="mb-8 rounded-xl overflow-hidden">
                 <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
                      alt="<?php echo htmlspecialchars($post['title']); ?>"
                      class="w-full h-auto">
             </div>
+            <?php endif; ?>
+            
+            <?php else: ?>
+            <!-- STANDARD LAYOUT - Default -->
+            <?php if ($post['featured_image']): ?>
+            <div class="mb-8 rounded-xl overflow-hidden">
+                <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
+                     alt="<?php echo htmlspecialchars($post['title']); ?>"
+                     class="w-full h-auto">
+            </div>
+            <?php endif; ?>
             <?php endif; ?>
 
             <!-- Content -->
@@ -369,8 +628,9 @@ try {
 
 <script src="assets/js/main.js"></script>
 
-<!-- Blog Interaction Script -->
+<!-- Blog Interaction & Layout Styles -->
 <style>
+/* Share buttons */
 .share-btn-icon {
     width: 36px;
     height: 36px;
@@ -390,10 +650,12 @@ try {
 .share-btn-icon.copy-link { background: #6b7280; }
 .share-btn-icon.copy-link:hover { background: #4b5563; }
 
+/* Star rating */
 .star-btn.active span,
 .star-btn.hover span { color: #facc15; }
 .star-btn span { transition: color 0.15s; }
 
+/* Like button */
 #likeBtn.liked {
     background: #fef2f2;
     border-color: #ef4444;
@@ -405,7 +667,110 @@ try {
 .dark #likeBtn.liked {
     background: rgba(239, 68, 68, 0.2);
 }
+
+/* Lightbox */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.lightbox-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    position: relative;
+}
+.lightbox-content img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.lightbox-close:hover {
+    transform: scale(1.2);
+}
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.lightbox-nav:hover {
+    background: rgba(255,255,255,0.4);
+}
+.lightbox-prev { left: -70px; }
+.lightbox-next { right: -70px; }
+.lightbox-counter {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 14px;
+}
+
+/* Slider animations */
+.slider-btn {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+#imageSlider:hover .slider-btn {
+    opacity: 1;
+}
+
+/* Masonry gap fix */
+.columns-2, .columns-3, .columns-4 {
+    column-gap: 1rem;
+}
+.break-inside-avoid {
+    margin-bottom: 1rem;
+}
 </style>
+
+<!-- Lightbox HTML -->
+<div class="lightbox-overlay" id="lightbox">
+    <div class="lightbox-content">
+        <span class="lightbox-close material-symbols-outlined" onclick="closeLightbox()">close</span>
+        <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">
+            <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <img src="" alt="Lightbox image" id="lightboxImg">
+        <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+        <div class="lightbox-counter">
+            <span id="lightboxCurrent">1</span> / <span id="lightboxTotal">1</span>
+        </div>
+    </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -539,6 +904,132 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// ========== LIGHTBOX FUNCTIONS ==========
+let lightboxImages = [];
+let currentLightboxIndex = 0;
+
+function initLightbox() {
+    // Collect all images from the page for lightbox
+    lightboxImages = [];
+    
+    // Get featured image
+    const featuredImg = document.querySelector('[onclick^="openLightbox(0)"]');
+    if (featuredImg) {
+        const img = featuredImg.tagName === 'IMG' ? featuredImg : featuredImg.querySelector('img');
+        if (img) lightboxImages.push(img.src);
+    }
+    
+    // Get gallery images
+    document.querySelectorAll('[onclick^="openLightbox("]').forEach(el => {
+        const match = el.getAttribute('onclick').match(/openLightbox\((\d+)\)/);
+        if (match) {
+            const index = parseInt(match[1]);
+            const img = el.tagName === 'IMG' ? el : el.querySelector('img');
+            if (img && index > 0) {
+                lightboxImages[index] = img.src;
+            }
+        }
+    });
+    
+    // Filter out empty slots
+    lightboxImages = lightboxImages.filter(Boolean);
+    
+    document.getElementById('lightboxTotal').textContent = lightboxImages.length;
+}
+
+function openLightbox(index) {
+    initLightbox();
+    if (lightboxImages.length === 0) return;
+    
+    currentLightboxIndex = Math.min(index, lightboxImages.length - 1);
+    updateLightboxImage();
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function lightboxNav(direction) {
+    currentLightboxIndex += direction;
+    if (currentLightboxIndex < 0) currentLightboxIndex = lightboxImages.length - 1;
+    if (currentLightboxIndex >= lightboxImages.length) currentLightboxIndex = 0;
+    updateLightboxImage();
+}
+
+function updateLightboxImage() {
+    document.getElementById('lightboxImg').src = lightboxImages[currentLightboxIndex];
+    document.getElementById('lightboxCurrent').textContent = currentLightboxIndex + 1;
+}
+
+// Close lightbox on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+});
+
+// Close lightbox on overlay click
+document.getElementById('lightbox')?.addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+});
+
+// ========== SLIDER FUNCTIONS ==========
+let currentSlide = 0;
+let totalSlides = 0;
+
+function initSlider() {
+    const slider = document.getElementById('imageSlider');
+    if (!slider) return;
+    
+    const slides = slider.querySelectorAll('.slider-slide');
+    totalSlides = slides.length;
+    
+    // Auto-slide every 5 seconds
+    setInterval(() => {
+        slideImage(1);
+    }, 5000);
+}
+
+function slideImage(direction) {
+    const track = document.getElementById('sliderTrack');
+    const dots = document.querySelectorAll('#sliderDots button');
+    if (!track || totalSlides === 0) return;
+    
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = totalSlides - 1;
+    if (currentSlide >= totalSlides) currentSlide = 0;
+    
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update dots
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('bg-[#d4af37]', i === currentSlide);
+        dot.classList.toggle('bg-gray-300', i !== currentSlide);
+        dot.classList.toggle('dark:bg-gray-600', i !== currentSlide);
+    });
+}
+
+function goToSlide(index) {
+    const track = document.getElementById('sliderTrack');
+    const dots = document.querySelectorAll('#sliderDots button');
+    if (!track) return;
+    
+    currentSlide = index;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('bg-[#d4af37]', i === currentSlide);
+        dot.classList.toggle('bg-gray-300', i !== currentSlide);
+        dot.classList.toggle('dark:bg-gray-600', i !== currentSlide);
+    });
+}
+
+// Initialize slider on page load
+document.addEventListener('DOMContentLoaded', initSlider);
 </script>
 </body>
 </html>
