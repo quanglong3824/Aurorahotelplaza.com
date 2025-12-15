@@ -58,6 +58,17 @@ try {
     $stmt->execute([$user_id]);
     $points_history = $stmt->fetchAll();
     
+    // Get contact history (limit 5)
+    $stmt = $db->prepare("
+        SELECT contact_code, subject, message, status, created_at, updated_at
+        FROM contact_submissions 
+        WHERE user_id = ? 
+        ORDER BY created_at DESC 
+        LIMIT 5
+    ");
+    $stmt->execute([$user_id]);
+    $contact_history = $stmt->fetchAll();
+    
 } catch (Exception $e) {
     error_log("Profile error: " . $e->getMessage());
     $error = "Có lỗi xảy ra.";
@@ -70,6 +81,17 @@ function getStatusBadge($status) {
         'checked_in' => [__('booking_status.checked_in'), 'bg-green-100 text-green-800'],
         'checked_out' => [__('booking_status.checked_out'), 'bg-gray-100 text-gray-800'],
         'cancelled' => [__('booking_status.cancelled'), 'bg-red-100 text-red-800'],
+    ];
+    $info = $map[$status] ?? [$status, 'bg-gray-100 text-gray-800'];
+    return '<span class="px-2 py-1 text-xs font-medium rounded-full '.$info[1].'">'.$info[0].'</span>';
+}
+
+function getContactStatusBadge($status) {
+    $map = [
+        'new' => ['Mới', 'bg-blue-100 text-blue-800'],
+        'in_progress' => ['Đang xử lý', 'bg-yellow-100 text-yellow-800'],
+        'resolved' => ['Đã giải quyết', 'bg-green-100 text-green-800'],
+        'closed' => ['Đã đóng', 'bg-gray-100 text-gray-800'],
     ];
     $info = $map[$status] ?? [$status, 'bg-gray-100 text-gray-800'];
     return '<span class="px-2 py-1 text-xs font-medium rounded-full '.$info[1].'">'.$info[0].'</span>';
@@ -153,6 +175,9 @@ function getStatusBadge($status) {
                 <button class="tab-btn <?php echo $active_tab == 'points' ? 'active' : ''; ?>" onclick="switchTab('points')">
                     <span class="material-symbols-outlined align-middle text-sm mr-1">stars</span><?php _e('profile_page.tab_points'); ?>
                 </button>
+                <button class="tab-btn <?php echo $active_tab == 'contacts' ? 'active' : ''; ?>" onclick="switchTab('contacts')">
+                    <span class="material-symbols-outlined align-middle text-sm mr-1">contact_support</span><?php _e('profile_page.tab_contacts'); ?>
+                </button>
             </div>
 
             <!-- Tab: Thông tin -->
@@ -231,6 +256,39 @@ function getStatusBadge($status) {
                         <span class="font-bold <?php echo $p['transaction_type'] == 'earn' ? 'text-green-600' : 'text-red-600'; ?>">
                             <?php echo $p['transaction_type'] == 'earn' ? '+' : '-'; ?><?php echo number_format($p['points']); ?>
                         </span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tab: Lịch sử liên hệ -->
+            <div id="tab-contacts" class="tab-content <?php echo $active_tab == 'contacts' ? 'active' : ''; ?> p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg"><?php _e('profile_page.contact_history'); ?></h3>
+                    <a href="#" class="text-accent hover:underline text-sm"><?php _e('profile_page.view_all'); ?> →</a>
+                </div>
+                <?php if (empty($contact_history)): ?>
+                    <p class="text-center text-gray-500 py-8"><?php _e('profile_page.no_contacts'); ?></p>
+                <?php else: ?>
+                <div class="space-y-4">
+                    <?php foreach ($contact_history as $c): ?>
+                    <div class="border rounded-lg p-4 hover:shadow-sm transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-accent text-sm">contact_support</span>
+                                <span class="font-semibold text-sm"><?php echo htmlspecialchars($c['contact_code'] ?: '#' . $c['id']); ?></span>
+                            </div>
+                            <?php echo getContactStatusBadge($c['status']); ?>
+                        </div>
+                        <p class="font-medium text-sm mb-1"><?php echo htmlspecialchars($c['subject']); ?></p>
+                        <p class="text-sm text-gray-600 line-clamp-2"><?php echo htmlspecialchars($c['message']); ?></p>
+                        <p class="text-xs text-gray-500 mt-2">
+                            <?php _e('profile_page.submitted'); ?>: <?php echo date('d/m/Y H:i', strtotime($c['created_at'])); ?>
+                            <?php if ($c['updated_at'] !== $c['created_at']): ?>
+                                • <?php _e('profile_page.updated'); ?>: <?php echo date('d/m/Y H:i', strtotime($c['updated_at'])); ?>
+                            <?php endif; ?>
+                        </p>
                     </div>
                     <?php endforeach; ?>
                 </div>

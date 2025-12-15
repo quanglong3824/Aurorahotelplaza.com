@@ -748,6 +748,7 @@ return [
         'tab_info' => 'Thông tin',
         'tab_bookings' => 'Đặt phòng',
         'tab_points' => 'Điểm thưởng',
+        'tab_contacts' => 'Lịch sử liên hệ',
         'current_points' => 'Điểm hiện tại',
         'total_points' => 'Tổng điểm',
         'bookings' => 'Đặt phòng',
@@ -768,6 +769,10 @@ return [
         'points_history' => 'Lịch sử điểm',
         'details' => 'Chi tiết',
         'no_points' => 'Chưa có giao dịch điểm',
+        'contact_history' => 'Lịch sử liên hệ',
+        'no_contacts' => 'Chưa có liên hệ nào',
+        'submitted' => 'Gửi lúc',
+        'updated' => 'Cập nhật',
     ],
 
     // Service detail page

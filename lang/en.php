@@ -748,6 +748,7 @@ return [
         'tab_info' => 'Information',
         'tab_bookings' => 'Bookings',
         'tab_points' => 'Points',
+        'tab_contacts' => 'Contact History',
         'current_points' => 'Current Points',
         'total_points' => 'Total Points',
         'bookings' => 'Bookings',
@@ -768,6 +769,10 @@ return [
         'points_history' => 'Points History',
         'details' => 'Details',
         'no_points' => 'No points transactions yet',
+        'contact_history' => 'Contact History',
+        'no_contacts' => 'No contacts yet',
+        'submitted' => 'Submitted',
+        'updated' => 'Updated',
     ],
 
     // Service detail page
