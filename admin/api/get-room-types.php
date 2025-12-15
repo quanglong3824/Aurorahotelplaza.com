@@ -13,7 +13,7 @@ try {
     $db = getDB();
     
     $stmt = $db->query("
-        SELECT room_type_id, type_name, slug, category, base_price, status
+        SELECT room_type_id, type_name, slug, category, base_price, max_occupancy, status
         FROM room_types
         WHERE status = 'active'
         ORDER BY category, sort_order ASC, type_name ASC
