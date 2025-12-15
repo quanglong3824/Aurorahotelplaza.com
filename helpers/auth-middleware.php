@@ -22,6 +22,19 @@ class AuthMiddleware {
                 exit;
             }
         }
+        
+        // Check if user must change password
+        if (isset($_SESSION['must_change_password']) && $_SESSION['must_change_password']) {
+            if (self::isAjax()) {
+                http_response_code(403);
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Bạn phải đổi mật khẩu trước', 'redirect' => '/auth/change-password.php']);
+                exit;
+            } else {
+                header('Location: /auth/change-password.php');
+                exit;
+            }
+        }
     }
     
     /**

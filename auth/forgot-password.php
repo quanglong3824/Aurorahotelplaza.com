@@ -17,6 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $db = getDB();
+            
+            // Check if temp_password column exists, add if not
+            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS temp_password VARCHAR(255) NULL");
+            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS temp_password_expires TIMESTAMP NULL");
+            $db->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS requires_password_change TINYINT(1) DEFAULT 0");
+            
             $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ? AND status = 'active'");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
@@ -24,30 +30,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user) {
                 $user_id = $user['user_id'];
                 
-                // Generate reset token
-                $token = bin2hex(random_bytes(32));
-                $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+                // Generate random temporary password (8-12 characters)
+                $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+                $temp_password = substr(str_shuffle($chars), 0, rand(8, 12));
+                $temp_password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
+                $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 
-                // Delete old unused tokens for this user
-                $stmt = $db->prepare("DELETE FROM password_resets WHERE user_id = ? AND used = 0");
-                $stmt->execute([$user_id]);
-                
-                // Save new token
+                // Update user with temporary password
                 $stmt = $db->prepare("
-                    INSERT INTO password_resets (user_id, token, expires_at, used)
-                    VALUES (?, ?, ?, 0)
+                    UPDATE users 
+                    SET temp_password = ?, temp_password_expires = ?, requires_password_change = 1, updated_at = NOW()
+                    WHERE user_id = ?
                 ");
-                $stmt->execute([$user_id, $token, $expires]);
+                $stmt->execute([$temp_password_hash, $expires, $user_id]);
                 
-                // Generate reset link
-                $reset_link = BASE_URL . '/auth/reset-password.php?token=' . $token;
-                
-                // Try to send email (optional - don't block if email fails)
+                // Try to send email with temporary password
                 $emailSent = false;
                 try {
                     require_once '../helpers/mailer.php';
                     $mailer = getMailer();
-                    $emailSent = $mailer->sendPasswordReset($email, $user['full_name'], $token);
+                    $emailSent = $mailer->sendTemporaryPassword($email, $user['full_name'], $temp_password);
                 } catch (Exception $emailError) {
                     error_log("Email send failed: " . $emailError->getMessage());
                 }
@@ -56,25 +58,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     require_once '../helpers/logger.php';
                     $logger = getLogger();
-                    $logger->logAdminAction($user['user_id'], 'password_reset_requested', 'user', $user['user_id'], [
+                    $logger->logAdminAction($user['user_id'], 'temp_password_sent', 'user', $user['user_id'], [
                         'email' => $email,
                         'email_sent' => $emailSent,
-                        'token_expires' => $expires
+                        'temp_expires' => $expires
                     ]);
                 } catch (Exception $logError) {
                     error_log("Logger failed: " . $logError->getMessage());
                 }
                 
-                // Show reset link for testing (remove in production)
+                // Show temporary password for testing (remove in production)
                 if ($emailSent) {
-                    $success = 'Đã gửi link đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư (có thể trong thư mục Spam).';
+                    $success = 'Mật khẩu tạm thời đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (có thể trong thư mục Spam).';
                 } else {
-                    // For testing purposes, show the link directly
-                    $success = 'Link đặt lại mật khẩu của bạn: <a href="' . htmlspecialchars($reset_link) . '" target="_blank">' . htmlspecialchars($reset_link) . '</a><br>Bạn cũng có thể kiểm tra email (có thể trong thư mục Spam).';
+                    // For testing purposes, show the password directly
+                    $success = 'Mật khẩu tạm thời của bạn: <strong>' . htmlspecialchars($temp_password) . '</strong><br>Hết hạn sau 30 phút.<br>Bạn cũng có thể kiểm tra email (có thể trong thư mục Spam).';
                 }
             } else {
                 // Don't reveal if email exists or not (security)
-                $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu.';
+                $success = 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được mật khẩu tạm thời.';
             }
         } catch (Exception $e) {
             $error = 'Có lỗi xảy ra. Vui lòng thử lại.';
@@ -109,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <h1 class="auth-title">Quên mật khẩu?</h1>
             <p class="auth-subtitle">
-                Nhập email của bạn để nhận link đặt lại mật khẩu
+                Nhập email của bạn để nhận mật khẩu tạm thời
             </p>
         </div>
 
@@ -154,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Submit -->
                     <button type="submit" class="btn-primary">
-                        <span class="btn-text">Gửi link đặt lại mật khẩu</span>
+                        <span class="btn-text">Gửi mật khẩu tạm thời</span>
                         <span class="btn-icon">
                             <span class="material-symbols-outlined">send</span>
                         </span>
