@@ -73,6 +73,7 @@ foreach ($room_types as $room) {
 
 <!-- Custom CSS -->
 <link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/liquid-glass.css">
 <link rel="stylesheet" href="./assets/css/booking.css">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">

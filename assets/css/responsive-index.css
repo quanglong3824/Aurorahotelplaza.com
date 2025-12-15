@@ -1,0 +1,1241 @@
+/* ============================================
+   AURORA HOTEL - RESPONSIVE INDEX PAGE
+   Optimized for all screen sizes
+   ============================================ */
+
+/* ============================================
+   MOBILE FIRST - BASE STYLES (< 640px)
+   ============================================ */
+
+/* Quick Info Bar - Hide on very small screens */
+@media (max-width: 479px) {
+    .glass-info-bar .glass-tag:nth-child(3),
+    .glass-info-bar .glass-tag:nth-child(4) {
+        display: none;
+    }
+    
+    .glass-info-bar .flex-wrap {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+}
+
+/* About Section */
+@media (max-width: 639px) {
+    section#about .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section#about .max-w-3xl {
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    
+    /* Stats Grid - 2 columns on mobile */
+    section#about .grid-cols-2 {
+        gap: 0.75rem;
+    }
+    
+    /* Feature Cards - Stack on mobile */
+    section#about .lg\:grid-cols-4 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    section#about .glass-card-solid {
+        padding: 1rem;
+    }
+    
+    section#about .glass-card-solid .w-16 {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    section#about .glass-card-solid .text-3xl {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* Promotions Section */
+@media (max-width: 639px) {
+    .glass-promo-banner .flex-col.md\:flex-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .glass-promo-banner .w-16.h-16 {
+        width: 3rem;
+        height: 3rem;
+        margin: 0 auto;
+    }
+    
+    .glass-promo-banner .text-2xl {
+        font-size: 1.25rem;
+    }
+    
+    .glass-promo-banner .flex-wrap.gap-3 {
+        justify-content: center;
+    }
+}
+
+/* Featured Rooms/Apartments Section */
+@media (max-width: 639px) {
+    section#rooms .text-3xl,
+    section#apartments .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section#rooms .grid,
+    section#apartments .grid {
+        gap: 1rem;
+    }
+    
+    /* Room Card */
+    section#rooms .rounded-xl,
+    section#apartments .rounded-xl {
+        border-radius: 0.75rem;
+    }
+    
+    section#rooms .p-6,
+    section#apartments .p-6 {
+        padding: 1rem;
+    }
+    
+    section#rooms .text-xl,
+    section#apartments .text-xl {
+        font-size: 1rem;
+    }
+    
+    section#rooms .text-lg,
+    section#apartments .text-lg {
+        font-size: 0.9375rem;
+    }
+}
+
+/* Services Section */
+@media (max-width: 639px) {
+    section#services .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section#services .max-w-2xl {
+        font-size: 0.875rem;
+    }
+    
+    /* Service Cards - Full width on mobile */
+    section#services .lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Amenities - 3 columns on mobile */
+    section#services .lg\:grid-cols-6 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+}
+
+/* Why Choose Us Section */
+@media (max-width: 639px) {
+    section:has(.glass-card-solid.flex.gap-4) .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 .h-14.w-14 {
+        width: 3rem;
+        height: 3rem;
+        margin: 0 auto;
+    }
+    
+    .glass-card-solid.flex.gap-4 .text-2xl {
+        font-size: 1.25rem;
+    }
+}
+
+
+/* Blog Section */
+@media (max-width: 639px) {
+    section#blog .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section#blog .grid {
+        gap: 1rem;
+    }
+    
+    section#blog article .p-6 {
+        padding: 1rem;
+    }
+    
+    section#blog .text-lg {
+        font-size: 1rem;
+    }
+}
+
+/* Location Section */
+@media (max-width: 639px) {
+    section#location .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section#location .h-\[400px\] {
+        height: 250px;
+    }
+    
+    section#location .grid-cols-1.sm\:grid-cols-2 {
+        gap: 0.75rem;
+    }
+    
+    section#location .p-5 {
+        padding: 0.875rem;
+    }
+    
+    section#location .w-12.h-12 {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    section#location .text-xl {
+        font-size: 1rem;
+    }
+    
+    /* Nearby places - single column */
+    section#location .grid-cols-2:last-child {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* CTA Section */
+@media (max-width: 639px) {
+    section:has(.bg-gradient-to-br.from-accent) .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    section:has(.bg-gradient-to-br.from-accent) .text-lg {
+        font-size: 0.9375rem;
+    }
+    
+    section:has(.bg-gradient-to-br.from-accent) .px-8.py-4 {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    section:has(.bg-gradient-to-br.from-accent) .flex-wrap.gap-6 {
+        gap: 0.5rem;
+        flex-direction: column;
+    }
+    
+    section:has(.bg-gradient-to-br.from-accent) .flex.items-center.gap-2 {
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   TABLET STYLES (640px - 1023px)
+   ============================================ */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    /* About Section */
+    section#about .lg\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Services Section */
+    section#services .lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    section#services .lg\:grid-cols-6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    /* Why Choose Us */
+    section:has(.glass-card-solid.flex.gap-4) .lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Location */
+    section#location .lg\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    section#location .h-\[400px\] {
+        height: 300px;
+    }
+}
+
+
+/* ============================================
+   EXTRA SMALL MOBILE (< 375px)
+   ============================================ */
+
+@media (max-width: 374px) {
+    /* Hide more elements */
+    .glass-info-bar {
+        display: none;
+    }
+    
+    /* Reduce section padding */
+    section {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    /* Stats - smaller */
+    .glass-stat-card-light .stat-value {
+        font-size: 1.125rem;
+    }
+    
+    .glass-stat-card-light .stat-label {
+        font-size: 0.5625rem;
+    }
+    
+    /* Amenities - 2 columns */
+    section#services .lg\:grid-cols-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Hide some amenities on very small screens */
+    section#services .lg\:grid-cols-6 > div:nth-child(n+5) {
+        display: none;
+    }
+    
+    /* CTA buttons - stack */
+    section:has(.bg-gradient-to-br.from-accent) .sm\:flex-row {
+        flex-direction: column;
+    }
+    
+    /* Hide trust badges on very small screens */
+    section:has(.bg-gradient-to-br.from-accent) .flex-wrap.justify-center.gap-6 {
+        display: none;
+    }
+}
+
+/* ============================================
+   LANDSCAPE MOBILE ADJUSTMENTS
+   ============================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Reduce hero height */
+    .hero-slider {
+        height: 100vh;
+    }
+    
+    /* Reduce section padding */
+    section {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    /* Hide info bar in landscape */
+    .glass-info-bar {
+        display: none;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .glass-info-bar,
+    .glass-promo-banner,
+    .hero-slider,
+    header,
+    footer,
+    .floating-menu {
+        display: none !important;
+    }
+    
+    section {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .hero-slide {
+        transition: none;
+    }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: high) {
+    .glass-card-solid,
+    .glass-stat-card-light,
+    .glass-amenity-card {
+        border-width: 2px;
+    }
+    
+    .btn-glass-primary {
+        border: 2px solid currentColor;
+    }
+}
+
+
+/* ============================================
+   UTILITY CLASSES FOR RESPONSIVE HIDING
+   ============================================ */
+
+/* Hide on mobile */
+.hide-mobile {
+    display: block;
+}
+
+@media (max-width: 639px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+/* Hide on tablet */
+.hide-tablet {
+    display: block;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .hide-tablet {
+        display: none !important;
+    }
+}
+
+/* Hide on desktop */
+.hide-desktop {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    .hide-desktop {
+        display: block;
+    }
+}
+
+/* Show only on mobile */
+.show-mobile-only {
+    display: none;
+}
+
+@media (max-width: 639px) {
+    .show-mobile-only {
+        display: block !important;
+    }
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Headings */
+    .font-display.text-3xl,
+    h2.text-3xl {
+        font-size: 1.5rem !important;
+        line-height: 1.3;
+    }
+    
+    .font-display.text-4xl,
+    h2.text-4xl {
+        font-size: 1.75rem !important;
+        line-height: 1.2;
+    }
+    
+    /* Body text */
+    .text-base {
+        font-size: 0.875rem;
+    }
+    
+    .text-lg {
+        font-size: 1rem;
+    }
+    
+    /* Small text */
+    .text-sm {
+        font-size: 0.75rem;
+    }
+    
+    .text-xs {
+        font-size: 0.625rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE SPACING
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Reduce gaps */
+    .gap-8 {
+        gap: 1.5rem;
+    }
+    
+    .gap-6 {
+        gap: 1rem;
+    }
+    
+    .gap-10 {
+        gap: 1.5rem;
+    }
+    
+    /* Reduce padding */
+    .py-16 {
+        padding-top: 2.5rem;
+        padding-bottom: 2.5rem;
+    }
+    
+    .py-24 {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+    
+    .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Reduce margins */
+    .my-8 {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .mb-10 {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE IMAGES & MEDIA
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Aspect ratio adjustments */
+    .aspect-video {
+        aspect-ratio: 4/3;
+    }
+    
+    /* Service card images */
+    .glass-service-card {
+        height: 180px;
+    }
+    
+    /* Map height */
+    iframe[src*="google.com/maps"] {
+        height: 200px !important;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .glass-service-card {
+        height: 220px;
+    }
+}
+
+
+/* ============================================
+   RESPONSIVE BUTTONS
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Primary buttons */
+    .btn-glass-primary,
+    .inline-flex.items-center.gap-2.px-6.py-3 {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+        gap: 0.375rem;
+    }
+    
+    .btn-glass-primary .material-symbols-outlined,
+    .inline-flex .material-symbols-outlined {
+        font-size: 1rem;
+    }
+    
+    /* CTA buttons */
+    .px-8.py-4 {
+        padding: 0.75rem 1.25rem;
+    }
+    
+    /* Room/Apartment view buttons */
+    .h-11 {
+        height: 2.5rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE CARDS
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Room/Apartment cards */
+    .rounded-xl.bg-surface-light {
+        border-radius: 0.75rem;
+    }
+    
+    .rounded-xl.bg-surface-light .p-6 {
+        padding: 1rem;
+    }
+    
+    /* Glass cards */
+    .glass-card-solid {
+        border-radius: 0.875rem;
+        padding: 1rem;
+    }
+    
+    /* Contact info cards */
+    .rounded-xl.bg-white {
+        border-radius: 0.75rem;
+    }
+    
+    .rounded-xl.bg-white .p-5 {
+        padding: 0.875rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE GRIDS - OVERRIDE TAILWIND
+   ============================================ */
+
+@media (max-width: 639px) {
+    /* Force single column on mobile for most grids */
+    .grid.sm\:grid-cols-2.lg\:grid-cols-3,
+    .grid.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Stats grid - keep 2 columns */
+    .grid.grid-cols-2.md\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    /* Amenities - 3 columns */
+    .grid.grid-cols-2.sm\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    /* Contact info - single column */
+    .grid.grid-cols-1.sm\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+    /* 2 columns for cards on small tablets */
+    .grid.sm\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   HERO SLIDER RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    .hero-slider {
+        height: 100vh;
+        min-height: 500px;
+    }
+    
+    .slider-arrow {
+        width: 10%;
+    }
+    
+    .slider-arrow .arrow-icon {
+        font-size: 32px;
+    }
+    
+    .slider-dots {
+        bottom: 20px;
+        gap: 8px;
+    }
+    
+    .slider-dot {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .slider-dot.active {
+        width: 24px;
+    }
+}
+
+/* ============================================
+   FOOTER RESPONSIVE (if needed)
+   ============================================ */
+
+@media (max-width: 639px) {
+    footer .grid {
+        gap: 1.5rem;
+    }
+    
+    footer .text-lg {
+        font-size: 1rem;
+    }
+}
+
+
+/* ============================================
+   HERO SLIDER RESPONSIVE
+   ============================================ */
+
+/* Hero Content */
+@media (max-width: 639px) {
+    .hero-slider .relative.z-10 {
+        padding: 0 1rem;
+        gap: 1.5rem;
+    }
+    
+    .hero-slider h1 {
+        font-size: 1.75rem !important;
+        line-height: 1.2;
+    }
+    
+    .hero-slider .text-xl {
+        font-size: 0.9375rem;
+        max-width: 100%;
+    }
+    
+    /* Glass badge */
+    .hero-slider .glass-badge-accent {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Booking form */
+    .glass-booking-form {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-booking-form form {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem;
+    }
+    
+    .glass-booking-form label {
+        font-size: 0.75rem;
+        margin-bottom: 0.375rem;
+    }
+    
+    .glass-booking-form .h-12 {
+        height: 2.75rem;
+    }
+    
+    .glass-booking-form .btn-glass-primary {
+        margin-top: 0.5rem;
+    }
+    
+    /* Trust badges */
+    .hero-slider .flex-wrap.gap-4 {
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .glass-trust-badge {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.6875rem;
+    }
+    
+    .glass-trust-badge .material-symbols-outlined {
+        font-size: 0.875rem;
+    }
+    
+    /* Scroll indicator */
+    .hero-slider .absolute.bottom-8 {
+        bottom: 1rem;
+    }
+    
+    .hero-slider .absolute.bottom-8 .text-sm {
+        display: none;
+    }
+}
+
+@media (max-width: 374px) {
+    .hero-slider h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .hero-slider .text-xl {
+        font-size: 0.875rem;
+    }
+    
+    /* Hide some trust badges on very small screens */
+    .glass-trust-badge:nth-child(3) {
+        display: none;
+    }
+    
+    .glass-booking-form {
+        padding: 0.875rem;
+    }
+}
+
+/* Tablet */
+@media (min-width: 640px) and (max-width: 1023px) {
+    .hero-slider h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .glass-booking-form form {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .glass-booking-form form > div:last-child,
+    .glass-booking-form form > button {
+        grid-column: span 2;
+    }
+}
+
+/* ============================================
+   QUICK INFO BAR RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    .glass-info-bar {
+        padding: 0.5rem 0;
+    }
+    
+    .glass-info-bar .flex-wrap {
+        gap: 0.375rem;
+    }
+    
+    .glass-info-bar .glass-tag {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.625rem;
+        gap: 0.25rem;
+    }
+    
+    .glass-info-bar .glass-tag .material-symbols-outlined {
+        font-size: 0.75rem;
+    }
+    
+    /* Hide address and schedule on mobile */
+    .glass-info-bar .glass-tag:nth-child(3),
+    .glass-info-bar .glass-tag:nth-child(4) {
+        display: none;
+    }
+}
+
+@media (max-width: 374px) {
+    .glass-info-bar {
+        display: none;
+    }
+}
+
+/* ============================================
+   LOCATION SECTION RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section#location .lg\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    section#location .h-\[400px\] {
+        height: 220px;
+        border-radius: 1rem;
+    }
+    
+    section#location .grid-cols-1.sm\:grid-cols-2 {
+        gap: 0.75rem;
+    }
+    
+    section#location .flex.gap-4.p-5 {
+        padding: 0.875rem;
+        gap: 0.75rem;
+    }
+    
+    section#location .w-12.h-12 {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    section#location .w-12.h-12 .material-symbols-outlined {
+        font-size: 1.125rem;
+    }
+    
+    section#location h4.font-bold {
+        font-size: 0.875rem;
+    }
+    
+    section#location .text-sm {
+        font-size: 0.75rem;
+    }
+    
+    /* Nearby places */
+    section#location .grid-cols-2:last-child {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    section#location .grid-cols-2:last-child .flex.justify-between {
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================
+   CTA SECTION RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section.bg-gradient-to-br.from-accent {
+        padding: 2.5rem 1rem;
+    }
+    
+    section.bg-gradient-to-br h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    section.bg-gradient-to-br .text-lg {
+        font-size: 0.9375rem;
+    }
+    
+    section.bg-gradient-to-br .flex-col.sm\:flex-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    section.bg-gradient-to-br .px-8.py-4 {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    section.bg-gradient-to-br .flex-wrap.justify-center.gap-6 {
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    section.bg-gradient-to-br .flex.items-center.gap-2 {
+        font-size: 0.75rem;
+    }
+    
+    section.bg-gradient-to-br .flex.items-center.gap-2 .material-symbols-outlined {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 374px) {
+    /* Hide trust badges on very small screens */
+    section.bg-gradient-to-br .flex-wrap.justify-center.gap-6 {
+        display: none;
+    }
+}
+
+
+/* ============================================
+   BLOG SECTION RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section#blog .grid.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    section#blog article {
+        border-radius: 0.75rem;
+    }
+    
+    section#blog article .aspect-video {
+        aspect-ratio: 16/9;
+    }
+    
+    section#blog article .p-6 {
+        padding: 1rem;
+    }
+    
+    section#blog article .text-lg {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    section#blog article .text-sm {
+        font-size: 0.75rem;
+    }
+    
+    section#blog article .text-xs {
+        font-size: 0.625rem;
+    }
+}
+
+/* ============================================
+   SERVICES SECTION RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section#services .md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* Service cards */
+    .glass-service-card {
+        height: 180px;
+        border-radius: 0.875rem;
+    }
+    
+    .glass-service-content {
+        padding: 1rem;
+    }
+    
+    .glass-service-content h3 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .glass-service-content p {
+        font-size: 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .glass-service-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.625rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Amenities grid */
+    section#services .grid-cols-2.sm\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .glass-amenity-card {
+        padding: 0.625rem;
+        border-radius: 0.5rem;
+        gap: 0.375rem;
+    }
+    
+    .glass-amenity-card .material-symbols-outlined {
+        font-size: 1.25rem;
+    }
+    
+    .glass-amenity-card .text-sm {
+        font-size: 0.625rem;
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 374px) {
+    /* 2 columns for amenities on very small screens */
+    section#services .grid-cols-2.sm\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Hide last 2 amenities */
+    section#services .grid-cols-2.sm\:grid-cols-3.lg\:grid-cols-6 > div:nth-child(n+5) {
+        display: none;
+    }
+}
+
+/* ============================================
+   WHY CHOOSE US SECTION RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section:has(> .mx-auto > .grid > .glass-card-solid.flex.gap-4) .md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 {
+        padding: 1rem;
+        gap: 0.75rem;
+        border-radius: 0.75rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 .h-14.w-14 {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.625rem;
+        flex-shrink: 0;
+    }
+    
+    .glass-card-solid.flex.gap-4 .text-2xl {
+        font-size: 1rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 h3.text-lg {
+        font-size: 0.9375rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .glass-card-solid.flex.gap-4 p.text-sm {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+}
+
+/* ============================================
+   ABOUT SECTION FEATURE CARDS RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section#about .sm\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    section#about .glass-card-solid.p-6.text-center {
+        padding: 0.875rem;
+        border-radius: 0.75rem;
+    }
+    
+    section#about .glass-card-solid .w-16.h-16 {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    section#about .glass-card-solid .text-3xl {
+        font-size: 1.125rem;
+    }
+    
+    section#about .glass-card-solid h3.text-lg {
+        font-size: 0.8125rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    section#about .glass-card-solid p.text-sm {
+        font-size: 0.6875rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 374px) {
+    section#about .sm\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    section#about .glass-card-solid.p-6.text-center {
+        display: flex;
+        flex-direction: row;
+        text-align: left;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    
+    section#about .glass-card-solid .w-16.h-16 {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+    
+    section#about .glass-card-solid p.text-sm {
+        -webkit-line-clamp: 1;
+    }
+}
+
+/* ============================================
+   ROOMS/APARTMENTS CARDS RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+    section#rooms .sm\:grid-cols-2.lg\:grid-cols-3,
+    section#apartments .sm\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    section#rooms .rounded-xl,
+    section#apartments .rounded-xl {
+        border-radius: 0.875rem;
+    }
+    
+    section#rooms .aspect-video,
+    section#apartments .aspect-video {
+        aspect-ratio: 16/10;
+    }
+    
+    section#rooms .p-6,
+    section#apartments .p-6 {
+        padding: 1rem;
+    }
+    
+    section#rooms h3.text-xl,
+    section#apartments h3.text-xl {
+        font-size: 1rem;
+    }
+    
+    section#rooms .text-lg,
+    section#apartments .text-lg {
+        font-size: 0.9375rem;
+    }
+    
+    section#rooms .h-11,
+    section#apartments .h-11 {
+        height: 2.5rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* ============================================
+   SAFE AREA FOR MOBILE DEVICES
+   ============================================ */
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    @media (max-width: 767px) {
+        footer {
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        }
+        
+        section:last-of-type {
+            padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* ============================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    .btn-glass-primary,
+    .btn-glass-secondary,
+    .glass-amenity-card,
+    .glass-service-card {
+        min-height: 44px;
+    }
+    
+    /* Remove hover effects that don't work well on touch */
+    .glass-card-solid:hover,
+    .glass-amenity-card:hover,
+    .glass-service-card:hover img {
+        transform: none;
+    }
+    
+    /* Add active states instead */
+    .btn-glass-primary:active,
+    .btn-glass-secondary:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+}

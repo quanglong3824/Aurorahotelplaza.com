@@ -107,6 +107,7 @@ function getContactStatusBadge($status) {
     <link href="../assets/css/fonts.css" rel="stylesheet"/>
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
     <style>
         .tab-btn { padding: 0.75rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .tab-btn.active { border-color: #d4af37; color: #d4af37; font-weight: 600; }
@@ -122,11 +123,12 @@ function getContactStatusBadge($status) {
 <main class="flex h-full grow flex-col pt-24 pb-16">
     <div class="mx-auto max-w-5xl w-full px-4 py-6">
         
-        <!-- User Header -->
-        <div class="bg-gradient-to-r from-primary-light to-accent p-6 rounded-xl text-white mb-6">
-            <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- User Header - Liquid Glass Style -->
+        <div class="relative overflow-hidden p-6 rounded-2xl text-white mb-6" style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7)), url('../assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0 backdrop-blur-sm"></div>
+            <div class="relative z-10 flex items-center justify-between flex-wrap gap-4">
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-accent text-2xl font-bold">
+                    <div class="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-accent text-2xl font-bold shadow-lg">
                         <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
                     </div>
                     <div>
@@ -135,7 +137,7 @@ function getContactStatusBadge($status) {
                     </div>
                 </div>
                 <?php if ($user['tier_name']): ?>
-                <div class="px-4 py-2 rounded-lg font-bold" style="background: <?php echo $user['color_code']; ?>20; border: 2px solid <?php echo $user['color_code']; ?>;">
+                <div class="glass-badge px-4 py-2 rounded-lg font-bold" style="background: <?php echo $user['color_code']; ?>20; border: 2px solid <?php echo $user['color_code']; ?>;">
                     <span class="material-symbols-outlined align-middle mr-1">workspace_premium</span>
                     <?php echo $user['tier_name']; ?>
                 </div>
@@ -143,23 +145,51 @@ function getContactStatusBadge($status) {
             </div>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- Stats Cards - Liquid Glass Style -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
-                <p class="text-gray-500 text-xs"><?php _e('profile_page.current_points'); ?></p>
-                <p class="text-2xl font-bold text-accent"><?php echo number_format($user['current_points'] ?? 0); ?></p>
+            <div class="glass-card-solid rounded-xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent">stars</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs"><?php _e('profile_page.current_points'); ?></p>
+                        <p class="text-xl font-bold text-accent"><?php echo number_format($user['current_points'] ?? 0); ?></p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
-                <p class="text-gray-500 text-xs"><?php _e('profile_page.total_points'); ?></p>
-                <p class="text-2xl font-bold text-primary-light"><?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
+            <div class="glass-card-solid rounded-xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-primary-light/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary-light">military_tech</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs"><?php _e('profile_page.total_points'); ?></p>
+                        <p class="text-xl font-bold text-primary-light"><?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
-                <p class="text-gray-500 text-xs"><?php _e('profile_page.bookings'); ?></p>
-                <p class="text-2xl font-bold text-blue-600"><?php echo $stats['total'] ?? 0; ?></p>
+            <div class="glass-card-solid rounded-xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600">hotel</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs"><?php _e('profile_page.bookings'); ?></p>
+                        <p class="text-xl font-bold text-blue-600"><?php echo $stats['total'] ?? 0; ?></p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-surface-dark rounded-lg p-4 shadow-sm">
-                <p class="text-gray-500 text-xs"><?php _e('profile_page.spent'); ?></p>
-                <p class="text-xl font-bold text-green-600"><?php echo number_format($stats['spent'] ?? 0); ?>đ</p>
+            <div class="glass-card-solid rounded-xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">payments</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs"><?php _e('profile_page.spent'); ?></p>
+                        <p class="text-lg font-bold text-green-600"><?php echo number_format($stats['spent'] ?? 0); ?>đ</p>
+                    </div>
+                </div>
             </div>
         </div>
 

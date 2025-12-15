@@ -19,6 +19,7 @@ $user_name = $_SESSION['user_name'] ?? 'User';
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
 <script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/liquid-glass.css">
 <link rel="stylesheet" href="./assets/css/auth.css">
 </head>
 <body class="auth-logout">

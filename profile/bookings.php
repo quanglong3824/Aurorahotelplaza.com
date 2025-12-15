@@ -79,6 +79,7 @@ $payment_labels = [
     
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
     <link rel="stylesheet" href="./assets/css/profile.css">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">

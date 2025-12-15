@@ -73,65 +73,6 @@ try {
     background-position: center;
     min-height: 500px;
 }
-.quick-link-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1rem;
-    background: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-.dark .quick-link-card {
-    background: #1e293b;
-}
-.quick-link-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-.quick-link-icon {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1rem;
-    background: linear-gradient(to bottom right, #d4af37, #cc9a2c);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-.category-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1rem;
-    height: 280px;
-    cursor: pointer;
-    display: block;
-}
-.category-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-.category-card:hover img {
-    transform: scale(1.1);
-}
-.category-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4) 50%, transparent);
-}
-.feature-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.75rem;
-    background: rgba(212, 175, 55, 0.2);
-    color: #d4af37;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
 </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -169,7 +110,7 @@ try {
     <section id="quick-links" class="py-16 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
         <div class="mx-auto max-w-7xl px-4">
             <div class="text-center mb-12">
-                <span class="feature-badge mb-4">
+                <span class="glass-section-badge mb-4">
                     <span class="material-symbols-outlined text-sm">bolt</span>
                     <?php _e('explore_page.quick_access'); ?>
                 </span>
@@ -179,63 +120,57 @@ try {
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                 <!-- Phòng nghỉ -->
-                <a href="rooms.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="rooms.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">hotel</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.rooms'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.rooms_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.rooms'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.rooms_desc'); ?></p>
                 </a>
                 
                 <!-- Căn hộ -->
-                <a href="apartments.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="apartments.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">apartment</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.apartments'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.apartments_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.apartments'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.apartments_desc'); ?></p>
                 </a>
                 
                 <!-- Dịch vụ -->
-                <a href="services.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="services.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">room_service</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.services'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.services_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.services'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.services_desc'); ?></p>
                 </a>
                 
                 <!-- Thư viện ảnh -->
-                <a href="gallery.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="gallery.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">photo_library</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.gallery'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.gallery_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.gallery'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.gallery_desc'); ?></p>
                 </a>
                 
                 <!-- Blog -->
-                <a href="blog.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="blog.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">article</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.news'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.news_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.news'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.news_desc'); ?></p>
                 </a>
                 
                 <!-- Liên hệ -->
-                <a href="contact.php" class="quick-link-card p-6 text-center">
-                    <div class="quick-link-icon mx-auto mb-4">
+                <a href="contact.php" class="glass-quick-link group">
+                    <div class="glass-quick-link-icon">
                         <span class="material-symbols-outlined text-2xl">contact_support</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.contact'); ?></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php _e('explore_page.contact_desc'); ?></p>
-                    <span class="material-symbols-outlined text-accent mt-3 opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.contact'); ?></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.contact_desc'); ?></p>
                 </a>
             </div>
         </div>
@@ -245,7 +180,7 @@ try {
     <section class="py-16">
         <div class="mx-auto max-w-7xl px-4">
             <div class="text-center mb-12">
-                <span class="feature-badge mb-4">
+                <span class="glass-section-badge mb-4">
                     <span class="material-symbols-outlined text-sm">category</span>
                     <?php _e('explore_page.categories'); ?>
                 </span>
@@ -255,11 +190,11 @@ try {
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Phòng nghỉ -->
-                <a href="rooms.php" class="category-card">
+                <a href="rooms.php" class="glass-category-card">
                     <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg" alt="<?php _e('explore_page.rooms'); ?>">
-                    <div class="category-overlay"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
+                    <div class="glass-category-overlay"></div>
+                    <div class="glass-category-content">
+                        <span class="glass-category-badge">
                             <span class="material-symbols-outlined text-sm">hotel</span>
                             <?php _e('explore_page.room_types_count', ['count' => count($featured_rooms)]); ?>
                         </span>
@@ -269,11 +204,11 @@ try {
                 </a>
                 
                 <!-- Căn hộ -->
-                <a href="apartments.php" class="category-card">
+                <a href="apartments.php" class="glass-category-card">
                     <img src="assets/img/apartment/can-ho-aurora-1.jpg" alt="<?php _e('explore_page.apartments'); ?>" onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
-                    <div class="category-overlay"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
+                    <div class="glass-category-overlay"></div>
+                    <div class="glass-category-content">
+                        <span class="glass-category-badge">
                             <span class="material-symbols-outlined text-sm">apartment</span>
                             <?php _e('explore_page.apartments_count', ['count' => count($featured_apartments)]); ?>
                         </span>
@@ -283,11 +218,11 @@ try {
                 </a>
                 
                 <!-- Nhà hàng -->
-                <a href="services.php?category=restaurant" class="category-card">
+                <a href="services.php?category=restaurant" class="glass-category-card">
                     <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg" alt="<?php _e('explore_page.restaurant_aurora'); ?>">
-                    <div class="category-overlay"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
+                    <div class="glass-category-overlay"></div>
+                    <div class="glass-category-content">
+                        <span class="glass-category-badge">
                             <span class="material-symbols-outlined text-sm">restaurant</span>
                             <?php _e('explore_page.cuisine'); ?>
                         </span>
@@ -297,11 +232,11 @@ try {
                 </a>
                 
                 <!-- Sự kiện -->
-                <a href="services.php?category=event" class="category-card">
+                <a href="services.php?category=event" class="glass-category-card">
                     <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg" alt="<?php _e('explore_page.events'); ?>">
-                    <div class="category-overlay"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent rounded-full text-xs font-bold mb-3">
+                    <div class="glass-category-overlay"></div>
+                    <div class="glass-category-content">
+                        <span class="glass-category-badge">
                             <span class="material-symbols-outlined text-sm">celebration</span>
                             <?php _e('explore_page.events'); ?>
                         </span>
@@ -319,7 +254,7 @@ try {
         <div class="mx-auto max-w-7xl px-4">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
                 <div>
-                    <span class="feature-badge mb-4">
+                    <span class="glass-section-badge mb-4">
                         <span class="material-symbols-outlined text-sm">hotel</span>
                         <?php _e('explore_page.rooms'); ?>
                     </span>
@@ -372,7 +307,7 @@ try {
         <div class="mx-auto max-w-7xl px-4">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
                 <div>
-                    <span class="feature-badge mb-4">
+                    <span class="glass-section-badge mb-4">
                         <span class="material-symbols-outlined text-sm">apartment</span>
                         <?php _e('explore_page.apartments'); ?>
                     </span>
@@ -428,7 +363,7 @@ try {
         <div class="mx-auto max-w-7xl px-4">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
                 <div>
-                    <span class="feature-badge mb-4">
+                    <span class="glass-section-badge mb-4">
                         <span class="material-symbols-outlined text-sm">star</span>
                         <?php _e('explore_page.featured_services'); ?>
                     </span>
@@ -492,7 +427,7 @@ try {
         <div class="mx-auto max-w-7xl px-4">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
                 <div>
-                    <span class="feature-badge mb-4">
+                    <span class="glass-section-badge mb-4">
                         <span class="material-symbols-outlined text-sm">article</span>
                         <?php _e('explore_page.news'); ?>
                     </span>

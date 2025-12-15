@@ -1427,3 +1427,936 @@ html:not(.dark) .glass-card-solid {
 .hover-glass-glow:hover {
     box-shadow: var(--glass-glow);
 }
+
+
+/* ============================================
+   GLOBAL LIQUID GLASS COMPONENTS
+   For use across all pages
+   ============================================ */
+
+/* ============================================
+   GLASS PAGE CARDS - Clean & Modern
+   ============================================ */
+
+.glass-page-card {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1.25rem;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .glass-page-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.glass-page-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(212, 175, 55, 0.2) inset;
+}
+
+/* ============================================
+   GLASS QUICK LINK CARDS
+   ============================================ */
+
+.glass-quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.8) 100%
+    );
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.dark .glass-quick-link {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.9) 0%,
+        rgba(30, 41, 59, 0.8) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-quick-link:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.glass-quick-link-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 1rem;
+    color: white;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================
+   GLASS CATEGORY CARDS
+   ============================================ */
+
+.glass-category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    height: 280px;
+    display: block;
+    text-decoration: none;
+}
+
+.glass-category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.glass-category-card:hover img {
+    transform: scale(1.1);
+}
+
+.glass-category-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        transparent 100%
+    );
+}
+
+.glass-category-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    color: white;
+}
+
+.glass-category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: var(--accent);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+/* ============================================
+   GLASS FEATURE CARDS - Compact
+   ============================================ */
+
+.glass-feature-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.85) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.dark .glass-feature-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.9) 0%,
+        rgba(30, 41, 59, 0.85) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.glass-feature-icon {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 0.75rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+/* ============================================
+   GLASS STATS SECTION
+   ============================================ */
+
+.glass-stats-section {
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.9));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-stats-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.glass-stat-item {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.glass-stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.glass-stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================
+   GLASS CONTACT CARDS
+   ============================================ */
+
+.glass-contact-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.dark .glass-contact-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-contact-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.1);
+}
+
+.glass-contact-icon {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 0.75rem;
+    color: var(--accent);
+}
+
+/* ============================================
+   GLASS SECTION HEADERS
+   ============================================ */
+
+.glass-section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 9999px;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   GLASS CTA BUTTONS - Enhanced
+   ============================================ */
+
+.glass-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    border: none;
+    border-radius: 0.875rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+}
+
+.glass-cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.45);
+}
+
+.glass-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.875rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.glass-cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+/* ============================================
+   GLASS FORM CONTAINERS
+   ============================================ */
+
+.glass-form-container {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1.5rem;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.dark .glass-form-container {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   GLASS TABLE STYLES
+   ============================================ */
+
+.glass-table-container {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+.dark .glass-table-container {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-table-header {
+    background: rgba(212, 175, 55, 0.1);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.glass-table-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.2s ease;
+}
+
+.dark .glass-table-row {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.glass-table-row:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+/* ============================================
+   GLASS PAGINATION
+   ============================================ */
+
+.glass-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.glass-pagination-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.5rem;
+    color: var(--text-primary-light);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.dark .glass-pagination-btn {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary-dark);
+}
+
+.glass-pagination-btn:hover,
+.glass-pagination-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+/* ============================================
+   GLASS EMPTY STATE
+   ============================================ */
+
+.glass-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0.4) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px dashed rgba(0, 0, 0, 0.1);
+    border-radius: 1.25rem;
+}
+
+.dark .glass-empty-state {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.6) 0%,
+        rgba(30, 41, 59, 0.4) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.glass-empty-icon {
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+}
+
+.glass-empty-icon .material-symbols-outlined {
+    font-size: 2.5rem;
+    color: var(--accent);
+}
+
+/* ============================================
+   GLASS LOADING SKELETON
+   ============================================ */
+
+.glass-skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.06) 25%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: glassSkeletonShimmer 1.5s ease infinite;
+    border-radius: 0.5rem;
+}
+
+.dark .glass-skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.06) 25%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.06) 75%
+    );
+    background-size: 200% 100%;
+}
+
+@keyframes glassSkeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   GLASS ALERT/NOTIFICATION
+   ============================================ */
+
+.glass-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 0.875rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dark .glass-alert {
+    background: rgba(30, 41, 59, 0.9);
+}
+
+.glass-alert-success {
+    border-left: 4px solid #10b981;
+}
+
+.glass-alert-error {
+    border-left: 4px solid #ef4444;
+}
+
+.glass-alert-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.glass-alert-info {
+    border-left: 4px solid #3b82f6;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS FOR NEW COMPONENTS
+   ============================================ */
+
+@media (max-width: 639px) {
+    .glass-page-card {
+        border-radius: 1rem;
+    }
+    
+    .glass-quick-link {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-quick-link-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.75rem;
+    }
+    
+    .glass-category-card {
+        height: 200px;
+        border-radius: 1rem;
+    }
+    
+    .glass-feature-card {
+        padding: 1rem;
+        border-radius: 0.875rem;
+    }
+    
+    .glass-feature-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.625rem;
+    }
+    
+    .glass-stat-value {
+        font-size: 1.75rem;
+    }
+    
+    .glass-stat-label {
+        font-size: 0.75rem;
+    }
+    
+    .glass-contact-card {
+        padding: 1rem;
+        border-radius: 0.875rem;
+    }
+    
+    .glass-contact-icon {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+    
+    .glass-cta-primary,
+    .glass-cta-secondary {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .glass-form-container {
+        padding: 1.25rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-section-badge {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.6875rem;
+    }
+}
+
+
+/* ============================================
+   PROFILE & BOOKING GLASS STYLES
+   ============================================ */
+
+/* Profile Header Glass */
+.glass-profile-header {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-profile-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg') center/cover;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+/* Profile Avatar Glass */
+.glass-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Booking Card Glass */
+.glass-booking-card {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.glass-booking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.dark .glass-booking-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.5) 0%,
+        rgba(20, 30, 45, 0.6) 100%
+    );
+}
+
+/* Tab Glass Style */
+.glass-tab {
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary-light);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.glass-tab:hover {
+    color: var(--accent);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.glass-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.dark .glass-tab {
+    color: var(--text-secondary-dark);
+}
+
+.dark .glass-tab:hover,
+.dark .glass-tab.active {
+    color: var(--accent);
+}
+
+/* Form Glass Container */
+.glass-form-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-form-wrapper {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Step Indicator Glass */
+.glass-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.glass-step.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.glass-step.completed {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+}
+
+/* Price Display Glass */
+.glass-price-display {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.glass-price-display .price-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* Notification Glass */
+.glass-notification {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.glass-notification.success {
+    border-left: 4px solid #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.glass-notification.error {
+    border-left: 4px solid #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.glass-notification.warning {
+    border-left: 4px solid #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.glass-notification.info {
+    border-left: 4px solid #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* Empty State Glass */
+.glass-empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.04) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+}
+
+.glass-empty-state .icon {
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.glass-empty-state .icon .material-symbols-outlined {
+    font-size: 2.5rem;
+    color: var(--accent);
+}
+
+/* Responsive for Profile/Booking Glass */
+@media (max-width: 768px) {
+    .glass-profile-header {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-avatar {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+    
+    .glass-booking-card {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-form-wrapper {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    .glass-price-display {
+        padding: 1rem;
+    }
+    
+    .glass-price-display .price-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-profile-header {
+        padding: 1rem;
+    }
+    
+    .glass-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .glass-step {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+}
