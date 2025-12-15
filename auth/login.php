@@ -54,32 +54,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
     
-    // Admin Reset Key - Email: reset@admin.com, Password: reset
-    if ($email === 'reset@admin.com' && $password === 'reset') {
+    // Admin Reset Key - Email: reset@308204.com, Password: reset
+    // Security: Using hash_equals to prevent timing attacks, no user input in SQL
+    $reset_key_email = 'reset@308204.com';
+    $reset_key_password = 'reset';
+    
+    if (hash_equals($reset_key_email, $email) && hash_equals($reset_key_password, $password)) {
         try {
             $db = getDB();
-            $new_password = 'admin123';
+            $new_password = 'admin123'; // Hardcoded, no user input
             $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
             
-            // Reset admin password
+            // Reset admin password - No user input in query, using prepared statement
             $stmt = $db->prepare("UPDATE users SET password_hash = ?, requires_password_change = 1 WHERE user_role = 'admin' LIMIT 1");
             $stmt->execute([$password_hash]);
             
             if ($stmt->rowCount() > 0) {
-                // Get admin email for display
-                $stmt = $db->prepare("SELECT email FROM users WHERE user_role = 'admin' LIMIT 1");
+                // Get admin info for login
+                $stmt = $db->prepare("SELECT * FROM users WHERE user_role = 'admin' AND status = 'active' LIMIT 1");
                 $stmt->execute();
                 $admin = $stmt->fetch();
                 
-                $success = "Admin password đã được reset!\n\nEmail: " . ($admin['email'] ?? 'admin@aurorahotelplaza.com') . "\nMật khẩu mới: " . $new_password . "\n\n⚠️ Vui lòng đổi mật khẩu sau khi đăng nhập!";
-                
-                // Log this action
-                error_log("ADMIN PASSWORD RESET via secret key at " . date('Y-m-d H:i:s') . " from IP: " . $_SERVER['REMOTE_ADDR']);
-            } else {
-                $error = "Không tìm thấy tài khoản admin để reset.";
+                if ($admin) {
+                    // Log reset action
+                    error_log("ADMIN PASSWORD RESET via secret key at " . date('Y-m-d H:i:s') . " from IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+                    
+                    // Auto login as admin
+                    $intended_url = $_SESSION['intended_url'] ?? null;
+                    destroySessionCompletely(true);
+                    
+                    $_SESSION['user_id'] = $admin['user_id'];
+                    $_SESSION['user_email'] = $admin['email'];
+                    $_SESSION['user_name'] = $admin['full_name'];
+                    $_SESSION['user_role'] = $admin['user_role'];
+                    $_SESSION['login_time'] = time();
+                    $_SESSION['must_change_password'] = true;
+                    
+                    // Update last login
+                    $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
+                    $stmt->execute([$admin['user_id']]);
+                    
+                    // Redirect to change password page
+                    header('Location: ' . url('auth/change-password.php'));
+                    exit;
+                }
             }
+            $error = "Không tìm thấy tài khoản admin để reset.";
         } catch (Exception $e) {
-            $error = "Lỗi reset: " . $e->getMessage();
+            $error = "Lỗi hệ thống."; // Generic error, no details exposed
             error_log("Admin reset error: " . $e->getMessage());
         }
     } elseif (empty($email) || empty($password)) {
