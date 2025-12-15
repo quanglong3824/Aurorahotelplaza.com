@@ -632,6 +632,9 @@ return [
         'comment_pending' => 'Your comment is pending approval',
         'comment_empty' => 'Please enter comment content',
         'login_required' => 'Please login to comment',
+        'rate_post' => 'Rate this post:',
+        'ratings' => 'ratings',
+        'shares' => 'shares',
     ],
 
     // Booking page

@@ -561,11 +561,14 @@ document.addEventListener('DOMContentLoaded', function() {
             imageGallery.closest('.card-body')?.querySelector('div:last-child')?.appendChild(galleryContainer);
         }
         
+        // url is uploads/filename.jpg, need ../uploads/ for admin display
+        let displayUrl = url.startsWith('uploads/') ? '../' + url : url;
+        
         const thumb = document.createElement('div');
         thumb.className = 'image-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative group selected';
-        thumb.dataset.src = url;
+        thumb.dataset.src = url; // Store original path for saving to DB
         thumb.innerHTML = `
-            <img src="${url}" alt="${filename}" class="w-full h-full object-cover">
+            <img src="${displayUrl}" alt="${filename}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span class="material-symbols-outlined text-white">check_circle</span>
             </div>

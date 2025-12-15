@@ -200,21 +200,54 @@ try {
             </div>
             <?php endif; ?>
 
-            <!-- Share -->
-            <div class="border-t border-b border-gray-200 dark:border-gray-700 py-6 mb-12">
-                <div class="flex items-center justify-between">
-                    <span class="font-semibold"><?php _e('blog_page.share_post'); ?></span>
-                    <div class="flex gap-3">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" 
-                           target="_blank" class="share-btn">
-                            <span class="material-symbols-outlined">share</span>
-                            Facebook
-                        </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>&text=<?php echo urlencode($post['title']); ?>" 
-                           target="_blank" class="share-btn">
-                            <span class="material-symbols-outlined">share</span>
-                            Twitter
-                        </a>
+            <!-- Rating, Like, Share Section -->
+            <div class="border-t border-b border-gray-200 dark:border-gray-700 py-6 mb-12" id="interactionSection" data-post-id="<?php echo $post['post_id']; ?>">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    
+                    <!-- Star Rating -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400"><?php _e('blog_page.rate_post'); ?></span>
+                        <div class="flex items-center gap-3">
+                            <div class="star-rating flex gap-1" id="starRating">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <button type="button" class="star-btn text-2xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="<?php echo $i; ?>">
+                                    <span class="material-symbols-outlined">star</span>
+                                </button>
+                                <?php endfor; ?>
+                            </div>
+                            <span class="text-sm text-gray-500">
+                                <span id="ratingAvg"><?php echo number_format($post['rating_avg'] ?? 0, 1); ?></span>/5
+                                (<span id="ratingCount"><?php echo (int)($post['rating_count'] ?? 0); ?></span> <?php _e('blog_page.ratings'); ?>)
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Like Button -->
+                    <div class="flex items-center gap-4">
+                        <button type="button" id="likeBtn" class="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-red-400 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+                            <span class="material-symbols-outlined like-icon">favorite</span>
+                            <span id="likesCount"><?php echo (int)($post['likes_count'] ?? 0); ?></span>
+                        </button>
+                        
+                        <!-- Share Buttons -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-500 mr-2"><?php _e('blog_page.share_post'); ?></span>
+                            <button type="button" class="share-btn-icon facebook" data-platform="facebook" title="Facebook">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            </button>
+                            <button type="button" class="share-btn-icon twitter" data-platform="twitter" title="Twitter/X">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </button>
+                            <button type="button" class="share-btn-icon linkedin" data-platform="linkedin" title="LinkedIn">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            </button>
+                            <button type="button" class="share-btn-icon copy-link" data-platform="copy_link" title="Copy Link">
+                                <span class="material-symbols-outlined text-xl">link</span>
+                            </button>
+                        </div>
+                        <span class="text-sm text-gray-500">
+                            <span id="sharesCount"><?php echo (int)($post['shares_count'] ?? 0); ?></span> <?php _e('blog_page.shares'); ?>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -335,5 +368,177 @@ try {
 </div>
 
 <script src="assets/js/main.js"></script>
+
+<!-- Blog Interaction Script -->
+<style>
+.share-btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    color: white;
+}
+.share-btn-icon.facebook { background: #1877f2; }
+.share-btn-icon.facebook:hover { background: #0d65d9; }
+.share-btn-icon.twitter { background: #000; }
+.share-btn-icon.twitter:hover { background: #333; }
+.share-btn-icon.linkedin { background: #0a66c2; }
+.share-btn-icon.linkedin:hover { background: #004182; }
+.share-btn-icon.copy-link { background: #6b7280; }
+.share-btn-icon.copy-link:hover { background: #4b5563; }
+
+.star-btn.active span,
+.star-btn.hover span { color: #facc15; }
+.star-btn span { transition: color 0.15s; }
+
+#likeBtn.liked {
+    background: #fef2f2;
+    border-color: #ef4444;
+}
+#likeBtn.liked .like-icon {
+    font-variation-settings: 'FILL' 1;
+    color: #ef4444;
+}
+.dark #likeBtn.liked {
+    background: rgba(239, 68, 68, 0.2);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const section = document.getElementById('interactionSection');
+    if (!section) return;
+    
+    const postId = section.dataset.postId;
+    const starRating = document.getElementById('starRating');
+    const likeBtn = document.getElementById('likeBtn');
+    const likesCount = document.getElementById('likesCount');
+    const ratingAvg = document.getElementById('ratingAvg');
+    const ratingCount = document.getElementById('ratingCount');
+    const sharesCount = document.getElementById('sharesCount');
+    const starBtns = starRating.querySelectorAll('.star-btn');
+    
+    // Load initial status
+    fetch(`api/blog-interaction.php?action=get_status&post_id=${postId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                if (data.is_liked) likeBtn.classList.add('liked');
+                if (data.user_rating > 0) highlightStars(data.user_rating);
+                likesCount.textContent = data.likes_count;
+                ratingAvg.textContent = data.rating_avg.toFixed(1);
+                ratingCount.textContent = data.rating_count;
+                sharesCount.textContent = data.shares_count;
+            }
+        }).catch(() => {});
+    
+    // Star rating hover effect
+    starBtns.forEach((btn, index) => {
+        btn.addEventListener('mouseenter', () => {
+            starBtns.forEach((b, i) => {
+                b.classList.toggle('hover', i <= index);
+            });
+        });
+        btn.addEventListener('mouseleave', () => {
+            starBtns.forEach(b => b.classList.remove('hover'));
+        });
+        btn.addEventListener('click', () => {
+            const rating = parseInt(btn.dataset.rating);
+            submitRating(rating);
+        });
+    });
+    
+    function highlightStars(rating) {
+        starBtns.forEach((btn, i) => {
+            btn.classList.toggle('active', i < rating);
+        });
+    }
+    
+    function submitRating(rating) {
+        const formData = new FormData();
+        formData.append('action', 'rate');
+        formData.append('post_id', postId);
+        formData.append('rating', rating);
+        
+        fetch('api/blog-interaction.php', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    highlightStars(data.user_rating);
+                    ratingAvg.textContent = data.rating_avg.toFixed(1);
+                    ratingCount.textContent = data.rating_count;
+                }
+            });
+    }
+    
+    // Like button
+    likeBtn.addEventListener('click', function() {
+        const isLiked = this.classList.contains('liked');
+        const action = isLiked ? 'unlike' : 'like';
+        
+        const formData = new FormData();
+        formData.append('action', action);
+        formData.append('post_id', postId);
+        
+        fetch('api/blog-interaction.php', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    likeBtn.classList.toggle('liked', data.liked);
+                    likesCount.textContent = data.likes_count;
+                }
+            });
+    });
+    
+    // Share buttons
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareTitle = encodeURIComponent(document.title);
+    
+    document.querySelectorAll('.share-btn-icon').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const platform = this.dataset.platform;
+            let url = '';
+            
+            switch(platform) {
+                case 'facebook':
+                    url = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+                    break;
+                case 'twitter':
+                    url = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`;
+                    break;
+                case 'linkedin':
+                    url = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`;
+                    break;
+                case 'copy_link':
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        alert('Link đã được sao chép!');
+                    });
+                    break;
+            }
+            
+            if (url) {
+                window.open(url, '_blank', 'width=600,height=400');
+            }
+            
+            // Track share
+            const formData = new FormData();
+            formData.append('action', 'share');
+            formData.append('post_id', postId);
+            formData.append('platform', platform);
+            
+            fetch('api/blog-interaction.php', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        sharesCount.textContent = data.shares_count;
+                    }
+                });
+        });
+    });
+});
+</script>
 </body>
 </html>
