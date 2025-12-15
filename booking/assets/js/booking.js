@@ -56,12 +56,22 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DEBUG - Current selectedIndex:', roomSelect.selectedIndex);
     console.log('DEBUG - Current value:', roomSelect.value);
     
-    // Check if a room is already selected (selectedIndex > 0 means not the placeholder)
-    if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
+    // Check if a room is pre-selected from PHP (via data attribute or selected attribute)
+    const preselectedId = roomSelect.dataset.preselected;
+    const hasPreselection = preselectedId && preselectedId !== 'null' && preselectedId !== '';
+    
+    if (hasPreselection) {
+        // Find and select the option with matching room_type_id
+        for (let i = 0; i < roomSelect.options.length; i++) {
+            if (roomSelect.options[i].value === preselectedId) {
+                roomSelect.selectedIndex = i;
+                console.log('Room pre-selected from URL (index: ' + i + ', id: ' + preselectedId + ')');
+                break;
+            }
+        }
+    } else if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
         console.log('No room pre-selected, selecting first room type...');
         roomSelect.selectedIndex = 1; // Select first room type
-    } else if (roomSelect && roomSelect.selectedIndex > 0) {
-        console.log('Room pre-selected from URL (index: ' + roomSelect.selectedIndex + ')');
     }
     
     // Calculate after selection is determined
