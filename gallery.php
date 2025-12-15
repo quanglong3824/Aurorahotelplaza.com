@@ -63,17 +63,23 @@ $categories = [
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, #1A237E 0%, #0f172a 60%, #d4af37 150%);
 }
 
-.gallery-hero::before {
-    content: '';
+.gallery-hero-bg {
     position: absolute;
     inset: 0;
     background: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 0.15;
+    z-index: 0;
+}
+
+.gallery-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1;
 }
 
 .gallery-hero::after {
@@ -95,9 +101,10 @@ $categories = [
 .hero-shape {
     position: absolute;
     border-radius: 50%;
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 2;
 }
 
 .hero-shape-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
@@ -116,7 +123,7 @@ $categories = [
     width: 6rem;
     height: 6rem;
     margin: 0 auto 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(212, 175, 55, 0.4);
     border-radius: 50%;
@@ -220,10 +227,10 @@ $categories = [
 }
 
 .filter-btn-glass.active {
-    background: linear-gradient(135deg, #1A237E, #d4af37);
-    border-color: transparent;
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(212, 175, 55, 0.5);
     color: white;
-    box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .filter-btn-glass .material-symbols-outlined {
@@ -462,10 +469,10 @@ $categories = [
 }
 
 .page-btn-glass.active {
-    background: linear-gradient(135deg, #1A237E, #d4af37);
-    border-color: transparent;
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(212, 175, 55, 0.5);
     color: white;
-    box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .page-btn-glass.disabled {
@@ -536,4 +543,325 @@ $categories = [
     font-weight: 600;
 }
 
-.l
+.lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.lightbox-close:hover {
+    background: #d4af37;
+    border-color: #d4af37;
+    transform: rotate(90deg);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3.5rem;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.lightbox-nav:hover {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: #d4af37;
+}
+
+.lightbox-prev { left: 1.5rem; }
+.lightbox-next { right: 1.5rem; }
+
+/* CTA Section */
+.gallery-cta {
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-cta-bg {
+    position: absolute;
+    inset: 0;
+    background: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.gallery-cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(3px);
+}
+
+.cta-content-glass {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .gallery-masonry { grid-template-columns: repeat(3, 1fr); }
+    .gallery-card-glass:nth-child(3n+1) { grid-row: span 2; }
+    .gallery-card-glass:nth-child(3n+2) { grid-row: span 1; }
+    .gallery-card-glass:nth-child(3n) { grid-row: span 1; }
+}
+
+@media (max-width: 768px) {
+    .gallery-hero { min-height: 50vh; }
+    .gallery-hero-title { font-size: 2.5rem; }
+    .gallery-hero-subtitle { font-size: 1rem; }
+    .filter-glass-bar { margin-top: -2rem; }
+    .filter-glass-container { padding: 1rem; }
+    .gallery-masonry { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .gallery-card-glass:nth-child(2n+1) { grid-row: span 2; }
+    .gallery-card-glass:nth-child(2n) { grid-row: span 1; }
+    .lightbox-nav { width: 2.75rem; height: 2.75rem; }
+    .lightbox-prev { left: 0.75rem; }
+    .lightbox-next { right: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+    .gallery-hero { min-height: 45vh; }
+    .gallery-hero-title { font-size: 2rem; }
+    .hero-icon-ring { width: 4.5rem; height: 4.5rem; }
+    .filter-btn-glass { padding: 0.625rem 1rem; font-size: 0.8125rem; }
+    .gallery-masonry { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .gallery-card-glass { grid-row: span 1 !important; }
+    .gallery-overlay { padding: 1rem; }
+    .gallery-overlay-title { font-size: 1rem; }
+    .page-btn-glass { min-width: 2.5rem; height: 2.5rem; }
+}
+</style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<div class="relative flex min-h-screen w-full flex-col">
+<?php include 'includes/header.php'; ?>
+
+<main class="flex h-full grow flex-col">
+    <!-- Hero Section -->
+    <section class="gallery-hero">
+        <div class="gallery-hero-bg"></div>
+        <div class="gallery-hero-overlay"></div>
+        <div class="hero-shape hero-shape-1"></div>
+        <div class="hero-shape hero-shape-2"></div>
+        <div class="hero-shape hero-shape-3"></div>
+        
+        <div class="hero-glass-content">
+            <div class="hero-icon-ring">
+                <span class="material-symbols-outlined">photo_library</span>
+            </div>
+            <h1 class="gallery-hero-title"><?php _e('gallery_page.title'); ?></h1>
+            <p class="gallery-hero-subtitle"><?php _e('gallery_page.subtitle'); ?></p>
+        </div>
+    </section>
+
+    <!-- Category Filter -->
+    <div class="filter-glass-bar">
+        <div class="filter-glass-container">
+            <div class="filter-scroll">
+                <?php foreach ($categories as $key => $cat): ?>
+                <a href="?category=<?php echo $key; ?>" 
+                   class="filter-btn-glass <?php echo $current_category === $key ? 'active' : ''; ?>">
+                    <span class="material-symbols-outlined"><?php echo $cat['icon']; ?></span>
+                    <?php echo $cat['name']; ?>
+                    <span class="filter-count"><?php echo $cat['count']; ?></span>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-section">
+        <div class="gallery-masonry">
+            <?php if (empty($page_images)): ?>
+            <div class="gallery-empty">
+                <div class="gallery-empty-icon">
+                    <span class="material-symbols-outlined">image_not_supported</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2"><?php _e('gallery_page.no_images'); ?></h3>
+                <p class="text-text-secondary-light dark:text-text-secondary-dark">
+                    <?php _e('gallery_page.no_images_desc'); ?>
+                </p>
+            </div>
+            <?php else: ?>
+            <?php foreach ($page_images as $index => $image): ?>
+            <div class="gallery-card-glass" 
+                 onclick="openLightbox(<?php echo $index; ?>)"
+                 data-src="<?php echo htmlspecialchars($image['src']); ?>"
+                 data-title="<?php echo htmlspecialchars($image['title']); ?>"
+                 data-category="<?php echo htmlspecialchars($categories[$image['category']]['name'] ?? $image['category']); ?>">
+                <img src="<?php echo htmlspecialchars($image['src']); ?>" 
+                     alt="<?php echo htmlspecialchars($image['title']); ?>"
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-overlay-title"><?php echo htmlspecialchars($image['title']); ?></h3>
+                    <span class="gallery-overlay-category">
+                        <span class="material-symbols-outlined" style="font-size: 1rem;">
+                            <?php echo $categories[$image['category']]['icon'] ?? 'image'; ?>
+                        </span>
+                        <?php echo $categories[$image['category']]['name'] ?? $image['category']; ?>
+                    </span>
+                </div>
+                <div class="gallery-zoom-btn">
+                    <span class="material-symbols-outlined">zoom_in</span>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <!-- Pagination -->
+        <?php if ($total_pages > 1): ?>
+        <div class="pagination-glass">
+            <a href="?category=<?php echo $current_category; ?>&page=<?php echo max(1, $current_page - 1); ?>" 
+               class="page-btn-glass <?php echo $current_page <= 1 ? 'disabled' : ''; ?>">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </a>
+            
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <?php if ($i == 1 || $i == $total_pages || abs($i - $current_page) <= 2): ?>
+                <a href="?category=<?php echo $current_category; ?>&page=<?php echo $i; ?>" 
+                   class="page-btn-glass <?php echo $i === $current_page ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+                <?php elseif (abs($i - $current_page) == 3): ?>
+                <span class="page-btn-glass disabled">...</span>
+                <?php endif; ?>
+            <?php endfor; ?>
+            
+            <a href="?category=<?php echo $current_category; ?>&page=<?php echo min($total_pages, $current_page + 1); ?>" 
+               class="page-btn-glass <?php echo $current_page >= $total_pages ? 'disabled' : ''; ?>">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+        </div>
+        <?php endif; ?>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gallery-cta">
+        <div class="gallery-cta-bg"></div>
+        <div class="gallery-cta-overlay"></div>
+        <div class="cta-content-glass">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white/90 text-sm font-semibold mb-4">
+                <span class="material-symbols-outlined text-accent">auto_awesome</span>
+                <?php _e('gallery_page.experience'); ?>
+            </span>
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">
+                <?php _e('gallery_page.cta_title'); ?>
+            </h2>
+            <p class="text-white/80 text-lg mb-8">
+                <?php _e('gallery_page.cta_desc'); ?>
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <?php _e('gallery_page.book_now'); ?>
+                </a>
+                <a href="rooms.php" class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold hover:bg-white/20 transition-all">
+                    <span class="material-symbols-outlined">hotel</span>
+                    <?php _e('gallery_page.view_rooms'); ?>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<?php include 'includes/footer.php'; ?>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-glass" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+    <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-info">
+            <h3 class="lightbox-title" id="lightbox-title"></h3>
+            <span class="lightbox-category" id="lightbox-category"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+const galleryCards = document.querySelectorAll('.gallery-card-glass');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxTitle = document.getElementById('lightbox-title');
+const lightboxCategory = document.getElementById('lightbox-category');
+let currentIndex = 0;
+
+function openLightbox(index) {
+    currentIndex = index;
+    const card = galleryCards[index];
+    lightboxImg.src = card.dataset.src;
+    lightboxTitle.textContent = card.dataset.title;
+    lightboxCategory.textContent = card.dataset.category;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function navigateLightbox(direction) {
+    currentIndex = (currentIndex + direction + galleryCards.length) % galleryCards.length;
+    const card = galleryCards[currentIndex];
+    lightboxImg.src = card.dataset.src;
+    lightboxTitle.textContent = card.dataset.title;
+    lightboxCategory.textContent = card.dataset.category;
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+    if (e.key === 'ArrowRight') navigateLightbox(1);
+});
+
+// Close on backdrop click
+lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+});
+</script>
+</body>
+</html>

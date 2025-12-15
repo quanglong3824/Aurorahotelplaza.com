@@ -423,7 +423,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
         <?php if ($service['thumbnail']): ?>
             <div class="service-hero-bg" style="background-image: url('<?php echo htmlspecialchars($service['thumbnail']); ?>');"></div>
         <?php else: ?>
-            <div class="service-hero-bg" style="background: linear-gradient(135deg, #1A237E 0%, #d4af37 100%);"></div>
+            <div class="service-hero-bg" style="background: linear-gradient(135deg, #111827 0%, #1f2937 100%);"></div>
         <?php endif; ?>
         <div class="service-hero-overlay"></div>
         

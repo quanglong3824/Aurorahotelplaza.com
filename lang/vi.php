@@ -524,11 +524,13 @@ return [
     // Gallery page
     'gallery_page' => [
         'title' => 'Thư viện ảnh - Aurora Hotel Plaza',
+        'subtitle' => 'Khám phá không gian sang trọng và tiện nghi tại Aurora Hotel Plaza',
         'collection' => 'Bộ sưu tập hình ảnh',
         'page_title' => 'Thư viện ảnh',
         'page_subtitle' => 'Khám phá không gian sang trọng và tiện nghi tại Aurora Hotel Plaza qua {:count}+ hình ảnh đẹp nhất',
         'view_gallery' => 'Xem thư viện',
         'book_now' => 'Đặt phòng ngay',
+        'view_rooms' => 'Xem phòng',
         'explore_aurora' => 'Khám phá Aurora Hotel',
         'explore_desc' => 'Duyệt qua bộ sưu tập hình ảnh để cảm nhận không gian sang trọng và dịch vụ đẳng cấp',
         'all' => 'Tất cả',
@@ -547,6 +549,9 @@ return [
         'no_images_desc' => 'Không tìm thấy ảnh trong danh mục này',
         'view_all_images' => 'Xem tất cả ảnh',
         'image' => 'Ảnh',
+        'experience' => 'Trải nghiệm thực tế',
+        'cta_title' => 'Sẵn sàng trải nghiệm?',
+        'cta_desc' => 'Đặt phòng ngay hôm nay để tận hưởng không gian sang trọng và dịch vụ đẳng cấp 5 sao',
         'experience_real' => 'Trải nghiệm không gian thực tế',
         'experience_desc' => 'Đặt phòng ngay hôm nay để tận hưởng không gian sang trọng và dịch vụ đẳng cấp 5 sao',
         'contact_consult' => 'Liên hệ tư vấn',

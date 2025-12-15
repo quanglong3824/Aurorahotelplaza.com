@@ -524,11 +524,13 @@ return [
     // Gallery page
     'gallery_page' => [
         'title' => 'Gallery - Aurora Hotel Plaza',
+        'subtitle' => 'Explore the luxurious spaces and amenities at Aurora Hotel Plaza',
         'collection' => 'Image Collection',
         'page_title' => 'Gallery',
         'page_subtitle' => 'Explore the luxurious spaces and amenities at Aurora Hotel Plaza through {:count}+ beautiful images',
         'view_gallery' => 'View Gallery',
         'book_now' => 'Book Now',
+        'view_rooms' => 'View Rooms',
         'explore_aurora' => 'Explore Aurora Hotel',
         'explore_desc' => 'Browse through our image collection to experience the luxurious spaces and premium services',
         'all' => 'All',
@@ -547,6 +549,9 @@ return [
         'no_images_desc' => 'No images found in this category',
         'view_all_images' => 'View All Images',
         'image' => 'Image',
+        'experience' => 'Real Experience',
+        'cta_title' => 'Ready to Experience?',
+        'cta_desc' => 'Book today to enjoy luxurious spaces and 5-star services',
         'experience_real' => 'Experience the Real Space',
         'experience_desc' => 'Book today to enjoy luxurious spaces and 5-star services',
         'contact_consult' => 'Contact for Consultation',
