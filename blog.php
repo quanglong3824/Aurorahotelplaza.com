@@ -45,11 +45,9 @@ try {
     $total_pages = ceil($total_posts / $per_page);
     
     // Get posts
-    $query = $select_from . " WHERE $where ORDER BY p.published_at DESC LIMIT ? OFFSET ?";
+    $query = $select_from . " WHERE $where ORDER BY p.published_at DESC, p.created_at DESC LIMIT $per_page OFFSET $offset";
     $stmt = $db->prepare($query);
-    
-    $all_params = array_merge($params, [$per_page, $offset]);
-    $stmt->execute($all_params);
+    $stmt->execute($params);
     $posts = $stmt->fetchAll();
     
     // Get categories from the blog_categories table
@@ -62,9 +60,12 @@ try {
     $posts = [];
     $categories = [];
     $total_pages = 0;
-    // You could set an error message to display to the user
-    $error_message = "Could not load posts. Please try again later.";
+    $error_message = "Could not load posts: " . $e->getMessage();
 }
+
+// Debug: uncomment to see query results
+// echo "<!-- Debug: total_posts=$total_posts, posts_count=" . count($posts) . " -->";
+
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 15, 2025 lúc 12:25 PM
+-- Thời gian đã tạo: Th12 15, 2025 lúc 03:07 PM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
@@ -190,7 +190,28 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `enti
 (116, 1, 'update_room_status', 'room', 1, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:22:34'),
 (117, 1, 'update_room_type', NULL, NULL, 'Đổi loại phòng ID: 83 sang loại: 4', '1.53.200.212', NULL, '2025-12-15 05:23:52'),
 (118, 1, 'logout', 'user', 1, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:24:33'),
-(119, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:24:42');
+(119, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:24:42'),
+(120, 3, 'logout', 'user', 3, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:33:04'),
+(121, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 05:33:26'),
+(122, 1, 'update_room_status', 'room', 5, 'Updated room status to available', '1.53.200.212', NULL, '2025-12-15 05:34:04'),
+(123, 1, 'update_room_status', 'room', 5, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:34:16'),
+(124, 1, 'update_booking_status', 'booking', 1, 'Changed booking BK202512141A72E8 status from checked_in to checked_out', '1.53.200.212', NULL, '2025-12-15 05:36:00'),
+(125, 1, 'update_room_status', 'room', 32, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:36:18'),
+(126, 1, 'update_room_status', 'room', 31, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:36:24'),
+(127, 1, 'update_room_status', 'room', 30, 'Updated room status to maintenance', '1.53.200.212', NULL, '2025-12-15 05:36:31'),
+(128, 5, 'login', 'user', 5, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 06:40:57'),
+(129, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 06:41:45'),
+(130, 1, 'update_booking_status', 'booking', 6, 'Changed booking BK202512150B095E status from confirmed to checked_in', '115.74.225.100', NULL, '2025-12-15 06:57:11'),
+(131, 1, 'confirm_payment', 'booking', 6, 'Confirmed payment for booking BK202512150B095E. Amount: 1,500,000 VND. Points awarded: 15,000', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 06:57:27'),
+(132, 1, 'update_room_status', 'room', 20, 'Updated room status to available', '115.74.225.100', NULL, '2025-12-15 07:00:01'),
+(133, 5, 'logout', 'user', 5, 'User logged out', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:09:27'),
+(134, 1, 'logout', 'user', 1, 'User logged out', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:15:09'),
+(135, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:15:39'),
+(136, 1, 'logout', 'user', 1, 'User logged out', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:16:18'),
+(137, 7, 'login', 'user', 7, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:18:47'),
+(138, 7, 'update_booking_status', 'booking', 6, 'Changed booking BK202512150B095E status from checked_in to checked_out', '115.74.225.100', NULL, '2025-12-15 07:18:58'),
+(139, 5, 'login', 'user', 5, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:31:35'),
+(140, 7, 'login', 'user', 7, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 08:06:45');
 
 -- --------------------------------------------------------
 
@@ -297,6 +318,11 @@ CREATE TABLE `blog_posts` (
   `excerpt_en` varchar(500) DEFAULT NULL,
   `content` longtext NOT NULL,
   `content_en` text DEFAULT NULL,
+  `tags` varchar(500) DEFAULT NULL,
+  `layout` enum('standard','hero','sidebar','gallery') DEFAULT 'standard',
+  `gallery_images` text DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `allow_comments` tinyint(1) DEFAULT 1,
   `featured_image` varchar(255) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `author_id` int(11) NOT NULL,
@@ -306,6 +332,13 @@ CREATE TABLE `blog_posts` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `blog_posts`
+--
+
+INSERT INTO `blog_posts` (`post_id`, `title`, `title_en`, `slug`, `excerpt`, `excerpt_en`, `content`, `content_en`, `tags`, `layout`, `gallery_images`, `is_featured`, `allow_comments`, `featured_image`, `category_id`, `author_id`, `status`, `views`, `published_at`, `created_at`, `updated_at`) VALUES
+(0, 'Trải nghiệm Ẩm thực Tinh tế tại nhà hàng Aurora Hotel Plaza', NULL, 'trai-nghiem-am-thuc-tinh-te-tai-nha-hang-aurora-hotel-plaza', 'Khám phá không gian sang trọng và hành trình vị giác độc đáo với sự kết hợp hoàn hảo giữa tinh hoa ẩm thực Á-Âu. Điểm đến lý tưởng chon những bữa tiệc ấm cúng tại Biên Hòa', NULL, '<p>Chào mừng quý khách đến với nhà hàng tại Aurora Hotel Plaza, nơi ẩm thực không chỉ là món ăn mà còn là một nghệ thuật thưởng thức. Chúng tôi tự hào mang đến một không gian đẳng cấp cùng những trải nghiệm vị giác khó quên cho mọi thực khách.</p>\r\n\r\n<h2>Không gian sang trọng, tầm nhìn ấn tượng</h2>\r\n<p>Tọa lạc tại vị trí đắc địa trong khách sạn, nhà hàng được thiết kế với kiến trúc hiện đại pha lẫn nét cổ điển tinh tế. Ánh sáng vàng ấm cúng, nội thất cao cấp cùng tầm nhìn thoáng đãng ra thành phố tạo nên một bầu không khí lãng mạn, lý tưởng cho các buổi hẹn hò, gặp gỡ đối tác hay sum họp gia đình.</p>\r\n\r\n<h2>Thực đơn đa dạng: Giao thoa Á - Âu</h2>\r\n<p>Đội ngũ đầu bếp tài hoa của Aurora đã dành nhiều tâm huyết để sáng tạo nên một thực đơn phong phú, đáp ứng khẩu vị của những thực khách khó tính nhất. Chúng tôi cam kết sử dụng nguồn nguyên liệu tươi ngon, được tuyển chọn kỹ lưỡng mỗi ngày.</p>\r\n\r\n<h3>Những điểm nhấn không thể bỏ qua:</h3>\r\n<ul>\r\n    <li><b>Hương vị Việt truyền thống:</b> Thưởng thức những món ăn đậm đà bản sắc dân tộc được nâng tầm với cách trình bày hiện đại.</li>\r\n    <li><b>Tinh tuyển món Âu:</b> Các món Steak bò nhập khẩu thượng hạng, hay hải sản tươi sống chế biến theo phong cách Địa Trung Hải.</li>\r\n    <li><b>Thực đơn chay phong phú:</b> Nhiều lựa chọn thanh đạm nhưng vẫn đảm bảo dinh dưỡng và hương vị hấp dẫn.</li>\r\n</ul>\r\n\r\n<p>Đừng quên kết hợp bữa ăn của bạn với bộ sưu tập rượu vang hảo hạng của chúng tôi để trải nghiệm ẩm thực thêm phần trọn vẹn.</p>\r\n\r\n<p><i>Kính mời quý khách đặt bàn trước để được phục vụ tốt nhất và có những vị trí ngồi đẹp nhất tại nhà hàng Aurora Hotel Plaza.</i></p>', NULL, 'ẩm thực biên hòa, nhà hàng aurora, fine dining, khách sạn aurora, món ngon, đặt tiệc', 'hero', '', 1, 1, '../uploads/img_20251215_075429_0beaebf5.jpg', 9, 7, 'published', 0, '2025-12-15 01:01:05', '2025-12-15 08:01:05', '2025-12-15 08:01:05');
 
 -- --------------------------------------------------------
 
@@ -354,11 +387,12 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`, `room_id`, `check_in_date`, `check_out_date`, `num_adults`, `num_children`, `num_rooms`, `total_nights`, `room_price`, `service_charges`, `discount_amount`, `points_used`, `total_amount`, `special_requests`, `guest_name`, `guest_email`, `guest_phone`, `guest_id_number`, `status`, `payment_status`, `qr_code`, `confirmation_sent`, `checked_in_at`, `checked_out_at`, `checked_in_by`, `cancelled_at`, `cancelled_by`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
-(1, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'checked_in', 'paid', NULL, 0, '2025-12-15 05:01:06', NULL, 1, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-15 05:01:06'),
+(1, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:01:06', '2025-12-15 05:36:00', 1, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-15 05:36:00'),
 (2, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:01:04', '2025-12-15 05:16:56', 1, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-15 05:16:56'),
 (3, 'BK202512158079E0', 5, 4, 31, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 4500000.00, 0.00, 0.00, 0, 4500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:01:02', '2025-12-15 05:16:52', 1, NULL, NULL, NULL, '2025-12-15 03:55:36', '2025-12-15 05:16:52'),
 (4, 'BK202512157ED3F6', 5, 7, 60, '2025-12-26', '2025-12-30', 2, 0, 1, 4, 3000000.00, 0.00, 0.00, 0, 12000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'cancelled', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 04:17:59', '2025-12-15 04:24:53'),
-(5, 'BK20251215CD6C9D', 5, 4, 32, '2025-12-15', '2025-12-17', 2, 0, 1, 2, 4500000.00, 0.00, 0.00, 0, 9000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:00:55', '2025-12-15 05:16:48', 1, NULL, NULL, NULL, '2025-12-15 04:26:52', '2025-12-15 05:16:48');
+(5, 'BK20251215CD6C9D', 5, 4, 32, '2025-12-15', '2025-12-17', 2, 0, 1, 2, 4500000.00, 0.00, 0.00, 0, 9000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:00:55', '2025-12-15 05:16:48', 1, NULL, NULL, NULL, '2025-12-15 04:26:52', '2025-12-15 05:16:48'),
+(6, 'BK202512150B095E', 5, 2, NULL, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 1500000.00, 0.00, 0.00, 0, 1500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 06:57:11', '2025-12-15 07:18:58', 1, NULL, NULL, NULL, '2025-12-15 06:56:48', '2025-12-15 07:18:58');
 
 --
 -- Bẫy `bookings`
@@ -429,7 +463,15 @@ INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_st
 (17, 3, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:16:52'),
 (18, 3, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:52'),
 (19, 2, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:16:56'),
-(20, 2, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:56');
+(20, 2, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:16:56'),
+(21, 1, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 05:36:00'),
+(22, 1, 'checked_in', 'checked_out', 1, 'Status changed from checked_in to checked_out', '2025-12-15 05:36:00'),
+(23, 6, 'pending', 'confirmed', NULL, NULL, '2025-12-15 06:56:53'),
+(24, 6, 'pending', 'confirmed', 5, 'Booking confirmed by user', '2025-12-15 06:56:53'),
+(25, 6, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 06:57:11'),
+(26, 6, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 06:57:11'),
+(27, 6, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 07:18:58'),
+(28, 6, 'checked_in', 'checked_out', 7, 'Status changed from checked_in to checked_out', '2025-12-15 07:18:58');
 
 -- --------------------------------------------------------
 
@@ -494,7 +536,8 @@ CREATE TABLE `contact_submissions` (
 --
 
 INSERT INTO `contact_submissions` (`id`, `contact_code`, `submission_id`, `name`, `email`, `phone`, `subject`, `message`, `status`, `assigned_to`, `ip_address`, `user_id`, `created_at`, `updated_at`) VALUES
-(4, '85669175', 0, 'Long Quang', 'longdev.08@gmail.com', '0969875278', 'Đặt phòng', 'Mình cần đặt phòng trước', 'new', NULL, '123.31.116.145', 3, '2025-12-14 05:03:42', '2025-12-14 05:03:42');
+(4, '85669175', 0, 'Long Quang', 'longdev.08@gmail.com', '0969875278', 'Đặt phòng', 'Mình cần đặt phòng trước', 'new', NULL, '123.31.116.145', 3, '2025-12-14 05:03:42', '2025-12-14 05:03:42'),
+(5, '26460579', 0, 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', 'Tổ chức sự kiện', 'Mình cần book sự kiện', 'resolved', 1, '115.74.225.100', 5, '2025-12-15 06:54:20', '2025-12-15 07:05:43');
 
 -- --------------------------------------------------------
 
@@ -556,6 +599,36 @@ CREATE TABLE `faqs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `floor_maintenance`
+--
+
+CREATE TABLE `floor_maintenance` (
+  `id` int(11) NOT NULL,
+  `floor` int(11) NOT NULL,
+  `is_maintenance` tinyint(1) NOT NULL DEFAULT 0,
+  `maintenance_note` text DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `floor_maintenance`
+--
+
+INSERT INTO `floor_maintenance` (`id`, `floor`, `is_maintenance`, `maintenance_note`, `start_date`, `end_date`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 7, 1, NULL, '2025-12-15', '2025-12-21', NULL, '2025-12-15 05:28:46', '2025-12-15 05:33:43'),
+(2, 8, 0, NULL, NULL, NULL, NULL, '2025-12-15 05:28:46', '2025-12-15 06:59:46'),
+(3, 9, 1, NULL, '2025-12-15', '2025-12-16', NULL, '2025-12-15 05:28:46', '2025-12-15 05:35:13'),
+(4, 10, 1, NULL, '2025-12-15', '2025-12-17', NULL, '2025-12-15 05:28:46', '2025-12-15 05:35:30'),
+(5, 11, 1, NULL, '2025-12-15', '2025-12-17', NULL, '2025-12-15 05:28:46', '2025-12-15 05:35:39'),
+(6, 12, 1, NULL, '2025-12-15', '2025-12-16', NULL, '2025-12-15 05:28:46', '2025-12-15 05:35:21');
 
 -- --------------------------------------------------------
 
@@ -703,6 +776,13 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `notifications`
+--
+
+INSERT INTO `notifications` (`notification_id`, `user_id`, `type`, `title`, `message`, `link`, `icon`, `is_read`, `read_at`, `created_at`) VALUES
+(0, 5, 'payment_confirmed', 'Payment Confirmed', 'Your payment of 1,500,000 VND for booking BK202512150B095E has been confirmed. You earned 15,000 loyalty points!', '/profile/bookings.php?id=6', 'payment', 0, NULL, '2025-12-15 06:57:27');
+
 -- --------------------------------------------------------
 
 --
@@ -777,7 +857,8 @@ INSERT INTO `payments` (`payment_id`, `booking_id`, `payment_method`, `amount`, 
 (3, 6, 'vnpay', 4500000.00, 'VND', '15270095', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15270095\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251119A1664F\",\"vnp_PayDate\":\"20251119111050\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15270095\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251119A1664F\",\"vnp_SecureHash\":\"7539e3f2bb647c4883f91d3716eff27387d84199b1f98728319e26ceb57fefdba6023389b95967f2e4ac468d2a959bf335d4b8d932fcde9734a54317a1d44175\"}', 'completed', '2025-11-19 04:10:55', NULL, NULL, NULL, '2025-11-19 04:10:55', '2025-11-19 04:10:55'),
 (4, 0, 'vnpay', 1400000.00, 'VND', '15305547', '{\"vnp_Amount\":\"140000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15305547\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202511272C145F\",\"vnp_PayDate\":\"20251127162450\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15305547\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202511272C145F\",\"vnp_SecureHash\":\"dc96cb1d6e6cde142b9306042620126661b7206ec0327ecea881898185244b917d0e2876ab0b54907b6533edf2c3fe0bf25e4901c6415c344ed1344dc7665319\"}', 'completed', '2025-11-27 09:24:59', NULL, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59'),
 (5, 0, 'vnpay', 4500000.00, 'VND', '15345129', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345129\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202512158079E0\",\"vnp_PayDate\":\"20251215105635\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345129\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202512158079E0\",\"vnp_SecureHash\":\"ac2f6401028a07784b9633faf34a377970159f3269b8959fba704ab0864244b22b7f77b07e5436ec4a832246b722a23cc28c80d976c2141f68c32e41797167f8\"}', 'completed', '2025-12-15 03:56:38', NULL, NULL, NULL, '2025-12-15 03:56:38', '2025-12-15 03:56:38'),
-(7, 5, 'vnpay', 9000000.00, 'VND', '15345192', '{\"vnp_Amount\":\"900000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345192\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251215CD6C9D\",\"vnp_PayDate\":\"20251215112751\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345192\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251215CD6C9D\",\"vnp_SecureHash\":\"4eca69d8a8db984379bdee9bacc768f55e8135a5a97eaf3150b9eb249b1c2f74b49b485f78cf9c7dd09e562756ed3b6bd8f2db46902a93ffa69f5217a3a69d05\"}', 'completed', '2025-12-15 04:27:55', NULL, NULL, NULL, '2025-12-15 04:27:55', '2025-12-15 04:27:55');
+(7, 5, 'vnpay', 9000000.00, 'VND', '15345192', '{\"vnp_Amount\":\"900000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345192\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251215CD6C9D\",\"vnp_PayDate\":\"20251215112751\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345192\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251215CD6C9D\",\"vnp_SecureHash\":\"4eca69d8a8db984379bdee9bacc768f55e8135a5a97eaf3150b9eb249b1c2f74b49b485f78cf9c7dd09e562756ed3b6bd8f2db46902a93ffa69f5217a3a69d05\"}', 'completed', '2025-12-15 04:27:55', NULL, NULL, NULL, '2025-12-15 04:27:55', '2025-12-15 04:27:55'),
+(8, 6, 'cash', 1500000.00, 'VND', NULL, NULL, 'completed', '2025-12-15 06:57:27', NULL, NULL, '', '2025-12-15 06:57:27', '2025-12-15 06:57:27');
 
 -- --------------------------------------------------------
 
@@ -803,7 +884,8 @@ CREATE TABLE `points_transactions` (
 
 INSERT INTO `points_transactions` (`transaction_id`, `user_id`, `points`, `transaction_type`, `reference_type`, `reference_id`, `description`, `created_by`, `created_at`) VALUES
 (1, 5, 450, 'earn', 'booking', 0, 'Tích điểm từ đặt phòng BK202512158079E0', NULL, '2025-12-15 03:56:38'),
-(2, 5, 900, 'earn', 'booking', 5, 'Tích điểm từ đặt phòng BK20251215CD6C9D', NULL, '2025-12-15 04:27:55');
+(2, 5, 900, 'earn', 'booking', 5, 'Tích điểm từ đặt phòng BK20251215CD6C9D', NULL, '2025-12-15 04:27:55'),
+(3, 5, 15000, 'earn', 'booking_payment', 6, 'Earned 15,000 points from booking BK202512150B095E (Total: 1,500,000 VND)', 1, '2025-12-15 06:57:27');
 
 -- --------------------------------------------------------
 
@@ -1096,127 +1178,127 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `building`, `status`, `notes`, `last_cleaned`, `created_at`, `updated_at`) VALUES
 (1, 2, '701', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:22:34'),
-(2, 8, '702', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:05:40'),
-(3, 1, '703', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-01 09:14:49'),
-(4, 1, '704', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-22 07:56:46'),
-(5, 1, '705', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(7, 11, '707', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:05:29'),
-(8, 1, '708', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(9, 1, '709', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(10, 1, '710', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(11, 2, '711', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(12, 2, '712', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-22 07:57:12'),
-(13, 2, '714', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(14, 2, '715', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(15, 2, '716', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(16, 2, '717', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(17, 2, '718', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(18, 2, '719', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(19, 2, '720', 7, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(20, 3, '801', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:17:50'),
-(21, 3, '802', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(22, 3, '803', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(23, 3, '804', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(24, 3, '805', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(25, 3, '806', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(26, 3, '807', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(27, 3, '808', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(28, 3, '809', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(29, 3, '810', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(30, 4, '811', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-11-19 04:10:18'),
-(31, 4, '812', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 03:55:36'),
-(32, 4, '814', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 04:26:52'),
-(33, 4, '815', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(34, 4, '816', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(35, 4, '817', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(36, 4, '818', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(37, 4, '819', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(38, 5, '901', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(39, 5, '902', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(40, 5, '903', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(41, 5, '904', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(42, 5, '905', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(43, 5, '906', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(44, 5, '907', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(45, 5, '908', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(46, 5, '909', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(47, 5, '910', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(48, 4, '911', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 18:27:55'),
-(49, 6, '912', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(50, 6, '914', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(51, 6, '915', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(52, 6, '916', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(53, 6, '917', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(54, 6, '918', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(55, 6, '919', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(56, 6, '920', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(57, 6, '921', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(58, 6, '922', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(59, 4, '923', 9, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 18:28:04'),
+(2, 8, '702', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(3, 1, '703', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(4, 1, '704', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(5, 1, '705', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:16'),
+(7, 11, '707', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(8, 1, '708', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(9, 1, '709', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(10, 1, '710', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(11, 2, '711', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(12, 2, '712', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(13, 2, '714', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(14, 2, '715', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(15, 2, '716', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(16, 2, '717', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(17, 2, '718', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(18, 2, '719', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(19, 2, '720', 7, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:33:43'),
+(20, 3, '801', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 07:00:01'),
+(21, 3, '802', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(22, 3, '803', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(23, 3, '804', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(24, 3, '805', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(25, 3, '806', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(26, 3, '807', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(27, 3, '808', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(28, 3, '809', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(29, 3, '810', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(30, 4, '811', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:36:31'),
+(31, 4, '812', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:36:24'),
+(32, 4, '814', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:36:18'),
+(33, 4, '815', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(34, 4, '816', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(35, 4, '817', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(36, 4, '818', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(37, 4, '819', 8, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:34:56'),
+(38, 5, '901', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(39, 5, '902', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(40, 5, '903', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(41, 5, '904', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(42, 5, '905', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(43, 5, '906', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(44, 5, '907', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(45, 5, '908', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(46, 5, '909', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(47, 5, '910', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(48, 4, '911', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(49, 6, '912', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(50, 6, '914', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(51, 6, '915', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(52, 6, '916', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(53, 6, '917', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(54, 6, '918', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(55, 6, '919', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(56, 6, '920', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(57, 6, '921', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(58, 6, '922', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
+(59, 4, '923', 9, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:13'),
 (60, 7, '1001', 10, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 04:17:59'),
-(61, 7, '1002', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(62, 7, '1003', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(63, 7, '1004', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(64, 7, '1005', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(65, 7, '1006', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(66, 7, '1007', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(67, 7, '1008', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(68, 7, '1009', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(69, 7, '1010', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(70, 7, '1011', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(71, 8, '1012', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(72, 8, '1014', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(73, 8, '1015', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(74, 8, '1016', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(75, 8, '1017', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(76, 8, '1018', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(77, 8, '1019', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(78, 8, '1020', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(79, 8, '1021', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(80, 8, '1022', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(81, 8, '1023', 10, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(82, 9, '1101', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(83, 4, '1102', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:23:52'),
-(84, 9, '1103', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(85, 9, '1104', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(86, 9, '1105', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(87, 9, '1106', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(88, 9, '1107', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(89, 9, '1108', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(90, 9, '1109', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(91, 9, '1110', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(92, 9, '1111', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(93, 10, '1112', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(94, 10, '1114', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(95, 10, '1115', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(96, 10, '1116', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(97, 10, '1117', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(98, 10, '1118', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(99, 10, '1119', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(100, 10, '1120', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(101, 10, '1121', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(102, 10, '1122', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(103, 10, '1123', 11, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(104, 11, '1201', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(105, 11, '1202', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(106, 11, '1203', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(107, 11, '1204', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(108, 11, '1205', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(109, 11, '1206', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(110, 11, '1207', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(111, 11, '1208', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(112, 11, '1209', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(113, 11, '1210', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(114, 12, '1211', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(115, 12, '1212', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(116, 12, '1214', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(117, 12, '1215', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(118, 12, '1216', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(119, 13, '1217', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(120, 13, '1218', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(121, 13, '1219', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(122, 13, '1220', 12, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
-(0, 10, '706', 7, 'Main', 'available', '', '0000-00-00 00:00:00', '2025-12-15 05:02:40', '2025-12-15 05:02:40');
+(61, 7, '1002', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(62, 7, '1003', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(63, 7, '1004', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(64, 7, '1005', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(65, 7, '1006', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(66, 7, '1007', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(67, 7, '1008', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(68, 7, '1009', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(69, 7, '1010', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(70, 7, '1011', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(71, 8, '1012', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(72, 8, '1014', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(73, 8, '1015', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(74, 8, '1016', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(75, 8, '1017', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(76, 8, '1018', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(77, 8, '1019', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(78, 8, '1020', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(79, 8, '1021', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(80, 8, '1022', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(81, 8, '1023', 10, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:30'),
+(82, 9, '1101', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(83, 4, '1102', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(84, 9, '1103', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(85, 9, '1104', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(86, 9, '1105', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(87, 9, '1106', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(88, 9, '1107', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(89, 9, '1108', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(90, 9, '1109', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(91, 9, '1110', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(92, 9, '1111', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(93, 10, '1112', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(94, 10, '1114', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(95, 10, '1115', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(96, 10, '1116', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(97, 10, '1117', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(98, 10, '1118', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(99, 10, '1119', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(100, 10, '1120', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(101, 10, '1121', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(102, 10, '1122', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(103, 10, '1123', 11, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:39'),
+(104, 11, '1201', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(105, 11, '1202', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(106, 11, '1203', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(107, 11, '1204', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(108, 11, '1205', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(109, 11, '1206', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(110, 11, '1207', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(111, 11, '1208', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(112, 11, '1209', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(113, 11, '1210', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(114, 12, '1211', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(115, 12, '1212', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(116, 12, '1214', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(117, 12, '1215', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(118, 12, '1216', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(119, 13, '1217', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(120, 13, '1218', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(121, 13, '1219', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(122, 13, '1220', 12, 'Main', 'maintenance', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 05:35:21'),
+(0, 10, '706', 7, 'Main', 'maintenance', '', '0000-00-00 00:00:00', '2025-12-15 05:02:40', '2025-12-15 05:33:43');
 
 -- --------------------------------------------------------
 
@@ -1271,7 +1353,7 @@ CREATE TABLE `room_types` (
 --
 
 INSERT INTO `room_types` (`room_type_id`, `type_name`, `type_name_en`, `slug`, `category`, `description`, `description_en`, `short_description`, `short_description_en`, `max_occupancy`, `size_sqm`, `bed_type`, `amenities`, `images`, `thumbnail`, `base_price`, `weekend_price`, `holiday_price`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'Deluxe', 'Deluxe Room', 'deluxe', 'room', 'Phòng Deluxe rộng 35m² được thiết kế hiện đại với giường King size cao cấp, tầm nhìn thành phố tuyệt đẹp. Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Đây là lựa chọn hoàn hảo cho cặp đôi hoặc khách công tác.', 'Luxurious room with panoramic view and exclusive services.', 'Không gian sang trọng với đầy đủ tiện nghi hiện đại', 'Luxury room with panoramic view', 2, 35.00, '1 Giường King', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', 1400000.00, 2200000.00, 2500000.00, 'active', 1, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(1, 'Deluxe', 'Deluxe Room', 'deluxe', 'room', 'Phòng Deluxe rộng 35m² được thiết kế hiện đại với giường King size cao cấp, tầm nhìn thành phố tuyệt đẹp. Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Đây là lựa chọn hoàn hảo cho cặp đôi hoặc khách công tác.', 'Luxurious room with panoramic view and exclusive services.', 'Không gian sang trọng với đầy đủ tiện nghi hiện đại', 'Luxury room with panoramic view', 2, 35.00, '1 Giường King', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', 14100000.00, 2200000.00, 2500000.00, 'active', 1, '2025-11-18 17:31:03', '2025-12-15 07:21:09'),
 (2, 'Premium Deluxe', 'Deluxe Room', 'premium-deluxe', 'room', 'Phòng Premium Deluxe 40m² mang đến trải nghiệm cao cấp hơn với không gian rộng rãi, giường King size sang trọng và khu vực tiếp khách riêng biệt. Phòng có tầm nhìn panorama tuyệt đẹp ra thành phố, được trang bị đầy đủ tiện nghi hiện đại bao gồm TV thông minh, hệ thống âm thanh cao cấp và phòng tắm với bồn tắm nằm.', 'Luxurious room with panoramic view and exclusive services.', 'Không gian cao cấp với tầm nhìn panorama tuyệt đẹp', 'Luxury room with panoramic view', 2, 40.00, '1 Giường King', 'WiFi miễn phí,TV thông minh,Hệ thống âm thanh,Minibar cao cấp,Két an toàn,Điều hòa,Phòng tắm với bồn tắm,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cao cấp,Bàn làm việc,Khu vực tiếp khách,Máy pha cà phê,Áo choàng tắm cao cấp', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg,/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', 1500000.00, 3000000.00, 3500000.00, 'active', 2, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
 (3, 'Premium Twin', NULL, 'premium-twin', 'room', 'Phòng Premium Twin 38m² được thiết kế đặc biệt cho nhóm bạn hoặc gia đình nhỏ với 2 giường đơn cao cấp. Không gian hiện đại, thoáng đãng với đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Phòng có tầm nhìn đẹp ra thành phố.', NULL, 'Lý tưởng cho nhóm bạn hoặc gia đình với 2 giường đơn', NULL, 2, 38.00, '2 Giường Đơn', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg,/assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', 2200000.00, 2700000.00, 3000000.00, 'active', 3, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
 (4, 'VIP Suite', 'Suite Room', 'vip-suite', 'room', 'VIP Suite 60m² là đỉnh cao của sự sang trọng với phòng ngủ riêng biệt, phòng khách rộng rãi và phòng tắm cao cấp với bồn tắm Jacuzzi. Giường King size đặc biệt, tầm nhìn panorama 180 độ ra thành phố. Được trang bị đầy đủ tiện nghi 5 sao bao gồm TV thông minh, hệ thống âm thanh Bose, minibar cao cấp và dịch vụ butler 24/7.', 'Premium suite with separate living area and VIP services.', 'Đỉnh cao sang trọng với không gian riêng tư tuyệt đối', 'Premium suite with living area', 3, 60.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh 55 inch,Hệ thống âm thanh Bose,Minibar cao cấp,Két an toàn điện tử,Điều hòa thông minh,Phòng tắm với Jacuzzi,Vòi sen massage,Máy sấy tóc Dyson,Đồ vệ sinh Hermes,Bàn làm việc executive,Phòng khách riêng,Máy pha cà phê Nespresso,Áo choàng tắm cao cấp,Dịch vụ butler 24/7', '/assets/img/vip/vip-room-aurora-hotel-1.jpg,/assets/img/vip/vip-room-aurora-hotel-3.jpg,/assets/img/vip/vip-room-aurora-hotel-4.jpg', '/assets/img/vip/vip-room-aurora-hotel-1.jpg', 4500000.00, 5500000.00, 6500000.00, 'active', 4, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
@@ -1283,7 +1365,7 @@ INSERT INTO `room_types` (`room_type_id`, `type_name`, `type_name_en`, `slug`, `
 (10, 'Classical Premium', NULL, 'classical-premium', 'apartment', 'Classical Premium 66m² mang phong cách cổ điển sang trọng với nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế. Phòng ngủ riêng, phòng khách ấm cúng, bếp đầy đủ tiện nghi. Không gian thanh lịch, quý phái cho những ai yêu thích sự cổ điển.', NULL, 'Phong cách cổ điển sang trọng và thanh lịch', NULL, 3, 66.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 4 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm với bồn tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa cổ điển,Ban công,Nội thất gỗ cao cấp', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg,/assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg', 4500000.00, 5300000.00, 6000000.00, 'active', 8, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
 (11, 'Family Apartment', NULL, 'family-apartment', 'apartment', 'Family Apartment 75m² được thiết kế đặc biệt cho gia đình với 2 phòng ngủ riêng biệt, phòng khách rộng rãi và bếp đầy đủ. Phòng ngủ chính có giường King, phòng ngủ phụ có 2 giường đơn. Không gian thoải mái, an toàn cho trẻ em với đầy đủ tiện nghi hiện đại.', NULL, 'Lý tưởng cho gia đình với 2 phòng ngủ riêng', NULL, 5, 75.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV thông minh,Bếp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa,Ban công,Khu vực vui chơi trẻ em', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', 5500000.00, 6500000.00, 7500000.00, 'active', 13, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
 (12, 'Indochine Family', NULL, 'indochine-family', 'apartment', 'Indochine Family 72m² kết hợp phong cách Đông Dương truyền thống với tiện nghi hiện đại. 2 phòng ngủ riêng biệt, phòng khách ấm cúng với nội thất gỗ tự nhiên, bếp đầy đủ. Không gian văn hóa đậm chất Việt, lý tưởng cho gia đình yêu thích truyền thống.', NULL, 'Phong cách Đông Dương cho gia đình', NULL, 5, 72.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa,Ban công,Nội thất Đông Dương,Trang trí truyền thống', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg,/assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', 5200000.00, 6200000.00, 7200000.00, 'active', 9, '2025-11-18 17:31:04', '2025-11-25 04:24:18'),
-(13, 'Classical Family', NULL, 'classical-family', 'apartment', 'Classical Family 78m² mang phong cách cổ điển sang trọng với 2 phòng ngủ rộng rãi, phòng khách thanh lịch và bếp cao cấp. Nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế, không gian ấm cúng. Lựa chọn hoàn hảo cho gia đình yêu thích sự quý phái cổ điển.', NULL, 'Sang trọng cổ điển cho gia đình', NULL, 5, 78.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm cao cấp,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa cổ điển,Ban công lớn,Nội thất gỗ cao cấp,Trang trí cổ điển', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg,/assets/img/classical-family-apartment/classical-family-apartment2.jpg', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg', 5800000.00, 6800000.00, 7800000.00, 'active', 10, '2025-11-18 17:31:04', '2025-11-25 04:24:18');
+(13, 'Classical Family', NULL, 'classical-family', 'apartment', 'Classical Family 78m² mang phong cách cổ điển sang trọng với 2 phòng ngủ rộng rãi, phòng khách thanh lịch và bếp cao cấp. Nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế, không gian ấm cúng. Lựa chọn hoàn hảo cho gia đình yêu thích sự quý phái cổ điển.', NULL, 'Sang trọng cổ điển cho gia đình', NULL, 5, 78.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm cao cấp,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa cổ điển,Ban công lớn,Nội thất gỗ cao cấp,Trang trí cổ điển', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg,/assets/img/classical-family-apartment/classical-family-apartment2.jpg', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg', 4800000.00, 6800000.00, 7800000.00, 'active', 10, '2025-11-18 17:31:04', '2025-12-15 07:20:04');
 
 -- --------------------------------------------------------
 
@@ -1487,11 +1569,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`, `temp_password`, `temp_password_expires`, `requires_password_change`) VALUES
-(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-15 05:00:23', '2025-12-15 05:00:23', NULL, NULL, 0),
 (3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-15 05:24:42', '2025-12-15 05:24:42', NULL, NULL, 0),
 (4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL, NULL, NULL, 0),
-(5, '15.lequanglong@gmail.com', '$2y$10$/hqCPtwg7jUCSes5mkbD8eG2.YU5/FFf3FPjOkuyFH9OmZL3LEy6K', 'Long meo meo', '0987654321', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-15 02:56:41', '2025-12-15 02:56:30', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
-(6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 04:45:34', '2025-12-15 04:45:34', NULL, NULL, 0);
+(5, '15.lequanglong@gmail.com', '$2y$10$/hqCPtwg7jUCSes5mkbD8eG2.YU5/FFf3FPjOkuyFH9OmZL3LEy6K', 'Long meo meo', '0987654321', NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKye63XJrM6P_TKQJrW8bMsQAcI4hfnQhOEqX9Jt3kH-0J2zg=s96-c', 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-15 07:31:35', '2025-12-15 07:31:35', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
+(6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 04:45:34', '2025-12-15 04:45:34', NULL, NULL, 0),
+(7, 'admin@aurorahotelplaza.com', '$2y$10$eUchqcXU.rshUBkIe9QyrOenoefdMl6zPtU/mQ5U3BNp1dxMLZ50m', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-15 07:18:18', '2025-12-15 08:06:45', '2025-12-15 08:06:45', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1518,8 +1600,9 @@ INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime
 (1, 1, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 04:22:12'),
 (3, 3, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:22:12'),
 (4, 4, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:22:12'),
-(11, 5, 1350, 1350, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 04:27:55'),
-(12, 6, 0, 0, NULL, NULL, '2025-12-15 03:37:57', '2025-12-15 03:37:57');
+(11, 5, 16350, 16350, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 06:57:27'),
+(12, 6, 0, 0, NULL, NULL, '2025-12-15 03:37:57', '2025-12-15 03:37:57'),
+(15, 7, 0, 0, NULL, NULL, '2025-12-15 07:18:18', '2025-12-15 07:18:18');
 
 -- --------------------------------------------------------
 
@@ -1654,6 +1737,14 @@ ALTER TABLE `email_logs`
   ADD PRIMARY KEY (`email_log_id`);
 
 --
+-- Chỉ mục cho bảng `floor_maintenance`
+--
+ALTER TABLE `floor_maintenance`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_floor` (`floor`),
+  ADD KEY `fk_floor_maintenance_user` (`created_by`);
+
+--
 -- Chỉ mục cho bảng `gallery`
 --
 ALTER TABLE `gallery`
@@ -1707,7 +1798,7 @@ ALTER TABLE `user_loyalty`
 -- AUTO_INCREMENT cho bảng `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
 
 --
 -- AUTO_INCREMENT cho bảng `amenities`
@@ -1731,25 +1822,31 @@ ALTER TABLE `blog_comments`
 -- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `booking_history`
 --
 ALTER TABLE `booking_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT cho bảng `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `email_logs`
 --
 ALTER TABLE `email_logs`
   MODIFY `email_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `floor_maintenance`
+--
+ALTER TABLE `floor_maintenance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT cho bảng `gallery`
@@ -1767,13 +1864,13 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `points_transactions`
 --
 ALTER TABLE `points_transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `translations`
@@ -1785,48 +1882,23 @@ ALTER TABLE `translations`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `user_loyalty`
 --
 ALTER TABLE `user_loyalty`
-  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
--- --------------------------------------------------------
+  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- Cấu trúc bảng cho bảng `floor_maintenance`
+-- Ràng buộc đối với các bảng kết xuất
 --
 
-CREATE TABLE `floor_maintenance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `floor` int(11) NOT NULL,
-  `is_maintenance` tinyint(1) NOT NULL DEFAULT 0,
-  `maintenance_note` text DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_floor` (`floor`),
-  KEY `fk_floor_maintenance_user` (`created_by`),
-  CONSTRAINT `fk_floor_maintenance_user` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 --
--- Đang đổ dữ liệu cho bảng `floor_maintenance`
+-- Ràng buộc cho bảng `floor_maintenance`
 --
-
-INSERT INTO `floor_maintenance` (`floor`, `is_maintenance`, `maintenance_note`, `start_date`, `end_date`) VALUES
-(7, 0, NULL, NULL, NULL),
-(8, 0, NULL, NULL, NULL),
-(9, 0, NULL, NULL, NULL),
-(10, 0, NULL, NULL, NULL),
-(11, 0, NULL, NULL, NULL),
-(12, 0, NULL, NULL, NULL);
-
+ALTER TABLE `floor_maintenance`
+  ADD CONSTRAINT `fk_floor_maintenance_user` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
