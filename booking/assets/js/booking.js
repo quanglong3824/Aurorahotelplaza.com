@@ -53,15 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Only auto-select first room if no room is pre-selected from URL
         const roomSelect = document.getElementById('room_type_id');
-        if (roomSelect && roomSelect.options.length > 1 && !roomSelect.value) {
+        // Check if a room is already selected (selectedIndex > 0 means not the placeholder)
+        if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
             console.log('No room pre-selected, selecting first room type...');
             roomSelect.selectedIndex = 1; // Select first room type
             calculateTotal();
-        } else if (roomSelect && roomSelect.value) {
-            console.log('Room pre-selected from URL, calculating...');
+        } else if (roomSelect && roomSelect.selectedIndex > 0) {
+            console.log('Room pre-selected from URL (index: ' + roomSelect.selectedIndex + '), calculating...');
             calculateTotal();
         }
-    }, 500);
+    }, 100);
     
     // Event listeners
     document.getElementById('check_in_date').addEventListener('change', function() {
