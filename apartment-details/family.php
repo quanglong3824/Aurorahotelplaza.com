@@ -81,10 +81,11 @@ initLanguage();
                         <div><span class="price-amount">6.500.000đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
                         <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_30_7days'); ?></p>
                     </div>
-                    <form class="booking-form">
-                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label><select class="form-input"><option>2 <?php _e('apartment_detail.persons'); ?></option><option>4 <?php _e('apartment_detail.persons'); ?></option><option selected>6 <?php _e('apartment_detail.persons'); ?></option></select></div>
+                    <form class="booking-form" action="../booking/index.php" method="get">
+                        <input type="hidden" name="room_type" value="family">
+                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" name="check_in" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" name="check_out" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label><select name="guests" class="form-input"><option value="2">2 <?php _e('apartment_detail.persons'); ?></option><option value="4">4 <?php _e('apartment_detail.persons'); ?></option><option value="6" selected>6 <?php _e('apartment_detail.persons'); ?></option></select></div>
                         <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
                     </form>
                     <div class="contact-info"><div class="contact-text"><?php _e('apartment_detail.or_call'); ?></div><div class="contact-phone">(+84-251) 391.8888</div></div>

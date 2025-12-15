@@ -34,27 +34,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('check_in_date').min = today;
     
-    // Set default check-in to today and check-out to tomorrow
+    // Set default check-in to today and check-out to tomorrow (only if not pre-filled from URL)
     if (!document.getElementById('check_in_date').value) {
         document.getElementById('check_in_date').value = today;
         
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         document.getElementById('check_out_date').value = tomorrow.toISOString().split('T')[0];
-        
-        updateCheckoutMin();
     }
+    
+    // Always update checkout min based on check-in value
+    updateCheckoutMin();
     
     // Initial calculation with default dates
     setTimeout(() => {
         console.log('Running initial calculation...');
         calculateTotal();
         
-        // Test with first room type if available
+        // Only auto-select first room if no room is pre-selected from URL
         const roomSelect = document.getElementById('room_type_id');
-        if (roomSelect && roomSelect.options.length > 1) {
-            console.log('Testing with first room type...');
+        if (roomSelect && roomSelect.options.length > 1 && !roomSelect.value) {
+            console.log('No room pre-selected, selecting first room type...');
             roomSelect.selectedIndex = 1; // Select first room type
+            calculateTotal();
+        } else if (roomSelect && roomSelect.value) {
+            console.log('Room pre-selected from URL, calculating...');
             calculateTotal();
         }
     }, 500);

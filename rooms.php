@@ -146,7 +146,7 @@ try {
                                         </div>
                                     </div>
                                     <div class="room-actions">
-                                        <a href="booking.php?room_type=<?php echo $room['slug']; ?>" class="btn-book-now"><?php _e('rooms_page.book'); ?></a>
+                                        <a href="booking/index.php?room_type=<?php echo $room['slug']; ?>" class="btn-book-now"><?php _e('rooms_page.book'); ?></a>
                                         <a href="room-details/<?php echo $room['slug']; ?>.php" class="btn-view-details">
                                             <?php _e('rooms_page.view_details'); ?>
                                             <span class="material-symbols-outlined">arrow_forward</span>

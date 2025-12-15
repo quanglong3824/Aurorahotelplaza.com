@@ -45,9 +45,10 @@ initLanguage();
                 </div>
                 <div class="booking-card">
                     <div class="price-section"><div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div><div><span class="price-amount">2.800.000đ</span><span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div></div>
-                    <form class="booking-form">
-                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" class="form-input" required></div>
+                    <form class="booking-form" action="../booking/index.php" method="get">
+                        <input type="hidden" name="room_type" value="indochine-studio">
+                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" name="check_in" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" name="check_out" class="form-input" required></div>
                         <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
                     </form>
                 </div>

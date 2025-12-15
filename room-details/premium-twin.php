@@ -104,20 +104,21 @@ initLanguage();
                             <span class="price-unit">/<?php _e('room_detail.night'); ?></span>
                         </div>
                     </div>
-                    <form class="booking-form">
+                    <form class="booking-form" action="../booking/index.php" method="get">
+                        <input type="hidden" name="room_type" value="premium-twin">
                         <div class="form-group">
                             <label class="form-label"><?php _e('room_detail.check_in_date'); ?></label>
-                            <input type="date" class="form-input" required>
+                            <input type="date" name="check_in" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><?php _e('room_detail.check_out_date'); ?></label>
-                            <input type="date" class="form-input" required>
+                            <input type="date" name="check_out" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><?php _e('room_detail.num_guests'); ?></label>
-                            <select class="form-input">
-                                <option>1 <?php _e('room_detail.person'); ?></option>
-                                <option selected>2 <?php _e('room_detail.person'); ?></option>
+                            <select name="guests" class="form-input">
+                                <option value="1">1 <?php _e('room_detail.person'); ?></option>
+                                <option value="2" selected>2 <?php _e('room_detail.person'); ?></option>
                             </select>
                         </div>
                         <button type="submit" class="btn-book"><?php _e('room_detail.book_now'); ?></button>

@@ -175,7 +175,7 @@ try {
                                         </p>
                                     </div>
                                     <div class="flex gap-2">
-                                        <a href="booking.php?room_type=<?php echo $apt['slug']; ?>" 
+                                        <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>" 
                                            class="px-4 py-2 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all">
                                             <?php _e('apartments_page.book'); ?>
                                         </a>
@@ -286,7 +286,7 @@ try {
                                         </p>
                                     </div>
                                     <div class="flex gap-2">
-                                        <a href="booking.php?room_type=<?php echo $apt['slug']; ?>" 
+                                        <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>" 
                                            class="px-4 py-2 bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all">
                                             <?php _e('apartments_page.book'); ?>
                                         </a>

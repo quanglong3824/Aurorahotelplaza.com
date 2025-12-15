@@ -23,6 +23,29 @@ $stmt = $db->prepare("SELECT * FROM room_types WHERE status = 'active' ORDER BY 
 $stmt->execute();
 $room_types = $stmt->fetchAll();
 
+// Get pre-selected room type from URL (by slug or id)
+$selected_room_type_id = null;
+if (isset($_GET['room_type'])) {
+    $room_type_param = $_GET['room_type'];
+    // Check if it's a numeric ID or slug
+    if (is_numeric($room_type_param)) {
+        $selected_room_type_id = (int)$room_type_param;
+    } else {
+        // Find by slug
+        foreach ($room_types as $room) {
+            if ($room['slug'] === $room_type_param) {
+                $selected_room_type_id = $room['room_type_id'];
+                break;
+            }
+        }
+    }
+}
+
+// Get pre-filled dates and guests from URL
+$prefilled_check_in = isset($_GET['check_in']) ? htmlspecialchars($_GET['check_in']) : '';
+$prefilled_check_out = isset($_GET['check_out']) ? htmlspecialchars($_GET['check_out']) : '';
+$prefilled_guests = isset($_GET['guests']) ? (int)$_GET['guests'] : 2;
+
 // Debug: Log room types
 error_log("Room types loaded: " . count($room_types));
 foreach ($room_types as $room) {
@@ -102,7 +125,8 @@ foreach ($room_types as $room) {
                                 <?php foreach($room_types as $room): ?>
                                 <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
-                                        data-max-guests="<?php echo $room['max_occupancy']; ?>">
+                                        data-max-guests="<?php echo $room['max_occupancy']; ?>"
+                                        <?php echo ($selected_room_type_id == $room['room_type_id']) ? 'selected' : ''; ?>>
                                     <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm
                                 </option>
                                 <?php endforeach; ?>
@@ -112,19 +136,19 @@ foreach ($room_types as $room) {
                         <!-- Number of Guests -->
                         <div class="form-group">
                             <label class="form-label"><?php _e('booking_page.num_guests'); ?> *</label>
-                            <input type="number" name="num_guests" id="num_guests" class="form-input" min="1" max="10" value="2" required>
+                            <input type="number" name="num_guests" id="num_guests" class="form-input" min="1" max="10" value="<?php echo $prefilled_guests; ?>" required>
                         </div>
 
                         <!-- Check-in Date -->
                         <div class="form-group">
                             <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
-                            <input type="date" name="check_in_date" id="check_in_date" class="form-input" required>
+                            <input type="date" name="check_in_date" id="check_in_date" class="form-input" value="<?php echo $prefilled_check_in; ?>" required>
                         </div>
 
                         <!-- Check-out Date -->
                         <div class="form-group">
                             <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
-                            <input type="date" name="check_out_date" id="check_out_date" class="form-input" required>
+                            <input type="date" name="check_out_date" id="check_out_date" class="form-input" value="<?php echo $prefilled_check_out; ?>" required>
                         </div>
                     </div>
 

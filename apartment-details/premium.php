@@ -105,22 +105,23 @@ initLanguage();
                         </div>
                         <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_25_7days'); ?></p>
                     </div>
-                    <form class="booking-form">
+                    <form class="booking-form" action="../booking/index.php" method="get">
+                        <input type="hidden" name="room_type" value="premium">
                         <div class="form-group">
                             <label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label>
-                            <input type="date" class="form-input" required>
+                            <input type="date" name="check_in" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label>
-                            <input type="date" class="form-input" required>
+                            <input type="date" name="check_out" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label>
-                            <select class="form-input">
-                                <option>1 <?php _e('apartment_detail.persons'); ?></option>
-                                <option>2 <?php _e('apartment_detail.persons'); ?></option>
-                                <option>3 <?php _e('apartment_detail.persons'); ?></option>
-                                <option selected>4 <?php _e('apartment_detail.persons'); ?></option>
+                            <select name="guests" class="form-input">
+                                <option value="1">1 <?php _e('apartment_detail.persons'); ?></option>
+                                <option value="2">2 <?php _e('apartment_detail.persons'); ?></option>
+                                <option value="3">3 <?php _e('apartment_detail.persons'); ?></option>
+                                <option value="4" selected>4 <?php _e('apartment_detail.persons'); ?></option>
                             </select>
                         </div>
                         <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
