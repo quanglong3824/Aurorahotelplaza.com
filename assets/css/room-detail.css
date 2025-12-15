@@ -103,8 +103,55 @@
     align-items: center;
     gap: 16px;
     padding: 20px;
-    background: #f8f9fa;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(212, 175, 55, 0.18);
     border-radius: 12px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(212, 175, 55, 0.08) inset;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.spec-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    pointer-events: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.spec-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 16px 48px rgba(212, 175, 55, 0.15),
+        0 0 0 1px rgba(212, 175, 55, 0.12) inset;
+}
+
+.light .spec-item,
+html:not(.dark) .spec-item {
+    background: linear-gradient(
+        135deg,
+        rgba(249, 250, 251, 0.95) 0%,
+        rgba(249, 250, 251, 0.85) 100%
+    );
+    border-color: rgba(212, 175, 55, 0.15);
 }
 
 .spec-icon {
@@ -162,10 +209,25 @@
     align-items: center;
     gap: 10px;
     padding: 12px;
-    background: #f8f9fa;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.85) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 8px;
     font-size: 15px;
     color: #666;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.amenity-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1);
 }
 
 .amenity-item::before {
@@ -175,14 +237,70 @@
     font-size: 18px;
 }
 
-/* Booking Card */
+/* Booking Card - Liquid Glass Style */
 .booking-card {
     position: sticky;
     top: 120px;
-    background: white;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 32px;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.booking-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    pointer-events: none;
+    border-radius: 20px 20px 0 0;
+}
+
+.booking-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(212, 175, 55, 0.08) 0%,
+        transparent 50%
+    );
+    pointer-events: none;
+    animation: shimmerFloat 8s ease-in-out infinite;
+}
+
+@keyframes shimmerFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(10%, 10%); }
+}
+
+.booking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(212, 175, 55, 0.2) inset;
 }
 
 .price-section {
@@ -313,14 +431,48 @@
 .gallery-item {
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    position: relative;
+}
+
+.gallery-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(212, 175, 55, 0) 0%,
+        rgba(212, 175, 55, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .gallery-item:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.2),
+        0 0 40px rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.gallery-item:hover::before {
+    opacity: 1;
 }
 
 .gallery-item img {
@@ -358,16 +510,28 @@
 }
 
 .related-card {
-    background: white;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .related-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(212, 175, 55, 0.2) inset;
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .related-image {
@@ -409,4 +573,1314 @@
 
 .btn-view:hover {
     background: #0d1642;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - Room Detail Pages
+   ============================================ */
+
+/* Dark Mode Support - Liquid Glass */
+.dark .room-description {
+    color: #a0a0a0;
+}
+
+.dark .spec-item {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.5) 0%,
+        rgba(20, 30, 45, 0.6) 100%
+    );
+    border-color: rgba(212, 175, 55, 0.15);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(212, 175, 55, 0.08) inset;
+}
+
+.dark .spec-item::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.dark .spec-label {
+    color: #888;
+}
+
+.dark .spec-value {
+    color: #f0f0f0;
+}
+
+.dark .amenity-item {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.9) 0%,
+        rgba(30, 41, 59, 0.85) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #a0a0a0;
+}
+
+.dark .booking-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.dark .booking-card::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.dark .booking-card::after {
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(212, 175, 55, 0.1) 0%,
+        transparent 50%
+    );
+}
+
+.dark .price-section {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .form-label {
+    color: #f0f0f0;
+}
+
+.dark .form-input {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #f0f0f0;
+}
+
+.dark .form-input:focus {
+    border-color: #cc9a2c;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+.dark .contact-info {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .contact-text {
+    color: #888;
+}
+
+.dark .gallery-section {
+    background: linear-gradient(
+        135deg,
+        rgba(17, 24, 39, 0.95) 0%,
+        rgba(17, 24, 39, 0.9) 100%
+    );
+}
+
+.dark .gallery-item {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.5) 0%,
+        rgba(20, 30, 45, 0.6) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .section-title,
+.dark .section-title-center {
+    color: #f0f0f0;
+}
+
+.dark .related-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.95) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .related-title {
+    color: #f0f0f0;
+}
+
+/* ============================================
+   TABLET LANDSCAPE (max-width: 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    .page-header-room {
+        padding: 150px 20px 80px;
+        min-height: 50vh;
+    }
+
+    .page-title {
+        font-size: 48px;
+    }
+
+    .page-subtitle {
+        font-size: 18px;
+    }
+
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .room-info-section {
+        gap: 40px;
+    }
+
+    .section-title-center {
+        font-size: 36px;
+        margin-bottom: 40px;
+    }
+
+    .gallery-section {
+        padding: 80px 0;
+    }
+
+    .related-section {
+        padding: 80px 0;
+    }
+}
+
+/* ============================================
+   TABLET PORTRAIT (max-width: 968px)
+   ============================================ */
+@media (max-width: 968px) {
+    .room-info-section {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .booking-card {
+        position: relative;
+        top: 0;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .room-specs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .amenities-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .room-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+/* ============================================
+   MOBILE LANDSCAPE (max-width: 768px)
+   Modern Liquid Glass Mobile Layout
+   ============================================ */
+@media (max-width: 768px) {
+    /* Hero Header - Full Glass Immersive */
+    .page-header-room {
+        padding: 100px 16px 40px;
+        min-height: 50vh;
+        position: relative;
+    }
+
+    .page-header-room::after {
+        content: '';
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        height: 60px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.06) 100%
+        );
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        z-index: 2;
+    }
+
+    .page-header-content {
+        position: relative;
+        z-index: 3;
+    }
+
+    .page-title {
+        font-size: 32px;
+        margin-bottom: 12px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-subtitle {
+        font-size: 15px;
+        line-height: 1.5;
+        opacity: 0.95;
+    }
+
+    /* Glass Badge Header */
+    .room-badge-header {
+        padding: 8px 18px;
+        font-size: 11px;
+        margin-bottom: 16px;
+        background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.9) 0%,
+            rgba(184, 136, 42, 0.9) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+    }
+
+    .section-padding {
+        padding: 50px 0;
+    }
+
+    .container-custom {
+        padding: 0 16px;
+    }
+
+    /* Room Description - Glass Card */
+    .room-description {
+        font-size: 15px;
+        line-height: 1.8;
+        margin-bottom: 28px;
+        padding: 20px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%
+        );
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    .light .room-description,
+    html:not(.dark) .room-description {
+        background: linear-gradient(
+            135deg,
+            rgba(249, 250, 251, 0.9) 0%,
+            rgba(249, 250, 251, 0.8) 100%
+        );
+        border-color: rgba(212, 175, 55, 0.1);
+    }
+
+    /* Specs - Horizontal Scroll Glass Cards */
+    .room-specs {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 8px 4px 16px;
+        margin: 0 -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .room-specs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .spec-item {
+        flex: 0 0 auto;
+        width: 130px;
+        padding: 16px 12px;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        scroll-snap-align: start;
+        border-radius: 16px;
+    }
+
+    .spec-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
+    }
+
+    .spec-icon .material-symbols-outlined {
+        font-size: 24px;
+    }
+
+    .spec-label {
+        font-size: 11px;
+        opacity: 0.7;
+    }
+
+    .spec-value {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* Section Title - Glass Underline */
+    .section-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #cc9a2c, transparent);
+        border-radius: 2px;
+    }
+
+    /* Amenities - Glass Chips */
+    .amenities-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .amenity-item {
+        flex: 0 0 auto;
+        padding: 10px 14px;
+        font-size: 13px;
+        border-radius: 20px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.06) 100%
+        );
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .light .amenity-item,
+    html:not(.dark) .amenity-item {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.9) 100%
+        );
+    }
+
+    .amenity-item::before {
+        font-size: 14px;
+        color: #cc9a2c;
+    }
+
+    /* Booking Card - Premium Glass */
+    .booking-card {
+        padding: 24px;
+        border-radius: 24px;
+        max-width: 100%;
+        margin-top: 20px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(255, 255, 255, 0.95) 100%
+        );
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(212, 175, 55, 0.1) inset;
+    }
+
+    .dark .booking-card {
+        background: linear-gradient(
+            135deg,
+            rgba(30, 41, 59, 0.98) 0%,
+            rgba(30, 41, 59, 0.95) 100%
+        );
+    }
+
+    /* Price Section - Glass Highlight */
+    .price-section {
+        padding: 20px;
+        margin: -24px -24px 24px;
+        background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.1) 0%,
+            rgba(212, 175, 55, 0.05) 100%
+        );
+        border-radius: 24px 24px 0 0;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    }
+
+    .price-amount {
+        font-size: 38px;
+        background: linear-gradient(135deg, #cc9a2c 0%, #e6b84d 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .price-unit {
+        font-size: 14px;
+    }
+
+    /* Form Inputs - Glass Style */
+    .form-input {
+        padding: 14px 16px;
+        font-size: 15px;
+        border-radius: 12px;
+        background: linear-gradient(
+            135deg,
+            rgba(249, 250, 251, 0.9) 0%,
+            rgba(249, 250, 251, 0.8) 100%
+        );
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        background: white;
+        border-color: rgba(212, 175, 55, 0.5);
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    }
+
+    .dark .form-input {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Book Button - Glass Gradient */
+    .btn-book {
+        padding: 16px;
+        font-size: 16px;
+        border-radius: 14px;
+        background: linear-gradient(
+            135deg,
+            #cc9a2c 0%,
+            #e6b84d 50%,
+            #cc9a2c 100%
+        );
+        background-size: 200% 100%;
+        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.35);
+        transition: all 0.3s ease;
+    }
+
+    .btn-book:active {
+        transform: scale(0.98);
+        box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+    }
+
+    .contact-phone {
+        font-size: 16px;
+    }
+
+    /* Gallery Section - Glass Background */
+    .gallery-section {
+        padding: 50px 0;
+        background: linear-gradient(
+            180deg,
+            rgba(249, 250, 251, 0.95) 0%,
+            rgba(249, 250, 251, 0.8) 100%
+        );
+        position: relative;
+    }
+
+    .gallery-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.5) 0%,
+            transparent 100%
+        );
+        pointer-events: none;
+    }
+
+    .dark .gallery-section {
+        background: linear-gradient(
+            180deg,
+            rgba(17, 24, 39, 0.98) 0%,
+            rgba(17, 24, 39, 0.9) 100%
+        );
+    }
+
+    .section-title-center {
+        font-size: 26px;
+        margin-bottom: 28px;
+        position: relative;
+    }
+
+    .section-title-center::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #cc9a2c, transparent);
+        margin: 12px auto 0;
+        border-radius: 2px;
+    }
+
+    /* Gallery - Masonry Style Glass Cards */
+    .room-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .gallery-item {
+        border-radius: 16px;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+
+    .gallery-item:nth-child(3n+1) {
+        grid-column: span 2;
+    }
+
+    .gallery-item:nth-child(3n+1) img {
+        height: 200px;
+    }
+
+    .gallery-item img {
+        height: 150px;
+    }
+
+    /* Related Section */
+    .related-section {
+        padding: 50px 0;
+    }
+
+    .related-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 16px;
+        padding: 8px 4px 16px;
+        margin: 0 -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .related-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .related-card {
+        flex: 0 0 auto;
+        width: 260px;
+        border-radius: 20px;
+        scroll-snap-align: start;
+        box-shadow: 
+            0 12px 40px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    }
+
+    .related-image {
+        height: 160px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .related-content {
+        padding: 16px;
+    }
+
+    .related-title {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+
+    .related-price {
+        font-size: 15px;
+        margin-bottom: 12px;
+        color: #cc9a2c;
+        font-weight: 700;
+    }
+
+    .btn-view {
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1A237E 0%, #283593 100%);
+        box-shadow: 0 4px 16px rgba(26, 35, 126, 0.25);
+    }
+}
+
+/* ============================================
+   MOBILE PORTRAIT (max-width: 480px)
+   Ultra Modern Liquid Glass Layout
+   ============================================ */
+@media (max-width: 480px) {
+    /* Hero - Immersive Glass Experience */
+    .page-header-room {
+        padding: 90px 12px 50px;
+        min-height: 45vh;
+    }
+
+    .page-header-room::after {
+        bottom: -20px;
+        width: 85%;
+        height: 50px;
+        border-radius: 16px;
+    }
+
+    .page-header-content {
+        padding: 0 4px;
+    }
+
+    .page-title {
+        font-size: 26px;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        font-size: 13px;
+        padding: 0 10px;
+    }
+
+    .room-badge-header {
+        padding: 6px 14px;
+        font-size: 10px;
+        border-radius: 16px;
+    }
+
+    .section-padding {
+        padding: 36px 0;
+    }
+
+    .container-custom {
+        padding: 0 12px;
+    }
+
+    /* Description - Floating Glass Card */
+    .room-description {
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 24px;
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    /* Specs - Compact Horizontal Scroll */
+    .room-specs {
+        gap: 10px;
+        padding: 6px 2px 14px;
+        margin: 0 -12px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .spec-item {
+        width: 110px;
+        padding: 14px 10px;
+        gap: 8px;
+        border-radius: 14px;
+    }
+
+    .spec-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .spec-icon .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    .spec-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .spec-value {
+        font-size: 13px;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 18px;
+        margin-bottom: 18px;
+    }
+
+    .section-title::after {
+        width: 50px;
+        height: 2px;
+        bottom: -6px;
+    }
+
+    /* Amenities - Compact Glass Chips */
+    .amenities-grid {
+        gap: 8px;
+    }
+
+    .amenity-item {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 16px;
+    }
+
+    .amenity-item::before {
+        font-size: 12px;
+    }
+
+    /* Booking Card - Full Glass Premium */
+    .booking-card {
+        padding: 0;
+        border-radius: 20px;
+        margin-top: 24px;
+        overflow: visible;
+    }
+
+    .booking-card::before,
+    .booking-card::after {
+        display: none;
+    }
+
+    /* Price Section - Prominent Glass Header */
+    .price-section {
+        padding: 20px 20px 16px;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
+        background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.15) 0%,
+            rgba(212, 175, 55, 0.08) 100%
+        );
+        position: relative;
+    }
+
+    .price-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 100%
+        );
+        border-radius: 20px 20px 0 0;
+        pointer-events: none;
+    }
+
+    .price-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.7;
+    }
+
+    .price-amount {
+        font-size: 34px;
+    }
+
+    .price-unit {
+        font-size: 13px;
+    }
+
+    /* Form Section */
+    .booking-form {
+        padding: 20px;
+        gap: 12px;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        margin-bottom: 6px;
+    }
+
+    .form-input {
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    /* Book Button - Glass Shimmer */
+    .btn-book {
+        padding: 14px;
+        font-size: 15px;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-book::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+        );
+        animation: btnShimmer 3s infinite;
+    }
+
+    @keyframes btnShimmer {
+        0% { left: -100%; }
+        50%, 100% { left: 100%; }
+    }
+
+    /* Contact Info - Glass Footer */
+    .contact-info {
+        padding: 16px 20px 20px;
+        margin: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(249, 250, 251, 0.5) 0%,
+            rgba(249, 250, 251, 0.3) 100%
+        );
+        border-radius: 0 0 20px 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .contact-info {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.02) 100%
+        );
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-text {
+        font-size: 12px;
+    }
+
+    .contact-phone {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* Gallery Section - Glass Overlay */
+    .gallery-section {
+        padding: 36px 0;
+    }
+
+    .gallery-section::before {
+        height: 80px;
+    }
+
+    .section-title-center {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .section-title-center::after {
+        width: 60px;
+        margin-top: 10px;
+    }
+
+    /* Gallery - Full Width Glass Cards */
+    .room-gallery {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .gallery-item {
+        border-radius: 14px;
+    }
+
+    .gallery-item:nth-child(3n+1) {
+        grid-column: span 1;
+    }
+
+    .gallery-item:nth-child(3n+1) img,
+    .gallery-item img {
+        height: 200px;
+    }
+
+    .gallery-item:nth-child(odd) img {
+        height: 220px;
+    }
+
+    /* Related - Horizontal Scroll Cards */
+    .related-section {
+        padding: 36px 0;
+    }
+
+    .related-grid {
+        gap: 12px;
+        margin: 0 -12px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .related-card {
+        width: 220px;
+        border-radius: 16px;
+    }
+
+    .related-image {
+        height: 140px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .related-content {
+        padding: 14px;
+    }
+
+    .related-title {
+        font-size: 15px;
+        margin-bottom: 4px;
+        font-weight: 700;
+    }
+
+    .related-price {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .btn-view {
+        padding: 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+}
+
+/* ============================================
+   EXTRA SMALL DEVICES (max-width: 360px)
+   Compact Liquid Glass Layout
+   ============================================ */
+@media (max-width: 360px) {
+    /* Hero - Compact Glass */
+    .page-header-room {
+        padding: 80px 10px 40px;
+        min-height: 40vh;
+    }
+
+    .page-header-room::after {
+        bottom: -15px;
+        width: 80%;
+        height: 40px;
+        border-radius: 12px;
+    }
+
+    .page-title {
+        font-size: 22px;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        font-size: 12px;
+    }
+
+    .room-badge-header {
+        padding: 5px 12px;
+        font-size: 9px;
+    }
+
+    .section-padding {
+        padding: 28px 0;
+    }
+
+    .container-custom {
+        padding: 0 10px;
+    }
+
+    /* Description */
+    .room-description {
+        font-size: 13px;
+        padding: 14px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* Specs - Ultra Compact */
+    .room-specs {
+        gap: 8px;
+        margin: 0 -10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .spec-item {
+        width: 95px;
+        padding: 12px 8px;
+        gap: 6px;
+        border-radius: 12px;
+    }
+
+    .spec-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+    }
+
+    .spec-icon .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    .spec-label {
+        font-size: 9px;
+    }
+
+    .spec-value {
+        font-size: 12px;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 16px;
+        margin-bottom: 14px;
+    }
+
+    .section-title::after {
+        width: 40px;
+    }
+
+    /* Amenities */
+    .amenities-grid {
+        gap: 6px;
+    }
+
+    .amenity-item {
+        padding: 6px 10px;
+        font-size: 11px;
+        border-radius: 14px;
+    }
+
+    .amenity-item::before {
+        font-size: 11px;
+    }
+
+    /* Booking Card */
+    .booking-card {
+        border-radius: 16px;
+    }
+
+    .price-section {
+        padding: 16px 16px 14px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .price-label {
+        font-size: 11px;
+    }
+
+    .price-amount {
+        font-size: 28px;
+    }
+
+    .price-unit {
+        font-size: 12px;
+    }
+
+    .booking-form {
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .form-label {
+        font-size: 11px;
+    }
+
+    .form-input {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .btn-book {
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .contact-info {
+        padding: 14px 16px 16px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .contact-text {
+        font-size: 11px;
+    }
+
+    .contact-phone {
+        font-size: 14px;
+    }
+
+    /* Gallery */
+    .gallery-section {
+        padding: 28px 0;
+    }
+
+    .section-title-center {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .section-title-center::after {
+        width: 50px;
+        margin-top: 8px;
+    }
+
+    .room-gallery {
+        gap: 8px;
+    }
+
+    .gallery-item {
+        border-radius: 12px;
+    }
+
+    .gallery-item img,
+    .gallery-item:nth-child(3n+1) img,
+    .gallery-item:nth-child(odd) img {
+        height: 180px;
+    }
+
+    /* Related */
+    .related-section {
+        padding: 28px 0;
+    }
+
+    .related-grid {
+        gap: 10px;
+        margin: 0 -10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .related-card {
+        width: 190px;
+        border-radius: 14px;
+    }
+
+    .related-image {
+        height: 120px;
+        border-radius: 14px 14px 0 0;
+    }
+
+    .related-content {
+        padding: 12px;
+    }
+
+    .related-title {
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .related-price {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .btn-view {
+        padding: 8px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION FIXES
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .page-header-room {
+        min-height: 80vh;
+        padding: 80px 20px 40px;
+    }
+
+    .page-title {
+        font-size: 32px;
+    }
+}
+
+/* ============================================
+   HOVER EFFECTS - Touch Device Optimization
+   ============================================ */
+@media (hover: none) {
+    .gallery-item:hover {
+        transform: none;
+    }
+
+    .gallery-item:hover img {
+        transform: none;
+    }
+
+    .related-card:hover {
+        transform: none;
+    }
+
+    .btn-book:hover {
+        transform: none;
+    }
+
+    .btn-view:hover {
+        background: #1A237E;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .page-header-room {
+        min-height: auto;
+        padding: 40px 20px;
+        background: #f5f5f5 !important;
+        color: #000 !important;
+    }
+
+    .page-header-room::before {
+        display: none;
+    }
+
+    .booking-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .gallery-section {
+        background: white !important;
+    }
+
+    .btn-book,
+    .btn-view {
+        display: none;
+    }
 }
