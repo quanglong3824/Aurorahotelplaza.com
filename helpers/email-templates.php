@@ -154,6 +154,76 @@ HTML;
     }
     
     /**
+     * Temporary password email template
+     */
+    public static function getTemporaryPasswordTemplate($userName, $tempPassword) {
+        $currentDate = date('d/m/Y H:i');
+        $hotelUrl = self::getBaseUrl();
+        
+        // Load CSS
+        $css = file_get_contents(__DIR__ . '/../includes/email-templates/email-styles.css');
+        
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mật khẩu tạm thời - Aurora Hotel Plaza</title>
+    <style>{$css}</style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <div class="email-header">
+                <h1>Mật khẩu tạm thời</h1>
+                <p>Aurora Hotel Plaza</p>
+            </div>
+            
+            <div class="email-content">
+                <p class="email-greeting">Xin chào <strong>{$userName}</strong>,</p>
+                
+                <p class="email-text">Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Dưới đây là mật khẩu tạm thời:</p>
+                
+                <div class="info-box" style="background-color: #e3f2fd; border-left-color: #2196f3; text-align: center;">
+                    <div class="info-box-title" style="color: #1976d2;">Mật khẩu tạm thời của bạn</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #1976d2; letter-spacing: 2px; padding: 10px;">
+                        {$tempPassword}
+                    </div>
+                </div>
+                
+                <p class="email-text">Vui lòng sử dụng mật khẩu này để đăng nhập và thay đổi mật khẩu mới ngay lập tức.</p>
+                
+                <div class="button-wrapper">
+                    <a href="{$hotelUrl}/auth/login.php" class="email-button">Đăng nhập ngay</a>
+                </div>
+                
+                <div class="alert-box" style="background-color: #fff3cd; border-left-color: #f59e0b;">
+                    <div class="alert-box-title" style="color: #856404;">Lưu ý quan trọng</div>
+                    <ul>
+                        <li style="color: #856404;">Mật khẩu tạm thời này có hiệu lực trong <strong>30 phút</strong>.</li>
+                        <li style="color: #856404;">Vui lòng thay đổi mật khẩu ngay sau khi đăng nhập.</li>
+                        <li style="color: #856404;">Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</li>
+                    </ul>
+                </div>
+                
+                <p class="email-text">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua hotline: <strong>(+84-251) 391 8888</strong></p>
+            </div>
+            
+            <div class="email-footer">
+                <p class="footer-text"><strong>Aurora Hotel Plaza</strong></p>
+                <p class="footer-text">KP2, Phường Tân Hiệp, Thủ Đông Nai</p>
+                <p class="footer-text">(+84-251) 391 8888 | info@aurorahotelplaza.com</p>
+                <p class="footer-text">© 2025 Aurora Hotel Plaza. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+HTML;
+    }
+    
+    /**
      * Booking confirmation email template (Simple version - for backward compatibility)
      * For detailed template, use getBookingConfirmationEmailHTML in includes/email-templates/booking-confirmation.php
      */
