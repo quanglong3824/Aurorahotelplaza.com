@@ -121,6 +121,11 @@
     gap: 12px;
     align-items: flex-end;
     z-index: 10000;
+    pointer-events: none;
+}
+
+.floating-menu.active .floating-menu-items {
+    pointer-events: auto;
 }
 
 /* ===== Individual Menu Item ===== */

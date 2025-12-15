@@ -44,14 +44,15 @@ if ($is_logged_in) {
 /* Hero Section */
 .contact-hero {
     position: relative;
-    min-height: 60vh;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.9), rgba(17, 24, 39, 0.85)),
-                url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
+                url('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg');
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
     padding: 120px 20px 80px;
 }
 
@@ -91,35 +92,65 @@ if ($is_logged_in) {
     align-items: start;
 }
 
-/* Info Cards */
+/* Info Cards - Liquid Glass Style */
 .info-card-glass {
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.95), rgba(17, 24, 39, 0.9));
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 2rem;
     padding: 2.5rem;
-    color: white;
     position: relative;
     overflow: hidden;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.dark .info-card-glass {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(30, 41, 59, 0.6) 100%);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .info-card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.08), transparent);
+}
+
+.info-card-glass::after {
     content: '';
     position: absolute;
     top: -50%;
     right: -30%;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
     border-radius: 50%;
+    animation: shimmer 8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.5; transform: translate(0, 0); }
+    50% { opacity: 1; transform: translate(-10px, 10px); }
 }
 
 .info-item-glass {
     display: flex;
     gap: 1rem;
     padding: 1.25rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 1;
+}
+
+.dark .info-item-glass {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .info-item-glass:last-child {
@@ -129,13 +160,22 @@ if ($is_logged_in) {
 .info-icon-glass {
     width: 3.5rem;
     height: 3.5rem;
-    background: rgba(212, 175, 55, 0.2);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.06) 50%, rgba(212, 175, 55, 0.03) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.18);
     border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.info-item-glass:hover .info-icon-glass {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
 }
 
 .info-icon-glass .material-symbols-outlined {
@@ -147,18 +187,30 @@ if ($is_logged_in) {
     font-weight: 700;
     font-size: 1rem;
     margin-bottom: 0.375rem;
-    color: white;
+    color: var(--text-primary-light);
+}
+
+.dark .info-title-glass {
+    color: var(--text-primary-dark);
 }
 
 .info-text-glass {
     font-size: 0.9375rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary-light);
     line-height: 1.6;
 }
 
+.dark .info-text-glass {
+    color: var(--text-secondary-dark);
+}
+
 .info-text-glass a {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-primary-light);
     transition: color 0.3s;
+}
+
+.dark .info-text-glass a {
+    color: var(--text-primary-dark);
 }
 
 .info-text-glass a:hover {

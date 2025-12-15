@@ -29,7 +29,7 @@ initLanguage();
 .about-hero-bg {
     position: absolute;
     inset: 0;
-    background: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
+    background: url('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -39,12 +39,7 @@ initLanguage();
 .about-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(26, 35, 126, 0.85) 0%,
-        rgba(17, 24, 39, 0.75) 50%,
-        rgba(212, 175, 55, 0.4) 100%
-    );
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7));
 }
 
 .about-hero::after {
@@ -214,7 +209,11 @@ initLanguage();
 .stats-floating {
     position: relative;
     padding: 6rem 0;
-    background: linear-gradient(135deg, #1A237E 0%, #0f172a 100%);
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.8)), 
+                url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     overflow: hidden;
 }
 
@@ -359,8 +358,8 @@ initLanguage();
     bottom: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #1A237E, #d4af37);
+    height: 3px;
+    background: #d4af37;
     transform: scaleX(0);
     transition: transform 0.4s;
 }
@@ -378,32 +377,27 @@ initLanguage();
     width: 5rem;
     height: 5rem;
     margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.1), rgba(212, 175, 55, 0.1));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.06) 50%, rgba(212, 175, 55, 0.03) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.18);
     border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .value-card-glass:hover .value-icon-glass {
-    background: linear-gradient(135deg, #1A237E, #d4af37);
-    transform: rotate(10deg) scale(1.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15);
 }
 
 .value-icon-glass .material-symbols-outlined {
     font-size: 2.5rem;
-    background: linear-gradient(135deg, #1A237E, #d4af37);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: all 0.4s;
-}
-
-.value-card-glass:hover .value-icon-glass .material-symbols-outlined {
-    background: white;
-    -webkit-background-clip: text;
-    background-clip: text;
+    color: #d4af37;
+    transition: all 0.4s ease;
 }
 
 .value-title-glass {
@@ -516,21 +510,12 @@ initLanguage();
 .cta-elegant {
     position: relative;
     padding: 6rem 0;
-    background: linear-gradient(135deg, #1A237E 0%, #0f172a 50%, #d4af37 150%);
-    overflow: hidden;
-}
-
-.cta-elegant::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg');
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.85)), 
+                url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 0.1;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
 .cta-glass-card {
