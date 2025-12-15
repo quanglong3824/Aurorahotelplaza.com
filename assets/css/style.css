@@ -7,6 +7,35 @@ html {
 }
 
 /* ============================================
+   MOBILE: Chống zoom và giữ scale cố định
+   ============================================ */
+@media (max-width: 768px) {
+    html {
+        touch-action: manipulation;
+        -ms-touch-action: manipulation;
+    }
+    
+    body {
+        touch-action: manipulation;
+        -ms-touch-action: manipulation;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+    
+    /* Chống zoom khi double-tap */
+    * {
+        touch-action: manipulation;
+    }
+    
+    /* Input không zoom khi focus (font-size >= 16px) */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* ============================================
    PERFORMANCE OPTIMIZED SMOOTH TRANSITIONS
    ============================================ */
 

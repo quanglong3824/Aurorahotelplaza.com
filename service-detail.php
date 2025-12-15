@@ -28,7 +28,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
 <html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php echo htmlspecialchars($page_title); ?></title>
 <meta name="description" content="<?php echo htmlspecialchars(substr($service['description'], 0, 160)); ?>">
 <script src="assets/js/tailwindcss-cdn.js"></script>

@@ -92,7 +92,7 @@ $category_names = [
 <html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php _e('gallery_page.title'); ?></title>
 <meta name="description" content="<?php _e('gallery_page.page_subtitle', ['count' => $total_images]); ?>">
 <script src="assets/js/tailwindcss-cdn.js"></script>

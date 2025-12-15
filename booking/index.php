@@ -58,7 +58,7 @@ foreach ($room_types as $room) {
 <html class="light" lang="vi">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php _e('booking_page.title'); ?></title>
 
 <!-- Tailwind CSS -->

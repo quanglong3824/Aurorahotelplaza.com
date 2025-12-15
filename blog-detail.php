@@ -105,7 +105,7 @@ try {
 <html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php echo htmlspecialchars($post['title']); ?> - Aurora Hotel Plaza</title>
 <meta name="description" content="<?php echo htmlspecialchars($post['excerpt'] ?? ''); ?>">
 <script src="assets/js/tailwindcss-cdn.js"></script>
