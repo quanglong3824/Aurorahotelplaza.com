@@ -84,20 +84,7 @@ try {
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/profile.css">
-    <style>
-        @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%;
-                padding: 20px;
-            }
-            .no-print { display: none !important; }
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/css/qr-popup.css">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -124,8 +111,8 @@ try {
             </div>
             
             <div class="space-y-3 no-print">
-                <button onclick="downloadQR()" class="w-full bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">download</span>
+                <button onclick="openQRPopup()" class="w-full bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">qr_code_2</span>
                     <?php _e('profile_qrcode.download_qr'); ?>
                 </button>
                 
@@ -348,9 +335,96 @@ try {
 </div>
 
 <script>
-function downloadQR() {
-    window.location.href = 'api/download-qrcode.php?booking_id=<?php echo $booking_id; ?>';
+function openQRPopup() {
+    const overlay = document.getElementById('qrPopupOverlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
+
+function closeQRPopup(event) {
+    if (event && event.target !== event.currentTarget) return;
+    const overlay = document.getElementById('qrPopupOverlay');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function downloadQRFromPopup() {
+    const qrImage = document.getElementById('popupQrImage');
+    const bookingCode = '<?php echo $booking['booking_code']; ?>';
+    
+    // Create canvas to draw QR with booking info
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = function() {
+        // Set canvas size with extra space for text
+        const padding = 40;
+        const headerHeight = 60;
+        const footerHeight = 80;
+        canvas.width = img.width + (padding * 2);
+        canvas.height = img.height + headerHeight + footerHeight + (padding * 2);
+        
+        // White background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Header - Hotel name
+        ctx.fillStyle = '#d4af37';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('AURORA HOTEL PLAZA', canvas.width / 2, padding + 25);
+        
+        // Draw QR code
+        ctx.drawImage(img, padding, headerHeight + padding, img.width, img.height);
+        
+        // Footer - Booking code
+        const footerY = headerHeight + padding + img.height + 20;
+        ctx.fillStyle = '#666666';
+        ctx.font = '14px Arial';
+        ctx.fillText('Mã đặt phòng / Booking Code', canvas.width / 2, footerY);
+        
+        ctx.fillStyle = '#d4af37';
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText(bookingCode, canvas.width / 2, footerY + 30);
+        
+        // Check-in info
+        ctx.fillStyle = '#888888';
+        ctx.font = '12px Arial';
+        ctx.fillText('Check-in: <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?> | Check-out: <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>', canvas.width / 2, footerY + 55);
+        
+        // Download
+        const link = document.createElement('a');
+        link.download = 'QRCode-' + bookingCode + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        showToast('Đã tải xuống QR Code!', 'success');
+    };
+    
+    img.onerror = function() {
+        // Fallback to direct download
+        window.location.href = 'api/download-qrcode.php?booking_id=<?php echo $booking_id; ?>';
+    };
+    
+    img.src = qrImage.src;
+}
+
+function screenshotQR() {
+    showToast('Hãy sử dụng tổ hợp phím để chụp màn hình:\n• Windows: Win + Shift + S\n• Mac: Cmd + Shift + 4', 'info');
+}
+
+function downloadQR() {
+    openQRPopup();
+}
+
+// Close popup with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeQRPopup();
+    }
+});
 
 function printBookingQR() {
     const printWindow = window.open('', '_blank', 'width=800,height=900');
@@ -665,6 +739,45 @@ function handleQRError() {
     qrImage.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" fill="%23666" font-size="16">Không thể tải QR Code</text></svg>';
 }
 </script>
+
+<!-- QR Code Popup with Liquid Glass Effect -->
+<div id="qrPopupOverlay" class="qr-popup-overlay" onclick="closeQRPopup(event)">
+    <div class="qr-popup-container" onclick="event.stopPropagation()">
+        <div class="qr-popup-glass">
+            <button class="qr-popup-close" onclick="closeQRPopup()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <div class="qr-popup-header">
+                <h3>Mã QR Check-in</h3>
+                <p>Xuất trình mã này tại quầy lễ tân</p>
+            </div>
+            
+            <div class="qr-popup-code">
+                <img id="popupQrImage" src="<?php echo $qr_url; ?>" alt="QR Code">
+                <div class="qr-popup-booking-code">
+                    <span>Mã đặt phòng</span>
+                    <strong><?php echo htmlspecialchars($booking['booking_code']); ?></strong>
+                </div>
+            </div>
+            
+            <div class="qr-popup-actions">
+                <button onclick="downloadQRFromPopup()" class="qr-popup-btn qr-popup-btn-primary">
+                    <span class="material-symbols-outlined">download</span>
+                    Tải xuống QR Code
+                </button>
+                <button onclick="screenshotQR()" class="qr-popup-btn qr-popup-btn-secondary">
+                    <span class="material-symbols-outlined">screenshot</span>
+                    Chụp màn hình
+                </button>
+            </div>
+            
+            <div class="qr-popup-info">
+                <p>💡 Bạn có thể chụp màn hình hoặc tải xuống để lưu mã QR này</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 </main>
 <?php include '../includes/footer.php'; ?>
