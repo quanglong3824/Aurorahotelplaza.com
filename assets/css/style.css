@@ -467,7 +467,12 @@ header.scrolled .user-menu-btn:hover {
 
 .user-menu-item .material-symbols-outlined {
     font-size: 1.25rem;
+    color: #111827;
 }
+
+ .dark .user-menu-item .material-symbols-outlined {
+     color: #d1d5db;
+ }
 
 /* Mobile Menu - User Section */
 @media (max-width: 768px) {
@@ -570,7 +575,7 @@ header.scrolled .user-menu-btn:hover {
 }
 
 .dark .user-menu-item {
-    color: #1d1d1d;
+    color: #d1d5db;
 }
 
 .user-menu-item:hover {
@@ -583,7 +588,12 @@ header.scrolled .user-menu-btn:hover {
 
 .user-menu-item .material-symbols-outlined {
     font-size: 1.25rem;
+    color: #111827;
 }
+
+ .dark .user-menu-item .material-symbols-outlined {
+     color: #d1d5db;
+ }
 
 .user-menu-item.text-red-600:hover {
     background: rgba(239, 68, 68, 0.1);
