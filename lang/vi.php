@@ -1161,6 +1161,7 @@ return [
         'privacy_policy' => 'Chính sách bảo mật',
         'terms_of_service' => 'Điều khoản sử dụng',
         'cancellation_policy' => 'Chính sách hủy phòng',
+        'events_coming_soon' => 'Trang sự kiện đang được cập nhật. Vui lòng quay lại sau!',
     ],
 
     // Hero slider
