@@ -63,18 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$email]);
             $user = $stmt->fetch();
             
-            if ($user && (password_verify($password, $user['password_hash']) || 
-                     (isset($user['temp_password']) && $user['temp_password'] && password_verify($password, $user['temp_password']) && $user['temp_password_expires'] > date('Y-m-d H:i:s')))) {
-                
-                // Check if using temporary password
-                $using_temp_password = isset($user['temp_password']) && $user['temp_password'] && password_verify($password, $user['temp_password']) && $user['temp_password_expires'] > date('Y-m-d H:i:s');
-                
-                if ($using_temp_password) {
-                    // Login successful with temporary password - force password change
-                    $_SESSION['temp_password_login'] = true;
-                    $_SESSION['must_change_password'] = true;
-                }
-                
+            if ($user && password_verify($password, $user['password_hash'])) {
                 // Login successful - Xóa session cũ hoàn toàn trước khi set mới
                 $intended_url = $_SESSION['intended_url'] ?? null;
                 
@@ -86,11 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_name'] = $user['full_name'];
                 $_SESSION['user_role'] = $user['user_role'];
                 $_SESSION['login_time'] = time();
-                
-                if ($using_temp_password) {
-                    $_SESSION['temp_password_login'] = true;
-                    $_SESSION['must_change_password'] = true;
-                }
                 
                 if ($intended_url) {
                     $_SESSION['intended_url'] = $intended_url;
@@ -108,8 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'email' => $user['email'],
                         'user_name' => $user['full_name'],
                         'role' => $user['user_role'],
-                        'remember_me' => $remember,
-                        'temp_password' => $using_temp_password
+                        'remember_me' => $remember
                     ]);
                 } catch (Exception $logError) {
                     error_log("Logger failed: " . $logError->getMessage());
@@ -122,9 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // TODO: Store token in user_sessions table
                 }
                 
-                // Check if must change password - ONLY if using temp password
-                // Don't redirect if user logs in with regular password (even if requires_password_change is set)
-                if ($using_temp_password) {
+                // Check if must change password (requires_password_change flag is set)
+                if (isset($user['requires_password_change']) && $user['requires_password_change'] == 1) {
                     $_SESSION['must_change_password'] = true;
                     header('Location: ' . url('auth/change-password.php'));
                     exit;

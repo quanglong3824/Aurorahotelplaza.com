@@ -35,22 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
             
             if ($user) {
-                // Verify current password (either temp password or regular password)
-                $password_valid = false;
-                
-                if (isset($user['temp_password']) && $user['temp_password'] && password_verify($current_password, $user['temp_password']) && $user['temp_password_expires'] > date('Y-m-d H:i:s')) {
-                    $password_valid = true;
-                } elseif (password_verify($current_password, $user['password_hash'])) {
-                    $password_valid = true;
-                }
+                // Verify current password (temp password is now stored in password_hash)
+                $password_valid = password_verify($current_password, $user['password_hash']);
                 
                 if ($password_valid) {
-                    // Update to new password
+                    // Update to new password and clear requires_password_change flag
                     $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
                     $stmt = $db->prepare("
                         UPDATE users 
-                        SET password_hash = ?, temp_password = NULL, temp_password_expires = NULL, 
-                            requires_password_change = 0, updated_at = NOW()
+                        SET password_hash = ?, requires_password_change = 0, updated_at = NOW()
                         WHERE user_id = ?
                     ");
                     $stmt->execute([$new_password_hash, $_SESSION['user_id']]);
@@ -63,10 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     try {
                         require_once '../helpers/logger.php';
                         $logger = getLogger();
-                        $logger->logAdminAction($_SESSION['user_id'], 'password_changed_after_temp', 'user', $_SESSION['user_id'], [
-                            'email' => $user['email'],
-                            'user_name' => $user['full_name']
-                        ]);
+                        if ($logger && method_exists($logger, 'logActivity')) {
+                            $logger->logActivity($_SESSION['user_id'], 'password_changed', 'user', $_SESSION['user_id'], 'Password changed after reset', [
+                                'email' => $user['email'],
+                                'user_name' => $user['full_name']
+                            ]);
+                        }
                     } catch (Exception $logError) {
                         error_log("Logger failed: " . $logError->getMessage());
                     }

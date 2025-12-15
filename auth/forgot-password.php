@@ -95,23 +95,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $temp_password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
                 $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 
-                // Update user with temporary password
+                // Update user: REPLACE password_hash with temp password
+                // User must change password on next login
                 try {
                     $stmt = $db->prepare("
                         UPDATE users 
-                        SET temp_password = ?, temp_password_expires = ?, requires_password_change = 1, updated_at = NOW()
+                        SET password_hash = ?, requires_password_change = 1, updated_at = NOW()
                         WHERE user_id = ?
                     ");
-                    $updateResult = $stmt->execute([$temp_password_hash, $expires, $user_id]);
+                    $updateResult = $stmt->execute([$temp_password_hash, $user_id]);
                     $rowsAffected = $stmt->rowCount();
                     
                     if (!$updateResult || $rowsAffected == 0) {
-                        error_log("Update failed - Result: " . ($updateResult ? 'true' : 'false') . ", Rows: $rowsAffected, User ID: $user_id");
-                        // Don't throw - continue anyway, user can still see temp password
+                        error_log("Update password failed - Result: " . ($updateResult ? 'true' : 'false') . ", Rows: $rowsAffected, User ID: $user_id");
+                        $error = 'Không thể cập nhật mật khẩu. Vui lòng thử lại.';
                     }
                 } catch (PDOException $updateErr) {
-                    error_log("Update temp password PDO error: " . $updateErr->getMessage());
-                    // Don't throw - continue anyway
+                    error_log("Update password PDO error: " . $updateErr->getMessage());
+                    $error = 'Lỗi cập nhật mật khẩu. Vui lòng thử lại.';
                 }
                 
                 // Try to send email (non-blocking approach)
