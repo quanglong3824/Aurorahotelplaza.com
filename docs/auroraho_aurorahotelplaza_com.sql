@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 14, 2025 lúc 03:14 PM
+-- Thời gian đã tạo: Th12 15, 2025 lúc 10:59 AM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
@@ -144,7 +144,50 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `enti
 (70, 4, 'register', 'user', 4, 'New user registered via google - Details: {\"email\":\"thuylinh.80902@gmail.com\",\"user_name\":\"Linh\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:36:38'),
 (71, 4, 'logout', 'user', 4, 'User logged out', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:41:58'),
 (72, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 04:42:36'),
-(73, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 04:45:07');
+(73, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 04:45:07'),
+(74, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 09:14:58'),
+(75, 1, 'login', 'user', 1, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-14 09:17:55'),
+(76, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-14 23:56:44'),
+(77, 5, 'register', 'user', 5, 'New user registered via manual - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"registration_method\":\"manual\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 01:57:14'),
+(78, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:27:50'),
+(79, 5, 'profile_update', 'user', 5, 'User updated profile information - Details: {\"updated_fields\":[\"full_name\",\"phone\",\"user_id\",\"password_hash\"],\"password_changed\":true}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:28:29'),
+(80, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:28:34'),
+(81, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:28:41'),
+(82, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:34:48'),
+(83, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:35:44'),
+(84, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:36:22'),
+(85, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:36:33'),
+(86, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:36:38'),
+(87, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:44:29'),
+(88, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:50:16'),
+(89, 5, 'temp_password_sent', 'user', 5, 'Temporary password requested - Details: {\"email\":\"15.lequanglong@gmail.com\",\"email_sent\":true,\"temp_expires\":\"2025-12-15 03:20:27\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:50:30'),
+(90, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false,\"temp_password\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:50:57'),
+(91, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:55:08'),
+(92, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:55:20'),
+(93, 5, 'logout', 'user', 5, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:55:31'),
+(94, 5, 'temp_password_sent', 'user', 5, 'Temporary password requested - Details: {\"email\":\"15.lequanglong@gmail.com\",\"email_sent\":true,\"temp_expires\":\"2025-12-15 03:25:36\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:55:40'),
+(95, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:56:30'),
+(96, 5, 'password_changed', 'user', 5, 'Password changed after reset - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 02:56:41'),
+(97, 6, 'register', 'user', 6, 'New user registered via manual - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"V\\u00e0ng\",\"registration_method\":\"manual\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-12-15 03:37:57'),
+(98, 6, 'login', 'user', 6, 'User logged in - Details: {\"email\":\"thuvienanhvang@gmail.com\",\"user_name\":\"V\\u00e0ng\",\"role\":\"customer\",\"remember_me\":false}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', '2025-12-15 03:38:15'),
+(99, 5, 'payment_success', 'payment', NULL, 'Payment successful - Transaction: 15345129 - Details: {\"booking_id\":\"0\",\"booking_code\":\"BK202512158079E0\",\"amount\":4500000,\"currency\":\"VND\",\"transaction_id\":\"15345129\",\"bank_code\":\"NCB\",\"response_code\":\"00\",\"points_earned\":450,\"payment_method\":\"vnpay\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 03:56:38');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `amenities`
+--
+
+CREATE TABLE `amenities` (
+  `amenity_id` int(11) NOT NULL,
+  `amenity_name` varchar(100) NOT NULL,
+  `amenity_name_en` varchar(100) DEFAULT NULL,
+  `icon` varchar(50) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `sort_order` int(11) DEFAULT 0,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -155,11 +198,14 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `enti
 CREATE TABLE `banners` (
   `banner_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `title_en` varchar(255) DEFAULT NULL,
   `subtitle` varchar(255) DEFAULT NULL,
+  `subtitle_en` varchar(255) DEFAULT NULL,
   `image_desktop` varchar(255) NOT NULL,
   `image_mobile` varchar(255) DEFAULT NULL,
   `link_url` varchar(255) DEFAULT NULL,
   `link_text` varchar(100) DEFAULT NULL,
+  `link_text_en` varchar(100) DEFAULT NULL,
   `position` enum('hero','sidebar','footer','popup') DEFAULT 'hero',
   `sort_order` int(11) DEFAULT 0,
   `start_date` timestamp NULL DEFAULT NULL,
@@ -225,9 +271,12 @@ CREATE TABLE `blog_comments` (
 CREATE TABLE `blog_posts` (
   `post_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `title_en` varchar(255) DEFAULT NULL,
   `slug` varchar(255) NOT NULL,
   `excerpt` text DEFAULT NULL,
+  `excerpt_en` varchar(500) DEFAULT NULL,
   `content` longtext NOT NULL,
+  `content_en` text DEFAULT NULL,
   `featured_image` varchar(255) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `author_id` int(11) NOT NULL,
@@ -285,8 +334,9 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`, `room_id`, `check_in_date`, `check_out_date`, `num_adults`, `num_children`, `num_rooms`, `total_nights`, `room_price`, `service_charges`, `discount_amount`, `points_used`, `total_amount`, `special_requests`, `guest_name`, `guest_email`, `guest_phone`, `guest_id_number`, `status`, `payment_status`, `qr_code`, `confirmation_sent`, `checked_in_at`, `checked_out_at`, `checked_in_by`, `cancelled_at`, `cancelled_by`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
-(0, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'pending', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-14 04:20:17'),
-(0, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'confirmed', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-14 04:50:49');
+(0, 'BK202512141A72E8', 0, 1, 1, '2025-12-14', '2025-12-15', 2, 0, 1, 1, 1400000.00, 0.00, 0.00, 0, 1400000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:20:17', '2025-12-15 03:56:38'),
+(0, 'BK20251214087E52', 3, 3, 20, '2025-12-20', '2025-12-25', 2, 0, 1, 5, 2200000.00, 0.00, 0.00, 0, 11000000.00, '', 'Long Quang', 'longdev.08@gmail.com', '0969875278', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-14 04:50:24', '2025-12-15 03:56:38'),
+(0, 'BK202512158079E0', 5, 4, 31, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 4500000.00, 0.00, 0.00, 0, 4500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'confirmed', 'paid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 03:55:36', '2025-12-15 03:56:38');
 
 --
 -- Bẫy `bookings`
@@ -339,7 +389,9 @@ CREATE TABLE `booking_history` (
 
 INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_status`, `changed_by`, `notes`, `created_at`) VALUES
 (0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-14 04:50:49'),
-(0, 0, 'pending', 'confirmed', 3, 'Booking confirmed by user', '2025-12-14 04:50:49');
+(0, 0, 'pending', 'confirmed', 3, 'Booking confirmed by user', '2025-12-14 04:50:49'),
+(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38'),
+(0, 0, 'pending', 'confirmed', NULL, NULL, '2025-12-15 03:56:38');
 
 -- --------------------------------------------------------
 
@@ -443,7 +495,8 @@ CREATE TABLE `email_logs` (
 
 INSERT INTO `email_logs` (`email_log_id`, `recipient`, `subject`, `template`, `status`, `error_message`, `sent_at`, `created_at`) VALUES
 (1, 'long.lequang308@gmail.com', 'Xác nhận thanh toán - Mã: BK20251119A1664F', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-19 04:10:55'),
-(0, 'quanglong.3824@gmail.com', 'Xác nhận thanh toán - Mã: BK202511267A7286', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-27 09:24:59');
+(0, 'quanglong.3824@gmail.com', 'Xác nhận thanh toán - Mã: BK202511267A7286', 'booking_confirmation', 'pending', NULL, NULL, '2025-11-27 09:24:59'),
+(0, 'admin@aurorahotelplaza.com', 'Xác nhận thanh toán - Mã: BK202512141A72E8', 'booking_confirmation', 'pending', NULL, NULL, '2025-12-15 03:56:38');
 
 -- --------------------------------------------------------
 
@@ -454,7 +507,9 @@ INSERT INTO `email_logs` (`email_log_id`, `recipient`, `subject`, `template`, `s
 CREATE TABLE `faqs` (
   `faq_id` int(11) NOT NULL,
   `question` varchar(255) NOT NULL,
+  `question_en` text DEFAULT NULL,
   `answer` text NOT NULL,
+  `answer_en` text DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
   `sort_order` int(11) DEFAULT 0,
   `status` enum('active','inactive') DEFAULT 'active',
@@ -579,10 +634,12 @@ INSERT INTO `gallery` (`gallery_id`, `title`, `description`, `image_url`, `thumb
 CREATE TABLE `membership_tiers` (
   `tier_id` int(11) NOT NULL,
   `tier_name` varchar(50) NOT NULL,
+  `tier_name_en` varchar(50) DEFAULT NULL,
   `tier_level` int(11) NOT NULL,
   `min_points` int(11) NOT NULL DEFAULT 0,
   `discount_percentage` decimal(5,2) DEFAULT 0.00,
   `benefits` text DEFAULT NULL,
+  `benefits_en` text DEFAULT NULL,
   `color_code` varchar(7) DEFAULT '#000000',
   `icon` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -641,6 +698,13 @@ CREATE TABLE `password_resets` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `password_resets`
+--
+
+INSERT INTO `password_resets` (`reset_id`, `user_id`, `token`, `expires_at`, `used`, `created_at`) VALUES
+(0, 5, '8d3a0d013970955b645eb08a88706d613825e260b3b1092144e23e3f31ff05c9', '2025-12-14 19:57:35', 0, '2025-12-15 01:57:35');
+
 -- --------------------------------------------------------
 
 --
@@ -672,7 +736,8 @@ INSERT INTO `payments` (`payment_id`, `booking_id`, `payment_method`, `amount`, 
 (1, 1, 'credit_card', 3900000.00, 'VND', NULL, NULL, 'completed', '2025-11-19 01:01:14', NULL, NULL, '', '2025-11-19 01:01:14', '2025-11-19 01:01:14'),
 (2, 2, 'cash', 3000000.00, 'VND', NULL, NULL, 'completed', '2025-11-19 01:40:54', NULL, NULL, NULL, '2025-11-19 01:40:54', '2025-11-19 01:40:54'),
 (3, 6, 'vnpay', 4500000.00, 'VND', '15270095', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15270095\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK20251119A1664F\",\"vnp_PayDate\":\"20251119111050\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15270095\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK20251119A1664F\",\"vnp_SecureHash\":\"7539e3f2bb647c4883f91d3716eff27387d84199b1f98728319e26ceb57fefdba6023389b95967f2e4ac468d2a959bf335d4b8d932fcde9734a54317a1d44175\"}', 'completed', '2025-11-19 04:10:55', NULL, NULL, NULL, '2025-11-19 04:10:55', '2025-11-19 04:10:55'),
-(0, 0, 'vnpay', 1400000.00, 'VND', '15305547', '{\"vnp_Amount\":\"140000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15305547\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202511272C145F\",\"vnp_PayDate\":\"20251127162450\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15305547\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202511272C145F\",\"vnp_SecureHash\":\"dc96cb1d6e6cde142b9306042620126661b7206ec0327ecea881898185244b917d0e2876ab0b54907b6533edf2c3fe0bf25e4901c6415c344ed1344dc7665319\"}', 'completed', '2025-11-27 09:24:59', NULL, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59');
+(0, 0, 'vnpay', 1400000.00, 'VND', '15305547', '{\"vnp_Amount\":\"140000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15305547\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202511272C145F\",\"vnp_PayDate\":\"20251127162450\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15305547\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202511272C145F\",\"vnp_SecureHash\":\"dc96cb1d6e6cde142b9306042620126661b7206ec0327ecea881898185244b917d0e2876ab0b54907b6533edf2c3fe0bf25e4901c6415c344ed1344dc7665319\"}', 'completed', '2025-11-27 09:24:59', NULL, NULL, NULL, '2025-11-27 09:24:59', '2025-11-27 09:24:59'),
+(0, 0, 'vnpay', 4500000.00, 'VND', '15345129', '{\"vnp_Amount\":\"450000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15345129\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan dat phong BK202512158079E0\",\"vnp_PayDate\":\"20251215105635\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"ZWJBID1P\",\"vnp_TransactionNo\":\"15345129\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"BK202512158079E0\",\"vnp_SecureHash\":\"ac2f6401028a07784b9633faf34a377970159f3269b8959fba704ab0864244b22b7f77b07e5436ec4a832246b722a23cc28c80d976c2141f68c32e41797167f8\"}', 'completed', '2025-12-15 03:56:38', NULL, NULL, NULL, '2025-12-15 03:56:38', '2025-12-15 03:56:38');
 
 -- --------------------------------------------------------
 
@@ -692,6 +757,13 @@ CREATE TABLE `points_transactions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `points_transactions`
+--
+
+INSERT INTO `points_transactions` (`transaction_id`, `user_id`, `points`, `transaction_type`, `reference_type`, `reference_id`, `description`, `created_by`, `created_at`) VALUES
+(0, 5, 450, 'earn', 'booking', 0, 'Tích điểm từ đặt phòng BK202512158079E0', NULL, '2025-12-15 03:56:38');
+
 -- --------------------------------------------------------
 
 --
@@ -702,7 +774,9 @@ CREATE TABLE `promotions` (
   `promotion_id` int(11) NOT NULL,
   `promotion_code` varchar(50) NOT NULL,
   `promotion_name` varchar(255) NOT NULL,
+  `promotion_name_en` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
+  `description_en` text DEFAULT NULL,
   `discount_type` enum('percentage','fixed_amount') NOT NULL,
   `discount_value` decimal(10,2) NOT NULL,
   `min_booking_amount` decimal(10,2) DEFAULT NULL,
@@ -723,8 +797,8 @@ CREATE TABLE `promotions` (
 -- Đang đổ dữ liệu cho bảng `promotions`
 --
 
-INSERT INTO `promotions` (`promotion_id`, `promotion_code`, `promotion_name`, `description`, `discount_type`, `discount_value`, `min_booking_amount`, `max_discount`, `usage_limit`, `usage_per_user`, `used_count`, `applicable_to`, `start_date`, `end_date`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'TEACHERDAYS2025', 'Mừng ngày nhà giáo Việt Nam', 'Giảm 5% cho đơn tối thiểu 1 triệu, tối đa giảm 250.000vnđ', 'percentage', 5.00, 100000.00, 250000.00, 2, 1, 0, 'rooms', '2025-11-20 10:50:00', '2025-11-21 10:50:00', 'active', 22, '2025-11-18 17:52:30', '2025-11-18 17:52:30');
+INSERT INTO `promotions` (`promotion_id`, `promotion_code`, `promotion_name`, `promotion_name_en`, `description`, `description_en`, `discount_type`, `discount_value`, `min_booking_amount`, `max_discount`, `usage_limit`, `usage_per_user`, `used_count`, `applicable_to`, `start_date`, `end_date`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'TEACHERDAYS2025', 'Mừng ngày nhà giáo Việt Nam', NULL, 'Giảm 5% cho đơn tối thiểu 1 triệu, tối đa giảm 250.000vnđ', NULL, 'percentage', 5.00, 100000.00, 250000.00, 2, 1, 0, 'rooms', '2025-11-20 10:50:00', '2025-11-21 10:50:00', 'active', 22, '2025-11-18 17:52:30', '2025-11-18 17:52:30');
 
 -- --------------------------------------------------------
 
@@ -1009,7 +1083,7 @@ INSERT INTO `rooms` (`room_id`, `room_type_id`, `room_number`, `floor`, `buildin
 (28, 3, '809', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (29, 3, '810', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (30, 4, '811', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-11-19 04:10:18'),
-(31, 4, '812', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
+(31, 4, '812', 8, 'Main', 'occupied', NULL, NULL, '2025-11-18 17:31:29', '2025-12-15 03:55:36'),
 (32, 4, '814', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (33, 4, '815', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
 (34, 4, '816', 8, 'Main', 'available', NULL, NULL, '2025-11-18 17:31:29', '2025-11-18 17:31:29'),
@@ -1128,10 +1202,13 @@ CREATE TABLE `room_pricing` (
 CREATE TABLE `room_types` (
   `room_type_id` int(11) NOT NULL,
   `type_name` varchar(100) NOT NULL,
+  `type_name_en` varchar(100) DEFAULT NULL,
   `slug` varchar(100) NOT NULL,
   `category` enum('room','apartment') NOT NULL DEFAULT 'room',
   `description` text DEFAULT NULL,
+  `description_en` text DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
+  `short_description_en` varchar(500) DEFAULT NULL,
   `max_occupancy` int(11) NOT NULL DEFAULT 2,
   `size_sqm` decimal(10,2) DEFAULT NULL,
   `bed_type` varchar(100) DEFAULT NULL,
@@ -1151,20 +1228,20 @@ CREATE TABLE `room_types` (
 -- Đang đổ dữ liệu cho bảng `room_types`
 --
 
-INSERT INTO `room_types` (`room_type_id`, `type_name`, `slug`, `category`, `description`, `short_description`, `max_occupancy`, `size_sqm`, `bed_type`, `amenities`, `images`, `thumbnail`, `base_price`, `weekend_price`, `holiday_price`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'Deluxe', 'deluxe', 'room', 'Phòng Deluxe rộng 35m² được thiết kế hiện đại với giường King size cao cấp, tầm nhìn thành phố tuyệt đẹp. Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Đây là lựa chọn hoàn hảo cho cặp đôi hoặc khách công tác.', 'Không gian sang trọng với đầy đủ tiện nghi hiện đại', 2, 35.00, '1 Giường King', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', 1400000.00, 2200000.00, 2500000.00, 'active', 1, '2025-11-18 17:31:03', '2025-11-25 04:26:03'),
-(2, 'Premium Deluxe', 'premium-deluxe', 'room', 'Phòng Premium Deluxe 40m² mang đến trải nghiệm cao cấp hơn với không gian rộng rãi, giường King size sang trọng và khu vực tiếp khách riêng biệt. Phòng có tầm nhìn panorama tuyệt đẹp ra thành phố, được trang bị đầy đủ tiện nghi hiện đại bao gồm TV thông minh, hệ thống âm thanh cao cấp và phòng tắm với bồn tắm nằm.', 'Không gian cao cấp với tầm nhìn panorama tuyệt đẹp', 2, 40.00, '1 Giường King', 'WiFi miễn phí,TV thông minh,Hệ thống âm thanh,Minibar cao cấp,Két an toàn,Điều hòa,Phòng tắm với bồn tắm,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cao cấp,Bàn làm việc,Khu vực tiếp khách,Máy pha cà phê,Áo choàng tắm cao cấp', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg,/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', 1500000.00, 3000000.00, 3500000.00, 'active', 2, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(3, 'Premium Twin', 'premium-twin', 'room', 'Phòng Premium Twin 38m² được thiết kế đặc biệt cho nhóm bạn hoặc gia đình nhỏ với 2 giường đơn cao cấp. Không gian hiện đại, thoáng đãng với đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Phòng có tầm nhìn đẹp ra thành phố.', 'Lý tưởng cho nhóm bạn hoặc gia đình với 2 giường đơn', 2, 38.00, '2 Giường Đơn', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg,/assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', 2200000.00, 2700000.00, 3000000.00, 'active', 3, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(4, 'VIP Suite', 'vip-suite', 'room', 'VIP Suite 60m² là đỉnh cao của sự sang trọng với phòng ngủ riêng biệt, phòng khách rộng rãi và phòng tắm cao cấp với bồn tắm Jacuzzi. Giường King size đặc biệt, tầm nhìn panorama 180 độ ra thành phố. Được trang bị đầy đủ tiện nghi 5 sao bao gồm TV thông minh, hệ thống âm thanh Bose, minibar cao cấp và dịch vụ butler 24/7.', 'Đỉnh cao sang trọng với không gian riêng tư tuyệt đối', 3, 60.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh 55 inch,Hệ thống âm thanh Bose,Minibar cao cấp,Két an toàn điện tử,Điều hòa thông minh,Phòng tắm với Jacuzzi,Vòi sen massage,Máy sấy tóc Dyson,Đồ vệ sinh Hermes,Bàn làm việc executive,Phòng khách riêng,Máy pha cà phê Nespresso,Áo choàng tắm cao cấp,Dịch vụ butler 24/7', '/assets/img/vip/vip-room-aurora-hotel-1.jpg,/assets/img/vip/vip-room-aurora-hotel-3.jpg,/assets/img/vip/vip-room-aurora-hotel-4.jpg', '/assets/img/vip/vip-room-aurora-hotel-1.jpg', 4500000.00, 5500000.00, 6500000.00, 'active', 4, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(5, 'Studio Apartment', 'studio-apartment', 'apartment', 'Căn hộ Studio 45m² được thiết kế thông minh với không gian mở, kết hợp phòng ngủ và phòng khách. Bếp nhỏ đầy đủ tiện nghi, giường Queen size thoải mái, khu vực làm việc riêng biệt. Lý tưởng cho khách lưu trú dài ngày hoặc cặp đôi muốn có không gian riêng tư.', 'Không gian thông minh cho lưu trú dài ngày', 2, 45.00, '1 Giường Queen', 'WiFi miễn phí,TV thông minh,Bếp nhỏ đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm riêng,Vòi sen,Máy sấy tóc,Bàn làm việc,Sofa,Ban công', '/assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg,/assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg', '/assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg', 2800000.00, 3300000.00, 3800000.00, 'active', 11, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(6, 'Modern Studio', 'modern-studio', 'apartment', 'Modern Studio 48m² với thiết kế hiện đại tối giản, nội thất cao cấp và hệ thống smart home. Không gian mở thoáng đãng, bếp hiện đại đầy đủ thiết bị, giường King size sang trọng. Tầm nhìn đẹp và ánh sáng tự nhiên tràn ngập.', 'Thiết kế hiện đại với hệ thống smart home', 2, 48.00, '1 Giường King', 'WiFi miễn phí,TV thông minh,Smart home system,Bếp hiện đại,Tủ lạnh,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa thông minh,Máy giặt,Phòng tắm cao cấp,Vòi sen massage,Máy sấy tóc,Bàn làm việc,Sofa cao cấp,Ban công rộng', '/assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg,/assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg', '/assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg', 3200000.00, 3800000.00, 4300000.00, 'active', 5, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(7, 'Indochine Studio', 'indochine-studio', 'apartment', 'Indochine Studio 46m² mang phong cách Đông Dương độc đáo với nội thất gỗ tự nhiên, họa tiết truyền thống kết hợp hiện đại. Không gian ấm cúng, bếp đầy đủ tiện nghi, giường Queen size thoải mái. Lựa chọn hoàn hảo cho những ai yêu thích văn hóa Việt.', 'Phong cách Đông Dương độc đáo và ấm cúng', 2, 46.00, '1 Giường Queen', 'WiFi miễn phí,TV màn hình phẳng,Bếp đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Sofa,Ban công,Trang trí Đông Dương', '/assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg,/assets/img/indochine-studio-apartment/indochine-studio-apartment-2.jpg', '/assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg', 3000000.00, 3500000.00, 4000000.00, 'active', 6, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(8, 'Premium Apartment', 'premium-apartment', 'apartment', 'Premium Apartment 65m² với phòng ngủ riêng biệt, phòng khách rộng rãi và bếp đầy đủ tiện nghi cao cấp. Giường King size sang trọng, khu vực làm việc executive, phòng tắm với bồn tắm. Tầm nhìn đẹp ra thành phố, lý tưởng cho gia đình hoặc lưu trú dài hạn.', 'Không gian cao cấp với phòng ngủ riêng biệt', 3, 65.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 4 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,Phòng tắm với bồn tắm,Vòi sen massage,Máy sấy tóc,Bàn làm việc,Phòng khách riêng,Sofa cao cấp,Ban công lớn', '/assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg,/assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg,/assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg', '/assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg', 4200000.00, 5000000.00, 5800000.00, 'active', 12, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(9, 'Modern Premium', 'modern-premium', 'apartment', 'Modern Premium 68m² với thiết kế hiện đại tối giản, nội thất cao cấp và công nghệ smart home tiên tiến. Phòng ngủ riêng với giường King size, phòng khách sang trọng, bếp hiện đại đầy đủ. Tầm nhìn panorama tuyệt đẹp.', 'Hiện đại cao cấp với công nghệ smart home', 3, 68.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh 55 inch,Smart home system,Bếp hiện đại cao cấp,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Máy pha cà phê,Bàn ăn 4 chỗ,Minibar cao cấp,Két an toàn điện tử,Điều hòa thông minh,Máy giặt sấy,Phòng tắm cao cấp với bồn tắm,Vòi sen massage,Máy sấy tóc Dyson,Bàn làm việc executive,Phòng khách cao cấp,Sofa da,Ban công panorama', '/assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg,/assets/img/modern-premium-apartment/modern-premium-apartment-2.jpg', '/assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg', 4800000.00, 5700000.00, 6500000.00, 'active', 7, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(10, 'Classical Premium', 'classical-premium', 'apartment', 'Classical Premium 66m² mang phong cách cổ điển sang trọng với nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế. Phòng ngủ riêng, phòng khách ấm cúng, bếp đầy đủ tiện nghi. Không gian thanh lịch, quý phái cho những ai yêu thích sự cổ điển.', 'Phong cách cổ điển sang trọng và thanh lịch', 3, 66.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 4 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm với bồn tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa cổ điển,Ban công,Nội thất gỗ cao cấp', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg,/assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg', 4500000.00, 5300000.00, 6000000.00, 'active', 8, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(11, 'Family Apartment', 'family-apartment', 'apartment', 'Family Apartment 75m² được thiết kế đặc biệt cho gia đình với 2 phòng ngủ riêng biệt, phòng khách rộng rãi và bếp đầy đủ. Phòng ngủ chính có giường King, phòng ngủ phụ có 2 giường đơn. Không gian thoải mái, an toàn cho trẻ em với đầy đủ tiện nghi hiện đại.', 'Lý tưởng cho gia đình với 2 phòng ngủ riêng', 5, 75.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV thông minh,Bếp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa,Ban công,Khu vực vui chơi trẻ em', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', 5500000.00, 6500000.00, 7500000.00, 'active', 13, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
-(12, 'Indochine Family', 'indochine-family', 'apartment', 'Indochine Family 72m² kết hợp phong cách Đông Dương truyền thống với tiện nghi hiện đại. 2 phòng ngủ riêng biệt, phòng khách ấm cúng với nội thất gỗ tự nhiên, bếp đầy đủ. Không gian văn hóa đậm chất Việt, lý tưởng cho gia đình yêu thích truyền thống.', 'Phong cách Đông Dương cho gia đình', 5, 72.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa,Ban công,Nội thất Đông Dương,Trang trí truyền thống', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg,/assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', 5200000.00, 6200000.00, 7200000.00, 'active', 9, '2025-11-18 17:31:04', '2025-11-25 04:24:18'),
-(13, 'Classical Family', 'classical-family', 'apartment', 'Classical Family 78m² mang phong cách cổ điển sang trọng với 2 phòng ngủ rộng rãi, phòng khách thanh lịch và bếp cao cấp. Nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế, không gian ấm cúng. Lựa chọn hoàn hảo cho gia đình yêu thích sự quý phái cổ điển.', 'Sang trọng cổ điển cho gia đình', 5, 78.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm cao cấp,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa cổ điển,Ban công lớn,Nội thất gỗ cao cấp,Trang trí cổ điển', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg,/assets/img/classical-family-apartment/classical-family-apartment2.jpg', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg', 5800000.00, 6800000.00, 7800000.00, 'active', 10, '2025-11-18 17:31:04', '2025-11-25 04:24:18');
+INSERT INTO `room_types` (`room_type_id`, `type_name`, `type_name_en`, `slug`, `category`, `description`, `description_en`, `short_description`, `short_description_en`, `max_occupancy`, `size_sqm`, `bed_type`, `amenities`, `images`, `thumbnail`, `base_price`, `weekend_price`, `holiday_price`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 'Deluxe', 'Deluxe Room', 'deluxe', 'room', 'Phòng Deluxe rộng 35m² được thiết kế hiện đại với giường King size cao cấp, tầm nhìn thành phố tuyệt đẹp. Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Đây là lựa chọn hoàn hảo cho cặp đôi hoặc khách công tác.', 'Luxurious room with panoramic view and exclusive services.', 'Không gian sang trọng với đầy đủ tiện nghi hiện đại', 'Luxury room with panoramic view', 2, 35.00, '1 Giường King', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-2.jpg,/assets/img/deluxe/DELUXE-ROOM-AURORA-3.jpg', '/assets/img/deluxe/DELUXE-ROOM-AURORA-1.jpg', 1400000.00, 2200000.00, 2500000.00, 'active', 1, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(2, 'Premium Deluxe', 'Deluxe Room', 'premium-deluxe', 'room', 'Phòng Premium Deluxe 40m² mang đến trải nghiệm cao cấp hơn với không gian rộng rãi, giường King size sang trọng và khu vực tiếp khách riêng biệt. Phòng có tầm nhìn panorama tuyệt đẹp ra thành phố, được trang bị đầy đủ tiện nghi hiện đại bao gồm TV thông minh, hệ thống âm thanh cao cấp và phòng tắm với bồn tắm nằm.', 'Luxurious room with panoramic view and exclusive services.', 'Không gian cao cấp với tầm nhìn panorama tuyệt đẹp', 'Luxury room with panoramic view', 2, 40.00, '1 Giường King', 'WiFi miễn phí,TV thông minh,Hệ thống âm thanh,Minibar cao cấp,Két an toàn,Điều hòa,Phòng tắm với bồn tắm,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cao cấp,Bàn làm việc,Khu vực tiếp khách,Máy pha cà phê,Áo choàng tắm cao cấp', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg,/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg', '/assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg', 1500000.00, 3000000.00, 3500000.00, 'active', 2, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(3, 'Premium Twin', NULL, 'premium-twin', 'room', 'Phòng Premium Twin 38m² được thiết kế đặc biệt cho nhóm bạn hoặc gia đình nhỏ với 2 giường đơn cao cấp. Không gian hiện đại, thoáng đãng với đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với vòi sen massage. Phòng có tầm nhìn đẹp ra thành phố.', NULL, 'Lý tưởng cho nhóm bạn hoặc gia đình với 2 giường đơn', NULL, 2, 38.00, '2 Giường Đơn', 'WiFi miễn phí,TV màn hình phẳng,Minibar,Két an toàn,Điều hòa,Phòng tắm riêng,Vòi sen massage,Máy sấy tóc,Đồ vệ sinh cá nhân,Bàn làm việc,Điện thoại,Dép đi trong phòng,Áo choàng tắm', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg,/assets/img/premium-twin/premium-deluxe-twin-aurora-2.jpg', '/assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg', 2200000.00, 2700000.00, 3000000.00, 'active', 3, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
+(4, 'VIP Suite', 'Suite Room', 'vip-suite', 'room', 'VIP Suite 60m² là đỉnh cao của sự sang trọng với phòng ngủ riêng biệt, phòng khách rộng rãi và phòng tắm cao cấp với bồn tắm Jacuzzi. Giường King size đặc biệt, tầm nhìn panorama 180 độ ra thành phố. Được trang bị đầy đủ tiện nghi 5 sao bao gồm TV thông minh, hệ thống âm thanh Bose, minibar cao cấp và dịch vụ butler 24/7.', 'Premium suite with separate living area and VIP services.', 'Đỉnh cao sang trọng với không gian riêng tư tuyệt đối', 'Premium suite with living area', 3, 60.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh 55 inch,Hệ thống âm thanh Bose,Minibar cao cấp,Két an toàn điện tử,Điều hòa thông minh,Phòng tắm với Jacuzzi,Vòi sen massage,Máy sấy tóc Dyson,Đồ vệ sinh Hermes,Bàn làm việc executive,Phòng khách riêng,Máy pha cà phê Nespresso,Áo choàng tắm cao cấp,Dịch vụ butler 24/7', '/assets/img/vip/vip-room-aurora-hotel-1.jpg,/assets/img/vip/vip-room-aurora-hotel-3.jpg,/assets/img/vip/vip-room-aurora-hotel-4.jpg', '/assets/img/vip/vip-room-aurora-hotel-1.jpg', 4500000.00, 5500000.00, 6500000.00, 'active', 4, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(5, 'Studio Apartment', 'Studio Apartment', 'studio-apartment', 'apartment', 'Căn hộ Studio 45m² được thiết kế thông minh với không gian mở, kết hợp phòng ngủ và phòng khách. Bếp nhỏ đầy đủ tiện nghi, giường Queen size thoải mái, khu vực làm việc riêng biệt. Lý tưởng cho khách lưu trú dài ngày hoặc cặp đôi muốn có không gian riêng tư.', 'Modern studio apartment with full kitchen and living space.', 'Không gian thông minh cho lưu trú dài ngày', 'Modern studio with kitchen', 2, 45.00, '1 Giường Queen', 'WiFi miễn phí,TV thông minh,Bếp nhỏ đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm riêng,Vòi sen,Máy sấy tóc,Bàn làm việc,Sofa,Ban công', '/assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg,/assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg', '/assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg', 2800000.00, 3300000.00, 3800000.00, 'active', 11, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(6, 'Modern Studio', 'Studio Apartment', 'modern-studio', 'apartment', 'Modern Studio 48m² với thiết kế hiện đại tối giản, nội thất cao cấp và hệ thống smart home. Không gian mở thoáng đãng, bếp hiện đại đầy đủ thiết bị, giường King size sang trọng. Tầm nhìn đẹp và ánh sáng tự nhiên tràn ngập.', 'Modern studio apartment with full kitchen and living space.', 'Thiết kế hiện đại với hệ thống smart home', 'Modern studio with kitchen', 2, 48.00, '1 Giường King', 'WiFi miễn phí,TV thông minh,Smart home system,Bếp hiện đại,Tủ lạnh,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa thông minh,Máy giặt,Phòng tắm cao cấp,Vòi sen massage,Máy sấy tóc,Bàn làm việc,Sofa cao cấp,Ban công rộng', '/assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg,/assets/img/modern-studio-apartment/modern-studio-apartment-2.jpg', '/assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg', 3200000.00, 3800000.00, 4300000.00, 'active', 5, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(7, 'Indochine Studio', 'Studio Apartment', 'indochine-studio', 'apartment', 'Indochine Studio 46m² mang phong cách Đông Dương độc đáo với nội thất gỗ tự nhiên, họa tiết truyền thống kết hợp hiện đại. Không gian ấm cúng, bếp đầy đủ tiện nghi, giường Queen size thoải mái. Lựa chọn hoàn hảo cho những ai yêu thích văn hóa Việt.', 'Modern studio apartment with full kitchen and living space.', 'Phong cách Đông Dương độc đáo và ấm cúng', 'Modern studio with kitchen', 2, 46.00, '1 Giường Queen', 'WiFi miễn phí,TV màn hình phẳng,Bếp đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Sofa,Ban công,Trang trí Đông Dương', '/assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg,/assets/img/indochine-studio-apartment/indochine-studio-apartment-2.jpg', '/assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg', 3000000.00, 3500000.00, 4000000.00, 'active', 6, '2025-11-18 17:31:03', '2025-12-14 08:26:08'),
+(8, 'Premium Apartment', NULL, 'premium-apartment', 'apartment', 'Premium Apartment 65m² với phòng ngủ riêng biệt, phòng khách rộng rãi và bếp đầy đủ tiện nghi cao cấp. Giường King size sang trọng, khu vực làm việc executive, phòng tắm với bồn tắm. Tầm nhìn đẹp ra thành phố, lý tưởng cho gia đình hoặc lưu trú dài hạn.', NULL, 'Không gian cao cấp với phòng ngủ riêng biệt', NULL, 3, 65.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 4 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,Phòng tắm với bồn tắm,Vòi sen massage,Máy sấy tóc,Bàn làm việc,Phòng khách riêng,Sofa cao cấp,Ban công lớn', '/assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg,/assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg,/assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg', '/assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg', 4200000.00, 5000000.00, 5800000.00, 'active', 12, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
+(9, 'Modern Premium', NULL, 'modern-premium', 'apartment', 'Modern Premium 68m² với thiết kế hiện đại tối giản, nội thất cao cấp và công nghệ smart home tiên tiến. Phòng ngủ riêng với giường King size, phòng khách sang trọng, bếp hiện đại đầy đủ. Tầm nhìn panorama tuyệt đẹp.', NULL, 'Hiện đại cao cấp với công nghệ smart home', NULL, 3, 68.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV thông minh 55 inch,Smart home system,Bếp hiện đại cao cấp,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Máy pha cà phê,Bàn ăn 4 chỗ,Minibar cao cấp,Két an toàn điện tử,Điều hòa thông minh,Máy giặt sấy,Phòng tắm cao cấp với bồn tắm,Vòi sen massage,Máy sấy tóc Dyson,Bàn làm việc executive,Phòng khách cao cấp,Sofa da,Ban công panorama', '/assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg,/assets/img/modern-premium-apartment/modern-premium-apartment-2.jpg', '/assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg', 4800000.00, 5700000.00, 6500000.00, 'active', 7, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
+(10, 'Classical Premium', NULL, 'classical-premium', 'apartment', 'Classical Premium 66m² mang phong cách cổ điển sang trọng với nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế. Phòng ngủ riêng, phòng khách ấm cúng, bếp đầy đủ tiện nghi. Không gian thanh lịch, quý phái cho những ai yêu thích sự cổ điển.', NULL, 'Phong cách cổ điển sang trọng và thanh lịch', NULL, 3, 66.00, '1 Giường King + Sofa bed', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 4 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,Phòng tắm với bồn tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa cổ điển,Ban công,Nội thất gỗ cao cấp', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg,/assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg', '/assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg', 4500000.00, 5300000.00, 6000000.00, 'active', 8, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
+(11, 'Family Apartment', NULL, 'family-apartment', 'apartment', 'Family Apartment 75m² được thiết kế đặc biệt cho gia đình với 2 phòng ngủ riêng biệt, phòng khách rộng rãi và bếp đầy đủ. Phòng ngủ chính có giường King, phòng ngủ phụ có 2 giường đơn. Không gian thoải mái, an toàn cho trẻ em với đầy đủ tiện nghi hiện đại.', NULL, 'Lý tưởng cho gia đình với 2 phòng ngủ riêng', NULL, 5, 75.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV thông minh,Bếp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa,Ban công,Khu vực vui chơi trẻ em', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg,/assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg', '/assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg', 5500000.00, 6500000.00, 7500000.00, 'active', 13, '2025-11-18 17:31:03', '2025-11-25 04:24:18'),
+(12, 'Indochine Family', NULL, 'indochine-family', 'apartment', 'Indochine Family 72m² kết hợp phong cách Đông Dương truyền thống với tiện nghi hiện đại. 2 phòng ngủ riêng biệt, phòng khách ấm cúng với nội thất gỗ tự nhiên, bếp đầy đủ. Không gian văn hóa đậm chất Việt, lý tưởng cho gia đình yêu thích truyền thống.', NULL, 'Phong cách Đông Dương cho gia đình', NULL, 5, 72.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp đầy đủ,Tủ lạnh,Lò vi sóng,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt,2 Phòng tắm,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách,Sofa,Ban công,Nội thất Đông Dương,Trang trí truyền thống', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg,/assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg', '/assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg', 5200000.00, 6200000.00, 7200000.00, 'active', 9, '2025-11-18 17:31:04', '2025-11-25 04:24:18'),
+(13, 'Classical Family', NULL, 'classical-family', 'apartment', 'Classical Family 78m² mang phong cách cổ điển sang trọng với 2 phòng ngủ rộng rãi, phòng khách thanh lịch và bếp cao cấp. Nội thất gỗ tự nhiên cao cấp, họa tiết tinh tế, không gian ấm cúng. Lựa chọn hoàn hảo cho gia đình yêu thích sự quý phái cổ điển.', NULL, 'Sang trọng cổ điển cho gia đình', NULL, 5, 78.00, '1 King + 2 Đơn', 'WiFi miễn phí,TV màn hình phẳng,Bếp cao cấp đầy đủ,Tủ lạnh lớn,Lò vi sóng,Máy rửa chén,Ấm đun nước,Bàn ăn 6 chỗ,Minibar,Két an toàn,Điều hòa,Máy giặt sấy,2 Phòng tắm cao cấp,Vòi sen,Máy sấy tóc,Bàn làm việc,Phòng khách rộng,Sofa cổ điển,Ban công lớn,Nội thất gỗ cao cấp,Trang trí cổ điển', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg,/assets/img/classical-family-apartment/classical-family-apartment2.jpg', '/assets/img/classical-family-apartment/classical-family-apartment1.jpg', 5800000.00, 6800000.00, 7800000.00, 'active', 10, '2025-11-18 17:31:04', '2025-11-25 04:24:18');
 
 -- --------------------------------------------------------
 
@@ -1175,10 +1252,13 @@ INSERT INTO `room_types` (`room_type_id`, `type_name`, `slug`, `category`, `desc
 CREATE TABLE `services` (
   `service_id` int(11) NOT NULL,
   `service_name` varchar(255) NOT NULL,
+  `service_name_en` varchar(100) DEFAULT NULL,
   `slug` varchar(255) NOT NULL,
   `category` enum('room_service','spa','restaurant','event','transport','laundry','other') NOT NULL,
   `description` text DEFAULT NULL,
+  `description_en` text DEFAULT NULL,
   `short_description` varchar(255) DEFAULT NULL,
+  `short_description_en` varchar(500) DEFAULT NULL,
   `icon` varchar(100) DEFAULT 'room_service',
   `price` decimal(10,2) NOT NULL,
   `price_unit` varchar(50) DEFAULT NULL,
@@ -1195,21 +1275,21 @@ CREATE TABLE `services` (
 -- Đang đổ dữ liệu cho bảng `services`
 --
 
-INSERT INTO `services` (`service_id`, `service_name`, `slug`, `category`, `description`, `short_description`, `icon`, `price`, `price_unit`, `thumbnail`, `images`, `is_available`, `is_featured`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'Tổ chức tiệc cưới', 'wedding-service', 'event', 'Aurora Hotel Plaza tự hào là địa điểm tổ chức tiệc cưới hàng đầu tại Đồng Nai với sảnh tiệc sang trọng 500m², sức chứa lên đến 800 khách. Đội ngũ chuyên nghiệp với hơn 500 tiệc cưới thành công.', 'Sảnh tiệc 500m², sức chứa 800 khách, dịch vụ trọn gói', 'celebration', 0.00, 'Liên hệ', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-1.jpg', NULL, 1, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(2, 'Tổ chức hội nghị', 'conference-service', 'event', 'Phòng hội nghị hiện đại với 5 phòng họp đa năng, sức chứa từ 20-300 người. Trang bị đầy đủ thiết bị hiện đại, WiFi tốc độ cao, dịch vụ coffee break và buffet.', 'Phòng họp hiện đại, thiết bị đầy đủ, WiFi tốc độ cao', 'meeting_room', 5000000.00, 'VNĐ', 'assets/img/post/conference/conference-1.jpg', NULL, 1, 1, 2, '2025-11-18 18:34:50', '2025-11-19 00:16:14'),
-(3, 'Nhà hàng Aurora', 'aurora-restaurant', 'restaurant', 'Nhà hàng sang trọng với sức chứa 200 khách, view thành phố tuyệt đẹp. Buffet đa dạng hơn 100 món Á-Âu: hải sản tươi sống, sushi Nhật Bản, BBQ Hàn Quốc, món Việt truyền thống.', 'Buffet 100+ món Á-Âu, view đẹp, đầu bếp 5 sao', 'restaurant', 350000.00, 'VNĐ/người', 'assets/img/post/restaurant/restaurant-1.jpg', NULL, 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(4, 'Văn phòng cho thuê', 'office-rental', 'other', 'Văn phòng hiện đại với 3 loại: Studio 20m², Standard 40m², Premium 80m². Đầy đủ nội thất, WiFi 1Gbps, phòng họp chung, bảo vệ 24/7.', 'Văn phòng đầy đủ nội thất, WiFi 1Gbps, tiện ích đầy đủ', 'business_center', 8000000.00, 'VNĐ/tháng', 'assets/img/post/office/office-1.jpg', NULL, 1, 1, 4, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(5, 'Rooftop Bar', 'rooftop-bar', 'restaurant', 'Quầy bar tầng thượng với view 360 độ thành phố Biên Hòa. Không gian sang trọng, âm nhạc sống mỗi tối thứ 6-7. Menu cocktail đa dạng.', 'Bar tầng thượng, view 360°, cocktail đa dạng, nhạc sống', 'local_bar', 150000.00, 'VNĐ/ly', 'assets/img/post/restaurant/rooftop-bar-1.jpg', NULL, 1, 1, 5, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(6, 'Dịch vụ phòng 24/7', 'room-service-24-7', 'room_service', 'Dịch vụ phòng hoạt động 24/7 với thực đơn đa dạng hơn 50 món.', 'Gọi món ăn, đồ uống phục vụ tận phòng 24/7', 'room_service', 0.00, 'Miễn phí', NULL, NULL, 1, 0, 6, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(7, 'Dọn phòng hàng ngày', 'daily-housekeeping', 'room_service', 'Dịch vụ dọn phòng hàng ngày với đội ngũ chuyên nghiệp.', 'Dọn dẹp và thay đổi khăn giường mỗi ngày', 'cleaning_services', 0.00, 'Miễn phí', NULL, NULL, 1, 0, 7, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(8, 'Giặt ủi cao cấp', 'laundry-service', 'laundry', 'Dịch vụ giặt ủi chuyên nghiệp với máy móc hiện đại.', 'Giặt ủi quần áo chuyên nghiệp, giao nhận tận phòng', 'local_laundry_service', 50000.00, 'VNĐ/kg', NULL, NULL, 1, 0, 8, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(9, 'Massage trị liệu', 'therapeutic-massage', 'spa', 'Massage trị liệu chuyên sâu giúp giảm căng thẳng, đau nhức cơ bắp.', 'Massage thư giãn toàn thân với tinh dầu thiên nhiên', 'spa', 500000.00, 'VNĐ/60 phút', NULL, NULL, 1, 1, 9, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(10, 'Sauna & Jacuzzi', 'sauna-jacuzzi', 'spa', 'Phòng xông hơi khô và bồn tắm massage cao cấp.', 'Xông hơi khô và bồn tắm nước nóng massage', 'hot_tub', 300000.00, 'VNĐ/45 phút', NULL, NULL, 1, 0, 10, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(11, 'Hồ bơi & Gym', 'pool-gym', 'other', 'Hồ bơi ngoài trời 25m x 12m và phòng gym 200m² với trang thiết bị Technogym.', 'Hồ bơi ngoài trời và phòng gym hiện đại miễn phí', 'pool', 0.00, 'Miễn phí', NULL, NULL, 1, 1, 11, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(12, 'Đưa đón sân bay', 'airport-transfer', 'transport', 'Dịch vụ đưa đón sân bay Tân Sơn Nhất bằng xe sang.', 'Xe đưa đón sân bay Tân Sơn Nhất tiện lợi, an toàn', 'local_taxi', 500000.00, 'VNĐ/chuyến', NULL, NULL, 1, 0, 12, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(13, 'Thuê xe tự lái', 'car-rental', 'transport', 'Cho thuê xe tự lái đa dạng dòng xe 4-7 chỗ.', 'Thuê xe tự lái 4-7 chỗ, xe mới, bảo hiểm đầy đủ', 'directions_car', 800000.00, 'VNĐ/ngày', NULL, NULL, 1, 0, 13, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(14, 'Trông trẻ', 'babysitting', 'other', 'Dịch vụ trông trẻ chuyên nghiệp, an toàn cho trẻ từ 6 tháng đến 12 tuổi.', 'Dịch vụ trông trẻ an toàn, chuyên nghiệp, giám sát camera', 'child_care', 100000.00, 'VNĐ/giờ', NULL, NULL, 1, 0, 14, '2025-11-18 18:34:50', '2025-11-18 18:34:50');
+INSERT INTO `services` (`service_id`, `service_name`, `service_name_en`, `slug`, `category`, `description`, `description_en`, `short_description`, `short_description_en`, `icon`, `price`, `price_unit`, `thumbnail`, `images`, `is_available`, `is_featured`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 'Tổ chức tiệc cưới', 'Wedding Services', 'wedding-service', 'event', 'Aurora Hotel Plaza tự hào là địa điểm tổ chức tiệc cưới hàng đầu tại Đồng Nai với sảnh tiệc sang trọng 500m², sức chứa lên đến 800 khách. Đội ngũ chuyên nghiệp với hơn 500 tiệc cưới thành công.', 'Complete wedding planning and hosting services with elegant venues.', 'Sảnh tiệc 500m², sức chứa 800 khách, dịch vụ trọn gói', 'Elegant wedding venues and planning', 'celebration', 0.00, 'Liên hệ', 'assets/img/post/wedding/Tiec-cuoi-tai-aurora-1.jpg', NULL, 1, 1, 1, '2025-11-18 18:34:50', '2025-12-14 08:26:08'),
+(2, 'Tổ chức hội nghị', 'Conference & Events', 'conference-service', 'event', 'Phòng hội nghị hiện đại với 5 phòng họp đa năng, sức chứa từ 20-300 người. Trang bị đầy đủ thiết bị hiện đại, WiFi tốc độ cao, dịch vụ coffee break và buffet.', 'Professional conference rooms and event spaces with full equipment.', 'Phòng họp hiện đại, thiết bị đầy đủ, WiFi tốc độ cao', 'Professional meeting spaces', 'meeting_room', 5000000.00, 'VNĐ', 'assets/img/post/conference/conference-1.jpg', NULL, 1, 1, 2, '2025-11-18 18:34:50', '2025-12-14 08:26:08'),
+(3, 'Nhà hàng Aurora', 'Aurora Restaurant', 'aurora-restaurant', 'restaurant', 'Nhà hàng sang trọng với sức chứa 200 khách, view thành phố tuyệt đẹp. Buffet đa dạng hơn 100 món Á-Âu: hải sản tươi sống, sushi Nhật Bản, BBQ Hàn Quốc, món Việt truyền thống.', 'Fine dining experience with Vietnamese and international cuisine.', 'Buffet 100+ món Á-Âu, view đẹp, đầu bếp 5 sao', 'Fine dining restaurant', 'restaurant', 350000.00, 'VNĐ/người', 'assets/img/post/restaurant/restaurant-1.jpg', NULL, 1, 1, 3, '2025-11-18 18:34:50', '2025-12-14 08:26:08'),
+(4, 'Văn phòng cho thuê', 'Office Rental', 'office-rental', 'other', 'Văn phòng hiện đại với 3 loại: Studio 20m², Standard 40m², Premium 80m². Đầy đủ nội thất, WiFi 1Gbps, phòng họp chung, bảo vệ 24/7.', 'Premium office spaces for rent with business amenities.', 'Văn phòng đầy đủ nội thất, WiFi 1Gbps, tiện ích đầy đủ', 'Premium office spaces', 'business_center', 8000000.00, 'VNĐ/tháng', 'assets/img/post/office/office-1.jpg', NULL, 1, 1, 4, '2025-11-18 18:34:50', '2025-12-14 08:26:08'),
+(5, 'Rooftop Bar', NULL, 'rooftop-bar', 'restaurant', 'Quầy bar tầng thượng với view 360 độ thành phố Biên Hòa. Không gian sang trọng, âm nhạc sống mỗi tối thứ 6-7. Menu cocktail đa dạng.', NULL, 'Bar tầng thượng, view 360°, cocktail đa dạng, nhạc sống', NULL, 'local_bar', 150000.00, 'VNĐ/ly', 'assets/img/post/restaurant/rooftop-bar-1.jpg', NULL, 1, 1, 5, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(6, 'Dịch vụ phòng 24/7', NULL, 'room-service-24-7', 'room_service', 'Dịch vụ phòng hoạt động 24/7 với thực đơn đa dạng hơn 50 món.', NULL, 'Gọi món ăn, đồ uống phục vụ tận phòng 24/7', NULL, 'room_service', 0.00, 'Miễn phí', NULL, NULL, 1, 0, 6, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(7, 'Dọn phòng hàng ngày', NULL, 'daily-housekeeping', 'room_service', 'Dịch vụ dọn phòng hàng ngày với đội ngũ chuyên nghiệp.', NULL, 'Dọn dẹp và thay đổi khăn giường mỗi ngày', NULL, 'cleaning_services', 0.00, 'Miễn phí', NULL, NULL, 1, 0, 7, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(8, 'Giặt ủi cao cấp', NULL, 'laundry-service', 'laundry', 'Dịch vụ giặt ủi chuyên nghiệp với máy móc hiện đại.', NULL, 'Giặt ủi quần áo chuyên nghiệp, giao nhận tận phòng', NULL, 'local_laundry_service', 50000.00, 'VNĐ/kg', NULL, NULL, 1, 0, 8, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(9, 'Massage trị liệu', NULL, 'therapeutic-massage', 'spa', 'Massage trị liệu chuyên sâu giúp giảm căng thẳng, đau nhức cơ bắp.', NULL, 'Massage thư giãn toàn thân với tinh dầu thiên nhiên', NULL, 'spa', 500000.00, 'VNĐ/60 phút', NULL, NULL, 1, 1, 9, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(10, 'Sauna & Jacuzzi', NULL, 'sauna-jacuzzi', 'spa', 'Phòng xông hơi khô và bồn tắm massage cao cấp.', NULL, 'Xông hơi khô và bồn tắm nước nóng massage', NULL, 'hot_tub', 300000.00, 'VNĐ/45 phút', NULL, NULL, 1, 0, 10, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(11, 'Hồ bơi & Gym', NULL, 'pool-gym', 'other', 'Hồ bơi ngoài trời 25m x 12m và phòng gym 200m² với trang thiết bị Technogym.', NULL, 'Hồ bơi ngoài trời và phòng gym hiện đại miễn phí', NULL, 'pool', 0.00, 'Miễn phí', NULL, NULL, 1, 1, 11, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(12, 'Đưa đón sân bay', NULL, 'airport-transfer', 'transport', 'Dịch vụ đưa đón sân bay Tân Sơn Nhất bằng xe sang.', NULL, 'Xe đưa đón sân bay Tân Sơn Nhất tiện lợi, an toàn', NULL, 'local_taxi', 500000.00, 'VNĐ/chuyến', NULL, NULL, 1, 0, 12, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(13, 'Thuê xe tự lái', NULL, 'car-rental', 'transport', 'Cho thuê xe tự lái đa dạng dòng xe 4-7 chỗ.', NULL, 'Thuê xe tự lái 4-7 chỗ, xe mới, bảo hiểm đầy đủ', NULL, 'directions_car', 800000.00, 'VNĐ/ngày', NULL, NULL, 1, 0, 13, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(14, 'Trông trẻ', NULL, 'babysitting', 'other', 'Dịch vụ trông trẻ chuyên nghiệp, an toàn cho trẻ từ 6 tháng đến 12 tuổi.', NULL, 'Dịch vụ trông trẻ an toàn, chuyên nghiệp, giám sát camera', NULL, 'child_care', 100000.00, 'VNĐ/giờ', NULL, NULL, 1, 0, 14, '2025-11-18 18:34:50', '2025-11-18 18:34:50');
 
 -- --------------------------------------------------------
 
@@ -1243,8 +1323,10 @@ CREATE TABLE `service_packages` (
   `package_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
   `package_name` varchar(200) NOT NULL,
+  `package_name_en` varchar(100) DEFAULT NULL,
   `slug` varchar(200) NOT NULL,
   `description` text DEFAULT NULL,
+  `description_en` text DEFAULT NULL,
   `features` text DEFAULT NULL COMMENT 'Danh sách tính năng, phân cách bởi dấu phẩy',
   `price` decimal(10,2) NOT NULL,
   `price_unit` varchar(50) DEFAULT 'VNĐ',
@@ -1259,19 +1341,19 @@ CREATE TABLE `service_packages` (
 -- Đang đổ dữ liệu cho bảng `service_packages`
 --
 
-INSERT INTO `service_packages` (`package_id`, `service_id`, `package_name`, `slug`, `description`, `features`, `price`, `price_unit`, `is_featured`, `is_available`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Gói Cơ bản', 'wedding-basic', 'Gói tiệc cưới cơ bản cho 200-300 khách.', 'Sảnh tiệc 200-300 khách,Trang trí cơ bản,Menu 8 món,Âm thanh ánh sáng,Bàn ghế tiêu chuẩn,Backdrop sân khấu', 15000000.00, 'VNĐ', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(2, 1, 'Gói Tiêu chuẩn', 'wedding-standard', 'Gói tiệc cưới tiêu chuẩn cho 400-500 khách.', 'Sảnh tiệc 400-500 khách,Trang trí theo chủ đề,Menu 10 món + tráng miệng,Âm thanh ánh sáng cao cấp,Bàn ghế VIP,Backdrop + Cổng hoa,MC chuyên nghiệp,Nhiếp ảnh cơ bản', 25000000.00, 'VNĐ', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(3, 1, 'Gói VIP', 'wedding-vip', 'Gói tiệc cưới VIP cho 600-800 khách.', 'Sảnh tiệc 600-800 khách,Trang trí sang trọng,Menu 12 món + buffet tráng miệng,Âm thanh ánh sáng 3D,Bàn ghế VIP cao cấp,Backdrop + Cổng hoa + Sân khấu,MC + Ban nhạc,Nhiếp ảnh + Quay phim,Trang điểm cô dâu,Xe hoa', 40000000.00, 'VNĐ', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(4, 3, 'Buffet Sáng', 'restaurant-breakfast', 'Buffet sáng với hơn 50 món Á - Âu.', 'Hơn 50 món ăn,Phở - Bún - Cháo,Bánh mì - Xúc xích,Trứng các loại,Hoa quả tươi,Nước ép - Cà phê,Thời gian: 6h-10h', 200000.00, 'VNĐ/người', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(5, 3, 'Buffet Trưa/Tối', 'restaurant-lunch-dinner', 'Buffet trưa hoặc tối với hơn 100 món.', 'Hơn 100 món ăn,Hải sản tươi sống,Sushi Nhật Bản,BBQ Hàn Quốc,Món Việt truyền thống,Món Âu cao cấp,Tráng miệng đa dạng,Nước uống không giới hạn', 350000.00, 'VNĐ/người', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(6, 3, 'Set Menu VIP', 'restaurant-set-menu', 'Set menu cao cấp phục vụ riêng.', 'Khai vị cao cấp,Súp đặc biệt,Món chính (Bò/Hải sản),Món phụ,Tráng miệng,Rượu vang,Phục vụ riêng tư,Không gian VIP', 800000.00, 'VNĐ/người', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(7, 2, 'Gói Nửa ngày', 'conference-half-day', 'Gói hội nghị nửa ngày (4 giờ) phù hợp cho 50-100 người.', 'Phòng họp 50-100 người,Projector + Màn hình,Micro không dây,WiFi miễn phí,Coffee break 1 lần,Bảng Flipchart', 6000000.00, 'VNĐ/4 giờ', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-19 00:16:32'),
-(8, 2, 'Gói Cả ngày', 'conference-full-day', 'Gói hội nghị cả ngày (8 giờ) cho 100-200 người.', 'Phòng họp 100-200 người,Màn hình LED lớn,Hệ thống âm thanh cao cấp,WiFi tốc độ cao,Coffee break 2 lần,Buffet trưa,Bảng Flipchart + Bút,Hỗ trợ kỹ thuật', 9000000.00, 'VNĐ/8 giờ', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(9, 2, 'Gói VIP', 'conference-vip', 'Gói hội nghị VIP cho 200-300 người.', 'Phòng hội nghị 200-300 người,Màn hình LED 3D,Âm thanh chuyên nghiệp,WiFi doanh nghiệp,Coffee break 3 lần,Buffet trưa + tối,Phòng VIP cho ban tổ chức,Ghi hình chuyên nghiệp,Hỗ trợ kỹ thuật 24/7', 15000000.00, 'VNĐ/ngày', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(10, 4, 'Studio 20m²', 'office-studio', 'Văn phòng Studio cho 2-3 người.', 'Diện tích 20m²,2-3 người,Bàn làm việc,Ghế ergonomic,Tủ tài liệu,Điều hòa,WiFi 1Gbps', 3000000.00, 'VNĐ/tháng', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(11, 4, 'Standard 40m²', 'office-standard', 'Văn phòng Standard cho 5-8 người.', 'Diện tích 40m²,5-8 người,Bàn làm việc,Ghế ergonomic,Tủ tài liệu,Điều hòa,WiFi 1Gbps,Phòng họp chung', 5500000.00, 'VNĐ/tháng', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
-(12, 4, 'Premium 80m²', 'office-premium', 'Văn phòng Premium cho 10-15 người.', 'Diện tích 80m²,10-15 người,Bàn làm việc cao cấp,Ghế ergonomic,Tủ tài liệu,Điều hòa trung tâm,WiFi 1Gbps,Phòng họp riêng,Khu pantry riêng', 8000000.00, 'VNĐ/tháng', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50');
+INSERT INTO `service_packages` (`package_id`, `service_id`, `package_name`, `package_name_en`, `slug`, `description`, `description_en`, `features`, `price`, `price_unit`, `is_featured`, `is_available`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Gói Cơ bản', NULL, 'wedding-basic', 'Gói tiệc cưới cơ bản cho 200-300 khách.', NULL, 'Sảnh tiệc 200-300 khách,Trang trí cơ bản,Menu 8 món,Âm thanh ánh sáng,Bàn ghế tiêu chuẩn,Backdrop sân khấu', 15000000.00, 'VNĐ', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(2, 1, 'Gói Tiêu chuẩn', NULL, 'wedding-standard', 'Gói tiệc cưới tiêu chuẩn cho 400-500 khách.', NULL, 'Sảnh tiệc 400-500 khách,Trang trí theo chủ đề,Menu 10 món + tráng miệng,Âm thanh ánh sáng cao cấp,Bàn ghế VIP,Backdrop + Cổng hoa,MC chuyên nghiệp,Nhiếp ảnh cơ bản', 25000000.00, 'VNĐ', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(3, 1, 'Gói VIP', NULL, 'wedding-vip', 'Gói tiệc cưới VIP cho 600-800 khách.', NULL, 'Sảnh tiệc 600-800 khách,Trang trí sang trọng,Menu 12 món + buffet tráng miệng,Âm thanh ánh sáng 3D,Bàn ghế VIP cao cấp,Backdrop + Cổng hoa + Sân khấu,MC + Ban nhạc,Nhiếp ảnh + Quay phim,Trang điểm cô dâu,Xe hoa', 40000000.00, 'VNĐ', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(4, 3, 'Buffet Sáng', NULL, 'restaurant-breakfast', 'Buffet sáng với hơn 50 món Á - Âu.', NULL, 'Hơn 50 món ăn,Phở - Bún - Cháo,Bánh mì - Xúc xích,Trứng các loại,Hoa quả tươi,Nước ép - Cà phê,Thời gian: 6h-10h', 200000.00, 'VNĐ/người', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(5, 3, 'Buffet Trưa/Tối', NULL, 'restaurant-lunch-dinner', 'Buffet trưa hoặc tối với hơn 100 món.', NULL, 'Hơn 100 món ăn,Hải sản tươi sống,Sushi Nhật Bản,BBQ Hàn Quốc,Món Việt truyền thống,Món Âu cao cấp,Tráng miệng đa dạng,Nước uống không giới hạn', 350000.00, 'VNĐ/người', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(6, 3, 'Set Menu VIP', NULL, 'restaurant-set-menu', 'Set menu cao cấp phục vụ riêng.', NULL, 'Khai vị cao cấp,Súp đặc biệt,Món chính (Bò/Hải sản),Món phụ,Tráng miệng,Rượu vang,Phục vụ riêng tư,Không gian VIP', 800000.00, 'VNĐ/người', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(7, 2, 'Gói Nửa ngày', NULL, 'conference-half-day', 'Gói hội nghị nửa ngày (4 giờ) phù hợp cho 50-100 người.', NULL, 'Phòng họp 50-100 người,Projector + Màn hình,Micro không dây,WiFi miễn phí,Coffee break 1 lần,Bảng Flipchart', 6000000.00, 'VNĐ/4 giờ', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-19 00:16:32'),
+(8, 2, 'Gói Cả ngày', NULL, 'conference-full-day', 'Gói hội nghị cả ngày (8 giờ) cho 100-200 người.', NULL, 'Phòng họp 100-200 người,Màn hình LED lớn,Hệ thống âm thanh cao cấp,WiFi tốc độ cao,Coffee break 2 lần,Buffet trưa,Bảng Flipchart + Bút,Hỗ trợ kỹ thuật', 9000000.00, 'VNĐ/8 giờ', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(9, 2, 'Gói VIP', NULL, 'conference-vip', 'Gói hội nghị VIP cho 200-300 người.', NULL, 'Phòng hội nghị 200-300 người,Màn hình LED 3D,Âm thanh chuyên nghiệp,WiFi doanh nghiệp,Coffee break 3 lần,Buffet trưa + tối,Phòng VIP cho ban tổ chức,Ghi hình chuyên nghiệp,Hỗ trợ kỹ thuật 24/7', 15000000.00, 'VNĐ/ngày', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(10, 4, 'Studio 20m²', NULL, 'office-studio', 'Văn phòng Studio cho 2-3 người.', NULL, 'Diện tích 20m²,2-3 người,Bàn làm việc,Ghế ergonomic,Tủ tài liệu,Điều hòa,WiFi 1Gbps', 3000000.00, 'VNĐ/tháng', 0, 1, 1, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(11, 4, 'Standard 40m²', NULL, 'office-standard', 'Văn phòng Standard cho 5-8 người.', NULL, 'Diện tích 40m²,5-8 người,Bàn làm việc,Ghế ergonomic,Tủ tài liệu,Điều hòa,WiFi 1Gbps,Phòng họp chung', 5500000.00, 'VNĐ/tháng', 1, 1, 2, '2025-11-18 18:34:50', '2025-11-18 18:34:50'),
+(12, 4, 'Premium 80m²', NULL, 'office-premium', 'Văn phòng Premium cho 10-15 người.', NULL, 'Diện tích 80m²,10-15 người,Bàn làm việc cao cấp,Ghế ergonomic,Tủ tài liệu,Điều hòa trung tâm,WiFi 1Gbps,Phòng họp riêng,Khu pantry riêng', 8000000.00, 'VNĐ/tháng', 1, 1, 3, '2025-11-18 18:34:50', '2025-11-18 18:34:50');
 
 -- --------------------------------------------------------
 
@@ -1317,6 +1399,23 @@ INSERT INTO `system_settings` (`setting_id`, `setting_key`, `setting_value`, `se
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `translations`
+--
+
+CREATE TABLE `translations` (
+  `id` int(11) NOT NULL,
+  `table_name` varchar(50) NOT NULL,
+  `record_id` int(11) NOT NULL,
+  `field_name` varchar(50) NOT NULL,
+  `language_code` varchar(5) NOT NULL DEFAULT 'en',
+  `translated_text` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `users`
 --
 
@@ -1335,17 +1434,22 @@ CREATE TABLE `users` (
   `email_verified` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `last_login` timestamp NULL DEFAULT NULL
+  `last_login` timestamp NULL DEFAULT NULL,
+  `temp_password` varchar(255) DEFAULT NULL,
+  `temp_password_expires` timestamp NULL DEFAULT NULL,
+  `requires_password_change` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`) VALUES
-(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-14 04:45:07', '2025-12-14 04:45:07'),
-(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-14 04:42:36', '2025-12-14 04:42:36'),
-(4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL);
+INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`, `temp_password`, `temp_password_expires`, `requires_password_change`) VALUES
+(1, 'admin@aurorahotelplaza.com', '$2y$10$QWGNpc5O6bZFNMNmvNjt/u23mxN1VQCupiIuHbKu3khVse0U6lwl6', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-14 04:27:35', '2025-12-14 09:17:55', '2025-12-14 09:17:55', NULL, NULL, 0),
+(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-14 23:56:44', '2025-12-14 23:56:44', NULL, NULL, 0),
+(4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL, NULL, NULL, 0),
+(5, '15.lequanglong@gmail.com', '$2y$10$/hqCPtwg7jUCSes5mkbD8eG2.YU5/FFf3FPjOkuyFH9OmZL3LEy6K', 'Long meo meo', '0987654321', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-15 02:56:41', '2025-12-15 02:56:30', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
+(6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 03:38:15', '2025-12-15 03:38:15', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1371,7 +1475,9 @@ CREATE TABLE `user_loyalty` (
 INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime_points`, `tier_id`, `tier_updated_at`, `created_at`, `updated_at`) VALUES
 (1, 1, 0, 0, NULL, NULL, '2025-12-14 03:53:00', '2025-12-14 04:22:12'),
 (3, 3, 0, 0, NULL, NULL, '2025-12-14 04:08:07', '2025-12-14 04:22:12'),
-(4, 4, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:22:12');
+(4, 4, 0, 0, NULL, NULL, '2025-12-14 04:13:48', '2025-12-14 04:22:12'),
+(11, 5, 450, 450, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 03:56:38'),
+(12, 6, 0, 0, NULL, NULL, '2025-12-15 03:37:57', '2025-12-15 03:37:57');
 
 -- --------------------------------------------------------
 
@@ -1463,11 +1569,25 @@ ALTER TABLE `activity_logs`
   ADD PRIMARY KEY (`log_id`);
 
 --
+-- Chỉ mục cho bảng `amenities`
+--
+ALTER TABLE `amenities`
+  ADD PRIMARY KEY (`amenity_id`);
+
+--
 -- Chỉ mục cho bảng `contact_submissions`
 --
 ALTER TABLE `contact_submissions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_contact_user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `translations`
+--
+ALTER TABLE `translations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_translation` (`table_name`,`record_id`,`field_name`,`language_code`),
+  ADD KEY `idx_lookup` (`table_name`,`record_id`,`language_code`);
 
 --
 -- Chỉ mục cho bảng `users`
@@ -1491,7 +1611,13 @@ ALTER TABLE `user_loyalty`
 -- AUTO_INCREMENT cho bảng `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+
+--
+-- AUTO_INCREMENT cho bảng `amenities`
+--
+ALTER TABLE `amenities`
+  MODIFY `amenity_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `contact_submissions`
@@ -1500,16 +1626,22 @@ ALTER TABLE `contact_submissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT cho bảng `translations`
+--
+ALTER TABLE `translations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `user_loyalty`
 --
 ALTER TABLE `user_loyalty`
-  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
