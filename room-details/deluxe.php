@@ -35,9 +35,7 @@ initLanguage();
             <div class="room-info-section">
                 <div class="room-content">
                     <p class="room-description">
-                        Phòng Deluxe rộng 35m² được thiết kế hiện đại với giường King size cao cấp, tầm nhìn thành phố tuyệt đẹp. 
-                        Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng, minibar, két an toàn và phòng tắm riêng với 
-                        vòi sen massage. Đây là lựa chọn hoàn hảo cho cặp đôi hoặc khách công tác.
+                        <?php _e('room_detail.deluxe_desc'); ?>
                     </p>
 
                     <div class="room-specs">

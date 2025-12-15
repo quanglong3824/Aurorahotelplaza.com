@@ -1,11 +1,13 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
-$page_title = 'Chính sách hủy phòng';
+$page_title = __('cancellation.title');
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -26,10 +28,10 @@ $page_title = 'Chính sách hủy phòng';
         <div class="policy-hero-content">
             <span class="glass-badge-accent mb-4">
                 <span class="material-symbols-outlined text-accent">event_busy</span>
-                Chính sách hủy & hoàn tiền
+                <?php _e('cancellation.badge'); ?>
             </span>
-            <h1 class="policy-hero-title">Chính sách hủy phòng</h1>
-            <p class="policy-hero-subtitle">Quy định về hủy đặt phòng và hoàn tiền tại Aurora Hotel Plaza</p>
+            <h1 class="policy-hero-title"><?php _e('cancellation.title'); ?></h1>
+            <p class="policy-hero-subtitle"><?php _e('cancellation.subtitle'); ?></p>
         </div>
     </section>
 
@@ -41,10 +43,9 @@ $page_title = 'Chính sách hủy phòng';
                 <div class="flex items-start gap-4">
                     <span class="material-symbols-outlined text-accent text-3xl">info</span>
                     <div>
-                        <h3 class="font-bold text-lg mb-2">Lưu ý quan trọng</h3>
+                        <h3 class="font-bold text-lg mb-2"><?php _e('cancellation.important_notice'); ?></h3>
                         <p class="text-text-secondary-light dark:text-text-secondary-dark">
-                            Chính sách hủy phòng có thể khác nhau tùy theo loại phòng, chương trình khuyến mãi và thời điểm đặt phòng. 
-                            Vui lòng kiểm tra kỹ điều kiện hủy phòng trước khi xác nhận đặt phòng.
+                            <?php _e('cancellation.notice_text'); ?>
                         </p>
                     </div>
                 </div>
@@ -52,39 +53,39 @@ $page_title = 'Chính sách hủy phòng';
 
             <!-- Cancellation Timeline -->
             <div class="mb-12">
-                <h2 class="font-display text-2xl font-bold mb-6 text-center">Biểu đồ hoàn tiền</h2>
+                <h2 class="font-display text-2xl font-bold mb-6 text-center"><?php _e('cancellation.refund_chart'); ?></h2>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="cancellation-card cancellation-full">
                         <div class="cancellation-icon">
                             <span class="material-symbols-outlined">sentiment_very_satisfied</span>
                         </div>
-                        <div class="cancellation-time">≥ 7 ngày</div>
+                        <div class="cancellation-time"><?php _e('cancellation.days_7plus'); ?></div>
                         <div class="cancellation-percent">100%</div>
-                        <div class="cancellation-label">Hoàn tiền đầy đủ</div>
+                        <div class="cancellation-label"><?php _e('cancellation.full_refund'); ?></div>
                     </div>
                     <div class="cancellation-card cancellation-high">
                         <div class="cancellation-icon">
                             <span class="material-symbols-outlined">sentiment_satisfied</span>
                         </div>
-                        <div class="cancellation-time">3-6 ngày</div>
+                        <div class="cancellation-time"><?php _e('cancellation.days_3_6'); ?></div>
                         <div class="cancellation-percent">70%</div>
-                        <div class="cancellation-label">Hoàn 70% tiền cọc</div>
+                        <div class="cancellation-label"><?php _e('cancellation.refund_70'); ?></div>
                     </div>
                     <div class="cancellation-card cancellation-medium">
                         <div class="cancellation-icon">
                             <span class="material-symbols-outlined">sentiment_neutral</span>
                         </div>
-                        <div class="cancellation-time">1-2 ngày</div>
+                        <div class="cancellation-time"><?php _e('cancellation.days_1_2'); ?></div>
                         <div class="cancellation-percent">50%</div>
-                        <div class="cancellation-label">Hoàn 50% tiền cọc</div>
+                        <div class="cancellation-label"><?php _e('cancellation.refund_50'); ?></div>
                     </div>
                     <div class="cancellation-card cancellation-none">
                         <div class="cancellation-icon">
                             <span class="material-symbols-outlined">sentiment_dissatisfied</span>
                         </div>
-                        <div class="cancellation-time">< 24 giờ</div>
+                        <div class="cancellation-time"><?php _e('cancellation.hours_24'); ?></div>
                         <div class="cancellation-percent">0%</div>
-                        <div class="cancellation-label">Không hoàn tiền</div>
+                        <div class="cancellation-label"><?php _e('cancellation.no_refund'); ?></div>
                     </div>
                 </div>
             </div>
@@ -94,38 +95,38 @@ $page_title = 'Chính sách hủy phòng';
                 <div id="chinh-sach-chung" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">1</span>
-                        Chính sách hủy phòng tiêu chuẩn
+                        <?php _e('cancellation.section1_title'); ?>
                     </h2>
                     <div class="policy-section-content">
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse">
                                 <thead>
                                     <tr class="bg-accent/10">
-                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30">Thời gian hủy</th>
-                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30">Phí hủy</th>
-                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30">Hoàn tiền</th>
+                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30"><?php _e('cancellation.cancel_time'); ?></th>
+                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30"><?php _e('cancellation.cancel_fee'); ?></th>
+                                        <th class="p-4 text-left font-bold border-b-2 border-accent/30"><?php _e('cancellation.refund'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
-                                        <td class="p-4">Trước 7 ngày hoặc hơn</td>
-                                        <td class="p-4 text-green-600 font-semibold">Miễn phí</td>
-                                        <td class="p-4">100% tiền cọc</td>
+                                        <td class="p-4"><?php _e('cancellation.before_7days'); ?></td>
+                                        <td class="p-4 text-green-600 font-semibold"><?php _e('cancellation.free'); ?></td>
+                                        <td class="p-4"><?php _e('cancellation.deposit_100'); ?></td>
                                     </tr>
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
-                                        <td class="p-4">Trước 3-6 ngày</td>
-                                        <td class="p-4 text-yellow-600 font-semibold">30% tiền cọc</td>
-                                        <td class="p-4">70% tiền cọc</td>
+                                        <td class="p-4"><?php _e('cancellation.before_3_6days'); ?></td>
+                                        <td class="p-4 text-yellow-600 font-semibold"><?php _e('cancellation.deposit_30'); ?></td>
+                                        <td class="p-4"><?php _e('cancellation.deposit_70'); ?></td>
                                     </tr>
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
-                                        <td class="p-4">Trước 1-2 ngày</td>
-                                        <td class="p-4 text-orange-600 font-semibold">50% tiền cọc</td>
-                                        <td class="p-4">50% tiền cọc</td>
+                                        <td class="p-4"><?php _e('cancellation.before_1_2days'); ?></td>
+                                        <td class="p-4 text-orange-600 font-semibold"><?php _e('cancellation.deposit_50'); ?></td>
+                                        <td class="p-4"><?php _e('cancellation.deposit_50'); ?></td>
                                     </tr>
                                     <tr>
-                                        <td class="p-4">Trong vòng 24 giờ / No-show</td>
-                                        <td class="p-4 text-red-600 font-semibold">100% tiền cọc</td>
-                                        <td class="p-4">Không hoàn tiền</td>
+                                        <td class="p-4"><?php _e('cancellation.within_24h'); ?></td>
+                                        <td class="p-4 text-red-600 font-semibold"><?php _e('cancellation.deposit_100'); ?></td>
+                                        <td class="p-4"><?php _e('cancellation.no_refund'); ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -136,49 +137,41 @@ $page_title = 'Chính sách hủy phòng';
                 <div id="loai-gia" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">2</span>
-                        Chính sách theo loại giá
+                        <?php _e('cancellation.section2_title'); ?>
                     </h2>
                     <div class="policy-section-content">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="glass-card-solid p-6">
                                 <div class="flex items-center gap-3 mb-4">
                                     <span class="material-symbols-outlined text-green-500 text-2xl">check_circle</span>
-                                    <h4 class="font-bold text-lg">Giá linh hoạt (Flexible Rate)</h4>
+                                    <h4 class="font-bold text-lg"><?php _e('cancellation.flexible_rate'); ?></h4>
                                 </div>
                                 <ul class="space-y-2 text-sm">
+                                    <?php foreach(explode('|', __('cancellation.flexible_items')) as $item): ?>
                                     <li class="flex items-start gap-2">
                                         <span class="text-green-500">✓</span>
-                                        Hủy miễn phí trước 24 giờ
+                                        <?php echo $item; ?>
                                     </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-500">✓</span>
-                                        Thay đổi ngày linh hoạt
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-500">✓</span>
-                                        Hoàn tiền đầy đủ nếu hủy đúng hạn
-                                    </li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </div>
                             
                             <div class="glass-card-solid p-6">
                                 <div class="flex items-center gap-3 mb-4">
                                     <span class="material-symbols-outlined text-red-500 text-2xl">lock</span>
-                                    <h4 class="font-bold text-lg">Giá không hoàn tiền (Non-refundable)</h4>
+                                    <h4 class="font-bold text-lg"><?php _e('cancellation.non_refundable'); ?></h4>
                                 </div>
                                 <ul class="space-y-2 text-sm">
+                                    <?php 
+                                    $items = explode('|', __('cancellation.non_refundable_items'));
+                                    foreach($items as $i => $item): 
+                                        $isPositive = ($i == count($items) - 1);
+                                    ?>
                                     <li class="flex items-start gap-2">
-                                        <span class="text-red-500">✗</span>
-                                        Không được hủy hoặc thay đổi
+                                        <span class="<?php echo $isPositive ? 'text-green-500' : 'text-red-500'; ?>"><?php echo $isPositive ? '✓' : '✗'; ?></span>
+                                        <?php echo $item; ?>
                                     </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-red-500">✗</span>
-                                        Không hoàn tiền trong mọi trường hợp
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-green-500">✓</span>
-                                        Giá ưu đãi hơn 15-20%
-                                    </li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </div>
                         </div>
@@ -188,25 +181,24 @@ $page_title = 'Chính sách hủy phòng';
                 <div id="mua-cao-diem" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">3</span>
-                        Chính sách mùa cao điểm
+                        <?php _e('cancellation.section3_title'); ?>
                     </h2>
                     <div class="policy-section-content">
                         <div class="glass-card-accent p-6 mb-4">
-                            <h4 class="font-bold mb-3">Các dịp cao điểm áp dụng chính sách đặc biệt:</h4>
+                            <h4 class="font-bold mb-3"><?php _e('cancellation.peak_season_intro'); ?></h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="glass-badge-solid">Giáng sinh (20-26/12)</span>
-                                <span class="glass-badge-solid">Tết Dương lịch (30/12-2/1)</span>
-                                <span class="glass-badge-solid">Tết Nguyên đán</span>
-                                <span class="glass-badge-solid">Lễ 30/4 - 1/5</span>
-                                <span class="glass-badge-solid">🇻Quốc khánh 2/9</span>
+                                <span class="glass-badge-solid"><?php _e('cancellation.christmas'); ?></span>
+                                <span class="glass-badge-solid"><?php _e('cancellation.new_year'); ?></span>
+                                <span class="glass-badge-solid"><?php _e('cancellation.lunar_new_year'); ?></span>
+                                <span class="glass-badge-solid"><?php _e('cancellation.april_may'); ?></span>
+                                <span class="glass-badge-solid"><?php _e('cancellation.national_day'); ?></span>
                             </div>
                         </div>
-                        <p><strong>Trong mùa cao điểm:</strong></p>
+                        <p><strong><?php _e('cancellation.peak_policy'); ?></strong></p>
                         <ul>
-                            <li>Yêu cầu đặt cọc 100% khi đặt phòng</li>
-                            <li>Hủy trước 14 ngày: Hoàn 100%</li>
-                            <li>Hủy trước 7-13 ngày: Hoàn 50%</li>
-                            <li>Hủy trong vòng 7 ngày: Không hoàn tiền</li>
+                            <?php foreach(explode('|', __('cancellation.peak_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -214,26 +206,28 @@ $page_title = 'Chính sách hủy phòng';
                 <div id="thay-doi" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">4</span>
-                        Thay đổi đặt phòng
+                        <?php _e('cancellation.section4_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <h4>4.1. Thay đổi ngày lưu trú</h4>
+                        <h4>4.1. <?php _e('cancellation.change_date'); ?></h4>
                         <ul>
-                            <li>Miễn phí thay đổi nếu thông báo trước 48 giờ</li>
-                            <li>Phụ thuộc vào tình trạng phòng trống</li>
-                            <li>Chênh lệch giá (nếu có) sẽ được tính thêm hoặc hoàn lại</li>
+                            <?php foreach(explode('|', __('cancellation.change_date_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                         
-                        <h4>4.2. Thay đổi loại phòng</h4>
+                        <h4>4.2. <?php _e('cancellation.change_room'); ?></h4>
                         <ul>
-                            <li>Nâng cấp phòng: Thanh toán phần chênh lệch</li>
-                            <li>Hạ cấp phòng: Hoàn lại phần chênh lệch (trừ phí xử lý 5%)</li>
+                            <?php foreach(explode('|', __('cancellation.change_room_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
 
-                        <h4>4.3. Rút ngắn thời gian lưu trú</h4>
+                        <h4>4.3. <?php _e('cancellation.shorten_stay'); ?></h4>
                         <ul>
-                            <li>Thông báo trước 24 giờ: Hoàn tiền các đêm không sử dụng</li>
-                            <li>Không thông báo: Tính phí 1 đêm cho mỗi đêm hủy</li>
+                            <?php foreach(explode('|', __('cancellation.shorten_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -241,7 +235,7 @@ $page_title = 'Chính sách hủy phòng';
                 <div id="hoan-tien" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">5</span>
-                        Quy trình hoàn tiền
+                        <?php _e('cancellation.section5_title'); ?>
                     </h2>
                     <div class="policy-section-content">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -249,49 +243,48 @@ $page_title = 'Chính sách hủy phòng';
                                 <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-accent/20 flex items-center justify-center">
                                     <span class="text-accent font-bold text-xl">1</span>
                                 </div>
-                                <h5 class="font-bold mb-2">Gửi yêu cầu</h5>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Liên hệ qua email hoặc hotline</p>
+                                <h5 class="font-bold mb-2"><?php _e('cancellation.step1'); ?></h5>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('cancellation.step1_desc'); ?></p>
                             </div>
                             <div class="glass-card-solid p-4 text-center">
                                 <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-accent/20 flex items-center justify-center">
                                     <span class="text-accent font-bold text-xl">2</span>
                                 </div>
-                                <h5 class="font-bold mb-2">Xác nhận</h5>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Nhận email xác nhận trong 24h</p>
+                                <h5 class="font-bold mb-2"><?php _e('cancellation.step2'); ?></h5>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('cancellation.step2_desc'); ?></p>
                             </div>
                             <div class="glass-card-solid p-4 text-center">
                                 <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-accent/20 flex items-center justify-center">
                                     <span class="text-accent font-bold text-xl">3</span>
                                 </div>
-                                <h5 class="font-bold mb-2">Hoàn tiền</h5>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">5-10 ngày làm việc</p>
+                                <h5 class="font-bold mb-2"><?php _e('cancellation.step3'); ?></h5>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('cancellation.step3_desc'); ?></p>
                             </div>
                         </div>
                         
-                        <h4>Phương thức hoàn tiền:</h4>
+                        <h4><?php _e('cancellation.refund_method'); ?></h4>
                         <ul>
-                          <li><strong>Thẻ tín dụng/ghi nợ:</strong> Hoàn về thẻ gốc trong 5-10 ngày việc</li>
-                            <li><strong>Chuyển khoản:</strong> Hoàn về tài khoản trong 3-5 ngày làm việc</li>
-                            <li><strong>Tiền mặt:</strong> Nhận tại quầy lễ tân hoặc chuyển khoản</li>
-                        </ul            </div>
+                            <li><?php _e('cancellation.refund_card'); ?></li>
+                            <li><?php _e('cancellation.refund_transfer'); ?></li>
+                            <li><?php _e('cancellation.refund_cash'); ?></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div id="bat-kha-khang" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">6</span>
-                        Trường hợp bất khả kháng
+                        <?php _e('cancellation.section6_title'); ?>
                     </h2>
-         <div class="policy-section-content">
-                        <p>Trong các trường hợp bất khả kháng sau, khách sạn sẽ hoàn tiền 100% hoặc cho phép đổi ngày miễn phí:</p>
-                <ul>
-                     <li>Thiên tai (bão, lũ lụt, động đất...)</li>
-                            <li>Dịch bệnh được công bố bởi cơ quan y tế</li>
-                            <li>Hạn chế di chuyển do chính phủ ban hành</li>
-                            <li>Sự cố nghiêm trọng tại khách sạn</li>
+                    <div class="policy-section-content">
+                        <p><?php _e('cancellation.force_majeure_intro'); ?></p>
+                        <ul>
+                            <?php foreach(explode('|', __('cancellation.force_majeure_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                         <p class="mt-4">
-                            <strong>Lưu ý:</strong> Quý khách cần cung cấp bằng chứng liên quan (vé máy bay bị hủy, giấy xác nhận y tế...) 
-                            để được xem xét hoàn tiền theo chính sách bất khả kháng.
+                            <?php _e('cancellation.force_majeure_note'); ?>
                         </p>
                     </div>
                 </div>
@@ -300,11 +293,11 @@ $page_title = 'Chính sách hủy phòng';
                 <div class="glass-card-solid p-6 mt-8">
                     <h3 class="font-bold text-xl mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined text-accent">support_agent</span>
-                        Liên hệ hỗ trợ hủy phòng
+                        <?php _e('cancellation.contact_support'); ?>
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <p class="mb-4">Để hủy hoặc thay đổi đặt phòng, vui lòng liên hệ:</p>
+                            <p class="mb-4"><?php _e('cancellation.contact_intro'); ?></p>
                             <div class="space-y-3">
                                 <p class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-accent">phone</span>
@@ -316,29 +309,19 @@ $page_title = 'Chính sách hủy phòng';
                                 </p>
                                 <p class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-accent">schedule</span>
-                                    <span>Hỗ trợ 24/7</span>
+                                    <span><?php _e('cancellation.support_24_7'); ?></span>
                                 </p>
                             </div>
                         </div>
                         <div>
-                            <p class="mb-4">Thông tin cần cung cấp khi hủy phòng:</p>
+                            <p class="mb-4"><?php _e('cancellation.info_required'); ?></p>
                             <ul class="space-y-2 text-sm">
+                                <?php foreach(explode('|', __('cancellation.info_items')) as $item): ?>
                                 <li class="flex items-center gap-2">
                                     <span class="text-accent">•</span>
-                                    Mã đặt phòng (Booking ID)
+                                    <?php echo $item; ?>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-accent">•</span>
-                                    Họ tên người đặt phòng
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-accent">•</span>
-                                    Số điện thoại/Email đăng ký
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-accent">•</span>
-                                    Lý do hủy phòng
-                                </li>
+                                <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>

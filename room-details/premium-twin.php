@@ -23,9 +23,9 @@ initLanguage();
     <section class="page-header-room" style="background-image: url('../assets/img/premium twin/PREMIUM-DELUXE-TWIN-AURORA-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
-            <span class="room-badge-header">Linh hoạt</span>
-            <h1 class="page-title">Phòng Premium Twin</h1>
-            <p class="page-subtitle">Hai giường đơn cao cấp, lý tưởng cho bạn bè hoặc đồng nghiệp</p>
+            <span class="room-badge-header"><?php _e('room_detail.premium_twin_badge'); ?></span>
+            <h1 class="page-title"><?php _e('room_detail.premium_twin_name'); ?></h1>
+            <p class="page-subtitle"><?php _e('room_detail.premium_twin_subtitle'); ?></p>
         </div>
     </section>
 
@@ -35,9 +35,7 @@ initLanguage();
             <div class="room-info-section">
                 <div class="room-content">
                     <p class="room-description">
-                        Phòng Premium Twin rộng 42m² được thiết kế hiện đại với 2 giường đơn cao cấp, tầm nhìn thành phố đẹp. 
-                        Phòng được trang bị đầy đủ tiện nghi như TV màn hình phẳng 50", minibar, két an toàn và phòng tắm riêng với 
-                        vòi sen massage. Đây là lựa chọn hoàn hảo cho bạn bè, đồng nghiệp hoặc gia đình có trẻ em.
+                        <?php _e('room_detail.premium_twin_desc'); ?>
                     </p>
 
                     <div class="room-specs">
@@ -82,18 +80,18 @@ initLanguage();
                     <div class="amenities-section">
                         <h3 class="section-title"><?php _e('room_detail.amenities'); ?></h3>
                         <div class="amenities-grid">
-                            <div class="amenity-item">WiFi miễn phí tốc độ cao</div>
-                            <div class="amenity-item">TV màn hình phẳng 50"</div>
-                            <div class="amenity-item">Điều hòa nhiệt độ</div>
-                            <div class="amenity-item">Minibar đầy đủ</div>
-                            <div class="amenity-item">Két an toàn</div>
-                            <div class="amenity-item">2 Bàn làm việc</div>
-                            <div class="amenity-item">Phòng tắm riêng</div>
-                            <div class="amenity-item">Vòi sen massage</div>
-                            <div class="amenity-item">Máy sấy tóc</div>
-                            <div class="amenity-item">Đồ vệ sinh cá nhân</div>
-                            <div class="amenity-item">Dép đi trong phòng</div>
-                            <div class="amenity-item">Ấm đun nước</div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_wifi'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_tv'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_ac'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_minibar'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_safe'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_desk'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_bathroom'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_shower'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_hairdryer'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_toiletries'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_slippers'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_kettle'); ?></div>
                         </div>
                     </div>
                 </div>

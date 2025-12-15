@@ -1,11 +1,13 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
-$page_title = 'Chính sách bảo mật';
+$page_title = __('privacy.title');
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -27,10 +29,10 @@ $page_title = 'Chính sách bảo mật';
         <div class="policy-hero-content">
             <span class="glass-badge-accent mb-4">
                 <span class="material-symbols-outlined text-accent">security</span>
-                Bảo mật thông tin
+                <?php _e('privacy.badge'); ?>
             </span>
-            <h1 class="policy-hero-title">Chính sách bảo mật</h1>
-            <p class="policy-hero-subtitle">Cam kết bảo vệ thông tin cá nhân của quý khách</p>
+            <h1 class="policy-hero-title"><?php _e('privacy.title'); ?></h1>
+            <p class="policy-hero-subtitle"><?php _e('privacy.subtitle'); ?></p>
         </div>
     </section>
 
@@ -41,16 +43,16 @@ $page_title = 'Chính sách bảo mật';
             <div class="glass-card-solid p-6 mb-8">
                 <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
                     <span class="material-symbols-outlined text-accent">menu_book</span>
-                    Mục lục
+                    <?php _e('privacy.toc'); ?>
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <a href="#thu-thap" class="policy-nav-link">1. Thu thập thông tin</a>
-                    <a href="#su-dung" class="policy-nav-link">2. Sử dụng thông tin</a>
-                    <a href="#bao-mat" class="policy-nav-link">3. Bảo mật thông tin</a>
-                    <a href="#chia-se" class="policy-nav-link">4. Chia sẻ thông tin</a>
-                    <a href="#cookie" class="policy-nav-link">5. Cookie và công nghệ</a>
-                    <a href="#quyen-loi" class="policy-nav-link">6. Quyền của khách hàng</a>
-                    <a href="#lien-he" class="policy-nav-link">7. Liên hệ</a>
+                    <a href="#thu-thap" class="policy-nav-link">1. <?php _e('privacy.section1_title'); ?></a>
+                    <a href="#su-dung" class="policy-nav-link">2. <?php _e('privacy.section2_title'); ?></a>
+                    <a href="#bao-mat" class="policy-nav-link">3. <?php _e('privacy.section3_title'); ?></a>
+                    <a href="#chia-se" class="policy-nav-link">4. <?php _e('privacy.section4_title'); ?></a>
+                    <a href="#cookie" class="policy-nav-link">5. <?php _e('privacy.section5_title'); ?></a>
+                    <a href="#quyen-loi" class="policy-nav-link">6. <?php _e('privacy.section6_title'); ?></a>
+                    <a href="#lien-he" class="policy-nav-link">7. <?php _e('privacy.section7_title'); ?></a>
                 </div>
             </div>
 
@@ -58,43 +60,37 @@ $page_title = 'Chính sách bảo mật';
             <div class="policy-content">
                 <div class="policy-intro glass-card-solid p-6 mb-8">
                     <p class="text-lg leading-relaxed">
-                        Aurora Hotel Plaza cam kết bảo vệ quyền riêng tư và thông tin cá nhân của quý khách. 
-                        Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin 
-                        của quý khách khi sử dụng dịch vụ tại khách sạn và website của chúng tôi.
+                        <?php _e('privacy.intro'); ?>
                     </p>
                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-4">
-                        <strong>Cập nhật lần cuối:</strong> 01/12/2025
+                        <strong><?php _e('privacy.last_updated'); ?>:</strong> 01/12/2025
                     </p>
                 </div>
 
                 <div id="thu-thap" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">1</span>
-                        Thu thập thông tin
+                        <?php _e('privacy.section1_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Chúng tôi thu thập các loại thông tin sau:</p>
-                        <h4>1.1. Thông tin cá nhân</h4>
+                        <p><?php _e('privacy.section1_intro'); ?></p>
+                        <h4>1.1. <?php _e('privacy.section1_1'); ?></h4>
                         <ul>
-                            <li>Họ và tên đầy đủ</li>
-                            <li>Số điện thoại liên hệ</li>
-                            <li>Địa chỉ email</li>
-                            <li>Số CMND/CCCD/Hộ chiếu</li>
-                            <li>Địa chỉ thường trú</li>
-                            <li>Ngày sinh</li>
+                            <?php foreach(explode('|', __('privacy.section1_1_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
-                        <h4>1.2. Thông tin đặt phòng</h4>
+                        <h4>1.2. <?php _e('privacy.section1_2'); ?></h4>
                         <ul>
-                            <li>Ngày nhận phòng và trả phòng</li>
-                            <li>Loại phòng và dịch vụ yêu cầu</li>
-                            <li>Số lượng khách lưu trú</li>
-                            <li>Yêu cầu đặc biệt (nếu có)</li>
+                            <?php foreach(explode('|', __('privacy.section1_2_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
-                        <h4>1.3. Thông tin thanh toán</h4>
+                        <h4>1.3. <?php _e('privacy.section1_3'); ?></h4>
                         <ul>
-                            <li>Thông tin thẻ tín dụng/ghi nợ (được mã hóa)</li>
-                            <li>Lịch sử giao dịch</li>
-                            <li>Hóa đơn và biên lai</li>
+                            <?php foreach(explode('|', __('privacy.section1_3_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -102,17 +98,16 @@ $page_title = 'Chính sách bảo mật';
                 <div id="su-dung" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">2</span>
-                        Sử dụng thông tin
+                        <?php _e('privacy.section2_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Thông tin của quý khách được sử dụng cho các mục đích:</p>
+                        <p><?php _e('privacy.section2_intro'); ?></p>
                         <ul>
-                            <li><strong>Xử lý đặt phòng:</strong> Xác nhận và quản lý đặt phòng của quý khách</li>
-                            <li><strong>Cung cấp dịch vụ:</strong> Đảm bảo trải nghiệm lưu trú tốt nhất</li>
-                            <li><strong>Liên lạc:</strong> Gửi xác nhận, thông báo và hỗ trợ khách hàng</li>
-                            <li><strong>Cải thiện dịch vụ:</strong> Phân tích và nâng cao chất lượng phục vụ</li>
-                            <li><strong>Marketing:</strong> Gửi ưu đãi và khuyến mãi (với sự đồng ý của quý khách)</li>
-                            <li><strong>Tuân thủ pháp luật:</strong> Đáp ứng yêu cầu của cơ quan chức năng</li>
+                            <?php foreach(explode('|', __('privacy.section2_items')) as $item): 
+                                $parts = explode(': ', $item, 2);
+                            ?>
+                            <li><strong><?php echo $parts[0]; ?>:</strong> <?php echo $parts[1] ?? ''; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -120,30 +115,30 @@ $page_title = 'Chính sách bảo mật';
                 <div id="bao-mat" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">3</span>
-                        Bảo mật thông tin
+                        <?php _e('privacy.section3_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Chúng tôi áp dụng các biện pháp bảo mật nghiêm ngặt:</p>
+                        <p><?php _e('privacy.section3_intro'); ?></p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div class="glass-card-solid p-4">
                                 <span class="material-symbols-outlined text-accent text-2xl mb-2">encrypted</span>
-                                <h4 class="font-bold mb-1">Mã hóa SSL/TLS</h4>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tất cả dữ liệu được mã hóa khi truyền tải</p>
+                                <h4 class="font-bold mb-1"><?php _e('privacy.ssl_title'); ?></h4>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('privacy.ssl_desc'); ?></p>
                             </div>
                             <div class="glass-card-solid p-4">
                                 <span class="material-symbols-outlined text-accent text-2xl mb-2">shield</span>
-                                <h4 class="font-bold mb-1">Firewall bảo vệ</h4>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Hệ thống tường lửa chống xâm nhập</p>
+                                <h4 class="font-bold mb-1"><?php _e('privacy.firewall_title'); ?></h4>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('privacy.firewall_desc'); ?></p>
                             </div>
                             <div class="glass-card-solid p-4">
                                 <span class="material-symbols-outlined text-accent text-2xl mb-2">lock</span>
-                                <h4 class="font-bold mb-1">Kiểm soát truy cập</h4>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Chỉ nhân viên được ủy quyền mới truy cập</p>
+                                <h4 class="font-bold mb-1"><?php _e('privacy.access_title'); ?></h4>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('privacy.access_desc'); ?></p>
                             </div>
                             <div class="glass-card-solid p-4">
                                 <span class="material-symbols-outlined text-accent text-2xl mb-2">backup</span>
-                                <h4 class="font-bold mb-1">Sao lưu định kỳ</h4>
-                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Dữ liệu được sao lưu an toàn hàng ngày</p>
+                                <h4 class="font-bold mb-1"><?php _e('privacy.backup_title'); ?></h4>
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('privacy.backup_desc'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -152,14 +147,14 @@ $page_title = 'Chính sách bảo mật';
                 <div id="chia-se" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">4</span>
-                        Chia sẻ thông tin
+                        <?php _e('privacy.section4_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Chúng tôi <strong>không bán</strong> thông tin cá nhân của quý khách. Thông tin chỉ được chia sẻ trong các trường hợp:</p>
+                        <p><?php _e('privacy.section4_intro'); ?></p>
                         <ul>
-                            <li>Đối tác cung cấp dịch vụ (thanh toán, vận chuyển) với cam kết bảo mật</li>
-                            <li>Cơ quan chức năng theo yêu cầu pháp luật</li>
-                            <li>Với sự đồng ý rõ ràng của quý khách</li>
+                            <?php foreach(explode('|', __('privacy.section4_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -167,33 +162,32 @@ $page_title = 'Chính sách bảo mật';
                 <div id="cookie" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">5</span>
-                        Cookie và công nghệ theo dõi
+                        <?php _e('privacy.section5_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Website của chúng tôi sử dụng cookie để:</p>
+                        <p><?php _e('privacy.section5_intro'); ?></p>
                         <ul>
-                            <li>Ghi nhớ thông tin đăng nhập và tùy chọn của quý khách</li>
-                            <li>Phân tích lưu lượng truy cập và hành vi người dùng</li>
-                            <li>Cải thiện trải nghiệm sử dụng website</li>
-                            <li>Hiển thị nội dung phù hợp</li>
+                            <?php foreach(explode('|', __('privacy.section5_items')) as $item): ?>
+                            <li><?php echo $item; ?></li>
+                            <?php endforeach; ?>
                         </ul>
-                        <p class="mt-4">Quý khách có thể tắt cookie trong cài đặt trình duyệt, tuy nhiên một số tính năng có thể bị ảnh hưởng.</p>
+                        <p class="mt-4"><?php _e('privacy.section5_note'); ?></p>
                     </div>
                 </div>
 
                 <div id="quyen-loi" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">6</span>
-                        Quyền của khách hàng
+                        <?php _e('privacy.section6_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Quý khách có các quyền sau đối với thông tin cá nhân:</p>
+                        <p><?php _e('privacy.section6_intro'); ?></p>
                         <ul>
-                            <li><strong>Quyền truy cập:</strong> Yêu cầu xem thông tin chúng tôi lưu trữ</li>
-                            <li><strong>Quyền chỉnh sửa:</strong> Cập nhật thông tin không chính xác</li>
-                            <li><strong>Quyền xóa:</strong> Yêu cầu xóa thông tin (trong phạm vi pháp luật cho phép)</li>
-                            <li><strong>Quyền từ chối:</strong> Hủy đăng ký nhận email marketing</li>
-                            <li><strong>Quyền khiếu nại:</strong> Liên hệ chúng tôi nếu có thắc mắc</li>
+                            <?php foreach(explode('|', __('privacy.section6_items')) as $item): 
+                                $parts = explode(': ', $item, 2);
+                            ?>
+                            <li><strong><?php echo $parts[0]; ?>:</strong> <?php echo $parts[1] ?? ''; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
@@ -201,10 +195,10 @@ $page_title = 'Chính sách bảo mật';
                 <div id="lien-he" class="policy-section">
                     <h2 class="policy-section-title">
                         <span class="policy-section-number">7</span>
-                        Liên hệ
+                        <?php _e('privacy.section7_title'); ?>
                     </h2>
                     <div class="policy-section-content">
-                        <p>Nếu quý khách có bất kỳ câu hỏi nào về chính sách bảo mật, vui lòng liên hệ:</p>
+                        <p><?php _e('privacy.section7_intro'); ?></p>
                         <div class="glass-card-solid p-6 mt-4">
                             <h4 class="font-bold text-lg mb-4">Aurora Hotel Plaza</h4>
                             <div class="space-y-3">

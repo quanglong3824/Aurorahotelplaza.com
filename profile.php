@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'helpers/language.php';
+initLanguage();
 
 // Check if user is logged in
 $user_id = $_SESSION['user_id'] ?? null;
@@ -40,7 +42,7 @@ try {
     $user = $stmt->fetch();
     
     if (!$user) {
-        die("User không tồn tại");
+        die(__('profile_full.user_not_found'));
     }
     
     // Get booking statistics
@@ -135,7 +137,7 @@ try {
     }
     
 } catch (Exception $e) {
-    die("Lỗi: " . $e->getMessage());
+    die(__('profile_full.error') . ': ' . $e->getMessage());
 }
 
 // Helper functions
@@ -170,11 +172,11 @@ function getContactStatusBadge($status) {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Thông tin tài khoản - <?php echo htmlspecialchars($user['full_name']); ?></title>
+<title><?php _e('profile_full.title'); ?> - <?php echo htmlspecialchars($user['full_name']); ?></title>
 
 <script src="assets/js/tailwindcss-cdn.js"></script>
 <link href="assets/css/fonts.css" rel="stylesheet"/>
@@ -252,7 +254,7 @@ function getContactStatusBadge($status) {
                     <div>
                         <h1 class="text-3xl font-bold"><?php echo htmlspecialchars($user['full_name']); ?></h1>
                         <p class="text-white/80"><?php echo htmlspecialchars($user['email']); ?></p>
-                        <p class="text-white/80"><?php echo htmlspecialchars($user['phone'] ?? 'Chưa cập nhật'); ?></p>
+                        <p class="text-white/80"><?php echo htmlspecialchars($user['phone'] ?? __('profile_full.not_updated')); ?></p>
                     </div>
                 </div>
                 
@@ -270,7 +272,7 @@ function getContactStatusBadge($status) {
             <div class="stat-card">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Điểm hiện tại</p>
+                        <p class="text-gray-600 text-sm"><?php _e('profile_full.current_points'); ?></p>
                         <p class="text-3xl font-bold text-accent"><?php echo number_format($user['current_points'] ?? 0); ?></p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-accent">stars</span>
@@ -280,7 +282,7 @@ function getContactStatusBadge($status) {
             <div class="stat-card">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Tổng điểm tích lũy</p>
+                        <p class="text-gray-600 text-sm"><?php _e('profile_full.lifetime_points'); ?></p>
                         <p class="text-3xl font-bold text-primary-light"><?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-primary-light">emoji_events</span>
@@ -290,7 +292,7 @@ function getContactStatusBadge($status) {
             <div class="stat-card">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Tổng đặt phòng</p>
+                        <p class="text-gray-600 text-sm"><?php _e('profile_full.total_bookings'); ?></p>
                         <p class="text-3xl font-bold text-blue-600"><?php echo $stats['total_bookings']; ?></p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-blue-600">hotel</span>
@@ -300,7 +302,7 @@ function getContactStatusBadge($status) {
             <div class="stat-card">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Tổng chi tiêu</p>
+                        <p class="text-gray-600 text-sm"><?php _e('profile_full.total_spent'); ?></p>
                         <p class="text-2xl font-bold text-green-600"><?php echo number_format($stats['total_spent']); ?> đ</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-green-600">payments</span>
@@ -311,11 +313,11 @@ function getContactStatusBadge($status) {
         <!-- Membership Benefits -->
         <?php if ($user['tier_name']): ?>
         <div class="bg-white p-6 rounded-xl shadow mb-6">
-            <h2 class="text-xl font-bold mb-4">🎁 Quyền lợi hạng <?php echo $user['tier_name']; ?></h2>
+            <h2 class="text-xl font-bold mb-4">🎁 <?php _e('profile_full.tier_benefits'); ?> <?php echo $user['tier_name']; ?></h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-accent">discount</span>
-                    <span>Giảm giá: <strong><?php echo $user['discount_percentage']; ?>%</strong></span>
+                    <span><?php _e('profile_full.discount'); ?>: <strong><?php echo $user['discount_percentage']; ?>%</strong></span>
                 </div>
                 <?php 
                 $benefits = explode(',', $user['benefits']);
@@ -335,26 +337,26 @@ function getContactStatusBadge($status) {
             <div class="border-b flex gap-4 px-6">
                 <button class="tab-button active" onclick="switchTab('bookings')">
                     <span class="material-symbols-outlined" style="vertical-align: middle;">hotel</span>
-                    Lịch sử đặt phòng (<?php echo $stats['total_bookings']; ?>)
+                    <?php _e('profile_full.booking_history'); ?> (<?php echo $stats['total_bookings']; ?>)
                 </button>
                 <button class="tab-button" onclick="switchTab('points')">
                     <span class="material-symbols-outlined" style="vertical-align: middle;">stars</span>
-                    Lịch sử điểm (<?php echo count($points_history); ?>)
+                    <?php _e('profile_full.points_history'); ?> (<?php echo count($points_history); ?>)
                 </button>
                 <button class="tab-button" onclick="switchTab('payments')">
                     <span class="material-symbols-outlined" style="vertical-align: middle;">receipt</span>
-                    Thanh toán (<?php echo count($payments); ?>)
+                    <?php _e('profile_full.payments'); ?> (<?php echo count($payments); ?>)
                 </button>
                 <button class="tab-button" onclick="switchTab('contacts')">
                     <span class="material-symbols-outlined" style="vertical-align: middle;">mail</span>
-                    Liên hệ (<?php echo count($contacts); ?>)
+                    <?php _e('profile_full.contacts'); ?> (<?php echo count($contacts); ?>)
                 </button>
             </div>
 
             <!-- Bookings Tab -->
             <div id="tab-bookings" class="tab-content active p-6">
                 <?php if (empty($bookings)): ?>
-                    <p class="text-center text-gray-500 py-8">Chưa có đặt phòng nào</p>
+                    <p class="text-center text-gray-500 py-8"><?php _e('profile_full.no_bookings'); ?></p>
                 <?php else: ?>
                     <div class="space-y-4">
                         <?php foreach ($bookings as $booking): ?>
@@ -362,9 +364,9 @@ function getContactStatusBadge($status) {
                             <div class="flex justify-between items-start mb-3">
                                 <div>
                                     <h3 class="font-bold text-lg"><?php echo htmlspecialchars($booking['type_name']); ?></h3>
-                                    <p class="text-gray-600">Mã: <?php echo $booking['booking_code']; ?></p>
+                                    <p class="text-gray-600"><?php _e('profile_full.booking_code'); ?>: <?php echo $booking['booking_code']; ?></p>
                                     <?php if ($booking['room_number']): ?>
-                                    <p class="text-gray-600">Phòng: <?php echo $booking['room_number']; ?> - Tầng <?php echo $booking['floor']; ?></p>
+                                    <p class="text-gray-600"><?php _e('profile_full.room'); ?>: <?php echo $booking['room_number']; ?> - <?php _e('profile_full.floor'); ?> <?php echo $booking['floor']; ?></p>
                                     <?php endif; ?>
                                 </div>
                                 <div class="text-right">
@@ -375,32 +377,32 @@ function getContactStatusBadge($status) {
                             
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                 <div>
-                                    <p class="text-gray-600">Nhận phòng</p>
+                                    <p class="text-gray-600"><?php _e('profile_full.check_in'); ?></p>
                                     <p class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Trả phòng</p>
+                                    <p class="text-gray-600"><?php _e('profile_full.check_out'); ?></p>
                                     <p class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Số đêm</p>
+                                    <p class="text-gray-600"><?php _e('profile_full.num_nights'); ?></p>
                                     <p class="font-semibold"><?php echo $booking['total_nights']; ?> đêm</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Tổng tiền</p>
+                                    <p class="text-gray-600"><?php _e('profile_full.total_amount'); ?></p>
                                     <p class="font-semibold text-accent"><?php echo number_format($booking['total_amount']); ?> đ</p>
                                 </div>
                             </div>
                             
                             <?php if ($booking['special_requests']): ?>
                             <div class="mt-3 p-3 bg-gray-50 rounded">
-                                <p class="text-sm text-gray-600">Yêu cầu đặc biệt:</p>
+                                <p class="text-sm text-gray-600"><?php _e('profile_full.special_requests'); ?>:</p>
                                 <p class="text-sm"><?php echo htmlspecialchars($booking['special_requests']); ?></p>
                             </div>
                             <?php endif; ?>
                             
                             <div class="mt-3 text-xs text-gray-500">
-                                Đặt lúc: <?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?>
+                                <?php _e('profile_full.booked_at'); ?>: <?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -411,7 +413,7 @@ function getContactStatusBadge($status) {
             <!-- Points Tab -->
             <div id="tab-points" class="tab-content p-6">
                 <?php if (empty($points_history)): ?>
-                    <p class="text-center text-gray-500 py-8">Chưa có giao dịch điểm nào</p>
+                    <p class="text-center text-gray-500 py-8"><?php _e('profile_full.no_points'); ?></p>
                 <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($points_history as $trans): ?>
@@ -439,7 +441,7 @@ function getContactStatusBadge($status) {
             <!-- Payments Tab -->
             <div id="tab-payments" class="tab-content p-6">
                 <?php if (empty($payments)): ?>
-                    <p class="text-center text-gray-500 py-8">Chưa có giao dịch thanh toán nào</p>
+                    <p class="text-center text-gray-500 py-8"><?php _e('profile_full.no_payments'); ?></p>
                 <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($payments as $payment): ?>
@@ -447,9 +449,9 @@ function getContactStatusBadge($status) {
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="font-bold">Booking: <?php echo $payment['booking_code']; ?></p>
-                                    <p class="text-sm text-gray-600">Phương thức: <?php echo strtoupper($payment['payment_method']); ?></p>
+                                    <p class="text-sm text-gray-600"><?php _e('profile_full.method'); ?>: <?php echo strtoupper($payment['payment_method']); ?></p>
                                     <?php if ($payment['transaction_id']): ?>
-                                    <p class="text-sm text-gray-600">Mã GD: <?php echo $payment['transaction_id']; ?></p>
+                                    <p class="text-sm text-gray-600"><?php _e('profile_full.transaction_id'); ?>: <?php echo $payment['transaction_id']; ?></p>
                                     <?php endif; ?>
                                     <p class="text-xs text-gray-500 mt-1"><?php echo date('d/m/Y H:i', strtotime($payment['created_at'])); ?></p>
                                 </div>
@@ -467,19 +469,19 @@ function getContactStatusBadge($status) {
             <!-- Contacts Tab -->
             <div id="tab-contacts" class="tab-content p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-semibold text-lg">Lịch sử liên hệ</h3>
+                    <h3 class="font-semibold text-lg"><?php _e('profile_full.contact_history'); ?></h3>
                     <a href="contact.php" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition flex items-center gap-2">
                         <span class="material-symbols-outlined text-sm">add</span>
-                        Gửi liên hệ mới
+                        <?php _e('profile_full.new_contact'); ?>
                     </a>
                 </div>
                 <?php if (empty($contacts)): ?>
                     <div class="text-center py-12">
                         <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">mail</span>
-                        <p class="text-gray-500 mb-4">Bạn chưa gửi liên hệ nào</p>
+                        <p class="text-gray-500 mb-4"><?php _e('profile_full.no_contacts'); ?></p>
                         <a href="contact.php" class="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition">
                             <span class="material-symbols-outlined">send</span>
-                            Gửi liên hệ đầu tiên
+                            <?php _e('profile_full.first_contact'); ?>
                         </a>
                     </div>
                 <?php else: ?>
@@ -492,7 +494,7 @@ function getContactStatusBadge($status) {
                                         <span class="material-symbols-outlined text-accent">mail</span>
                                     </div>
                                     <div>
-                                        <p class="font-bold text-gray-900"><?php echo htmlspecialchars($contact['subject'] ?? 'Liên hệ chung'); ?></p>
+                                        <p class="font-bold text-gray-900"><?php echo htmlspecialchars($contact['subject'] ?? __('profile_full.general_contact')); ?></p>
                                         <p class="text-sm text-gray-500 font-mono">#<?php echo htmlspecialchars($contact['display_code']); ?></p>
                                     </div>
                                 </div>
@@ -513,7 +515,7 @@ function getContactStatusBadge($status) {
                                     </span>
                                 </div>
                                 <button onclick="viewContactDetail(<?php echo $contact['id']; ?>)" class="text-accent hover:underline font-medium flex items-center gap-1">
-                                    Xem chi tiết
+                                    <?php _e('profile_full.view_detail'); ?>
                                     <span class="material-symbols-outlined text-sm">arrow_forward</span>
                                 </button>
                             </div>
@@ -535,7 +537,7 @@ function getContactStatusBadge($status) {
 <div id="contactModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800">
-            <h3 class="text-lg font-bold">Chi tiết liên hệ</h3>
+            <h3 class="text-lg font-bold"><?php _e('profile_full.contact_detail'); ?></h3>
             <button onclick="closeContactModal()" class="text-gray-500 hover:text-gray-700">
                 <span class="material-symbols-outlined">close</span>
             </button>

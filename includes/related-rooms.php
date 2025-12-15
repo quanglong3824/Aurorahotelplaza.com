@@ -15,7 +15,7 @@ require_once __DIR__ . '/../helpers/room-helper.php';
 
 // Lấy biến từ file gọi (nếu có)
 $currentRoomTypeId = $currentRoomTypeId ?? null;
-$sectionTitle = $sectionTitle ?? 'Phòng khác';
+$sectionTitle = $sectionTitle ?? __('room_detail.other_rooms');
 
 // Lấy danh sách phòng random
 $relatedRooms = getRandomRooms($currentRoomTypeId, 3);
@@ -34,9 +34,9 @@ $relatedRooms = getRandomRooms($currentRoomTypeId, 3);
                              class="related-image">
                         <div class="related-content">
                             <h3 class="related-title"><?php echo htmlspecialchars($room['name']); ?></h3>
-                            <div class="related-price"><?php echo formatPrice($room['base_price']); ?>/đêm</div>
+                            <div class="related-price"><?php echo formatPrice($room['base_price']); ?><?php _e('apartment_detail.per_night'); ?></div>
                             <a href="<?php echo htmlspecialchars(getRoomDetailUrl($room['slug'], $room['category'])); ?>" 
-                               class="btn-view">Xem chi tiết</a>
+                               class="btn-view"><?php _e('common.view_details'); ?></a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -46,24 +46,24 @@ $relatedRooms = getRandomRooms($currentRoomTypeId, 3);
                     <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg" alt="Premium Deluxe" class="related-image">
                     <div class="related-content">
                         <h3 class="related-title">Premium Deluxe</h3>
-                        <div class="related-price">1.800.000đ/đêm</div>
-                        <a href="../room-details/premium-deluxe.php" class="btn-view">Xem chi tiết</a>
+                        <div class="related-price">1.800.000đ<?php _e('apartment_detail.per_night'); ?></div>
+                        <a href="../room-details/premium-deluxe.php" class="btn-view"><?php _e('common.view_details'); ?></a>
                     </div>
                 </div>
                 <div class="related-card">
                     <img src="../assets/img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg" alt="VIP Suite" class="related-image">
                     <div class="related-content">
                         <h3 class="related-title">VIP Suite</h3>
-                        <div class="related-price">3.500.000đ/đêm</div>
-                        <a href="../room-details/vip-suite.php" class="btn-view">Xem chi tiết</a>
+                        <div class="related-price">3.500.000đ<?php _e('apartment_detail.per_night'); ?></div>
+                        <a href="../room-details/vip-suite.php" class="btn-view"><?php _e('common.view_details'); ?></a>
                     </div>
                 </div>
                 <div class="related-card">
                     <img src="../assets/img/premium twin/PREMIUM-DELUXE-TWIN-AURORA-1.jpg" alt="Premium Twin" class="related-image">
                     <div class="related-content">
                         <h3 class="related-title">Premium Twin</h3>
-                        <div class="related-price">1.600.000đ/đêm</div>
-                        <a href="../room-details/premium-twin.php" class="btn-view">Xem chi tiết</a>
+                        <div class="related-price">1.600.000đ<?php _e('apartment_detail.per_night'); ?></div>
+                        <a href="../room-details/premium-twin.php" class="btn-view"><?php _e('common.view_details'); ?></a>
                     </div>
                 </div>
             <?php endif; ?>

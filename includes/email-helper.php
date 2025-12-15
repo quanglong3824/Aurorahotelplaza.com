@@ -10,6 +10,12 @@ use PHPMailer\PHPMailer\Exception;
 // Load email configuration
 require_once __DIR__ . '/../config/email.php';
 
+// Load language helper for email translations
+if (!function_exists('__')) {
+    require_once __DIR__ . '/../helpers/language.php';
+    initLanguage();
+}
+
 // Load PHPMailer if not already loaded
 if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
     // Try to load via composer autoload
@@ -120,19 +126,19 @@ function sendBookingConfirmationEmail($booking) {
 function sendBookingStatusUpdateEmail($booking, $old_status, $new_status) {
     $status_messages = [
         'confirmed' => [
-            'subject' => 'Đặt phòng đã được xác nhận',
-            'title' => '✅ Đặt phòng của quý khách đã được xác nhận!',
-            'message' => 'Chúng tôi xin xác nhận rằng đặt phòng của quý khách đã được xác nhận. Quý khách có thể tải mã QR để check-in nhanh chóng tại khách sạn.'
+            'subject' => __('email.booking_confirmed_subject'),
+            'title' => '✅ ' . __('email.booking_confirmed_title'),
+            'message' => __('email.booking_confirmed_message')
         ],
         'cancelled' => [
-            'subject' => 'Đặt phòng đã bị hủy',
-            'title' => '❌ Đặt phòng của quý khách đã bị hủy',
-            'message' => 'Đặt phòng của quý khách đã được hủy theo yêu cầu. Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.'
+            'subject' => __('email.booking_cancelled_subject'),
+            'title' => '❌ ' . __('email.booking_cancelled_title'),
+            'message' => __('email.booking_cancelled_message')
         ],
         'checked_in' => [
-            'subject' => 'Đã nhận phòng thành công',
-            'title' => '🏨 Chào mừng quý khách đến với Aurora Hotel Plaza!',
-            'message' => 'Quý khách đã nhận phòng thành công. Chúc quý khách có kỳ nghỉ vui vẻ!'
+            'subject' => __('email.booking_checked_in_subject'),
+            'title' => '🏨 ' . __('email.booking_checked_in_title'),
+            'message' => __('email.booking_checked_in_message')
         ]
     ];
     
@@ -147,23 +153,43 @@ function sendBookingStatusUpdateEmail($booking, $old_status, $new_status) {
     
     $qr_section = '';
     if ($new_status === 'confirmed') {
+        $qr_title = __('email.download_qr');
+        $qr_instruction = __('email.qr_instruction');
+        $view_bookings = __('email.view_my_bookings');
         $qr_section = <<<HTML
         <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 4px;">
-            <h3 style="margin: 0 0 10px; color: #1976D2; font-size: 16px;">📱 Tải mã QR của bạn</h3>
-            <p>Quý khách có thể tải mã QR từ trang quản lý đặt phòng để check-in nhanh chóng tại khách sạn.</p>
+            <h3 style="margin: 0 0 10px; color: #1976D2; font-size: 16px;">{$qr_title}</h3>
+            <p>{$qr_instruction}</p>
             <p style="text-align: center; margin-top: 15px;">
                 <a href="https://aurorahotelplaza.com/profile/bookings.php" 
                    style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 4px; font-weight: 600;">
-                    Xem đặt phòng của tôi
+                    {$view_bookings}
                 </a>
             </p>
         </div>
 HTML;
     }
     
+    // Get translated labels
+    $dear = __('email.dear');
+    $booking_code_label = __('email.booking_code');
+    $booking_info_label = __('email.booking_info');
+    $room_type_label = __('email.room_type');
+    $check_in_label = __('email.check_in_date');
+    $check_out_label = __('email.check_out_date');
+    $nights_label = __('email.num_nights');
+    $night_unit = __('email.night');
+    $total_label = __('email.total_cost');
+    $contact_note = __('email.contact_note');
+    $regards = __('email.regards');
+    $team = __('email.team');
+    $auto_note = __('email.auto_email_note');
+    $copyright = __('email.copyright');
+    $lang = getLang();
+    
     $htmlBody = <<<HTML
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{$lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,34 +205,34 @@ HTML;
         <div style="padding: 30px 20px;">
             <h2 style="color: #667eea; font-size: 20px;">{$info['title']}</h2>
             
-            <p>Kính gửi <strong>{$booking['guest_name']}</strong>,</p>
+            <p>{$dear} <strong>{$booking['guest_name']}</strong>,</p>
             
             <p>{$info['message']}</p>
             
             <div style="background: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin: 20px 0; border-radius: 4px;">
-                <div style="margin-bottom: 5px;">Mã đặt phòng:</div>
+                <div style="margin-bottom: 5px;">{$booking_code_label}:</div>
                 <strong style="color: #667eea; font-size: 20px; font-family: 'Courier New', monospace;">{$booking['booking_code']}</strong>
             </div>
             
             <div style="margin: 25px 0;">
-                <h3 style="color: #667eea; font-size: 16px; margin-bottom: 10px;">Thông tin đặt phòng:</h3>
-                <p style="margin: 5px 0;"><strong>Loại phòng:</strong> {$booking['type_name']}</p>
-                <p style="margin: 5px 0;"><strong>Ngày nhận phòng:</strong> {$check_in}</p>
-                <p style="margin: 5px 0;"><strong>Ngày trả phòng:</strong> {$check_out}</p>
-                <p style="margin: 5px 0;"><strong>Số đêm:</strong> {$booking['total_nights']} đêm</p>
-                <p style="margin: 5px 0;"><strong>Tổng chi phí:</strong> {$booking['total_amount_formatted']} VNĐ</p>
+                <h3 style="color: #667eea; font-size: 16px; margin-bottom: 10px;">{$booking_info_label}:</h3>
+                <p style="margin: 5px 0;"><strong>{$room_type_label}:</strong> {$booking['type_name']}</p>
+                <p style="margin: 5px 0;"><strong>{$check_in_label}:</strong> {$check_in}</p>
+                <p style="margin: 5px 0;"><strong>{$check_out_label}:</strong> {$check_out}</p>
+                <p style="margin: 5px 0;"><strong>{$nights_label}:</strong> {$booking['total_nights']} {$night_unit}</p>
+                <p style="margin: 5px 0;"><strong>{$total_label}:</strong> {$booking['total_amount_formatted']} VNĐ</p>
             </div>
             
             {$qr_section}
             
-            <p style="margin-top: 30px;">Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.</p>
+            <p style="margin-top: 30px;">{$contact_note}</p>
             
-            <p style="margin-top: 20px;">Trân trọng,<br><strong>Đội ngũ Aurora Hotel Plaza</strong></p>
+            <p style="margin-top: 20px;">{$regards},<br><strong>{$team}</strong></p>
         </div>
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px;">
-            <p>Email này được gửi tự động, vui lòng không trả lời trực tiếp.</p>
-            <p>© 2025 Aurora Hotel Plaza. All rights reserved.</p>
+            <p>{$auto_note}</p>
+            <p>© 2025 {$copyright}</p>
         </div>
     </div>
 </body>

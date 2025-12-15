@@ -23,9 +23,9 @@ initLanguage();
     <section class="page-header-room" style="background-image: url('../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
-            <span class="room-badge-header">Cao cấp</span>
-            <h1 class="page-title">Phòng Premium Deluxe</h1>
-            <p class="page-subtitle">Không gian sang trọng hơn với view đẹp và tiện nghi nâng cấp</p>
+            <span class="room-badge-header"><?php _e('room_detail.premium_deluxe_badge'); ?></span>
+            <h1 class="page-title"><?php _e('room_detail.premium_deluxe_name'); ?></h1>
+            <p class="page-subtitle"><?php _e('room_detail.premium_deluxe_subtitle'); ?></p>
         </div>
     </section>
 
@@ -35,9 +35,7 @@ initLanguage();
             <div class="room-info-section">
                 <div class="room-content">
                     <p class="room-description">
-                        Phòng Premium Deluxe rộng 45m² được thiết kế cao cấp với giường King size đặc biệt, tầm nhìn thành phố tuyệt đẹp từ tầng cao. 
-                        Phòng được trang bị đầy đủ tiện nghi nâng cấp như TV màn hình phẳng 50", minibar cao cấp, két an toàn điện tử và phòng tắm 
-                        sang trọng với bồn tắm và vòi sen massage. Đây là lựa chọn hoàn hảo cho khách yêu cầu cao về chất lượng.
+                        <?php _e('room_detail.premium_deluxe_desc'); ?>
                     </p>
 
                     <div class="room-specs">
@@ -82,18 +80,18 @@ initLanguage();
                     <div class="amenities-section">
                         <h3 class="section-title"><?php _e('room_detail.amenities'); ?></h3>
                         <div class="amenities-grid">
-                            <div class="amenity-item">WiFi miễn phí tốc độ cao</div>
-                            <div class="amenity-item">TV màn hình phẳng 50"</div>
-                            <div class="amenity-item">Điều hòa nhiệt độ thông minh</div>
-                            <div class="amenity-item">Minibar cao cấp</div>
-                            <div class="amenity-item">Két an toàn điện tử</div>
-                            <div class="amenity-item">Bàn làm việc rộng</div>
-                            <div class="amenity-item">Phòng tắm sang trọng</div>
-                            <div class="amenity-item">Bồn tắm + Vòi sen massage</div>
-                            <div class="amenity-item">Máy sấy tóc cao cấp</div>
-                            <div class="amenity-item">Đồ vệ sinh cao cấp</div>
-                            <div class="amenity-item">Áo choàng tắm</div>
-                            <div class="amenity-item">Máy pha cà phê Nespresso</div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_wifi'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_tv'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_ac'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_minibar'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_safe'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_desk'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_bathroom'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_shower'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_hairdryer'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_toiletries'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_slippers'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_kettle'); ?></div>
                         </div>
                     </div>
                 </div>

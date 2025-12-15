@@ -27,10 +27,10 @@
         <div class="flex flex-col gap-4">
             <span class="glass-badge-accent mx-auto">
                 <span class="text-accent">★★★★★</span>
-                Khách sạn 5 sao tại Biên Hòa
+                <?php _e('hero.badge'); ?>
             </span>
             <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza</h1>
-            <p class="text-xl font-light text-white/90 max-w-2xl">Trải nghiệm đẳng cấp sang trọng với dịch vụ hoàn hảo tại trung tâm thành phố Biên Hòa, Đồng Nai</p>
+            <p class="text-xl font-light text-white/90 max-w-2xl"><?php _e('hero.subtitle'); ?></p>
         </div>
         
         <!-- Quick Booking Form - Liquid Glass -->
@@ -39,7 +39,7 @@
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkin">
                         <span class="material-symbols-outlined text-sm">calendar_today</span>
-                        Ngày nhận phòng
+                        <?php _e('hero.check_in'); ?>
                     </label>
                     <input class="glass-input-solid h-12" 
                            id="checkin" name="check_in" type="date" 
@@ -49,7 +49,7 @@
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkout">
                         <span class="material-symbols-outlined text-sm">event</span>
-                        Ngày trả phòng
+                        <?php _e('hero.check_out'); ?>
                     </label>
                     <input class="glass-input-solid h-12" 
                            id="checkout" name="check_out" type="date" 
@@ -59,30 +59,30 @@
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="adults">
                         <span class="material-symbols-outlined text-sm">person</span>
-                        Người lớn
+                        <?php _e('hero.adults'); ?>
                     </label>
                     <select class="glass-input-solid glass-select h-12" id="adults" name="adults">
-                        <option value="1">1 người</option>
-                        <option value="2" selected>2 người</option>
-                        <option value="3">3 người</option>
-                        <option value="4">4 người</option>
+                        <option value="1">1 <?php _e('hero.person'); ?></option>
+                        <option value="2" selected>2 <?php _e('hero.person'); ?></option>
+                        <option value="3">3 <?php _e('hero.person'); ?></option>
+                        <option value="4">4 <?php _e('hero.person'); ?></option>
                     </select>
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="children">
                         <span class="material-symbols-outlined text-sm">child_care</span>
-                        Trẻ em
+                        <?php _e('hero.children'); ?>
                     </label>
                     <select class="glass-input-solid glass-select h-12" id="children" name="children">
-                        <option value="0" selected>0 trẻ em</option>
-                        <option value="1">1 trẻ em</option>
-                        <option value="2">2 trẻ em</option>
-                        <option value="3">3 trẻ em</option>
+                        <option value="0" selected>0 <?php _e('hero.child'); ?></option>
+                        <option value="1">1 <?php _e('hero.child'); ?></option>
+                        <option value="2">2 <?php _e('hero.child'); ?></option>
+                        <option value="3">3 <?php _e('hero.child'); ?></option>
                     </select>
                 </div>
                 <button type="submit" class="btn-glass-primary h-12 w-full whitespace-nowrap">
                     <span class="material-symbols-outlined">search</span>
-                    <span>Tìm phòng</span>
+                    <span><?php _e('hero.search'); ?></span>
                 </button>
             </form>
         </div>
@@ -91,15 +91,15 @@
         <div class="flex flex-wrap justify-center gap-4 mt-6">
             <div class="glass-trust-badge">
                 <span class="material-symbols-outlined">verified</span>
-                <span>Giá tốt nhất đảm bảo</span>
+                <span><?php _e('hero.best_price'); ?></span>
             </div>
             <div class="glass-trust-badge">
                 <span class="material-symbols-outlined">credit_card_off</span>
-                <span>Không cần thanh toán trước</span>
+                <span><?php _e('hero.no_prepayment'); ?></span>
             </div>
             <div class="glass-trust-badge">
                 <span class="material-symbols-outlined">event_available</span>
-                <span>Hủy miễn phí trong 24h</span>
+                <span><?php _e('hero.free_cancel'); ?></span>
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@
     <!-- Scroll Down Indicator -->
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <a href="#about" class="flex flex-col items-center gap-2 text-white/70 hover:text-white transition-colors">
-            <span class="text-sm">Khám phá thêm</span>
+            <span class="text-sm"><?php _e('hero.explore_more'); ?></span>
             <span class="material-symbols-outlined text-2xl">keyboard_arrow_down</span>
         </a>
     </div>

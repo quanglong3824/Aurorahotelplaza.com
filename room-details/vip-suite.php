@@ -23,9 +23,9 @@ initLanguage();
     <section class="page-header-room" style="background-image: url('../assets/img/vip /VIP-ROOM-AURORA-HOTEL-1.jpg');">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
-            <span class="room-badge-header">VIP</span>
-            <h1 class="page-title">Phòng VIP Suite</h1>
-            <p class="page-subtitle">Đẳng cấp thượng lưu với không gian rộng rãi và dịch vụ đặc biệt</p>
+            <span class="room-badge-header"><?php _e('room_detail.vip'); ?></span>
+            <h1 class="page-title"><?php _e('room_detail.vip_suite_name'); ?></h1>
+            <p class="page-subtitle"><?php _e('room_detail.vip_suite_subtitle'); ?></p>
         </div>
     </section>
 
@@ -35,10 +35,7 @@ initLanguage();
             <div class="room-info-section">
                 <div class="room-content">
                     <p class="room-description">
-                        Phòng VIP Suite rộng 80m² là đỉnh cao của sự sang trọng với phòng ngủ riêng biệt, phòng khách rộng rãi, 
-                        giường King size đặc biệt và tầm nhìn panorama tuyệt đẹp. Phòng được trang bị đầy đủ tiện nghi cao cấp nhất 
-                        như TV màn hình phẳng 65", hệ thống âm thanh cao cấp, minibar đầy đủ, két an toàn lớn và phòng tắm sang trọng 
-                        với bồn tắm Jacuzzi. Dịch vụ butler 24/7 và nhiều đặc quyền VIP khác.
+                        <?php _e('room_detail.vip_suite_desc'); ?>
                     </p>
 
                     <div class="room-specs">
@@ -83,22 +80,22 @@ initLanguage();
                     <div class="amenities-section">
                         <h3 class="section-title"><?php _e('room_detail.amenities'); ?></h3>
                         <div class="amenities-grid">
-                            <div class="amenity-item">WiFi miễn phí tốc độ cao</div>
-                            <div class="amenity-item">TV màn hình phẳng 65"</div>
-                            <div class="amenity-item">Hệ thống âm thanh cao cấp</div>
-                            <div class="amenity-item">Minibar đầy đủ</div>
-                            <div class="amenity-item">Két an toàn lớn</div>
-                            <div class="amenity-item">Bàn làm việc executive</div>
-                            <div class="amenity-item">Phòng tắm sang trọng</div>
-                            <div class="amenity-item">Bồn tắm Jacuzzi</div>
-                            <div class="amenity-item">Vòi sen massage cao cấp</div>
-                            <div class="amenity-item">Đồ vệ sinh thương hiệu</div>
-                            <div class="amenity-item">Áo choàng tắm cao cấp</div>
-                            <div class="amenity-item">Máy pha cà phê Nespresso</div>
-                            <div class="amenity-item">Dịch vụ Butler 24/7</div>
-                            <div class="amenity-item">Phòng khách riêng</div>
-                            <div class="amenity-item">Ban công lớn</div>
-                            <div class="amenity-item">Bàn ăn 4 người</div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_wifi'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_tv'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_ac'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_minibar'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_safe'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_desk'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_bathroom'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_shower'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_hairdryer'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_toiletries'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_slippers'); ?></div>
+                            <div class="amenity-item"><?php _e('room_detail.amenity_kettle'); ?></div>
+                            <div class="amenity-item">Butler 24/7</div>
+                            <div class="amenity-item">Jacuzzi</div>
+                            <div class="amenity-item">Balcony</div>
+                            <div class="amenity-item">Dining table</div>
                         </div>
                     </div>
                 </div>

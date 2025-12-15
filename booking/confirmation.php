@@ -2,6 +2,8 @@
 session_start();
 require_once '../config/environment.php';
 require_once '../config/database.php';
+require_once '../helpers/language.php';
+initLanguage();
 
 $booking_code = $_GET['booking_code'] ?? '';
 
@@ -27,7 +29,7 @@ try {
     $booking = $stmt->fetch();
     
     if (!$booking) {
-        throw new Exception('Không tìm thấy đơn đặt phòng');
+        throw new Exception(__('booking_confirmation.not_found'));
     }
     
 } catch (Exception $e) {
@@ -35,11 +37,11 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Xác nhận đặt phòng - Aurora Hotel Plaza</title>
+<title><?php _e('booking_confirmation.title'); ?></title>
 <script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
 <link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
 <script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
@@ -54,20 +56,20 @@ try {
             <div class="bg-red-100 text-red-700 p-4 rounded"><?php echo $error; ?></div>
         <?php else: ?>
             <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg p-8">
-                <h1 class="text-3xl font-bold mb-6">Xác nhận đặt phòng</h1>
+                <h1 class="text-3xl font-bold mb-6"><?php _e('booking_confirmation.page_title'); ?></h1>
                 
                 <div id="confirmationMessage" class="hidden mb-6 p-4 rounded-lg"></div>
                 
                 <div class="space-y-4 mb-8">
-                    <p><strong>Mã đặt phòng:</strong> <?php echo $booking['booking_code']; ?></p>
-                    <p><strong>Loại phòng:</strong> <?php echo $booking['room_type_name']; ?></p>
-                    <p><strong>Nhận phòng:</strong> <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
-                    <p><strong>Trả phòng:</strong> <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
-                    <p><strong>Tổng tiền:</strong> <?php echo number_format($booking['total_amount']); ?> VNĐ</p>
-                    <p><strong>Trạng thái:</strong> 
+                    <p><strong><?php _e('booking_confirmation.booking_code'); ?>:</strong> <?php echo $booking['booking_code']; ?></p>
+                    <p><strong><?php _e('booking_confirmation.room_type'); ?>:</strong> <?php echo $booking['room_type_name']; ?></p>
+                    <p><strong><?php _e('booking_confirmation.check_in'); ?>:</strong> <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
+                    <p><strong><?php _e('booking_confirmation.check_out'); ?>:</strong> <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
+                    <p><strong><?php _e('booking_confirmation.total_amount'); ?>:</strong> <?php echo number_format($booking['total_amount']); ?> VNĐ</p>
+                    <p><strong><?php _e('booking_confirmation.status'); ?>:</strong> 
                         <span id="bookingStatus" class="px-3 py-1 rounded-full text-sm font-semibold
                             <?php echo $booking['status'] === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; ?>">
-                            <?php echo $booking['status'] === 'confirmed' ? 'Đã xác nhận' : 'Chờ xác nhận'; ?>
+                            <?php echo $booking['status'] === 'confirmed' ? __('booking_confirmation.confirmed') : __('booking_confirmation.pending'); ?>
                         </span>
                     </p>
                 </div>
@@ -77,23 +79,23 @@ try {
                     <button id="confirmBookingBtn" 
                             class="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-2.5 rounded-lg font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2">
                         <span class="material-icons text-lg">check_circle</span>
-                        <span>Xác nhận</span>
+                        <span><?php _e('booking_confirmation.confirm_btn'); ?></span>
                     </button>
                     <a href="../profile/bookings.php" 
                        class="bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium hover:bg-gray-300 transition-all flex items-center justify-center">
-                        Quay lại
+                        <?php _e('booking_confirmation.back'); ?>
                     </a>
                 </div>
                 <?php else: ?>
                 <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
                     <p class="text-green-800 flex items-center gap-2">
                         <span class="material-icons">check_circle</span>
-                        <span>Đặt phòng của bạn đã được xác nhận. Email xác nhận đã được gửi đến địa chỉ email của bạn.</span>
+                        <span><?php _e('booking_confirmation.success_message'); ?></span>
                     </p>
                 </div>
                 <a href="../profile/bookings.php" 
                    class="block w-full bg-gradient-to-r from-primary to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all text-center">
-                    Xem danh sách đặt phòng
+                    <?php _e('booking_confirmation.view_bookings'); ?>
                 </a>
                 <?php endif; ?>
             </div>
