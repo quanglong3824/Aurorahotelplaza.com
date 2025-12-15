@@ -249,10 +249,23 @@ include 'includes/admin-header.php';
         </div>
         <div class="card-body space-y-4">
             <!-- Selected Image Preview -->
+            <?php 
+                // Fix image path for display in admin
+                $preview_img = $post['featured_image'] ?? '';
+                $display_img = $preview_img;
+                if ($preview_img && strpos($preview_img, 'uploads/') === 0) {
+                    $display_img = '../' . $preview_img; // uploads/ -> ../uploads/ for admin display
+                }
+                // Normalize stored value to uploads/ format
+                $stored_img = $preview_img;
+                if ($stored_img && strpos($stored_img, '../uploads/') === 0) {
+                    $stored_img = str_replace('../uploads/', 'uploads/', $stored_img);
+                }
+            ?>
             <div id="selectedImagePreview" class="mb-4 <?php echo empty($post['featured_image']) ? 'hidden' : ''; ?>">
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Ảnh đã chọn:</p>
                 <div class="relative inline-block">
-                    <img id="previewImg" src="<?php echo htmlspecialchars($post['featured_image'] ?? ''); ?>" 
+                    <img id="previewImg" src="<?php echo htmlspecialchars($display_img); ?>" 
                          alt="Preview" class="h-32 w-auto rounded-lg object-cover border-2 border-[#d4af37]">
                     <button type="button" id="clearImageBtn" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
                         <span class="material-symbols-outlined text-sm">close</span>
@@ -261,7 +274,7 @@ include 'includes/admin-header.php';
             </div>
             
             <input type="hidden" name="featured_image" id="featuredImageInput" 
-                   value="<?php echo htmlspecialchars($post['featured_image'] ?? ''); ?>">
+                   value="<?php echo htmlspecialchars($stored_img); ?>">
             
             <!-- Upload Zone -->
             <div id="uploadZone" class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl p-6 text-center hover:border-[#d4af37] transition-colors cursor-pointer hidden">
@@ -294,7 +307,7 @@ include 'includes/admin-header.php';
                     <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto p-2 bg-gray-50 dark:bg-slate-800 rounded-xl" id="imageGallery">
                         <?php foreach ($uploaded_images as $img): ?>
                             <div class="image-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative group"
-                                 data-src="../uploads/<?php echo htmlspecialchars($img); ?>">
+                                 data-src="uploads/<?php echo htmlspecialchars($img); ?>">
                                 <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
                                      alt="<?php echo htmlspecialchars($img); ?>"
                                      class="w-full h-full object-cover">
@@ -340,7 +353,7 @@ include 'includes/admin-header.php';
                     <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-100 dark:bg-slate-700 rounded-xl" id="gallerySourceImages">
                         <?php foreach ($uploaded_images as $img): ?>
                             <div class="gallery-source-thumb aspect-square rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#d4af37] transition-all relative"
-                                 data-src="../uploads/<?php echo htmlspecialchars($img); ?>">
+                                 data-src="uploads/<?php echo htmlspecialchars($img); ?>">
                                 <img src="../uploads/<?php echo htmlspecialchars($img); ?>" 
                                      alt="<?php echo htmlspecialchars($img); ?>"
                                      class="w-full h-full object-cover">
@@ -569,7 +582,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Select image from gallery
     function selectImage(src) {
         featuredImageInput.value = src;
-        previewImg.src = src;
+        // For preview in admin, add ../ prefix if needed
+        let displaySrc = src;
+        if (src.startsWith('uploads/')) {
+            displaySrc = '../' + src;
+        }
+        previewImg.src = displaySrc;
         selectedImagePreview.classList.remove('hidden');
         
         // Update selected state in gallery
@@ -655,9 +673,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         galleryPlaceholder.classList.add('hidden');
-        galleryImagesList.innerHTML = galleryImages.map((src, index) => `
+        galleryImagesList.innerHTML = galleryImages.map((src, index) => {
+            // For display in admin, add ../ prefix if needed
+            let displaySrc = src.startsWith('uploads/') ? '../' + src : src;
+            return `
             <div class="gallery-item aspect-square rounded-lg overflow-hidden relative group border-2 border-[#d4af37]" data-src="${src}" data-index="${index}">
-                <img src="${src}" alt="Gallery ${index + 1}" class="w-full h-full object-cover">
+                <img src="${displaySrc}" alt="Gallery ${index + 1}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                     <span class="text-white text-xs font-bold bg-black/50 px-1 rounded">${index + 1}</span>
                     <button type="button" class="remove-gallery-btn w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600" data-src="${src}">
@@ -665,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
         
         // Bind remove buttons
         galleryImagesList.querySelectorAll('.remove-gallery-btn').forEach(btn => {

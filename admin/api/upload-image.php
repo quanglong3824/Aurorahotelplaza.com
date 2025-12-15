@@ -81,8 +81,8 @@ if (!move_uploaded_file($file['tmp_name'], $target_path)) {
     exit;
 }
 
-// Return success with URL
-$url = '../uploads/' . $filename;
+// Return success with URL - use root-relative path for frontend compatibility
+$url = 'uploads/' . $filename;
 
 echo json_encode([
     'success' => true,

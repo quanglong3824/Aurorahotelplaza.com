@@ -57,6 +57,19 @@ try {
     $stmt->execute([$post['post_id'], $post['category_id']]);
     $related_posts = $stmt->fetchAll();
     
+    // Fix image path - convert ../uploads/ to uploads/
+    if (!empty($post['featured_image']) && strpos($post['featured_image'], '../uploads/') === 0) {
+        $post['featured_image'] = str_replace('../uploads/', 'uploads/', $post['featured_image']);
+    }
+    if (!empty($post['gallery_images'])) {
+        $gallery = json_decode($post['gallery_images'], true);
+        if (is_array($gallery)) {
+            $post['gallery_images'] = json_encode(array_map(function($img) {
+                return strpos($img, '../uploads/') === 0 ? str_replace('../uploads/', 'uploads/', $img) : $img;
+            }, $gallery));
+        }
+    }
+    
     // Handle comment submission
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         if (!isset($_SESSION['user_id'])) {

@@ -129,11 +129,17 @@ try {
             <!-- Posts Grid -->
             <?php if (!empty($posts)): ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php foreach ($posts as $post): ?>
+                <?php foreach ($posts as $post): 
+                    // Fix image path - convert ../uploads/ to uploads/
+                    $featured_img = $post['featured_image'] ?? '';
+                    if ($featured_img && strpos($featured_img, '../uploads/') === 0) {
+                        $featured_img = str_replace('../uploads/', 'uploads/', $featured_img);
+                    }
+                ?>
                 <article class="blog-card">
                     <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="block">
-                        <?php if ($post['featured_image']): ?>
-                        <div class="blog-card-image" style="background-image: url('<?php echo htmlspecialchars($post['featured_image']); ?>')"></div>
+                        <?php if ($featured_img): ?>
+                        <div class="blog-card-image" style="background-image: url('<?php echo htmlspecialchars($featured_img); ?>')"></div>
                         <?php else: ?>
                         <div class="blog-card-image" style="background-image: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg')"></div>
                         <?php endif; ?>
