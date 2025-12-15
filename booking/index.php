@@ -75,6 +75,68 @@ foreach ($room_types as $room) {
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="../assets/css/liquid-glass.css">
 <link rel="stylesheet" href="./assets/css/booking.css">
+
+<!-- Inline CSS fallback for hero section -->
+<style>
+.booking-hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
+                url('../assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 120px 20px 80px;
+}
+.booking-hero::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to top, #f8fafc, transparent);
+    pointer-events: none;
+}
+.dark .booking-hero::before {
+    background: linear-gradient(to top, #0f172a, transparent);
+}
+.hero-glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2rem;
+    padding: 3rem;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+.stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 1.5rem 0;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.stat-item {
+    text-align: center;
+    color: white;
+}
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #d4af37;
+}
+.stat-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+</style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -82,11 +144,35 @@ foreach ($room_types as $room) {
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <!-- Page Header -->
-    <section class="page-header-booking">
-        <div class="page-header-content">
-            <h1 class="page-title"><?php _e('booking_page.page_title'); ?></h1>
-            <p class="page-subtitle"><?php _e('booking_page.page_subtitle'); ?></p>
+    <!-- Hero Section -->
+    <section class="booking-hero">
+        <div class="hero-glass-card">
+            <div class="glass-badge mb-4 inline-flex">
+                <span class="material-symbols-outlined text-accent text-sm">calendar_month</span>
+                <?php _e('booking_page.online_booking'); ?>
+            </div>
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                <?php _e('booking_page.page_title'); ?>
+            </h1>
+            <p class="text-white/80 text-lg max-w-xl mx-auto mb-8">
+                <?php _e('booking_page.page_subtitle'); ?>
+            </p>
+            
+            <!-- Quick Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value"><?php echo count($room_types); ?>+</div>
+                    <div class="stat-label"><?php _e('booking_page.room_types'); ?></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5★</div>
+                    <div class="stat-label"><?php _e('booking_page.standard'); ?></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label"><?php _e('booking_page.support'); ?></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -94,8 +180,8 @@ foreach ($room_types as $room) {
     <section class="w-full justify-center py-16">
         <div class="mx-auto flex max-w-5xl flex-col gap-8 px-4">
 
-            <!-- Booking Form -->
-            <form id="bookingForm" class="flex flex-col gap-6 rounded-xl bg-surface-light p-8 shadow-lg dark:bg-surface-dark">
+            <!-- Booking Form - Liquid Glass -->
+            <form id="bookingForm" class="booking-form-glass">
                 
                 <!-- Step Indicator -->
                 <div class="flex items-center justify-between mb-6">
@@ -174,9 +260,8 @@ foreach ($room_types as $room) {
                         </div>
                     </div>
 
-                    <div class="flex gap-4 mt-4">
-                        <button type="button" class="btn-secondary" onclick="calculateTotal()"><?php _e('booking_page.test_calculate'); ?></button>
-                        <button type="button" class="btn-primary flex-1" onclick="nextStep(2)"><?php _e('booking_page.continue'); ?></button>
+                    <div class="flex justify-end mt-4">
+                        <button type="button" class="btn-primary" onclick="nextStep(2)"><?php _e('booking_page.continue'); ?></button>
                     </div>
                 </div>
 
