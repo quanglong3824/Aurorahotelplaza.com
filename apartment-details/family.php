@@ -33,7 +33,7 @@ try {
 <?php include '../includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg');">
+    <section class="page-header-room" data-bg-image="../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('apartment_detail.badge_family'); ?></span>
@@ -111,10 +111,11 @@ try {
         <div class="container-custom">
             <h2 class="section-title-center"><?php _e('apartment_detail.gallery'); ?></h2>
             <div class="room-gallery">
-                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-3.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-4.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-5.jpg" alt="Family Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/family-apartment/CAN-HO-FAMILY-AURORA-HOTEL-6.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/can-ho-family-aurora-hotel-7.jpg" alt="Family Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/family-apartment/can-ho-family-aurora-hotel-8.jpg" alt="Family Apartment"></div>
             </div>
         </div>
     </section>
@@ -130,5 +131,6 @@ try {
 <?php include '../includes/footer.php'; ?>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/room-detail-bg.js"></script>
 </body>
 </html>

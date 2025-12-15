@@ -34,7 +34,7 @@ try {
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" style="background-image: url('../assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');">
+    <section class="page-header-room" data-bg-image="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('apartment_detail.badge_saving'); ?></span>
@@ -153,22 +153,19 @@ try {
             <h2 class="section-title-center"><?php _e('apartment_detail.gallery'); ?></h2>
             <div class="room-gallery">
                 <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-1.jpg" alt="Studio Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-2.jpg" alt="Studio Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-3.jpg" alt="Studio Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-4.jpg" alt="Studio Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-5.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-5.jpg" alt="Studio Apartment">
-                </div>
-                <div class="gallery-item">
-                    <img src="../assets/img/studio-apartment/CAN-HO-STUDIO-AURORA-HOTEL-6.jpg" alt="Studio Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-8.jpg" alt="Studio Apartment">
                 </div>
             </div>
         </div>
@@ -187,5 +184,6 @@ try {
 <?php include '../includes/footer.php'; ?>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/room-detail-bg.js"></script>
 </body>
 </html>

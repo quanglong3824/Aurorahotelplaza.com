@@ -31,7 +31,7 @@ try {
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include '../includes/header.php'; ?>
 <main class="flex h-full grow flex-col">
-    <section class="page-header-room" style="background-image: url('../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg');">
+    <section class="page-header-room" data-bg-image="../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('apartment_detail.badge_indochine'); ?></span>
@@ -97,5 +97,6 @@ try {
 <?php include '../includes/footer.php'; ?>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/room-detail-bg.js"></script>
 </body>
 </html>

@@ -34,7 +34,7 @@ try {
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" style="background-image: url('../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg');">
+    <section class="page-header-room" data-bg-image="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
             <span class="room-badge-header"><?php _e('room_detail.premium_deluxe_badge'); ?></span>
@@ -152,22 +152,22 @@ try {
             <h2 class="section-title-center"><?php _e('room_detail.room_gallery'); ?></h2>
             <div class="room-gallery">
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-1.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg" alt="Phòng Premium Deluxe">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-2.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg" alt="Phòng Premium Deluxe">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-3.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg" alt="Phòng Premium Deluxe">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-5.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg" alt="Phòng Premium Deluxe">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-6.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg" alt="Phòng Premium Deluxe">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium deluxe/PREMIUM-DELUXE-AURORA-HOTEL-7.jpg" alt="Phòng Premium Deluxe">
+                    <img src="../assets/img/premium-deluxe/premium-deluxe-aurora-hotel-7.jpg" alt="Phòng Premium Deluxe">
                 </div>
             </div>
         </div>
@@ -186,5 +186,6 @@ try {
 <?php include '../includes/footer.php'; ?>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/room-detail-bg.js"></script>
 </body>
 </html>
