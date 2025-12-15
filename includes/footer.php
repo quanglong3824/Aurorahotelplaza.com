@@ -76,7 +76,7 @@ if (!function_exists('__')) {
                 <ul class="space-y-4 text-sm">
                     <li class="flex items-start gap-3">
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">location_on</span>
-                        <a href="https://maps.google.com/?q=253+Pham+Van+Thuan,+Tam+Hiep,+Bien+Hoa,+Dong+Nai" target="_blank" class="text-white/70 hover:text-accent transition-colors">
+                        <a href="https://maps.app.goo.gl/XsdoqeYRinQfwVxv7" target="_blank" class="text-white/70 hover:text-accent transition-colors">
                             Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai
                         </a>
                     </li>
