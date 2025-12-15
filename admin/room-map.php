@@ -424,6 +424,83 @@ foreach ($floor_configs as $floor => $config):
     </div>
 </div>
 
+<!-- Status Selection Modal -->
+<div id="statusModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden" style="background: rgba(0,0,0,0.6);">
+    <div class="absolute inset-0" onclick="closeStatusModal()"></div>
+    <div class="relative z-10 bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 class="font-bold text-lg">Đổi trạng thái phòng</h3>
+            <button onclick="closeStatusModal()" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Chọn trạng thái mới cho phòng <strong id="statusRoomNumber"></strong>:</p>
+            <input type="hidden" id="statusRoomId">
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="selectStatus('available')" class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent hover:border-green-500 bg-green-50 dark:bg-green-900/20 transition-all group">
+                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">check_circle</span>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-green-700 dark:text-green-400">Trống</div>
+                        <div class="text-xs text-gray-500">Available</div>
+                    </div>
+                </button>
+                <button onclick="selectStatus('occupied')" class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent hover:border-red-500 bg-red-50 dark:bg-red-900/20 transition-all group">
+                    <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">person</span>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-red-700 dark:text-red-400">Đang ở</div>
+                        <div class="text-xs text-gray-500">Occupied</div>
+                    </div>
+                </button>
+                <button onclick="selectStatus('maintenance')" class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent hover:border-orange-500 bg-orange-50 dark:bg-orange-900/20 transition-all group">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">build</span>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-orange-700 dark:text-orange-400">Bảo trì</div>
+                        <div class="text-xs text-gray-500">Maintenance</div>
+                    </div>
+                </button>
+                <button onclick="selectStatus('cleaning')" class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent hover:border-blue-500 bg-blue-50 dark:bg-blue-900/20 transition-all group">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">cleaning_services</span>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-blue-700 dark:text-blue-400">Dọn dẹp</div>
+                        <div class="text-xs text-gray-500">Cleaning</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Room Type Selection Modal -->
+<div id="roomTypeModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden" style="background: rgba(0,0,0,0.6);">
+    <div class="absolute inset-0" onclick="closeRoomTypeModal()"></div>
+    <div class="relative z-10 bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-lg max-h-[80vh] overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 class="font-bold text-lg">Đổi loại phòng</h3>
+            <button onclick="closeRoomTypeModal()" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Chọn loại phòng mới cho phòng <strong id="typeRoomNumber"></strong>:</p>
+            <input type="hidden" id="typeRoomId">
+            <div id="roomTypeList" class="space-y-2 max-h-[50vh] overflow-y-auto">
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function changeDate() {
     const date = document.getElementById('checkDate').value;
@@ -575,11 +652,11 @@ function displayRoomDetail(room, currentBooking, history) {
                 </div>
                 <div class="card-body">
                     <div class="grid grid-cols-2 gap-3">
-                        <button onclick="changeRoomType(${room.room_id})" class="btn btn-secondary w-full">
+                        <button onclick="changeRoomType(${room.room_id}, '${room.room_number}')" class="btn btn-secondary w-full">
                             <span class="material-symbols-outlined text-sm">swap_horiz</span>
                             Đổi loại phòng
                         </button>
-                        <button onclick="changeRoomStatus(${room.room_id}, '${room.status}')" class="btn btn-secondary w-full">
+                        <button onclick="changeRoomStatus(${room.room_id}, '${room.status}', '${room.room_number}')" class="btn btn-secondary w-full">
                             <span class="material-symbols-outlined text-sm">toggle_on</span>
                             Đổi trạng thái
                         </button>
@@ -612,105 +689,132 @@ function closeRoomModal() {
     document.body.style.overflow = '';
 }
 
-// Đổi loại phòng
-async function changeRoomType(roomId) {
+// Đổi loại phòng - Mở modal chọn
+async function changeRoomType(roomId, roomNumber) {
+    document.getElementById('typeRoomId').value = roomId;
+    document.getElementById('typeRoomNumber').textContent = roomNumber || roomId;
+    document.getElementById('roomTypeModal').classList.remove('hidden');
+    
+    // Load danh sách loại phòng
     try {
-        // Lấy danh sách loại phòng
         const response = await fetch('api/get-room-types.php');
         const data = await response.json();
         
         if (!data.success) {
-            alert('Không thể tải danh sách loại phòng');
+            document.getElementById('roomTypeList').innerHTML = '<p class="text-center text-red-500 py-4">Không thể tải danh sách loại phòng</p>';
             return;
         }
         
         const roomTypes = data.room_types;
+        let html = '';
         
-        // Tạo options cho select
-        const options = roomTypes.map(type => 
-            `<option value="${type.room_type_id}">
-                ${type.type_name} - ${type.category === 'room' ? 'Phòng' : 'Căn hộ'} (${parseInt(type.base_price).toLocaleString()}đ)
-            </option>`
-        ).join('');
-        
-        // Hiển thị dialog
-        const newTypeId = prompt(
-            'Nhập ID loại phòng mới:\n\n' + 
-            roomTypes.map(t => `${t.room_type_id}: ${t.type_name}`).join('\n')
-        );
-        
-        if (!newTypeId) return;
-        
-        // Cập nhật
-        const updateResponse = await fetch('api/update-room-type.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `room_id=${roomId}&room_type_id=${newTypeId}`
+        roomTypes.forEach(type => {
+            const isRoom = type.category === 'room';
+            html += `
+                <button onclick="selectRoomType(${type.room_type_id})" 
+                        class="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-[#d4af37] bg-gray-50 dark:bg-slate-700/50 transition-all text-left">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br ${isRoom ? 'from-blue-500 to-blue-600' : 'from-purple-500 to-purple-600'} flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-white">${isRoom ? 'bed' : 'apartment'}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-semibold text-gray-900 dark:text-white">${type.type_name}</div>
+                        <div class="text-sm text-gray-500">${isRoom ? 'Phòng' : 'Căn hộ'} • ${type.max_occupancy || 2} người</div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <div class="font-bold text-[#d4af37]">${parseInt(type.base_price).toLocaleString()}đ</div>
+                        <div class="text-xs text-gray-500">/đêm</div>
+                    </div>
+                </button>
+            `;
         });
         
-        const updateData = await updateResponse.json();
-        
-        if (updateData.success) {
-            alert('Đã đổi loại phòng thành công!');
-            location.reload();
-        } else {
-            alert(updateData.message || 'Có lỗi xảy ra');
-        }
+        document.getElementById('roomTypeList').innerHTML = html;
     } catch (error) {
-        alert('Có lỗi xảy ra: ' + error.message);
+        document.getElementById('roomTypeList').innerHTML = '<p class="text-center text-red-500 py-4">Có lỗi xảy ra</p>';
     }
 }
 
-// Đổi trạng thái phòng - Rút gọn bằng số
-async function changeRoomStatus(roomId, currentStatus) {
-    const statuses = {
-        '1': 'available',
-        '2': 'occupied', 
-        '3': 'maintenance',
-        '4': 'cleaning'
-    };
-    
-    const statusLabels = {
-        'available': 'Trống',
-        'occupied': 'Đang ở',
-        'maintenance': 'Bảo trì',
-        'cleaning': 'Dọn dẹp'
-    };
-    
-    const choice = prompt(
-        `Trạng thái hiện tại: ${statusLabels[currentStatus]}\n\n` +
-        `Chọn trạng thái mới (nhập số):\n` +
-        `1. Trống (available)\n` +
-        `2. Đang ở (occupied)\n` +
-        `3. Bảo trì (maintenance)\n` +
-        `4. Dọn dẹp (cleaning)`
-    );
-    
-    const newStatus = statuses[choice];
-    
-    if (!newStatus) {
-        if (choice) alert('Lựa chọn không hợp lệ! Vui lòng nhập số 1-4');
-        return;
-    }
+// Chọn loại phòng
+async function selectRoomType(typeId) {
+    const roomId = document.getElementById('typeRoomId').value;
     
     try {
-        const response = await fetch('api/update-room-status.php', {
+        const response = await fetch('api/update-room-type.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: `room_id=${roomId}&status=${newStatus}`
+            body: `room_id=${roomId}&room_type_id=${typeId}`
         });
         
         const data = await response.json();
         
         if (data.success) {
-            alert('Đã đổi trạng thái thành công!');
-            location.reload();
+            closeRoomTypeModal();
+            showToast('Đã đổi loại phòng thành công!', 'success');
+            setTimeout(() => location.reload(), 1000);
         } else {
-            alert(data.message || 'Có lỗi xảy ra');
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
         }
     } catch (error) {
-        alert('Có lỗi xảy ra: ' + error.message);
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
     }
+}
+
+function closeRoomTypeModal() {
+    document.getElementById('roomTypeModal').classList.add('hidden');
+}
+
+// Đổi trạng thái phòng - Mở modal chọn
+function changeRoomStatus(roomId, currentStatus, roomNumber) {
+    document.getElementById('statusRoomId').value = roomId;
+    document.getElementById('statusRoomNumber').textContent = roomNumber || roomId;
+    document.getElementById('statusModal').classList.remove('hidden');
+}
+
+// Chọn trạng thái
+async function selectStatus(status) {
+    const roomId = document.getElementById('statusRoomId').value;
+    
+    try {
+        const response = await fetch('api/update-room-status.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `room_id=${roomId}&status=${status}`
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            closeStatusModal();
+            showToast('Đã đổi trạng thái thành công!', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    } catch (error) {
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
+    }
+}
+
+function closeStatusModal() {
+    document.getElementById('statusModal').classList.add('hidden');
+}
+
+// Toast notification
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+    toast.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-[100] flex items-center gap-2 animate-fade-in`;
+    toast.innerHTML = `
+        <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+        ${message}
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // Quick Jump to Room by Number
