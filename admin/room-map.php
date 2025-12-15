@@ -407,15 +407,16 @@ foreach ($floor_configs as $floor => $config):
 <?php endforeach; ?>
 
 <!-- Room Detail Modal -->
-<div id="roomModal" class="modal">
-    <div class="modal-content max-w-4xl">
-        <div class="modal-header">
+<div id="roomModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" style="background: rgba(0,0,0,0.5);">
+    <div class="absolute inset-0" onclick="closeRoomModal()"></div>
+    <div class="modal-content max-w-4xl relative z-10 bg-white dark:bg-slate-800 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
+        <div class="modal-header px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-800 z-20">
             <h3 class="font-bold text-lg">Chi tiết phòng</h3>
-            <button onclick="closeRoomModal()" class="text-gray-500 hover:text-gray-700">
+            <button onclick="closeRoomModal()" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-        <div id="roomModalContent" class="modal-body">
+        <div id="roomModalContent" class="modal-body p-6">
             <div class="flex items-center justify-center py-12">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4af37]"></div>
             </div>
@@ -432,7 +433,8 @@ function changeDate() {
 }
 
 function viewRoom(roomId) {
-    document.getElementById('roomModal').classList.add('active');
+    document.getElementById('roomModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
     
     fetch(`api/get-room-detail.php?room_id=${roomId}`)
         .then(res => res.json())
@@ -606,7 +608,8 @@ function displayRoomDetail(room, currentBooking, history) {
 }
 
 function closeRoomModal() {
-    document.getElementById('roomModal').classList.remove('active');
+    document.getElementById('roomModal').classList.add('hidden');
+    document.body.style.overflow = '';
 }
 
 // Đổi loại phòng
