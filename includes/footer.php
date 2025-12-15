@@ -130,7 +130,7 @@ if (!function_exists('__')) {
     </div>
 </footer>
 
- <button id="backToTopBtn" type="button" aria-label="Back to top" class="fixed bottom-6 right-6 z-50 hidden h-12 w-12 items-center justify-center rounded-full bg-[#d4af37] text-white shadow-lg transition-all hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50">
+ <button id="backToTopBtn" type="button" aria-label="Back to top" class="fixed bottom-6 right-[90px] z-[10000] hidden h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/80 text-white shadow-lg transition-all hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50">
      <span class="material-symbols-outlined">arrow_upward</span>
  </button>
 

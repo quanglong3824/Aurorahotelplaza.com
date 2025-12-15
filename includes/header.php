@@ -210,10 +210,137 @@ $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
     </div>
 </header>
 
+<!-- Floating Mobile Menu - Liquid Glass -->
+<div id="floatingMenu" class="floating-menu">
+    <div class="floating-menu-overlay"></div>
+    
+    <div class="floating-menu-items">
+        <!-- Trang chủ -->
+        <div class="floating-menu-item">
+            <span class="floating-menu-label"><?php _e('nav.home'); ?></span>
+            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-btn" aria-label="<?php _e('nav.home'); ?>">
+                <span class="material-symbols-outlined">home</span>
+            </a>
+        </div>
+        
+        <!-- Phòng & Căn hộ - có submenu -->
+        <div class="floating-menu-item floating-submenu-wrapper">
+            <span class="floating-menu-label"><?php _e('nav.rooms'); ?></span>
+            <button class="floating-menu-btn" aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
+                <span class="material-symbols-outlined">hotel</span>
+            </button>
+            <div class="floating-submenu">
+                <a href="<?php echo $base_path; ?>rooms.php" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">bed</span>
+                    <?php _e('nav.rooms_only'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>apartments.php" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">apartment</span>
+                    <?php _e('nav.apartments'); ?>
+                    <span class="floating-badge-new"><?php _e('common.new'); ?></span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Dịch vụ - có submenu -->
+        <div class="floating-menu-item floating-submenu-wrapper">
+            <span class="floating-menu-label"><?php _e('nav.services'); ?></span>
+            <button class="floating-menu-btn" aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
+                <span class="material-symbols-outlined">room_service</span>
+            </button>
+            <div class="floating-submenu">
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">celebration</span>
+                    <?php _e('services_menu.wedding'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">groups</span>
+                    <?php _e('services_menu.conference'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">restaurant</span>
+                    <?php _e('services_menu.restaurant'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">business</span>
+                    <?php _e('services_menu.office'); ?>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Khám phá - có submenu -->
+        <div class="floating-menu-item floating-submenu-wrapper">
+            <span class="floating-menu-label"><?php _e('nav.explore'); ?></span>
+            <button class="floating-menu-btn" aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
+                <span class="material-symbols-outlined">explore</span>
+            </button>
+            <div class="floating-submenu">
+                <a href="<?php echo $base_path; ?>about.php" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">info</span>
+                    <?php _e('nav.about'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>gallery.php" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">photo_library</span>
+                    <?php _e('nav.gallery'); ?>
+                </a>
+                <a href="<?php echo $base_path; ?>blog.php" class="floating-submenu-item">
+                    <span class="material-symbols-outlined">article</span>
+                    <?php _e('nav.blog'); ?>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Liên hệ -->
+        <div class="floating-menu-item">
+            <span class="floating-menu-label"><?php _e('nav.contact'); ?></span>
+            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-btn" aria-label="<?php _e('nav.contact'); ?>">
+                <span class="material-symbols-outlined">call</span>
+            </a>
+        </div>
+        
+        <!-- Đặt phòng -->
+        <div class="floating-menu-item">
+            <span class="floating-menu-label"><?php _e('nav.book_now'); ?></span>
+            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-btn" aria-label="<?php _e('nav.book_now'); ?>">
+                <span class="material-symbols-outlined">calendar_month</span>
+            </a>
+        </div>
+        
+        <?php if ($is_logged_in): ?>
+        <!-- Tài khoản -->
+        <div class="floating-menu-item">
+            <span class="floating-menu-label"><?php _e('nav.profile'); ?></span>
+            <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-btn" aria-label="<?php _e('nav.profile'); ?>">
+                <span class="material-symbols-outlined">account_circle</span>
+            </a>
+        </div>
+        <?php else: ?>
+        <!-- Đăng nhập -->
+        <div class="floating-menu-item">
+            <span class="floating-menu-label"><?php _e('nav.login'); ?></span>
+            <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-btn" aria-label="<?php _e('nav.login'); ?>">
+                <span class="material-symbols-outlined">login</span>
+            </a>
+        </div>
+        <?php endif; ?>
+    </div>
+    
+    <!-- Main Toggle Button -->
+    <button class="floating-menu-toggle" aria-label="Mở menu" aria-expanded="false" aria-controls="floatingMenu">
+        <div class="floating-menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+</div>
+
 <!-- Header Styles & Script -->
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
+<link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo time(); ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo time(); ?>" defer></script>
+<script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo time(); ?>" defer></script>
 
 <script>
 (function() {
