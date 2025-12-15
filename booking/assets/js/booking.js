@@ -47,22 +47,25 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCheckoutMin();
     
     // Initial calculation with default dates
-    setTimeout(() => {
-        console.log('Running initial calculation...');
-        calculateTotal();
-        
-        // Only auto-select first room if no room is pre-selected from URL
-        const roomSelect = document.getElementById('room_type_id');
-        // Check if a room is already selected (selectedIndex > 0 means not the placeholder)
-        if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
-            console.log('No room pre-selected, selecting first room type...');
-            roomSelect.selectedIndex = 1; // Select first room type
-            calculateTotal();
-        } else if (roomSelect && roomSelect.selectedIndex > 0) {
-            console.log('Room pre-selected from URL (index: ' + roomSelect.selectedIndex + '), calculating...');
-            calculateTotal();
-        }
-    }, 100);
+    // Only auto-select first room if no room is pre-selected from URL
+    const roomSelect = document.getElementById('room_type_id');
+    
+    // Debug: Log preselected values from PHP
+    console.log('DEBUG - PHP preselected ID:', roomSelect.dataset.preselected);
+    console.log('DEBUG - PHP slug:', roomSelect.dataset.slug);
+    console.log('DEBUG - Current selectedIndex:', roomSelect.selectedIndex);
+    console.log('DEBUG - Current value:', roomSelect.value);
+    
+    // Check if a room is already selected (selectedIndex > 0 means not the placeholder)
+    if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
+        console.log('No room pre-selected, selecting first room type...');
+        roomSelect.selectedIndex = 1; // Select first room type
+    } else if (roomSelect && roomSelect.selectedIndex > 0) {
+        console.log('Room pre-selected from URL (index: ' + roomSelect.selectedIndex + ')');
+    }
+    
+    // Calculate after selection is determined
+    calculateTotal();
     
     // Event listeners
     document.getElementById('check_in_date').addEventListener('change', function() {

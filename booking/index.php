@@ -25,13 +25,15 @@ $room_types = $stmt->fetchAll();
 
 // Get pre-selected room type from URL (by slug or id)
 $selected_room_type_id = null;
+$selected_room_slug = null;
 if (isset($_GET['room_type'])) {
-    $room_type_param = $_GET['room_type'];
+    $room_type_param = trim($_GET['room_type']);
     // Check if it's a numeric ID or slug
     if (is_numeric($room_type_param)) {
         $selected_room_type_id = (int)$room_type_param;
     } else {
         // Find by slug
+        $selected_room_slug = $room_type_param;
         foreach ($room_types as $room) {
             if ($room['slug'] === $room_type_param) {
                 $selected_room_type_id = $room['room_type_id'];
@@ -120,13 +122,15 @@ foreach ($room_types as $room) {
                         <!-- Room Type -->
                         <div class="form-group">
                             <label class="form-label"><?php _e('booking_page.room_type'); ?> *</label>
-                            <select name="room_type_id" id="room_type_id" class="form-input" required>
+                            <select name="room_type_id" id="room_type_id" class="form-input" required
+                                        data-preselected="<?php echo $selected_room_type_id ?? 'null'; ?>"
+                                        data-slug="<?php echo $selected_room_slug ?? 'null'; ?>">
                                 <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
                                 <?php foreach($room_types as $room): ?>
                                 <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
                                         data-max-guests="<?php echo $room['max_occupancy']; ?>"
-                                        <?php echo ($selected_room_type_id == $room['room_type_id']) ? 'selected' : ''; ?>>
+                                        <?php echo ($selected_room_type_id !== null && (int)$selected_room_type_id === (int)$room['room_type_id']) ? 'selected' : ''; ?>>
                                     <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm
                                 </option>
                                 <?php endforeach; ?>
