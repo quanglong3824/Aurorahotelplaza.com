@@ -183,6 +183,7 @@ function getContactStatusBadge($status)
     <title><?php _e('profile_full.title'); ?> - <?php echo htmlspecialchars($user['full_name']); ?></title>
 
     <script src="assets/js/tailwindcss-cdn.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
@@ -351,7 +352,8 @@ function getContactStatusBadge($status)
 
                             <div class="text-center md:text-left">
                                 <h1 class="text-3xl font-heading font-bold text-white mb-1">
-                                    <?php echo htmlspecialchars($user['full_name']); ?></h1>
+                                    <?php echo htmlspecialchars($user['full_name']); ?>
+                                </h1>
                                 <div
                                     class="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-slate-400 text-sm">
                                     <span class="flex items-center gap-1"><span
@@ -381,6 +383,11 @@ function getContactStatusBadge($status)
                                     <span class="material-symbols-outlined text-sm">edit</span>
                                     <?php _e('profile_full.edit'); ?>
                                 </a>
+                                <button onclick="showMemberQR()"
+                                    class="px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-white transition-colors flex items-center gap-2 text-sm font-medium shadow-lg shadow-accent/20">
+                                    <span class="material-symbols-outlined text-sm">qr_code_2</span>
+                                    Member QR
+                                </button>
                                 <a href="logout.php"
                                     class="px-4 py-2 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-2 text-sm font-medium">
                                     <span class="material-symbols-outlined text-sm">logout</span>
@@ -394,7 +401,7 @@ function getContactStatusBadge($status)
                 <!-- Statistics Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Current Points -->
-                    <div class="stat-card group">
+                    <div class="stat-card group cursor-pointer" onclick="switchTab('points')">
                         <div class="flex justify-between items-start mb-2">
                             <span
                                 class="text-slate-400 text-sm font-medium uppercase tracking-wider"><?php _e('profile_full.current_points'); ?></span>
@@ -402,7 +409,8 @@ function getContactStatusBadge($status)
                                 class="material-symbols-outlined text-accent p-2 bg-accent/10 rounded-lg group-hover:bg-accent group-hover:text-white transition-colors">stars</span>
                         </div>
                         <p class="text-3xl font-bold text-white tracking-tight">
-                            <?php echo number_format($user['current_points'] ?? 0); ?></p>
+                            <?php echo number_format($user['current_points'] ?? 0); ?>
+                        </p>
                         <p class="text-xs text-slate-500 mt-1">Available to use</p>
                     </div>
 
@@ -415,7 +423,8 @@ function getContactStatusBadge($status)
                                 class="material-symbols-outlined text-purple-400 p-2 bg-purple-400/10 rounded-lg group-hover:bg-purple-500 group-hover:text-white transition-colors">emoji_events</span>
                         </div>
                         <p class="text-3xl font-bold text-white tracking-tight">
-                            <?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
+                            <?php echo number_format($user['lifetime_points'] ?? 0); ?>
+                        </p>
                         <p class="text-xs text-slate-500 mt-1">Total earned</p>
                     </div>
 
@@ -584,18 +593,21 @@ function getContactStatusBadge($status)
                                                         </div>
                                                     </div>
 
+                                                    <!-- Quick Stats -->
                                                     <div
-                                                        class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2 text-sm pt-4 border-t border-white/5">
+                                                        class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2 text-sm pt-4 border-t border-white/5 mb-4">
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">
-                                                                <?php _e('profile_full.check_in'); ?></div>
+                                                                <?php _e('profile_full.check_in'); ?>
+                                                            </div>
                                                             <div class="font-semibold text-white">
                                                                 <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
                                                             </div>
                                                         </div>
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">
-                                                                <?php _e('profile_full.check_out'); ?></div>
+                                                                <?php _e('profile_full.check_out'); ?>
+                                                            </div>
                                                             <div class="font-semibold text-white">
                                                                 <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
                                                             </div>
@@ -603,13 +615,37 @@ function getContactStatusBadge($status)
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">Duration</div>
                                                             <div class="font-semibold text-white">
-                                                                <?php echo $booking['total_nights']; ?> nights</div>
+                                                                <?php echo $booking['total_nights']; ?> nights
+                                                            </div>
                                                         </div>
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">Total</div>
                                                             <div class="font-bold text-accent">
-                                                                <?php echo number_format($booking['total_amount']); ?> đ</div>
+                                                                <?php echo number_format($booking['total_amount']); ?> đ
+                                                            </div>
                                                         </div>
+                                                    </div>
+
+                                                    <!-- Quick Actions -->
+                                                    <div class="flex items-center gap-3 pt-4 border-t border-white/5">
+                                                        <a href="profile/booking-detail.php?id=<?php echo $booking['booking_id']; ?>"
+                                                            class="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-center text-sm font-medium text-white transition border border-white/5">
+                                                            View Details
+                                                        </a>
+                                                        <?php if (in_array($booking['status'], ['confirmed', 'checked_in'])): ?>
+                                                            <button
+                                                                onclick="showBookingQR('<?php echo $booking['booking_code']; ?>')"
+                                                                class="px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 text-sm font-medium flex items-center gap-2">
+                                                                <span class="material-symbols-outlined text-base">qr_code</span>
+                                                                QR
+                                                            </button>
+                                                        <?php endif; ?>
+                                                        <?php if ($booking['status'] === 'pending'): ?>
+                                                            <a href="booking/payment.php?booking_id=<?php echo $booking['booking_id']; ?>"
+                                                                class="px-4 py-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/20 text-sm font-medium">
+                                                                Pay Now
+                                                            </a>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -669,7 +705,8 @@ function getContactStatusBadge($status)
                                 <div id="tab-payments" class="tab-content">
                                     <?php if (empty($payments)): ?>
                                         <div class="text-center py-12 text-slate-400">
-                                            <?php _e('profile_full.no_payments'); ?></div>
+                                            <?php _e('profile_full.no_payments'); ?>
+                                        </div>
                                     <?php else: ?>
                                         <div class="space-y-3">
                                             <?php foreach ($payments as $payment): ?>
@@ -683,10 +720,12 @@ function getContactStatusBadge($status)
                                                         </div>
                                                         <div>
                                                             <div class="font-bold text-white">
-                                                                <?php echo number_format($payment['amount']); ?> đ</div>
+                                                                <?php echo number_format($payment['amount']); ?> đ
+                                                            </div>
                                                             <div class="text-xs text-slate-500">Ref:
                                                                 <?php echo $payment['booking_code']; ?> •
-                                                                <?php echo strtoupper($payment['payment_method']); ?></div>
+                                                                <?php echo strtoupper($payment['payment_method']); ?>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="text-right">
@@ -779,14 +818,18 @@ function getContactStatusBadge($status)
     </div>
 
     <!-- Contact Detail Modal -->
-    <div id="contactModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300" id="contactModalContainer">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur-xl z-20">
+    <div id="contactModal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300"
+            id="contactModalContainer">
+            <div
+                class="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur-xl z-20">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
                     <span class="material-symbols-outlined text-accent">mail_lock</span>
                     <?php _e('profile_full.contact_detail'); ?>
                 </h3>
-                <button onclick="closeContactModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-slate-400 hover:text-white">
+                <button onclick="closeContactModal()"
+                    class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-slate-400 hover:text-white">
                     <span class="material-symbols-outlined text-xl">close</span>
                 </button>
             </div>
@@ -794,6 +837,34 @@ function getContactStatusBadge($status)
                 <div class="flex flex-col items-center py-12">
                     <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-accent mb-4"></div>
                     <p class="text-slate-400">Loading details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qrModal"
+        class="fixed inset-0 bg-black/90 backdrop-blur-md hidden items-center justify-center z-[60] p-4 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-sm transform scale-95 opacity-0 transition-all duration-300 relative"
+            id="qrModalContainer">
+            <button onclick="closeQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+
+            <div class="p-8 flex flex-col items-center justify-center text-center">
+                <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-4">
+                    <span class="material-symbols-outlined text-3xl text-accent">qr_code_2</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-1" id="qrModalTitle">Member Code</h3>
+                <p class="text-slate-400 text-sm mb-6" id="qrModalSubtitle">Present this code at reception</p>
+
+                <div class="p-4 bg-white rounded-2xl shadow-xl shadow-accent/10 mb-6">
+                    <div id="qrCodeContainer"></div>
+                </div>
+
+                <div class="bg-white/5 rounded-lg p-3 w-full border border-white/10">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Code ID</p>
+                    <p class="text-lg font-mono font-bold text-accent tracking-widest" id="qrTextDisplay">---</p>
                 </div>
             </div>
         </div>
@@ -829,10 +900,10 @@ function getContactStatusBadge($status)
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
+
             // Animation
             setTimeout(() => {
-                if(container) {
+                if (container) {
                     container.classList.remove('scale-95', 'opacity-0');
                     container.classList.add('scale-100', 'opacity-100');
                 }
@@ -914,12 +985,12 @@ function getContactStatusBadge($status)
         function closeContactModal() {
             const modal = document.getElementById('contactModal');
             const container = document.getElementById('contactModalContainer');
-            
-            if(container) {
+
+            if (container) {
                 container.classList.remove('scale-100', 'opacity-100');
                 container.classList.add('scale-95', 'opacity-0');
             }
-            
+
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
@@ -947,6 +1018,59 @@ function getContactStatusBadge($status)
         function switchTabByName(tabName) {
             switchTab(tabName);
         }
+
+        /* QR Code Logic */
+        const qrModal = document.getElementById('qrModal');
+        const qrContainer = document.getElementById('qrModalContainer');
+
+        function showMemberQR() {
+            openQR('<?php echo "MEMBER-" . str_pad($user_id, 8, "0", STR_PAD_LEFT); ?>', 'Member ID', 'Scan to accumulate points');
+        }
+
+        function showBookingQR(code) {
+            openQR(code, 'Booking Check-in', 'Scan this code at the reception');
+        }
+
+        function openQR(code, title, subtitle) {
+            document.getElementById('qrModalTitle').textContent = title;
+            document.getElementById('qrModalSubtitle').textContent = subtitle;
+            document.getElementById('qrTextDisplay').textContent = code;
+
+            // Generate QR
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: code,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            qrModal.classList.remove('hidden');
+            qrModal.classList.add('flex');
+
+            setTimeout(() => {
+                qrContainer.classList.remove('scale-95', 'opacity-0');
+                qrContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeQRModal() {
+            qrContainer.classList.remove('scale-100', 'opacity-100');
+            qrContainer.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                qrModal.classList.add('hidden');
+                qrModal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Close modal on outside click
+        qrModal.addEventListener('click', (e) => {
+            if (e.target === qrModal) closeQRModal();
+        });
     </script>
 
 </body>
