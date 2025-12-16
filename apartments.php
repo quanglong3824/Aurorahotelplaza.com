@@ -115,8 +115,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                 <div class="apt-grid">
                                     <?php foreach ($new_apartments as $apt):
                                         $amenities = !empty($apt['amenities']) ? array_slice(explode(',', $apt['amenities']), 0, 4) : [];
-                                        $thumbnail = normalizeImagePath($apt['thumbnail']);
-                                        $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                        $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                         ?>
                                         <div class="apt-card-glass">
                                             <div class="apt-img-container">
@@ -211,8 +210,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                 <div class="apt-grid">
                                     <?php foreach ($old_apartments as $apt):
                                         $amenities = !empty($apt['amenities']) ? array_slice(explode(',', $apt['amenities']), 0, 4) : [];
-                                        $thumbnail = normalizeImagePath($apt['thumbnail']);
-                                        $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                        $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                         ?>
                                         <div class="apt-card-glass">
                                             <div class="apt-img-container">

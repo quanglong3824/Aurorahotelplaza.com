@@ -119,8 +119,7 @@ try {
                             <?php foreach ($room_types as $room):
                                 $amenities = !empty($room['amenities']) ? explode(',', $room['amenities']) : [];
                                 $amenities = array_slice($amenities, 0, 4);
-                                $thumbnail = normalizeImagePath($room['thumbnail']);
-                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
                                 <div class="room-card-glass">
                                     <!-- Image -->

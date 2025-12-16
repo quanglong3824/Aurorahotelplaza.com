@@ -146,7 +146,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                 <div class="glass-card">
                                     <?php if ($service['thumbnail']): ?>
                                     <div class="service-img-container">
-                                        <img src="<?php echo htmlspecialchars($service['thumbnail']); ?>" 
+                                        <img src="<?php echo imgUrl($service['thumbnail']); ?>" 
                                              alt="<?php echo htmlspecialchars($service['service_name']); ?>">
                                         
                                         <?php if ($service['is_featured']): ?>

@@ -192,7 +192,7 @@ try {
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Phòng nghỉ -->
                         <a href="rooms.php" class="glass-category-card">
-                            <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg"
+                            <img src="<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.rooms'); ?>">
                             <div class="glass-category-overlay"></div>
                             <div class="glass-category-content">
@@ -206,9 +206,9 @@ try {
 
                         <!-- Căn hộ -->
                         <a href="apartments.php" class="glass-category-card">
-                            <img src="assets/img/apartment/can-ho-aurora-1.jpg"
+                            <img src="<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.apartments'); ?>"
-                                onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
+                                onerror="this.src='<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-3.jpg'); ?>'">
                             <div class="glass-category-overlay"></div>
                             <div class="glass-category-content">
                                 <span class="glass-category-badge">
@@ -222,7 +222,7 @@ try {
 
                         <!-- Nhà hàng -->
                         <a href="services.php?category=restaurant" class="glass-category-card">
-                            <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
+                            <img src="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg'); ?>"
                                 alt="<?php _e('explore_page.restaurant_aurora'); ?>">
                             <div class="glass-category-overlay"></div>
                             <div class="glass-category-content">
@@ -236,7 +236,7 @@ try {
 
                         <!-- Sự kiện -->
                         <a href="services.php?category=event" class="glass-category-card">
-                            <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
+                            <img src="<?php echo imgUrl('assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg'); ?>"
                                 alt="<?php _e('explore_page.events'); ?>">
                             <div class="glass-category-overlay"></div>
                             <div class="glass-category-content">
@@ -277,8 +277,7 @@ try {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <?php foreach ($featured_rooms as $room):
-                                $thumbnail = normalizeImagePath($room['thumbnail']);
-                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
                                 <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group">
                                     <div class="explore-card">
@@ -343,8 +342,7 @@ try {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <?php foreach ($featured_apartments as $apt):
-                                $thumbnail = normalizeImagePath($apt['thumbnail']);
-                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                 ?>
                                 <a href="apartment-details/<?php echo htmlspecialchars($apt['slug']); ?>.php" class="group">
                                     <div class="explore-card">
