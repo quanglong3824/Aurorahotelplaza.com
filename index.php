@@ -401,47 +401,44 @@ try {
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg');
                                 ?>
                                 <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
-                                    class="group liquid-glass-card hover:-translate-y-2">
-                                    <div class="card-image relative aspect-[4/3] overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                            alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
-                                        <div
-                                            class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full shadow-lg">
-                                            <?php _e('home.apartment'); ?>
-                                        </div>
-                                        <div
-                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                                            <div class="text-white font-bold text-xl price-tag">
-                                                <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ
-                                                <span
-                                                    class="text-sm font-normal opacity-80 text-white">/<?php _e('common.night'); ?></span>
-                                            </div>
-                                        </div>
+                                    class="liquid-glass-card group">
+
+                                    <!-- Image Layer -->
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                        alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
+                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
+
+                                    <!-- Badge Top Left -->
+                                    <div class="card-badge">
+                                        <span class="material-symbols-outlined">apartment</span>
+                                        <?php _e('home.apartment'); ?>
                                     </div>
-                                    <div class="p-6 flex flex-col flex-grow card-content">
-                                        <h3
-                                            class="font-display text-xl font-bold mb-3 group-hover:text-accent transition-colors">
-                                            <?php echo htmlspecialchars($apartment['type_name']); ?>
-                                        </h3>
-                                        <div class="flex flex-wrap gap-4 text-sm mt-auto">
-                                            <span
-                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                                                <span class="material-symbols-outlined text-accent text-base">square_foot</span>
+
+                                    <!-- Content Overlay Bottom -->
+                                    <div class="card-content">
+                                        <!-- Price -->
+                                        <div class="price-display">
+                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ
+                                            <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                        </div>
+
+                                        <!-- Title -->
+                                        <h3><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
+
+                                        <!-- Info Icons Row -->
+                                        <div class="info-row">
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">square_foot</span>
                                                 <?php echo number_format($apartment['size_sqm'], 0); ?>m²
-                                            </span>
-                                            <span
-                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                                                <span class="material-symbols-outlined text-accent text-base">bed</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">bed</span>
                                                 <?php echo htmlspecialchars($apartment['bed_type']); ?>
-                                            </span>
-                                            <span
-                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                                                <span class="material-symbols-outlined text-accent text-base">person</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">person</span>
                                                 <?php echo $apartment['max_occupancy']; ?>
-                                                <?php _e('apartments_page.guests'); ?>
-                                            </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>

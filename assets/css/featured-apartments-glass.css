@@ -1,39 +1,28 @@
 /* =================================================================
-   LIQUID GLASS STYLE - FEATURED APARTMENTS
-   Based on .kiro/steering/liquid-glass-popup-style.md
+   LIQUID GLASS STYLE - COMPACT OVERLAY CARDS
+   Style: Compact, Image-Centric, Text Overlay
    ================================================================= */
 
-/* 
-   SECTION BACKGROUND
-   Crucial: The section needs a dark/rich background for the 
-   transparent glass cards (opacity ~0.12) to be visible.
-*/
+/* Section Background adjustment */
 #apartments {
     position: relative;
     background-image: url('../img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    /* Parallax effect */
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
 }
 
-/* Overlay to darken background */
 #apartments::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
+    /* Darker overlay to make cards pop */
     background: linear-gradient(to bottom,
             rgba(17, 24, 39, 0.95),
-            /* Darker at top to blend with previous section */
-            rgba(17, 24, 39, 0.8) 50%,
-            rgba(17, 24, 39, 0.95)
-            /* Darker at bottom */
-        );
+            rgba(17, 24, 39, 0.85) 50%,
+            rgba(17, 24, 39, 0.95));
     z-index: 0;
 }
 
@@ -43,161 +32,182 @@
 }
 
 /* 
-   LIQUID GLASS CARD
-   Ref: liquid-glass-popup-style.md
+   COMPACT OVERLAY CARD
+   Image fills the card, content floats on top at bottom.
 */
 .liquid-glass-card {
-    display: flex;
-    flex-direction: column;
-    /* Principle 3: Gradient 3 points (0.12 -> 0.06 -> 0.03) */
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.12) 0%,
-            rgba(255, 255, 255, 0.06) 50%,
-            rgba(255, 255, 255, 0.03) 100%);
-    /* Principle 2: Blur 16px */
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-
-    /* Principle 4: Border 0.18 */
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 1.25rem;
-    overflow: hidden;
+    display: block;
     position: relative;
+    width: 100%;
+    /* Fixed height for uniformity - Standard Portrait Card */
+    height: 480px;
+    border-radius: 1.5rem;
+    /* Rounder corners like reference */
+    overflow: hidden;
 
-    /* Principle 6: Animation Transition */
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Liquid Glass Border */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 
-    /* Principle 5: Shadow layers */
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.12),
-        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-        0 32px 64px -12px rgba(0, 0, 0, 0.25);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #1a1a1a;
+    /* Fallback color */
+}
 
+/* Image Layer */
+.liquid-glass-card img {
+    width: 100%;
     height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Highlight Effect (::before) */
-.liquid-glass-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.08) 0%,
-            rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
-    z-index: 1;
+.liquid-glass-card:hover img {
+    transform: scale(1.1);
 }
 
-/* Shimmer Animation (::after) */
+/* 
+   Gradient Overlay 
+   Essential for text readability on top of images
+*/
 .liquid-glass-card::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 30% 20%,
-            rgba(212, 175, 55, 0.08) 0%,
-            transparent 50%);
-    animation: liquidShimmer 8s ease-in-out infinite;
     pointer-events: none;
-    z-index: 2;
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.9) 0%,
+            /* Deep black at bottom */
+            rgba(0, 0, 0, 0.6) 40%,
+            /* Fade up */
+            rgba(0, 0, 0, 0.1) 70%,
+            transparent 100%);
+    z-index: 1;
 }
 
-@keyframes liquidShimmer {
-
-    0%,
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-
-    25% {
-        transform: translate(5%, 5%) rotate(2deg);
-    }
-
-    50% {
-        transform: translate(0, 10%) rotate(0deg);
-    }
-
-    75% {
-        transform: translate(-5%, 5%) rotate(-2deg);
-    }
-}
-
-/* Hover Effect */
-.liquid-glass-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.15) 0%,
-            rgba(255, 255, 255, 0.08) 100%);
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
-}
-
-/* Content Styling for Dark Background */
+/* Content Container - Absolute Bottom */
 .liquid-glass-card .card-content {
-    background: transparent;
-    color: white;
-    /* Force white text */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.75rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
 }
 
-/* Image Container */
-.liquid-glass-card .card-image {
-    position: relative;
-    aspect-ratio: 4/3;
-    overflow: hidden;
-    z-index: 0;
+/* Hover Lift Effect for Content */
+.liquid-glass-card:hover .card-content {
+    transform: translateY(-5px);
 }
 
-.liquid-glass-card .card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-}
+/* Badge System - Top Left */
+.liquid-glass-card .card-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    z-index: 2;
 
-.liquid-glass-card:hover .card-image img {
-    transform: scale(1.1);
-}
-
-/* Text Upgrade */
-.liquid-glass-card h3 {
-    color: white !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.liquid-glass-card p,
-.liquid-glass-card span {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.liquid-glass-card .price-tag {
-    color: #ffd700 !important;
-    /* Brighter gold for dark bg */
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-/* Section Header Upgrade */
-#apartments .section-title {
-    color: white !important;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-#apartments .section-desc {
-    color: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* Button Upgrade for Dark Section */
-#apartments .btn-view-all {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    /* Glass Effect for Badge */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
     color: white;
-    transition: all 0.3s ease;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-#apartments .btn-view-all:hover {
-    background: #d4af37;
-    border-color: #d4af37;
+.liquid-glass-card .card-badge .material-symbols-outlined {
+    font-size: 1rem;
+    color: #d4af37;
+    /* Accent Gold */
+}
+
+/* Price Badge - Top Right or Bottom? 
+   Let's keep price integrated in content for clean look 
+   OR separate. Reference image didn't show price but usually needed.
+*/
+
+/* Typography */
+.liquid-glass-card h3 {
+    font-family: 'Playfair Display', serif;
+    /* Or project font */
+    font-size: 1.75rem;
+    font-weight: 700;
     color: white;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Info Row (Icons) */
+.liquid-glass-card .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.liquid-glass-card .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.liquid-glass-card .info-item .material-symbols-outlined {
+    font-size: 1.125rem;
+    color: #d4af37;
+}
+
+/* Price Styling in Content */
+.liquid-glass-card .price-display {
+    display: inline-block;
+    color: #d4af37;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.liquid-glass-card .price-unit {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive adjustments */
+@media (max-width: 639px) {
+    .liquid-glass-card {
+        height: 400px;
+    }
+
+    .liquid-glass-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .card-badge {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .card-content {
+        padding: 1.25rem;
+    }
 }
