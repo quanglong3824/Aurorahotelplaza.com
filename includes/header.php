@@ -60,16 +60,17 @@ $pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'galler
 $has_hero = in_array($current_page, $pages_with_hero);
 
 // Pages without hero need solid header with dark logo on white background
-$pages_solid_header = ['profile', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
-$is_solid_page = in_array($current_page, $pages_solid_header) || $current_dir === 'profile';
+// Pages without hero need solid header with dark logo on white background
+$pages_solid_header = ['confirmation'];
+$is_solid_page = in_array($current_page, $pages_solid_header);
 $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 
 // Force scrolled state for solid pages (profile, etc.)
 $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 
 // Pages with fixed transparent header (always transparent, always white logo)
-$pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore'];
-$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent);
+$pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail'];
+$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($current_dir === 'profile');
 ?>
 <!-- TopNavBar - Smart Header -->
 <header id="main-header"

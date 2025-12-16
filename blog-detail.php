@@ -125,7 +125,7 @@ try {
         <main class="flex h-full grow flex-col">
             <!-- Glass Page Wrapper for Dark Theme Consistency -->
             <div class="glass-page-wrapper blog-detail-wrapper"
-                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); padding-top: 180px;">
+                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
 
                 <!-- Article Header -->
                 <article class="py-0 relative z-10">
