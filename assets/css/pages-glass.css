@@ -45,7 +45,16 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px 20px 80px;
+    padding: 180px 20px 80px;
+}
+
+/* Specific Hero for Service Detail */
+.detail-hero-section {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 180px 20px 80px;
 }
 
 .hero-glass-card {
@@ -449,7 +458,7 @@ main {
 /* Responsive */
 @media (max-width: 768px) {
     .page-hero-glass {
-        padding: 100px 16px 60px;
+        padding: 180px 16px 60px;
         min-height: auto;
     }
 
@@ -465,6 +474,7 @@ main {
         padding: 1.5rem;
     }
 }
+
 /* --- MISSING SERVICE DETAIL STYLES --- */
 .stat-card-glass {
     background: rgba(255, 255, 255, 0.05);
@@ -483,21 +493,30 @@ main {
 }
 
 .stat-icon {
-    width: 3rem; height: 3rem;
+    width: 3rem;
+    height: 3rem;
     margin: 0 auto 1rem;
     background: linear-gradient(135deg, #d4af37, #b8941f);
     border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .stat-value {
-    font-size: 2rem; font-weight: 700; color: white;
-    margin-bottom: 0.25rem; font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+    font-family: 'Playfair Display', serif;
 }
 
-.stat-label { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
+.stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
 
 .detail-glass-card {
     background: rgba(255, 255, 255, 0.05);
@@ -513,14 +532,17 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
     padding: 2.5rem;
-    display: flex; flex-direction: column; height: 100%;
-    position: relative; transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    transition: all 0.3s;
 }
 
 .package-detail-card:hover {
     transform: translateY(-10px);
     background: rgba(30, 41, 59, 0.6);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .package-detail-card.featured {
@@ -529,25 +551,42 @@ main {
 }
 
 .package-badge {
-    position: absolute; top: 1.5rem; right: 1.5rem;
-    background: #d4af37; color: white;
-    padding: 0.25rem 0.75rem; border-radius: 99px;
-    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #d4af37;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .package-price-large {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; font-weight: 700;
-    color: #d4af37; margin: 1rem 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #d4af37;
+    margin: 1rem 0;
 }
 
-.package-features { margin: 1.5rem 0; flex-grow: 1; }
+.package-features {
+    margin: 1.5rem 0;
+    flex-grow: 1;
+}
 
 .feature-row {
-    display: flex; gap: 0.75rem; margin-bottom: 0.75rem;
-    color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
 }
-.feature-row .material-symbols-outlined { color: #10b981; }
+
+.feature-row .material-symbols-outlined {
+    color: #10b981;
+}
 
 
 /* --- HOVER EFFECTS FOR ABOUT & CONTACT --- */
@@ -558,8 +597,14 @@ main {
     box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
 }
 
-.info-item { transition: all 0.3s ease; }
-.info-item:hover { transform: translateX(10px); }
+.info-item {
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateX(10px);
+}
+
 .info-item:hover .info-icon {
     background: #d4af37;
     color: white;

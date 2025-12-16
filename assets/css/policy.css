@@ -259,7 +259,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .policy-hero-glass {
-        padding: 140px 16px 60px;
+        padding: 180px 16px 60px;
         min-height: auto;
     }
 

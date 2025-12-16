@@ -8,19 +8,19 @@ ini_set('display_errors', 0); // Don't display, but log
 ini_set('log_errors', 1);
 
 // Global error handler to prevent blank page
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     error_log("PHP Error [$errno]: $errstr in $errfile on line $errline");
     return false; // Let PHP handle it normally after logging
 });
 
 // Global exception handler
-set_exception_handler(function($e) {
+set_exception_handler(function ($e) {
     error_log("Uncaught exception: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
     // Don't die - let the page continue to render
 });
 
 // Register shutdown function to catch fatal errors
-register_shutdown_function(function() {
+register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
         error_log("Fatal error: {$error['message']} in {$error['file']} on line {$error['line']}");
@@ -47,27 +47,27 @@ $email = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         require_once '../config/database.php';
-        
+
         $email = trim($_POST['email'] ?? '');
-        
+
         if (empty($email)) {
             $error = 'Vui lòng nhập email';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Email không hợp lệ';
         } else {
             $db = getDB();
-            
+
             if (!$db) {
                 throw new Exception('Không thể kết nối database');
             }
-            
+
             // Check if columns exist first, only add if needed
             $columnsToAdd = [
                 'temp_password' => "ALTER TABLE users ADD COLUMN temp_password VARCHAR(255) NULL",
                 'temp_password_expires' => "ALTER TABLE users ADD COLUMN temp_password_expires DATETIME NULL",
                 'requires_password_change' => "ALTER TABLE users ADD COLUMN requires_password_change TINYINT(1) DEFAULT 0"
             ];
-            
+
             foreach ($columnsToAdd as $column => $sql) {
                 try {
                     $checkColumn = $db->query("SHOW COLUMNS FROM users LIKE '$column'");
@@ -78,14 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("Column check/add error for $column: " . $colErr->getMessage());
                 }
             }
-            
+
             $stmt = $db->prepare("SELECT user_id, full_name, email FROM users WHERE email = ? AND status = 'active'");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
-            
+
             if ($user) {
                 $user_id = $user['user_id'];
-                
+
                 // Generate random temporary password (8 characters, simple)
                 $chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
                 $temp_password = '';
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $temp_password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
                 $expires = date('Y-m-d H:i:s', strtotime('+30 minutes'));
-                
+
                 // Update user: REPLACE password_hash with temp password
                 // User must change password on next login
                 try {
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ");
                     $updateResult = $stmt->execute([$temp_password_hash, $user_id]);
                     $rowsAffected = $stmt->rowCount();
-                    
+
                     if (!$updateResult || $rowsAffected == 0) {
                         error_log("Update password failed - Result: " . ($updateResult ? 'true' : 'false') . ", Rows: $rowsAffected, User ID: $user_id");
                         $error = 'Không thể cập nhật mật khẩu. Vui lòng thử lại.';
@@ -114,14 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("Update password PDO error: " . $updateErr->getMessage());
                     $error = 'Lỗi cập nhật mật khẩu. Vui lòng thử lại.';
                 }
-                
+
                 // Try to send email (non-blocking approach)
                 $emailSent = false;
                 $emailError = '';
                 try {
                     // Set shorter timeout for email
                     set_time_limit(30);
-                    
+
                     require_once '../helpers/mailer.php';
                     $mailer = getMailer();
                     if ($mailer && $mailer->isReady()) {
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $emailError = $mailErr->getMessage();
                     error_log("Email send error: " . $emailError);
                 }
-                
+
                 // Log password reset request (optional, don't fail if logger fails)
                 try {
                     if (file_exists(__DIR__ . '/../helpers/logger.php')) {
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } catch (Throwable $logError) {
                     error_log("Logger Throwable: " . $logError->getMessage());
                 }
-                
+
                 // Always show temp password (for now, until email is reliable)
                 $success = 'Mật khẩu tạm thời của bạn: <strong>' . htmlspecialchars($temp_password) . '</strong><br>Hết hạn sau 30 phút.';
                 if ($emailSent) {
@@ -184,145 +184,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html class="light" lang="vi">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title>Quên mật khẩu - Aurora Hotel Plaza</title>
-<script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
-<link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Quên mật khẩu - Aurora Hotel Plaza</title>
+    <script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
+    <link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet" />
 
-<script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
-<link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
-<link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/auth/assets/css/auth.css?v=<?php echo time(); ?>">
-<style>
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-.animate-spin { animation: spin 1s linear infinite; }
-</style>
+    <script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+    <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/auth/assets/css/auth.css?v=<?php echo time(); ?>">
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
 </head>
+
 <body class="auth-forgot">
-<div class="relative flex min-h-screen w-full flex-col">
+    <div class="relative flex min-h-screen w-full flex-col">
 
-<?php include '../includes/header.php'; ?>
+        <?php include '../includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col items-center justify-center py-24 px-4 min-h-screen">
-    <div class="auth-container">
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <div class="icon-badge">
-                <span class="material-symbols-outlined">lock_reset</span>
-            </div>
-            <h1 class="auth-title">Quên mật khẩu?</h1>
-            <p class="auth-subtitle">
-                Nhập email của bạn để nhận mật khẩu tạm thời
-            </p>
-        </div>
-
-        <!-- Forgot Password Form -->
-        <div class="auth-card">
-            
-            <?php if ($success): ?>
-            <div class="alert alert-success">
-                <span class="material-symbols-outlined">check_circle</span>
-                <div>
-                    <strong>Thành công!</strong>
-                    <p><?php echo $success; ?></p>
-                </div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($error): ?>
-            <div class="alert alert-error">
-                <span class="material-symbols-outlined">error</span>
-                <div>
-                    <strong>Lỗi!</strong>
-                    <p><?php echo htmlspecialchars($error); ?></p>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <?php if (!$success): ?>
-            <form method="POST" action="" id="forgotForm">
-                <div class="form-fields">
-                    <!-- Email -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="material-symbols-outlined">email</span>
-                            Email
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="email" name="email" class="form-input" required 
-                                   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-                                   placeholder="Nhập địa chỉ email của bạn">
-                        </div>
+        <main class="flex h-full grow flex-col items-center justify-center pt-[180px] pb-24 px-4 min-h-screen">
+            <div class="auth-container">
+                <!-- Header -->
+                <div class="text-center mb-10">
+                    <div class="icon-badge">
+                        <span class="material-symbols-outlined">lock_reset</span>
                     </div>
-
-                    <!-- Submit -->
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        <span class="btn-text" id="btnText">Gửi mật khẩu tạm thời</span>
-                        <span class="btn-icon" id="btnIcon">
-                            <span class="material-symbols-outlined">send</span>
-                        </span>
-                        <span class="btn-loading" id="btnLoading" style="display: none;">
-                            <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span style="margin-left: 8px;">Đang gửi...</span>
-                        </span>
-                    </button>
+                    <h1 class="auth-title">Quên mật khẩu?</h1>
+                    <p class="auth-subtitle">
+                        Nhập email của bạn để nhận mật khẩu tạm thời
+                    </p>
                 </div>
-            </form>
-            
-            <script>
-            document.getElementById('forgotForm').addEventListener('submit', function(e) {
-                var btn = document.getElementById('submitBtn');
-                var btnText = document.getElementById('btnText');
-                var btnIcon = document.getElementById('btnIcon');
-                var btnLoading = document.getElementById('btnLoading');
-                
-                btn.disabled = true;
-                btn.style.opacity = '0.7';
-                btnText.style.display = 'none';
-                btnIcon.style.display = 'none';
-                btnLoading.style.display = 'flex';
-                btnLoading.style.alignItems = 'center';
-                btnLoading.style.justifyContent = 'center';
-            });
-            </script>
-            <?php else: ?>
-            <!-- Success Actions -->
-            <div class="text-center space-y-4">
-                <div class="success-actions">
-                    <a href="<?php echo url('auth/login.php'); ?>" class="btn-primary">
-                        <span class="btn-text">Đăng nhập</span>
-                        <span class="btn-icon">
-                            <span class="material-symbols-outlined">login</span>
-                        </span>
-                    </a>
+
+                <!-- Forgot Password Form -->
+                <div class="auth-card">
+
+                    <?php if ($success): ?>
+                        <div class="alert alert-success">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            <div>
+                                <strong>Thành công!</strong>
+                                <p><?php echo $success; ?></p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($error): ?>
+                        <div class="alert alert-error">
+                            <span class="material-symbols-outlined">error</span>
+                            <div>
+                                <strong>Lỗi!</strong>
+                                <p><?php echo htmlspecialchars($error); ?></p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!$success): ?>
+                        <form method="POST" action="" id="forgotForm">
+                            <div class="form-fields">
+                                <!-- Email -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span class="material-symbols-outlined">email</span>
+                                        Email
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <input type="email" name="email" class="form-input" required
+                                            value="<?php echo htmlspecialchars($email ?? ''); ?>"
+                                            placeholder="Nhập địa chỉ email của bạn">
+                                    </div>
+                                </div>
+
+                                <!-- Submit -->
+                                <button type="submit" class="btn-primary" id="submitBtn">
+                                    <span class="btn-text" id="btnText">Gửi mật khẩu tạm thời</span>
+                                    <span class="btn-icon" id="btnIcon">
+                                        <span class="material-symbols-outlined">send</span>
+                                    </span>
+                                    <span class="btn-loading" id="btnLoading" style="display: none;">
+                                        <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                        <span style="margin-left: 8px;">Đang gửi...</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <script>
+                            document.getElementById('forgotForm').addEventListener('submit', function (e) {
+                                var btn = document.getElementById('submitBtn');
+                                var btnText = document.getElementById('btnText');
+                                var btnIcon = document.getElementById('btnIcon');
+                                var btnLoading = document.getElementById('btnLoading');
+
+                                btn.disabled = true;
+                                btn.style.opacity = '0.7';
+                                btnText.style.display = 'none';
+                                btnIcon.style.display = 'none';
+                                btnLoading.style.display = 'flex';
+                                btnLoading.style.alignItems = 'center';
+                                btnLoading.style.justifyContent = 'center';
+                            });
+                        </script>
+                    <?php else: ?>
+                        <!-- Success Actions -->
+                        <div class="text-center space-y-4">
+                            <div class="success-actions">
+                                <a href="<?php echo url('auth/login.php'); ?>" class="btn-primary">
+                                    <span class="btn-text">Đăng nhập</span>
+                                    <span class="btn-icon">
+                                        <span class="material-symbols-outlined">login</span>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Back to Login -->
+                    <div class="auth-footer">
+                        <a href="<?php echo url('auth/login.php'); ?>" class="back-link">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Quay lại đăng nhập
+                        </a>
+                    </div>
                 </div>
             </div>
-            <?php endif; ?>
+        </main>
 
-            <!-- Back to Login -->
-            <div class="auth-footer">
-                <a href="<?php echo url('auth/login.php'); ?>" class="back-link">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    Quay lại đăng nhập
-                </a>
-            </div>
-        </div>
+        <?php include '../includes/footer.php'; ?>
+
     </div>
-</main>
 
-<?php include '../includes/footer.php'; ?>
-
-</div>
-
-<script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
-<script src="<?php echo BASE_URL; ?>/auth/assets/js/auth.js?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo BASE_URL; ?>/auth/assets/js/auth.js?v=<?php echo time(); ?>"></script>
 </body>
+
 </html>

@@ -125,7 +125,7 @@ try {
         <main class="flex h-full grow flex-col">
             <!-- Glass Page Wrapper for Dark Theme Consistency -->
             <div class="glass-page-wrapper blog-detail-wrapper"
-                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); padding-top: 140px;">
+                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); padding-top: 180px;">
 
                 <!-- Article Header -->
                 <article class="py-0 relative z-10">
@@ -509,7 +509,8 @@ try {
                                         <button type="button" id="likeBtn"
                                             class="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-red-400/50 text-red-400 hover:bg-red-900/20 transition-all">
                                             <span class="material-symbols-outlined like-icon">favorite</span>
-                                            <span id="likesCount"><?php echo (int) ($post['likes_count'] ?? 0); ?></span>
+                                            <span
+                                                id="likesCount"><?php echo (int) ($post['likes_count'] ?? 0); ?></span>
                                         </button>
 
                                         <!-- Share Buttons -->
@@ -646,7 +647,8 @@ try {
                     <section class="py-16 bg-black/40">
                         <div class="mx-auto max-w-7xl px-4">
                             <h2 class="text-3xl font-bold mb-8 text-center text-white">
-                                <?php _e('blog_page.related_posts'); ?></h2>
+                                <?php _e('blog_page.related_posts'); ?>
+                            </h2>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <?php foreach ($related_posts as $related): ?>
@@ -658,9 +660,11 @@ try {
                                             </div>
                                             <div class="blog-card-content">
                                                 <h3 class="blog-card-title text-white">
-                                                    <?php echo htmlspecialchars($related['title']); ?></h3>
+                                                    <?php echo htmlspecialchars($related['title']); ?>
+                                                </h3>
                                                 <p class="blog-card-excerpt text-white/70">
-                                                    <?php echo htmlspecialchars($related['excerpt'] ?? ''); ?></p>
+                                                    <?php echo htmlspecialchars($related['excerpt'] ?? ''); ?>
+                                                </p>
                                             </div>
                                         </a>
                                     </article>
