@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/database.php';
 require_once 'config/environment.php';
+require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 initLanguage();
 
@@ -41,13 +42,14 @@ if ($is_logged_in) {
     
     <!-- Preload critical resources -->
     <link rel="preload" href="assets/css/fonts.css" as="style">
-    <link rel="preload" href="assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg" as="image">
+    <link rel="preload" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>" as="image">
     
+    <!-- Critical CSS inline for faster FCP -->
     <!-- Critical CSS inline for faster FCP -->
     <style>
         /* Critical CSS - Same pattern as auth pages for smooth scroll */
-        body.glass-page{position:relative;background-image:url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed}
-        body.glass-page::before{content:'';position:fixed;inset:0;background:linear-gradient(135deg,rgba(17,24,39,.88),rgba(17,24,39,.75));z-index:1;pointer-events:none}
+        body.glass-page{position:relative;background-image:url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed}
+        body.glass-page::before{content:'';position:fixed;inset:0;background:linear-gradient(135deg,rgba(17,24,39,.88),rgba(17,24,39,.75));z-index:1;pointer-events:none;background-image:url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>');background-size:cover;background-position:center;background-repeat:no-repeat;}
         body.glass-page>div{position:relative;z-index:2}
         .page-hero-glass{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;padding:180px 20px 80px}
     </style>

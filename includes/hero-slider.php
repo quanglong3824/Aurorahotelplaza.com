@@ -10,9 +10,9 @@
     <div class="hero-slide" data-bg="assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg"></div>
     <div class="hero-slide" data-bg="assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg"></div>
     <div class="hero-slide" data-bg="assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg"></div>
-    <div class="hero-slide" data-bg="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg"></div>
-    <div class="hero-slide" data-bg="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg"></div>
-    <div class="hero-slide" data-bg="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"></div>
     <div class="hero-slide" data-bg="assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg"></div>
 
     <!-- Previous Arrow -->

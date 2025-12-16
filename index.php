@@ -324,7 +324,7 @@ try {
                     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_rooms)): ?>
                             <?php foreach ($featured_rooms as $room):
-                                $imageUrl = imgUrl($room['thumbnail'], 'assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg');
+                                $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
                                 <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
                                     class="liquid-glass-card group">
@@ -332,7 +332,7 @@ try {
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                         alt="<?php echo htmlspecialchars($room['type_name']); ?>" loading="lazy"
-                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg'); ?>'">
+                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-1.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
                                     <div class="card-badge">
@@ -406,7 +406,7 @@ try {
                     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_apartments)): ?>
                             <?php foreach ($featured_apartments as $apartment):
-                                $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg');
+                                $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg');
                                 ?>
                                 <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
                                     class="liquid-glass-card group">
@@ -414,7 +414,7 @@ try {
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                         alt="<?php echo htmlspecialchars($apartment['type_name']); ?>" loading="lazy"
-                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
+                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
                                     <div class="card-badge">
@@ -487,7 +487,7 @@ try {
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
                         <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
-                            <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg"
+                            <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
                                 alt="<?php _e('home.wedding_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
@@ -502,7 +502,7 @@ try {
 
                         <!-- Conference Service -->
                         <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg"
+                            <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
                                 alt="<?php _e('home.conference_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
@@ -517,7 +517,7 @@ try {
 
                         <!-- Restaurant Service -->
                         <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg"
+                            <img src="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"
                                 alt="<?php _e('home.restaurant_aurora'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">

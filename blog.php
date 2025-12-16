@@ -72,6 +72,12 @@ try {
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/liquid-glass.css">
     <link rel="stylesheet" href="assets/css/blog-glass.css?v=<?php echo time(); ?>">
+    <style>
+        .page-header-blog,
+        .blog-content-wrapper {
+            background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>') !important;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-900 font-body text-gray-100">

@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 initLanguage();
 
@@ -44,6 +45,11 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
+    <style>
+        body.glass-page::before {
+            background-image: url('<?php echo imgUrl('assets/img/hero-banner/caffe-aurora-hotel-1.jpg'); ?>');
+        }
+    </style>
 </head>
 
 <body class="glass-page font-body text-white">
