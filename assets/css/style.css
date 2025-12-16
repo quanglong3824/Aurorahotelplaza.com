@@ -21,7 +21,7 @@ html {
         touch-action: manipulation;
         -ms-touch-action: manipulation;
     }
-    
+
     body {
         touch-action: manipulation;
         -ms-touch-action: manipulation;
@@ -30,14 +30,16 @@ html {
         -ms-text-size-adjust: 100%;
         text-size-adjust: 100%;
     }
-    
+
     /* Chống zoom khi double-tap */
     * {
         touch-action: manipulation;
     }
-    
+
     /* Input không zoom khi focus (font-size >= 16px) */
-    input, select, textarea {
+    input,
+    select,
+    textarea {
         font-size: 16px !important;
     }
 }
@@ -55,7 +57,7 @@ html {
 /* GPU-accelerated properties only */
 .gpu-accelerate {
     will-change: transform, opacity;
-    transform: translateZ(0);
+    /* transform: translateZ(0); Optimization: Managed via logic */
     backface-visibility: hidden;
 }
 
@@ -72,19 +74,19 @@ html {
     --primary: #cc9a2c;
     --primary-light: #d4af37;
     --primary-dark: #b8941f;
-    
+
     /* Accent Colors */
     --accent: #d4af37;
     --accent-dark: #b8941f;
-    
+
     /* Background Colors */
     --background-light: #ffffff;
     --background-dark: #111827;
-    
+
     /* Surface Colors */
     --surface-light: #f9fafb;
     --surface-dark: #1f2937;
-    
+
     /* Text Colors */
     --text-primary-light: #1f2937;
     --text-primary-dark: #f3f4f6;
@@ -95,17 +97,18 @@ html {
 /* Material Icons Configuration */
 .material-symbols-outlined {
     font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
 }
 
 /* Hero Slider Styles */
 .hero-slider {
     position: relative;
     width: 100%;
-    height: 117.65vh; /* Compensate for 85% zoom: 100vh / 0.85 = 117.65vh */
+    height: 117.65vh;
+    /* Compensate for 85% zoom: 100vh / 0.85 = 117.65vh */
     overflow: hidden;
 }
 
@@ -191,7 +194,7 @@ html {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .slider-dot.active {
@@ -204,7 +207,7 @@ html {
 .logo-image {
     height: 80px;
     width: auto;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 /* Header Sticky on Scroll */
@@ -222,7 +225,7 @@ header.scrolled {
 /* Nav Links */
 .nav-link {
     color: white;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -279,7 +282,7 @@ header.scrolled .nav-link:hover {
     padding: 14px 24px;
     color: #1a1a1a;
     font-size: 15px;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     border-left: 3px solid transparent;
 }
 
@@ -324,7 +327,7 @@ header.scrolled .nav-link:hover {
     font-weight: 700;
     color: white;
     border: none;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .btn-booking:hover {
@@ -346,7 +349,7 @@ header.scrolled .nav-link:hover {
     backdrop-filter: blur(10px);
     color: white;
     border: none;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .lang-btn:hover {
@@ -378,7 +381,7 @@ header.scrolled .lang-btn:hover {
     border: 2px solid white;
     border-radius: 0.5rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     text-decoration: none;
 }
 
@@ -415,7 +418,7 @@ header.scrolled .auth-btn:hover {
     border-radius: 0.5rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .user-menu-btn:hover {
@@ -445,7 +448,7 @@ header.scrolled .user-menu-btn:hover {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     z-index: 1000;
 }
 
@@ -506,9 +509,9 @@ header.scrolled .user-menu-btn:hover {
     color: #111827;
 }
 
- .dark .user-menu-item .material-symbols-outlined {
-     color: #d1d5db;
- }
+.dark .user-menu-item .material-symbols-outlined {
+    color: #d1d5db;
+}
 
 /* Mobile Menu - User Section */
 @media (max-width: 768px) {
@@ -538,7 +541,7 @@ header.scrolled .user-menu-btn:hover {
     color: #d4af37;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .user-menu-btn:hover {
@@ -558,7 +561,7 @@ header.scrolled .user-menu-btn:hover {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     z-index: 100;
     overflow: hidden;
 }
@@ -627,9 +630,9 @@ header.scrolled .user-menu-btn:hover {
     color: #111827;
 }
 
- .dark .user-menu-item .material-symbols-outlined {
-     color: #d1d5db;
- }
+.dark .user-menu-item .material-symbols-outlined {
+    color: #d1d5db;
+}
 
 .user-menu-item.text-red-600:hover {
     background: rgba(239, 68, 68, 0.1);
@@ -651,7 +654,7 @@ header.scrolled .user-menu-btn:hover {
     color: #d4af37;
     font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .auth-btn:hover {
@@ -664,7 +667,7 @@ header.scrolled .user-menu-btn:hover {
     .user-menu-btn {
         padding: 0.5rem;
     }
-    
+
     .user-menu {
         right: -1rem;
         min-width: 200px;
@@ -696,7 +699,7 @@ header.scrolled .auth-btn {
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     text-decoration: none;
     border: none;
     cursor: pointer;
@@ -724,7 +727,7 @@ header.scrolled .auth-btn {
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     text-decoration: none;
     cursor: pointer;
 }
@@ -751,7 +754,7 @@ header.scrolled .auth-btn {
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
     text-decoration: none;
     cursor: pointer;
 }
@@ -801,7 +804,7 @@ header.scrolled .auth-btn {
     backdrop-filter: blur(10px) saturate(150%);
     -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -812,7 +815,7 @@ header.scrolled .auth-btn {
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.25),
         inset 0 -1px 0 rgba(255, 255, 255, 0.1);
@@ -824,7 +827,7 @@ header.scrolled .auth-btn {
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -836,7 +839,7 @@ header.scrolled .auth-btn {
     -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 1.5rem;
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -846,7 +849,7 @@ header.scrolled .auth-btn {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.25);
     transform: translateY(-4px);
-    box-shadow: 
+    box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -868,7 +871,7 @@ header.scrolled .auth-btn {
     font-size: 0.9375rem;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -877,7 +880,7 @@ header.scrolled .auth-btn {
     background: rgba(255, 255, 255, 0.18);
     border-color: rgba(255, 255, 255, 0.35);
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
@@ -919,7 +922,7 @@ header.scrolled .auth-btn {
     -webkit-backdrop-filter: blur(16px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 1.5rem;
-    box-shadow: 
+    box-shadow:
         0 24px 80px rgba(0, 0, 0, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -952,7 +955,7 @@ header.scrolled .auth-btn {
     backdrop-filter: blur(10px) saturate(150%);
     -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(212, 175, 55, 0.25);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(212, 175, 55, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -1083,22 +1086,31 @@ section#apartments .flex.h-10 {
  */
 
 /* Interactive elements - ONLY color and shadow transitions */
-a, button {
+a,
+button {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Form elements - minimal transitions */
-input, select, textarea {
+input,
+select,
+textarea {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Card hover effects - GPU accelerated */
-.card, .room-card, .service-card, .blog-card {
+.card,
+.room-card,
+.service-card,
+.blog-card {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     will-change: transform;
 }
 
-.card:hover, .room-card:hover, .service-card:hover, .blog-card:hover {
+.card:hover,
+.room-card:hover,
+.service-card:hover,
+.blog-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
 }
@@ -1156,7 +1168,9 @@ input, select, textarea {
 }
 
 /* Form focus - shadow only, no transform */
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
 }
 
@@ -1221,8 +1235,13 @@ input:focus, textarea:focus, select:focus {
 }
 
 @keyframes skeleton-loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* Mobile menu - GPU accelerated */
@@ -1349,12 +1368,29 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* Staggered delays - shorter */
-.fade-in:nth-child(1) { animation-delay: 0.05s; }
-.fade-in:nth-child(2) { animation-delay: 0.1s; }
-.fade-in:nth-child(3) { animation-delay: 0.15s; }
-.fade-in:nth-child(4) { animation-delay: 0.2s; }
-.fade-in:nth-child(5) { animation-delay: 0.25s; }
-.fade-in:nth-child(6) { animation-delay: 0.3s; }
+.fade-in:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.fade-in:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.fade-in:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.fade-in:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.fade-in:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.fade-in:nth-child(6) {
+    animation-delay: 0.3s;
+}
 
 /* Loading shimmer - optimized */
 .loading {
@@ -1375,7 +1411,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 @keyframes shimmer {
-    100% { transform: translateX(100%); }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 /* Page transition overlay */
@@ -1398,7 +1436,10 @@ input:focus, textarea:focus, select:focus {
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -1422,6 +1463,7 @@ section.py-16 {
 }
 
 @media (max-width: 768px) {
+
     section.py-16,
     section.sm\:py-24 {
         padding-top: 3rem !important;
@@ -1430,6 +1472,7 @@ section.py-16 {
 }
 
 @media (max-width: 480px) {
+
     section.py-16,
     section.sm\:py-24 {
         padding-top: 2rem !important;
@@ -1463,6 +1506,7 @@ section.py-16 {
 }
 
 @media (max-width: 768px) {
+
     .font-display.text-3xl,
     .md\:text-4xl {
         font-size: 1.5rem !important;
@@ -1470,6 +1514,7 @@ section.py-16 {
 }
 
 @media (max-width: 480px) {
+
     .font-display.text-3xl,
     .md\:text-4xl {
         font-size: 1.25rem !important;
@@ -1536,19 +1581,19 @@ section.py-16 {
     .rounded-xl.bg-surface-light {
         border-radius: 0.75rem;
     }
-    
+
     .rounded-xl.bg-surface-light .p-6 {
         padding: 1rem;
     }
-    
+
     .rounded-xl.bg-surface-light .text-xl {
         font-size: 1rem;
     }
-    
+
     .rounded-xl.bg-surface-light .text-lg {
         font-size: 0.9375rem;
     }
-    
+
     .rounded-xl.bg-surface-light .text-sm {
         font-size: 0.75rem;
     }
@@ -1565,16 +1610,16 @@ section.py-16 {
         text-align: center;
         gap: 1.5rem;
     }
-    
+
     .glass-promo-banner .text-2xl {
         font-size: 1.25rem;
     }
-    
+
     .glass-promo-banner .w-16 {
         width: 3rem;
         height: 3rem;
     }
-    
+
     .glass-promo-banner .text-4xl {
         font-size: 1.5rem;
     }
@@ -1585,7 +1630,7 @@ section.py-16 {
         justify-content: center;
         gap: 0.5rem;
     }
-    
+
     .glass-promo-banner .text-2xl {
         font-size: 1.125rem;
     }
@@ -1601,16 +1646,16 @@ section.py-16 {
         padding: 1.25rem;
         gap: 0.875rem;
     }
-    
+
     .glass-card-solid .h-14.w-14 {
         width: 3rem;
         height: 3rem;
     }
-    
+
     .glass-card-solid .text-2xl {
         font-size: 1.25rem;
     }
-    
+
     .glass-card-solid .text-lg {
         font-size: 1rem;
     }
@@ -1623,26 +1668,26 @@ section.py-16 {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .glass-card-solid .flex-shrink-0 {
         align-self: center;
     }
-    
+
     .glass-card-solid .h-14.w-14 {
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 0.625rem;
     }
-    
+
     .glass-card-solid .text-2xl {
         font-size: 1rem;
     }
-    
+
     .glass-card-solid .text-lg {
         font-size: 0.9375rem;
         margin-bottom: 0.25rem;
     }
-    
+
     .glass-card-solid .text-sm {
         font-size: 0.75rem;
     }
@@ -1653,25 +1698,25 @@ section.py-16 {
     .hero-slider {
         height: 100vh;
     }
-    
+
     .slider-arrow {
         width: 10%;
     }
-    
+
     .slider-arrow .arrow-icon {
         font-size: 32px;
     }
-    
+
     .slider-dots {
         bottom: 20px;
         gap: 8px;
     }
-    
+
     .slider-dot {
         width: 10px;
         height: 10px;
     }
-    
+
     .slider-dot.active {
         width: 30px;
     }
@@ -1681,21 +1726,21 @@ section.py-16 {
     .slider-arrow {
         width: 12%;
     }
-    
+
     .slider-arrow .arrow-icon {
         font-size: 24px;
     }
-    
+
     .slider-dots {
         bottom: 16px;
         gap: 6px;
     }
-    
+
     .slider-dot {
         width: 8px;
         height: 8px;
     }
-    
+
     .slider-dot.active {
         width: 24px;
         border-radius: 4px;
@@ -1711,16 +1756,16 @@ section.py-16 {
     .glass-card-solid.p-6.text-center {
         padding: 1.25rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .w-16.h-16 {
         width: 3.5rem;
         height: 3.5rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .text-3xl {
         font-size: 1.5rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .text-lg {
         font-size: 1rem;
     }
@@ -1730,22 +1775,22 @@ section.py-16 {
     .glass-card-solid.p-6.text-center {
         padding: 1rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .w-16.h-16 {
         width: 3rem;
         height: 3rem;
         margin-bottom: 0.75rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .text-3xl {
         font-size: 1.25rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .text-lg {
         font-size: 0.9375rem;
         margin-bottom: 0.375rem;
     }
-    
+
     .glass-card-solid.p-6.text-center .text-sm {
         font-size: 0.75rem;
     }
@@ -1756,11 +1801,11 @@ section.py-16 {
     .text-base {
         font-size: 0.875rem;
     }
-    
+
     .text-sm {
         font-size: 0.75rem;
     }
-    
+
     .uppercase.tracking-wider {
         font-size: 0.6875rem;
     }

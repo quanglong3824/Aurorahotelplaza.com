@@ -331,7 +331,7 @@ try {
 
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                        alt="<?php echo htmlspecialchars($room['type_name']); ?>"
+                                        alt="<?php echo htmlspecialchars($room['type_name']); ?>" loading="lazy"
                                         onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
@@ -413,7 +413,7 @@ try {
 
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                        alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
+                                        alt="<?php echo htmlspecialchars($apartment['type_name']); ?>" loading="lazy"
                                         onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
@@ -488,7 +488,7 @@ try {
                         <!-- Wedding Service -->
                         <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
                             <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg"
-                                alt="<?php _e('home.wedding_service'); ?>">
+                                alt="<?php _e('home.wedding_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -503,7 +503,7 @@ try {
                         <!-- Conference Service -->
                         <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
                             <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg"
-                                alt="<?php _e('home.conference_service'); ?>">
+                                alt="<?php _e('home.conference_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -518,7 +518,7 @@ try {
                         <!-- Restaurant Service -->
                         <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
                             <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg"
-                                alt="<?php _e('home.restaurant_aurora'); ?>">
+                                alt="<?php _e('home.restaurant_aurora'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -571,7 +571,7 @@ try {
             <!-- Why Choose Us Section - Premium Dark Glass -->
             <section class="w-full relative py-20" id="why-choose-us">
                 <!-- Parallax Background & Overlay -->
-                <div class="absolute inset-0 z-0 bg-fixed bg-cover bg-center"
+                <div class="absolute inset-0 z-0 bg-cover bg-center"
                     style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');"></div>
                 <div class="absolute inset-0 z-0 bg-slate-900/90"></div>
 
@@ -648,7 +648,7 @@ try {
                                     class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0">
                                     <div class="relative aspect-[16/10] overflow-hidden">
                                         <img src="<?php echo $post_image; ?>?v=<?php echo time(); ?>"
-                                            alt="<?php echo htmlspecialchars($post['title']); ?>"
+                                            alt="<?php echo htmlspecialchars($post['title']); ?>" loading="lazy"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         <div class="absolute top-3 left-3 glass-badge text-xs">
                                             <span class="material-symbols-outlined text-accent text-sm">article</span>
@@ -696,8 +696,9 @@ try {
             <!-- Location & Contact Section - Premium Dark Glass -->
             <section class="w-full justify-center py-16 sm:py-24 relative" id="location">
                 <!-- Background & Overlay -->
-                <div class="absolute inset-0 z-0 bg-cover bg-center fixed-bg-simulate"
-                    style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); background-attachment: fixed;">
+                <!-- Optimization: Removed fixed attachment for smoother scroll -->
+                <div class="absolute inset-0 z-0 bg-cover bg-center"
+                    style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg');">
                 </div>
                 <div class="absolute inset-0 z-0 bg-slate-900/90"></div>
 
@@ -719,8 +720,7 @@ try {
                             class="rounded-2xl overflow-hidden shadow-2xl border border-white/10 glass-card p-0 h-[500px]">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897!5m2!1svi!2s"
-                                class="w-full h-full grayscale-[50%] hover:grayscale-0 transition-all duration-500"
-                                style="border:0;" allowfullscreen="" loading="lazy"
+                                class="w-full h-full" style="border:0;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade">
                             </iframe>
                         </div>

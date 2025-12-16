@@ -8,12 +8,18 @@
     const forceScrolled = header.dataset.forceScrolled === 'true';
     const fixedTransparent = header.dataset.fixedTransparent === 'true';
 
+    // State tracking to prevent redundant DOM updates
+    let lastState = null; // 'transparent', 'solid'
+
     function updateHeader() {
         // Fixed Transparent: Always transparent with white logo (e.g. Blog page)
         if (fixedTransparent) {
-            header.classList.remove('header-solid', 'header-scrolled');
-            header.classList.add('header-transparent');
-            logo.src = logo.dataset.logoDark;
+            if (lastState !== 'fixed-transparent') {
+                header.classList.remove('header-solid', 'header-scrolled');
+                header.classList.add('header-transparent');
+                logo.src = logo.dataset.logoDark;
+                lastState = 'fixed-transparent';
+            }
             return;
         }
 
@@ -21,30 +27,42 @@
 
         // Pages with force-scrolled (profile, etc.): Always keep scrolled state
         if (forceScrolled) {
-            header.classList.remove('header-transparent');
-            header.classList.add('header-solid', 'header-scrolled');
-            logo.src = logo.dataset.logoWhite;
+            if (lastState !== 'force-scrolled') {
+                header.classList.remove('header-transparent');
+                header.classList.add('header-solid', 'header-scrolled');
+                logo.src = logo.dataset.logoWhite;
+                lastState = 'force-scrolled';
+            }
             return;
         }
 
         if (hasHero) {
             // Pages with hero banner
             if (scrolled) {
-                // Scrolled: Solid white background, dark text, white logo
-                header.classList.remove('header-transparent');
-                header.classList.add('header-solid', 'header-scrolled');
-                logo.src = logo.dataset.logoWhite;
+                if (lastState !== 'scrolled') {
+                    // Scrolled: Solid white background, dark text, white logo
+                    header.classList.remove('header-transparent');
+                    header.classList.add('header-solid', 'header-scrolled');
+                    logo.src = logo.dataset.logoWhite;
+                    lastState = 'scrolled';
+                }
             } else {
-                // Top: Transparent background, white text, dark logo
-                header.classList.remove('header-solid', 'header-scrolled');
-                header.classList.add('header-transparent');
-                logo.src = logo.dataset.logoDark;
+                if (lastState !== 'top') {
+                    // Top: Transparent background, white text, dark logo
+                    header.classList.remove('header-solid', 'header-scrolled');
+                    header.classList.add('header-transparent');
+                    logo.src = logo.dataset.logoDark;
+                    lastState = 'top';
+                }
             }
         } else {
             // Pages without hero banner: Always solid with white logo
-            header.classList.remove('header-transparent');
-            header.classList.add('header-solid', 'header-scrolled');
-            logo.src = logo.dataset.logoWhite;
+            if (lastState !== 'solid-default') {
+                header.classList.remove('header-transparent');
+                header.classList.add('header-solid', 'header-scrolled');
+                logo.src = logo.dataset.logoWhite;
+                lastState = 'solid-default';
+            }
         }
     }
 
@@ -61,10 +79,10 @@
             });
             ticking = true;
         }
-    });
+    }, { passive: true }); // Optimization: Use passive listener
 
     // Handle window resize
-    window.addEventListener('resize', updateHeader);
+    window.addEventListener('resize', updateHeader, { passive: true });
 })();
 
 

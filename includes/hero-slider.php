@@ -1,16 +1,19 @@
 <!-- Hero Slider Section -->
 <section class="hero-slider relative flex min-h-screen w-full items-center justify-center">
-    <!-- Slider Images -->
-    <div class="hero-slide active" style="background-image: url('assets/img/classical-family-apartment/classical-family-apartment6.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg');"></div>
+    <!-- Slider Images - Optimized for Lazy Loading -->
+    <!-- First image loads immediately -->
+    <div class="hero-slide active"
+        style="background-image: url('assets/img/classical-family-apartment/classical-family-apartment6.jpg');"></div>
+    <!-- Subsequent images load via JS -->
+    <div class="hero-slide" data-bg="assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg"></div>
 
     <!-- Previous Arrow -->
     <div class="slider-arrow prev">
@@ -29,10 +32,11 @@
                 <span class="text-accent">★★★★★</span>
                 <?php _e('hero.badge'); ?>
             </span>
-            <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza</h1>
+            <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza
+            </h1>
             <p class="text-xl font-light text-white/90 max-w-2xl"><?php _e('hero.subtitle'); ?></p>
         </div>
-        
+
         <!-- Quick Booking Form - Liquid Glass -->
         <div class="mt-4 w-full max-w-4xl glass-booking-form">
             <form action="booking/index.php" method="GET" class="grid grid-cols-1 items-end gap-4 md:grid-cols-5">
@@ -41,20 +45,17 @@
                         <span class="material-symbols-outlined text-sm">calendar_today</span>
                         <?php _e('hero.check_in'); ?>
                     </label>
-                    <input class="glass-input-solid h-12" 
-                           id="checkin" name="check_in" type="date" 
-                           min="<?php echo date('Y-m-d'); ?>" 
-                           value="<?php echo date('Y-m-d'); ?>"/>
+                    <input class="glass-input-solid h-12" id="checkin" name="check_in" type="date"
+                        min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkout">
                         <span class="material-symbols-outlined text-sm">event</span>
                         <?php _e('hero.check_out'); ?>
                     </label>
-                    <input class="glass-input-solid h-12" 
-                           id="checkout" name="check_out" type="date" 
-                           min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
-                           value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"/>
+                    <input class="glass-input-solid h-12" id="checkout" name="check_out" type="date"
+                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                        value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="adults">
@@ -119,22 +120,43 @@
 </section>
 
 <script>
-// Set minimum dates for booking form
-document.addEventListener('DOMContentLoaded', function() {
-    const checkinInput = document.getElementById('checkin');
-    const checkoutInput = document.getElementById('checkout');
-    
-    if (checkinInput && checkoutInput) {
-        checkinInput.addEventListener('change', function() {
-            const checkinDate = new Date(this.value);
-            checkinDate.setDate(checkinDate.getDate() + 1);
-            const minCheckout = checkinDate.toISOString().split('T')[0];
-            checkoutInput.min = minCheckout;
-            
-            if (checkoutInput.value && checkoutInput.value <= this.value) {
-                checkoutInput.value = minCheckout;
-            }
-        });
-    }
-});
+    // Set minimum dates for booking form
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkinInput = document.getElementById('checkin');
+        const checkoutInput = document.getElementById('checkout');
+
+        if (checkinInput && checkoutInput) {
+            checkinInput.addEventListener('change', function () {
+                const checkinDate = new Date(this.value);
+                checkinDate.setDate(checkinDate.getDate() + 1);
+                const minCheckout = checkinDate.toISOString().split('T')[0];
+                checkoutInput.min = minCheckout;
+
+                if (checkoutInput.value && checkoutInput.value <= this.value) {
+                    checkoutInput.value = minCheckout;
+                }
+            });
+        }
+
+        // Lazy load slider images
+        const lazySlides = document.querySelectorAll('.hero-slide[data-bg]');
+        if ('IntersectionObserver' in window) {
+            // Option 1: Load when slider is in view (which is immediately for hero)
+            // But we want to prioritize first paint, so we can use a timeout or idle callback
+            const loadImages = () => {
+                lazySlides.forEach(slide => {
+                    slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
+                    slide.removeAttribute('data-bg');
+                });
+            };
+
+            // Load rest of images 3 seconds after load to not block initial render
+            setTimeout(loadImages, 3000);
+        } else {
+            // Fallback for older browsers
+            lazySlides.forEach(slide => {
+                slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
+            });
+        }
+    });
 </script>

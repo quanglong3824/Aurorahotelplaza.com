@@ -42,7 +42,7 @@ body.glass-page::after {
     transform: translateZ(0);
 }
 
-body.glass-page > div {
+body.glass-page>div {
     position: relative;
     z-index: 1;
 }
@@ -56,18 +56,19 @@ body.glass-page > div {
     min-height: 100vh;
 }
 
-.glass-page-wrapper > * {
+.glass-page-wrapper>* {
     position: relative;
     z-index: 10;
 }
 
 /* Reduced Motion - disable animations */
 @media (prefers-reduced-motion: reduce) {
+
     body.glass-page::before,
     body.glass-page::after {
         will-change: auto;
     }
-    
+
     .glass-card,
     .utility-card-glass,
     .value-card {
@@ -108,14 +109,14 @@ main {
     max-width: 900px;
     padding: 3rem;
 
-    background: rgba(255, 255, 255, 0.05);
-    /* Reduced blur for better performance */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.6);
+    /* Darker solid background for contrast */
+    /* backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); */
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-    
+
     /* GPU acceleration */
     transform: translateZ(0);
 }
@@ -143,9 +144,10 @@ main {
    PERFORMANCE: Reduced blur, optimized transitions
 */
 .glass-card {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(30, 41, 59, 0.85);
+    /* Solid dark glass */
+    /* backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
     /* Only transition transform and box-shadow for GPU acceleration */
@@ -174,7 +176,10 @@ main {
     color: white;
     border-radius: 0.75rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
@@ -245,9 +250,9 @@ main {
 
 /* Utility Cards (Grid items) */
 .utility-card-glass {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(30, 41, 59, 0.85);
+    /* backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.25rem;
     padding: 2rem;
@@ -321,9 +326,9 @@ main {
 .story-split-card {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background: rgba(30, 41, 59, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(30, 41, 59, 0.85);
+    /* backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
     overflow: hidden;
@@ -363,7 +368,10 @@ main {
     padding: 2rem;
     border-radius: 1.5rem;
     text-align: center;
-    transition: all 0.3s;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .value-card:hover {
@@ -388,9 +396,9 @@ main {
 }
 
 .info-card-glass {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.95) 100%);
+    /* backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
     padding: 2.5rem;
@@ -444,7 +452,10 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.75rem;
     color: white;
-    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: white;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .form-input-glass:focus {
@@ -474,8 +485,15 @@ main {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* 
