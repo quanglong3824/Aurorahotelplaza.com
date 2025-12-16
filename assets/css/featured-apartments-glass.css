@@ -1,10 +1,11 @@
 /* =================================================================
-   LIQUID GLASS STYLE - COMPACT OVERLAY CARDS
+   LIQUID GLASS STYLE - COMPACT OVERLAY CARDS (ROOMS & APARTMENTS)
    Style: Compact, Image-Centric, Text Overlay
    ================================================================= */
 
-/* Section Background adjustment */
-#apartments {
+/* Section Background adjustment - Applied to BOTH Rooms and Apartments */
+#apartments,
+#rooms {
     position: relative;
     background-image: url('../img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
     background-size: cover;
@@ -14,7 +15,9 @@
     padding-bottom: 5rem;
 }
 
-#apartments::before {
+/* Overlay to darken background */
+#apartments::before,
+#rooms::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -26,13 +29,14 @@
     z-index: 0;
 }
 
-#apartments .mx-auto {
+#apartments .mx-auto,
+#rooms .mx-auto {
     position: relative;
     z-index: 10;
 }
 
 /* 
-   COMPACT OVERLAY CARD
+   COMPACT OVERLAY CARD - SHARED STYLE
    Image fills the card, content floats on top at bottom.
 */
 .liquid-glass-card {
@@ -136,18 +140,13 @@
     /* Accent Gold */
 }
 
-/* Price Badge - Top Right or Bottom? 
-   Let's keep price integrated in content for clean look 
-   OR separate. Reference image didn't show price but usually needed.
-*/
-
 /* Typography */
 .liquid-glass-card h3 {
     font-family: 'Playfair Display', serif;
     /* Or project font */
     font-size: 1.75rem;
     font-weight: 700;
-    color: white;
+    color: white !important;
     margin-bottom: 0.5rem;
     line-height: 1.2;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -190,6 +189,16 @@
     font-size: 0.875rem;
     font-weight: 400;
     color: rgba(255, 255, 255, 0.8);
+}
+
+/* Text overrides */
+.section-title {
+    color: white !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.section-desc {
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Responsive adjustments */

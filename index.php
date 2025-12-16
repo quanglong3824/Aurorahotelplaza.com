@@ -303,74 +303,81 @@ try {
                 </section>
             <?php endif; ?>
 
-            <!-- Featured Rooms Section -->
-            <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="rooms">
+            <!-- Featured Rooms Section - Liquid Glass Upgrade -->
+            <section class="w-full justify-center py-16 sm:py-24" id="rooms">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <h2
-                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                        <span class="glass-badge-solid mx-auto mb-2"
+                            style="background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2);">
+                            <span class="material-symbols-outlined text-accent text-sm">hotel</span>
                             <?php _e('home.rooms_suite'); ?>
+                        </span>
+                        <h2 class="font-display text-3xl font-bold section-title md:text-4xl">
+                            <?php _e('home.featured_rooms'); ?>
                         </h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                        <p class="text-base section-desc max-w-2xl mx-auto">
                             <?php _e('home.rooms_suite_desc'); ?>
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_rooms)): ?>
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg');
                                 ?>
                                 <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
-                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
-                                    <div class="relative aspect-[4/3] overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                            alt="<?php echo htmlspecialchars($room['type_name']); ?>"
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg'); ?>'">
-                                        <div class="absolute top-3 right-3 glass-badge text-xs">
-                                            <span class="material-symbols-outlined text-accent text-sm">hotel</span>
-                                            <?php _e('home.room'); ?>
-                                        </div>
-                                        <div
-                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                                            <div class="text-white font-bold text-lg">
-                                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ
-                                                <span
-                                                    class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
-                                            </div>
-                                        </div>
+                                    class="liquid-glass-card group">
+
+                                    <!-- Image Layer -->
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                        alt="<?php echo htmlspecialchars($room['type_name']); ?>"
+                                        onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg'); ?>'">
+
+                                    <!-- Badge Top Left -->
+                                    <div class="card-badge">
+                                        <span class="material-symbols-outlined">hotel</span>
+                                        <?php _e('home.room'); ?>
                                     </div>
-                                    <div class="p-5">
-                                        <h3
-                                            class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors">
-                                            <?php echo htmlspecialchars($room['type_name']); ?>
-                                        </h3>
-                                        <div
-                                            class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                                            <span class="flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-accent text-base">square_foot</span>
+
+                                    <!-- Content Overlay Bottom -->
+                                    <div class="card-content">
+                                        <!-- Price -->
+                                        <div class="price-display">
+                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ
+                                            <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                        </div>
+
+                                        <!-- Title -->
+                                        <h3><?php echo htmlspecialchars($room['type_name']); ?></h3>
+
+                                        <!-- Info Icons Row -->
+                                        <div class="info-row">
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">square_foot</span>
                                                 <?php echo number_format($room['size_sqm'], 0); ?>m²
-                                            </span>
-                                            <span class="flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-accent text-base">bed</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">bed</span>
                                                 <?php echo htmlspecialchars($room['bed_type']); ?>
-                                            </span>
-                                            <span class="flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-accent text-base">person</span>
-                                                <?php echo $room['max_occupancy']; ?>         <?php _e('rooms_page.guests'); ?>
-                                            </span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="material-symbols-outlined">person</span>
+                                                <?php echo $room['max_occupancy']; ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="col-span-full text-center py-12">
-                                <p class="text-gray-500 text-lg"><?php _e('home.no_rooms'); ?></p>
+                                <p class="text-white/70 text-lg"><?php _e('home.no_rooms'); ?></p>
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="flex justify-center pt-4">
-                        <a href="rooms.php" class="btn-glass-primary">
+
+                    <div class="flex justify-center pt-8">
+                        <a href="rooms.php"
+                            class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_rooms'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
