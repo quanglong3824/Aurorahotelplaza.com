@@ -87,7 +87,6 @@ $payment_labels = [
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('booking_detail.title'); ?></title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="../assets/css/fonts.css" rel="stylesheet" />
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -494,11 +493,11 @@ $payment_labels = [
                                             </button>
 
                                             <!-- QR Code Button -->
-                                            <button onclick="showBookingQR('<?php echo $booking['booking_code']; ?>')"
+                                            <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>"
                                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
                                                 <span class="material-symbols-outlined text-accent">qr_code</span>
                                                 <?php _e('booking_detail.view_qr'); ?>
-                                            </button>
+                                            </a>
 
                                             <!-- Cancellation Policy & Refund Info -->
                                             <?php if ($can_cancel && $refund_info): ?>
@@ -627,29 +626,6 @@ $payment_labels = [
 
     </div>
 
-    <!-- QR Modal -->
-    <div id="qrModal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden items-center justify-center z-[60] p-4 transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-sm transform scale-95 opacity-0 transition-all duration-300 relative" id="qrModalContainer">
-            <button onclick="closeQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
-                <span class="material-symbols-outlined text-2xl">close</span>
-            </button>
-            <div class="p-8 flex flex-col items-center justify-center text-center">
-                <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-3xl text-accent">qr_code_2</span>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-1">Check-in Code</h3>
-                <p class="text-slate-400 text-sm mb-6">Scan at reception</p>
-                <div class="p-4 bg-white rounded-2xl shadow-xl shadow-accent/10 mb-6">
-                    <div id="qrCodeContainer"></div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-3 w-full border border-white/10">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Booking Code</p>
-                    <p class="text-lg font-mono font-bold text-accent tracking-widest" id="qrTextDisplay">---</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="../assets/js/main.js"></script>
     <script>
         function shareBooking() {
@@ -660,52 +636,12 @@ $payment_labels = [
                     url: window.location.href
                 });
             } else {
+                // Fallback: copy to clipboard
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     alert('Đã sao chép link vào clipboard!');
                 });
             }
         }
-
-        /* QR Code Logic */
-        const qrModal = document.getElementById('qrModal');
-        const qrContainer = document.getElementById('qrModalContainer');
-        
-        function showBookingQR(code) {
-            document.getElementById('qrTextDisplay').textContent = code;
-            
-            // Generate QR
-            const container = document.getElementById('qrCodeContainer');
-            container.innerHTML = '';
-            new QRCode(container, {
-                text: code,
-                width: 200,
-                height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            qrModal.classList.remove('hidden');
-            qrModal.classList.add('flex');
-            
-            setTimeout(() => {
-                qrContainer.classList.remove('scale-95', 'opacity-0');
-                qrContainer.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeQRModal() {
-            qrContainer.classList.remove('scale-100', 'opacity-100');
-            qrContainer.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                qrModal.classList.add('hidden');
-                qrModal.classList.remove('flex');
-            }, 300);
-        }
-        
-        qrModal.addEventListener('click', (e) => {
-            if (e.target === qrModal) closeQRModal();
-        });
 
         // Cancel Modal
         function showCancelModal() {
