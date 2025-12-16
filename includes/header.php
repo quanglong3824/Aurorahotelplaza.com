@@ -66,12 +66,17 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 
 // Force scrolled state for solid pages (profile, etc.)
 $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
+
+// Pages with fixed transparent header (always transparent, always white logo)
+$pages_fixed_transparent = ['blog'];
+$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent);
 ?>
 <!-- TopNavBar - Smart Header -->
 <header id="main-header"
     class="fixed top-0 z-50 w-full transition-all duration-300 <?php echo $header_class; ?> <?php echo $force_scrolled; ?>"
     data-has-hero="<?php echo $has_hero ? 'true' : 'false'; ?>"
-    data-force-scrolled="<?php echo $is_solid_page ? 'true' : 'false'; ?>">
+    data-force-scrolled="<?php echo $is_solid_page ? 'true' : 'false'; ?>"
+    data-fixed-transparent="<?php echo $is_fixed_transparent ? 'true' : 'false'; ?>">
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
             <img id="header-logo"
