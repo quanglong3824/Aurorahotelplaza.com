@@ -68,7 +68,7 @@ $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 
 // Pages with fixed transparent header (always transparent, always white logo)
-$pages_fixed_transparent = ['blog'];
+$pages_fixed_transparent = ['blog', 'login', 'register', 'forgot-password'];
 $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent);
 ?>
 <!-- TopNavBar - Smart Header -->
