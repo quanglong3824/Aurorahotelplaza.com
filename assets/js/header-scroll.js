@@ -13,7 +13,7 @@
         if (fixedTransparent) {
             header.classList.remove('header-solid', 'header-scrolled');
             header.classList.add('header-transparent');
-            logo.src = logo.dataset.logoWhite;
+            logo.src = logo.dataset.logoDark;
             return;
         }
 
