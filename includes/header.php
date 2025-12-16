@@ -379,3 +379,15 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
         } catch (e) { }
     })();
 </script>
+<style>
+    /* UX Improvement: Hover to show dropdown on Desktop */
+    @media (min-width: 768px) {
+        .user-menu-wrapper:hover .user-menu {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    }
+</style>

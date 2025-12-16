@@ -568,8 +568,8 @@ function getContactStatusBadge($status)
                                     <?php else: ?>
                                         <div class="space-y-4">
                                             <?php foreach ($bookings as $booking): ?>
-                                                <div
-                                                    class="group relative bg-slate-800/50 hover:bg-slate-800 border border-white/5 rounded-xl p-5 transition-all duration-300 card-hover-effect">
+                                                <div onclick="location.href='profile/booking-detail.php?id=<?php echo $booking['booking_id']; ?>'"
+                                                    class="group relative bg-slate-800/50 hover:bg-slate-800 border border-white/5 rounded-xl p-5 transition-all duration-300 card-hover-effect cursor-pointer">
                                                     <div
                                                         class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
                                                         <div class="flex items-start gap-4">
@@ -634,7 +634,7 @@ function getContactStatusBadge($status)
                                                         </a>
                                                         <?php if (in_array($booking['status'], ['confirmed', 'checked_in'])): ?>
                                                             <button
-                                                                onclick="showBookingQR('<?php echo $booking['booking_code']; ?>')"
+                                                                onclick="event.stopPropagation(); showBookingQR('<?php echo $booking['booking_code']; ?>')"
                                                                 class="px-4 py-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 text-sm font-medium flex items-center gap-2">
                                                                 <span class="material-symbols-outlined text-base">qr_code</span>
                                                                 QR
@@ -642,6 +642,7 @@ function getContactStatusBadge($status)
                                                         <?php endif; ?>
                                                         <?php if ($booking['status'] === 'pending'): ?>
                                                             <a href="booking/payment.php?booking_id=<?php echo $booking['booking_id']; ?>"
+                                                                onclick="event.stopPropagation()"
                                                                 class="px-4 py-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/20 text-sm font-medium">
                                                                 Pay Now
                                                             </a>
