@@ -199,7 +199,7 @@ try {
                         <!-- Empty State (Glass Theme) -->
                         <div class="glass-empty-state max-w-2xl mx-auto">
                             <span
-                                class="material-symbols-outlined text-6xl text-white/30 mb-4 block mx-auto">article_off</span>
+                                class="material-symbols-outlined text-6xl text-white/30 mb-4 block mx-auto">auto_stories</span>
                             <h3 class="text-2xl font-bold mb-2 text-white">
                                 <?php _e('blog_page.no_posts'); ?>
                             </h3>
