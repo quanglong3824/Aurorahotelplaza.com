@@ -1,14 +1,15 @@
 /* =================================================================
-   LIQUID GLASS STYLE - BLOG PAGE
-   Style: Premium Glassmorphism, Hero Header, Card Grid
+   LIQUID GLASS STYLE - BLOG PAGE (DARK THEME)
+   Style: Premium Dark Glassmorphism, Strong Blur, Fixed Background
    ================================================================= */
 
 /* 
     HERO SECTION 
+    Kept separate, but connects seamlessly to content
 */
 .page-header-blog {
     position: relative;
-    min-height: 500px;
+    min-height: 400px;
     background-image: url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
     background-size: cover;
     background-position: center;
@@ -16,17 +17,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
 }
 
 .page-header-blog::before {
     content: '';
     position: absolute;
     inset: 0;
-    /* Gradient Overlay */
+    /* Gradient Overlay to transition to content */
     background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.4),
-            rgba(0, 0, 0, 0.6));
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(15, 23, 42, 0.9) 100%);
     backdrop-filter: blur(2px);
     z-index: 0;
 }
@@ -38,13 +39,14 @@
     max-width: 800px;
     padding: 3rem;
 
-    /* Glass Box */
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Strong Glass Box */
+    background: rgba(255, 255, 255, 0.05);
+    /* Very transparent */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 
     animation: fadeInUp 1s ease-out;
 }
@@ -67,7 +69,7 @@
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     line-height: 1.2;
 }
 
@@ -79,6 +81,38 @@
 }
 
 /* 
+   CONTENT WRAPPER 
+   Provides the dark background for glass cards to shine
+*/
+.blog-content-wrapper {
+    position: relative;
+    /* Continue the fixed background effect */
+    background-image: url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    padding-top: 4rem;
+    padding-bottom: 8rem;
+    min-height: 60vh;
+}
+
+.blog-content-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Strong Dark Overlay */
+    background: rgba(15, 23, 42, 0.92);
+    /* Very dark slate */
+    z-index: 0;
+}
+
+.blog-content-wrapper .max-w-7xl {
+    position: relative;
+    z-index: 10;
+}
+
+/* 
    CATEGORY FILTERS 
 */
 .blog-categories {
@@ -86,93 +120,65 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 3rem;
-    position: relative;
-    z-index: 5;
+    margin-bottom: 4rem;
 }
 
 .category-tag {
-    /* Glass Button */
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(209, 213, 219, 0.5);
-    color: #4b5563;
-    /* text-gray-600 */
-    padding: 0.75rem 1.5rem;
+    /* Glass Button Dark */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.75rem 1.75rem;
     border-radius: 9999px;
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-weight: 500;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    /* shadow-sm */
-}
-
-/* Dark mode support */
-.dark .category-tag {
-    background: rgba(31, 41, 55, 0.6);
-    /* gray-800 */
-    border-color: rgba(75, 85, 99, 0.5);
-    /* gray-600 */
-    color: #e5e7eb;
-    /* gray-200 */
+    backdrop-filter: blur(10px);
 }
 
 .category-tag:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
     transform: translateY(-2px);
-    background: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .category-tag.active {
-    background: #d4af37;
-    /* Accent Color */
-    border-color: #d4af37;
+    background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+    border-color: #ffd700;
     color: white;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    font-weight: 700;
 }
 
 /* 
-   BLOG CARD (Glass Style)
+   BLOG CARD (Dark Glass)
 */
 .blog-glass-card {
     height: 100%;
     display: flex;
     flex-direction: column;
 
-    /* Glass Effect */
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    /* Dark Glass */
+    background: rgba(30, 41, 59, 0.4);
+    /* Semi-transparent dark */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
     overflow: hidden;
 
-    box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark mode card */
-.dark .blog-glass-card {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
 .blog-glass-card:hover {
-    transform: translateY(-8px) scale(1.01);
-    box-shadow:
-        0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    background: rgba(255, 255, 255, 0.9);
-}
-
-.dark .blog-glass-card:hover {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-8px);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 /* Card Image */
@@ -181,6 +187,7 @@
     padding-top: 60%;
     /* Aspect Ratio 5:3 */
     overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .blog-card-image {
@@ -191,7 +198,7 @@
     height: 100%;
     background-size: cover;
     background-position: center;
-    transition: transform 0.7s ease;
+    transition: transform 0.8s ease;
 }
 
 .blog-glass-card:hover .blog-card-image {
@@ -202,20 +209,22 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    color: #d4af37;
-    padding: 0.25rem 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffd700;
+    padding: 0.35rem 0.85rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.05em;
     z-index: 2;
 }
 
 /* Content */
 .blog-card-content {
-    padding: 1.5rem;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -226,20 +235,14 @@
     align-items: center;
     gap: 1rem;
     font-size: 0.8rem;
-    color: #6b7280;
-    /* text-gray-500 */
-    margin-bottom: 0.75rem;
-}
-
-.dark .blog-meta {
-    color: #9ca3af;
-    /* text-gray-400 */
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
 }
 
 .blog-meta-item {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
 }
 
 .blog-meta-item .material-symbols-outlined {
@@ -249,28 +252,23 @@
 
 .blog-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: #111827;
-    /* text-gray-900 */
-    margin-bottom: 0.75rem;
-    line-height: 1.4;
+    color: white;
+    /* White text for accessibility on dark glass */
+    margin-bottom: 1rem;
+    line-height: 1.3;
     transition: color 0.3s;
-}
-
-.dark .blog-title {
-    color: #f3f4f6;
-    /* text-gray-100 */
 }
 
 .blog-glass-card:hover .blog-title {
     color: #d4af37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .blog-excerpt {
     font-size: 0.95rem;
-    color: #4b5563;
-    /* text-gray-600 */
+    color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
     margin-bottom: 1.5rem;
     flex-grow: 1;
@@ -278,11 +276,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-
-.dark .blog-excerpt {
-    color: #d1d5db;
-    /* text-gray-300 */
 }
 
 .blog-read-more {
@@ -298,6 +291,7 @@
 
 .blog-glass-card:hover .blog-read-more {
     gap: 0.75rem;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
 /* 
@@ -307,39 +301,47 @@
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-top: 4rem;
+    margin-top: 5rem;
 }
 
 .pagination-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(229, 231, 235, 1);
-    color: #4b5563;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
 
     transition: all 0.3s;
     text-decoration: none;
-}
-
-.dark .pagination-btn {
-    background: rgba(31, 41, 55, 0.6);
-    border-color: rgba(75, 85, 99, 0.5);
-    color: #e5e7eb;
+    font-weight: 600;
 }
 
 .pagination-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
     border-color: #d4af37;
     color: #d4af37;
+    transform: scale(1.1);
 }
 
 .pagination-btn.active {
     background: #d4af37;
     border-color: #d4af37;
     color: white;
-    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Empty State */
+.glass-empty-state {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 4rem;
+    text-align: center;
+    color: white;
 }

@@ -4,27 +4,24 @@ require_once 'helpers/language.php';
 require_once 'helpers/image-helper.php';
 initLanguage();
 
-// Pagination
+// Pagination setup
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $per_page = 9;
 $offset = ($page - 1) * $per_page;
 
-// Get category filter
+// Category filter
 $category_slug = isset($_GET['category']) ? $_GET['category'] : '';
 
 try {
     $db = getDB();
 
-    // Build query
-    $select_from = "
-        SELECT p.*, u.full_name as author_name, bc.category_name, bc.slug as category_slug,
-               (SELECT COUNT(*) FROM blog_comments WHERE post_id = p.post_id AND status = 'approved') as comment_count
-        FROM blog_posts p
-        LEFT JOIN users u ON p.author_id = u.user_id
-        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id
-    ";
-
-    $where = "p.status = 'published'";
+    // Core Query Parts
+    $select = "SELECT p.*, u.full_name as author_name, bc.category_name, bc.slug as category_slug,
+               (SELECT COUNT(*) FROM blog_comments WHERE post_id = p.post_id AND status = 'approved') as comment_count";
+    $from = "FROM blog_posts p 
+             LEFT JOIN users u ON p.author_id = u.user_id 
+             LEFT JOIN blog_categories bc ON p.category_id = bc.category_id";
+    $where = "WHERE p.status = 'published'";
     $params = [];
 
     if ($category_slug) {
@@ -32,25 +29,22 @@ try {
         $params[] = $category_slug;
     }
 
-    // Get total posts
-    $count_query = "
-        SELECT COUNT(p.post_id) as total 
-        FROM blog_posts p 
-        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id 
-        WHERE $where
-    ";
-    $stmt = $db->prepare($count_query);
+    // Total Count for Pagination
+    $stmt = $db->prepare("SELECT COUNT(p.post_id) as total $from $where");
     $stmt->execute($params);
     $total_posts = $stmt->fetch()['total'];
     $total_pages = ceil($total_posts / $per_page);
 
-    // Get posts
-    $query = $select_from . " WHERE $where ORDER BY p.published_at DESC, p.created_at DESC LIMIT $per_page OFFSET $offset";
-    $stmt = $db->prepare($query);
+    // Fetch Posts
+    // Add secondary sort by ID to ensure stable order
+    $order = "ORDER BY p.published_at DESC, p.post_id DESC";
+    $limit = "LIMIT $per_page OFFSET $offset";
+
+    $stmt = $db->prepare("$select $from $where $order $limit");
     $stmt->execute($params);
     $posts = $stmt->fetchAll();
 
-    // Get categories
+    // Fetch Categories
     $stmt = $db->query("SELECT category_name, slug FROM blog_categories ORDER BY sort_order ASC, category_name ASC");
     $categories = $stmt->fetchAll();
 
@@ -62,40 +56,35 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="<?php echo getLang(); ?>">
+<html class="dark" lang="<?php echo getLang(); ?>">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('blog_page.title'); ?></title>
-    <!-- Tailwind CSS -->
+
+    <!-- Scripts & Styles -->
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <script src="assets/js/tailwind-config.js"></script>
-
-    <!-- Fonts & Icons -->
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-
-    <!-- Base Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/liquid-glass.css">
-
-    <!-- Page Specific Styles - Liquid Glass Blog -->
     <link rel="stylesheet" href="assets/css/blog-glass.css?v=<?php echo time(); ?>">
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<body class="bg-gray-900 font-body text-gray-100">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
 
-            <!-- Hero Section - Liquid Glass Style -->
+            <!-- Hero Section -->
             <section class="page-header-blog">
                 <div class="page-header-content">
                     <span
-                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-sm font-bold uppercase tracking-wider mb-6">
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-bold uppercase tracking-wider mb-6 backdrop-blur-md">
                         <span class="material-symbols-outlined text-accent text-base">article</span>
                         <?php _e('blog_page.news_articles'); ?>
                     </span>
@@ -104,11 +93,11 @@ try {
                 </div>
             </section>
 
-            <!-- Blog Content -->
-            <section id="blog-posts" class="py-16 -mt-20 relative z-20">
+            <!-- Blog Main Content Wrapper (Dark Glass Theme) -->
+            <div class="blog-content-wrapper">
                 <div class="mx-auto max-w-7xl px-4">
 
-                    <!-- Category Filter -->
+                    <!-- Category Filters -->
                     <?php if (!empty($categories)): ?>
                         <div class="blog-categories">
                             <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
@@ -127,7 +116,6 @@ try {
                     <?php if (!empty($posts)): ?>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <?php foreach ($posts as $post):
-                                // Use imgUrl helper for robust image handling
                                 $featured_img = imgUrl($post['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
                                 ?>
                                 <article class="h-full">
@@ -208,22 +196,21 @@ try {
                         <?php endif; ?>
 
                     <?php else: ?>
-                        <!-- Empty State -->
-                        <div
-                            class="text-center py-24 glass-card p-12 max-w-2xl mx-auto rounded-3xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-md">
+                        <!-- Empty State (Glass Theme) -->
+                        <div class="glass-empty-state max-w-2xl mx-auto">
                             <span
-                                class="material-symbols-outlined text-6xl text-gray-300 mb-4 block mx-auto">article_off</span>
-                            <h3 class="text-2xl font-bold mb-2 text-text-primary-light dark:text-text-primary-dark">
+                                class="material-symbols-outlined text-6xl text-white/30 mb-4 block mx-auto">article_off</span>
+                            <h3 class="text-2xl font-bold mb-2 text-white">
                                 <?php _e('blog_page.no_posts'); ?>
                             </h3>
-                            <p class="text-text-secondary-light dark:text-text-secondary-dark">
-                                <?php _e('home.no_posts_desc') ?? _e('blog_page.no_posts'); ?>
+                            <p class="text-white/60">
+                                <?php echo __('blog_page.no_posts_desc') !== 'blog_page.no_posts_desc' ? __('blog_page.no_posts_desc') : 'Hiện chưa có bài viết nào trong danh mục này.'; ?>
                             </p>
                         </div>
                     <?php endif; ?>
 
                 </div>
-            </section>
+            </div>
 
         </main>
 
