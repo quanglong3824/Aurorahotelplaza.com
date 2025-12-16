@@ -9,6 +9,7 @@ ini_set('display_errors', 1);
 
 require_once 'config/database.php';
 require_once 'helpers/language.php';
+require_once 'helpers/image-helper.php';
 initLanguage();
 
 // Cấu hình phân trang
@@ -111,7 +112,7 @@ $category_names = [
             <section class="relative min-h-[600px] flex items-center justify-center overflow-hidden">
                 <!-- Background Image -->
                 <div class="absolute inset-0">
-                    <img src="assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg" alt="Aurora Hotel"
+                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>" alt="Aurora Hotel"
                         class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
                 </div>
@@ -249,12 +250,12 @@ $category_names = [
                             bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl
                             transform hover:-translate-y-2 transition-all duration-500"
                                 data-index="<?php echo $offset + $index; ?>"
-                                data-src="<?php echo htmlspecialchars($image['src']); ?>"
+                                data-src="<?php echo htmlspecialchars(imgUrl($image['src'])); ?>"
                                 data-title="<?php echo htmlspecialchars($image['title']); ?>" onclick="openLightbox(this)">
 
                                 <!-- Image Container -->
                                 <div class="aspect-[4/3] overflow-hidden">
-                                    <img src="<?php echo htmlspecialchars($image['src']); ?>"
+                                    <img src="<?php echo htmlspecialchars(imgUrl($image['src'])); ?>"
                                         alt="<?php echo htmlspecialchars($image['title']); ?>"
                                         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                                         loading="lazy">
@@ -379,7 +380,7 @@ $category_names = [
             <!-- CTA Section -->
             <section class="relative py-24 overflow-hidden">
                 <div class="absolute inset-0">
-                    <img src="assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg" alt="Aurora Hotel"
+                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>" alt="Aurora Hotel"
                         class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60"></div>
                 </div>
@@ -468,7 +469,8 @@ $category_names = [
         let currentIndex = 0;
         // Chỉ lấy ảnh của trang hiện tại để lightbox hoạt động đúng
         const images = <?php echo json_encode(array_map(function ($img) {
-            return ['src' => $img['src'], 'title' => $img['title']]; }, $page_images)); ?>;
+            return ['src' => imgUrl($img['src']), 'title' => $img['title']];
+        }, $page_images)); ?>;
 
 
 
