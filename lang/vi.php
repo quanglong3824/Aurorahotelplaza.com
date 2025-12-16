@@ -25,7 +25,7 @@ return [
         'room_map' => 'Sơ đồ phòng',
         'admin' => 'Quản trị',
     ],
-    
+
     // Services submenu
     'services_menu' => [
         'wedding' => 'Tổ chức tiệc cưới',
@@ -33,7 +33,7 @@ return [
         'restaurant' => 'Nhà hàng',
         'office' => 'Văn phòng cho thuê',
     ],
-    
+
     // Common
     'common' => [
         'new' => 'Mới',
@@ -68,7 +68,7 @@ return [
         'child' => 'trẻ em',
         'children' => 'trẻ em',
     ],
-    
+
     // Booking
     'booking' => [
         'title' => 'Đặt phòng',
@@ -93,7 +93,7 @@ return [
         'pay_at_hotel' => 'Thanh toán tại khách sạn',
         'pay_online' => 'Thanh toán online',
     ],
-    
+
     // Booking status
     'booking_status' => [
         'pending' => 'Chờ xác nhận',
@@ -103,7 +103,7 @@ return [
         'cancelled' => 'Đã hủy',
         'no_show' => 'Không đến',
     ],
-    
+
     // Payment status
     'payment_status' => [
         'unpaid' => 'Chưa thanh toán',
@@ -111,7 +111,7 @@ return [
         'paid' => 'Đã thanh toán',
         'refunded' => 'Đã hoàn tiền',
     ],
-    
+
     // Room
     'room' => [
         'available' => 'Còn trống',
@@ -124,7 +124,7 @@ return [
         'price_from' => 'Giá từ',
         'view_rooms' => 'Xem các phòng',
     ],
-    
+
     // Profile
     'profile' => [
         'title' => 'Thông tin cá nhân',
@@ -145,7 +145,7 @@ return [
         'member_since' => 'Thành viên từ',
         'not_updated' => 'Chưa cập nhật',
     ],
-    
+
     // Loyalty
     'loyalty' => [
         'title' => 'Điểm thưởng',
@@ -158,7 +158,7 @@ return [
         'earn' => 'Tích điểm',
         'redeem' => 'Đổi điểm',
     ],
-    
+
     // Contact
     'contact' => [
         'title' => 'Liên hệ',
@@ -173,7 +173,7 @@ return [
         'address' => 'Địa chỉ',
         'hotline' => 'Hotline',
     ],
-    
+
     // Auth
     'auth' => [
         'login' => 'Đăng nhập',
@@ -242,7 +242,7 @@ return [
         'error_terms_required' => 'Vui lòng đồng ý với điều khoản sử dụng',
         'error_general' => 'Có lỗi xảy ra. Vui lòng thử lại sau.',
     ],
-    
+
     // Footer
     'footer' => [
         'about' => 'Về chúng tôi',
@@ -255,7 +255,7 @@ return [
         'privacy' => 'Chính sách bảo mật',
         'terms' => 'Điều khoản sử dụng',
     ],
-    
+
     // Roles
     'roles' => [
         'customer' => 'Khách hàng',
@@ -263,7 +263,7 @@ return [
         'sale' => 'Nhân viên bán hàng',
         'admin' => 'Quản trị viên',
     ],
-    
+
     // Messages
     'messages' => [
         'welcome' => 'Chào mừng đến với Aurora Hotel Plaza',
@@ -276,7 +276,7 @@ return [
         'invalid_email' => 'Email không hợp lệ',
         'invalid_phone' => 'Số điện thoại không hợp lệ',
     ],
-    
+
     // Homepage
     'home' => [
         'meta_title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
@@ -300,6 +300,7 @@ return [
         'discount_online' => 'Giảm đến {:percent}% cho đặt phòng trực tuyến',
         'book_now' => 'Đặt ngay',
         'rooms_suite' => 'Phòng & Suite',
+        'featured_rooms' => 'Phòng Nổi Bật',
         'rooms_suite_desc' => 'Được thiết kế cho sự thoải mái, tạo nên những giấc mơ.',
         'no_rooms' => 'Không có phòng nào',
         'room' => 'Phòng',
@@ -374,7 +375,7 @@ return [
         'flexible_payment' => 'Thanh toán linh hoạt',
         'best_price_guarantee' => 'Giá tốt nhất đảm bảo',
     ],
-    
+
     // Rooms page
     'rooms_page' => [
         'title' => 'Phòng nghỉ - Aurora Hotel Plaza',
@@ -391,7 +392,7 @@ return [
         'guests' => 'người',
         'apartment_badge' => 'Căn hộ',
     ],
-    
+
     // Apartments page
     'apartments_page' => [
         'title' => 'Căn hộ - Aurora Hotel Plaza',
@@ -412,7 +413,7 @@ return [
         'apartments_count' => '{:count} căn hộ',
         'guests' => 'người',
     ],
-    
+
     // Services page
     'services_page' => [
         'title' => 'Dịch vụ - Aurora Hotel Plaza',
@@ -435,7 +436,7 @@ return [
         'cat_laundry' => 'Giặt ủi',
         'cat_other' => 'Khác',
     ],
-    
+
     // Contact page
     'contact_page' => [
         'title' => 'Liên hệ - Aurora Hotel Plaza',
@@ -471,7 +472,7 @@ return [
         'min_chars' => 'Tối thiểu {:count} ký tự',
         'sending' => 'Đang gửi...',
     ],
-    
+
     // About page
     'about_page' => [
         'title' => 'Giới thiệu - Aurora Hotel Plaza',
@@ -520,7 +521,7 @@ return [
         'ready_to_experience' => 'Sẵn sàng trải nghiệm?',
         'cta_desc' => 'Đặt phòng ngay hôm nay để nhận ưu đãi đặc biệt và trải nghiệm dịch vụ đẳng cấp 5 sao',
     ],
-    
+
     // Gallery page
     'gallery_page' => [
         'title' => 'Thư viện ảnh - Aurora Hotel Plaza',
@@ -556,7 +557,7 @@ return [
         'experience_desc' => 'Đặt phòng ngay hôm nay để tận hưởng không gian sang trọng và dịch vụ đẳng cấp 5 sao',
         'contact_consult' => 'Liên hệ tư vấn',
     ],
-    
+
     // Explore page
     'explore_page' => [
         'title' => 'Khám phá - Aurora Hotel Plaza',
@@ -1149,7 +1150,7 @@ return [
         'gallery' => 'Hình ảnh căn hộ',
         'other_apartments' => 'Căn hộ khác',
     ],
-    
+
     // Footer
     'footer' => [
         'about' => 'Về chúng tôi',

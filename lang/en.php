@@ -25,7 +25,7 @@ return [
         'room_map' => 'Room Map',
         'admin' => 'Admin Panel',
     ],
-    
+
     // Services submenu
     'services_menu' => [
         'wedding' => 'Wedding Services',
@@ -33,7 +33,7 @@ return [
         'restaurant' => 'Restaurant',
         'office' => 'Office Rental',
     ],
-    
+
     // Common
     'common' => [
         'new' => 'New',
@@ -68,7 +68,7 @@ return [
         'child' => 'child',
         'children' => 'children',
     ],
-    
+
     // Booking
     'booking' => [
         'title' => 'Booking',
@@ -93,7 +93,7 @@ return [
         'pay_at_hotel' => 'Pay at Hotel',
         'pay_online' => 'Pay Online',
     ],
-    
+
     // Booking status
     'booking_status' => [
         'pending' => 'Pending',
@@ -103,7 +103,7 @@ return [
         'cancelled' => 'Cancelled',
         'no_show' => 'No Show',
     ],
-    
+
     // Payment status
     'payment_status' => [
         'unpaid' => 'Unpaid',
@@ -111,7 +111,7 @@ return [
         'paid' => 'Paid',
         'refunded' => 'Refunded',
     ],
-    
+
     // Room
     'room' => [
         'available' => 'Available',
@@ -124,7 +124,7 @@ return [
         'price_from' => 'From',
         'view_rooms' => 'View Rooms',
     ],
-    
+
     // Profile
     'profile' => [
         'title' => 'My Profile',
@@ -145,7 +145,7 @@ return [
         'member_since' => 'Member Since',
         'not_updated' => 'Not updated',
     ],
-    
+
     // Loyalty
     'loyalty' => [
         'title' => 'Rewards',
@@ -158,7 +158,7 @@ return [
         'earn' => 'Earned',
         'redeem' => 'Redeemed',
     ],
-    
+
     // Contact
     'contact' => [
         'title' => 'Contact Us',
@@ -173,7 +173,7 @@ return [
         'address' => 'Address',
         'hotline' => 'Hotline',
     ],
-    
+
     // Auth
     'auth' => [
         'login' => 'Login',
@@ -242,7 +242,7 @@ return [
         'error_terms_required' => 'Please agree to the terms of service',
         'error_general' => 'An error occurred. Please try again later.',
     ],
-    
+
     // Footer
     'footer' => [
         'about' => 'About Us',
@@ -255,7 +255,7 @@ return [
         'privacy' => 'Privacy Policy',
         'terms' => 'Terms of Service',
     ],
-    
+
     // Roles
     'roles' => [
         'customer' => 'Customer',
@@ -263,7 +263,7 @@ return [
         'sale' => 'Sales',
         'admin' => 'Administrator',
     ],
-    
+
     // Messages
     'messages' => [
         'welcome' => 'Welcome to Aurora Hotel Plaza',
@@ -276,7 +276,7 @@ return [
         'invalid_email' => 'Invalid email address',
         'invalid_phone' => 'Invalid phone number',
     ],
-    
+
     // Homepage
     'home' => [
         'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Bien Hoa',
@@ -300,6 +300,7 @@ return [
         'discount_online' => 'Up to {:percent}% off for online bookings',
         'book_now' => 'Book Now',
         'rooms_suite' => 'Rooms & Suites',
+        'featured_rooms' => 'Featured Rooms',
         'rooms_suite_desc' => 'Designed for comfort, creating dreams.',
         'no_rooms' => 'No rooms available',
         'room' => 'Room',
@@ -374,7 +375,7 @@ return [
         'flexible_payment' => 'Flexible Payment',
         'best_price_guarantee' => 'Best Price Guarantee',
     ],
-    
+
     // Rooms page
     'rooms_page' => [
         'title' => 'Rooms - Aurora Hotel Plaza',
@@ -391,7 +392,7 @@ return [
         'guests' => 'guests',
         'apartment_badge' => 'Apartment',
     ],
-    
+
     // Apartments page
     'apartments_page' => [
         'title' => 'Apartments - Aurora Hotel Plaza',
@@ -412,7 +413,7 @@ return [
         'apartments_count' => '{:count} apartments',
         'guests' => 'guests',
     ],
-    
+
     // Services page
     'services_page' => [
         'title' => 'Services - Aurora Hotel Plaza',
@@ -435,7 +436,7 @@ return [
         'cat_laundry' => 'Laundry',
         'cat_other' => 'Other',
     ],
-    
+
     // Contact page
     'contact_page' => [
         'title' => 'Contact - Aurora Hotel Plaza',
@@ -471,7 +472,7 @@ return [
         'min_chars' => 'Minimum {:count} characters',
         'sending' => 'Sending...',
     ],
-    
+
     // About page
     'about_page' => [
         'title' => 'About Us - Aurora Hotel Plaza',
@@ -520,7 +521,7 @@ return [
         'ready_to_experience' => 'Ready to Experience?',
         'cta_desc' => 'Book today to receive special offers and experience 5-star service',
     ],
-    
+
     // Gallery page
     'gallery_page' => [
         'title' => 'Gallery - Aurora Hotel Plaza',
@@ -556,7 +557,7 @@ return [
         'experience_desc' => 'Book today to enjoy luxurious spaces and 5-star services',
         'contact_consult' => 'Contact for Consultation',
     ],
-    
+
     // Explore page
     'explore_page' => [
         'title' => 'Explore - Aurora Hotel Plaza',
@@ -1149,7 +1150,7 @@ return [
         'gallery' => 'Apartment Gallery',
         'other_apartments' => 'Other Apartments',
     ],
-    
+
     // Footer
     'footer' => [
         'about' => 'About Us',
