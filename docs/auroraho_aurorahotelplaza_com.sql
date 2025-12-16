@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th12 16, 2025 lúc 06:54 AM
+-- Thời gian đã tạo: Th12 16, 2025 lúc 11:49 PM
 -- Phiên bản máy phục vụ: 10.11.8-MariaDB
 -- Phiên bản PHP: 8.4.14
 
@@ -213,7 +213,24 @@ INSERT INTO `activity_logs` (`log_id`, `user_id`, `action`, `entity_type`, `enti
 (139, 5, 'login', 'user', 5, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '115.74.225.100', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-15 07:31:35'),
 (140, 7, 'login', 'user', 7, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '123.31.116.145', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-15 08:06:45'),
 (141, 8, 'register', 'user', 8, 'New user registered via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-15 12:28:16'),
-(142, 8, 'login', 'user', 8, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-15 12:31:38');
+(142, 8, 'login', 'user', 8, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '123.31.116.145', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-15 12:31:38'),
+(143, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 00:24:42'),
+(144, 8, 'login', 'user', 8, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 01:54:14'),
+(145, 8, 'profile_update', 'user', 8, 'User updated profile information - Details: {\"updated_fields\":[\"full_name\",\"phone\",\"date_of_birth\",\"gender\",\"user_id\"],\"password_changed\":false}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 01:57:14'),
+(146, 5, 'temp_password_sent', 'user', 5, 'Temporary password requested - Details: {\"email\":\"15.lequanglong@gmail.com\",\"email_sent\":true,\"temp_expires\":\"2025-12-16 02:31:21\"}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 02:01:25'),
+(147, 5, 'login', 'user', 5, 'User logged in - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"remember_me\":false}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 02:01:44'),
+(148, 5, 'password_changed', 'user', 5, 'Password changed after reset - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\"}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 02:02:08'),
+(149, 8, 'login', 'user', 8, 'User logged in via google - Details: {\"email\":\"long.lequang308@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1', '2025-12-16 03:42:27'),
+(150, 3, 'login', 'user', 3, 'User logged in via google - Details: {\"email\":\"longdev.08@gmail.com\",\"user_name\":\"Long Quang\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 05:32:56'),
+(151, 3, 'logout', 'user', 3, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 05:33:29'),
+(152, 9, 'register', 'user', 9, 'New user registered via google - Details: {\"email\":\"quanglong.3824@gmail.com\",\"user_name\":\"Long Quang\",\"registration_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 05:33:38'),
+(153, 9, 'logout', 'user', 9, 'User logged out', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 05:33:42'),
+(154, 5, 'login', 'user', 5, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '1.53.200.212', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 05:33:49'),
+(155, 7, 'login', 'user', 7, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '42.112.78.128', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 16:28:45'),
+(156, 7, 'logout', 'user', 7, 'User logged out', '42.112.78.128', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 16:43:41'),
+(157, 5, 'login', 'user', 5, 'User logged in via google - Details: {\"email\":\"15.lequanglong@gmail.com\",\"user_name\":\"Long meo meo\",\"role\":\"customer\",\"login_method\":\"google\"}', '42.112.78.128', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 16:43:49'),
+(158, 5, 'logout', 'user', 5, 'User logged out', '42.112.78.128', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 16:46:26'),
+(159, 7, 'login', 'user', 7, 'User logged in - Details: {\"email\":\"admin@aurorahotelplaza.com\",\"user_name\":\"Administrator\",\"role\":\"admin\",\"remember_me\":false}', '42.112.78.128', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15', '2025-12-16 16:46:31');
 
 -- --------------------------------------------------------
 
@@ -310,8 +327,7 @@ CREATE TABLE `blog_comments` (
 --
 
 INSERT INTO `blog_comments` (`comment_id`, `post_id`, `user_id`, `parent_id`, `author_name`, `author_email`, `content`, `status`, `ip_address`, `created_at`, `updated_at`) VALUES
-(1, 0, 5, NULL, 'Long meo meo', '15.lequanglong@gmail.com', 'Rất tốt', 'approved', '115.74.225.100', '2025-12-15 08:22:23', '2025-12-15 08:22:29'),
-(4, 4, 5, NULL, 'Long meo meo', '15.lequanglong@gmail.com', 'Căn hộ khá đẹp, nên thử cư trú và trải nghiệm', 'approved', '115.74.225.100', '2025-12-15 09:20:27', '2025-12-15 09:20:41');
+(1, 0, 5, NULL, 'Long meo meo', '15.lequanglong@gmail.com', 'Rất tốt', 'approved', '115.74.225.100', '2025-12-15 08:22:23', '2025-12-15 08:22:29');
 
 -- --------------------------------------------------------
 
@@ -369,14 +385,6 @@ CREATE TABLE `blog_posts` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `blog_posts`
---
-
-INSERT INTO `blog_posts` (`post_id`, `title`, `title_en`, `slug`, `excerpt`, `excerpt_en`, `content`, `content_en`, `tags`, `layout`, `gallery_images`, `video_url`, `is_featured`, `allow_comments`, `featured_image`, `category_id`, `author_id`, `status`, `views`, `likes_count`, `shares_count`, `rating_avg`, `rating_count`, `published_at`, `created_at`, `updated_at`) VALUES
-(4, 'Indochine Suite: Sống Chất Đông Dương Giữa Lòng Biên Hòa', NULL, 'indochine-suite-song-chat-dong-duong-giua-long-bien-hoa', 'Hơn cả một nơi lưu trú, căn hộ Indochine tại Aurora mang đến cảm giác &amp;quot;Nhà&amp;quot; với gian bếp ấm cúng, nội thất gỗ trầm mặc và không gian sống đậm chất nghệ thuật.', NULL, '<p>Nếu bạn đang tìm kiếm một khoảng lặng bình yên giữa nhịp sống hối hả, hay một không gian sống đầy đủ tiện nghi cho chuyến công tác dài ngày, căn hộ Indochine tại Aurora Hotel Plaza chính là câu trả lời hoàn hảo.</p>\r\n\r\n<h2>Bản giao hưởng của Gỗ và Ánh sáng</h2>\r\n<p>Lấy cảm hứng từ kiến trúc Đông Dương những năm đầu thế kỷ 20, căn hộ là sự kết hợp tinh tế giữa vẻ đẹp lãng mạn của Pháp và nét trầm mặc Á Đông. Bước vào phòng, bạn sẽ cảm nhận ngay sự thư thái đến từ gam màu nâu trầm của nội thất gỗ tự nhiên, hòa quyện cùng ánh sáng vàng dịu nhẹ, tạo nên một không gian vừa sang trọng, vừa gần gũi.</p>\r\n\r\n<h2>Căn bếp - Trái tim của căn hộ</h2>\r\n<p>Điểm khác biệt lớn nhất của hạng phòng này chính là khu vực bếp được đầu tư bài bản (như hình ảnh thực tế):</p>\r\n<ul>\r\n    <li><b>Hệ tủ bếp gỗ cao cấp:</b> Thiết kế kịch trần với nhiều ngăn lưu trữ, mang vẻ đẹp cổ điển nhưng vẫn tối ưu công năng.</li>\r\n    <li><b>Tiện nghi hiện đại:</b> Trang bị sẵn tủ lạnh dung tích lớn, bếp nấu và bồn rửa rộng rãi, cho phép bạn thỏa sức trổ tài nấu nướng những món ăn yêu thích ngay tại phòng.</li>\r\n    <li><b>Không gian kết nối:</b> Khu bếp được thiết kế mở, liền kề với phòng khách, giúp gắn kết các thành viên trong gia đình trong mỗi bữa ăn.</li>\r\n</ul>\r\n\r\n<h2>Trải nghiệm nghỉ dưỡng \"All-in-one\"</h2>\r\n<p>Lưu trú tại Indochine Suite, quý khách không chỉ sở hữu một không gian sống đẳng cấp mà còn được tận hưởng trọn vẹn hệ sinh thái dịch vụ của khách sạn 5 sao: từ hồ bơi, phòng gym đến dịch vụ dọn phòng tiêu chuẩn.</p>\r\n\r\n<p><i>Đặt phòng ngay hôm nay để trải nghiệm phong cách sống thượng lưu trong không gian hoài cổ độc đáo nhất tại Aurora.</i></p>', NULL, 'ăn hộ indochine, thuê phòng dài hạn, căn hộ có bếp, aurora hotel plaza, luxury stay, biên hòa', 'masonry', '[\"uploads/img_20251215_091536_5044fc7f.jpg\",\"uploads/img_20251215_091537_26f30a86.jpg\",\"uploads/img_20251215_091537_5b335e40.jpg\",\"uploads/img_20251215_091537_ba7e53a0.jpg\",\"uploads/img_20251215_091536_0e656f21.jpg\",\"uploads/img_20251215_091536_31d9fd26.jpg\",\"uploads/img_20251215_091536_5044fc7f.jpg\",\"uploads/img_20251215_091536_a1d1135e.jpg\",\"uploads/img_20251215_091536_c0e16490.jpg\",\"uploads/img_20251215_091536_de412ee7.jpg\"]', '', 1, 1, 'uploads/img_20251215_091537_16f82c23.jpg', 6, 7, 'published', 4, 1, 0, 5.0, 1, '2025-12-15 02:19:00', '2025-12-15 09:19:14', '2025-12-15 09:20:44'),
-(5, 'Classic Family Apartment: Chốn Về Bình Yên Cho Cả Gia Đình', NULL, 'classic-family-apartment-chon-ve-binh-yen-cho-ca-gia-dinh', 'Không gian sinh hoạt chung rộng thoáng với thiết kế hiện đại, trẻ trung. Sự lựa chọn hoàn hảo để gia đình bạn tận hưởng những khoảnh khắc sum vầy bên nhau trong kỳ nghỉ tại Biên Hòa.', NULL, '<p>Kỳ nghỉ gia đình sẽ trở nên trọn vẹn hơn bao giờ hết tại Classic Family Apartment – nơi mọi thành viên đều tìm thấy không gian riêng tư nhưng vẫn dễ dàng kết nối với nhau.</p>\r\n\r\n<h2>Thiết kế thông minh, tối ưu không gian</h2>\r\n<p>Căn hộ được thiết kế theo phong cách hiện đại với tông màu trắng và be chủ đạo (như hình ảnh thực tế), mang lại cảm giác tươi mới và sạch sẽ:</p>\r\n<ul>\r\n    <li><b>Phòng khách rộng rãi:</b> Nổi bật với bộ sofa êm ái và vách ngăn trang trí tinh tế, đây là nơi cả nhà cùng xem phim, trò chuyện hay các bé vui chơi an toàn.</li>\r\n    <li><b>Ánh sáng tự nhiên:</b> Cửa sổ lớn kịch trần đón trọn ánh nắng và gió trời, giúp căn phòng luôn thông thoáng và tràn đầy năng lượng.</li>\r\n</ul>\r\n\r\n<h2>Tiện nghi chuẩn \"Nhà mình\"</h2>\r\n<p>Hiểu được nhu cầu của các gia đình có trẻ nhỏ, Classic Family Apartment được trang bị đầy đủ các tiện ích thiết yếu:</p>\r\n<p>Khu vực bếp nhỏ gọn tiện lợi cho việc pha sữa hay hâm nóng đồ ăn. Phòng ngủ được bố trí giường lớn êm ái cùng chăn ga cao cấp, đảm bảo giấc ngủ ngon cho cả nhà sau một ngày dài vui chơi khám phá.</p>\r\n\r\n<h2>Vị trí thuận lợi</h2>\r\n<p>Từ căn hộ, gia đình bạn có thể dễ dàng di chuyển xuống hồ bơi, khu vui chơi trẻ em hoặc nhà hàng buffet sáng, mang đến trải nghiệm nghỉ dưỡng thảnh thơi và thuận tiện nhất.</p>\r\n\r\n<p><i>Classic Family Apartment tại Aurora Hotel Plaza - Nơi lưu giữ những ký ức hạnh phúc của gia đình bạn.</i></p>', NULL, 'Classic Family Apartment, căn hộ gia đình biên hòa, du lịch gia đình, phòng khách sạn rộng, aurora hotel plaza, staycation', 'apartment', '[\"uploads/img_20251215_092831_3f2c0153.jpg\",\"uploads/img_20251215_092831_68068402.jpg\",\"uploads/img_20251215_092831_9605c8ca.jpg\",\"uploads/img_20251215_092831_9935b91a.jpg\",\"uploads/img_20251215_092831_9948a62f.jpg\",\"uploads/img_20251215_092830_b7bac64c.jpg\"]', '', 1, 1, 'uploads/img_20251215_092831_601acc15.jpg', 6, 7, 'published', 1, 0, 0, 0.0, 0, '2025-12-15 02:33:03', '2025-12-15 09:33:03', '2025-12-15 09:33:10');
 
 -- --------------------------------------------------------
 
@@ -469,7 +477,8 @@ INSERT INTO `bookings` (`booking_id`, `booking_code`, `user_id`, `room_type_id`,
 (4, 'BK202512157ED3F6', 5, 7, 60, '2025-12-26', '2025-12-30', 2, 0, 1, 4, 3000000.00, 0.00, 0.00, 0, 12000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'cancelled', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 04:17:59', '2025-12-15 04:24:53'),
 (5, 'BK20251215CD6C9D', 5, 4, 32, '2025-12-15', '2025-12-17', 2, 0, 1, 2, 4500000.00, 0.00, 0.00, 0, 9000000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 05:00:55', '2025-12-15 05:16:48', 1, NULL, NULL, NULL, '2025-12-15 04:26:52', '2025-12-15 05:16:48'),
 (6, 'BK202512150B095E', 5, 2, NULL, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 1500000.00, 0.00, 0.00, 0, 1500000.00, '', 'Long meo meo', '15.lequanglong@gmail.com', '0987654321', NULL, 'checked_out', 'paid', NULL, 0, '2025-12-15 06:57:11', '2025-12-15 07:18:58', 1, NULL, NULL, NULL, '2025-12-15 06:56:48', '2025-12-15 07:18:58'),
-(7, 'BK202512154AF2BC', 7, 2, NULL, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 1500000.00, 0.00, 0.00, 0, 1500000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'pending', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 10:31:32', '2025-12-15 10:31:32');
+(7, 'BK202512154AF2BC', 7, 2, NULL, '2025-12-15', '2025-12-16', 2, 0, 1, 1, 1500000.00, 0.00, 0.00, 0, 1500000.00, '', 'Administrator', 'admin@aurorahotelplaza.com', '0123456789', NULL, 'confirmed', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-15 10:31:32', '2025-12-16 16:43:00'),
+(8, 'BK20251216C49F99', 8, 2, NULL, '2025-12-16', '2025-12-17', 2, 0, 1, 1, 1500000.00, 0.00, 0.00, 0, 1500000.00, '', 'Long Quang', 'long.lequang308@gmail.com', '0969875278', NULL, 'confirmed', 'unpaid', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2025-12-16 01:54:36', '2025-12-16 01:54:41');
 
 --
 -- Bẫy `bookings`
@@ -548,7 +557,11 @@ INSERT INTO `booking_history` (`history_id`, `booking_id`, `old_status`, `new_st
 (25, 6, 'confirmed', 'checked_in', 1, NULL, '2025-12-15 06:57:11'),
 (26, 6, 'confirmed', 'checked_in', 1, 'Status changed from confirmed to checked_in', '2025-12-15 06:57:11'),
 (27, 6, 'checked_in', 'checked_out', 1, NULL, '2025-12-15 07:18:58'),
-(28, 6, 'checked_in', 'checked_out', 7, 'Status changed from checked_in to checked_out', '2025-12-15 07:18:58');
+(28, 6, 'checked_in', 'checked_out', 7, 'Status changed from checked_in to checked_out', '2025-12-15 07:18:58'),
+(29, 8, 'pending', 'confirmed', NULL, NULL, '2025-12-16 01:54:41'),
+(30, 8, 'pending', 'confirmed', 8, 'Booking confirmed by user', '2025-12-16 01:54:41'),
+(31, 7, 'pending', 'confirmed', NULL, NULL, '2025-12-16 16:43:00'),
+(32, 7, 'pending', 'confirmed', 7, 'Booking confirmed by user', '2025-12-16 16:43:00');
 
 -- --------------------------------------------------------
 
@@ -1646,12 +1659,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `date_of_birth`, `gender`, `avatar`, `user_role`, `status`, `email_verified`, `created_at`, `updated_at`, `last_login`, `temp_password`, `temp_password_expires`, `requires_password_change`) VALUES
-(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-15 05:24:42', '2025-12-15 05:24:42', NULL, NULL, 0),
+(3, 'longdev.08@gmail.com', '$2y$10$OkHi4WIiaSFLcYDD/BOeq.SBHCqNzee1E7tj6qGhGDlaQVpy.f0RW', 'Long Quang', '0969875278', 'Biên Hoà', '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocJQsNS68y6f20vdimP4mRmGe3U-tMausEPGmo6q43KETsFjB9ju=s96-c', 'customer', 'active', 1, '2025-12-14 04:34:55', '2025-12-16 05:32:56', '2025-12-16 05:32:56', NULL, NULL, 0),
 (4, 'thuylinh.80902@gmail.com', '$2y$10$790oTo40HWdZ3NHZ87.VBumhEEFS0n.0t.2QluLqtPDiqd4C2DMOa', 'Linh', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocJWKgoXi3sCsEKJ4XKQcYaKv251QhkqcsNz2k6znBdFUE6dSQ=s96-c', 'customer', 'active', 1, '2025-12-14 04:36:38', '2025-12-14 04:36:38', NULL, NULL, NULL, 0),
-(5, '15.lequanglong@gmail.com', '$2y$10$/hqCPtwg7jUCSes5mkbD8eG2.YU5/FFf3FPjOkuyFH9OmZL3LEy6K', 'Long meo meo', '0987654321', NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKye63XJrM6P_TKQJrW8bMsQAcI4hfnQhOEqX9Jt3kH-0J2zg=s96-c', 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-15 07:31:35', '2025-12-15 07:31:35', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
+(5, '15.lequanglong@gmail.com', '$2y$10$1znCeyD3QEgVi3uD8s4uu.CweBtdgV4J.Ml6QXBbgR/0Rlt0JT9b2', 'Long meo meo', '0987654321', NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKye63XJrM6P_TKQJrW8bMsQAcI4hfnQhOEqX9Jt3kH-0J2zg=s96-c', 'customer', 'active', 0, '2025-12-15 01:57:14', '2025-12-16 16:43:49', '2025-12-16 16:43:49', '$2y$10$vbaL.RcspOiUHkzfv5nb4.f7N2ymjlcAq3ArrjT5uSpcxkLlzQKwe', '2025-12-14 20:20:27', 0),
 (6, 'thuvienanhvang@gmail.com', '$2y$10$oNgDLakQeLcoUr8lzuGtYewq4f7LhtKyFF/QzKflsKPI5xJzor9e6', 'Vàng', '0964214104', NULL, NULL, NULL, NULL, 'customer', 'active', 0, '2025-12-15 03:37:57', '2025-12-15 04:45:34', '2025-12-15 04:45:34', NULL, NULL, 0),
-(7, 'admin@aurorahotelplaza.com', '$2y$10$eUchqcXU.rshUBkIe9QyrOenoefdMl6zPtU/mQ5U3BNp1dxMLZ50m', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-15 07:18:18', '2025-12-15 08:06:45', '2025-12-15 08:06:45', NULL, NULL, 0),
-(8, 'long.lequang308@gmail.com', '$2y$10$fyXF.yYjjZKCtURUdL24Pu6oc9/qxw1lviI9QAYmAgpADTPEw4.WW', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocKOkiVeZmvgg6JT_uXnZk_IxejyzgK0E1oQfCWN9xa4391JemNp=s96-c', 'customer', 'active', 1, '2025-12-15 12:28:16', '2025-12-15 12:31:38', '2025-12-15 12:31:38', NULL, NULL, 0);
+(7, 'admin@aurorahotelplaza.com', '$2y$10$eUchqcXU.rshUBkIe9QyrOenoefdMl6zPtU/mQ5U3BNp1dxMLZ50m', 'Administrator', '0123456789', NULL, NULL, NULL, NULL, 'admin', 'active', 1, '2025-12-15 07:18:18', '2025-12-16 16:46:31', '2025-12-16 16:46:31', NULL, NULL, 0),
+(8, 'long.lequang308@gmail.com', '$2y$10$fyXF.yYjjZKCtURUdL24Pu6oc9/qxw1lviI9QAYmAgpADTPEw4.WW', 'Long Quang', '0969875278', NULL, '2004-08-30', 'male', 'https://lh3.googleusercontent.com/a/ACg8ocKOkiVeZmvgg6JT_uXnZk_IxejyzgK0E1oQfCWN9xa4391JemNp=s96-c', 'customer', 'active', 1, '2025-12-15 12:28:16', '2025-12-16 03:42:27', '2025-12-16 03:42:27', NULL, NULL, 0),
+(9, 'quanglong.3824@gmail.com', '$2y$10$MPwwJd4yHRIApqoOw3iQ9uFJrT7o9OHjp2B5hpFzqFJO2tIFuJJT2', 'Long Quang', NULL, NULL, NULL, NULL, 'https://lh3.googleusercontent.com/a/ACg8ocLn_ThubLaAq44AbKSFFGdXu0tR-NVGTWsOddLM7B_OTE3OyFI=s96-c', 'customer', 'active', 1, '2025-12-16 05:33:38', '2025-12-16 05:33:38', NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1681,7 +1695,8 @@ INSERT INTO `user_loyalty` (`loyalty_id`, `user_id`, `current_points`, `lifetime
 (11, 5, 16350, 16350, NULL, NULL, '2025-12-15 01:57:14', '2025-12-15 06:57:27'),
 (12, 6, 0, 0, NULL, NULL, '2025-12-15 03:37:57', '2025-12-15 03:37:57'),
 (15, 7, 0, 0, NULL, NULL, '2025-12-15 07:18:18', '2025-12-15 07:18:18'),
-(16, 8, 0, 0, NULL, NULL, '2025-12-15 12:28:16', '2025-12-15 12:28:16');
+(16, 8, 0, 0, NULL, NULL, '2025-12-15 12:28:16', '2025-12-15 12:28:16'),
+(17, 9, 0, 0, NULL, NULL, '2025-12-16 05:33:38', '2025-12-16 05:33:38');
 
 -- --------------------------------------------------------
 
@@ -1908,7 +1923,7 @@ ALTER TABLE `user_loyalty`
 -- AUTO_INCREMENT cho bảng `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 
 --
 -- AUTO_INCREMENT cho bảng `amenities`
@@ -1956,13 +1971,13 @@ ALTER TABLE `blog_shares`
 -- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `booking_history`
 --
 ALTER TABLE `booking_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT cho bảng `contact_submissions`
@@ -2016,13 +2031,13 @@ ALTER TABLE `translations`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT cho bảng `user_loyalty`
 --
 ALTER TABLE `user_loyalty`
-  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `loyalty_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Ràng buộc đối với các bảng kết xuất
