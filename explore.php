@@ -53,511 +53,701 @@ try {
     $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
     $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
     $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
-} catch (Exception $e) {}
+} catch (Exception $e) {
+}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title><?php _e('explore_page.title'); ?></title>
-<script src="assets/js/tailwindcss-cdn.js"></script>
-<link href="assets/css/fonts.css" rel="stylesheet"/>
-<script src="assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/liquid-glass.css">
-<style>
-.explore-hero {
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
-    background-size: cover;
-    background-position: center;
-    min-height: 500px;
-}
-</style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title><?php _e('explore_page.title'); ?></title>
+    <script src="assets/js/tailwindcss-cdn.js"></script>
+    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <script src="assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/liquid-glass.css">
+    <link rel="stylesheet" href="assets/css/pages-glass.css">
+    <style>
+        /* Explore Page Specifics */
+        .glass-quick-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-quick-link:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-quick-link-icon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            color: #d4af37;
+        }
+
+        .glass-category-card {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            display: block;
+        }
+
+        .glass-category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .glass-category-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .glass-category-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+        }
+
+        .glass-category-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+        }
+
+        .glass-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .glass-category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .explore-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .explore-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-gold {
+            color: #d4af37;
+        }
+    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
-<div class="relative flex min-h-screen w-full flex-col">
-<?php include 'includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col">
-    <!-- Hero Section -->
-    <section class="explore-hero flex items-center justify-center pt-20">
-        <div class="mx-auto max-w-7xl px-4 py-20 text-center">
-            <span class="badge-liquid-glass mb-6">
-                <span class="material-symbols-outlined text-accent">explore</span>
-                <?php _e('explore_page.badge'); ?>
-            </span>
-            <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                <?php _e('explore_page.hero_title'); ?>
-            </h1>
-            <p class="text-lg text-white/80 max-w-2xl mx-auto mb-10">
-                <?php _e('explore_page.hero_desc'); ?>
-            </p>
-            <div class="flex flex-wrap gap-4 justify-center">
-                <a href="booking/index.php" class="btn-liquid-primary">
-                    <span class="material-symbols-outlined">calendar_month</span>
-                    <?php _e('explore_page.book_now'); ?>
-                </a>
-                <a href="#quick-links" class="btn-liquid-glass">
-                    <span class="material-symbols-outlined">arrow_downward</span>
-                    <?php _e('explore_page.explore_more'); ?>
-                </a>
-            </div>
-        </div>
-    </section>
+<body class="bg-slate-900 font-body text-white">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <?php include 'includes/header.php'; ?>
 
-    <!-- Quick Links Section -->
-    <section id="quick-links" class="py-16 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="text-center mb-12">
-                <span class="glass-section-badge mb-4">
-                    <span class="material-symbols-outlined text-sm">bolt</span>
-                    <?php _e('explore_page.quick_access'); ?>
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"><?php _e('explore_page.what_looking_for'); ?></h2>
-                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto"><?php _e('explore_page.quick_access_desc'); ?></p>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                <!-- Phòng nghỉ -->
-                <a href="rooms.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">hotel</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.rooms'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.rooms_desc'); ?></p>
-                </a>
-                
-                <!-- Căn hộ -->
-                <a href="apartments.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">apartment</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.apartments'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.apartments_desc'); ?></p>
-                </a>
-                
-                <!-- Dịch vụ -->
-                <a href="services.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">room_service</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.services'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.services_desc'); ?></p>
-                </a>
-                
-                <!-- Thư viện ảnh -->
-                <a href="gallery.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">photo_library</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.gallery'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.gallery_desc'); ?></p>
-                </a>
-                
-                <!-- Blog -->
-                <a href="blog.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">article</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.news'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.news_desc'); ?></p>
-                </a>
-                
-                <!-- Liên hệ -->
-                <a href="contact.php" class="glass-quick-link group">
-                    <div class="glass-quick-link-icon">
-                        <span class="material-symbols-outlined text-2xl">contact_support</span>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1"><?php _e('explore_page.contact'); ?></h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php _e('explore_page.contact_desc'); ?></p>
-                </a>
-            </div>
-        </div>
-    </section>
+        <main class="flex h-full grow flex-col">
+            <!-- Glass Page Wrapper -->
+            <div class="glass-page-wrapper"
+                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
 
-    <!-- Categories Section -->
-    <section class="py-16">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="text-center mb-12">
-                <span class="glass-section-badge mb-4">
-                    <span class="material-symbols-outlined text-sm">category</span>
-                    <?php _e('explore_page.categories'); ?>
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"><?php _e('explore_page.explore_by_category'); ?></h2>
-                <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto"><?php _e('explore_page.category_desc'); ?></p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Phòng nghỉ -->
-                <a href="rooms.php" class="glass-category-card">
-                    <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg" alt="<?php _e('explore_page.rooms'); ?>">
-                    <div class="glass-category-overlay"></div>
-                    <div class="glass-category-content">
-                        <span class="glass-category-badge">
-                            <span class="material-symbols-outlined text-sm">hotel</span>
-                            <?php _e('explore_page.room_types_count', ['count' => count($featured_rooms)]); ?>
+                <!-- Hero Section -->
+                <section class="page-hero-glass">
+                    <div class="hero-glass-card">
+                        <div class="glass-badge-pill mb-4 justify-center mx-auto">
+                            <span class="material-symbols-outlined text-sm">explore</span>
+                            <?php _e('explore_page.badge'); ?>
+                        </div>
+                        <h1 class="hero-title-glass">
+                            <?php _e('explore_page.hero_title'); ?>
+                        </h1>
+                        <p class="hero-subtitle-glass">
+                            <?php _e('explore_page.hero_desc'); ?>
+                        </p>
+                        <div class="flex flex-wrap gap-4 justify-center">
+                            <a href="booking/index.php" class="btn-glass-gold">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                <?php _e('explore_page.book_now'); ?>
+                            </a>
+                            <a href="#quick-links" class="btn-glass-outline">
+                                <span class="material-symbols-outlined">arrow_downward</span>
+                                <?php _e('explore_page.explore_more'); ?>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Links Section -->
+                <section id="quick-links" class="py-16">
+                    <div class="mx-auto max-w-7xl px-4">
+                        <div class="text-center mb-12">
+                            <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                <span class="material-symbols-outlined text-sm align-middle mr-1">bolt</span>
+                                <?php _e('explore_page.quick_access'); ?>
+                            </span>
+                            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                                <?php _e('explore_page.what_looking_for'); ?>
+                            </h2>
+                            <p class="text-white/70 max-w-xl mx-auto"><?php _e('explore_page.quick_access_desc'); ?></p>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                            <!-- Phòng nghỉ -->
+                            <a href="rooms.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">hotel</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.rooms'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.rooms_desc'); ?></p>
+                            </a>
+
+                            <!-- Căn hộ -->
+                            <a href="apartments.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">apartment</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.apartments'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.apartments_desc'); ?></p>
+                            </a>
+
+                            <!-- Dịch vụ -->
+                            <a href="services.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">room_service</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.services'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.services_desc'); ?></p>
+                            </a>
+
+                            <!-- Thư viện ảnh -->
+                            <a href="gallery.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">photo_library</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.gallery'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.gallery_desc'); ?></p>
+                            </a>
+
+                            <!-- Blog -->
+                            <a href="blog.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">article</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.news'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.news_desc'); ?></p>
+                            </a>
+
+                            <!-- Liên hệ -->
+                            <a href="contact.php" class="glass-quick-link group">
+                                <div class="glass-quick-link-icon">
+                                    <span class="material-symbols-outlined text-2xl">contact_support</span>
+                                </div>
+                                <h3 class="font-bold text-white mb-1"><?php _e('explore_page.contact'); ?></h3>
+                                <p class="text-xs text-white/60"><?php _e('explore_page.contact_desc'); ?></p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Categories Section -->
+                <section class="py-16">
+                    <div class="mx-auto max-w-7xl px-4">
+                        <div class="text-center mb-12">
+                            <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                <span class="material-symbols-outlined text-sm align-middle mr-1">category</span>
+                                <?php _e('explore_page.categories'); ?>
+                            </span>
+                            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                                <?php _e('explore_page.explore_by_category'); ?>
+                            </h2>
+                            <p class="text-white/70 max-w-xl mx-auto"><?php _e('explore_page.category_desc'); ?></p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <!-- Phòng nghỉ -->
+                            <a href="rooms.php" class="glass-category-card">
+                                <img src="assets/img/deluxe/deluxe-room-aurora-1.jpg"
+                                    alt="<?php _e('explore_page.rooms'); ?>">
+                                <div class="glass-category-overlay"></div>
+                                <div class="glass-category-content">
+                                    <span class="glass-category-badge">
+                                        <span class="material-symbols-outlined text-sm">hotel</span>
+                                        <?php _e('explore_page.room_types_count', ['count' => count($featured_rooms)]); ?>
+                                    </span>
+                                    <h3 class="glass-category-title"><?php _e('explore_page.rooms'); ?></h3>
+                                </div>
+                            </a>
+
+                            <!-- Căn hộ -->
+                            <a href="apartments.php" class="glass-category-card">
+                                <img src="assets/img/apartment/can-ho-aurora-1.jpg"
+                                    alt="<?php _e('explore_page.apartments'); ?>"
+                                    onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
+                                <div class="glass-category-overlay"></div>
+                                <div class="glass-category-content">
+                                    <span class="glass-category-badge">
+                                        <span class="material-symbols-outlined text-sm">apartment</span>
+                                        <?php _e('explore_page.apartments_count', ['count' => count($featured_apartments)]); ?>
+                                    </span>
+                                    <h3 class="glass-category-title"><?php _e('explore_page.service_apartments'); ?>
+                                    </h3>
+                                </div>
+                            </a>
+
+                            <!-- Nhà hàng -->
+                            <a href="services.php?category=restaurant" class="glass-category-card">
+                                <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
+                                    alt="<?php _e('explore_page.restaurant_aurora'); ?>">
+                                <div class="glass-category-overlay"></div>
+                                <div class="glass-category-content">
+                                    <span class="glass-category-badge">
+                                        <span class="material-symbols-outlined text-sm">restaurant</span>
+                                        <?php _e('explore_page.cuisine'); ?>
+                                    </span>
+                                    <h3 class="glass-category-title"><?php _e('explore_page.restaurant_aurora'); ?></h3>
+                                </div>
+                            </a>
+
+                            <!-- Sự kiện -->
+                            <a href="services.php?category=event" class="glass-category-card">
+                                <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
+                                    alt="<?php _e('explore_page.events'); ?>">
+                                <div class="glass-category-overlay"></div>
+                                <div class="glass-category-content">
+                                    <span class="glass-category-badge">
+                                        <span class="material-symbols-outlined text-sm">celebration</span>
+                                        <?php _e('explore_page.events'); ?>
+                                    </span>
+                                    <h3 class="glass-category-title"><?php _e('explore_page.wedding_conference'); ?>
+                                    </h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Featured Rooms Section -->
+                <?php if (!empty($featured_rooms)): ?>
+                    <section class="py-16">
+                        <div class="mx-auto max-w-7xl px-4">
+                            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
+                                <div>
+                                    <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                        <span class="material-symbols-outlined text-sm align-middle mr-1">hotel</span>
+                                        <?php _e('explore_page.rooms'); ?>
+                                    </span>
+                                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                                        <?php _e('explore_page.featured_rooms'); ?>
+                                    </h2>
+                                    <p class="text-white/70"><?php _e('explore_page.featured_rooms_desc'); ?>
+                                    </p>
+                                </div>
+                                <a href="rooms.php"
+                                    class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                                    <?php _e('explore_page.view_all_rooms'); ?>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </a>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <?php foreach ($featured_rooms as $room):
+                                    $thumbnail = normalizeImagePath($room['thumbnail']);
+                                    $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                    ?>
+                                    <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group">
+                                        <div class="explore-card">
+                                            <div class="relative h-48 overflow-hidden">
+                                                <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                                    alt="<?php echo htmlspecialchars($room['type_name']); ?>"
+                                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                <div
+                                                    class="absolute top-3 right-3 px-3 py-1 bg-accent text-white text-xs font-bold rounded-full">
+                                                    <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
+                                                </div>
+                                            </div>
+                                            <div class="p-5">
+                                                <h3
+                                                    class="font-bold text-lg text-white mb-2 group-hover:text-accent transition-colors">
+                                                    <?php echo htmlspecialchars($room['type_name']); ?>
+                                                </h3>
+                                                <div class="flex flex-wrap gap-3 text-sm text-white/60">
+                                                    <span class="flex items-center gap-1">
+                                                        <span
+                                                            class="material-symbols-outlined text-base text-accent">square_foot</span>
+                                                        <?php echo number_format($room['size_sqm'], 0); ?>m²
+                                                    </span>
+                                                    <span class="flex items-center gap-1">
+                                                        <span
+                                                            class="material-symbols-outlined text-base text-accent">person</span>
+                                                        <?php echo $room['max_occupancy']; ?>
+                                                        <?php _e('explore_page.guests'); ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <!-- Featured Apartments Section -->
+                <?php if (!empty($featured_apartments)): ?>
+                    <section class="py-16">
+                        <div class="mx-auto max-w-7xl px-4">
+                            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
+                                <div>
+                                    <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                        <span class="material-symbols-outlined text-sm align-middle mr-1">apartment</span>
+                                        <?php _e('explore_page.apartments'); ?>
+                                    </span>
+                                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                                        <?php _e('explore_page.service_apartments'); ?>
+                                    </h2>
+                                    <p class="text-white/70">
+                                        <?php _e('explore_page.apartments_section_desc'); ?>
+                                    </p>
+                                </div>
+                                <a href="apartments.php"
+                                    class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                                    <?php _e('explore_page.view_all_apartments'); ?>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </a>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <?php foreach ($featured_apartments as $apt):
+                                    $thumbnail = normalizeImagePath($apt['thumbnail']);
+                                    $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
+                                    ?>
+                                    <a href="apartment-details/<?php echo htmlspecialchars($apt['slug']); ?>.php" class="group">
+                                        <div class="explore-card">
+                                            <div class="relative h-48 overflow-hidden">
+                                                <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                                    alt="<?php echo htmlspecialchars($apt['type_name']); ?>"
+                                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                <div
+                                                    class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
+                                                    <?php _e('explore_page.apartment_badge'); ?>
+                                                </div>
+                                                <div
+                                                    class="absolute top-3 right-3 px-3 py-1 bg-white/90 text-accent text-xs font-bold rounded-full">
+                                                    <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
+                                                </div>
+                                            </div>
+                                            <div class="p-5">
+                                                <h3
+                                                    class="font-bold text-lg text-white mb-2 group-hover:text-accent transition-colors">
+                                                    <?php echo htmlspecialchars($apt['type_name']); ?>
+                                                </h3>
+                                                <div class="flex flex-wrap gap-3 text-sm text-white/60">
+                                                    <span class="flex items-center gap-1">
+                                                        <span
+                                                            class="material-symbols-outlined text-base text-accent">square_foot</span>
+                                                        <?php echo number_format($apt['size_sqm'], 0); ?>m²
+                                                    </span>
+                                                    <span class="flex items-center gap-1">
+                                                        <span
+                                                            class="material-symbols-outlined text-base text-accent">person</span>
+                                                        <?php echo $apt['max_occupancy']; ?>         <?php _e('explore_page.guests'); ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <!-- Featured Services Section -->
+                <?php if (!empty($featured_services)): ?>
+                    <section class="py-16">
+                        <div class="mx-auto max-w-7xl px-4">
+                            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
+                                <div>
+                                    <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                        <span class="material-symbols-outlined text-sm align-middle mr-1">star</span>
+                                        <?php _e('explore_page.featured_services'); ?>
+                                    </span>
+                                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                                        <?php _e('explore_page.five_star_services'); ?>
+                                    </h2>
+                                    <p class="text-white/70">
+                                        <?php _e('explore_page.services_section_desc'); ?>
+                                    </p>
+                                </div>
+                                <a href="services.php"
+                                    class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                                    <?php _e('explore_page.view_all_services'); ?>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </a>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                                <?php foreach ($featured_services as $service): ?>
+                                    <a href="service-detail.php?slug=<?php echo htmlspecialchars($service['slug']); ?>"
+                                        class="group">
+                                        <div class="glass-card p-6 text-center hover:-translate-y-2">
+                                            <div
+                                                class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-all">
+                                                <span
+                                                    class="material-symbols-outlined text-3xl text-accent group-hover:text-white transition-colors"><?php echo htmlspecialchars($service['icon']); ?></span>
+                                            </div>
+                                            <h3
+                                                class="font-bold text-sm text-white mb-1 group-hover:text-accent transition-colors">
+                                                <?php echo htmlspecialchars($service['service_name']); ?>
+                                            </h3>
+                                            <?php if ($service['price'] > 0): ?>
+                                                <p class="text-xs text-accent font-bold"><?php _e('explore_page.from_price'); ?>
+                                                    <?php echo number_format($service['price'], 0, ',', '.'); ?>đ
+                                                </p>
+                                            <?php else: ?>
+                                                <p class="text-xs text-green-400 font-bold"><?php _e('explore_page.free'); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <!-- Stats Section -->
+                <section class="py-16">
+                    <div class="mx-auto max-w-7xl px-4">
+                        <div class="glass-card p-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+                            <div class="text-center border-r border-white/10 last:border-0">
+                                <div class="text-4xl md:text-5xl font-bold text-accent mb-2">
+                                    <?php echo $stats['total_rooms']; ?>+
+                                </div>
+                                <p class="text-white/80"><?php _e('home.rooms_apartments'); ?></p>
+                            </div>
+                            <div class="text-center border-r border-white/10 last:border-0">
+                                <div class="text-4xl md:text-5xl font-bold text-accent mb-2">
+                                    <?php echo number_format($stats['happy_customers']); ?>+
+                                </div>
+                                <p class="text-white/80"><?php _e('home.happy_customers'); ?></p>
+                            </div>
+                            <div class="text-center border-r border-white/10 last:border-0">
+                                <div class="text-4xl md:text-5xl font-bold text-accent mb-2">
+                                    <?php echo $stats['years_experience']; ?>+
+                                </div>
+                                <p class="text-white/80"><?php _e('home.years_experience'); ?></p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl md:text-5xl font-bold text-accent mb-2">24/7</div>
+                                <p class="text-white/80"><?php _e('home.customer_support'); ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Latest Blog Section -->
+                <?php if (!empty($latest_posts)): ?>
+                    <section class="py-16">
+                        <div class="mx-auto max-w-7xl px-4">
+                            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
+                                <div>
+                                    <span class="text-accent font-semibold text-sm uppercase tracking-wider mb-2 block">
+                                        <span class="material-symbols-outlined text-sm align-middle mr-1">article</span>
+                                        <?php _e('explore_page.news'); ?>
+                                    </span>
+                                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                                        <?php _e('explore_page.latest_posts'); ?>
+                                    </h2>
+                                    <p class="text-white/70"><?php _e('explore_page.latest_posts_desc'); ?>
+                                    </p>
+                                </div>
+                                <a href="blog.php"
+                                    class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                                    <?php _e('explore_page.view_all_posts'); ?>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </a>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <?php foreach ($latest_posts as $post): ?>
+                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group">
+                                        <div class="explore-card">
+                                            <div class="relative h-48 overflow-hidden">
+                                                <?php if ($post['featured_image']): ?>
+                                                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                                        alt="<?php echo htmlspecialchars($post['title']); ?>"
+                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                <?php else: ?>
+                                                    <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                                        <span class="material-symbols-outlined text-5xl text-accent">article</span>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="p-6">
+                                                <div class="flex items-center gap-4 text-sm text-white/60 mb-3">
+                                                    <span class="flex items-center gap-1">
+                                                        <span class="material-symbols-outlined text-base">calendar_today</span>
+                                                        <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                                                    </span>
+                                                    <?php if ($post['author_name']): ?>
+                                                        <span class="flex items-center gap-1">
+                                                            <span class="material-symbols-outlined text-base">person</span>
+                                                            <?php echo htmlspecialchars($post['author_name']); ?>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <h3
+                                                    class="font-bold text-lg text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                                                    <?php echo htmlspecialchars($post['title']); ?>
+                                                </h3>
+                                                <?php if ($post['excerpt']): ?>
+                                                    <p class="text-white/60 text-sm line-clamp-2">
+                                                        <?php echo htmlspecialchars($post['excerpt']); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <!-- CTA Section - Dark Style -->
+                <section class="py-20 relative overflow-hidden"
+                    style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
+                    <div class="mx-auto max-w-7xl px-4 text-center relative z-10">
+                        <span
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 border border-white/20">
+                            <span class="material-symbols-outlined">support_agent</span>
+                            Hỗ trợ 24/7
                         </span>
-                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.rooms'); ?></h3>
-                        <p class="text-white/80 text-sm"><?php _e('explore_page.rooms_category_desc'); ?></p>
-                    </div>
-                </a>
-                
-                <!-- Căn hộ -->
-                <a href="apartments.php" class="glass-category-card">
-                    <img src="assets/img/apartment/can-ho-aurora-1.jpg" alt="<?php _e('explore_page.apartments'); ?>" onerror="this.src='assets/img/deluxe/deluxe-room-aurora-3.jpg'">
-                    <div class="glass-category-overlay"></div>
-                    <div class="glass-category-content">
-                        <span class="glass-category-badge">
-                            <span class="material-symbols-outlined text-sm">apartment</span>
-                            <?php _e('explore_page.apartments_count', ['count' => count($featured_apartments)]); ?>
-                        </span>
-                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.service_apartments'); ?></h3>
-                        <p class="text-white/80 text-sm"><?php _e('explore_page.apartments_category_desc'); ?></p>
-                    </div>
-                </a>
-                
-                <!-- Nhà hàng -->
-                <a href="services.php?category=restaurant" class="glass-category-card">
-                    <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg" alt="<?php _e('explore_page.restaurant_aurora'); ?>">
-                    <div class="glass-category-overlay"></div>
-                    <div class="glass-category-content">
-                        <span class="glass-category-badge">
-                            <span class="material-symbols-outlined text-sm">restaurant</span>
-                            <?php _e('explore_page.cuisine'); ?>
-                        </span>
-                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.restaurant_aurora'); ?></h3>
-                        <p class="text-white/80 text-sm"><?php _e('explore_page.restaurant_desc'); ?></p>
-                    </div>
-                </a>
-                
-                <!-- Sự kiện -->
-                <a href="services.php?category=event" class="glass-category-card">
-                    <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg" alt="<?php _e('explore_page.events'); ?>">
-                    <div class="glass-category-overlay"></div>
-                    <div class="glass-category-content">
-                        <span class="glass-category-badge">
-                            <span class="material-symbols-outlined text-sm">celebration</span>
-                            <?php _e('explore_page.events'); ?>
-                        </span>
-                        <h3 class="text-xl font-bold mb-2"><?php _e('explore_page.wedding_conference'); ?></h3>
-                        <p class="text-white/80 text-sm"><?php _e('explore_page.events_desc'); ?></p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Rooms Section -->
-    <?php if (!empty($featured_rooms)): ?>
-    <section class="py-16 bg-surface-light dark:bg-surface-dark">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
-                <div>
-                    <span class="glass-section-badge mb-4">
-                        <span class="material-symbols-outlined text-sm">hotel</span>
-                        <?php _e('explore_page.rooms'); ?>
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.featured_rooms'); ?></h2>
-                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.featured_rooms_desc'); ?></p>
-                </div>
-                <a href="rooms.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    <?php _e('explore_page.view_all_rooms'); ?>
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ($featured_rooms as $room): 
-                    $thumbnail = normalizeImagePath($room['thumbnail']);
-                    $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
-                ?>
-                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="<?php echo htmlspecialchars($room['type_name']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-3 right-3 px-3 py-1 bg-accent text-white text-xs font-bold rounded-full">
-                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($room['type_name']); ?></h3>
-                            <div class="flex flex-wrap gap-3 text-sm text-gray-500 dark:text-gray-400">
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base text-accent">square_foot</span>
-                                    <?php echo number_format($room['size_sqm'], 0); ?>m²
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base text-accent">person</span>
-                                    <?php echo $room['max_occupancy']; ?> <?php _e('explore_page.guests'); ?>
-                                </span>
-                            </div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt phòng?</h2>
+                        <p class="text-white/80 max-w-2xl mx-auto mb-8">Liên hệ ngay với chúng tôi để được tư vấn và đặt
+                            phòng với giá tốt nhất</p>
+                        <div class="flex flex-wrap gap-4 justify-center">
+                            <a href="booking/index.php" class="btn-liquid-primary">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                Đặt phòng ngay
+                            </a>
+                            <a href="tel:+842513918888" class="btn-liquid-glass">
+                                <span class="material-symbols-outlined">phone</span>
+                                (+84-251) 391.8888
+                            </a>
                         </div>
                     </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
+                </section>
 
-    <!-- Featured Apartments Section -->
-    <?php if (!empty($featured_apartments)): ?>
-    <section class="py-16">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
-                <div>
-                    <span class="glass-section-badge mb-4">
-                        <span class="material-symbols-outlined text-sm">apartment</span>
-                        <?php _e('explore_page.apartments'); ?>
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.service_apartments'); ?></h2>
-                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.apartments_section_desc'); ?></p>
-                </div>
-                <a href="apartments.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    <?php _e('explore_page.view_all_apartments'); ?>
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ($featured_apartments as $apt): 
-                    $thumbnail = normalizeImagePath($apt['thumbnail']);
-                    $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
-                ?>
-                <a href="apartment-details/<?php echo htmlspecialchars($apt['slug']); ?>.php" class="group">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="<?php echo htmlspecialchars($apt['type_name']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
-                                <?php _e('explore_page.apartment_badge'); ?>
-                            </div>
-                            <div class="absolute top-3 right-3 px-3 py-1 bg-white/90 text-accent text-xs font-bold rounded-full">
-                                <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
-                            </div>
+                <!-- More Links Section -->
+                <section class="py-16">
+                    <div class="mx-auto max-w-7xl px-4">
+                        <div class="text-center mb-10">
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Khám phá thêm</h2>
+                            <p class="text-white/60">Các trang hữu ích khác</p>
                         </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($apt['type_name']); ?></h3>
-                            <div class="flex flex-wrap gap-3 text-sm text-gray-500 dark:text-gray-400">
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base text-accent">square_foot</span>
-                                    <?php echo number_format($apt['size_sqm'], 0); ?>m²
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base text-accent">person</span>
-                                    <?php echo $apt['max_occupancy']; ?> <?php _e('explore_page.guests'); ?>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
 
-    <!-- Featured Services Section -->
-    <?php if (!empty($featured_services)): ?>
-    <section class="py-16 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
-                <div>
-                    <span class="glass-section-badge mb-4">
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <?php _e('explore_page.featured_services'); ?>
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.five_star_services'); ?></h2>
-                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.services_section_desc'); ?></p>
-                </div>
-                <a href="services.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    <?php _e('explore_page.view_all_services'); ?>
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                <?php foreach ($featured_services as $service): ?>
-                <a href="service-detail.php?slug=<?php echo htmlspecialchars($service['slug']); ?>" class="group">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center group-hover:from-accent group-hover:to-primary transition-all">
-                            <span class="material-symbols-outlined text-3xl text-accent group-hover:text-white transition-colors"><?php echo htmlspecialchars($service['icon']); ?></span>
-                        </div>
-                        <h3 class="font-bold text-sm text-gray-900 dark:text-white mb-1 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($service['service_name']); ?></h3>
-                        <?php if ($service['price'] > 0): ?>
-                        <p class="text-xs text-accent font-bold"><?php _e('explore_page.from_price'); ?> <?php echo number_format($service['price'], 0, ',', '.'); ?>đ</p>
-                        <?php else: ?>
-                        <p class="text-xs text-green-600 font-bold"><?php _e('explore_page.free'); ?></p>
-                        <?php endif; ?>
-                    </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                            <a href="about.php"
+                                class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
+                                <div
+                                    class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-accent text-xl md:text-2xl">info</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3
+                                        class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
+                                        Về chúng tôi</h3>
+                                    <p class="text-xs md:text-sm text-white/50 truncate">Giới thiệu Aurora</p>
+                                </div>
+                            </a>
 
-    <!-- Stats Section -->
-    <section class="py-16 bg-gradient-to-r from-gray-900 to-gray-800">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['total_rooms']; ?>+</div>
-                    <p class="text-white/80"><?php _e('home.rooms_apartments'); ?></p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo number_format($stats['happy_customers']); ?>+</div>
-                    <p class="text-white/80"><?php _e('home.happy_customers'); ?></p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2"><?php echo $stats['years_experience']; ?>+</div>
-                    <p class="text-white/80"><?php _e('home.years_experience'); ?></p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2">24/7</div>
-                    <p class="text-white/80"><?php _e('home.customer_support'); ?></p>
-                </div>
-            </div>
-        </div>
-    </section>
+                            <a href="room-map-user.php"
+                                class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
+                                <div
+                                    class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-accent text-xl md:text-2xl">map</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3
+                                        class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
+                                        Sơ đồ phòng</h3>
+                                    <p class="text-xs md:text-sm text-white/50 truncate">Xem vị trí phòng</p>
+                                </div>
+                            </a>
 
-    <!-- Latest Blog Section -->
-    <?php if (!empty($latest_posts)): ?>
-    <section class="py-16">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
-                <div>
-                    <span class="glass-section-badge mb-4">
-                        <span class="material-symbols-outlined text-sm">article</span>
-                        <?php _e('explore_page.news'); ?>
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"><?php _e('explore_page.latest_posts'); ?></h2>
-                    <p class="text-gray-600 dark:text-gray-400"><?php _e('explore_page.latest_posts_desc'); ?></p>
-                </div>
-                <a href="blog.php" class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
-                    <?php _e('explore_page.view_all_posts'); ?>
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <?php foreach ($latest_posts as $post): ?>
-                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
-                        <div class="relative h-48 overflow-hidden">
-                            <?php if ($post['featured_image']): ?>
-                            <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <?php else: ?>
-                            <div class="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-5xl text-accent">article</span>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base">calendar_today</span>
-                                    <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
-                                </span>
-                                <?php if ($post['author_name']): ?>
-                                <span class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base">person</span>
-                                    <?php echo htmlspecialchars($post['author_name']); ?>
-                                </span>
-                                <?php endif; ?>
-                            </div>
-                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-accent transition-colors line-clamp-2"><?php echo htmlspecialchars($post['title']); ?></h3>
-                            <?php if ($post['excerpt']): ?>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2"><?php echo htmlspecialchars($post['excerpt']); ?></p>
-                            <?php endif; ?>
+                            <a href="gallery.php"
+                                class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
+                                <div
+                                    class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                                    <span
+                                        class="material-symbols-outlined text-accent text-xl md:text-2xl">photo_library</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3
+                                        class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
+                                        Thư viện ảnh</h3>
+                                    <p class="text-xs md:text-sm text-white/50 truncate">Hình ảnh khách sạn</p>
+                                </div>
+                            </a>
+
+                            <a href="contact.php"
+                                class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
+                                <div
+                                    class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-accent text-xl md:text-2xl">mail</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3
+                                        class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
+                                        Liên hệ</h3>
+                                    <p class="text-xs md:text-sm text-white/50 truncate">Gửi yêu cầu</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
+                </section>
 
-    <!-- CTA Section - Dark Style -->
-    <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
-        <div class="mx-auto max-w-7xl px-4 text-center relative z-10">
-            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 border border-white/20">
-                <span class="material-symbols-outlined">support_agent</span>
-                Hỗ trợ 24/7
-            </span>
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt phòng?</h2>
-            <p class="text-white/80 max-w-2xl mx-auto mb-8">Liên hệ ngay với chúng tôi để được tư vấn và đặt phòng với giá tốt nhất</p>
-            <div class="flex flex-wrap gap-4 justify-center">
-                <a href="booking/index.php" class="btn-liquid-primary">
-                    <span class="material-symbols-outlined">calendar_month</span>
-                    Đặt phòng ngay
-                </a>
-                <a href="tel:+842513918888" class="btn-liquid-glass">
-                    <span class="material-symbols-outlined">phone</span>
-                    (+84-251) 391.8888
-                </a>
-            </div>
-        </div>
-    </section>
+        </main>
 
-    <!-- More Links Section -->
-    <section class="py-16 bg-surface-light dark:bg-surface-dark">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Khám phá thêm</h2>
-                <p class="text-gray-600 dark:text-gray-400">Các trang hữu ích khác</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                <a href="about.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
-                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">info</span>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Về chúng tôi</h3>
-                        <p class="text-xs md:text-sm text-gray-500 truncate">Giới thiệu Aurora</p>
-                    </div>
-                </a>
-                
-                <a href="room-map-user.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
-                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">map</span>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Sơ đồ phòng</h3>
-                        <p class="text-xs md:text-sm text-gray-500 truncate">Xem vị trí phòng</p>
-                    </div>
-                </a>
-                
-                <a href="gallery.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
-                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">photo_library</span>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Thư viện ảnh</h3>
-                        <p class="text-xs md:text-sm text-gray-500 truncate">Hình ảnh khách sạn</p>
-                    </div>
-                </a>
-                
-                <a href="contact.php" class="flex items-center gap-3 md:gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-lg transition-all group">
-                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-xl md:text-2xl">mail</span>
-                    </div>
-                    <div class="min-w-0">
-                        <h3 class="font-bold text-sm md:text-base text-gray-900 dark:text-white group-hover:text-accent transition-colors truncate">Liên hệ</h3>
-                        <p class="text-xs md:text-sm text-gray-500 truncate">Gửi yêu cầu</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-</main>
-
-<?php include 'includes/footer.php'; ?>
-</div>
-<script src="assets/js/main.js"></script>
+        <?php include 'includes/footer.php'; ?>
+    </div>
+    <script src="assets/js/main.js"></script>
 </body>
-</html>
 
+</html>

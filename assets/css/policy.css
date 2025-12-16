@@ -1,0 +1,277 @@
+/**
+ * Policy Pages - Liquid Glass Style
+ * Applies to: Cancellation, Privacy, Terms
+ */
+
+/* ===== Hero Section ===== */
+.policy-hero-glass {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 180px 20px 80px;
+    /* Increased top padding for gap between menu and title box */
+}
+
+/* Override/Extend hero-glass-card if needed for policies */
+.policy-hero-glass .hero-glass-card {
+    max-width: 900px;
+    width: 100%;
+}
+
+/* ===== Policy Content Area ===== */
+.policy-content {
+    position: relative;
+    z-index: 10;
+}
+
+.policy-intro {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+/* ===== Policy Navigation Links (Privacy/Terms) ===== */
+.policy-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.policy-nav-link:hover {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
+    color: #d4af37;
+    transform: translateX(5px);
+}
+
+/* ===== Policy Sections ===== */
+.policy-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 120px;
+    /* For smooth scrolling anchor offset */
+}
+
+.policy-section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.policy-section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: white;
+    border-radius: 50%;
+    font-family: sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.policy-section-content {
+    padding-left: 3.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.policy-section-content p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+.policy-section-content h4 {
+    font-weight: 700;
+    margin: 1.5rem 0 0.75rem;
+    color: #d4af37;
+    font-size: 1.1rem;
+}
+
+.policy-section-content h5 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+/* Lists with checkmarks */
+.policy-section-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.policy-section-content ul li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.policy-section-content ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #d4af37;
+    font-weight: 700;
+}
+
+/* ===== Cancellation Specific ===== */
+.cancellation-card {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(30, 41, 59, 0.4);
+}
+
+.cancellation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.cancellation-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.cancellation-time {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    color: white;
+}
+
+.cancellation-percent {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin-bottom: 0.25rem;
+}
+
+.cancellation-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cancellation-full {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.25));
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.cancellation-full .cancellation-icon,
+.cancellation-full .cancellation-percent {
+    color: #34d399;
+}
+
+.cancellation-high {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.25));
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.cancellation-high .cancellation-icon,
+.cancellation-high .cancellation-percent {
+    color: #60a5fa;
+}
+
+.cancellation-medium {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.25));
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.cancellation-medium .cancellation-icon,
+.cancellation-medium .cancellation-percent {
+    color: #fbbf24;
+}
+
+.cancellation-none {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.25));
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.cancellation-none .cancellation-icon,
+.cancellation-none .cancellation-percent {
+    color: #f87171;
+}
+
+/* ===== Glass Card Variations ===== */
+.glass-card-solid {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    color: white;
+}
+
+.glass-card-accent {
+    background: rgba(212, 175, 55, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 1rem;
+    color: white;
+}
+
+.glass-badge-solid {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-badge-accent {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(212, 175, 55, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    color: #d4af37;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .policy-hero-glass {
+        padding: 140px 16px 60px;
+        min-height: auto;
+    }
+
+    .policy-section-content {
+        padding-left: 0;
+    }
+
+    .policy-section-number {
+        margin-right: 0.75rem;
+    }
+
+    .cancellation-percent {
+        font-size: 1.75rem;
+    }
+}

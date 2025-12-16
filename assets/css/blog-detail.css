@@ -1,0 +1,181 @@
+/* Blog Detail Styles */
+
+/* Share buttons */
+.share-btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    color: white;
+}
+
+.share-btn-icon.facebook {
+    background: #1877f2;
+}
+
+.share-btn-icon.facebook:hover {
+    background: #0d65d9;
+}
+
+.share-btn-icon.twitter {
+    background: #000;
+}
+
+.share-btn-icon.twitter:hover {
+    background: #333;
+}
+
+.share-btn-icon.linkedin {
+    background: #0a66c2;
+}
+
+.share-btn-icon.linkedin:hover {
+    background: #004182;
+}
+
+.share-btn-icon.copy-link {
+    background: #6b7280;
+}
+
+.share-btn-icon.copy-link:hover {
+    background: #4b5563;
+}
+
+/* Star rating */
+.star-btn.active span,
+.star-btn.hover span {
+    color: #facc15;
+}
+
+.star-btn span {
+    transition: color 0.15s;
+}
+
+/* Like button */
+#likeBtn.liked {
+    background: #fef2f2;
+    border-color: #ef4444;
+}
+
+#likeBtn.liked .like-icon {
+    font-variation-settings: 'FILL' 1;
+    color: #ef4444;
+}
+
+.dark #likeBtn.liked {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Lightbox */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.lightbox-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    position: relative;
+}
+
+.lightbox-content img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.lightbox-close:hover {
+    transform: scale(1.2);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.lightbox-prev {
+    left: -70px;
+}
+
+.lightbox-next {
+    right: -70px;
+}
+
+.lightbox-counter {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 14px;
+}
+
+/* Slider animations */
+.slider-btn {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#imageSlider:hover .slider-btn {
+    opacity: 1;
+}
+
+/* Masonry gap fix */
+.columns-2,
+.columns-3,
+.columns-4 {
+    column-gap: 1rem;
+}
+
+.break-inside-avoid {
+    margin-bottom: 1rem;
+}
+
+/* Glass Page Wrapper Adjustments */
+.blog-detail-wrapper {
+    padding-top: 140px;
+    /* Spacing for fixed header */
+    min-height: 100vh;
+}

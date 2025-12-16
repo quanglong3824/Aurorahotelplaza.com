@@ -1,154 +1,21 @@
 /**
  * Apartments Page - Liquid Glass Style
  * Aurora Hotel Plaza
+ * Updated: 2024
  */
 
-/* ===== Hero Section ===== */
-.apt-hero {
-    position: relative;
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
-                url('../img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    padding: 120px 20px 80px;
+/* Hero Section Override for Fixed Header */
+.page-hero-glass {
+    padding-top: 180px !important;
+    /* Adjust for fixed transparent header */
 }
 
-.apt-hero::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 150px;
-    background: linear-gradient(to top, var(--background-light, #f8fafc), transparent);
-    pointer-events: none;
-}
-
-.dark .apt-hero::before {
-    background: linear-gradient(to top, var(--background-dark, #0f172a), transparent);
-}
-
-/* ===== Hero Glass Card - Liquid Glass ===== */
-.hero-glass-card {
-    position: relative;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.06) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 2rem;
-    padding: 3rem;
-    max-width: 800px;
-    text-align: center;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.12),
-        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-        0 32px 64px -12px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-}
-
-.hero-glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0) 100%
-    );
-    pointer-events: none;
-    border-radius: 2rem 2rem 0 0;
-}
-
-.hero-glass-card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle at 30% 20%,
-        rgba(212, 175, 55, 0.08) 0%,
-        transparent 50%
-    );
-    animation: liquidShimmer 8s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes liquidShimmer {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(5%, 5%) rotate(2deg); }
-    50% { transform: translate(0, 10%) rotate(0deg); }
-    75% { transform: translate(-5%, 5%) rotate(-2deg); }
-}
-
-/* ===== Stats Bar ===== */
-.stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    padding: 1.5rem 0;
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    z-index: 1;
-}
-
-.stat-item {
-    text-align: center;
-    color: white;
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #d4af37;
-}
-
-.stat-label {
-    font-size: 0.875rem;
-    opacity: 0.8;
-}
-
-/* ===== Section Header ===== */
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-}
-
-.section-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-/* ===== Apartments Grid - Equal Height ===== */
+/* ===== Layout Grid ===== */
 .apt-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: 1fr;
     gap: 2rem;
+    margin-bottom: 3rem;
 }
 
 @media (min-width: 768px) {
@@ -169,258 +36,165 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.06) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(135deg,
+            rgba(30, 41, 59, 0.4) 0%,
+            rgba(30, 41, 59, 0.6) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
     overflow: hidden;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.apt-card-glass::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0) 30%
-    );
-    pointer-events: none;
-    z-index: 1;
-}
-
-.apt-card-glass::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle at 30% 20%,
-        rgba(212, 175, 55, 0.06) 0%,
-        transparent 50%
-    );
-    animation: liquidShimmer 8s ease-in-out infinite;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.apt-card-glass:hover::after {
-    opacity: 1;
-}
-
-.dark .apt-card-glass {
-    background: linear-gradient(
-        135deg,
-        rgba(30, 30, 30, 0.5) 0%,
-        rgba(20, 20, 20, 0.6) 100%
-    );
-    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .apt-card-glass:hover {
-    transform: translateY(-8px);
-    box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(212, 175, 55, 0.3),
-        0 0 30px rgba(212, 175, 55, 0.1);
+    transform: translateY(-8px) scale(1.02);
+    background: linear-gradient(135deg,
+            rgba(30, 41, 59, 0.5) 0%,
+            rgba(30, 41, 59, 0.7) 100%);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 15px rgba(212, 175, 55, 0.1);
 }
 
-/* ===== Image Container ===== */
+/* Image Section */
 .apt-img-container {
     position: relative;
     aspect-ratio: 4/3;
     overflow: hidden;
-    flex-shrink: 0;
+    width: 100%;
 }
 
 .apt-img-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.7s ease;
 }
 
 .apt-card-glass:hover .apt-img-container img {
-    transform: scale(1.08);
+    transform: scale(1.1);
 }
 
-/* ===== Price Badge - Liquid Glass ===== */
+/* Badges */
+.type-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    z-index: 10;
+}
+
 .price-badge {
     position: absolute;
     bottom: 1rem;
     left: 1rem;
-    background: linear-gradient(
-        135deg,
-        rgba(17, 24, 39, 0.85) 0%,
-        rgba(17, 24, 39, 0.75) 100%
-    );
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 1rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.5rem 1rem;
     color: white;
-    z-index: 2;
+    z-index: 10;
 }
 
 .price-badge .price {
     font-size: 1.25rem;
     font-weight: 700;
     color: #d4af37;
-    display: block;
 }
 
 .price-badge .unit {
-    font-size: 0.75rem;
-    opacity: 0.8;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-left: 0.25rem;
 }
 
-/* ===== Type Badge ===== */
-.type-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: linear-gradient(135deg, #d4af37, #b8941f);
-    border-radius: 2rem;
-    padding: 0.5rem 1rem;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    z-index: 2;
-}
-
-.type-badge.old {
-    background: linear-gradient(135deg, #6b7280, #4b5563);
-    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
-}
-
-/* ===== Apartment Info - Flex Grow ===== */
+/* Content Section */
 .apt-info {
-    position: relative;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.9);
-}
-
-.dark .apt-info {
-    background: rgba(30, 41, 59, 0.9);
 }
 
 .apt-name {
     font-family: 'Playfair Display', serif;
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--text-primary-light);
-    line-height: 1.3;
-}
-
-.dark .apt-name {
-    color: var(--text-primary-dark);
+    color: white;
+    line-height: 1.2;
 }
 
 .apt-desc {
-    font-size: 0.875rem;
-    color: var(--text-secondary-light);
-    line-height: 1.6;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
     margin-bottom: 1rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 2.8rem;
 }
 
-.dark .apt-desc {
-    color: var(--text-secondary-dark);
-}
-
-/* ===== Specs Grid ===== */
+/* Specs */
 .specs-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    min-height: 2.5rem;
-}
-
-.dark .specs-grid {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .spec-item {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.375rem 0.75rem;
-    background: rgba(212, 175, 55, 0.1);
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    color: var(--text-secondary-light);
-}
-
-.dark .spec-item {
-    background: rgba(212, 175, 55, 0.15);
-    color: var(--text-secondary-dark);
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .spec-item .material-symbols-outlined {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #d4af37;
 }
 
-/* ===== Amenities ===== */
+/* Amenities */
 .amenities-compact {
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 0.375rem;
-    margin-bottom: 1rem;
-    min-height: 1.75rem;
-    max-height: 3.5rem;
-    overflow: hidden;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .amenity-tag {
-    font-size: 0.6875rem;
-    padding: 0.25rem 0.625rem;
-    background: rgba(0, 0, 0, 0.04);
-    border-radius: 1rem;
-    color: var(--text-secondary-light);
-    height: fit-content;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.65rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.7);
 }
 
-.dark .amenity-tag {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-secondary-dark);
-}
-
-/* ===== Action Buttons ===== */
+/* Actions */
 .apt-actions {
     display: flex;
     gap: 0.75rem;
@@ -438,142 +212,41 @@
     color: white;
     border-radius: 0.75rem;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+    text-align: center;
 }
 
 .btn-book:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, #e5bd43, #c5a025);
 }
 
 .btn-detail {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
     padding: 0.75rem 1rem;
-    background: rgba(26, 35, 126, 0.08);
-    color: #1A237E;
-    border: 1px solid rgba(26, 35, 126, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0.75rem;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
 }
 
-.dark .btn-detail {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-primary-dark);
-    border-color: rgba(255, 255, 255, 0.15);
-}
-
 .btn-detail:hover {
-    background: rgba(26, 35, 126, 0.15);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
 }
 
-.dark .btn-detail:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.btn-detail .material-symbols-outlined {
-    font-size: 1rem;
-    transition: transform 0.3s ease;
-}
-
-.btn-detail:hover .material-symbols-outlined {
-    transform: translateX(3px);
-}
-
-/* ===== CTA Section - Liquid Glass ===== */
-.cta-glass {
-    position: relative;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(184, 136, 42, 0.85));
-    overflow: hidden;
-}
-
-.cta-glass::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-    animation: pulse 4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-}
-
-/* ===== Responsive ===== */
+/* Responsive */
 @media (max-width: 768px) {
-    .apt-hero {
-        min-height: 60vh;
-        padding: 100px 16px 60px;
-        background-attachment: scroll;
-    }
-    
-    .hero-glass-card {
-        padding: 2rem 1.5rem;
-        border-radius: 1.5rem;
-    }
-    
-    .hero-glass-card h1 {
-        font-size: 2rem;
-    }
-    
-    .stats-bar {
-        gap: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .stat-value {
-        font-size: 1.5rem;
-    }
-    
     .apt-actions {
         flex-direction: column;
-    }
-    
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .apt-info {
-        padding: 1.25rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-glass-card {
-        padding: 1.5rem 1rem;
-        border-radius: 1.25rem;
-    }
-    
-    .hero-glass-card h1 {
-        font-size: 1.75rem;
-    }
-    
-    .apt-card-glass {
-        border-radius: 1rem;
-    }
-    
-    .apt-info {
-        padding: 1rem;
-    }
-    
-    .apt-name {
-        font-size: 1.125rem;
-    }
-    
-    .price-badge .price {
-        font-size: 1.125rem;
     }
 }
