@@ -41,8 +41,9 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     <script src="assets/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/pages-glass.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
 </head>
 
 <body class="glass-page font-body text-white">

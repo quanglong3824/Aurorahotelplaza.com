@@ -646,9 +646,18 @@ try {
                                 ?>
                                 <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
                                     class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0">
-                                    <div class="relative aspect-[16/10] overflow-hidden">
-                                        <img src="<?php echo $post_image; ?>?v=<?php echo time(); ?>"
+                                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-800">
+                                        <?php
+                                        $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
+                                        $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
+                                        // Ensure we don't double-prefix if already absolute or root-relative
+                                        if (!str_starts_with($display_img, 'http') && !str_starts_with($display_img, '/')) {
+                                            // Use imgUrl but check if it's already a valid path
+                                        }
+                                        ?>
+                                        <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>" loading="lazy"
+                                            onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         <div class="absolute top-3 left-3 glass-badge text-xs">
                                             <span class="material-symbols-outlined text-accent text-sm">article</span>

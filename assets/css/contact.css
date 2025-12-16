@@ -189,18 +189,15 @@
 
 /* Liquid Glass Contact Info Section */
 .contact-info-section {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.06) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(30, 41, 59, 0.6) 0%,
+            rgba(30, 41, 59, 0.7) 100%);
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     padding: 48px;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.12),
         0 0 0 1px rgba(255, 255, 255, 0.08) inset,
         0 32px 64px -12px rgba(0, 0, 0, 0.25);
@@ -218,11 +215,9 @@
     left: 0;
     right: 0;
     height: 50%;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0) 100%
-    );
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
     border-radius: 24px 24px 0 0;
 }
@@ -235,28 +230,39 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(
-        circle at 30% 20%,
-        rgba(212, 175, 55, 0.08) 0%,
-        transparent 50%
-    );
+    background: radial-gradient(circle at 30% 20%,
+            rgba(212, 175, 55, 0.08) 0%,
+            transparent 50%);
     pointer-events: none;
     animation: liquidShimmer 8s ease-in-out infinite;
 }
 
 @keyframes liquidShimmer {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(5%, 5%) rotate(2deg); }
-    50% { transform: translate(0, 10%) rotate(0deg); }
-    75% { transform: translate(-5%, 5%) rotate(-2deg); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(5%, 5%) rotate(2deg);
+    }
+
+    50% {
+        transform: translate(0, 10%) rotate(0deg);
+    }
+
+    75% {
+        transform: translate(-5%, 5%) rotate(-2deg);
+    }
 }
 
 /* Light mode - solid background fallback */
 .light .contact-info-section,
 html:not(.dark) .contact-info-section {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
@@ -427,11 +433,9 @@ html:not(.dark) .contact-info-section {
 .social-link {
     width: 48px;
     height: 48px;
-    background: linear-gradient(
-        135deg,
-        rgba(212, 175, 55, 0.1) 0%,
-        rgba(212, 175, 55, 0.05) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(212, 175, 55, 0.1) 0%,
+            rgba(212, 175, 55, 0.05) 100%);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(212, 175, 55, 0.2);
@@ -465,18 +469,15 @@ html:not(.dark) .contact-info-section {
 
 /* Liquid Glass Contact Form Wrapper */
 .contact-form-wrapper {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.06) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(30, 41, 59, 0.6) 0%,
+            rgba(30, 41, 59, 0.7) 100%);
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     padding: 48px;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.12),
         0 0 0 1px rgba(255, 255, 255, 0.08) inset,
         0 32px 64px -12px rgba(0, 0, 0, 0.25);
@@ -491,11 +492,9 @@ html:not(.dark) .contact-info-section {
     left: 0;
     right: 0;
     height: 50%;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0) 100%
-    );
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
     border-radius: 24px 24px 0 0;
 }
@@ -503,9 +502,9 @@ html:not(.dark) .contact-info-section {
 /* Light mode fallback */
 .light .contact-form-wrapper,
 html:not(.dark) .contact-form-wrapper {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
@@ -570,21 +569,23 @@ html:not(.dark) .contact-form-wrapper {
 .form-label {
     font-size: 15px;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #f3f4f6;
 }
 
 .form-input,
 .form-textarea {
     padding: 16px 18px;
-    border: 2px solid #e5e5e5;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     font-size: 15px;
     transition: all 0.3s ease;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #fafafa;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
 @media (max-width: 480px) {
+
     .form-input,
     .form-textarea {
         padding: 14px 16px;
@@ -683,12 +684,10 @@ html:not(.dark) .contact-form-wrapper {
     align-items: center;
     gap: 10px;
     padding: 14px 18px;
-    background: linear-gradient(
-        135deg,
-        rgba(16, 185, 129, 0.12) 0%,
-        rgba(16, 185, 129, 0.06) 50%,
-        rgba(16, 185, 129, 0.03) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.12) 0%,
+            rgba(16, 185, 129, 0.06) 50%,
+            rgba(16, 185, 129, 0.03) 100%);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(16, 185, 129, 0.25);
@@ -755,6 +754,7 @@ html:not(.dark) .contact-form-wrapper {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -766,6 +766,7 @@ html:not(.dark) .contact-form-wrapper {
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -777,6 +778,7 @@ html:not(.dark) .contact-form-wrapper {
         opacity: 1;
         transform: translateX(0);
     }
+
     to {
         opacity: 0;
         transform: translateX(100%);

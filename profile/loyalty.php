@@ -91,15 +91,14 @@ try {
     <link rel="stylesheet" href="./assets/css/profile.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
 
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
             <!-- Glass Page Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('../assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
+            <div class="glass-page-wrapper">
 
                 <div class="w-full pt-[180px] pb-16 px-4">
                     <div class="mx-auto max-w-6xl">
@@ -136,9 +135,11 @@ try {
                                         <div class="flex items-center justify-between mb-6">
                                             <div>
                                                 <h2 class="text-2xl font-bold mb-1">
-                                                    <?php _e('profile_loyalty.current_points'); ?></h2>
+                                                    <?php _e('profile_loyalty.current_points'); ?>
+                                                </h2>
                                                 <p class="text-white/80 text-sm">
-                                                    <?php _e('profile_loyalty.available_points'); ?></p>
+                                                    <?php _e('profile_loyalty.available_points'); ?>
+                                                </p>
                                             </div>
                                             <div class="p-3 bg-white/20 rounded-full backdrop-blur-md">
                                                 <span class="material-symbols-outlined text-4xl text-white">stars</span>
@@ -301,7 +302,8 @@ try {
                                                     <div class="text-right">
                                                         <p
                                                             class="font-bold font-mono <?php echo $transaction['transaction_type'] == 'earn' ? 'text-green-400' : 'text-red-400'; ?>">
-                                                            <?php echo $transaction['transaction_type'] == 'earn' ? '+' : '-'; ?>        <?php echo number_format($transaction['points']); ?>
+                                                            <?php echo $transaction['transaction_type'] == 'earn' ? '+' : '-'; ?>
+                                                            <?php echo number_format($transaction['points']); ?>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -329,7 +331,8 @@ try {
                                 <div class="glass-card p-6">
                                     <h3
                                         class="text-lg font-bold mb-4 text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2">
-                                        <?php _e('profile_loyalty.statistics'); ?></h3>
+                                        <?php _e('profile_loyalty.statistics'); ?>
+                                    </h3>
                                     <div class="space-y-4">
                                         <div class="flex justify-between items-center py-2 border-b border-white/5">
                                             <span
@@ -357,7 +360,8 @@ try {
                                 <div class="glass-card p-6">
                                     <h3
                                         class="text-lg font-bold mb-4 text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2">
-                                        <?php _e('profile_loyalty.how_to_earn'); ?></h3>
+                                        <?php _e('profile_loyalty.how_to_earn'); ?>
+                                    </h3>
                                     <div class="space-y-4">
                                         <div class="flex items-start gap-4">
                                             <div class="p-2 bg-accent/10 rounded-lg">
@@ -365,9 +369,11 @@ try {
                                             </div>
                                             <div>
                                                 <p class="font-bold text-white text-sm mb-1">
-                                                    <?php _e('profile_loyalty.earn_booking'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_booking'); ?>
+                                                </p>
                                                 <p class="text-xs text-white/50 leading-relaxed">
-                                                    <?php _e('profile_loyalty.earn_booking_desc'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_booking_desc'); ?>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
@@ -377,9 +383,11 @@ try {
                                             </div>
                                             <div>
                                                 <p class="font-bold text-white text-sm mb-1">
-                                                    <?php _e('profile_loyalty.earn_review'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_review'); ?>
+                                                </p>
                                                 <p class="text-xs text-white/50 leading-relaxed">
-                                                    <?php _e('profile_loyalty.earn_review_desc'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_review_desc'); ?>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
@@ -388,9 +396,11 @@ try {
                                             </div>
                                             <div>
                                                 <p class="font-bold text-white text-sm mb-1">
-                                                    <?php _e('profile_loyalty.earn_referral'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_referral'); ?>
+                                                </p>
                                                 <p class="text-xs text-white/50 leading-relaxed">
-                                                    <?php _e('profile_loyalty.earn_referral_desc'); ?></p>
+                                                    <?php _e('profile_loyalty.earn_referral_desc'); ?>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -400,7 +410,8 @@ try {
                                 <div class="glass-card p-6">
                                     <h3
                                         class="text-lg font-bold mb-4 text-white uppercase tracking-wider text-sm border-b border-white/10 pb-2">
-                                        <?php _e('profile_loyalty.quick_actions'); ?></h3>
+                                        <?php _e('profile_loyalty.quick_actions'); ?>
+                                    </h3>
                                     <div class="space-y-3">
                                         <a href="../booking/index.php"
                                             class="block w-full px-4 py-3 bg-gradient-to-r from-accent to-yellow-600 text-white text-center rounded-xl hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] transition-all font-bold uppercase tracking-wider text-sm">

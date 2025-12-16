@@ -207,7 +207,7 @@ html:not(.dark) .spec-item {
 }
 
 .dark .spec-item {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(30, 41, 59, 0.6);
     border-color: rgba(212, 175, 55, 0.15);
 }
 

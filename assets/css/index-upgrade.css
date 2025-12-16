@@ -37,8 +37,8 @@ section#apartments .glass-card-solid {
     flex-direction: column;
     height: 100%;
     min-height: 420px;
-    background: rgba(15, 23, 42, 0.85);
-    /* Changed to Dark Glass */
+    background: rgba(30, 41, 59, 0.6);
+    /* Unified Slate Glass 0.6 */
     border: 1px solid rgba(255, 255, 255, 0.1);
     /* Lighter border for contrast */
     border-radius: 1.25rem;
@@ -58,8 +58,8 @@ section#apartments .glass-card-solid {
 section#rooms .glass-card-solid:hover,
 section#apartments .glass-card-solid:hover {
     transform: translateY(-8px);
-    background: rgba(15, 23, 42, 0.95);
-    /* Darker on hover */
+    background: rgba(30, 41, 59, 0.7);
+    /* Slightly darker on hover */
     box-shadow:
         0 15px 30px rgba(0, 0, 0, 0.5),
         /* Stronger shadow */
@@ -426,17 +426,17 @@ section#apartments .flex.items-center.gap-1:hover {
     position: absolute;
     inset: 0;
     background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.9) 0%,
-            rgba(0, 0, 0, 0.5) 40%,
-            rgba(0, 0, 0, 0.2) 70%,
+            rgba(30, 41, 59, 0.9) 0%,
+            rgba(30, 41, 59, 0.5) 40%,
+            rgba(30, 41, 59, 0.2) 70%,
             transparent 100%);
     transition: opacity 0.4s ease;
 }
 
 .glass-service-card:hover .glass-service-overlay {
     background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.95) 0%,
-            rgba(0, 0, 0, 0.6) 50%,
+            rgba(30, 41, 59, 0.95) 0%,
+            rgba(30, 41, 59, 0.6) 50%,
             transparent 100%);
 }
 

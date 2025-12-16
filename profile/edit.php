@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $logger = getLogger();
             $logger->logActivity($_SESSION['user_id'], 'profile_update', 'user', $_SESSION['user_id'], 'User updated profile information', [
                 'updated_fields' => array_keys(array_filter($update_data, function ($v) {
-                    return $v !== null; })),
+                    return $v !== null;
+                })),
                 'password_changed' => !empty($new_password)
             ]);
 
@@ -133,15 +134,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="./assets/css/profile.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
 
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
             <!-- Glass Page Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('../assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
+            <div class="glass-page-wrapper">
 
                 <div class="w-full pt-[180px] pb-16 px-4">
                     <div class="mx-auto max-w-4xl">

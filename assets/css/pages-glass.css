@@ -109,10 +109,10 @@ main {
     max-width: 900px;
     padding: 3rem;
 
-    background: rgba(0, 0, 0, 0.6);
-    /* Darker solid background for contrast */
-    /* backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px); */
+    background: rgba(30, 41, 59, 0.6) !important;
+    /* Lighter Slate Glass 0.6 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -144,8 +144,8 @@ main {
    PERFORMANCE: Reduced blur, optimized transitions
 */
 .glass-card {
-    background: rgba(30, 41, 59, 0.85);
-    /* Solid dark glass */
+    background: rgba(30, 41, 59, 0.6) !important;
+    /* Unified Slate Glass 0.6 */
     /* backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -216,6 +216,7 @@ main {
     aspect-ratio: 16/10;
     overflow: hidden;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem 1.5rem 0 0;
 }
 
 .service-img-container img {
@@ -250,7 +251,7 @@ main {
 
 /* Utility Cards (Grid items) */
 .utility-card-glass {
-    background: rgba(30, 41, 59, 0.85);
+    background: rgba(30, 41, 59, 0.6);
     /* backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -694,4 +695,62 @@ main {
     background: #d4af37;
     color: white;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+/* --- SERVICES MINI LIST STYLES (Added for Service Cards Refinement) --- */
+.packages-list-mini {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.package-item-mini {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.2s ease;
+}
+
+.package-item-mini:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.5rem;
+    border-bottom-color: transparent;
+}
+
+.package-price-mini {
+    font-weight: 700;
+    color: #d4af37;
+    font-family: 'Playfair Display', serif;
+}
+
+.service-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.8em;
+    /* Ensure consistent height */
+}
+
+/* Button Refinement for Cards */
+.service-info .btn-glass-gold {
+    width: 100%;
+    margin-top: auto;
+    justify-content: center;
+}
+
+/* Ensure images cover well */
+.service-img-container {
+    background-color: #1e293b;
+    /* Fallback for transparency */
 }

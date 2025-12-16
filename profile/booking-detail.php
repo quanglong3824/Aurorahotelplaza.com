@@ -95,15 +95,14 @@ $payment_labels = [
     <link rel="stylesheet" href="./assets/css/profile.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
 
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
             <!-- Glass Page Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('../assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
+            <div class="glass-page-wrapper">
 
                 <div class="w-full pt-[180px] pb-16 px-4">
                     <div class="mx-auto max-w-5xl">
