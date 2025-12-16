@@ -77,7 +77,7 @@ try {
             <div class="room-gallery">
                 <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg" alt="Classical Premium Apartment"></div>
                 <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg" alt="Classical Premium Apartment"></div>
-                <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-3.jpg.jpg" alt="Classical Premium Apartment"></div>
+                <div class="gallery-item"><img src="../assets/img/classical-premium-apartment/classical-premium-apartment-3.jpg" alt="Classical Premium Apartment"></div>
             </div>
         </div>
     </section>

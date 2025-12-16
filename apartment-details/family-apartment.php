@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
 
-$room_slug = 'family';
+$room_slug = 'family-apartment';
 $room_price = 6500000;
 try {
     $db = getDB();
@@ -96,7 +96,7 @@ try {
                         <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_30_7days'); ?></p>
                     </div>
                     <form class="booking-form" action="../booking/index.php" method="get">
-                        <input type="hidden" name="room_type" value="family">
+                        <input type="hidden" name="room_type" value="family-apartment">
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" name="check_in" class="form-input" required></div>
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" name="check_out" class="form-input" required></div>
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label><select name="guests" class="form-input"><option value="2">2 <?php _e('apartment_detail.persons'); ?></option><option value="4">4 <?php _e('apartment_detail.persons'); ?></option><option value="6" selected>6 <?php _e('apartment_detail.persons'); ?></option></select></div>
@@ -122,7 +122,7 @@ try {
     <?php 
     // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
     require_once __DIR__ . '/../helpers/room-helper.php';
-    $currentRoom = getRoomBySlug('family');
+    $currentRoom = getRoomBySlug('family-apartment');
     $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
     $sectionTitle = __('apartment_detail.other_apartments');
     include '../includes/related-rooms.php'; 

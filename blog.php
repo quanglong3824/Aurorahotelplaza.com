@@ -142,7 +142,7 @@ try {
                         <?php if ($featured_img): ?>
                         <div class="blog-card-image" style="background-image: url('<?php echo htmlspecialchars($featured_img); ?>')"></div>
                         <?php else: ?>
-                        <div class="blog-card-image" style="background-image: url('assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg')"></div>
+                        <div class="blog-card-image" style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg')"></div>
                         <?php endif; ?>
                         
                         <div class="blog-card-content">

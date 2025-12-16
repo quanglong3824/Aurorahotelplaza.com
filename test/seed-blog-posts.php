@@ -83,7 +83,7 @@ try {
             'excerpt' => 'Khám phá sự sang trọng và tiện nghi ngay tại trung tâm thành phố Biên Hòa. Aurora Hotel Plaza không chỉ là một nơi để ở, mà là một trải nghiệm.',
             'content' => '<p>Chào mừng quý khách đến với Aurora Hotel Plaza! Tọa lạc tại vị trí đắc địa của thành phố Biên Hòa sôi động, khách sạn của chúng tôi là sự kết hợp hoàn hảo giữa thiết kế hiện đại, dịch vụ đẳng cấp và lòng hiếu khách nồng hậu.</p><p>Tại đây, chúng tôi cung cấp đa dạng các loại phòng và căn hộ cao cấp, đáp ứng mọi nhu cầu từ du lịch nghỉ dưỡng đến công tác dài ngày. Mỗi không gian đều được trang bị đầy đủ tiện nghi, mang lại cho bạn cảm giác thoải mái như ở nhà.</p><p>Hãy bắt đầu hành trình khám phá Biên Hòa cùng chúng tôi!</p>',
             'category' => 'Thông Báo',
-            'featured_image' => 'assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg'
+            'featured_image' => 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'
         ],
         [
             'title' => 'Top 5 Địa Điểm Không Thể Bỏ Lỡ Khi Du Lịch Biên Hòa',

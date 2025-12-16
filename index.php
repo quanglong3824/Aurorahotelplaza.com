@@ -594,7 +594,7 @@ try {
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($latest_posts)): ?>
                             <?php foreach ($latest_posts as $post): 
-                                $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg';
+                                $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                             ?>
                                 <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
                                     <div class="relative aspect-[16/10] overflow-hidden">

@@ -52,7 +52,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
-                url('assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg');
+                url('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

@@ -3,8 +3,8 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
 initLanguage();
 
-$room_slug = 'premium';
-$room_price = 4200000;
+$room_slug = 'studio-apartment';
+$room_price = 2500000;
 try {
     $db = getDB();
     $stmt = $db->prepare("SELECT base_price FROM room_types WHERE slug = ? AND status = 'active' LIMIT 1");
@@ -20,7 +20,7 @@ try {
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title><?php _e('apartment_detail.premium_title'); ?></title>
+<title><?php _e('apartment_detail.studio_title'); ?></title>
 <script src="../assets/js/tailwindcss-cdn.js"></script>
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
 <script src="../assets/js/tailwind-config.js"></script>
@@ -34,12 +34,12 @@ try {
 
 <main class="flex h-full grow flex-col">
     <!-- Page Header -->
-    <section class="page-header-room" data-bg-image="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg">
+    <section class="page-header-room" data-bg-image="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg">
         <div class="page-header-overlay"></div>
         <div class="page-header-content">
-            <span class="room-badge-header"><?php _e('apartment_detail.badge_premium'); ?></span>
-            <h1 class="page-title"><?php _e('apartment_detail.premium_name'); ?></h1>
-            <p class="page-subtitle"><?php _e('apartment_detail.premium_subtitle'); ?></p>
+            <span class="room-badge-header"><?php _e('apartment_detail.badge_saving'); ?></span>
+            <h1 class="page-title"><?php _e('apartment_detail.studio_name'); ?></h1>
+            <p class="page-subtitle"><?php _e('apartment_detail.studio_subtitle'); ?></p>
         </div>
     </section>
 
@@ -49,7 +49,7 @@ try {
             <div class="room-info-section">
                 <div class="room-content">
                     <p class="room-description">
-                        <?php _e('apartment_detail.premium_desc'); ?>
+                        <?php _e('apartment_detail.studio_desc'); ?>
                     </p>
 
                     <div class="room-specs">
@@ -59,7 +59,7 @@ try {
                             </div>
                             <div class="spec-content">
                                 <div class="spec-label"><?php _e('apartment_detail.bed_type'); ?></div>
-                                <div class="spec-value"><?php _e('apartment_detail.premium_bed'); ?></div>
+                                <div class="spec-value"><?php _e('apartment_detail.bed_king'); ?></div>
                             </div>
                         </div>
                         <div class="spec-item">
@@ -68,7 +68,7 @@ try {
                             </div>
                             <div class="spec-content">
                                 <div class="spec-label"><?php _e('apartment_detail.area'); ?></div>
-                                <div class="spec-value">70 m²</div>
+                                <div class="spec-value">45 m²</div>
                             </div>
                         </div>
                         <div class="spec-item">
@@ -77,7 +77,7 @@ try {
                             </div>
                             <div class="spec-content">
                                 <div class="spec-label"><?php _e('apartment_detail.capacity'); ?></div>
-                                <div class="spec-value">2-4 <?php _e('apartment_detail.persons'); ?></div>
+                                <div class="spec-value">1-2 <?php _e('apartment_detail.persons'); ?></div>
                             </div>
                         </div>
                         <div class="spec-item">
@@ -86,7 +86,7 @@ try {
                             </div>
                             <div class="spec-content">
                                 <div class="spec-label"><?php _e('apartment_detail.kitchen'); ?></div>
-                                <div class="spec-value"><?php _e('apartment_detail.premium_kitchen'); ?></div>
+                                <div class="spec-value"><?php _e('apartment_detail.kitchen_full'); ?></div>
                             </div>
                         </div>
                     </div>
@@ -117,10 +117,10 @@ try {
                             <span class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
                             <span class="price-unit"><?php _e('apartment_detail.per_night'); ?></span>
                         </div>
-                        <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_25_7days'); ?></p>
+                        <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;"><?php _e('apartment_detail.discount_7days'); ?></p>
                     </div>
                     <form class="booking-form" action="../booking/index.php" method="get">
-                        <input type="hidden" name="room_type" value="premium">
+                        <input type="hidden" name="room_type" value="studio-apartment">
                         <div class="form-group">
                             <label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label>
                             <input type="date" name="check_in" class="form-input" required>
@@ -133,9 +133,7 @@ try {
                             <label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label>
                             <select name="guests" class="form-input">
                                 <option value="1">1 <?php _e('apartment_detail.persons'); ?></option>
-                                <option value="2">2 <?php _e('apartment_detail.persons'); ?></option>
-                                <option value="3">3 <?php _e('apartment_detail.persons'); ?></option>
-                                <option value="4" selected>4 <?php _e('apartment_detail.persons'); ?></option>
+                                <option value="2" selected>2 <?php _e('apartment_detail.persons'); ?></option>
                             </select>
                         </div>
                         <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
@@ -155,28 +153,28 @@ try {
             <h2 class="section-title-center"><?php _e('apartment_detail.gallery'); ?></h2>
             <div class="room-gallery">
                 <div class="gallery-item">
-                    <img src="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-1.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-2.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-2.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-3.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-7.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-5.jpg" alt="Studio Apartment">
                 </div>
                 <div class="gallery-item">
-                    <img src="../assets/img/premium-apartment/can-ho-premium-aurora-hotel-8.jpg" alt="Premium Apartment">
+                    <img src="../assets/img/studio-apartment/can-ho-studio-aurora-hotel-8.jpg" alt="Studio Apartment">
                 </div>
             </div>
         </div>
     </section>
 
-        <?php 
+    <?php 
     // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
     require_once __DIR__ . '/../helpers/room-helper.php';
-    $currentRoom = getRoomBySlug('premium');
+    $currentRoom = getRoomBySlug('studio-apartment');
     $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
     $sectionTitle = __('apartment_detail.other_apartments');
     include '../includes/related-rooms.php'; 

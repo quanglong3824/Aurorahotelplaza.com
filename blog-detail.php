@@ -608,7 +608,7 @@ try {
                 <article class="blog-card">
                     <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>">
                         <div class="blog-card-image" 
-                             style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero banner/AURORA-HOTEL-BIEN-HOA-1.jpg'); ?>')">
+                             style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
                         </div>
                         <div class="blog-card-content">
                             <h3 class="blog-card-title"><?php echo htmlspecialchars($related['title']); ?></h3>
