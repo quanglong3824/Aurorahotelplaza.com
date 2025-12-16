@@ -124,7 +124,7 @@ try {
     // Count total rooms
     $stmt = $db->query("SELECT COUNT(*) FROM rooms WHERE status != 'inactive'");
     $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
-    
+
     // Count completed bookings
     $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
     $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
@@ -151,6 +151,7 @@ try {
     <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/responsive-index.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/index-upgrade.css'); ?>?v=<?php echo time(); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -169,7 +170,8 @@ try {
                             <span class="material-symbols-outlined text-accent text-base">phone</span>
                             <span class="font-medium">(+84-251) 391.8888</span>
                         </a>
-                        <a href="mailto:booking@aurorahotelplaza.com" class="glass-tag hover:bg-white/20 transition-all">
+                        <a href="mailto:booking@aurorahotelplaza.com"
+                            class="glass-tag hover:bg-white/20 transition-all">
                             <span class="material-symbols-outlined text-accent text-base">email</span>
                             <span class="font-medium">booking@aurorahotelplaza.com</span>
                         </a>
@@ -189,13 +191,18 @@ try {
             <section class="w-full justify-center py-16 sm:py-24" id="about">
                 <div class="mx-auto flex max-w-7xl flex-col gap-10 px-4">
                     <div class="flex flex-col gap-4 text-center">
-                        <span class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.about_us'); ?></span>
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.welcome_title'); ?></h2>
-                        <p class="mx-auto max-w-3xl text-base leading-relaxed text-text-secondary-light dark:text-text-secondary-dark">
-                            <?php _e('home.welcome_desc'); ?></p>
+                        <span
+                            class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.about_us'); ?></span>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.welcome_title'); ?>
+                        </h2>
+                        <p
+                            class="mx-auto max-w-3xl text-base leading-relaxed text-text-secondary-light dark:text-text-secondary-dark">
+                            <?php _e('home.welcome_desc'); ?>
+                        </p>
                     </div>
-                    
+
                     <!-- Stats Counter - Liquid Glass -->
                     <div class="grid grid-cols-2 gap-6 md:grid-cols-4 my-8">
                         <div class="glass-stat-card-light glass-glow">
@@ -218,32 +225,44 @@ try {
 
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         <div class="glass-card-solid p-6 text-center">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">restaurant</span>
                             </div>
                             <h3 class="text-lg font-bold mb-2"><?php _e('home.fine_dining'); ?></h3>
-                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.fine_dining_desc'); ?></p>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                <?php _e('home.fine_dining_desc'); ?>
+                            </p>
                         </div>
                         <div class="glass-card-solid p-6 text-center">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">celebration</span>
                             </div>
                             <h3 class="text-lg font-bold mb-2"><?php _e('home.wedding_events'); ?></h3>
-                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.wedding_events_desc'); ?></p>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                <?php _e('home.wedding_events_desc'); ?>
+                            </p>
                         </div>
                         <div class="glass-card-solid p-6 text-center">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">apartment</span>
                             </div>
                             <h3 class="text-lg font-bold mb-2"><?php _e('home.service_apartment'); ?></h3>
-                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.service_apartment_desc'); ?></p>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                <?php _e('home.service_apartment_desc'); ?>
+                            </p>
                         </div>
                         <div class="glass-card-solid p-6 text-center">
-                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl text-accent">business_center</span>
                             </div>
                             <h3 class="text-lg font-bold mb-2"><?php _e('home.office_rental'); ?></h3>
-                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.office_rental_desc'); ?></p>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                <?php _e('home.office_rental_desc'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -251,67 +270,82 @@ try {
 
             <!-- Promotions Section - Liquid Glass -->
             <?php if (!empty($active_promotions)): ?>
-            <section class="w-full py-12 glass-promo-banner">
-                <div class="mx-auto max-w-7xl px-4 relative z-10">
-                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div class="flex items-center gap-4 text-white">
-                            <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                                <span class="material-symbols-outlined text-4xl animate-pulse">local_offer</span>
+                <section class="w-full py-12 glass-promo-banner">
+                    <div class="mx-auto max-w-7xl px-4 relative z-10">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div class="flex items-center gap-4 text-white">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-4xl animate-pulse">local_offer</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold"><?php _e('home.special_offer'); ?></h3>
+                                    <p class="text-white/90">
+                                        <?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_percent'))]); ?>
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="text-2xl font-bold"><?php _e('home.special_offer'); ?></h3>
-                                <p class="text-white/90"><?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_percent'))]); ?></p>
+                            <div class="flex flex-wrap gap-3">
+                                <?php foreach ($active_promotions as $promo): ?>
+                                    <div class="glass-promo-code">
+                                        <span><?php echo htmlspecialchars($promo['code']); ?></span>
+                                        <span class="text-sm opacity-80">-<?php echo $promo['discount_percent']; ?>%</span>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
+                            <a href="booking/index.php" class="btn-glass-secondary">
+                                <?php _e('home.book_now'); ?>
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
                         </div>
-                        <div class="flex flex-wrap gap-3">
-                            <?php foreach ($active_promotions as $promo): ?>
-                            <div class="glass-promo-code">
-                                <span><?php echo htmlspecialchars($promo['code']); ?></span>
-                                <span class="text-sm opacity-80">-<?php echo $promo['discount_percent']; ?>%</span>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <a href="booking/index.php" class="btn-glass-secondary">
-                            <?php _e('home.book_now'); ?>
-                            <span class="material-symbols-outlined">arrow_forward</span>
-                        </a>
                     </div>
-                </div>
-            </section>
+                </section>
             <?php endif; ?>
 
             <!-- Featured Rooms Section -->
             <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="rooms">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl"><?php _e('home.rooms_suite'); ?></h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.rooms_suite_desc'); ?></p>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.rooms_suite'); ?>
+                        </h2>
+                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                            <?php _e('home.rooms_suite_desc'); ?>
+                        </p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_rooms)): ?>
-                            <?php foreach ($featured_rooms as $room): 
-                                $thumbnail = normalizeImagePath($room['thumbnail']);
-                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
-                            ?>
-                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
+                            <?php foreach ($featured_rooms as $room):
+                                $imageUrl = imgUrl($room['thumbnail'], 'assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg');
+                                ?>
+                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
+                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
                                     <div class="relative aspect-[4/3] overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>" 
-                                             alt="<?php echo htmlspecialchars($room['type_name']); ?>"
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                            alt="<?php echo htmlspecialchars($room['type_name']); ?>"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/rooms/deluxe/PHONG-DELUXE-AURORA-HOTEL-1.jpg'); ?>'">
                                         <div class="absolute top-3 right-3 glass-badge text-xs">
                                             <span class="material-symbols-outlined text-accent text-sm">hotel</span>
                                             <?php _e('home.room'); ?>
                                         </div>
-                                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                                        <div
+                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
                                             <div class="text-white font-bold text-lg">
                                                 <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ
-                                                <span class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
+                                                <span
+                                                    class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="p-5">
-                                        <h3 class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($room['type_name']); ?></h3>
-                                        <div class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                        <h3
+                                            class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors">
+                                            <?php echo htmlspecialchars($room['type_name']); ?>
+                                        </h3>
+                                        <div
+                                            class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-accent text-base">square_foot</span>
                                                 <?php echo number_format($room['size_sqm'], 0); ?>m²
@@ -322,7 +356,7 @@ try {
                                             </span>
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-accent text-base">person</span>
-                                                <?php echo $room['max_occupancy']; ?> <?php _e('rooms_page.guests'); ?>
+                                                <?php echo $room['max_occupancy']; ?>         <?php _e('rooms_page.guests'); ?>
                                             </span>
                                         </div>
                                     </div>
@@ -351,34 +385,46 @@ try {
                             <span class="material-symbols-outlined text-accent text-sm">apartment</span>
                             <?php _e('home.premium_apartments'); ?>
                         </span>
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.featured_apartments'); ?></h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.modern_living'); ?></p>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.featured_apartments'); ?>
+                        </h2>
+                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                            <?php _e('home.modern_living'); ?>
+                        </p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_apartments)): ?>
-                            <?php foreach ($featured_apartments as $apartment): 
-                                $thumbnail = normalizeImagePath($apartment['thumbnail']);
-                                $imageUrl = dirname($_SERVER['PHP_SELF']) . $thumbnail;
-                            ?>
-                                <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php" class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
+                            <?php foreach ($featured_apartments as $apartment):
+                                $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg');
+                                ?>
+                                <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
+                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
                                     <div class="relative aspect-[4/3] overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>" 
-                                             alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                        <div class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
+                                        <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                            alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
+                                        <div
+                                            class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
                                             <?php _e('home.apartment'); ?>
                                         </div>
-                                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                                        <div
+                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
                                             <div class="text-white font-bold text-lg">
                                                 <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ
-                                                <span class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
+                                                <span
+                                                    class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="p-5">
-                                        <h3 class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors"><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
-                                        <div class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                        <h3
+                                            class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors">
+                                            <?php echo htmlspecialchars($apartment['type_name']); ?>
+                                        </h3>
+                                        <div
+                                            class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-accent text-base">square_foot</span>
                                                 <?php echo number_format($apartment['size_sqm'], 0); ?>m²
@@ -389,7 +435,8 @@ try {
                                             </span>
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-accent text-base">person</span>
-                                                <?php echo $apartment['max_occupancy']; ?> <?php _e('apartments_page.guests'); ?>
+                                                <?php echo $apartment['max_occupancy']; ?>
+                                                <?php _e('apartments_page.guests'); ?>
                                             </span>
                                         </div>
                                     </div>
@@ -402,7 +449,8 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="apartments.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                        <a href="apartments.php"
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_apartments'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -414,18 +462,23 @@ try {
             <section class="w-full py-16 sm:py-24 bg-surface-light dark:bg-surface-dark" id="services">
                 <div class="mx-auto max-w-7xl px-4">
                     <div class="flex flex-col gap-2 text-center mb-10">
-                        <span class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.our_services'); ?></span>
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.services_amenities'); ?></h2>
+                        <span
+                            class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.our_services'); ?></span>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.services_amenities'); ?>
+                        </h2>
                         <p class="text-base text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
-                            <?php _e('home.services_desc'); ?></p>
+                            <?php _e('home.services_desc'); ?>
+                        </p>
                     </div>
-                    
+
                     <!-- Main Services Grid - Liquid Glass -->
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
                         <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
-                            <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg" alt="<?php _e('home.wedding_service'); ?>">
+                            <img src="assets/img/post/wedding/Tiec-cuoi-tai-aurora-5.jpg"
+                                alt="<?php _e('home.wedding_service'); ?>">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -439,7 +492,8 @@ try {
 
                         <!-- Conference Service -->
                         <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg" alt="<?php _e('home.conference_service'); ?>">
+                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-4.jpg"
+                                alt="<?php _e('home.conference_service'); ?>">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -453,7 +507,8 @@ try {
 
                         <!-- Restaurant Service -->
                         <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
-                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg" alt="<?php _e('home.restaurant_aurora'); ?>">
+                            <img src="assets/img/restaurant/NHA-HANG-AURORA-HOTEL-6.jpg"
+                                alt="<?php _e('home.restaurant_aurora'); ?>">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
                                 <div class="glass-service-badge">
@@ -507,77 +562,99 @@ try {
             <section class="w-full py-16 sm:py-24 bg-primary-light/30 dark:bg-gray-900">
                 <div class="mx-auto max-w-7xl px-4">
                     <div class="flex flex-col gap-2 text-center mb-10">
-                        <span class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.why_choose_us'); ?></span>
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.why_choose_title'); ?></h2>
+                        <span
+                            class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.why_choose_us'); ?></span>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.why_choose_title'); ?>
+                        </h2>
                         <p class="text-base text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
-                            <?php _e('home.why_choose_desc'); ?></p>
+                            <?php _e('home.why_choose_desc'); ?>
+                        </p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">location_on</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.prime_location'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.prime_location_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.prime_location_desc'); ?>
+                                </p>
                             </div>
                         </div>
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">support_agent</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.professional_service'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.professional_service_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.professional_service_desc'); ?>
+                                </p>
                             </div>
                         </div>
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">payments</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.reasonable_price'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.reasonable_price_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.reasonable_price_desc'); ?>
+                                </p>
                             </div>
                         </div>
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">verified</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.quality_guaranteed'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.quality_guaranteed_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.quality_guaranteed_desc'); ?>
+                                </p>
                             </div>
                         </div>
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">security</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.security_24_7'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.security_24_7_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.security_24_7_desc'); ?>
+                                </p>
                             </div>
                         </div>
                         <div class="glass-card-solid flex gap-4 p-6">
                             <div class="flex-shrink-0">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
                                     <span class="material-symbols-outlined text-2xl">diversity_3</span>
                                 </div>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold mb-2"><?php _e('home.diverse_options'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm"><?php _e('home.diverse_options_desc'); ?></p>
+                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
+                                    <?php _e('home.diverse_options_desc'); ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -587,29 +664,36 @@ try {
             <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="blog">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.news_events'); ?></h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.news_events_desc'); ?></p>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.news_events'); ?>
+                        </h2>
+                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                            <?php _e('home.news_events_desc'); ?>
+                        </p>
                     </div>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($latest_posts)): ?>
-                            <?php foreach ($latest_posts as $post): 
+                            <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
-                            ?>
-                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
+                                ?>
+                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
+                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
                                     <div class="relative aspect-[16/10] overflow-hidden">
-                                        <img src="<?php echo $post_image; ?>?v=<?php echo time(); ?>" 
-                                             alt="<?php echo htmlspecialchars($post['title']); ?>"
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <img src="<?php echo $post_image; ?>?v=<?php echo time(); ?>"
+                                            alt="<?php echo htmlspecialchars($post['title']); ?>"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         <div class="absolute top-3 left-3 glass-badge text-xs">
                                             <span class="material-symbols-outlined text-accent text-sm">article</span>
                                             <?php _e('home.news'); ?>
                                         </div>
                                     </div>
                                     <div class="p-5">
-                                        <div class="flex items-center gap-3 text-xs text-text-secondary-light dark:text-text-secondary-dark mb-3">
+                                        <div
+                                            class="flex items-center gap-3 text-xs text-text-secondary-light dark:text-text-secondary-dark mb-3">
                                             <span class="flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-accent text-sm">calendar_today</span>
+                                                <span
+                                                    class="material-symbols-outlined text-accent text-sm">calendar_today</span>
                                                 <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
                                             </span>
                                             <span class="flex items-center gap-1">
@@ -617,7 +701,10 @@ try {
                                                 <?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?>
                                             </span>
                                         </div>
-                                        <h3 class="font-bold text-lg mb-2 group-hover:text-accent transition-colors line-clamp-2"><?php echo htmlspecialchars($post['title']); ?></h3>
+                                        <h3
+                                            class="font-bold text-lg mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                                            <?php echo htmlspecialchars($post['title']); ?>
+                                        </h3>
                                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark line-clamp-2">
                                             <?php echo htmlspecialchars($post['excerpt']); ?>
                                         </p>
@@ -631,7 +718,8 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="blog.php" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                        <a href="blog.php"
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_posts'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -643,22 +731,23 @@ try {
             <section class="w-full justify-center py-16 sm:py-24 bg-surface-light dark:bg-surface-dark" id="location">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <span class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.location_contact'); ?></span>
-                        <h2 class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
-                            <?php _e('home.come_to_aurora'); ?></h2>
+                        <span
+                            class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.location_contact'); ?></span>
+                        <h2
+                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                            <?php _e('home.come_to_aurora'); ?>
+                        </h2>
                         <p class="text-base text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
-                            <?php _e('home.location_desc'); ?></p>
+                            <?php _e('home.location_desc'); ?>
+                        </p>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Map -->
                         <div class="rounded-2xl overflow-hidden shadow-lg h-[400px]">
-                            <iframe 
+                            <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897!5m2!1svi!2s"
-                                class="w-full h-full"
-                                style="border:0;"
-                                allowfullscreen=""
-                                loading="lazy"
+                                class="w-full h-full" style="border:0;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade">
                             </iframe>
                         </div>
@@ -666,10 +755,13 @@ try {
                         <!-- Contact Info -->
                         <div class="flex flex-col gap-6">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300">
+                                <div
+                                    class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300">
                                     <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
-                                            <span class="material-symbols-outlined text-white text-xl">location_on</span>
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
+                                            <span
+                                                class="material-symbols-outlined text-white text-xl">location_on</span>
                                         </div>
                                     </div>
                                     <div>
@@ -679,37 +771,47 @@ try {
                                         </p>
                                     </div>
                                 </div>
-                                <a href="tel:+842513918888" class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300 group">
+                                <a href="tel:+842513918888"
+                                    class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300 group">
                                     <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
                                             <span class="material-symbols-outlined text-white text-xl">phone</span>
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold mb-1 group-hover:text-accent transition-colors"><?php _e('home.phone_label'); ?></h4>
+                                        <h4 class="font-bold mb-1 group-hover:text-accent transition-colors">
+                                            <?php _e('home.phone_label'); ?>
+                                        </h4>
                                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                             (+84-251) 391.8888<br>
                                             Hotline: 0909.123.456
                                         </p>
                                     </div>
                                 </a>
-                                <a href="mailto:info@aurorahotelplaza.com" class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300 group">
+                                <a href="mailto:info@aurorahotelplaza.com"
+                                    class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300 group">
                                     <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
                                             <span class="material-symbols-outlined text-white text-xl">email</span>
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold mb-1 group-hover:text-accent transition-colors"><?php _e('home.email_label'); ?></h4>
+                                        <h4 class="font-bold mb-1 group-hover:text-accent transition-colors">
+                                            <?php _e('home.email_label'); ?>
+                                        </h4>
                                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                             info@aurorahotelplaza.com<br>
                                             booking@aurorahotelplaza.com
                                         </p>
                                     </div>
                                 </a>
-                                <div class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300">
+                                <div
+                                    class="glass-card-solid flex gap-4 p-5 hover:-translate-y-1 transition-all duration-300">
                                     <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent/70 flex items-center justify-center shadow-lg shadow-accent/20">
                                             <span class="material-symbols-outlined text-white text-xl">schedule</span>
                                         </div>
                                     </div>
@@ -729,28 +831,40 @@ try {
                                     <?php _e('home.nearby_places'); ?>
                                 </h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.tan_son_nhat_airport'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.tan_son_nhat_airport'); ?></span>
                                         <span class="font-bold text-accent">35 km</span>
                                     </div>
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.long_thanh_airport'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.long_thanh_airport'); ?></span>
                                         <span class="font-bold text-accent">25 km</span>
                                     </div>
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.amata_industrial'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.amata_industrial'); ?></span>
                                         <span class="font-bold text-accent">5 km</span>
                                     </div>
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.bien_hoa_2_industrial'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.bien_hoa_2_industrial'); ?></span>
                                         <span class="font-bold text-accent">3 km</span>
                                     </div>
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.big_c_bien_hoa'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.big_c_bien_hoa'); ?></span>
                                         <span class="font-bold text-accent">2 km</span>
                                     </div>
-                                    <div class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
-                                        <span class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.bien_hoa_bus_station'); ?></span>
+                                    <div
+                                        class="flex justify-between items-center p-2 rounded-lg hover:bg-accent/5 transition-colors">
+                                        <span
+                                            class="text-text-secondary-light dark:text-text-secondary-dark"><?php _e('home.bien_hoa_bus_station'); ?></span>
                                         <span class="font-bold text-accent">1.5 km</span>
                                     </div>
                                 </div>
@@ -765,17 +879,20 @@ try {
                 <div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 text-center">
                     <div class="flex flex-col gap-4">
                         <h2 class="font-display text-3xl font-bold text-white md:text-4xl">
-                            <?php _e('home.ready_for_vacation'); ?></h2>
+                            <?php _e('home.ready_for_vacation'); ?>
+                        </h2>
                         <p class="text-lg text-white/90">
                             <?php _e('home.cta_desc'); ?>
                         </p>
                     </div>
                     <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                        <a href="booking/index.php" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-accent rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-lg">
+                        <a href="booking/index.php"
+                            class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-accent rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-lg">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('home.book_now_cta'); ?>
                         </a>
-                        <a href="tel:+842513918888" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold hover:bg-white/10 transition-colors">
+                        <a href="tel:+842513918888"
+                            class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold hover:bg-white/10 transition-colors">
                             <span class="material-symbols-outlined">phone</span>
                             <?php _e('home.call_now'); ?>
                         </a>
