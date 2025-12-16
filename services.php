@@ -42,7 +42,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/services-glass.css">
+    <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>
 
 <body class="bg-slate-900 font-body text-white">
@@ -51,23 +51,23 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
 
     <main class="flex h-full grow flex-col">
         <!-- Content Wrapper (Fixed Background & Dark Overlay) -->
-        <div class="services-content-wrapper">
+        <div class="glass-page-wrapper">
             
             <!-- Hero Section -->
-            <section class="services-page-header">
-                <div class="services-hero-card">
+            <section class="page-hero-glass">
+                <div class="hero-glass-card">
                     <div class="glass-badge-pill mb-4">
                         <span class="material-symbols-outlined text-sm">room_service</span>
                         <?php _e('services_page.five_star'); ?>
                     </div>
-                    <h1 class="services-hero-title">
+                    <h1 class="hero-title-glass">
                         <?php _e('services_page.page_title'); ?>
                     </h1>
-                    <p class="services-hero-subtitle">
+                    <p class="hero-subtitle-glass">
                         <?php _e('services_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center mb-8">
-                        <a href="contact.php" class="btn-service-glass" style="width: auto; margin-top:0;">
+                        <a href="contact.php" class="btn-glass-gold" style="width: auto; margin-top:0;">
                             <span class="material-symbols-outlined">mail</span>
                             <?php _e('services_page.contact_now'); ?>
                         </a>
@@ -139,7 +139,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <?php foreach ($main_services as $service): ?>
-                                <div class="service-card-glass">
+                                <div class="glass-card">
                                     <?php if ($service['thumbnail']): ?>
                                     <div class="service-img-container">
                                         <img src="<?php echo htmlspecialchars($service['thumbnail']); ?>" 
@@ -174,7 +174,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                         </div>
                                         <?php endif; ?>
                                         
-                                        <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="btn-service-glass">
+                                        <a href="service-detail.php?slug=<?php echo $service['slug']; ?>" class="btn-glass-gold">
                                             <?php _e('services_page.view_details'); ?>
                                             <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
                                         </a>
@@ -211,6 +211,6 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <?php include 'includes/footer.php'; ?>
 </div>
 
-<script src="assets/js/services-glass.js"></script>
+<script src="assets/js/glass-pages.js"></script>
 </body>
 </html>

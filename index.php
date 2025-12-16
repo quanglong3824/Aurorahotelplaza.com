@@ -150,6 +150,7 @@ try {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/pages-glass.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/responsive-index.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/index-upgrade.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/featured-apartments-glass.css'); ?>?v=<?php echo time(); ?>">
@@ -567,117 +568,74 @@ try {
                 </div>
             </section>
 
-            <!-- Why Choose Us Section -->
-            <section class="w-full py-16 sm:py-24 bg-primary-light/30 dark:bg-gray-900">
-                <div class="mx-auto max-w-7xl px-4">
+            <!-- Why Choose Us Section - Premium Dark Glass -->
+            <section class="w-full relative py-20" id="why-choose-us">
+                <!-- Parallax Background & Overlay -->
+                <div class="absolute inset-0 z-0 bg-fixed bg-cover bg-center"
+                    style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');"></div>
+                <div class="absolute inset-0 z-0 bg-slate-900/90"></div>
+
+                <div class="relative z-10 mx-auto max-w-7xl px-4">
                     <div class="flex flex-col gap-2 text-center mb-10">
                         <span
                             class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('home.why_choose_us'); ?></span>
-                        <h2
-                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                        <h2 class="font-display text-3xl font-bold text-white md:text-4xl">
                             <?php _e('home.why_choose_title'); ?>
                         </h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark max-w-2xl mx-auto">
+                        <p class="text-base text-white/70 max-w-2xl mx-auto">
                             <?php _e('home.why_choose_desc'); ?>
                         </p>
                     </div>
+
+                    <?php
+                    $why_features = [
+                        ['icon' => 'location_on', 'title' => 'home.prime_location', 'desc' => 'home.prime_location_desc'],
+                        ['icon' => 'support_agent', 'title' => 'home.professional_service', 'desc' => 'home.professional_service_desc'],
+                        ['icon' => 'payments', 'title' => 'home.reasonable_price', 'desc' => 'home.reasonable_price_desc'],
+                        ['icon' => 'verified', 'title' => 'home.quality_guaranteed', 'desc' => 'home.quality_guaranteed_desc'],
+                        ['icon' => 'security', 'title' => 'home.security_24_7', 'desc' => 'home.security_24_7_desc'],
+                        ['icon' => 'diversity_3', 'title' => 'home.diverse_options', 'desc' => 'home.diverse_options_desc']
+                    ];
+                    ?>
+
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">location_on</span>
+                        <?php foreach ($why_features as $feature): ?>
+                            <div
+                                class="glass-card flex gap-4 p-6 items-start hover:-translate-y-2 transition-transform duration-300">
+                                <div class="flex-shrink-0">
+                                    <div
+                                        class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg shadow-accent/20">
+                                        <span
+                                            class="material-symbols-outlined text-2xl"><?php echo $feature['icon']; ?></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold mb-2 text-white"><?php _e($feature['title']); ?></h3>
+                                    <p class="text-white/70 text-sm">
+                                        <?php _e($feature['desc']); ?>
+                                    </p>
                                 </div>
                             </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.prime_location'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.prime_location_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">support_agent</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.professional_service'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.professional_service_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">payments</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.reasonable_price'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.reasonable_price_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">verified</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.quality_guaranteed'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.quality_guaranteed_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">security</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.security_24_7'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.security_24_7_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="glass-card-solid flex gap-4 p-6">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent/80 text-white shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl">diversity_3</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold mb-2"><?php _e('home.diverse_options'); ?></h3>
-                                <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">
-                                    <?php _e('home.diverse_options_desc'); ?>
-                                </p>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </section>
-            <!-- Blog Section -->
-            <section class="w-full justify-center bg-primary-light/30 py-16 dark:bg-surface-dark sm:py-24" id="blog">
-                <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
+            <!-- Blog Section - Premium Dark Glass Style -->
+            <section class="w-full justify-center py-16 sm:py-24 relative bg-slate-900" id="blog">
+                <!-- Decorative Glow -->
+                <div
+                    class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none overflow-hidden">
+                    <div
+                        class="absolute -top-[20%] left-[10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]">
+                    </div>
+                </div>
+
+                <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 relative z-10">
                     <div class="flex flex-col gap-2 text-center">
-                        <h2
-                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                        <h2 class="font-display text-3xl font-bold text-white md:text-4xl">
                             <?php _e('home.news_events'); ?>
                         </h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                        <p class="text-base text-white/70">
                             <?php _e('home.news_events_desc'); ?>
                         </p>
                     </div>
@@ -687,7 +645,7 @@ try {
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
                                 <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
+                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0">
                                     <div class="relative aspect-[16/10] overflow-hidden">
                                         <img src="<?php echo $post_image; ?>?v=<?php echo time(); ?>"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>"
@@ -698,8 +656,7 @@ try {
                                         </div>
                                     </div>
                                     <div class="p-5">
-                                        <div
-                                            class="flex items-center gap-3 text-xs text-text-secondary-light dark:text-text-secondary-dark mb-3">
+                                        <div class="flex items-center gap-3 text-xs text-white/60 mb-3">
                                             <span class="flex items-center gap-1">
                                                 <span
                                                     class="material-symbols-outlined text-accent text-sm">calendar_today</span>
@@ -711,10 +668,10 @@ try {
                                             </span>
                                         </div>
                                         <h3
-                                            class="font-bold text-lg mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                                            class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
                                             <?php echo htmlspecialchars($post['title']); ?>
                                         </h3>
-                                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark line-clamp-2">
+                                        <p class="text-sm text-white/70 line-clamp-2">
                                             <?php echo htmlspecialchars($post['excerpt']); ?>
                                         </p>
                                     </div>
@@ -722,13 +679,13 @@ try {
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="col-span-full text-center py-12">
-                                <p class="text-gray-500 text-lg"><?php _e('home.no_posts'); ?></p>
+                                <p class="text-white/50 text-lg"><?php _e('home.no_posts'); ?></p>
                             </div>
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
                         <a href="blog.php"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                            class="inline-flex items-center gap-2 px-6 py-3 btn-glass-gold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_posts'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>

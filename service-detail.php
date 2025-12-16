@@ -43,7 +43,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/services-glass.css">
+    <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>
 
 <body class="bg-slate-900 font-body text-white">
@@ -55,7 +55,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
             <?php
             $bg_image = $service['thumbnail'] ? htmlspecialchars($service['thumbnail']) : 'assets/img/restaurant/nha-hang-aurora-hotel-4.jpg';
             ?>
-            <div class="services-content-wrapper" style="background-image: url('<?php echo $bg_image; ?>');">
+            <div class="glass-page-wrapper" style="background-image: url('<?php echo $bg_image; ?>');">
 
                 <!-- Hero Detail Section -->
                 <section class="detail-hero-section">
@@ -70,7 +70,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                     <?php _e('service_detail.premium_service'); ?>
                                 </div>
 
-                                <h1 class="services-hero-title" style="font-size: 3rem; text-align: left;">
+                                <h1 class="hero-title-glass" style="font-size: 3rem; text-align: left;">
                                     <?php echo htmlspecialchars($service['service_name']); ?>
                                 </h1>
 
@@ -79,7 +79,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                 </p>
 
                                 <div class="flex flex-wrap gap-4">
-                                    <a href="#packages" class="btn-service-glass" style="width: auto;">
+                                    <a href="#packages" class="btn-glass-gold" style="width: auto;">
                                         <?php _e('service_detail.view_packages'); ?>
                                         <span class="material-symbols-outlined">arrow_downward</span>
                                     </a>
@@ -157,7 +157,8 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                         <?php endif; ?>
 
                                         <h3 class="font-display text-2xl font-bold text-white mb-2">
-                                            <?php echo htmlspecialchars($pkg['package_name']); ?></h3>
+                                            <?php echo htmlspecialchars($pkg['package_name']); ?>
+                                        </h3>
                                         <div class="package-price-large">
                                             <?php echo number_format($pkg['price'], 0, ',', '.'); ?>đ
                                             <span class="text-sm font-sans font-normal text-white/60 ml-1">/
@@ -286,7 +287,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
         <?php include 'includes/footer.php'; ?>
     </div>
 
-    <script src="assets/js/services-glass.js"></script>
+    <script src="assets/js/glass-pages.js"></script>
 </body>
 
 </html>
