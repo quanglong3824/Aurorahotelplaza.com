@@ -152,6 +152,7 @@ try {
     <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/responsive-index.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/index-upgrade.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/featured-apartments-glass.css'); ?>?v=<?php echo time(); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -377,63 +378,66 @@ try {
                 </div>
             </section>
 
-            <!-- Featured Apartments Section -->
+            <!-- Featured Apartments Section - Liquid Glass Upgrade -->
             <section class="w-full justify-center py-16 sm:py-24" id="apartments">
                 <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4">
                     <div class="flex flex-col gap-2 text-center">
-                        <span class="glass-badge-solid mx-auto mb-2">
+                        <span class="glass-badge-solid mx-auto mb-2"
+                            style="background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2);">
                             <span class="material-symbols-outlined text-accent text-sm">apartment</span>
                             <?php _e('home.premium_apartments'); ?>
                         </span>
-                        <h2
-                            class="font-display text-3xl font-bold text-text-primary-light dark:text-text-primary-dark md:text-4xl">
+                        <h2 class="font-display text-3xl font-bold section-title md:text-4xl text-white">
                             <?php _e('home.featured_apartments'); ?>
                         </h2>
-                        <p class="text-base text-text-secondary-light dark:text-text-secondary-dark">
+                        <p class="text-base section-desc max-w-2xl mx-auto">
                             <?php _e('home.modern_living'); ?>
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($featured_apartments)): ?>
                             <?php foreach ($featured_apartments as $apartment):
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg');
                                 ?>
                                 <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
-                                    class="group glass-card-solid overflow-hidden hover:-translate-y-2 transition-all duration-300">
-                                    <div class="relative aspect-[4/3] overflow-hidden">
+                                    class="group liquid-glass-card hover:-translate-y-2">
+                                    <div class="card-image relative aspect-[4/3] overflow-hidden">
                                         <img src="<?php echo htmlspecialchars($imageUrl); ?>"
                                             alt="<?php echo htmlspecialchars($apartment['type_name']); ?>"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/apartments/studio-apartment/PHONG-STUDIO-AURORA-3.jpg'); ?>'">
                                         <div
-                                            class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full">
+                                            class="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-accent to-primary text-white text-xs font-bold rounded-full shadow-lg">
                                             <?php _e('home.apartment'); ?>
                                         </div>
                                         <div
-                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                                            <div class="text-white font-bold text-lg">
+                                            class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                            <div class="text-white font-bold text-xl price-tag">
                                                 <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ
                                                 <span
-                                                    class="text-sm font-normal opacity-80">/<?php _e('common.night'); ?></span>
+                                                    class="text-sm font-normal opacity-80 text-white">/<?php _e('common.night'); ?></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="p-5">
+                                    <div class="p-6 flex flex-col flex-grow card-content">
                                         <h3
-                                            class="font-display text-lg font-bold mb-2 group-hover:text-accent transition-colors">
+                                            class="font-display text-xl font-bold mb-3 group-hover:text-accent transition-colors">
                                             <?php echo htmlspecialchars($apartment['type_name']); ?>
                                         </h3>
-                                        <div
-                                            class="flex flex-wrap gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                                            <span class="flex items-center gap-1">
+                                        <div class="flex flex-wrap gap-4 text-sm mt-auto">
+                                            <span
+                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
                                                 <span class="material-symbols-outlined text-accent text-base">square_foot</span>
                                                 <?php echo number_format($apartment['size_sqm'], 0); ?>m²
                                             </span>
-                                            <span class="flex items-center gap-1">
+                                            <span
+                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
                                                 <span class="material-symbols-outlined text-accent text-base">bed</span>
                                                 <?php echo htmlspecialchars($apartment['bed_type']); ?>
                                             </span>
-                                            <span class="flex items-center gap-1">
+                                            <span
+                                                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10">
                                                 <span class="material-symbols-outlined text-accent text-base">person</span>
                                                 <?php echo $apartment['max_occupancy']; ?>
                                                 <?php _e('apartments_page.guests'); ?>
@@ -444,13 +448,14 @@ try {
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="col-span-full text-center py-12">
-                                <p class="text-gray-500 text-lg"><?php _e('home.no_apartments'); ?></p>
+                                <p class="text-white/70 text-lg"><?php _e('home.no_apartments'); ?></p>
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="flex justify-center pt-4">
+
+                    <div class="flex justify-center pt-8">
                         <a href="apartments.php"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                            class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_apartments'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
