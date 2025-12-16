@@ -645,15 +645,11 @@ try {
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
                                 <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0">
-                                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-800">
+                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full">
+                                    <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                         <?php
                                         $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                         $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
-                                        // Ensure we don't double-prefix if already absolute or root-relative
-                                        if (!str_starts_with($display_img, 'http') && !str_starts_with($display_img, '/')) {
-                                            // Use imgUrl but check if it's already a valid path
-                                        }
                                         ?>
                                         <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>" loading="lazy"
@@ -664,7 +660,7 @@ try {
                                             <?php _e('home.news'); ?>
                                         </div>
                                     </div>
-                                    <div class="p-5">
+                                    <div class="p-5 flex flex-col grow">
                                         <div class="flex items-center gap-3 text-xs text-white/60 mb-3">
                                             <span class="flex items-center gap-1">
                                                 <span
@@ -680,9 +676,14 @@ try {
                                             class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
                                             <?php echo htmlspecialchars($post['title']); ?>
                                         </h3>
-                                        <p class="text-sm text-white/70 line-clamp-2">
+                                        <p class="text-sm text-white/70 line-clamp-3 mb-4">
                                             <?php echo htmlspecialchars($post['excerpt']); ?>
                                         </p>
+                                        <div
+                                            class="mt-auto pt-4 border-t border-white/10 flex items-center text-accent text-sm font-semibold group-hover:translate-x-1 transition-transform">
+                                            <?php _e('home.read_more'); ?>
+                                            <span class="material-symbols-outlined text-lg ml-1">arrow_forward</span>
+                                        </div>
                                     </div>
                                 </a>
                             <?php endforeach; ?>

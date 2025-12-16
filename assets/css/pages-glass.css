@@ -251,20 +251,41 @@ main {
 
 /* Utility Cards (Grid items) */
 .utility-card-glass {
-    background: rgba(30, 41, 59, 0.6);
-    /* backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px); */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.25rem;
-    padding: 2rem;
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.4s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
     will-change: transform;
     transform: translateZ(0);
+    position: relative;
+    overflow: hidden;
+}
+
+.utility-card-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(212, 175, 55, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.utility-card-glass:hover {
+    transform: translateY(-8px) translateZ(0);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.utility-card-glass:hover::before {
+    opacity: 1;
 }
 
 .utility-card-glass:hover {
