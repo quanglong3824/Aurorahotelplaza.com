@@ -471,6 +471,9 @@ return [
         'enter_message' => 'Enter your message...',
         'min_chars' => 'Minimum {:count} characters',
         'sending' => 'Sending...',
+        'location' => 'Location',
+        'find_us' => 'Find Us',
+        'click_to_load_map' => 'Click to load map',
     ],
 
     // About page

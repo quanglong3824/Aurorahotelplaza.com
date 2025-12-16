@@ -17,11 +17,11 @@
     --glass-border-medium: rgba(255, 255, 255, 0.3);
     --glass-border-accent: rgba(212, 175, 55, 0.3);
     
-    /* Blur values */
-    --blur-sm: 8px;
-    --blur-md: 12px;
-    --blur-lg: 20px;
-    --blur-xl: 30px;
+    /* Blur values - Optimized for performance */
+    --blur-sm: 6px;
+    --blur-md: 8px;
+    --blur-lg: 10px;
+    --blur-xl: 12px;
     
     /* Glass shadows */
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@
     border: 1px solid var(--glass-border-light);
     border-radius: 1.25rem;
     box-shadow: var(--glass-shadow);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-card:hover {
@@ -69,14 +69,14 @@
         rgba(255, 255, 255, 0.06) 50%,
         rgba(255, 255, 255, 0.03) 100%
     );
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 1.25rem;
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.12),
         0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -1235,6 +1235,7 @@ html:not(.dark) .glass-card-solid {
     }
 }
 
+/* Glass shimmer - DISABLED for performance, use on-demand only */
 .glass-shimmer {
     background: linear-gradient(
         90deg,
@@ -1243,7 +1244,7 @@ html:not(.dark) .glass-card-solid {
         transparent 100%
     );
     background-size: 200% 100%;
-    animation: glassShimmer 2s infinite;
+    /* animation: glassShimmer 2s infinite; */
 }
 
 /* Hover glow effect */
@@ -1258,12 +1259,12 @@ html:not(.dark) .glass-card-solid {
 
 .glass-review-card {
     background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 1rem;
     padding: 1.5rem;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dark .glass-review-card {
@@ -1299,12 +1300,12 @@ html:not(.dark) .glass-card-solid {
 
 .glass-blog-card {
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 1.25rem;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dark .glass-blog-card {
@@ -1362,9 +1363,10 @@ html:not(.dark) .glass-card-solid {
     border: 1px solid var(--glass-border-light);
     border-radius: 9999px;
     color: rgba(255, 255, 255, 0.8);
-    animation: bounce 2s infinite;
+    /* animation disabled for performance */
 }
 
+/* Bounce animation - available but not auto-applied
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
@@ -1376,6 +1378,7 @@ html:not(.dark) .glass-card-solid {
         transform: translateY(-5px);
     }
 }
+*/
 
 /* ============================================
    UTILITY CLASSES

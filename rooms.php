@@ -38,15 +38,11 @@ try {
     <link rel="stylesheet" href="assets/css/rooms.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Glass Page Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('assets/img/deluxe/deluxe-room-aurora-1.jpg');">
-
                 <!-- Hero Section -->
                 <section class="page-hero-glass">
                     <div class="hero-glass-card">
@@ -234,7 +230,6 @@ try {
                         </div>
                     </div>
                 </section>
-            </div><!-- End Glass Page Wrapper -->
         </main>
 
         <?php include 'includes/footer.php'; ?>

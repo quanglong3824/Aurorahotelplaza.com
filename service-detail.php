@@ -46,17 +46,11 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Content Wrapper with Dynamic Background -->
-            <?php
-            $bg_image = $service['thumbnail'] ? htmlspecialchars($service['thumbnail']) : 'assets/img/restaurant/nha-hang-aurora-hotel-4.jpg';
-            ?>
-            <div class="glass-page-wrapper" style="background-image: url('<?php echo $bg_image; ?>');">
-
                 <!-- Hero Detail Section -->
                 <section class="detail-hero-section">
                     <div class="max-w-7xl mx-auto px-4 mt-10">
@@ -280,8 +274,6 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                 </div>
 
                 <div class="pb-20"></div>
-
-            </div>
         </main>
 
         <?php include 'includes/footer.php'; ?>

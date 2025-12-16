@@ -36,14 +36,11 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
     <link rel="stylesheet" href="assets/css/liquid-glass.css">
     <link rel="stylesheet" href="assets/css/pages-glass.css">
     <link rel="stylesheet" href="assets/css/apartments.css">
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
 <div class="relative flex min-h-screen w-full flex-col">
 <?php include 'includes/header.php'; ?>
 
 <main class="flex h-full grow flex-col">
-    <!-- Glass Page Wrapper -->
-    <div class="glass-page-wrapper" style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg');">
-        
         <!-- Hero Section -->
         <section class="page-hero-glass">
             <div class="hero-glass-card">
@@ -309,7 +306,6 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
             </div>
         </div>
     </section>
-    </div><!-- End Glass Page Wrapper -->
 </main>
 
 <?php include 'includes/footer.php'; ?>

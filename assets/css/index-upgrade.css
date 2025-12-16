@@ -178,17 +178,18 @@ section#apartments .flex.items-center.gap-1:hover {
 .glass-info-bar {
     background: linear-gradient(
         135deg,
-        rgba(17, 24, 39, 0.85) 0%,
-        rgba(17, 24, 39, 0.75) 100%
+        rgba(17, 24, 39, 0.9) 0%,
+        rgba(17, 24, 39, 0.85) 100%
     );
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
 }
 
-/* Shimmer effect */
+/* Shimmer effect - DISABLED for performance */
+/* Uncomment if needed on high-end devices
 .glass-info-bar::before {
     content: '';
     position: absolute;
@@ -210,6 +211,7 @@ section#apartments .flex.items-center.gap-1:hover {
     50% { left: 100%; }
     100% { left: 100%; }
 }
+*/
 
 .glass-info-bar .glass-tag {
     background: rgba(255, 255, 255, 0.06);
@@ -241,6 +243,8 @@ section#apartments .flex.items-center.gap-1:hover {
     overflow: hidden;
 }
 
+/* Promo banner glow - DISABLED for performance */
+/*
 .glass-promo-banner::before {
     content: '';
     position: absolute;
@@ -260,6 +264,7 @@ section#apartments .flex.items-center.gap-1:hover {
     0%, 100% { transform: translate(0, 0) rotate(0deg); }
     50% { transform: translate(-10%, 10%) rotate(180deg); }
 }
+*/
 
 .glass-promo-code {
     background: rgba(255, 255, 255, 0.15);
@@ -296,17 +301,14 @@ section#apartments .flex.items-center.gap-1:hover {
     border-radius: 1.25rem;
     background: linear-gradient(
         135deg,
-        rgba(212, 175, 55, 0.08) 0%,
-        rgba(212, 175, 55, 0.04) 50%,
-        rgba(212, 175, 55, 0.02) 100%
+        rgba(212, 175, 55, 0.1) 0%,
+        rgba(212, 175, 55, 0.05) 100%
     );
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    border: 1px solid rgba(212, 175, 55, 0.12);
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.06),
-        0 0 0 1px rgba(212, 175, 55, 0.05) inset;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -328,7 +330,8 @@ section#apartments .flex.items-center.gap-1:hover {
     border-radius: 1.25rem 1.25rem 0 0;
 }
 
-/* Shimmer animation */
+/* Shimmer animation - DISABLED for performance */
+/* Static glow instead of animated shimmer */
 .glass-stat-card-light::after {
     content: '';
     position: absolute;
@@ -338,18 +341,10 @@ section#apartments .flex.items-center.gap-1:hover {
     bottom: 0;
     background: radial-gradient(
         circle at 30% 20%,
-        rgba(212, 175, 55, 0.06) 0%,
+        rgba(212, 175, 55, 0.04) 0%,
         transparent 60%
     );
-    animation: statCardShimmer 8s ease-in-out infinite;
     pointer-events: none;
-}
-
-@keyframes statCardShimmer {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-    25% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
-    50% { transform: translate(0, 10%) scale(1); opacity: 0.5; }
-    75% { transform: translate(-5%, 5%) scale(1.05); opacity: 0.7; }
 }
 
 .glass-stat-card-light:hover {
@@ -710,6 +705,8 @@ section:has(.bg-gradient-to-br.from-accent) {
     overflow: hidden;
 }
 
+/* CTA glow - DISABLED for performance */
+/*
 section:has(.bg-gradient-to-br.from-accent)::before {
     content: '';
     position: absolute;
@@ -731,6 +728,7 @@ section:has(.bg-gradient-to-br.from-accent)::before {
     50% { transform: translate(-5%, 5%); }
     75% { transform: translate(5%, 5%); }
 }
+*/
 
 /* ============================================
    SECTION HEADERS - ENHANCED

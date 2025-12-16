@@ -20,15 +20,11 @@ $page_title = 'Điều khoản sử dụng';
     <link rel="stylesheet" href="assets/css/policy.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Glass Page Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
-
                 <!-- Hero Section - Using Policy Hero Class -->
                 <section class="policy-hero-glass">
                     <div class="hero-glass-card">
@@ -306,7 +302,6 @@ $page_title = 'Điều khoản sử dụng';
                         </div>
                     </div>
                 </section>
-            </div><!-- End Glass Page Wrapper -->
         </main>
 
         <?php include 'includes/footer.php'; ?>

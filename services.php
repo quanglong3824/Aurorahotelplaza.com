@@ -45,14 +45,11 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
 <div class="relative flex min-h-screen w-full flex-col">
     <?php include 'includes/header.php'; ?>
 
     <main class="flex h-full grow flex-col">
-        <!-- Content Wrapper (Fixed Background & Dark Overlay) -->
-        <div class="glass-page-wrapper">
-            
             <!-- Hero Section -->
             <section class="page-hero-glass">
                 <div class="hero-glass-card">
@@ -205,7 +202,6 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
 
                 </div>
             </section>
-        </div>
     </main>
 
     <?php include 'includes/footer.php'; ?>

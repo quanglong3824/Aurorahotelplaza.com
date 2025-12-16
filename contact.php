@@ -33,21 +33,41 @@ if ($is_logged_in) {
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
     <title><?php _e('contact_page.title'); ?></title>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.google.com" crossorigin>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/fonts.css" as="style">
+    <link rel="preload" href="assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg" as="image">
+    
+    <!-- Critical CSS inline for faster FCP -->
+    <style>
+        /* Critical CSS - Same pattern as auth pages for smooth scroll */
+        body.glass-page{position:relative;background-image:url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed}
+        body.glass-page::before{content:'';position:fixed;inset:0;background:linear-gradient(135deg,rgba(17,24,39,.88),rgba(17,24,39,.75));z-index:1;pointer-events:none}
+        body.glass-page>div{position:relative;z-index:2}
+        .page-hero-glass{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;padding:180px 20px 80px}
+    </style>
+    
+    <!-- Tailwind CSS -->
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     <script src="assets/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/pages-glass.css">
+    
+    <!-- Main stylesheets with versioning -->
+    <?php $css_version = '1.0.7'; ?>
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo $css_version; ?>">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
 <div class="relative flex min-h-screen w-full flex-col">
     <?php include 'includes/header.php'; ?>
 
     <main class="flex h-full grow flex-col">
-        <!-- Main Fixed Wrapper -->
-        <div class="glass-page-wrapper" style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg');">
-            
             <!-- Hero Section -->
             <section class="page-hero-glass">
                 <div class="hero-glass-card">
@@ -209,32 +229,43 @@ if ($is_logged_in) {
                 </div>
             </section>
 
-            <!-- Map Section -->
-            <section class="py-20 relative z-10">
+            <!-- Map Section - Lazy loaded -->
+            <section class="py-20 relative z-10" id="map-section">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-12">
                         <span class="text-accent font-semibold text-sm uppercase tracking-wider"><?php _e('contact_page.location'); ?></span>
                         <h2 class="font-display text-3xl md:text-4xl font-bold mt-2 mb-4 text-white"><?php _e('contact_page.find_us'); ?></h2>
                     </div>
                     <div class="map-glass-wrapper">
+                        <!-- Lazy load map when visible -->
+                        <div id="map-placeholder" class="w-full h-[450px] bg-slate-800/50 rounded-xl flex items-center justify-center cursor-pointer hover:bg-slate-800/70 transition-colors" onclick="loadMap()">
+                            <div class="text-center">
+                                <span class="material-symbols-outlined text-5xl text-accent mb-3 block">map</span>
+                                <p class="text-white/70"><?php _e('contact_page.click_to_load_map'); ?></p>
+                            </div>
+                        </div>
                         <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897!5m2!1svi!2s"
-                            allowfullscreen="" loading="lazy">
+                            id="google-map"
+                            data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897!5m2!1svi!2s"
+                            allowfullscreen="" 
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            style="display:none;">
                         </iframe>
                     </div>
                 </div>
             </section>
-        </div>
     </main>
 
     <?php include 'includes/footer.php'; ?>
 </div>
 
 <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2"></div>
-<!-- Original Scripts -->
-<script src="assets/js/main.js"></script>
-<script src="assets/js/contact.js"></script>
-<!-- New Glass Effects -->
-<script src="assets/js/glass-pages.js"></script>
+
+<!-- Scripts with defer for non-blocking load -->
+<?php $js_version = '1.0.7'; ?>
+<script src="assets/js/main.js?v=<?php echo $js_version; ?>" defer></script>
+<script src="assets/js/contact.js?v=<?php echo $js_version; ?>" defer></script>
+<script src="assets/js/lazy-map.js?v=<?php echo $js_version; ?>" defer></script>
 </body>
 </html>

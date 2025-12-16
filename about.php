@@ -16,15 +16,11 @@ initLanguage();
     <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>
 
-<body class="bg-slate-900 font-body text-white">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Main Fixed Wrapper -->
-            <div class="glass-page-wrapper"
-                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
-
                 <!-- Hero Section -->
                 <section class="page-hero-glass">
                     <div class="glass-blobs-container">
@@ -209,8 +205,6 @@ initLanguage();
                         </div>
                     </div>
                 </section>
-
-            </div>
         </main>
 
         <?php include 'includes/footer.php'; ?>

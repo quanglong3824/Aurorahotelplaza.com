@@ -359,11 +359,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
 </div>
 
 <!-- Header Styles & Script -->
-<link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo time(); ?>">
-<link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
-<link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo time(); ?>">
-<script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo time(); ?>" defer></script>
-<script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo time(); ?>" defer></script>
+<?php $asset_version = '1.0.7'; // Update this when assets change ?>
+<link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
+<script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
+<script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 
 <script>
     (function () {

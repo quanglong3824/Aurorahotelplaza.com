@@ -1,8 +1,0 @@
-# Ignore all test files with sensitive data
-*.log
-*.txt
-test-results/
-
-# Keep the structure
-!.gitignore
-!README.md

@@ -36,11 +36,11 @@
     border-color: white;
 }
 
-/* Solid State (Scrolled or no-hero pages) - Liquid Glass */
+/* Solid State (Scrolled or no-hero pages) - Liquid Glass (Optimized) */
 .header-solid {
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
 }
@@ -72,11 +72,11 @@
     box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
-/* Dark Mode Support - Liquid Glass */
+/* Dark Mode Support - Liquid Glass (Optimized) */
 .dark .header-solid {
-    background-color: rgba(17, 24, 39, 0.85);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(17, 24, 39, 0.88);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border-bottom-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
@@ -94,11 +94,11 @@
     color: #f3f4f6 !important;
 }
 
-/* Submenu Styles - Liquid Glass */
+/* Submenu Styles - Liquid Glass (Optimized) */
 .header-transparent .submenu {
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
@@ -109,8 +109,8 @@
 
 .header-solid .submenu {
     background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
 }
@@ -307,15 +307,15 @@
 
 
 
-/* Language Menu - Liquid Glass Dropdown */
+/* Language Menu - Liquid Glass Dropdown (Optimized) */
 .lang-menu {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
     min-width: 180px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 16px;
     box-shadow: 
@@ -326,7 +326,7 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px) scale(0.95);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.3s ease, visibility 0.3s, transform 0.3s ease;
 }
 
 .lang-menu.show {

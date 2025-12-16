@@ -350,7 +350,8 @@
     margin-left: 4px;
 }
 
-/* ===== Shimmer Effect ===== */
+/* ===== Shimmer Effect - DISABLED for performance ===== */
+/* Uncomment if needed on high-end devices
 .floating-menu-toggle::after {
     content: '';
     position: absolute;
@@ -374,6 +375,7 @@
     50% { transform: translate(0, 10%) rotate(0deg); }
     75% { transform: translate(-5%, 5%) rotate(-2deg); }
 }
+*/
 
 /* ===== Dark Mode ===== */
 .dark .floating-menu-label,
@@ -395,7 +397,8 @@
     border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* ===== Pulse Animation for CTA ===== */
+/* ===== Pulse Animation for CTA - DISABLED for performance ===== */
+/* Uncomment if needed on high-end devices
 .floating-menu-toggle.pulse::before {
     content: '';
     position: absolute;
@@ -416,6 +419,7 @@
         opacity: 0;
     }
 }
+*/
 
 /* ===== Safe Area for iPhone ===== */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {

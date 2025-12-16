@@ -1,4 +1,4 @@
-<?php
+    KJHYTDRAWE4564<?php
 session_start();
 require_once 'config/database.php';
 require_once 'helpers/language.php';
@@ -118,15 +118,11 @@ try {
     <link rel="stylesheet" href="assets/css/blog-detail.css">
 </head>
 
-<body class="bg-gray-900 font-body text-white">
+<body class="glass-page blog-detail-wrapper font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Glass Page Wrapper for Dark Theme Consistency -->
-            <div class="glass-page-wrapper blog-detail-wrapper"
-                style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');">
-
                 <!-- Article Header -->
                 <article class="py-0 relative z-10">
                     <div class="mx-auto max-w-4xl px-4">
@@ -673,8 +669,6 @@ try {
                         </div>
                     </section>
                 <?php endif; ?>
-
-            </div>
         </main>
 
         <?php include 'includes/footer.php'; ?>

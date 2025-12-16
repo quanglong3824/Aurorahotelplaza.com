@@ -471,6 +471,9 @@ return [
         'enter_message' => 'Nhập nội dung tin nhắn của bạn...',
         'min_chars' => 'Tối thiểu {:count} ký tự',
         'sending' => 'Đang gửi...',
+        'location' => 'Vị trí',
+        'find_us' => 'Tìm chúng tôi',
+        'click_to_load_map' => 'Nhấn để tải bản đồ',
     ],
 
     // About page

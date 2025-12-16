@@ -4,13 +4,14 @@
    ================================================================= */
 
 /* Section Background adjustment - Applied to BOTH Rooms and Apartments */
+/* REMOVED background-attachment: fixed to prevent scroll jank */
 #apartments,
 #rooms {
     position: relative;
     background-image: url('../img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll; /* Changed from fixed - prevents scroll jank */
     padding-top: 5rem;
     padding-bottom: 5rem;
 }

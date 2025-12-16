@@ -3,7 +3,14 @@
 /* Global Scale - Zoom toàn bộ website */
 html {
     zoom: 85%;
-    scroll-behavior: smooth;
+    /* scroll-behavior moved to @media to respect user preferences */
+}
+
+/* Smooth scroll only for users who haven't disabled it */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
 /* ============================================
@@ -249,15 +256,15 @@ header.scrolled .nav-link:hover {
     margin-top: 12px;
     width: 240px;
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 1rem;
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.3s ease, visibility 0.3s, transform 0.3s ease;
     overflow: hidden;
 }
 
@@ -788,11 +795,11 @@ header.scrolled .auth-btn {
    APPLE-STYLE LIQUID GLASS EFFECTS
    ============================================ */
 
-/* Base Liquid Glass - Apple Style */
+/* Base Liquid Glass - Apple Style (Optimized for performance) */
 .liquid-glass {
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.12),
@@ -802,8 +809,8 @@ header.scrolled .auth-btn {
 /* Liquid Glass Light - For dark backgrounds */
 .liquid-glass-light {
     background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.15),
@@ -814,8 +821,8 @@ header.scrolled .auth-btn {
 /* Liquid Glass Dark - For light backgrounds */
 .liquid-glass-dark {
     background: rgba(17, 24, 39, 0.6);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.2),
@@ -825,14 +832,14 @@ header.scrolled .auth-btn {
 /* Liquid Glass Card */
 .liquid-glass-card {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 1.5rem;
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .liquid-glass-card:hover {
@@ -844,7 +851,7 @@ header.scrolled .auth-btn {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Liquid Glass Button - Apple Style */
+/* Liquid Glass Button - Apple Style (Optimized) */
 .liquid-glass-btn {
     display: inline-flex;
     align-items: center;
@@ -852,15 +859,15 @@ header.scrolled .auth-btn {
     gap: 0.5rem;
     padding: 0.875rem 1.75rem;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0.875rem;
     color: white;
     font-weight: 600;
     font-size: 0.9375rem;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
     box-shadow: 
         0 4px 16px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -908,8 +915,8 @@ header.scrolled .auth-btn {
 
 .liquid-glass-modal {
     background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(32px) saturate(200%);
-    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 1.5rem;
     box-shadow: 
@@ -920,8 +927,8 @@ header.scrolled .auth-btn {
 /* Liquid Glass Navigation */
 .liquid-glass-nav {
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
@@ -942,8 +949,8 @@ header.scrolled .auth-btn {
 /* Liquid Glass with Accent Glow */
 .liquid-glass-accent {
     background: rgba(212, 175, 55, 0.1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     border: 1px solid rgba(212, 175, 55, 0.25);
     box-shadow: 
         0 8px 32px rgba(212, 175, 55, 0.15),
