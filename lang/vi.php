@@ -705,6 +705,8 @@ return [
         'terms_conditions' => 'điều khoản và điều kiện',
         'of_aurora' => 'của Aurora Hotel Plaza',
         'confirm_booking' => 'Xác nhận đặt phòng',
+        'rooms_available' => 'phòng trống',
+        'out_of_stock' => 'Hết phòng',
     ],
 
     // Room detail page

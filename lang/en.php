@@ -705,6 +705,8 @@ return [
         'terms_conditions' => 'terms and conditions',
         'of_aurora' => 'of Aurora Hotel Plaza',
         'confirm_booking' => 'Confirm Booking',
+        'rooms_available' => 'rooms available',
+        'out_of_stock' => 'Sold out',
     ],
 
     // Room detail page

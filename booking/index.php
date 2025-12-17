@@ -17,9 +17,28 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Get room types for selection
+// Get room types for selection with room availability count
 $db = getDB();
-$stmt = $db->prepare("SELECT * FROM room_types WHERE status = 'active' ORDER BY sort_order, base_price");
+$stmt = $db->prepare("
+    SELECT 
+        rt.*,
+        COALESCE(total.total_rooms, 0) as total_rooms,
+        COALESCE(available.available_rooms, 0) as available_rooms
+    FROM room_types rt
+    LEFT JOIN (
+        SELECT room_type_id, COUNT(*) as total_rooms 
+        FROM rooms 
+        GROUP BY room_type_id
+    ) total ON rt.room_type_id = total.room_type_id
+    LEFT JOIN (
+        SELECT room_type_id, COUNT(*) as available_rooms 
+        FROM rooms 
+        WHERE status = 'available' 
+        GROUP BY room_type_id
+    ) available ON rt.room_type_id = available.room_type_id
+    WHERE rt.status = 'active' 
+    ORDER BY rt.sort_order, rt.base_price
+");
 $stmt->execute();
 $room_types = $stmt->fetchAll();
 
@@ -51,7 +70,7 @@ $prefilled_guests = isset($_GET['guests']) ? (int)$_GET['guests'] : 2;
 // Debug: Log room types
 error_log("Room types loaded: " . count($room_types));
 foreach ($room_types as $room) {
-    error_log("Room: " . $room['type_name'] . " - Price: " . $room['base_price']);
+    error_log("Room: " . $room['type_name'] . " - Price: " . $room['base_price'] . " - Available: " . $room['available_rooms'] . "/" . $room['total_rooms']);
 }
 ?>
 <!DOCTYPE html>
@@ -213,12 +232,19 @@ foreach ($room_types as $room) {
                                         data-preselected="<?php echo $selected_room_type_id ?? 'null'; ?>"
                                         data-slug="<?php echo $selected_room_slug ?? 'null'; ?>">
                                 <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
-                                <?php foreach($room_types as $room): ?>
+                                <?php foreach($room_types as $room): 
+                                    $is_available = $room['available_rooms'] > 0;
+                                    $availability_text = $is_available 
+                                        ? "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")" 
+                                        : "(" . __('booking_page.out_of_stock') . ")";
+                                ?>
                                 <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
                                         data-max-guests="<?php echo $room['max_occupancy']; ?>"
-                                        <?php echo ($selected_room_type_id !== null && (int)$selected_room_type_id === (int)$room['room_type_id']) ? 'selected' : ''; ?>>
-                                    <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm
+                                        data-available="<?php echo $room['available_rooms']; ?>"
+                                        <?php echo !$is_available ? 'disabled' : ''; ?>
+                                        <?php echo ($selected_room_type_id !== null && (int)$selected_room_type_id === (int)$room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
+                                    <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm <?php echo $availability_text; ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>

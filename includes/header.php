@@ -242,9 +242,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
         <!-- Phòng & Căn hộ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
             <span class="floating-menu-label"><?php _e('nav.rooms'); ?></span>
-            <button class="floating-menu-btn" aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
+            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-btn"
+                aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">hotel</span>
-            </button>
+            </a>
             <div class="floating-submenu">
                 <a href="<?php echo $base_path; ?>rooms.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">bed</span>
@@ -261,9 +262,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
         <!-- Dịch vụ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
             <span class="floating-menu-label"><?php _e('nav.services'); ?></span>
-            <button class="floating-menu-btn" aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
+            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-btn"
+                aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">room_service</span>
-            </button>
+            </a>
             <div class="floating-submenu">
                 <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service"
                     class="floating-submenu-item">
@@ -290,9 +292,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
         <!-- Khám phá - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
             <span class="floating-menu-label"><?php _e('nav.explore'); ?></span>
-            <button class="floating-menu-btn" aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
+            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-btn"
+                aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">explore</span>
-            </button>
+            </a>
             <div class="floating-submenu">
                 <a href="<?php echo $base_path; ?>about.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">info</span>
@@ -357,6 +360,75 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($c
         </div>
     </button>
 </div>
+
+<?php if ($current_dir !== 'booking'): ?>
+    <!-- Floating Booking Toggle Button (Independent - Above Menu) - Hidden on booking page -->
+    <button class="floating-booking-toggle" aria-label="<?php _e('nav.book_now'); ?>" onclick="toggleFloatingBookingForm()">
+        <span class="material-symbols-outlined">calendar_month</span>
+    </button>
+
+    <!-- Floating Booking Form Popup (Mobile) -->
+    <div id="floatingBookingForm" class="floating-booking-popup">
+        <div class="floating-booking-overlay" onclick="toggleFloatingBookingForm()"></div>
+        <div class="floating-booking-content">
+            <div class="floating-booking-header">
+                <h3><?php _e('hero.search'); ?></h3>
+                <button class="floating-booking-close" onclick="toggleFloatingBookingForm()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form action="<?php echo $base_path; ?>booking/index.php" method="GET" class="floating-booking-form-inner">
+                <div class="floating-booking-field">
+                    <label for="floating-checkin">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        <?php _e('hero.check_in'); ?>
+                    </label>
+                    <input type="date" id="floating-checkin" name="check_in" min="<?php echo date('Y-m-d'); ?>"
+                        value="<?php echo date('Y-m-d'); ?>" class="glass-input-solid">
+                </div>
+                <div class="floating-booking-field">
+                    <label for="floating-checkout">
+                        <span class="material-symbols-outlined">event</span>
+                        <?php _e('hero.check_out'); ?>
+                    </label>
+                    <input type="date" id="floating-checkout" name="check_out"
+                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                        value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" class="glass-input-solid">
+                </div>
+                <div class="floating-booking-row">
+                    <div class="floating-booking-field">
+                        <label for="floating-adults">
+                            <span class="material-symbols-outlined">person</span>
+                            <?php _e('hero.adults'); ?>
+                        </label>
+                        <select id="floating-adults" name="adults" class="glass-input-solid glass-select">
+                            <option value="1">1 <?php _e('hero.person'); ?></option>
+                            <option value="2" selected>2 <?php _e('hero.person'); ?></option>
+                            <option value="3">3 <?php _e('hero.person'); ?></option>
+                            <option value="4">4 <?php _e('hero.person'); ?></option>
+                        </select>
+                    </div>
+                    <div class="floating-booking-field">
+                        <label for="floating-children">
+                            <span class="material-symbols-outlined">child_care</span>
+                            <?php _e('hero.children'); ?>
+                        </label>
+                        <select id="floating-children" name="children" class="glass-input-solid glass-select">
+                            <option value="0" selected>0 <?php _e('hero.child'); ?></option>
+                            <option value="1">1 <?php _e('hero.child'); ?></option>
+                            <option value="2">2 <?php _e('hero.child'); ?></option>
+                            <option value="3">3 <?php _e('hero.child'); ?></option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-glass-primary floating-booking-submit">
+                    <span class="material-symbols-outlined">search</span>
+                    <?php _e('hero.search'); ?>
+                </button>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- Header Styles & Script -->
 <?php $asset_version = '1.0.7'; // Update this when assets change ?>

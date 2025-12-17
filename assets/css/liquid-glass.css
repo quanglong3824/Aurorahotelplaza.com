@@ -393,6 +393,13 @@ html:not(.dark) .glass-card-solid {
     }
 }
 
+/* Hide master booking form on mobile - use floating popup instead */
+@media (max-width: 767px) {
+    .glass-booking-form {
+        display: none !important;
+    }
+}
+
 
 /* ============================================
    GLASS STATS CARDS
