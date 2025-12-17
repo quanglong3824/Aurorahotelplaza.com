@@ -804,9 +804,12 @@ $payment_labels = [
                         .hotel-name { font-size: 28px; font-weight: 700; color: #d4af37; margin-bottom: 5px; text-transform: uppercase; }
                         .doc-title { font-size: 16px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
                         
-                        .booking-code-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 30px; border-radius: 8px; }
+                        .booking-code-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
+                        .booking-code-content { text-align: left; }
                         .booking-code-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
                         .booking-code { font-size: 32px; font-weight: 700; color: #333; letter-spacing: 1px; }
+                        
+                        .qr-code img { width: 100px; height: 100px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
                         
                         .section { margin-bottom: 30px; }
                         .section-title { font-size: 16px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: #d4af37; text-transform: uppercase; }
@@ -840,10 +843,15 @@ $payment_labels = [
                     </div>
                     
                     <div class="booking-code-box">
-                        <div class="booking-code-label">Mã đặt phòng / Booking Code</div>
-                        <div class="booking-code"><?php echo $booking['booking_code']; ?></div>
-                        <div style="margin-top: 10px; font-size: 14px; color: <?php echo ($booking['status'] == 'confirmed') ? 'green' : 'orange'; ?>">
-                            <?php echo $status_labels[$booking['status']]['label']; ?>
+                        <div class="booking-code-content">
+                            <div class="booking-code-label">Mã đặt phòng / Booking Code</div>
+                            <div class="booking-code"><?php echo $booking['booking_code']; ?></div>
+                            <div style="margin-top: 10px; font-size: 14px; font-weight: bold; color: <?php echo ($booking['status'] == 'confirmed') ? '#2e7d32' : 'orange'; ?>">
+                                <?php echo $status_labels[$booking['status']]['label']; ?>
+                            </div>
+                        </div>
+                        <div class="qr-code">
+                             <img src="api/get-qrcode.php?booking_id=<?php echo $booking['booking_id']; ?>" alt="QR Code" />
                         </div>
                     </div>
                     
@@ -901,7 +909,7 @@ $payment_labels = [
                                 <span class="total-amount"><?php echo number_format($booking['total_amount']); ?> VND</span>
                             </div>
                             <div style="text-align: right; font-size: 12px; margin-top: 5px; opacity: 0.8;">
-                                <?php echo $booking['payment_status'] == 'paid' ? 'Đã thanh toán / Paid' : 'Chưa thanh toán / Unpaid'; ?>
+                                <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
                                 <?php if($booking['payment_method']) echo ' - ' . ucfirst($booking['payment_method']); ?>
                             </div>
                         </div>
