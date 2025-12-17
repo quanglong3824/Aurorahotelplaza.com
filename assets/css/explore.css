@@ -5,22 +5,23 @@
     align-items: center;
     text-align: center;
     padding: 1.5rem 1rem;
-    background: rgba(30, 41, 59, 0.6);
-    /* Unified Slate Glass 0.6 */
+    background: rgba(30, 41, 59, 0.7);
+    /* Unified Slate Glass 0.7 */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.4);
     border-radius: 1rem;
     transition: all 0.3s ease;
     height: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .glass-quick-link:hover {
     transform: translateY(-5px);
-    background: rgba(30, 41, 59, 0.7);
-    /* Slightly darker on hover */
-    border-color: rgba(212, 175, 55, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    background: rgba(30, 41, 59, 0.85);
+    /* Even darker on hover */
+    border-color: rgba(212, 175, 55, 0.8);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
 .glass-quick-link-icon {
@@ -29,10 +30,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(212, 175, 55, 0.2);
+    /* Increased visibility */
     border-radius: 50%;
     margin-bottom: 1rem;
     color: #d4af37;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.glass-quick-link:hover .glass-quick-link-icon {
+    background: #d4af37;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
 }
 
 .glass-category-card {

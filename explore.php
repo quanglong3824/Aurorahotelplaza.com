@@ -69,7 +69,7 @@ try {
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/explore.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/explore.css?v=explore_v2">
 </head>
 
 <body class="glass-page font-body text-white">

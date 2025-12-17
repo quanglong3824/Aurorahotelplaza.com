@@ -12,13 +12,14 @@ require_once __DIR__ . '/../config/database.php';
  * @param int $limit Số lượng phòng cần lấy
  * @return array Danh sách phòng
  */
-function getRandomRooms($currentRoomTypeId = null, $limit = 3) {
+function getRandomRooms($currentRoomTypeId = null, $limit = 3, $category = null)
+{
     try {
         $conn = getDB();
         if (!$conn) {
             return [];
         }
-        
+
         $sql = "SELECT 
                     rt.room_type_id as id,
                     rt.type_name as name,
@@ -28,23 +29,30 @@ function getRandomRooms($currentRoomTypeId = null, $limit = 3) {
                     rt.category
                 FROM room_types rt
                 WHERE rt.status = 'active'";
-        
+
         if ($currentRoomTypeId) {
             $sql .= " AND rt.room_type_id != :current_id";
         }
-        
-        $sql .= " ORDER BY RAND() LIMIT :limit";
-        
-        $stmt = $conn->prepare($sql);
-        
-        if ($currentRoomTypeId) {
-            $stmt->bindParam(':current_id', $currentRoomTypeId, PDO::PARAM_INT);
+
+        if ($category) {
+            $sql .= " AND rt.category = :category";
         }
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        
+
+        $sql .= " ORDER BY RAND() LIMIT :limit";
+
+        $stmt = $conn->prepare($sql);
+
+        if ($currentRoomTypeId) {
+            $stmt->bindValue(':current_id', $currentRoomTypeId, PDO::PARAM_INT);
+        }
+        if ($category) {
+            $stmt->bindValue(':category', $category, PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
     } catch (PDOException $e) {
         error_log("Error in getRandomRooms: " . $e->getMessage());
         return [];
@@ -56,13 +64,14 @@ function getRandomRooms($currentRoomTypeId = null, $limit = 3) {
  * @param string $slug Slug của phòng
  * @return array|null Thông tin phòng hoặc null nếu không tìm thấy
  */
-function getRoomBySlug($slug) {
+function getRoomBySlug($slug)
+{
     try {
         $conn = getDB();
         if (!$conn) {
             return null;
         }
-        
+
         $sql = "SELECT 
                     room_type_id as id,
                     type_name as name,
@@ -76,9 +85,9 @@ function getRoomBySlug($slug) {
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':slug', $slug, PDO::PARAM_STR);
         $stmt->execute();
-        
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
     } catch (PDOException $e) {
         error_log("Error in getRoomBySlug: " . $e->getMessage());
         return null;
@@ -90,7 +99,8 @@ function getRoomBySlug($slug) {
  * @param float $price Giá
  * @return string Giá đã format
  */
-function formatPrice($price) {
+function formatPrice($price)
+{
     return number_format($price, 0, ',', '.') . 'đ';
 }
 
@@ -100,21 +110,22 @@ function formatPrice($price) {
  * @param string $category Loại phòng (room/apartment)
  * @return string Đường dẫn đầy đủ
  */
-function getThumbnailPath($thumbnail, $category = 'room') {
+function getThumbnailPath($thumbnail, $category = 'room')
+{
     if (empty($thumbnail)) {
         return '../assets/img/placeholder.jpg';
     }
-    
+
     // Nếu đã có đường dẫn tương đối đúng
     if (strpos($thumbnail, '../assets/img/') === 0) {
         return $thumbnail;
     }
-    
+
     // Nếu bắt đầu bằng /assets/img/ thì thêm .. vào đầu
     if (strpos($thumbnail, '/assets/img/') === 0) {
         return '..' . $thumbnail;
     }
-    
+
     // Nếu chỉ là tên file thì thêm đường dẫn đầy đủ
     return '../assets/img/' . $thumbnail;
 }
@@ -125,7 +136,8 @@ function getThumbnailPath($thumbnail, $category = 'room') {
  * @param string $category Loại phòng (room/apartment)
  * @return string Đường dẫn
  */
-function getRoomDetailUrl($slug, $category = 'room') {
+function getRoomDetailUrl($slug, $category = 'room')
+{
     if ($category === 'apartment') {
         return '../apartment-details/' . $slug . '.php';
     }
