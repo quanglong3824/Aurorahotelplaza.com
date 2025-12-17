@@ -480,7 +480,7 @@ $payment_labels = [
                                                 </a>
                                             <?php endif; ?>
 
-                                            <button onclick="window.print()"
+                                            <button onclick="printBookingDetail()"
                                                 class="w-full px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all font-semibold flex items-center justify-center gap-2">
                                                 <span class="material-symbols-outlined text-accent">print</span>
                                                 <?php _e('booking_detail.print'); ?>
@@ -670,9 +670,9 @@ $payment_labels = [
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between text-white/80">
                             <span>Tổng tiền đặt phòng:</span>
-                            <span class="font-bold text-white font-mono"><?php echo number_format($refund_info['total_amount']); ?> VNĐ</span>
+                            <span class="font-bold text-white font-mono"><?php echo number_format($refund_info['total_amount'] ?? 0); ?> VNĐ</span>
                         </div>
-                        <?php if ($refund_info['processing_fee'] > 0): ?>
+                        <?php if (($refund_info['processing_fee'] ?? 0) > 0): ?>
                         <div class="flex justify-between text-red-300">
                             <span>Phí xử lý (5%):</span>
                             <span class="font-mono">-<?php echo number_format($refund_info['processing_fee']); ?> VNĐ</span>
@@ -680,10 +680,10 @@ $payment_labels = [
                         <?php endif; ?>
                         <div class="flex justify-between text-lg font-bold text-green-400 pt-3 border-t border-white/10 mt-2">
                             <span>Số tiền hoàn lại:</span>
-                            <span class="font-mono"><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</span>
+                            <span class="font-mono"><?php echo number_format($refund_info['refund_amount'] ?? 0); ?> VNĐ</span>
                         </div>
                         <div class="pt-3 text-xs text-blue-200/70 border-t border-white/5 mt-2">
-                            <p><strong>Chính sách:</strong> <?php echo $refund_info['policy_message']; ?></p>
+                            <p><strong>Chính sách:</strong> <?php echo $refund_info['policy_message'] ?? ''; ?></p>
                             <p class="mt-1"><strong>Thời gian hoàn tiền:</strong> 5-7 ngày làm việc</p>
                         </div>
                     </div>
@@ -714,7 +714,7 @@ $payment_labels = [
                         </div>
                         <span class="text-sm text-white/70 group-hover:text-white transition-colors">
                             Tôi đã đọc và đồng ý với chính sách hủy phòng. Tôi hiểu rằng số tiền hoàn lại sẽ là 
-                            <strong class="text-green-400"><?php echo number_format($refund_info['refund_amount']); ?> VNĐ</strong>
+                            <strong class="text-green-400"><?php echo number_format($refund_info['refund_amount'] ?? 0); ?> VNĐ</strong>
                             và sẽ được xử lý trong vòng 5-7 ngày làm việc.
                         </span>
                     </label>
@@ -788,23 +788,143 @@ $payment_labels = [
                 });
         }
 
-        // Print styles
-        const printStyles = `
-    <style>
-        @media print {
-            body * { visibility: hidden; }
-            .print-area, .print-area * { visibility: visible; }
-            .print-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-            /* Reset colors for printing */
-            body.bg-slate-900 { background-color: white !important; color: black !important; }
-            .glass-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; color: black !important; }
-            .text-white { color: black !important; }
-            .text-white\/50, .text-white\/60, .text-white\/70, .text-white\/80 { color: #555 !important; }
+        // New Print Function
+        function printBookingDetail() {
+            const printWindow = window.open('', '_blank', 'width=900,height=900');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Booking Confirmation - <?php echo $booking['booking_code']; ?></title>
+                    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Roboto', sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; line-height: 1.5; }
+                        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+                        .hotel-name { font-size: 28px; font-weight: 700; color: #d4af37; margin-bottom: 5px; text-transform: uppercase; }
+                        .doc-title { font-size: 16px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+                        
+                        .booking-code-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 30px; border-radius: 8px; }
+                        .booking-code-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
+                        .booking-code { font-size: 32px; font-weight: 700; color: #333; letter-spacing: 1px; }
+                        
+                        .section { margin-bottom: 30px; }
+                        .section-title { font-size: 16px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: #d4af37; text-transform: uppercase; }
+                        
+                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                        .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+                        .label { color: #666; }
+                        .value { font-weight: 500; text-align: right; }
+                        
+                        .dates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+                        .date-box { padding: 15px; background: #f5f5f5; border-radius: 8px; text-align: center; }
+                        .date-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
+                        .date-val { font-size: 18px; font-weight: 700; color: #333; }
+                        
+                        .total-section { background: #1a1a1a; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; }
+                        .total-row { display: flex; justify-content: space-between; align-items: center; }
+                        .total-label { font-size: 16px; font-weight: 500; }
+                        .total-amount { font-size: 24px; font-weight: 700; color: #d4af37; }
+                        
+                        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
+                        
+                        @media print {
+                            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="hotel-name">Aurora Hotel Plaza</div>
+                        <div class="doc-title">Xác nhận đặt phòng / Booking Confirmation</div>
+                    </div>
+                    
+                    <div class="booking-code-box">
+                        <div class="booking-code-label">Mã đặt phòng / Booking Code</div>
+                        <div class="booking-code"><?php echo $booking['booking_code']; ?></div>
+                        <div style="margin-top: 10px; font-size: 14px; color: <?php echo ($booking['status'] == 'confirmed') ? 'green' : 'orange'; ?>">
+                            <?php echo $status_labels[$booking['status']]['label']; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="dates-grid">
+                        <div class="date-box">
+                            <div class="date-label">Check-in</div>
+                            <div class="date-val"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></div>
+                            <div style="font-size: 12px; margin-top: 5px;">Từ/From 14:00</div>
+                        </div>
+                        <div class="date-box">
+                            <div class="date-label">Check-out</div>
+                            <div class="date-val"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></div>
+                            <div style="font-size: 12px; margin-top: 5px;">Trước/Before 12:00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid">
+                        <div class="section">
+                            <div class="section-title">Khách hàng / Guest</div>
+                            <div class="row"><span class="label">Họ tên:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_name']); ?></span></div>
+                            <div class="row"><span class="label">SĐT:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_phone']); ?></span></div>
+                            <div class="row"><span class="label">Email:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_email']); ?></span></div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">Phòng / Room</div>
+                            <div class="row"><span class="label">Loại phòng:</span> <span class="value"><?php echo htmlspecialchars($booking['type_name']); ?></span></div>
+                            <?php if ($booking['room_number']): ?>
+                            <div class="row"><span class="label">Số phòng:</span> <span class="value"><?php echo $booking['room_number']; ?></span></div>
+                            <?php endif; ?>
+                            <div class="row"><span class="label">Số khách:</span> <span class="value"><?php echo $booking['num_adults']; ?> người lớn, <?php echo $booking['num_children']; ?> trẻ em</span></div>
+                            <div class="row"><span class="label">Thời gian:</span> <span class="value"><?php echo $booking['total_nights']; ?> đêm / nights</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Chi tiết thanh toán / Payment Details</div>
+                        <div class="row"><span class="label">Giá phòng (<?php echo $booking['total_nights']; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng):</span> <span class="value"><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?> VND</span></div>
+                        
+                        <?php if ($booking['service_charges'] > 0): ?>
+                        <div class="row"><span class="label">Phí dịch vụ:</span> <span class="value"><?php echo number_format($booking['service_charges']); ?> VND</span></div>
+                        <?php endif; ?>
+                        
+                        <?php if ($booking['discount_amount'] > 0): ?>
+                        <div class="row"><span class="label">Giảm giá:</span> <span class="value">-<?php echo number_format($booking['discount_amount']); ?> VND</span></div>
+                        <?php endif; ?>
+                        
+                        <?php if ($booking['points_used'] > 0): ?>
+                        <div class="row"><span class="label">Điểm thưởng sử dụng:</span> <span class="value"><?php echo number_format($booking['points_used']); ?> điểm</span></div>
+                        <?php endif; ?>
+                        
+                        <div class="total-section">
+                            <div class="total-row">
+                                <span class="total-label">TỔNG CỘNG / TOTAL</span>
+                                <span class="total-amount"><?php echo number_format($booking['total_amount']); ?> VND</span>
+                            </div>
+                            <div style="text-align: right; font-size: 12px; margin-top: 5px; opacity: 0.8;">
+                                <?php echo $booking['payment_status'] == 'paid' ? 'Đã thanh toán / Paid' : 'Chưa thanh toán / Unpaid'; ?>
+                                <?php if($booking['payment_method']) echo ' - ' . ucfirst($booking['payment_method']); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        <p>Cảm ơn quý khách đã lựa chọn Aurora Hotel Plaza!</p>
+                        <p>Thank you for choosing Aurora Hotel Plaza!</p>
+                        <p style="margin-top: 10px;">Hotline: 0251 3511 888 | info@aurorahotelplaza.com</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close(); // Necessary for IE >= 10
+            printWindow.focus(); // Necessary for IE >= 10
+            
+            // Wait for images to load
+            setTimeout(function() {
+                printWindow.print();
+                // printWindow.close(); // Optional: close after print
+            }, 500);
         }
-    </style>
-`;
-        document.head.insertAdjacentHTML('beforeend', printStyles);
     </script>
 </body>
 
