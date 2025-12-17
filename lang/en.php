@@ -92,6 +92,11 @@ return [
         'payment_method' => 'Payment Method',
         'pay_at_hotel' => 'Pay at Hotel',
         'pay_online' => 'Pay Online',
+        'select_type' => 'Select Booking Type',
+        'individual_family' => 'Individual / Family',
+        'individual_desc' => 'Book for 1-6 guests, pay online or at hotel.',
+        'large_group' => 'Group / Event',
+        'group_desc' => 'Large groups, corporate, weddings, conferences.',
     ],
 
     // Booking status

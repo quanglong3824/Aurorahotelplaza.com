@@ -92,6 +92,11 @@ return [
         'payment_method' => 'Phương thức thanh toán',
         'pay_at_hotel' => 'Thanh toán tại khách sạn',
         'pay_online' => 'Thanh toán online',
+        'select_type' => 'Chọn loại đặt phòng',
+        'individual_family' => 'Cá nhân / Gia đình',
+        'individual_desc' => 'Đặt phòng 1-6 người, thanh toán online hoặc tại khách sạn.',
+        'large_group' => 'Đoàn / Sự kiện',
+        'group_desc' => 'Đặt phòng số lượng lớn, công ty, đám cưới, hội nghị.',
     ],
 
     // Booking status
