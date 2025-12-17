@@ -1207,6 +1207,9 @@ return [
         'no_prepayment' => 'Không cần thanh toán trước',
         'free_cancel' => 'Hủy miễn phí trong 24h',
         'explore_more' => 'Khám phá thêm',
+        'group_booking_title' => 'Đặt phòng cho đoàn',
+        'group_booking_desc' => 'Đặt phòng cho nhóm từ 5 người trở lên? Liên hệ với chúng tôi để được hỗ trợ tốt nhất!',
+        'call_hotline' => 'Gọi Hotline',
     ],
 
     // Profile page (full)

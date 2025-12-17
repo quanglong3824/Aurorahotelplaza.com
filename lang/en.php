@@ -1207,6 +1207,9 @@ return [
         'no_prepayment' => 'No Prepayment Required',
         'free_cancel' => 'Free Cancellation within 24h',
         'explore_more' => 'Explore More',
+        'group_booking_title' => 'Group Booking',
+        'group_booking_desc' => 'Booking for a group of 5 or more? Contact us for the best support!',
+        'call_hotline' => 'Call Hotline',
     ],
 
     // Profile page (full)
