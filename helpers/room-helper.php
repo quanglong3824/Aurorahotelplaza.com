@@ -143,4 +143,56 @@ function getRoomDetailUrl($slug, $category = 'room')
     }
     return '../room-details/' . $slug . '.php';
 }
+
+/**
+ * Kiểm tra số lượng phòng trống
+ * @param int $roomTypeId ID loại phòng
+ * @param string $checkIn Ngày nhận phòng (Y-m-d)
+ * @param string $checkOut Ngày trả phòng (Y-m-d)
+ * @return int Số lượng phòng trống
+ */
+function checkRoomAvailability($roomTypeId, $checkIn, $checkOut)
+{
+    try {
+        $conn = getDB();
+        if (!$conn) {
+            return 0;
+        }
+
+        // Đếm tổng số phòng active của loại này
+        $sqlTotal = "SELECT COUNT(*) FROM rooms WHERE room_type_id = :room_type_id AND status = 'available'";
+        $stmtTotal = $conn->prepare($sqlTotal);
+        $stmtTotal->execute([':room_type_id' => $roomTypeId]);
+        $totalRooms = $stmtTotal->fetchColumn();
+
+        if ($totalRooms == 0) {
+            return 0;
+        }
+
+        // Đếm số phòng đã được đặt trong khoảng thời gian này
+        // Booking trùng là booking có thời gian giao nhau với khoảng [checkIn, checkOut]
+        // (start1 < end2) AND (end1 > start2)
+        $sqlBooked = "SELECT COUNT(DISTINCT room_id) 
+                      FROM bookings 
+                      WHERE room_type_id = :room_type_id 
+                      AND status IN ('confirmed', 'checked_in')
+                      AND room_id IS NOT NULL
+                      AND check_in_date < :check_out 
+                      AND check_out_date > :check_in";
+
+        $stmtBooked = $conn->prepare($sqlBooked);
+        $stmtBooked->execute([
+            ':room_type_id' => $roomTypeId,
+            ':check_in' => $checkIn,
+            ':check_out' => $checkOut
+        ]);
+        $bookedRooms = $stmtBooked->fetchColumn();
+
+        return max(0, $totalRooms - $bookedRooms);
+
+    } catch (PDOException $e) {
+        error_log("Error in checkRoomAvailability: " . $e->getMessage());
+        return 0;
+    }
+}
 ?>

@@ -1154,37 +1154,6 @@ return [
         'other_apartments' => 'Căn hộ khác',
     ],
 
-    // Footer
-    'footer' => [
-        'about' => 'Về chúng tôi',
-        'description' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại trung tâm Biên Hòa, Đồng Nai. Chúng tôi mang đến trải nghiệm nghỉ dưỡng đẳng cấp với dịch vụ hoàn hảo và tiện nghi hiện đại.',
-        'follow_us' => 'Theo dõi chúng tôi',
-        'quick_links' => 'Liên kết nhanh',
-        'about_us' => 'Về chúng tôi',
-        'rooms_suite' => 'Phòng & Suite',
-        'services' => 'Dịch vụ',
-        'restaurant' => 'Nhà hàng',
-        'gallery' => 'Thư viện ảnh',
-        'events' => 'Sự kiện',
-        'contact' => 'Liên hệ',
-        'services_title' => 'Dịch vụ',
-        'online_booking' => 'Đặt phòng trực tuyến',
-        'restaurant_bar' => 'Nhà hàng & Bar',
-        'conference_events' => 'Hội nghị & Sự kiện',
-        'spa_massage' => 'Spa & Massage',
-        'swimming_pool' => 'Hồ bơi',
-        'gym' => 'Phòng gym',
-        'shuttle_service' => 'Dịch vụ đưa đón',
-        'contact_title' => 'Liên hệ',
-        'reception_24_7' => 'Lễ tân 24/7',
-        'copyright' => '© {:year} Aurora Hotel Plaza. Bản quyền thuộc về Aurora Hotel Plaza.',
-        'privacy_policy' => 'Chính sách bảo mật',
-        'terms_of_service' => 'Điều khoản sử dụng',
-        'cancellation_policy' => 'Chính sách hủy phòng',
-        'our_location' => 'Vị trí của chúng tôi',
-        'events_coming_soon' => 'Trang sự kiện đang được cập nhật. Vui lòng quay lại sau!',
-    ],
-
     // Hero slider
     'hero' => [
         'badge' => 'Khách sạn 5 sao tại Biên Hòa',
@@ -1200,6 +1169,30 @@ return [
         'no_prepayment' => 'Không cần thanh toán trước',
         'free_cancel' => 'Hủy miễn phí trong 24h',
         'explore_more' => 'Khám phá thêm',
+        'find_room' => 'Tìm phòng',
+        'search_now' => 'Tìm Ngay',
+        'group_booking_title' => 'Đặt Phòng Đoàn',
+        'group_booking_desc' => 'Để đảm bảo dịch vụ tốt nhất cho đoàn của quý khách, vui lòng liên hệ trực tiếp với chúng tôi.',
+        'group_booking_alert' => 'Vui lòng liên hệ hotline để đặt phòng cho đoàn đông người.',
+        'call_hotline' => 'Gọi Hotline',
+    ],
+
+    // New Booking Flow Keys
+    'booking' => [
+        'select_type' => 'Chọn Loại Đặt Phòng',
+        'individual_family' => 'Cá Nhân / Gia Đình',
+        'individual_desc' => 'Đặt phòng cho cá nhân, cặp đôi hoặc gia đình nhỏ.',
+        'large_group' => 'Đoàn / Sự Kiện',
+        'group_desc' => 'Đặt phòng số lượng lớn cho công ty hoặc đoàn du lịch.',
+        'rooms_required' => 'Số phòng cần thiết',
+        'room' => 'Phòng',
+        'add_room' => 'Thêm Phòng',
+        'large_group_title' => 'Đặt Phòng Đoàn Lớn',
+        'large_group_warning' => 'Nhóm trên 6 người vui lòng liên hệ hotline để được hỗ trợ tốt nhất.',
+        'suggested_rooms' => 'Gợi ý',
+        'max_adults' => 'Tối đa :n người lớn',
+        'max_children' => 'Tối đa :n trẻ em',
+        'room_capacity_exceeded' => 'Vượt quá sức chứa phòng',
     ],
 
     // Profile page (full)

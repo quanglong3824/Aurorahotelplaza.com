@@ -1154,37 +1154,6 @@ return [
         'other_apartments' => 'Other Apartments',
     ],
 
-    // Footer
-    'footer' => [
-        'about' => 'About Us',
-        'description' => 'Aurora Hotel Plaza - Luxury hotel in the heart of Bien Hoa, Dong Nai. We deliver premium hospitality experiences with perfect service and modern amenities.',
-        'follow_us' => 'Follow Us',
-        'quick_links' => 'Quick Links',
-        'about_us' => 'About Us',
-        'rooms_suite' => 'Rooms & Suites',
-        'services' => 'Services',
-        'restaurant' => 'Restaurant',
-        'gallery' => 'Gallery',
-        'events' => 'Events',
-        'contact' => 'Contact',
-        'services_title' => 'Services',
-        'online_booking' => 'Online Booking',
-        'restaurant_bar' => 'Restaurant & Bar',
-        'conference_events' => 'Conference & Events',
-        'spa_massage' => 'Spa & Massage',
-        'swimming_pool' => 'Swimming Pool',
-        'gym' => 'Gym',
-        'shuttle_service' => 'Shuttle Service',
-        'contact_title' => 'Contact',
-        'reception_24_7' => 'Reception 24/7',
-        'copyright' => '© {:year} Aurora Hotel Plaza. All rights reserved.',
-        'privacy_policy' => 'Privacy Policy',
-        'terms_of_service' => 'Terms of Service',
-        'cancellation_policy' => 'Cancellation Policy',
-        'our_location' => 'Our Location',
-        'events_coming_soon' => 'Events page is being updated. Please check back later!',
-    ],
-
     // Hero slider
     'hero' => [
         'badge' => '5-star hotel in Bien Hoa',
@@ -1200,6 +1169,30 @@ return [
         'no_prepayment' => 'No Prepayment Required',
         'free_cancel' => 'Free Cancellation within 24h',
         'explore_more' => 'Explore More',
+        'find_room' => 'Find Room',
+        'search_now' => 'Search Now',
+        'group_booking_title' => 'Group Booking',
+        'group_booking_desc' => 'To ensure the best service for your large group or event, please contact us directly.',
+        'group_booking_alert' => 'Please contact hotline for large group bookings.',
+        'call_hotline' => 'Call Hotline',
+    ],
+
+    // New Booking Flow Keys
+    'booking' => [
+        'select_type' => 'Select Booking Type',
+        'individual_family' => 'Individual / Small Family',
+        'individual_desc' => 'Booking for individuals, couples, or small families.',
+        'large_group' => 'Large Group / Event',
+        'group_desc' => 'Booking for large groups, companies, or events.',
+        'rooms_required' => 'Rooms Required',
+        'room' => 'Room',
+        'add_room' => 'Add Room',
+        'large_group_title' => 'Large Group Booking',
+        'large_group_warning' => 'Groups over 6 people please contact hotline for best support.',
+        'suggested_rooms' => 'Suggested',
+        'max_adults' => 'Max :n adults',
+        'max_children' => 'Max :n children',
+        'room_capacity_exceeded' => 'Room capacity exceeded',
     ],
 
     // Profile page (full)
