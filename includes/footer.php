@@ -257,7 +257,7 @@ if (!function_exists('__')) {
     // ============================================
     // BOOKING TYPE SELECTION
     // ============================================
-    (function () {
+    document.addEventListener('DOMContentLoaded', function () {
         let pendingUrl = null;
         const show = id => { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
         const hide = id => { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
@@ -281,7 +281,7 @@ if (!function_exists('__')) {
         ['bookingTypeModal', 'groupContactModal'].forEach(id => {
             document.getElementById(id)?.addEventListener('click', function (e) { if (e.target === this) hide(id); });
         });
-    })();
+    });
 </script>
 
 <!-- Booking Type Modal -->
