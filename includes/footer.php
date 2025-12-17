@@ -256,68 +256,41 @@ if (!function_exists('__')) {
 
     // ============================================
     // BOOKING TYPE SELECTION
-    // Intercept booking links and ask user to choose type
     // ============================================
     (function () {
-        let pendingBookingUrl = null;
+        let pendingUrl = null;
+        const show = id => { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
+        const hide = id => { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
 
-        // Helper functions
-        const showModal = (id) => {
-            const modal = document.getElementById(id);
-            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
-        };
-        const hideModal = (id) => {
-            const modal = document.getElementById(id);
-            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
-        };
-
-        // Intercept clicks on booking links (except hero-slider which has own flow)
+        // Intercept booking links (skip hero-slider)
         document.addEventListener('click', function (e) {
             const link = e.target.closest('a[href*="booking/index.php"], a[href*="booking/"]');
-            if (!link) return;
-            if (link.closest('.hero-slider')) return; // Skip hero forms
-            if (link.classList.contains('booking-bypass')) return;
-
+            if (!link || link.closest('.hero-slider') || link.classList.contains('booking-bypass')) return;
             const href = link.getAttribute('href');
             if (!href || (!href.includes('booking/index.php') && !href.endsWith('/booking/'))) return;
-
             e.preventDefault();
-            pendingBookingUrl = href;
-            showModal('bookingTypeModal');
+            pendingUrl = href;
+            show('bookingTypeModal');
         });
 
-        // Individual button → proceed to booking
-        document.getElementById('btn-individual')?.addEventListener('click', function () {
-            hideModal('bookingTypeModal');
-            if (pendingBookingUrl) window.location.href = pendingBookingUrl;
-        });
+        document.getElementById('btn-individual')?.addEventListener('click', () => { hide('bookingTypeModal'); if (pendingUrl) window.location.href = pendingUrl; });
+        document.getElementById('btn-group')?.addEventListener('click', () => { hide('bookingTypeModal'); show('groupContactModal'); });
+        document.getElementById('close-type-modal')?.addEventListener('click', () => hide('bookingTypeModal'));
+        document.getElementById('close-group-modal')?.addEventListener('click', () => hide('groupContactModal'));
 
-        // Group button → show contact modal
-        document.getElementById('btn-group')?.addEventListener('click', function () {
-            hideModal('bookingTypeModal');
-            showModal('groupContactModal');
-        });
-
-        // Close buttons
-        document.getElementById('close-type-modal')?.addEventListener('click', () => hideModal('bookingTypeModal'));
-        document.getElementById('close-group-modal')?.addEventListener('click', () => hideModal('groupContactModal'));
-
-        // Click backdrop to close
         ['bookingTypeModal', 'groupContactModal'].forEach(id => {
-            document.getElementById(id)?.addEventListener('click', function (e) {
-                if (e.target === this) hideModal(id);
-            });
+            document.getElementById(id)?.addEventListener('click', function (e) { if (e.target === this) hide(id); });
         });
     })();
 </script>
 
-<!-- Booking Type Selection Modal -->
+<!-- Booking Type Modal -->
 <div id="bookingTypeModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
-    style="background: rgba(0,0,0,0.7);">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-white/10">
+    style="background:rgba(0,0,0,0.7);">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
             class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-[#d4af37] to-[#b8941f]">
-            <h3 class="font-bold text-lg text-white"><?php _e('booking.select_type'); ?></h3>
+            <h3 class="font-bold text-lg text-white">Chọn loại đặt phòng</h3>
             <button id="close-type-modal" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -328,8 +301,9 @@ if (!function_exists('__')) {
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-green-400 text-3xl">person</span>
                     <div>
-                        <div class="font-bold text-white"><?php _e('booking.individual_family'); ?></div>
-                        <div class="text-sm text-white/60"><?php _e('booking.individual_desc'); ?></div>
+                        <div class="font-bold text-white">Cá nhân / Gia đình</div>
+                        <div class="text-sm text-white/60">Đặt phòng 1-6 người, thanh toán online hoặc tại khách sạn.
+                        </div>
                     </div>
                 </div>
             </button>
@@ -338,8 +312,8 @@ if (!function_exists('__')) {
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-amber-400 text-3xl">groups</span>
                     <div>
-                        <div class="font-bold text-white"><?php _e('booking.large_group'); ?></div>
-                        <div class="text-sm text-white/60"><?php _e('booking.group_desc'); ?></div>
+                        <div class="font-bold text-white">Đoàn / Sự kiện</div>
+                        <div class="text-sm text-white/60">Đặt phòng số lượng lớn, công ty, đám cưới, hội nghị.</div>
                     </div>
                 </div>
             </button>
@@ -349,8 +323,8 @@ if (!function_exists('__')) {
 
 <!-- Group Contact Modal -->
 <div id="groupContactModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
-    style="background: rgba(0,0,0,0.7);">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-white/10">
+    style="background:rgba(0,0,0,0.7);">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
             class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-amber-500 to-orange-500">
             <h3 class="font-bold text-lg text-white"><?php _e('hero.group_booking_title'); ?></h3>
@@ -363,7 +337,7 @@ if (!function_exists('__')) {
                 <span class="material-symbols-outlined text-amber-400 text-4xl">support_agent</span>
             </div>
             <p class="text-white/80 mb-6"><?php _e('hero.group_booking_desc'); ?></p>
-            <a href="tel:<?php echo defined('HOTEL_PHONE') ? HOTEL_PHONE : '0909123456'; ?>"
+            <a href="tel:0909123456"
                 class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:shadow-lg transition-all">
                 <span class="material-symbols-outlined">call</span>
                 <?php _e('hero.call_hotline'); ?>
