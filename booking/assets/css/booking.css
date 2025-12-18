@@ -200,6 +200,132 @@ body.booking-page>div {
     }
 }
 
+/* ===== Dark Theme Text Colors ===== */
+body.booking-page {
+    color: white;
+}
+
+body.booking-page h3,
+body.booking-page h4 {
+    color: white !important;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+body.booking-page .text-xl {
+    font-size: 1.25rem;
+    color: white !important;
+}
+
+body.booking-page .text-lg {
+    font-size: 1.125rem;
+    color: white !important;
+}
+
+body.booking-page .text-sm {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* ===== Price Summary Box - Glass ===== */
+.price-summary-glass,
+body.booking-page .bg-primary-light\/20,
+body.booking-page [class*="bg-gray-700"],
+body.booking-page [class*="bg-surface"] {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    color: white !important;
+}
+
+.price-summary-glass span,
+body.booking-page .bg-primary-light\/20 span,
+body.booking-page [class*="bg-gray-700"] span,
+body.booking-page [class*="bg-surface"] span,
+body.booking-page .mt-6 span,
+body.booking-page .p-4 span,
+body.booking-page .p-6 span {
+    color: white !important;
+}
+
+body.booking-page .text-accent {
+    color: #d4af37 !important;
+}
+
+/* ===== Checkbox Styling ===== */
+body.booking-page input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: #d4af37;
+    cursor: pointer;
+}
+
+body.booking-page label {
+    cursor: pointer;
+    color: white;
+}
+
+/* ===== Links ===== */
+body.booking-page a:not(.btn-primary):not(.btn-secondary) {
+    color: #d4af37;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+body.booking-page a:not(.btn-primary):not(.btn-secondary):hover {
+    color: #e5c04a;
+    text-decoration: underline;
+}
+
+/* ===== Alert/Info Boxes ===== */
+body.booking-page .bg-blue-50,
+body.booking-page [class*="bg-blue-900"] {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+body.booking-page .text-blue-800,
+body.booking-page .text-blue-600,
+body.booking-page .text-blue-700,
+body.booking-page [class*="text-blue"] {
+    color: #bfdbfe !important;
+}
+
+body.booking-page .bg-blue-600 {
+    background: #3b82f6 !important;
+    color: white !important;
+}
+
+body.booking-page .bg-blue-600:hover {
+    background: #2563eb !important;
+}
+
+/* ===== Borders ===== */
+body.booking-page .border-t,
+body.booking-page .border-gray-300,
+body.booking-page [class*="border-gray"] {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ===== Grid text colors ===== */
+body.booking-page .flex span,
+body.booking-page .space-y-2 span,
+body.booking-page div span {
+    color: white !important;
+}
+
+body.booking-page .font-semibold {
+    font-weight: 600;
+    color: white !important;
+}
+
+body.booking-page .font-bold {
+    font-weight: 700;
+    color: white !important;
+}
+
 /* ============================================
    STEP INDICATOR - Premium Liquid Glass Design
    ============================================ */
@@ -423,8 +549,9 @@ body.booking-page>div {
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9375rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .form-label .material-symbols-outlined {
@@ -463,6 +590,24 @@ body.booking-page>div {
     background: rgba(255, 255, 255, 0.05);
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+/* Select dropdown styling */
+.form-input option {
+    background: #1e293b;
+    color: white;
+    padding: 0.5rem;
+}
+
+/* Date input icons */
+.form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.form-input[type="number"]::-webkit-inner-spin-button,
+.form-input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1);
 }
 
 /* Payment Options - Liquid Glass (Dark Theme) */
