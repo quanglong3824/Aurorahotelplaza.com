@@ -138,7 +138,7 @@ try {
                                 <option value="4" selected>4 <?php _e('apartment_detail.persons'); ?></option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
+                        <button type="submit" class="btn-book"><?php _e('inquiry.contact_btn'); ?></button>
                     </form>
                     <div class="contact-info">
                         <div class="contact-text"><?php _e('apartment_detail.or_call'); ?></div>

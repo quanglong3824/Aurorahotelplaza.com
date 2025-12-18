@@ -148,17 +148,23 @@ foreach ($room_types as $room) {
                                 <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
                                 <?php foreach($room_types as $room): 
                                     $is_available = $room['available_rooms'] > 0;
+                                    // Apartments are always "available" for inquiry
+                                    $is_inquiry = isset($room['booking_type']) && $room['booking_type'] === 'inquiry';
+                                    if ($is_inquiry) $is_available = true;
+                                    
                                     $availability_text = $is_available 
-                                        ? "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")" 
+                                        ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
                                         : "(" . __('booking_page.out_of_stock') . ")";
                                 ?>
                                 <option value="<?php echo $room['room_type_id']; ?>" 
                                         data-price="<?php echo $room['base_price']; ?>"
                                         data-max-guests="<?php echo $room['max_occupancy']; ?>"
                                         data-available="<?php echo $room['available_rooms']; ?>"
+                                        data-category="<?php echo $room['category']; ?>"
+                                        data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>"
                                         <?php echo !$is_available ? 'disabled' : ''; ?>
                                         <?php echo ($selected_room_type_id !== null && (int)$selected_room_type_id === (int)$room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
-                                    <?php echo $room['type_name']; ?> - <?php echo number_format($room['base_price']); ?> VNĐ/đêm <?php echo $availability_text; ?>
+                                    <?php echo $room['type_name']; ?> - <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($room['base_price']) . ' VNĐ/đêm ' . $availability_text; ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
@@ -184,7 +190,7 @@ foreach ($room_types as $room) {
                     </div>
 
                     <!-- Price Summary -->
-                    <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg">
+                    <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg transition-all duration-300" id="price_summary_box">
                         <div class="flex justify-between items-center">
                             <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
                             <span id="room_price_display">0 VNĐ</span>
@@ -256,6 +262,50 @@ foreach ($room_types as $room) {
                             <?php endif; ?>
                         </div>
 
+                        <!-- INQUIRY FIELDS (Hidden by default) -->
+                        <div class="form-group md:col-span-2 hidden" id="inquiry_fields">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Duration Type -->
+                                <div class="form-group">
+                                    <label class="form-label"><?php _e('inquiry.duration_type'); ?></label>
+                                    <select name="duration_type" id="duration_type" class="form-input">
+                                        <option value="short_term"><?php _e('inquiry.short_term'); ?></option>
+                                        <option value="long_term"><?php _e('inquiry.long_term'); ?></option>
+                                        <option value="monthly"><?php _e('inquiry.monthly'); ?></option>
+                                        <option value="yearly"><?php _e('inquiry.yearly'); ?></option>
+                                    </select>
+                                </div>
+                                <!-- Message -->
+                                <div class="form-group md:col-span-2">
+                                    <label class="form-label"><?php _e('inquiry.message'); ?></label>
+                                    <textarea name="message" id="inquiry_message" class="form-input" rows="3" 
+                                              placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- INQUIRY FIELDS (Hidden by default) -->
+                        <div class="form-group md:col-span-2 hidden" id="inquiry_fields">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Duration Type -->
+                                <div class="form-group">
+                                    <label class="form-label"><?php _e('inquiry.duration_type'); ?></label>
+                                    <select name="duration_type" id="duration_type" class="form-input">
+                                        <option value="short_term"><?php _e('inquiry.short_term'); ?></option>
+                                        <option value="long_term"><?php _e('inquiry.long_term'); ?></option>
+                                        <option value="monthly"><?php _e('inquiry.monthly'); ?></option>
+                                        <option value="yearly"><?php _e('inquiry.yearly'); ?></option>
+                                    </select>
+                                </div>
+                                <!-- Message -->
+                                <div class="form-group md:col-span-2">
+                                    <label class="form-label"><?php _e('inquiry.message'); ?></label>
+                                    <textarea name="message" id="inquiry_message" class="form-input" rows="3" 
+                                              placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Special Requests -->
                         <div class="form-group md:col-span-2">
                             <label class="form-label"><?php _e('booking_page.special_requests'); ?></label>
@@ -311,55 +361,77 @@ foreach ($room_types as $room) {
                                 <span id="summary_phone" class="font-semibold"></span>
                             </div>
                             <hr class="my-3 border-gray-300 dark:border-gray-600">
-                            <div class="flex justify-between">
-                                <span><?php _e('booking_page.subtotal'); ?>:</span>
-                                <span id="summary_subtotal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between text-green-600" id="discount_row" style="display: none;">
-                                <span><?php _e('booking_page.discount'); ?>:</span>
-                                <span id="summary_discount" class="font-semibold"></span>
-                            </div>
-                            <hr class="my-3 border-gray-300 dark:border-gray-600">
-                            <div class="flex justify-between text-lg font-bold text-accent">
-                                <span><?php _e('booking_page.total_payment'); ?>:</span>
-                                <span id="summary_total"></span>
+
+                            <!-- PAYMENT SPECIFIC SUMMARY -->
+                            <div id="payment_summary_rows">
+                                <div class="flex justify-between">
+                                    <span><?php _e('booking_page.subtotal'); ?>:</span>
+                                    <span id="summary_subtotal" class="font-semibold"></span>
+                                </div>
+                                <div class="flex justify-between text-green-600" id="discount_row" style="display: none;">
+                                    <span><?php _e('booking_page.discount'); ?>:</span>
+                                    <span id="summary_discount" class="font-semibold"></span>
+                                </div>
+                                <hr class="my-3 border-gray-300 dark:border-gray-600">
+                                <div class="flex justify-between text-lg font-bold text-accent">
+                                    <span><?php _e('booking_page.total_payment'); ?>:</span>
+                                    <span id="summary_total"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Promotion Code -->
-                    <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
-                        <h4 class="font-bold text-lg mb-4"><?php _e('booking_page.promo_code'); ?></h4>
-                        <div class="flex gap-3">
-                            <input type="text" id="promo_code" class="form-input flex-1" 
-                                   placeholder="<?php _e('booking_page.enter_promo_code'); ?>" style="text-transform: uppercase;">
-                            <button type="button" onclick="applyPromoCode()" class="btn-primary whitespace-nowrap">
-                                <?php _e('booking_page.apply'); ?>
-                            </button>
+                    <!-- BOOKING PAYMENT SECTION (Hidden if Inquiry) -->
+                    <div id="booking_payment_section">
+                        <!-- Promotion Code -->
+                        <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
+                            <h4 class="font-bold text-lg mb-4"><?php _e('booking_page.promo_code'); ?></h4>
+                            <div class="flex gap-3">
+                                <input type="text" id="promo_code" class="form-input flex-1" 
+                                       placeholder="<?php _e('booking_page.enter_promo_code'); ?>" style="text-transform: uppercase;">
+                                <button type="button" onclick="applyPromoCode()" class="btn-primary whitespace-nowrap">
+                                    <?php _e('booking_page.apply'); ?>
+                                </button>
+                            </div>
+                            <div id="promo_message" class="mt-3 text-sm"></div>
+                            <input type="hidden" name="promotion_code" id="promotion_code_input">
+                            <input type="hidden" name="discount_amount" id="discount_amount_input" value="0">
                         </div>
-                        <div id="promo_message" class="mt-3 text-sm"></div>
-                        <input type="hidden" name="promotion_code" id="promotion_code_input">
-                        <input type="hidden" name="discount_amount" id="discount_amount_input" value="0">
+    
+                        <!-- Payment Method -->
+                        <div class="form-group mb-6">
+                            <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
+                            <div class="space-y-3">
+                                <label class="payment-option opacity-60 cursor-not-allowed" onclick="alert('Tính năng thanh toán Online đang được phát triển. Vui lòng chọn Thanh toán tại khách sạn.'); return false;">
+                                    <input type="radio" name="payment_method" value="vnpay" disabled>
+                                    <div class="payment-option-content">
+                                        <img src="./assets/img/vnpay-logo.png" alt="VNPay" class="h-8 grayscale">
+                                        <span><?php _e('booking_page.pay_vnpay'); ?> (Đang phát triển)</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="payment_method" value="cash" checked>
+                                    <div class="payment-option-content">
+                                        <span class="material-symbols-outlined text-2xl">payments</span>
+                                        <span><?php _e('booking_page.pay_at_hotel'); ?></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Payment Method -->
-                    <div class="form-group mb-6">
-                        <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
-                        <div class="space-y-3">
-                            <label class="payment-option opacity-60 cursor-not-allowed" onclick="alert('Tính năng thanh toán Online đang được phát triển. Vui lòng chọn Thanh toán tại khách sạn.'); return false;">
-                                <input type="radio" name="payment_method" value="vnpay" disabled>
-                                <div class="payment-option-content">
-                                    <img src="./assets/img/vnpay-logo.png" alt="VNPay" class="h-8 grayscale">
-                                    <span><?php _e('booking_page.pay_vnpay'); ?> (Đang phát triển)</span>
+                    <!-- INQUIRY CONFIRM SECTION (Shown if Inquiry) -->
+                    <div id="inquiry_confirm_section" class="hidden mb-6">
+                        <div class="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-accent text-xl mt-1">contact_support</span>
+                                <div>
+                                    <h4 class="font-bold text-accent mb-1"><?php _e('inquiry.title'); ?></h4>
+                                    <p class="text-sm text-text-secondary dark:text-gray-300">
+                                        <?php _e('inquiry.success_desc'); ?>
+                                    </p>
                                 </div>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="cash" checked>
-                                <div class="payment-option-content">
-                                    <span class="material-symbols-outlined text-2xl">payments</span>
-                                    <span><?php _e('booking_page.pay_at_hotel'); ?></span>
-                                </div>
-                            </label>
+                            </div>
                         </div>
                     </div>
 
@@ -374,8 +446,8 @@ foreach ($room_types as $room) {
                     <div class="flex gap-4 mt-4">
                         <button type="button" class="btn-secondary" onclick="prevStep(2)"><?php _e('booking_page.back'); ?></button>
                         <button type="submit" class="btn-primary flex-1" id="submitBtn">
-                            <span class="material-symbols-outlined">lock</span>
-                            <?php _e('booking_page.confirm_booking'); ?>
+                            <span class="material-symbols-outlined" id="submitBtnIcon">lock</span>
+                            <span id="submitBtnText"><?php _e('booking_page.confirm_booking'); ?></span>
                         </button>
                     </div>
                 </div>

@@ -1,35 +1,12 @@
 // Booking Form JavaScript
 
 let currentStep = 1;
-
-// Test function to verify elements exist
-function testElements() {
-    const elements = {
-        'room_type_id': document.getElementById('room_type_id'),
-        'check_in_date': document.getElementById('check_in_date'),
-        'check_out_date': document.getElementById('check_out_date'),
-        'num_nights': document.getElementById('num_nights'),
-        'room_price_display': document.getElementById('room_price_display'),
-        'estimated_total': document.getElementById('estimated_total')
-    };
-
-    console.log('Element check:', elements);
-
-    for (const [name, element] of Object.entries(elements)) {
-        if (!element) {
-            console.error(`Element ${name} not found!`);
-        }
-    }
-
-    return elements;
-}
+let isInquiryMode = false;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, initializing booking form...');
 
-    // Test elements
-    testElements();
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('check_in_date').min = today;
@@ -50,12 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Only auto-select first room if no room is pre-selected from URL
     const roomSelect = document.getElementById('room_type_id');
 
-    // Debug: Log preselected values from PHP
-    console.log('DEBUG - PHP preselected ID:', roomSelect.dataset.preselected);
-    console.log('DEBUG - PHP slug:', roomSelect.dataset.slug);
-    console.log('DEBUG - Current selectedIndex:', roomSelect.selectedIndex);
-    console.log('DEBUG - Current value:', roomSelect.value);
-
     // Check if a room is pre-selected from PHP (via data attribute or selected attribute)
     const preselectedId = roomSelect.dataset.preselected;
     const hasPreselection = preselectedId && preselectedId !== 'null' && preselectedId !== '';
@@ -65,17 +36,17 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < roomSelect.options.length; i++) {
             if (roomSelect.options[i].value === preselectedId) {
                 roomSelect.selectedIndex = i;
-                console.log('Room pre-selected from URL (index: ' + i + ', id: ' + preselectedId + ')');
                 break;
             }
         }
-        // Calculate only if room is pre-selected from URL
-        calculateTotal();
     } else {
         // Keep default placeholder selected - do not auto-select first room
-        console.log('No room pre-selected, keeping placeholder option...');
         roomSelect.selectedIndex = 0;
     }
+
+    // Check initial mode and calculate
+    checkBookingMode();
+    calculateTotal();
 
     // Event listeners
     document.getElementById('check_in_date').addEventListener('change', function () {
@@ -83,16 +54,97 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateTotal();
     });
     document.getElementById('check_out_date').addEventListener('change', calculateTotal);
-    document.getElementById('room_type_id').addEventListener('change', calculateTotal);
-
-    // Calculate initial values if room type is pre-selected
-    if (document.getElementById('room_type_id').value) {
+    document.getElementById('room_type_id').addEventListener('change', function () {
+        checkBookingMode();
         calculateTotal();
-    }
+    });
 
     // Form submission
-    document.getElementById('bookingForm').addEventListener('submit', handleSubmit);
+    const form = document.getElementById('bookingForm');
+    if (form) {
+        form.addEventListener('submit', handleSubmit);
+    }
 });
+
+// Check booking mode based on selected room
+function checkBookingMode() {
+    const roomSelect = document.getElementById('room_type_id');
+    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+
+    if (selectedOption && selectedOption.dataset.bookingType === 'inquiry') {
+        isInquiryMode = true;
+        updateUIForInquiry();
+    } else {
+        isInquiryMode = false;
+        updateUIForBooking();
+    }
+}
+
+// Update UI for Inquiry Mode
+function updateUIForInquiry() {
+    // Hide Price Summary
+    const priceBox = document.getElementById('price_summary_box');
+    if (priceBox) priceBox.classList.add('hidden');
+
+    // Show Inquiry Fields in Step 2
+    const inquiryFields = document.getElementById('inquiry_fields');
+    if (inquiryFields) inquiryFields.classList.remove('hidden');
+
+    // Show Inquiry Confirm Section in Step 3
+    const inquiryConfirm = document.getElementById('inquiry_confirm_section');
+    if (inquiryConfirm) inquiryConfirm.classList.remove('hidden');
+
+    // Hide Payment Section in Step 3
+    const paymentSection = document.getElementById('booking_payment_section');
+    if (paymentSection) paymentSection.classList.add('hidden');
+
+    // Hide Payment Summary Rows
+    const paymentSummary = document.getElementById('payment_summary_rows');
+    if (paymentSummary) paymentSummary.classList.add('hidden');
+
+    // Update Submit Button
+    const submitBtnText = document.getElementById('submitBtnText');
+    const submitBtnIcon = document.getElementById('submitBtnIcon');
+    if (submitBtnText) submitBtnText.textContent = 'Gửi yêu cầu tư vấn';
+    if (submitBtnIcon) submitBtnIcon.textContent = 'send';
+
+    // Update Step 3 Title
+    const step3Title = document.getElementById('step3_title');
+    if (step3Title) step3Title.textContent = 'Xác nhận thông tin';
+}
+
+// Update UI for Standard Booking
+function updateUIForBooking() {
+    // Show Price Summary
+    const priceBox = document.getElementById('price_summary_box');
+    if (priceBox) priceBox.classList.remove('hidden');
+
+    // Hide Inquiry Fields
+    const inquiryFields = document.getElementById('inquiry_fields');
+    if (inquiryFields) inquiryFields.classList.add('hidden');
+
+    // Hide Inquiry Confirm Section
+    const inquiryConfirm = document.getElementById('inquiry_confirm_section');
+    if (inquiryConfirm) inquiryConfirm.classList.add('hidden');
+
+    // Show Payment Section
+    const paymentSection = document.getElementById('booking_payment_section');
+    if (paymentSection) paymentSection.classList.remove('hidden');
+
+    // Show Payment Summary Rows
+    const paymentSummary = document.getElementById('payment_summary_rows');
+    if (paymentSummary) paymentSummary.classList.remove('hidden');
+
+    // Update Submit Button
+    const submitBtnText = document.getElementById('submitBtnText');
+    const submitBtnIcon = document.getElementById('submitBtnIcon');
+    if (submitBtnText) submitBtnText.textContent = 'Xác nhận đặt phòng';
+    if (submitBtnIcon) submitBtnIcon.textContent = 'lock';
+
+    // Update Step 3 Title
+    const step3Title = document.getElementById('step3_title');
+    if (step3Title) step3Title.textContent = 'Xác nhận thanh toán';
+}
 
 // Update checkout minimum date
 function updateCheckoutMin() {
@@ -115,15 +167,11 @@ function calculateNights() {
     const checkin = document.getElementById('check_in_date').value;
     const checkout = document.getElementById('check_out_date').value;
 
-    console.log('calculateNights:', { checkin, checkout });
-
     if (checkin && checkout) {
         const date1 = new Date(checkin);
         const date2 = new Date(checkout);
         const diffTime = date2 - date1;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        console.log('Date calculation:', { date1, date2, diffTime, diffDays });
 
         if (diffDays > 0) {
             const nightsElement = document.getElementById('num_nights');
@@ -143,23 +191,19 @@ function calculateNights() {
 
 // Calculate total price
 function calculateTotal() {
-    console.log('calculateTotal() called'); // Debug log
+    if (isInquiryMode) return; // Skip calculation for inquiry
 
     const roomSelect = document.getElementById('room_type_id');
     const roomPriceDisplay = document.getElementById('room_price_display');
     const estimatedTotal = document.getElementById('estimated_total');
     const estimatedTotalDisplay = document.getElementById('estimated_total_display');
 
-    if (!roomSelect || !roomPriceDisplay || !estimatedTotal) {
-        console.error('Required elements not found');
-        return 0;
-    }
+    if (!roomSelect || !roomPriceDisplay || !estimatedTotal) return 0;
 
     if (!roomSelect.value) {
         roomPriceDisplay.textContent = '0 VNĐ';
         estimatedTotal.value = '0';
         if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
-        console.log('No room selected');
         return 0;
     }
 
@@ -167,33 +211,23 @@ function calculateTotal() {
     const price = parseFloat(selectedOption.dataset.price) || 0;
     const nights = calculateNights();
 
-    console.log('Calculation data:', {
-        selectedIndex: roomSelect.selectedIndex,
-        price: price,
-        nights: nights,
-        dataPrice: selectedOption.dataset.price
-    });
-
     // Update room price display
     roomPriceDisplay.textContent = formatCurrency(price);
 
     if (nights <= 0) {
         estimatedTotal.value = '0';
         if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
-        console.log('No nights calculated');
         return 0;
     }
 
     const total = price * nights;
-    estimatedTotal.value = total; // Store numeric value
-    if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = formatCurrency(total); // Display formatted
+    estimatedTotal.value = total;
+    if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = formatCurrency(total);
 
     // Store values for form submission
     roomSelect.setAttribute('data-calculated-total', total);
     roomSelect.setAttribute('data-calculated-nights', nights);
     roomSelect.setAttribute('data-room-price', price);
-
-    console.log('Final calculation:', { price, nights, total, formattedTotal: formatCurrency(total) });
 
     return total;
 }
@@ -311,16 +345,6 @@ function validateStep(step) {
             return false;
         }
 
-        // Check max guests
-        const roomSelect = document.getElementById('room_type_id');
-        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-        const maxGuests = parseInt(selectedOption.dataset.maxGuests) || 2;
-
-        if (guests > maxGuests) {
-            alert(`Loại phòng này chỉ phù hợp cho tối đa ${maxGuests} khách`);
-            return false;
-        }
-
         return true;
     }
 
@@ -329,34 +353,14 @@ function validateStep(step) {
         const phone = document.getElementById('guest_phone').value.trim();
         const email = document.getElementById('guest_email').value.trim();
 
-        if (!name) {
-            alert('Vui lòng nhập họ tên');
+        if (!name || !phone || !email) {
+            alert('Vui lòng nhập đầy đủ thông tin bắt buộc');
             return false;
         }
 
-        if (!phone) {
-            alert('Vui lòng nhập số điện thoại');
-            return false;
-        }
-
-        if (!email) {
-            alert('Vui lòng nhập email');
-            return false;
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Email không hợp lệ');
-            return false;
-        }
-
-        // Validate phone format (Vietnamese) - more flexible
-        const cleanPhone = phone.replace(/[\s\-\.]/g, '');
-        const phoneRegex = /^(0|\+84|84)[1-9][0-9]{8,9}$/;
-        if (!phoneRegex.test(cleanPhone)) {
-            alert('Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam (VD: 0901234567)');
-            return false;
+        // Validate duration for inquiry
+        if (isInquiryMode) {
+            // Can add more validation here if needed
         }
 
         return true;
@@ -370,19 +374,32 @@ function updateSummary() {
     const roomSelect = document.getElementById('room_type_id');
     const roomName = roomSelect.options[roomSelect.selectedIndex].text.split(' - ')[0];
 
-    document.getElementById('summary_room_type').textContent = roomName;
-    document.getElementById('summary_guests').textContent = document.getElementById('num_guests').value + ' khách';
-    document.getElementById('summary_checkin').textContent = formatDate(document.getElementById('check_in_date').value);
-    document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
-    document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
-    document.getElementById('summary_name').textContent = document.getElementById('guest_name').value;
-    document.getElementById('summary_email').textContent = document.getElementById('guest_email').value;
-    document.getElementById('summary_phone').textContent = document.getElementById('guest_phone').value;
-    document.getElementById('summary_total').textContent = document.getElementById('estimated_total').textContent;
+    document.getElementById('conf_room_type').textContent = roomName;
+    document.getElementById('conf_guest_name').textContent = document.getElementById('guest_name').value;
+    document.getElementById('conf_guest_phone').textContent = document.getElementById('guest_phone').value;
+
+    // Checkin/Checkout
+    document.getElementById('conf_check_in').textContent = formatDate(document.getElementById('check_in_date').value);
+    document.getElementById('conf_check_out').textContent = formatDate(document.getElementById('check_out_date').value);
+
+    if (!isInquiryMode) {
+        // Payment summaries
+        document.getElementById('conf_subtotal').textContent = document.getElementById('estimated_total_display').textContent;
+        const promoDiscount = document.getElementById('discount_amount_input').value;
+        const total = document.getElementById('estimated_total').value;
+
+        let finalTotal = total;
+        if (promoDiscount && promoDiscount > 0) {
+            finalTotal = total - promoDiscount;
+            document.getElementById('conf_discount').textContent = '-' + formatCurrency(promoDiscount);
+        }
+        document.getElementById('conf_total').textContent = formatCurrency(finalTotal);
+    }
 }
 
 // Format date
 function formatDate(dateString) {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('vi-VN', {
         weekday: 'short',
@@ -404,52 +421,64 @@ async function handleSubmit(e) {
 
     // Get form data
     const formData = new FormData(e.target);
+    const formObject = Object.fromEntries(formData);
 
-    // Add calculated values to form data
-    const roomSelect = document.getElementById('room_type_id');
-    const calculatedTotal = roomSelect.getAttribute('data-calculated-total') || '0';
-    const calculatedNights = roomSelect.getAttribute('data-calculated-nights') || '0';
-    const roomPrice = roomSelect.getAttribute('data-room-price') || '0';
-
-    formData.append('calculated_total', calculatedTotal);
-    formData.append('calculated_nights', calculatedNights);
-    formData.append('room_price', roomPrice);
+    // Add additional fields via JSON
+    const data = {
+        ...formObject,
+        num_nights: calculateNights() // ensure we have nights count
+    };
 
     const submitBtn = document.getElementById('submitBtn');
+    const submitBtnText = document.getElementById('submitBtnText');
+    const originalText = submitBtnText.textContent;
 
     // Disable submit button
     submitBtn.disabled = true;
-    submitBtn.classList.add('loading');
-    submitBtn.innerHTML = '<span>Đang xử lý...</span>';
+    submitBtnText.textContent = 'Đang xử lý...';
 
     try {
-        // Send booking request
-        const response = await fetch('./api/create_booking.php', {
+        let apiUrl = './api/create_booking.php';
+
+        // Check if Inquiry Mode
+        if (isInquiryMode) {
+            apiUrl = './api/create_inquiry.php';
+        }
+
+        // Send request
+        const response = await fetch(apiUrl, {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
         const result = await response.json();
 
         if (result.success) {
-            // Redirect to payment or confirmation
-            if (formData.get('payment_method') === 'vnpay') {
-                window.location.href = result.payment_url;
+            if (isInquiryMode) {
+                // Success for inquiry - Show alert and redirect home or clear form
+                alert(result.message);
+                window.location.href = '../index.php';
             } else {
-                window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                // Success for booking
+                if (data.payment_method === 'vnpay') {
+                    window.location.href = result.payment_url;
+                } else {
+                    window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                }
             }
         } else {
             alert('Có lỗi xảy ra: ' + result.message);
             submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-            submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span> Xác nhận đặt phòng';
+            submitBtnText.textContent = originalText;
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Có lỗi xảy ra khi đặt phòng. Vui lòng thử lại.');
+        alert('Có lỗi xảy ra. Vui lòng thử lại.');
         submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-        submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span> Xác nhận đặt phòng';
+        submitBtnText.textContent = originalText;
     }
 }
 
@@ -457,6 +486,9 @@ async function handleSubmit(e) {
 let appliedPromotion = null;
 
 async function applyPromoCode() {
+    // Only for booking mode
+    if (isInquiryMode) return;
+
     const promoCode = document.getElementById('promo_code').value.trim().toUpperCase();
     const messageDiv = document.getElementById('promo_message');
 
@@ -529,18 +561,11 @@ function removePromotion() {
 
     const totalAmount = parseFloat(document.getElementById('estimated_total').value) || 0;
 
-    document.getElementById('summary_subtotal').textContent = formatCurrency(totalAmount);
-    document.getElementById('summary_total').textContent = formatCurrency(totalAmount);
+    document.getElementById('conf_subtotal').textContent = formatCurrency(totalAmount);
+    document.getElementById('conf_total').textContent = formatCurrency(totalAmount);
     document.getElementById('discount_row').style.display = 'none';
 
     document.getElementById('promotion_code_input').value = '';
     document.getElementById('discount_amount_input').value = '0';
     document.getElementById('promo_code').disabled = false;
-}
-
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(amount);
 }

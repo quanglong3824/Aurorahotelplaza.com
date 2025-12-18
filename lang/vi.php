@@ -1416,4 +1416,73 @@ return [
         'auto_email_note' => 'Email này được gửi tự động, vui lòng không trả lời trực tiếp.',
         'copyright' => 'Aurora Hotel Plaza. All rights reserved.',
     ],
+
+    // Apartment Inquiry
+    'inquiry' => [
+        // Form
+        'title' => 'Yêu cầu tư vấn căn hộ',
+        'subtitle' => 'Để lại thông tin để được tư vấn chi tiết về căn hộ',
+        'apartment_name' => 'Căn hộ quan tâm',
+        'your_info' => 'Thông tin của bạn',
+        'full_name' => 'Họ và tên',
+        'email' => 'Email',
+        'phone' => 'Số điện thoại',
+        'preferred_dates' => 'Thời gian dự kiến',
+        'check_in' => 'Ngày nhận phòng mong muốn',
+        'check_out' => 'Ngày trả phòng mong muốn',
+        'duration_type' => 'Hình thức thuê',
+        'short_term' => 'Ngắn hạn (dưới 1 tháng)',
+        'long_term' => 'Dài hạn (1-6 tháng)',
+        'monthly' => 'Theo tháng',
+        'yearly' => 'Theo năm',
+        'num_adults' => 'Số người lớn',
+        'num_children' => 'Số trẻ em',
+        'message' => 'Tin nhắn / Yêu cầu cụ thể',
+        'message_placeholder' => 'Ví dụ: Tôi quan tâm đến việc thuê căn hộ dài hạn từ tháng 1/2025...',
+        'submit' => 'Gửi yêu cầu tư vấn',
+        'submitting' => 'Đang gửi...',
+
+        // Buttons
+        'contact_btn' => 'Liên hệ tư vấn',
+        'contact_now' => 'Liên hệ ngay',
+        'request_consultation' => 'Yêu cầu tư vấn',
+
+        // Messages
+        'success_message' => 'Yêu cầu tư vấn của bạn đã được gửi! Chúng tôi sẽ liên hệ trong vòng 24 giờ.',
+        'success_title' => 'Gửi yêu cầu thành công!',
+        'success_desc' => 'Cảm ơn bạn đã quan tâm đến căn hộ tại Aurora Hotel Plaza. Đội ngũ tư vấn của chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.',
+        'inquiry_code' => 'Mã yêu cầu',
+        'create_failed' => 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.',
+
+        // Validation
+        'field_required' => 'Vui lòng điền thông tin',
+        'invalid_email' => 'Email không hợp lệ',
+        'invalid_phone' => 'Số điện thoại không hợp lệ',
+        'apartment_not_found' => 'Không tìm thấy căn hộ',
+
+        // Status
+        'status_new' => 'Mới',
+        'status_contacted' => 'Đã liên hệ',
+        'status_in_progress' => 'Đang xử lý',
+        'status_converted' => 'Đã chuyển đổi',
+        'status_cancelled' => 'Đã hủy',
+        'status_closed' => 'Đã đóng',
+
+        // Priority
+        'priority_low' => 'Thấp',
+        'priority_normal' => 'Bình thường',
+        'priority_high' => 'Cao',
+        'priority_urgent' => 'Khẩn cấp',
+
+        // Admin
+        'inquiries_list' => 'Danh sách yêu cầu tư vấn',
+        'inquiry_detail' => 'Chi tiết yêu cầu',
+        'assign_staff' => 'Phân công nhân viên',
+        'add_notes' => 'Thêm ghi chú',
+        'convert_to_booking' => 'Chuyển thành đặt phòng',
+
+        // Notes
+        'note_apartment' => 'Căn hộ - Liên hệ để được tư vấn',
+        'note_no_online_booking' => 'Căn hộ không hỗ trợ đặt trực tuyến. Vui lòng liên hệ để được tư vấn chi tiết.',
+    ],
 ];

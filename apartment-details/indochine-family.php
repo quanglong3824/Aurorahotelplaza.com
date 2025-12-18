@@ -63,7 +63,7 @@ try {
                         <input type="hidden" name="room_type" value="indochine-family">
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input type="date" name="check_in" class="form-input" required></div>
                         <div class="form-group"><label class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input type="date" name="check_out" class="form-input" required></div>
-                        <button type="submit" class="btn-book"><?php _e('apartment_detail.book_now'); ?></button>
+                        <button type="submit" class="btn-book"><?php _e('inquiry.contact_btn'); ?></button>
                     </form>
                 </div>
             </div>

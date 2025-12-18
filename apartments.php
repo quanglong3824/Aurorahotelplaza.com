@@ -63,8 +63,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="booking/index.php" class="btn-glass-gold">
-                            <span class="material-symbols-outlined">calendar_month</span>
-                            <?php _e('apartments_page.book_now'); ?>
+                            <span class="material-symbols-outlined">contact_support</span>
+                            <?php _e('inquiry.contact_btn'); ?>
                         </a>
                         <a href="#apartments-list" class="btn-glass-outline">
                             <span class="material-symbols-outlined">arrow_downward</span>
@@ -182,8 +182,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                     <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
-                                                            style="font-size: 18px;">calendar_month</span>
-                                                        <?php _e('apartments_page.book'); ?>
+                                                            style="font-size: 18px;">contact_support</span>
+                                                        <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
                                                     <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
@@ -277,8 +277,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                     <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
-                                                            style="font-size: 18px;">calendar_month</span>
-                                                        <?php _e('apartments_page.book'); ?>
+                                                            style="font-size: 18px;">contact_support</span>
+                                                        <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
                                                     <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
@@ -311,8 +311,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="booking/index.php" class="btn-glass-gold">
-                            <span class="material-symbols-outlined">calendar_month</span>
-                            <?php _e('home.book_now_cta'); ?>
+                            <span class="material-symbols-outlined">contact_support</span>
+                            <?php _e('inquiry.contact_btn'); ?>
                         </a>
                         <a href="tel:+842513918888" class="btn-glass-outline">
                             <span class="material-symbols-outlined">phone</span>

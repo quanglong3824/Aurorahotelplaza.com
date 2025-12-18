@@ -232,7 +232,7 @@ try {
 
                                     <button type="submit"
                                         class="btn-glass-primary w-full justify-center !mt-6 shadow-lg shadow-accent/20">
-                                        <?php _e('apartment_detail.book_now'); ?>
+                                        <?php _e('inquiry.contact_btn'); ?>
                                     </button>
                                 </form>
 
