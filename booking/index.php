@@ -96,66 +96,7 @@ foreach ($room_types as $room) {
 <link rel="stylesheet" href="./assets/css/booking.css">
 
 <!-- Inline CSS fallback for hero section -->
-<style>
-.booking-hero {
-    position: relative;
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
-                url('../assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    padding: 120px 20px 80px;
-}
-.booking-hero::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 150px;
-    background: linear-gradient(to top, #f8fafc, transparent);
-    pointer-events: none;
-}
-.dark .booking-hero::before {
-    background: linear-gradient(to top, #0f172a, transparent);
-}
-.hero-glass-card {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 2rem;
-    padding: 3rem;
-    max-width: 800px;
-    text-align: center;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-}
-.stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    padding: 1.5rem 0;
-    margin-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-.stat-item {
-    text-align: center;
-    color: white;
-}
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #d4af37;
-}
-.stat-label {
-    font-size: 0.875rem;
-    opacity: 0.8;
-}
-</style>
+
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">
@@ -432,15 +373,15 @@ foreach ($room_types as $room) {
                     <div class="form-group mb-6">
                         <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
                         <div class="space-y-3">
-                            <label class="payment-option">
-                                <input type="radio" name="payment_method" value="vnpay" checked>
+                            <label class="payment-option opacity-60 cursor-not-allowed" onclick="alert('Tính năng thanh toán Online đang được phát triển. Vui lòng chọn Thanh toán tại khách sạn.'); return false;">
+                                <input type="radio" name="payment_method" value="vnpay" disabled>
                                 <div class="payment-option-content">
-                                    <img src="./assets/img/vnpay-logo.png" alt="VNPay" class="h-8">
-                                    <span><?php _e('booking_page.pay_vnpay'); ?></span>
+                                    <img src="./assets/img/vnpay-logo.png" alt="VNPay" class="h-8 grayscale">
+                                    <span><?php _e('booking_page.pay_vnpay'); ?> (Đang phát triển)</span>
                                 </div>
                             </label>
                             <label class="payment-option">
-                                <input type="radio" name="payment_method" value="cash">
+                                <input type="radio" name="payment_method" value="cash" checked>
                                 <div class="payment-option-content">
                                     <span class="material-symbols-outlined text-2xl">payments</span>
                                     <span><?php _e('booking_page.pay_at_hotel'); ?></span>

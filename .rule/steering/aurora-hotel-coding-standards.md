@@ -8,7 +8,7 @@ Aurora Hotel Plaza là website đặt phòng khách sạn được xây dựng b
 - **Database**: MySQL với PDO
 - **Frontend**: Tailwind CSS (CDN), vanilla JavaScript
 - **Icons**: Material Symbols Outlined
-- **Fonts**: Plus Jakarta Sans (body), Playfair Display (headings)
+- **Fonts**: Plus Jakarta Sans (body), Montserrat (headings)
 
 ## Project Structure
 ```

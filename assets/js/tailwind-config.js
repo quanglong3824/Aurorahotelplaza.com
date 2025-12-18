@@ -34,9 +34,9 @@ tailwind.config = {
                 },
             },
             fontFamily: {
-                body: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-                display: ['Playfair Display', 'serif'],
-                sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                body: ['Be Vietnam Pro', 'sans-serif'],
+                display: ['Be Vietnam Pro', 'sans-serif'],
+                sans: ['Be Vietnam Pro', 'sans-serif'],
             },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out',

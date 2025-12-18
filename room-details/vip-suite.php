@@ -29,182 +29,256 @@ try {
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/room-detail.css">
+    <link rel="stylesheet" href="../assets/css/pages-glass.css">
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Page Header -->
-            <section class="page-header-room"
-                data-bg-image="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-1.jpg'); ?>">
-                <div class="page-header-overlay"></div>
-                <div class="page-header-content">
-                    <span class="room-badge-header"><?php _e('room_detail.vip'); ?></span>
-                    <h1 class="page-title"><?php _e('room_detail.vip_suite_name'); ?></h1>
-                    <p class="page-subtitle"><?php _e('room_detail.vip_suite_subtitle'); ?></p>
+            <!-- Top Hero Section -->
+            <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
+                <!-- Hero Background -->
+                <div class="absolute inset-0 z-0">
+                    <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-1.jpg'); ?>"
+                        class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                 </div>
-            </section>
 
-            <!-- Room Info -->
-            <section class="section-padding">
-                <div class="container-custom">
-                    <div class="room-info-section">
-                        <div class="room-content">
-                            <p class="room-description">
-                                <?php _e('room_detail.vip_suite_desc'); ?>
-                            </p>
+                <div class="relative z-10 text-center max-w-4xl mx-auto">
+                    <span
+                        class="glass-badge-pill mb-6 mx-auto bg-accent/20 border-accent/40 text-accent"><?php _e('room_detail.vip'); ?></span>
+                    <h1
+                        class="text-4xl md:text-6xl font-bold text-white mb-4 font-display text-shadow-lg tracking-tight">
+                        <?php _e('room_detail.vip_suite_name'); ?>
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto font-light leading-relaxed">
+                        <?php _e('room_detail.vip_suite_subtitle'); ?>
+                    </p>
+                </div>
+            </div>
 
-                            <div class="room-specs">
-                                <div class="spec-item">
-                                    <div class="spec-icon">
-                                        <span class="material-symbols-outlined">bed</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('room_detail.bed_type'); ?></div>
-                                        <div class="spec-value"><?php _e('room_detail.bed_king'); ?> + Sofa</div>
-                                    </div>
+            <!-- Glass Page Wrapper for Content -->
+            <div class="glass-page-wrapper relative z-20 -mt-12">
+                <div class="container mx-auto px-4 pb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                        <!-- Left Column: Details -->
+                        <div class="lg:col-span-2 space-y-8">
+
+                            <!-- Description Card -->
+                            <div class="glass-card p-8">
+                                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-accent">description</span>
+                                    <?php _e('room_detail.description'); ?>
+                                </h2>
+                                <p class="text-white/80 leading-relaxed text-lg">
+                                    <?php _e('room_detail.vip_suite_desc'); ?>
+                                </p>
+                            </div>
+
+                            <!-- Specs Grid -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">bed</span>
+                                    <span class="text-sm text-white/60"><?php _e('room_detail.bed_type'); ?></span>
+                                    <span class="font-bold text-accent"><?php _e('room_detail.bed_king'); ?> +
+                                        Sofa</span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon">
-                                        <span class="material-symbols-outlined">square_foot</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('room_detail.area'); ?></div>
-                                        <div class="spec-value">80 m²</div>
-                                    </div>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">square_foot</span>
+                                    <span class="text-sm text-white/60"><?php _e('room_detail.area'); ?></span>
+                                    <span class="font-bold text-accent">80 m²</span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon">
-                                        <span class="material-symbols-outlined">person</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('room_detail.capacity'); ?></div>
-                                        <div class="spec-value">2-4 <?php _e('room_detail.guests'); ?></div>
-                                    </div>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">group</span>
+                                    <span class="text-sm text-white/60"><?php _e('room_detail.capacity'); ?></span>
+                                    <span class="font-bold text-accent">2-4 <?php _e('room_detail.guests'); ?></span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon">
-                                        <span class="material-symbols-outlined">visibility</span>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">panorama</span>
+                                    <span class="text-sm text-white/60"><?php _e('room_detail.view'); ?></span>
+                                    <span class="font-bold text-accent">Panorama 360°</span>
+                                </div>
+                            </div>
+
+                            <!-- Amenities -->
+                            <div class="glass-card p-8">
+                                <h3 class="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">
+                                    <?php _e('room_detail.amenities'); ?>
+                                </h3>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">wifi</span>
+                                        <?php _e('room_detail.amenity_wifi'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">tv</span>
+                                        <?php _e('room_detail.amenity_tv'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">ac_unit</span>
+                                        <?php _e('room_detail.amenity_ac'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">kitchen</span>
+                                        <?php _e('room_detail.amenity_minibar'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">lock</span>
+                                        <?php _e('room_detail.amenity_safe'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">desk</span>
+                                        <?php _e('room_detail.amenity_desk'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">bathtub</span>
+                                        <?php _e('room_detail.amenity_bathroom'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">shower</span>
+                                        <?php _e('room_detail.amenity_shower'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">dry_cleaning</span>
+                                        <?php _e('room_detail.amenity_hairdryer'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">soap</span>
+                                        <?php _e('room_detail.amenity_toiletries'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">do_not_step</span>
+                                        <?php _e('room_detail.amenity_slippers'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">coffee_maker</span>
+                                        <?php _e('room_detail.amenity_kettle'); ?></div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">room_service</span>
+                                        Butler 24/7</div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">hot_tub</span> Jacuzzi
                                     </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('room_detail.view'); ?></div>
-                                        <div class="spec-value">Panorama 360°</div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">balcony</span> Balcony
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80"><span
+                                            class="material-symbols-outlined text-accent text-sm">table_restaurant</span>
+                                        Dining table</div>
+                                </div>
+                            </div>
+
+                            <!-- Gallery -->
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-6 text-center">
+                                    <?php _e('room_detail.room_gallery'); ?></h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-1.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-3.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-4.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-5.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-6.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-7.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="amenities-section">
-                                <h3 class="section-title"><?php _e('room_detail.amenities'); ?></h3>
-                                <div class="amenities-grid">
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_wifi'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_tv'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_ac'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_minibar'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_safe'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_desk'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_bathroom'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_shower'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_hairdryer'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_toiletries'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_slippers'); ?></div>
-                                    <div class="amenity-item"><?php _e('room_detail.amenity_kettle'); ?></div>
-                                    <div class="amenity-item">Butler 24/7</div>
-                                    <div class="amenity-item">Jacuzzi</div>
-                                    <div class="amenity-item">Balcony</div>
-                                    <div class="amenity-item">Dining table</div>
-                                </div>
-                            </div>
                         </div>
 
-                        <div class="booking-card">
-                            <div class="price-section">
-                                <div class="price-label"><?php _e('room_detail.room_price'); ?></div>
-                                <div>
-                                    <span
-                                        class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
-                                    <span class="price-unit">/<?php _e('room_detail.night'); ?></span>
+                        <!-- Right Column: Booking Form (Sticky) -->
+                        <div class="lg:col-span-1">
+                            <div class="sticky top-32 glass-booking-form !p-6 !block space-y-6">
+                                <div class="text-center pb-6 border-b border-white/10">
+                                    <p class="text-sm text-white/60 uppercase tracking-wider mb-1">
+                                        <?php _e('room_detail.room_price'); ?></p>
+                                    <div class="flex items-end justify-center gap-1">
+                                        <span
+                                            class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
+                                        <span
+                                            class="text-sm text-white/60 mb-1">/<?php _e('room_detail.night'); ?></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <form class="booking-form" action="../booking/index.php" method="get">
-                                <input type="hidden" name="room_type" value="vip-suite">
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('room_detail.check_in_date'); ?></label>
-                                    <input type="date" name="check_in" class="form-input" required>
+
+                                <form action="../booking/index.php" method="get" class="space-y-4 !block">
+                                    <input type="hidden" name="room_type" value="vip-suite">
+
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold text-white ml-1"><?php _e('room_detail.check_in_date'); ?></label>
+                                        <div class="relative">
+                                            <input type="date" name="check_in" class="glass-input w-full" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold text-white ml-1"><?php _e('room_detail.check_out_date'); ?></label>
+                                        <div class="relative">
+                                            <input type="date" name="check_out" class="glass-input w-full" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold text-white ml-1"><?php _e('room_detail.num_guests'); ?></label>
+                                        <div class="relative">
+                                            <select name="guests" class="glass-input glass-select w-full text-white">
+                                                <option value="1" class="text-slate-800">1
+                                                    <?php _e('room_detail.person'); ?></option>
+                                                <option value="2" selected class="text-slate-800">2
+                                                    <?php _e('room_detail.person'); ?></option>
+                                                <option value="3" class="text-slate-800">3
+                                                    <?php _e('room_detail.person'); ?></option>
+                                                <option value="4" class="text-slate-800">4
+                                                    <?php _e('room_detail.person'); ?></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit"
+                                        class="btn-glass-primary w-full justify-center !mt-6 shadow-lg shadow-accent/20">
+                                        <?php _e('room_detail.book_now'); ?>
+                                    </button>
+                                </form>
+
+                                <div class="text-center pt-4 border-t border-white/10">
+                                    <p class="text-sm text-white/60 mb-2"><?php _e('room_detail.or_call'); ?></p>
+                                    <a href="tel:+842513918888"
+                                        class="text-lg font-bold text-white hover:text-accent transition-colors flex items-center justify-center gap-2">
+                                        <span class="material-symbols-outlined">call</span>
+                                        (+84-251) 391.8888
+                                    </a>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('room_detail.check_out_date'); ?></label>
-                                    <input type="date" name="check_out" class="form-input" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('room_detail.num_guests'); ?></label>
-                                    <select name="guests" class="form-input">
-                                        <option value="1">1 <?php _e('room_detail.person'); ?></option>
-                                        <option value="2" selected>2 <?php _e('room_detail.person'); ?></option>
-                                        <option value="3">3 <?php _e('room_detail.person'); ?></option>
-                                        <option value="4">4 <?php _e('room_detail.person'); ?></option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn-book"><?php _e('room_detail.book_now'); ?></button>
-                            </form>
-                            <div class="contact-info">
-                                <div class="contact-text"><?php _e('room_detail.or_call'); ?></div>
-                                <div class="contact-phone">(+84-251) 391.8888</div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Gallery -->
-            <section class="gallery-section">
-                <div class="container-custom">
-                    <h2 class="section-title-center"><?php _e('room_detail.room_gallery'); ?></h2>
-                    <div class="room-gallery">
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-1.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-3.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-4.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-5.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-6.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="<?php echo imgUrl('assets/img/vip/vip-room-aurora-hotel-7.jpg'); ?>"
-                                alt="Phòng VIP Suite">
-                        </div>
-                    </div>
-                </div>
-            </section>
+                <?php
+                // Related Rooms
+                require_once __DIR__ . '/../helpers/room-helper.php';
+                $currentRoom = getRoomBySlug('vip-suite');
+                $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
+                $sectionTitle = __('room_detail.other_rooms');
+                include '../includes/related-rooms.php';
+                ?>
 
-            <?php
-            // Lấy thông tin phòng hiện tại để loại trừ khỏi danh sách related
-            require_once __DIR__ . '/../helpers/room-helper.php';
-            $currentRoom = getRoomBySlug('vip-suite');
-            $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
-            $sectionTitle = __('room_detail.other_rooms');
-            include '../includes/related-rooms.php';
-            ?>
+            </div>
         </main>
 
         <?php include '../includes/footer.php'; ?>
     </div>
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/room-detail-bg.js"></script>
 </body>
 
 </html>

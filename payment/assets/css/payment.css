@@ -131,7 +131,7 @@ body {
 }
 
 .payment-logo h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--accent);
@@ -178,7 +178,7 @@ body {
 }
 
 .card-header h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -555,7 +555,7 @@ body {
 
 /* Result Title */
 .result-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.5rem;

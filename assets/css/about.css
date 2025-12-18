@@ -26,7 +26,7 @@
 }
 
 .page-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 48px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -104,7 +104,7 @@
 }
 
 .section-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 24px;
@@ -162,7 +162,7 @@
     font-size: 56px;
     font-weight: 900;
     margin-bottom: 12px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .stat-label {
@@ -343,7 +343,7 @@
 }
 
 .cta-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 42px;
     font-weight: 900;
     margin-bottom: 20px;

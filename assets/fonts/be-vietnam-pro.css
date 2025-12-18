@@ -1,0 +1,72 @@
+/* Be Vietnam Pro - Professional Sans-Serif Font with Vietnamese Support */
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bevietnampro/v10/QdVMITMtJh4t7PqTdJoRARsxiirSbW3lDhQIDXr2z5fXULOWcXS4Od3R3a0.woff2') format('woff2');
+}

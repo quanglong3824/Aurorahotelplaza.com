@@ -1,4 +1,9 @@
 /* Import local fonts */
 @import url('../fonts/plus-jakarta-sans.css');
-@import url('../fonts/playfair-display.css');
+@import url('../fonts/be-vietnam-pro.css');
 @import url('../fonts/material-symbols.css');
+
+/* Override all Montserrat font declarations with Be Vietnam Pro */
+*:not(code):not(pre):not([class*='material-symbols']) {
+  font-family: 'Be Vietnam Pro', sans-serif !important;
+}

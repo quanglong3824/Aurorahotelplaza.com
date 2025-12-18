@@ -57,7 +57,7 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
 // Detect if current page has hero banner
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 $pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog'];
-$has_hero = in_array($current_page, $pages_with_hero);
+$has_hero = in_array($current_page, $pages_with_hero) || in_array($current_dir, ['room-details', 'apartment-details']);
 
 // Pages without hero need solid header with dark logo on white background
 // Pages without hero need solid header with dark logo on white background
@@ -70,7 +70,7 @@ $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 
 // Pages with fixed transparent header (always transparent, always white logo)
 $pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail'];
-$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || ($current_dir === 'profile');
+$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_array($current_dir, ['profile', 'room-details', 'apartment-details']);
 ?>
 <!-- TopNavBar - Smart Header -->
 <header id="main-header"
