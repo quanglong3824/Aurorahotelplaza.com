@@ -95,69 +95,42 @@ foreach ($room_types as $room) {
 <link rel="stylesheet" href="../assets/css/liquid-glass.css">
 <link rel="stylesheet" href="./assets/css/booking.css">
 
-<!-- Inline CSS fallback for hero section -->
-
 </head>
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<body class="booking-page">
 <div class="relative flex min-h-screen w-full flex-col">
 
 <?php include '../includes/header.php'; ?>
 
-<main class="flex h-full grow flex-col">
-    <!-- Hero Section -->
-    <section class="booking-hero">
-        <div class="hero-glass-card">
-            <div class="glass-badge mb-4 inline-flex">
-                <span class="material-symbols-outlined text-accent text-sm">calendar_month</span>
-                <?php _e('booking_page.online_booking'); ?>
+<main class="booking-main">
+    <div class="booking-container">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="icon-badge">
+                <span class="material-symbols-outlined">calendar_month</span>
             </div>
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
-                <?php _e('booking_page.page_title'); ?>
-            </h1>
-            <p class="text-white/80 text-lg max-w-xl mx-auto mb-8">
-                <?php _e('booking_page.page_subtitle'); ?>
-            </p>
-            
-            <!-- Quick Stats -->
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <div class="stat-value"><?php echo count($room_types); ?>+</div>
-                    <div class="stat-label"><?php _e('booking_page.room_types'); ?></div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">5★</div>
-                    <div class="stat-label"><?php _e('booking_page.standard'); ?></div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">24/7</div>
-                    <div class="stat-label"><?php _e('booking_page.support'); ?></div>
-                </div>
-            </div>
+            <h1 class="booking-title"><?php _e('booking_page.page_title'); ?></h1>
+            <p class="booking-subtitle"><?php _e('booking_page.page_subtitle'); ?></p>
         </div>
-    </section>
 
-    <!-- Booking Form Section -->
-    <section class="w-full justify-center py-16">
-        <div class="mx-auto flex max-w-5xl flex-col gap-8 px-4">
-
-            <!-- Booking Form - Liquid Glass -->
-            <form id="bookingForm" class="booking-form-glass">
+        <!-- Booking Form - Liquid Glass -->
+        <div class="booking-card">
+            <form id="bookingForm">
                 
-                <!-- Step Indicator -->
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-2 step-item active" data-step="1">
+                <!-- Step Indicator - Premium Glass Design -->
+                <div class="step-indicator-container mb-8">
+                    <div class="step-item active" data-step="1">
                         <div class="step-circle">1</div>
-                        <span class="hidden sm:inline"><?php _e('booking_page.step_select_room'); ?></span>
+                        <span><?php _e('booking_page.step_select_room'); ?></span>
                     </div>
-                    <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
-                    <div class="flex items-center gap-2 step-item" data-step="2">
+                    <div class="step-connector" data-from="1" data-to="2"></div>
+                    <div class="step-item" data-step="2">
                         <div class="step-circle">2</div>
-                        <span class="hidden sm:inline"><?php _e('booking_page.step_info'); ?></span>
+                        <span><?php _e('booking_page.step_info'); ?></span>
                     </div>
-                    <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
-                    <div class="flex items-center gap-2 step-item" data-step="3">
+                    <div class="step-connector" data-from="2" data-to="3"></div>
+                    <div class="step-item" data-step="3">
                         <div class="step-circle">3</div>
-                        <span class="hidden sm:inline"><?php _e('booking_page.step_payment'); ?></span>
+                        <span><?php _e('booking_page.step_payment'); ?></span>
                     </div>
                 </div>
 
@@ -409,7 +382,7 @@ foreach ($room_types as $room) {
 
             </form>
         </div>
-    </section>
+    </div>
 </main>
 
 <?php include '../includes/footer.php'; ?>
