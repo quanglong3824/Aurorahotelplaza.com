@@ -69,13 +69,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             }
         }
-    } else if (roomSelect && roomSelect.options.length > 1 && roomSelect.selectedIndex === 0) {
-        console.log('No room pre-selected, selecting first room type...');
-        roomSelect.selectedIndex = 1; // Select first room type
+        // Calculate only if room is pre-selected from URL
+        calculateTotal();
+    } else {
+        // Keep default placeholder selected - do not auto-select first room
+        console.log('No room pre-selected, keeping placeholder option...');
+        roomSelect.selectedIndex = 0;
     }
-
-    // Calculate after selection is determined
-    calculateTotal();
 
     // Event listeners
     document.getElementById('check_in_date').addEventListener('change', function () {
@@ -351,10 +351,11 @@ function validateStep(step) {
             return false;
         }
 
-        // Validate phone format (Vietnamese)
-        const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
-        if (!phoneRegex.test(phone.replace(/\s/g, ''))) {
-            alert('Số điện thoại không hợp lệ');
+        // Validate phone format (Vietnamese) - more flexible
+        const cleanPhone = phone.replace(/[\s\-\.]/g, '');
+        const phoneRegex = /^(0|\+84|84)[1-9][0-9]{8,9}$/;
+        if (!phoneRegex.test(cleanPhone)) {
+            alert('Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam (VD: 0901234567)');
             return false;
         }
 

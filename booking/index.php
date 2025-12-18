@@ -114,7 +114,7 @@ foreach ($room_types as $room) {
 
         <!-- Booking Form - Liquid Glass -->
         <div class="booking-card">
-            <form id="bookingForm">
+            <form id="bookingForm" novalidate>
                 
                 <!-- Step Indicator - Premium Glass Design -->
                 <div class="step-indicator-container mb-8">
