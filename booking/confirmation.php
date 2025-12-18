@@ -113,7 +113,7 @@ try {
 
                     <?php if ($booking['status'] === 'pending'): ?>
                         <div class="grid grid-cols-2 gap-3">
-                            <button id="confirmBookingBtn" class="btn-primary">
+                            <button type="button" id="confirmBookingBtn" class="btn-primary">
                                 <span class="material-symbols-outlined">check_circle</span>
                                 <span><?php _e('booking_confirmation.confirm_btn'); ?></span>
                             </button>

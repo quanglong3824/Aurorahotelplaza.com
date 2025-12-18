@@ -16,12 +16,16 @@ body.booking-page::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.88), rgba(17, 24, 39, 0.75));
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.75), rgba(17, 24, 39, 0.6));
     z-index: 1;
     pointer-events: none;
 }
 
-body.booking-page>div {
+body.booking-page>div,
+body.booking-page>main,
+body.booking-page>header,
+body.booking-page>footer,
+body.booking-page>section {
     position: relative;
     z-index: 2;
 }
@@ -143,9 +147,9 @@ body.booking-page .user-menu-item.text-red-400:hover {
 .booking-card {
     position: relative;
     background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.12) 0%,
-            rgba(255, 255, 255, 0.06) 50%,
-            rgba(255, 255, 255, 0.03) 100%);
+            rgba(255, 255, 255, 0.18) 0%,
+            rgba(255, 255, 255, 0.12) 50%,
+            rgba(255, 255, 255, 0.08) 100%);
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.18);
