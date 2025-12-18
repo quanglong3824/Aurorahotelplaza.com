@@ -7,8 +7,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)), 
-                url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.7)),
+        url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -80,7 +80,7 @@
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 1.5rem;
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.12),
         0 2px 8px rgba(0, 0, 0, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -105,6 +105,7 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -112,17 +113,27 @@
 }
 
 /* Step Indicator - Liquid Glass */
+/* Step Indicator - Liquid Glass Premium */
 .step-item {
-    color: var(--text-secondary-light);
-    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+}
+
+.step-item span {
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
 }
 
 .dark .step-item {
-    color: var(--text-secondary-dark);
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .step-item.active {
     color: #d4af37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .step-item.completed {
@@ -130,38 +141,84 @@
 }
 
 .step-circle {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
 }
 
 .dark .step-circle {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(30, 41, 59, 0.4) 100%);
+    background: rgba(30, 41, 59, 0.4);
     border-color: rgba(255, 255, 255, 0.08);
 }
 
 .step-item.active .step-circle {
-    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-    border-color: transparent;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    border-color: rgba(255, 255, 255, 0.4);
     color: white;
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+    box-shadow:
+        0 0 0 4px rgba(212, 175, 55, 0.15),
+        0 8px 25px rgba(212, 175, 55, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .step-item.completed .step-circle {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: transparent;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: rgba(255, 255, 255, 0.4);
     color: white;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    box-shadow:
+        0 4px 15px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Step Connector Lines */
+.step-connector {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 1rem;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/* Animated fill for connector - optional if we add active class to connectors in JS, 
+   but for now we can just make them look good statically */
+.step-connector::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #d4af37, #fcd34d);
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* We can use sibling selectors to fake the progress connector */
+/* If step 1 is completed (which implies step 2 is active), fill the first connector */
+.step-item.completed[data-step="1"]~.step-connector:nth-of-type(1)::after {
+    width: 100%;
+}
+
+/* If step 2 is completed (which implies step 3 is active), fill both connectors */
+.step-item.completed[data-step="2"]~.step-connector:nth-of-type(2)::after {
+    width: 100%;
 }
 
 /* Form Elements - Liquid Glass */
@@ -173,47 +230,65 @@
 
 .form-label {
     font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--text-primary-light);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.3px;
+    margin-left: 0.25rem;
 }
 
 .dark .form-label {
-    color: var(--text-primary-dark);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .form-input {
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: var(--text-primary-light);
+    padding: 0.875rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    /* Very subtle fill */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: white;
+    /* Force white text */
     font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .dark .form-input {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.7) 100%);
+    background: rgba(15, 23, 42, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary-dark);
+    color: white;
+}
+
+.form-input:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .form-input:focus {
     outline: none;
-    border-color: rgba(212, 175, 55, 0.5);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #d4af37;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 0 0 4px rgba(212, 175, 55, 0.15),
+        0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .form-input:disabled {
-    background: rgba(243, 244, 246, 0.8);
+    background: rgba(255, 255, 255, 0.02);
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 0.6;
+    border-style: dashed;
 }
 
 .dark .form-input:disabled {
-    background: rgba(31, 41, 55, 0.8);
+    background: rgba(15, 23, 42, 0.2);
 }
 
 /* Payment Options - Liquid Glass */
@@ -221,43 +296,55 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    /* Lighter glass */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark .payment-option {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(30, 41, 59, 0.3) 100%);
+    background: rgba(30, 41, 59, 0.4);
     border-color: rgba(255, 255, 255, 0.08);
 }
 
 .payment-option:hover {
-    border-color: rgba(212, 175, 55, 0.4);
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.04) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-color: rgba(212, 175, 55, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Active State for selected radio */
+.payment-option:has(input:checked) {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    border-color: #d4af37;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
 }
 
 .payment-option input[type="radio"] {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     accent-color: #d4af37;
+    margin: 0;
 }
 
-.payment-option input[type="radio"]:checked ~ .payment-option-content {
+.payment-option input[type="radio"]:checked~.payment-option-content {
     color: #d4af37;
+    font-weight: 600;
 }
 
 .payment-option-content {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     flex: 1;
+    color: white;
+    transition: color 0.3s ease;
 }
 
 /* Buttons */
@@ -342,39 +429,39 @@
         min-height: 60vh;
         padding: 100px 16px 60px;
     }
-    
+
     .hero-glass-card {
         padding: 2rem 1.5rem;
         border-radius: 1.5rem;
     }
-    
+
     .hero-glass-card h1 {
         font-size: 1.75rem;
     }
-    
+
     .stats-bar {
         gap: 1.5rem;
         flex-wrap: wrap;
     }
-    
+
     .stat-value {
         font-size: 1.5rem;
     }
-    
+
     .stat-label {
         font-size: 0.75rem;
     }
-    
+
     .step-item span {
         font-size: 0.75rem;
     }
-    
+
     .step-circle {
         width: 32px;
         height: 32px;
         font-size: 0.875rem;
     }
-    
+
     .booking-form-glass {
         padding: 1.5rem;
         border-radius: 1rem;
