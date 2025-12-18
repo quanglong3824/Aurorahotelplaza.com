@@ -23,7 +23,6 @@ body.booking-page::before {
 
 body.booking-page>div,
 body.booking-page>main,
-body.booking-page>header,
 body.booking-page>footer,
 body.booking-page>section {
     position: relative;
