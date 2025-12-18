@@ -26,6 +26,57 @@ body.booking-page>div {
     z-index: 2;
 }
 
+/* ===== User Menu Dropdown - Dark Glass Override ===== */
+body.booking-page .user-menu {
+    background: linear-gradient(135deg,
+            rgba(30, 41, 59, 0.95) 0%,
+            rgba(17, 24, 39, 0.98) 100%) !important;
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
+}
+
+body.booking-page .user-menu-header {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.booking-page .user-menu-header span,
+body.booking-page .user-menu-header div {
+    color: white !important;
+}
+
+body.booking-page .user-menu-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+body.booking-page .user-menu-item:hover {
+    background: rgba(212, 175, 55, 0.15) !important;
+    color: #d4af37 !important;
+}
+
+body.booking-page .user-menu-item .material-symbols-outlined {
+    color: #d4af37 !important;
+}
+
+body.booking-page .user-menu-divider {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.booking-page .user-menu-item.text-red-600,
+body.booking-page .user-menu-item.text-red-400 {
+    color: #f87171 !important;
+}
+
+body.booking-page .user-menu-item.text-red-600:hover,
+body.booking-page .user-menu-item.text-red-400:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+
 /* ===== Main Container ===== */
 .booking-main {
     padding-top: 10rem;
