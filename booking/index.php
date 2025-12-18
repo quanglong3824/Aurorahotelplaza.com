@@ -149,12 +149,12 @@ foreach ($room_types as $room) {
                         <div class="step-circle">1</div>
                         <span class="hidden sm:inline"><?php _e('booking_page.step_select_room'); ?></span>
                     </div>
-                    <div class="step-connector"></div>
+                    <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
                     <div class="flex items-center gap-2 step-item" data-step="2">
                         <div class="step-circle">2</div>
                         <span class="hidden sm:inline"><?php _e('booking_page.step_info'); ?></span>
                     </div>
-                    <div class="step-connector"></div>
+                    <div class="flex-1 h-1 bg-gray-300 dark:bg-gray-600 mx-2"></div>
                     <div class="flex items-center gap-2 step-item" data-step="3">
                         <div class="step-circle">3</div>
                         <span class="hidden sm:inline"><?php _e('booking_page.step_payment'); ?></span>
