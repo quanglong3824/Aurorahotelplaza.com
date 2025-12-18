@@ -80,23 +80,29 @@ try {
 
         // Prepare booking data for email
         $booking['total_nights'] = $totalNights;
+        $emailMessage = '';
 
-        // Send confirmation email
+        // ADDED: Wrap email sending in a separate try-catch block catching Throwable to prevent API crash
         try {
-            $email_result = sendBookingStatusUpdateEmail($booking, 'pending', 'confirmed');
+            if (function_exists('sendBookingStatusUpdateEmail')) {
+                $email_result = sendBookingStatusUpdateEmail($booking, 'pending', 'confirmed');
 
-            if ($email_result['success']) {
-                error_log("User confirmation email sent successfully for: " . $booking['booking_code']);
-                $emailMessage = ' Email xác nhận đã được gửi đến địa chỉ email của bạn.';
-            } else {
-                error_log("Failed to send user confirmation email: " . $email_result['message']);
-                $emailMessage = ' Tuy nhiên, có lỗi khi gửi email xác nhận.';
+                if ($email_result['success']) {
+                    // Email sent successfully
+                    $emailMessage = ' Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+                } else {
+                    // Email sending returned false status
+                    error_log("Failed to send user confirmation email: " . $email_result['message']);
+                    // We do NOT show error to user as booking is confirmed
+                }
             }
-        } catch (Exception $emailError) {
-            error_log("Email sending error: " . $emailError->getMessage());
-            $emailMessage = ' Tuy nhiên, có lỗi khi gửi email xác nhận.';
+        } catch (Throwable $emailError) {
+            // Catch ANY error during email sending (including Fatal Errors)
+            error_log("CRITICAL EMAIL ERROR: " . $emailError->getMessage());
+            // Do not fail the request, just log it
         }
 
+        // Return success response independently of email result
         ob_clean();
         echo json_encode([
             'success' => true,
@@ -107,13 +113,17 @@ try {
             ]
         ]);
 
-    } catch (Exception $e) {
-        $db->rollBack();
-        throw $e;
+    } catch (Throwable $e) {
+        // Catch any DB or Logic errors
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        throw new Exception($e->getMessage());
     }
 
-} catch (Exception $e) {
-    http_response_code(400);
+} catch (Throwable $e) {
+    // Catch-all for any unhandled errors
+    http_response_code(200); // Return 200 but with success: false to let client handle the error message gracefully
     ob_clean();
     echo json_encode([
         'success' => false,
