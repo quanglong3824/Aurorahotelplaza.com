@@ -8,16 +8,26 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, initializing booking form...');
 
     // Set minimum date to today
-    const today = new Date().toISOString().split('T')[0];
+    // Set minimum date to today (Local Time)
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+
     document.getElementById('check_in_date').min = today;
 
     // Set default check-in to today and check-out to tomorrow (only if not pre-filled from URL)
     if (!document.getElementById('check_in_date').value) {
         document.getElementById('check_in_date').value = today;
 
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('check_out_date').value = tomorrow.toISOString().split('T')[0];
+        const tomorrowDate = new Date();
+        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+        const tYear = tomorrowDate.getFullYear();
+        const tMonth = String(tomorrowDate.getMonth() + 1).padStart(2, '0');
+        const tDay = String(tomorrowDate.getDate()).padStart(2, '0');
+
+        document.getElementById('check_out_date').value = `${tYear}-${tMonth}-${tDay}`;
     }
 
     // Always update checkout min based on check-in value
@@ -150,14 +160,27 @@ function updateUIForBooking() {
 function updateCheckoutMin() {
     const checkinDate = document.getElementById('check_in_date').value;
     if (checkinDate) {
-        const minCheckout = new Date(checkinDate);
-        minCheckout.setDate(minCheckout.getDate() + 1);
-        document.getElementById('check_out_date').min = minCheckout.toISOString().split('T')[0];
+        // Create date from input string (YYYY-MM-DD)
+        // Be careful: new Date('2025-12-21') is UTC. 
+        // We want simply "Next Day" string.
+        const parts = checkinDate.split('-');
+        const year = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1; // 0-indexed
+        const day = parseInt(parts[2]);
+
+        const nextDay = new Date(year, month, day + 1);
+
+        const ndYear = nextDay.getFullYear();
+        const ndMonth = String(nextDay.getMonth() + 1).padStart(2, '0');
+        const ndDay = String(nextDay.getDate()).padStart(2, '0');
+        const minCheckoutStr = `${ndYear}-${ndMonth}-${ndDay}`;
+
+        document.getElementById('check_out_date').min = minCheckoutStr;
 
         // If checkout date is before the new minimum, update it
         const checkoutDate = document.getElementById('check_out_date').value;
-        if (checkoutDate && new Date(checkoutDate) <= new Date(checkinDate)) {
-            document.getElementById('check_out_date').value = minCheckout.toISOString().split('T')[0];
+        if (checkoutDate && checkoutDate < minCheckoutStr) {
+            document.getElementById('check_out_date').value = minCheckoutStr;
         }
     }
 }
@@ -337,6 +360,23 @@ function validateStep(step) {
 
         if (new Date(checkout) <= new Date(checkin)) {
             alert('Ngày trả phòng phải sau ngày nhận phòng');
+            return false;
+        }
+
+        // Validate explicit ranges (Local Time check)
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+
+        if (checkin < todayStr) {
+            alert('Ngày nhận phòng không được nhỏ hơn ngày hiện tại');
+            return false;
+        }
+
+        if (checkout <= todayStr) { // Checkout must be future
+            alert('Ngày trả phòng phải là ngày trong tương lai');
             return false;
         }
 
