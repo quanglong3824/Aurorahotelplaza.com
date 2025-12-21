@@ -26,13 +26,7 @@ try {
     $stmt = $db->prepare("
         SELECT 
             b.*,
-            b.extra_guest_fee,
-            b.extra_bed_fee,
-            b.extra_beds,
-            b.price_type_used,
-            b.booking_type,
-            b.extra_guests_data,
-            u.user_id,
+            u.user_id as joined_user_id,
             COALESCE(u.full_name, b.guest_name) as full_name,
             COALESCE(u.email, b.guest_email) as email,
             COALESCE(u.phone, b.guest_phone) as phone,
