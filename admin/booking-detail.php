@@ -16,10 +16,8 @@ try {
     // Get booking details
     $stmt = $db->prepare("
         SELECT b.*, b.booking_type, b.inquiry_message, b.duration_type,
-               b.extra_guest_fee, b.extra_bed_fee, b.extra_beds, b.price_type_used, b.extra_guests_data,
                u.full_name as user_name, u.email as user_email, u.phone as user_phone,
                rt.type_name, rt.category, rt.bed_type, rt.max_occupancy,
-               rt.price_published, rt.price_single_occupancy, rt.price_double_occupancy, rt.price_short_stay,
                r.room_number, r.floor, r.building
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
@@ -276,7 +274,7 @@ include 'includes/admin-header.php';
                                 <?php echo $price_type_labels[$price_type] ?? $price_type; ?>
                             </span>
                         </div>
-                        <?php if ($booking['extra_beds'] > 0): ?>
+                        <?php if (($booking['extra_beds'] ?? 0) > 0): ?>
                             <div>
                                 <p class="text-xs text-gray-500 mb-1">Giường phụ</p>
                                 <p class="font-medium text-orange-600"><?php echo $booking['extra_beds']; ?> giường</p>
@@ -415,16 +413,16 @@ include 'includes/admin-header.php';
                         <span
                             class="font-medium"><?php echo number_format($booking['room_price'], 0, ',', '.'); ?>đ</span>
                     </div>
-                    <?php if ($booking['extra_guest_fee'] > 0): ?>
+                    <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
                         <div class="flex justify-between text-blue-600">
                             <span>Phụ thu khách thêm</span>
                             <span
                                 class="font-medium"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>đ</span>
                         </div>
                     <?php endif; ?>
-                    <?php if ($booking['extra_bed_fee'] > 0): ?>
+                    <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
                         <div class="flex justify-between text-orange-600">
-                            <span>Phí giường phụ (<?php echo $booking['extra_beds']; ?> giường)</span>
+                            <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?> giường)</span>
                             <span
                                 class="font-medium"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
                         </div>
