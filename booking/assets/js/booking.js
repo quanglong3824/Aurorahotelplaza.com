@@ -472,17 +472,59 @@ function updateSummary() {
 
     // IDs must match index.php
     document.getElementById('summary_room_type').textContent = roomName;
-    document.getElementById('summary_guests').textContent = document.getElementById('num_guests').value + ' khách';
     document.getElementById('summary_name').textContent = document.getElementById('guest_name').value;
     document.getElementById('summary_email').textContent = document.getElementById('guest_email').value;
     document.getElementById('summary_phone').textContent = document.getElementById('guest_phone').value;
 
-    // Checkin/Checkout
-    document.getElementById('summary_checkin').textContent = formatDate(document.getElementById('check_in_date').value);
-    document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
-    document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
+    if (isInquiryMode) {
+        // ========== APARTMENT INQUIRY SUMMARY ==========
+        const numAdults = document.getElementById('inquiry_num_adults').value || 1;
+        const numChildren = document.getElementById('inquiry_num_children').value || 0;
+        const durationType = document.getElementById('duration_type').value;
+        const preferredCheckIn = document.getElementById('preferred_check_in').value;
 
-    if (!isInquiryMode) {
+        // Update guest count
+        let guestText = numAdults + ' người lớn';
+        if (numChildren > 0) {
+            guestText += ', ' + numChildren + ' trẻ em';
+        }
+        document.getElementById('summary_guests').textContent = guestText;
+
+        // Update labels for apartment
+        document.getElementById('summary_checkin_label').textContent = 'Ngày dự kiến:';
+        document.getElementById('summary_checkin').textContent = formatDate(preferredCheckIn);
+
+        // Show duration instead of checkout
+        document.getElementById('summary_checkout_label').textContent = 'Thời gian cư trú:';
+        const durationLabels = {
+            '1_month': '1 tháng',
+            '3_months': '3 tháng',
+            '6_months': '6 tháng',
+            '12_months': '12 tháng (1 năm)',
+            'custom': 'Khác (xem tin nhắn)'
+        };
+        document.getElementById('summary_checkout').textContent = durationLabels[durationType] || durationType;
+
+        // Hide nights row for inquiry
+        document.getElementById('summary_nights_row').style.display = 'none';
+
+    } else {
+        // ========== ROOM BOOKING SUMMARY ==========
+        document.getElementById('summary_guests').textContent = document.getElementById('num_guests').value + ' khách';
+
+        // Reset labels
+        document.getElementById('summary_checkin_label').textContent = 'Nhận phòng:';
+        document.getElementById('summary_checkout_label').textContent = 'Trả phòng:';
+        document.getElementById('summary_nights_label').textContent = 'Số đêm:';
+
+        // Checkin/Checkout/Nights
+        document.getElementById('summary_checkin').textContent = formatDate(document.getElementById('check_in_date').value);
+        document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
+        document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
+
+        // Show nights row
+        document.getElementById('summary_nights_row').style.display = 'flex';
+
         // Payment summaries
         const subtotal = document.getElementById('estimated_total_display').textContent;
         document.getElementById('summary_subtotal').textContent = subtotal;

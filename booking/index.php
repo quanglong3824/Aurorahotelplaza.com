@@ -142,7 +142,8 @@ foreach ($room_types as $room) {
                         <!-- Step 1: Room/Apartment Selection -->
                         <div class="form-step active" id="step1">
                             <h3 class="text-xl font-bold mb-4" id="step1_title">
-                                <?php _e('booking_page.select_room_date'); ?></h3>
+                                <?php _e('booking_page.select_room_date'); ?>
+                            </h3>
 
                             <!-- Room Type Selection (Common) -->
                             <div class="form-group mb-6">
@@ -398,15 +399,15 @@ foreach ($room_types as $room) {
                                         <span id="summary_guests" class="font-semibold"></span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span><?php _e('booking_page.check_in'); ?>:</span>
+                                        <span id="summary_checkin_label"><?php _e('booking_page.check_in'); ?>:</span>
                                         <span id="summary_checkin" class="font-semibold"></span>
                                     </div>
-                                    <div class="flex justify-between">
-                                        <span><?php _e('booking_page.check_out'); ?>:</span>
+                                    <div class="flex justify-between" id="summary_checkout_row">
+                                        <span id="summary_checkout_label"><?php _e('booking_page.check_out'); ?>:</span>
                                         <span id="summary_checkout" class="font-semibold"></span>
                                     </div>
-                                    <div class="flex justify-between">
-                                        <span><?php _e('booking_page.num_nights'); ?>:</span>
+                                    <div class="flex justify-between" id="summary_nights_row">
+                                        <span id="summary_nights_label"><?php _e('booking_page.num_nights'); ?>:</span>
                                         <span id="summary_nights" class="font-semibold"></span>
                                     </div>
                                     <hr class="my-3 border-gray-300 dark:border-gray-600">
