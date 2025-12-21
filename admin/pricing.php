@@ -3,15 +3,26 @@ session_start();
 require_once '../config/database.php';
 
 $page_title = 'Quản lý giá phòng';
-$page_subtitle = 'Cập nhật giá theo mùa và ngày đặc biệt';
+$page_subtitle = 'Cập nhật giá theo bảng giá lễ tân - Bao gồm 5% phí dịch vụ và 8% VAT';
 
 try {
     $db = getDB();
-    
-    // Get all room types
-    $stmt = $db->query("SELECT * FROM room_types WHERE status = 'active' ORDER BY category, type_name");
+
+    // Get all room types with extended pricing columns
+    $stmt = $db->query("
+        SELECT rt.*, 
+            (SELECT COUNT(*) FROM rooms r WHERE r.room_type_id = rt.room_type_id AND r.status = 'available') AS available_rooms,
+            (SELECT COUNT(*) FROM rooms r WHERE r.room_type_id = rt.room_type_id) AS total_rooms
+        FROM room_types rt 
+        WHERE rt.status = 'active' 
+        ORDER BY rt.category, rt.sort_order
+    ");
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
+    // Get pricing policies (extra guest fees, extra bed)
+    $stmt = $db->query("SELECT * FROM pricing_policies WHERE is_active = 1 ORDER BY sort_order");
+    $pricing_policies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     // Get seasonal pricing
     $stmt = $db->query("
         SELECT rp.*, rt.type_name, rt.base_price
@@ -20,12 +31,17 @@ try {
         ORDER BY rp.start_date DESC
     ");
     $seasonal_pricing = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
 } catch (Exception $e) {
     error_log("Pricing page error: " . $e->getMessage());
     $room_types = [];
+    $pricing_policies = [];
     $seasonal_pricing = [];
 }
+
+// Group rooms by category
+$hotel_rooms = array_filter($room_types, fn($r) => $r['category'] === 'room');
+$apartments = array_filter($room_types, fn($r) => $r['category'] === 'apartment');
 
 include 'includes/admin-header.php';
 ?>
@@ -71,14 +87,15 @@ include 'includes/admin-header.php';
                                 </td>
                                 <td><?php echo $type['max_occupancy']; ?> người</td>
                                 <td>
-                                    <span class="badge badge-<?php echo $type['status'] === 'active' ? 'success' : 'secondary'; ?>">
+                                    <span
+                                        class="badge badge-<?php echo $type['status'] === 'active' ? 'success' : 'secondary'; ?>">
                                         <?php echo $type['status'] === 'active' ? 'Hoạt động' : 'Tạm ngưng'; ?>
                                     </span>
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="room-type-form.php?id=<?php echo $type['room_type_id']; ?>" 
-                                           class="action-btn" title="Sửa">
+                                        <a href="room-type-form.php?id=<?php echo $type['room_type_id']; ?>" class="action-btn"
+                                            title="Sửa">
                                             <span class="material-symbols-outlined text-sm">edit</span>
                                         </a>
                                     </div>
@@ -115,13 +132,14 @@ include 'includes/admin-header.php';
             <div class="space-y-3">
                 <?php foreach ($seasonal_pricing as $pricing): ?>
                     <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-xl">
-                        <div class="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#b8941f] rounded-xl flex items-center justify-center">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#b8941f] rounded-xl flex items-center justify-center">
                             <span class="material-symbols-outlined text-white">event</span>
                         </div>
                         <div class="flex-1">
                             <p class="font-semibold"><?php echo htmlspecialchars($pricing['type_name']); ?></p>
                             <p class="text-sm text-gray-500">
-                                <?php echo date('d/m/Y', strtotime($pricing['start_date'])); ?> - 
+                                <?php echo date('d/m/Y', strtotime($pricing['start_date'])); ?> -
                                 <?php echo date('d/m/Y', strtotime($pricing['end_date'])); ?>
                             </p>
                         </div>
@@ -130,19 +148,19 @@ include 'includes/admin-header.php';
                                 <?php echo number_format($pricing['price'], 0, ',', '.'); ?>đ
                             </p>
                             <p class="text-xs text-gray-500">
-                                <?php 
+                                <?php
                                 $diff = (($pricing['price'] - $pricing['base_price']) / $pricing['base_price']) * 100;
                                 echo ($diff > 0 ? '+' : '') . number_format($diff, 0) . '%';
                                 ?>
                             </p>
                         </div>
                         <div class="action-buttons">
-                            <button onclick="editSeasonalPricing(<?php echo $pricing['pricing_id']; ?>)" 
-                                    class="action-btn" title="Sửa">
+                            <button onclick="editSeasonalPricing(<?php echo $pricing['pricing_id']; ?>)" class="action-btn"
+                                title="Sửa">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                             </button>
-                            <button onclick="deleteSeasonalPricing(<?php echo $pricing['pricing_id']; ?>)" 
-                                    class="action-btn text-red-600" title="Xóa">
+                            <button onclick="deleteSeasonalPricing(<?php echo $pricing['pricing_id']; ?>)"
+                                class="action-btn text-red-600" title="Xóa">
                                 <span class="material-symbols-outlined text-sm">delete</span>
                             </button>
                         </div>
@@ -165,7 +183,7 @@ include 'includes/admin-header.php';
         <form id="seasonalPricingForm" onsubmit="saveSeasonalPricing(event)">
             <div class="modal-body space-y-4">
                 <input type="hidden" name="pricing_id" id="pricing_id">
-                
+
                 <div class="form-group">
                     <label class="form-label">Loại phòng *</label>
                     <select name="room_type_id" class="form-select" required>
@@ -177,7 +195,7 @@ include 'includes/admin-header.php';
                         <?php endforeach; ?>
                     </select>
                 </div>
-                
+
                 <div class="grid grid-cols-2 gap-4">
                     <div class="form-group">
                         <label class="form-label">Ngày bắt đầu *</label>
@@ -188,12 +206,12 @@ include 'includes/admin-header.php';
                         <input type="date" name="end_date" class="form-input" required>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Giá đặc biệt (VNĐ) *</label>
                     <input type="number" name="price" class="form-input" min="0" step="1000" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Ghi chú</label>
                     <input type="text" name="notes" class="form-input" placeholder="VD: Giá Tết, Giá cuối tuần...">
@@ -208,50 +226,50 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
-function openSeasonalPricingModal() {
-    document.getElementById('seasonalPricingModal').classList.add('active');
-    document.getElementById('seasonalPricingForm').reset();
-}
+    function openSeasonalPricingModal() {
+        document.getElementById('seasonalPricingModal').classList.add('active');
+        document.getElementById('seasonalPricingForm').reset();
+    }
 
-function closeSeasonalPricingModal() {
-    document.getElementById('seasonalPricingModal').classList.remove('active');
-}
+    function closeSeasonalPricingModal() {
+        document.getElementById('seasonalPricingModal').classList.remove('active');
+    }
 
-function saveSeasonalPricing(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    fetch('api/save-seasonal-pricing.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || 'Có lỗi xảy ra');
-        }
-    });
-}
+    function saveSeasonalPricing(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
 
-function deleteSeasonalPricing(id) {
-    if (!confirm('Bạn có chắc muốn xóa giá này?')) return;
-    
-    fetch('api/delete-seasonal-pricing.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'pricing_id=' + id
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || 'Có lỗi xảy ra');
-        }
-    });
-}
+        fetch('api/save-seasonal-pricing.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra');
+                }
+            });
+    }
+
+    function deleteSeasonalPricing(id) {
+        if (!confirm('Bạn có chắc muốn xóa giá này?')) return;
+
+        fetch('api/delete-seasonal-pricing.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'pricing_id=' + id
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra');
+                }
+            });
+    }
 </script>
 
 <?php include 'includes/admin-footer.php'; ?>

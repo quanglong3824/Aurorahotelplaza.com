@@ -71,17 +71,59 @@ try {
         error_log("Nights mismatch: frontend=$calculated_nights, backend=$num_nights");
     }
 
-    $room_price = $room_type['base_price'];
+    // Determine room price based on number of guests and category
+    $category = $room_type['category'] ?? 'room';
+    $price_type_used = $input_data['price_type_used'] ?? 'double';
 
-    // Validate frontend price matches backend
-    if (abs($frontend_room_price - $room_price) > 0.01) {
-        error_log("Price mismatch: frontend=$frontend_room_price, backend=$room_price");
+    if ($category === 'room') {
+        // Hotel Room: use single/double pricing
+        if ($num_guests == 1 && !empty($room_type['price_single_occupancy'])) {
+            $room_price = (float) $room_type['price_single_occupancy'];
+            $price_type_used = 'single';
+        } else {
+            $room_price = !empty($room_type['price_double_occupancy'])
+                ? (float) $room_type['price_double_occupancy']
+                : (float) $room_type['base_price'];
+            $price_type_used = 'double';
+        }
+    } else {
+        // Apartment: use daily/weekly pricing
+        if ($num_nights >= 7) {
+            // Weekly rate
+            if ($num_guests == 1 && !empty($room_type['price_avg_weekly_single'])) {
+                $room_price = (float) $room_type['price_avg_weekly_single'];
+                $price_type_used = 'weekly';
+            } elseif (!empty($room_type['price_avg_weekly_double'])) {
+                $room_price = (float) $room_type['price_avg_weekly_double'];
+                $price_type_used = 'weekly';
+            } else {
+                $room_price = (float) $room_type['base_price'];
+                $price_type_used = 'daily';
+            }
+        } else {
+            // Daily rate
+            if ($num_guests == 1 && !empty($room_type['price_daily_single'])) {
+                $room_price = (float) $room_type['price_daily_single'];
+                $price_type_used = 'daily';
+            } elseif (!empty($room_type['price_daily_double'])) {
+                $room_price = (float) $room_type['price_daily_double'];
+                $price_type_used = 'daily';
+            } else {
+                $room_price = (float) $room_type['base_price'];
+                $price_type_used = 'daily';
+            }
+        }
+    }
+
+    // Validate frontend price matches backend (with tolerance)
+    if (abs($frontend_room_price - $room_price) > 1000) {
+        error_log("Price mismatch: frontend=$frontend_room_price, backend=$room_price (type=$price_type_used)");
     }
 
     // Use backend calculation for security, but log discrepancies
     $total_amount = $room_price * $num_nights;
 
-    if (abs($calculated_total - $total_amount) > 0.01) {
+    if (abs($calculated_total - $total_amount) > 1000) {
         error_log("Total mismatch: frontend=$calculated_total, backend=$total_amount");
     }
 

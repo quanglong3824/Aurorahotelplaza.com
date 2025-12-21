@@ -1,0 +1,139 @@
+{
+    "hotel_name": "Aurora Hotel Plaza",
+    "star_rating": 4,
+    "address": "253 Phạm Văn Thuận, KP 17, Phường Tam Hiệp, Tỉnh Đồng Nai",
+    "contact": "0251 3918 888",
+    "currency": "VNĐ",
+    "tax_and_services": "Đã bao gồm 5% phí dịch vụ và 8% VAT",
+    "room_categories": {
+        "hotel_rooms": [
+            {
+                "type": "Deluxe",
+                "area": "32m2",
+                "view": "Thành phố",
+                "bed_type": "1 giường đôi lớn (1m8x2m)",
+                "price_published": 1900000,
+                "price_discounted": {
+                    "double_occupancy": 1600000,
+                    "single_occupancy": 1400000
+                },
+                "price_short_stay": {
+                    "description": "Dưới 4h và trả phòng trước 22h, không bao gồm bữa sáng",
+                    "price": 1100000
+                }
+            },
+            {
+                "type": "Premium Deluxe Double",
+                "area": "48m2",
+                "view": "Thành phố",
+                "bed_type": "1 giường đôi lớn (1m8x2m)",
+                "price_published": 2200000,
+                "price_discounted": {
+                    "double_occupancy": 1900000,
+                    "single_occupancy": 1700000
+                },
+                "price_short_stay": {
+                    "description": "Dưới 4h và trả phòng trước 22h, không bao gồm bữa sáng",
+                    "price": 1300000
+                }
+            },
+            {
+                "type": "Premium Deluxe Twin",
+                "area": "48m2",
+                "view": "Thành phố",
+                "bed_type": "2 giường đơn (1m4x2m)",
+                "price_published": 2200000,
+                "price_discounted": {
+                    "double_occupancy": 1900000,
+                    "single_occupancy": 1700000
+                },
+                "price_short_stay": null
+            },
+            {
+                "type": "Aurora Studio",
+                "area": "54m2",
+                "view": "Thành phố",
+                "bed_type": "1 giường siêu lớn (2mx2m)",
+                "price_published": 2950000,
+                "price_discounted": {
+                    "double_occupancy": 2300000,
+                    "single_occupancy": 2200000
+                },
+                "price_short_stay": {
+                    "description": "Dưới 4h và trả phòng trước 22h, không bao gồm bữa sáng",
+                    "price": 1900000
+                }
+            }
+        ],
+        "apartments": [
+            {
+                "types": [
+                    "Modern Studio Apartment",
+                    "Indochine Studio Apartment"
+                ],
+                "area": "35m2",
+                "pricing": [
+                    {
+                        "occupancy": "1 người",
+                        "daily_rate": 1850000,
+                        "weekly_rate": 12250000,
+                        "average_per_night_weekly": 1750000
+                    },
+                    {
+                        "occupancy": "2 người",
+                        "daily_rate": 2250000,
+                        "weekly_rate": 15050000,
+                        "average_per_night_weekly": 2150000
+                    }
+                ]
+            },
+            {
+                "types": [
+                    "Modern Premium Apartment",
+                    "Classical Premium Apartment"
+                ],
+                "area": "60m2",
+                "pricing": [
+                    {
+                        "occupancy": "1 người",
+                        "daily_rate": 2050000,
+                        "weekly_rate": 13650000,
+                        "average_per_night_weekly": 1950000
+                    },
+                    {
+                        "occupancy": "2 người",
+                        "daily_rate": 2450000,
+                        "weekly_rate": 16450000,
+                        "average_per_night_weekly": 2350000
+                    }
+                ]
+            },
+            {
+                "types": [
+                    "Classical Family Apartment",
+                    "Indochine Family Apartment"
+                ],
+                "area": "82m2",
+                "pricing": [
+                    {
+                        "occupancy": "2 người",
+                        "daily_rate": 2550000,
+                        "weekly_rate": 17150000,
+                        "average_per_night_weekly": 2450000
+                    }
+                ]
+            }
+        ]
+    },
+    "additional_policies": {
+        "extra_guest_with_breakfast": {
+            "children_under_1m": 0,
+            "children_1m_to_1m3": 200000,
+            "adult_and_children_over_1m3": 400000
+        },
+        "extra_bed": {
+            "price": 650000,
+            "note": "Không áp dụng cho căn hộ"
+        }
+    }
+}

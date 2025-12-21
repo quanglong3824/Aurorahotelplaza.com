@@ -69,6 +69,13 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateTotal();
     });
 
+    // Recalculate price when number of guests changes (for 1-person vs 2-person rates)
+    const numGuestsInput = document.getElementById('num_guests');
+    if (numGuestsInput) {
+        numGuestsInput.addEventListener('change', calculateTotal);
+        numGuestsInput.addEventListener('input', calculateTotal);
+    }
+
     // Form submission
     const form = document.getElementById('bookingForm');
     if (form) {
@@ -250,7 +257,7 @@ function calculateNights() {
     return 0;
 }
 
-// Calculate total price
+// Calculate total price - Enhanced with new pricing structure
 function calculateTotal() {
     if (isInquiryMode) return; // Skip calculation for inquiry
 
@@ -258,6 +265,9 @@ function calculateTotal() {
     const roomPriceDisplay = document.getElementById('room_price_display');
     const estimatedTotal = document.getElementById('estimated_total');
     const estimatedTotalDisplay = document.getElementById('estimated_total_display');
+    const priceTypeLabel = document.getElementById('price_type_label');
+    const originalPriceDisplay = document.getElementById('original_price_display');
+    const priceTypeUsed = document.getElementById('price_type_used');
 
     if (!roomSelect || !roomPriceDisplay || !estimatedTotal) return 0;
 
@@ -265,12 +275,88 @@ function calculateTotal() {
         roomPriceDisplay.textContent = '0 VNĐ';
         estimatedTotal.value = '0';
         if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
+        if (originalPriceDisplay) originalPriceDisplay.classList.add('hidden');
         return 0;
     }
 
     const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-    const price = parseFloat(selectedOption.dataset.price) || 0;
+    const category = selectedOption.dataset.category || 'room';
+    const numGuests = parseInt(document.getElementById('num_guests')?.value) || 2;
     const nights = calculateNights();
+
+    // Get prices based on room category and number of guests
+    let price = 0;
+    let priceLabel = 'Giá 2 người';
+    let priceType = 'double';
+    let originalPrice = parseFloat(selectedOption.dataset.pricePublished) || 0;
+
+    if (category === 'room') {
+        // Hotel Room pricing
+        const priceSingle = parseFloat(selectedOption.dataset.priceSingle) || 0;
+        const priceDouble = parseFloat(selectedOption.dataset.priceDouble) || 0;
+
+        if (numGuests === 1 && priceSingle > 0) {
+            price = priceSingle;
+            priceLabel = 'Giá 1 người';
+            priceType = 'single';
+        } else {
+            price = priceDouble || parseFloat(selectedOption.dataset.price) || 0;
+            priceLabel = 'Giá 2 người';
+            priceType = 'double';
+        }
+    } else {
+        // Apartment pricing
+        const priceDailySingle = parseFloat(selectedOption.dataset.priceDailySingle) || 0;
+        const priceDailyDouble = parseFloat(selectedOption.dataset.priceDailyDouble) || 0;
+        const priceWeeklySingle = parseFloat(selectedOption.dataset.priceWeeklySingle) || 0;
+        const priceWeeklyDouble = parseFloat(selectedOption.dataset.priceWeeklyDouble) || 0;
+        const priceAvgWeeklySingle = parseFloat(selectedOption.dataset.priceAvgWeeklySingle) || 0;
+        const priceAvgWeeklyDouble = parseFloat(selectedOption.dataset.priceAvgWeeklyDouble) || 0;
+
+        // Check if weekly rate applies (7+ nights)
+        if (nights >= 7) {
+            if (numGuests === 1 && priceAvgWeeklySingle > 0) {
+                price = priceAvgWeeklySingle;
+                priceLabel = 'Giá tuần (1 người)';
+                priceType = 'weekly';
+            } else if (priceAvgWeeklyDouble > 0) {
+                price = priceAvgWeeklyDouble;
+                priceLabel = 'Giá tuần (2 người)';
+                priceType = 'weekly';
+            } else {
+                price = parseFloat(selectedOption.dataset.price) || 0;
+                priceLabel = 'Giá theo ngày';
+                priceType = 'daily';
+            }
+        } else {
+            if (numGuests === 1 && priceDailySingle > 0) {
+                price = priceDailySingle;
+                priceLabel = 'Giá ngày (1 người)';
+                priceType = 'daily';
+            } else if (priceDailyDouble > 0) {
+                price = priceDailyDouble;
+                priceLabel = 'Giá ngày (2 người)';
+                priceType = 'daily';
+            } else {
+                price = parseFloat(selectedOption.dataset.price) || 0;
+                priceLabel = 'Giá theo ngày';
+                priceType = 'daily';
+            }
+        }
+        originalPrice = 0; // Apartments don't have published price
+    }
+
+    // Update price type label and badge
+    if (priceTypeLabel) priceTypeLabel.textContent = priceLabel;
+    if (priceTypeUsed) priceTypeUsed.value = priceType;
+
+    // Show/hide original price if there's a discount
+    if (originalPriceDisplay && originalPrice > 0 && originalPrice > price) {
+        originalPriceDisplay.textContent = formatCurrency(originalPrice);
+        originalPriceDisplay.classList.remove('hidden');
+    } else if (originalPriceDisplay) {
+        originalPriceDisplay.classList.add('hidden');
+    }
 
     // Update room price display
     roomPriceDisplay.textContent = formatCurrency(price);
@@ -289,6 +375,7 @@ function calculateTotal() {
     roomSelect.setAttribute('data-calculated-total', total);
     roomSelect.setAttribute('data-calculated-nights', nights);
     roomSelect.setAttribute('data-room-price', price);
+    roomSelect.setAttribute('data-price-type', priceType);
 
     return total;
 }
@@ -809,7 +896,17 @@ async function handleSubmit(e) {
         };
     } else {
         // ========== ROOM BOOKING DATA ==========
-        data.num_nights = calculateNights();
+        const roomSelect = document.getElementById('room_type_id');
+        const numNights = calculateNights();
+        const roomPrice = parseFloat(roomSelect.getAttribute('data-room-price')) || 0;
+        const calculatedTotal = parseFloat(roomSelect.getAttribute('data-calculated-total')) || 0;
+        const priceType = roomSelect.getAttribute('data-price-type') || 'double';
+
+        data.num_nights = numNights;
+        data.calculated_nights = numNights;
+        data.room_price = roomPrice;
+        data.calculated_total = calculatedTotal;
+        data.price_type_used = priceType;
     }
 
     const submitBtn = document.getElementById('submitBtn');

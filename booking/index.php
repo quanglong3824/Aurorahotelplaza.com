@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Get room types for selection with room availability count
+// Get room types for selection with room availability count and extended pricing
 $db = getDB();
 $stmt = $db->prepare("
     SELECT 
@@ -162,15 +162,31 @@ foreach ($room_types as $room) {
                                         $availability_text = $is_available
                                             ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
                                             : "(" . __('booking_page.out_of_stock') . ")";
+                                        
+                                        // Get display price based on category
+                                        $display_price = $room['category'] === 'room' 
+                                            ? ($room['price_double_occupancy'] ?? $room['base_price'])
+                                            : ($room['price_daily_double'] ?? $room['base_price']);
                                         ?>
                                         <option value="<?php echo $room['room_type_id']; ?>"
-                                            data-price="<?php echo $room['base_price']; ?>"
+                                            data-price="<?php echo $display_price; ?>"
+                                            data-price-published="<?php echo $room['price_published'] ?? 0; ?>"
+                                            data-price-single="<?php echo $room['price_single_occupancy'] ?? $room['base_price']; ?>"
+                                            data-price-double="<?php echo $room['price_double_occupancy'] ?? $room['base_price']; ?>"
+                                            data-price-short-stay="<?php echo $room['price_short_stay'] ?? 0; ?>"
+                                            data-price-daily-single="<?php echo $room['price_daily_single'] ?? 0; ?>"
+                                            data-price-daily-double="<?php echo $room['price_daily_double'] ?? 0; ?>"
+                                            data-price-weekly-single="<?php echo $room['price_weekly_single'] ?? 0; ?>"
+                                            data-price-weekly-double="<?php echo $room['price_weekly_double'] ?? 0; ?>"
+                                            data-price-avg-weekly-single="<?php echo $room['price_avg_weekly_single'] ?? 0; ?>"
+                                            data-price-avg-weekly-double="<?php echo $room['price_avg_weekly_double'] ?? 0; ?>"
                                             data-max-guests="<?php echo $room['max_occupancy']; ?>"
                                             data-available="<?php echo $room['available_rooms']; ?>"
                                             data-category="<?php echo $room['category']; ?>"
+                                            data-size="<?php echo $room['size_sqm'] ?? 0; ?>"
                                             data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
                                             <?php echo $room['type_name']; ?> -
-                                            <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($room['base_price']) . ' VNĐ/đêm ' . $availability_text; ?>
+                                            <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($display_price) . ' VNĐ/đêm ' . $availability_text; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -203,23 +219,44 @@ foreach ($room_types as $room) {
                                     </div>
                                 </div>
 
-                                <!-- Price Summary (Room only) -->
-                                <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg transition-all duration-300"
+                                <!-- Price Summary (Room only) - Enhanced -->
+                                <div class="mt-6 p-4 bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-gray-700 dark:to-gray-800 rounded-xl border border-amber-500/20 dark:border-gray-600 transition-all duration-300"
                                     id="price_summary_box">
+                                    <!-- Price Type Badge -->
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span id="price_type_badge" class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full">
+                                            <span class="material-symbols-outlined text-sm">hotel</span>
+                                            <span id="price_type_label">Giá 2 người</span>
+                                        </span>
+                                        <span id="original_price_display" class="text-sm text-gray-500 line-through hidden">0 VNĐ</span>
+                                    </div>
+                                    
+                                    <!-- Price per night -->
                                     <div class="flex justify-between items-center">
                                         <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
-                                        <span id="room_price_display">0 VNĐ</span>
+                                        <span id="room_price_display" class="text-lg font-bold" style="color: #d4af37;">0 VNĐ</span>
                                     </div>
+                                    
+                                    <!-- Number of nights -->
                                     <div class="flex justify-between items-center mt-2">
                                         <span class="font-semibold"><?php _e('booking_page.num_nights'); ?>:</span>
                                         <span id="num_nights">0</span>
                                     </div>
-                                    <div
-                                        class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
+                                    
+                                    <!-- Subtotal -->
+                                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300/50 dark:border-gray-600">
                                         <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
-                                        <span id="estimated_total_display" class="text-xl font-bold text-accent">0
-                                            VNĐ</span>
+                                        <span id="estimated_total_display" class="text-xl font-bold text-accent">0 VNĐ</span>
                                         <input type="hidden" id="estimated_total" value="0">
+                                        <input type="hidden" id="price_type_used" name="price_type_used" value="double">
+                                    </div>
+                                    
+                                    <!-- Tax Info Note -->
+                                    <div class="mt-3 pt-3 border-t border-gray-300/30 dark:border-gray-600">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm text-green-500">check_circle</span>
+                                            Đã bao gồm 5% phí dịch vụ và 8% VAT
+                                        </p>
                                     </div>
                                 </div>
                             </div>
