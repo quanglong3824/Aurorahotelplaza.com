@@ -322,13 +322,13 @@ body.booking-page label {
 }
 
 /* ===== Links ===== */
-body.booking-page a:not(.btn-primary):not(.btn-secondary) {
+.booking-main a:not(.btn-primary):not(.btn-secondary) {
     color: #d4af37;
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
-body.booking-page a:not(.btn-primary):not(.btn-secondary):hover {
+.booking-main a:not(.btn-primary):not(.btn-secondary):hover {
     color: #e5c04a;
     text-decoration: underline;
 }
@@ -494,7 +494,8 @@ body.booking-page .font-bold {
 .step-item.completed .step-circle {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     border-color: rgba(16, 185, 129, 0.5);
-    color: white;
+    color: transparent;
+    /* Hide number */
     box-shadow:
         0 6px 24px rgba(16, 185, 129, 0.35),
         0 0 0 3px rgba(16, 185, 129, 0.12),
@@ -502,11 +503,14 @@ body.booking-page .font-bold {
 }
 
 /* Checkmark for completed steps */
+/* Checkmark for completed steps */
 .step-item.completed .step-circle::after {
     content: '✓';
     position: absolute;
     font-size: 1.25rem;
     font-weight: 700;
+    color: white;
+    /* Ensure checkmark is visible */
     animation: checkmarkPop 0.3s ease-out;
 }
 
@@ -616,7 +620,8 @@ body.booking-page .font-bold {
 .form-input {
     width: 100%;
     padding: 0.875rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(17, 24, 39, 0.4);
+    /* Darker background */
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0.75rem;
     color: white;

@@ -374,26 +374,32 @@ function updateSummary() {
     const roomSelect = document.getElementById('room_type_id');
     const roomName = roomSelect.options[roomSelect.selectedIndex].text.split(' - ')[0];
 
-    document.getElementById('conf_room_type').textContent = roomName;
-    document.getElementById('conf_guest_name').textContent = document.getElementById('guest_name').value;
-    document.getElementById('conf_guest_phone').textContent = document.getElementById('guest_phone').value;
+    // IDs must match index.php
+    document.getElementById('summary_room_type').textContent = roomName;
+    document.getElementById('summary_guests').textContent = document.getElementById('num_guests').value + ' khách';
+    document.getElementById('summary_name').textContent = document.getElementById('guest_name').value;
+    document.getElementById('summary_email').textContent = document.getElementById('guest_email').value;
+    document.getElementById('summary_phone').textContent = document.getElementById('guest_phone').value;
 
     // Checkin/Checkout
-    document.getElementById('conf_check_in').textContent = formatDate(document.getElementById('check_in_date').value);
-    document.getElementById('conf_check_out').textContent = formatDate(document.getElementById('check_out_date').value);
+    document.getElementById('summary_checkin').textContent = formatDate(document.getElementById('check_in_date').value);
+    document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
+    document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
 
     if (!isInquiryMode) {
         // Payment summaries
-        document.getElementById('conf_subtotal').textContent = document.getElementById('estimated_total_display').textContent;
+        const subtotal = document.getElementById('estimated_total_display').textContent;
+        document.getElementById('summary_subtotal').textContent = subtotal;
+
         const promoDiscount = document.getElementById('discount_amount_input').value;
-        const total = document.getElementById('estimated_total').value;
+        const total = parseFloat(document.getElementById('estimated_total').value) || 0;
 
         let finalTotal = total;
         if (promoDiscount && promoDiscount > 0) {
             finalTotal = total - promoDiscount;
-            document.getElementById('conf_discount').textContent = '-' + formatCurrency(promoDiscount);
+            document.getElementById('summary_discount').textContent = '-' + formatCurrency(promoDiscount);
         }
-        document.getElementById('conf_total').textContent = formatCurrency(finalTotal);
+        document.getElementById('summary_total').textContent = formatCurrency(finalTotal);
     }
 }
 
@@ -561,8 +567,8 @@ function removePromotion() {
 
     const totalAmount = parseFloat(document.getElementById('estimated_total').value) || 0;
 
-    document.getElementById('conf_subtotal').textContent = formatCurrency(totalAmount);
-    document.getElementById('conf_total').textContent = formatCurrency(totalAmount);
+    document.getElementById('summary_subtotal').textContent = formatCurrency(totalAmount);
+    document.getElementById('summary_total').textContent = formatCurrency(totalAmount);
     document.getElementById('discount_row').style.display = 'none';
 
     document.getElementById('promotion_code_input').value = '';
