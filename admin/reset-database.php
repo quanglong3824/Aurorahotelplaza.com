@@ -88,6 +88,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
             $db->exec("DELETE FROM user_loyalty WHERE user_id NOT IN (SELECT user_id FROM temp_admin_users)");
             $db->exec("DELETE FROM users WHERE user_role != 'admin'");
 
+            // QUAN TRỌNG: Reset trạng thái phòng về "Trống" (available)
+            // Vì khi xóa booking, phòng phải được giải phóng
+            if ($reset_mode === 'transactions_only') {
+                try {
+                    $db->exec("UPDATE rooms SET status = 'available'");
+                } catch (Exception $e) {
+                    error_log("Error resetting room status: " . $e->getMessage());
+                }
+            }
+
             // Reset AUTO_INCREMENT cho các bảng đã xóa
             foreach ($tables_to_truncate as $table) {
                 try {
@@ -197,6 +207,7 @@ include 'includes/admin-header.php';
                                 </div>
                                 <p class="text-sm text-green-700">
                                     Chỉ xóa dữ liệu Đặt phòng, Thanh toán, Khách hàng, Đánh giá, Logs.
+                                    <br><strong>TỰ ĐỘNG:</strong> Đưa tất cả phòng về trạng thái "Còn trống" (Màu xanh).
                                     <br><span class="font-semibold">GIỮ LẠI:</span> Phòng, Loại phòng, Dịch vụ, Bài
                                     viết, Ảnh, Cấu hình giá.
                                 </p>
