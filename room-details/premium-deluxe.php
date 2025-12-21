@@ -151,7 +151,8 @@ try {
                             <!-- Gallery -->
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-6 text-center">
-                                    <?php _e('room_detail.room_gallery'); ?></h3>
+                                    <?php _e('room_detail.room_gallery'); ?>
+                                </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
                                         <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg'); ?>"
@@ -187,7 +188,8 @@ try {
                             <div class="sticky top-32 glass-booking-form !p-6 !block space-y-6">
                                 <div class="text-center pb-6 border-b border-white/10">
                                     <p class="text-sm text-white/60 uppercase tracking-wider mb-1">
-                                        <?php _e('room_detail.room_price'); ?></p>
+                                        <?php _e('room_detail.room_price'); ?>
+                                    </p>
                                     <div class="flex items-end justify-center gap-1">
                                         <span
                                             class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
@@ -221,9 +223,11 @@ try {
                                         <div class="relative">
                                             <select name="guests" class="glass-input glass-select w-full text-white">
                                                 <option value="1" class="text-slate-800">1
-                                                    <?php _e('room_detail.person'); ?></option>
+                                                    <?php _e('room_detail.person'); ?>
+                                                </option>
                                                 <option value="2" selected class="text-slate-800">2
-                                                    <?php _e('room_detail.person'); ?></option>
+                                                    <?php _e('room_detail.person'); ?>
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -261,6 +265,7 @@ try {
 
         <?php include '../includes/footer.php'; ?>
     </div>
+    <script src="../assets/js/room-detail-validation.js"></script>
     <script src="../assets/js/main.js"></script>
 </body>
 
