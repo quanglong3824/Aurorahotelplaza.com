@@ -392,13 +392,23 @@ $payment_labels = [
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="material-symbols-outlined text-sm">group</span>
-                                                                    <?php echo $booking['num_adults']; ?>
-                                                                    <?php _e('profile_bookings.persons'); ?>
+                                                                    <?php echo $booking['num_adults']; ?> người lớn
+                                                                    <?php if (($booking['num_children'] ?? 0) > 0): ?>
+                                                                        <span class="text-white/40">+
+                                                                            <?php echo $booking['num_children']; ?> trẻ em</span>
+                                                                    <?php endif; ?>
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="material-symbols-outlined text-sm">bed</span>
                                                                     <?php _e('profile_bookings.num_nights'); ?>:
                                                                     <?php echo $booking['total_nights']; ?>
+                                                                    <?php
+                                                                    $isShortStay = ($booking['booking_type'] ?? 'standard') === 'short_stay';
+                                                                    if ($isShortStay): ?>
+                                                                        <span
+                                                                            class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-xs">Ngắn
+                                                                            hạn</span>
+                                                                    <?php endif; ?>
                                                                 </div>
                                                                 <?php if ($booking['room_number']): ?>
                                                                     <div class="flex items-center gap-2">
@@ -406,6 +416,24 @@ $payment_labels = [
                                                                             class="material-symbols-outlined text-sm">door_front</span>
                                                                         <?php _e('profile_bookings.room'); ?>:
                                                                         <?php echo $booking['room_number']; ?>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                <?php
+                                                                $hasExtraFees = ($booking['extra_guest_fee'] ?? 0) > 0 || ($booking['extra_bed_fee'] ?? 0) > 0;
+                                                                if ($hasExtraFees): ?>
+                                                                    <div class="flex items-center gap-2">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-sm text-amber-400">receipt_long</span>
+                                                                        <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
+                                                                            <span
+                                                                                class="text-blue-300 text-xs">+<?php echo number_format($booking['extra_guest_fee']); ?>đ
+                                                                                khách</span>
+                                                                        <?php endif; ?>
+                                                                        <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
+                                                                            <span
+                                                                                class="text-orange-300 text-xs">+<?php echo number_format($booking['extra_bed_fee']); ?>đ
+                                                                                giường</span>
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 <?php endif; ?>
                                                             </div>

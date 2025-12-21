@@ -15,45 +15,57 @@ AuthMiddleware::requireStaff();
 
 try {
     $booking_id = $_GET['booking_id'] ?? 0;
-    
+
     if (!$booking_id) {
         throw new Exception('Booking ID is required');
     }
-    
+
     $db = getDB();
-    
-    // Get booking with customer info
+
+    // Get booking with customer info (support both registered and guest users)
     $stmt = $db->prepare("
         SELECT 
             b.*,
+            b.extra_guest_fee,
+            b.extra_bed_fee,
+            b.extra_beds,
+            b.price_type_used,
+            b.booking_type,
+            b.extra_guests_data,
             u.user_id,
-            u.full_name,
-            u.email,
-            u.phone,
+            COALESCE(u.full_name, b.guest_name) as full_name,
+            COALESCE(u.email, b.guest_email) as email,
+            COALESCE(u.phone, b.guest_phone) as phone,
             u.created_at as customer_since,
             rt.type_name,
+            rt.category,
             r.room_number,
+            r.floor,
+            r.building,
             ul.current_points,
             ul.lifetime_points,
             mt.tier_name,
             mt.color_code,
             mt.discount_percentage
         FROM bookings b
-        JOIN users u ON b.user_id = u.user_id
+        LEFT JOIN users u ON b.user_id = u.user_id
         JOIN room_types rt ON b.room_type_id = rt.room_type_id
         LEFT JOIN rooms r ON b.room_id = r.room_id
         LEFT JOIN user_loyalty ul ON u.user_id = ul.user_id
         LEFT JOIN membership_tiers mt ON ul.tier_id = mt.tier_id
         WHERE b.booking_id = :booking_id
     ");
-    
+
     $stmt->execute([':booking_id' => $booking_id]);
     $booking = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     if (!$booking) {
         throw new Exception('Booking not found');
     }
-    
+
+    // Check if this is a guest booking (no user_id)
+    $is_guest = empty($booking['user_id']);
+
     // Get customer booking stats
     $stmt = $db->prepare("
         SELECT 
@@ -65,10 +77,10 @@ try {
         FROM bookings
         WHERE user_id = :user_id
     ");
-    
+
     $stmt->execute([':user_id' => $booking['user_id']]);
     $customer_stats = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     // Get recent bookings of this customer
     $stmt = $db->prepare("
         SELECT 
@@ -87,23 +99,23 @@ try {
         ORDER BY b.created_at DESC
         LIMIT 5
     ");
-    
+
     $stmt->execute([
         ':user_id' => $booking['user_id'],
         ':current_booking_id' => $booking_id
     ]);
     $recent_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Get payment history for this booking
     $stmt = $db->prepare("
         SELECT * FROM payments
         WHERE booking_id = :booking_id
         ORDER BY created_at DESC
     ");
-    
+
     $stmt->execute([':booking_id' => $booking_id]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Format response
     $response = [
         'success' => true,
@@ -114,6 +126,7 @@ try {
             'booking_date' => BookingHelper::getDateFromCode($booking['booking_code']),
             'status' => $booking['status'],
             'payment_status' => $booking['payment_status'],
+            'booking_type' => $booking['booking_type'] ?? 'standard',
             'check_in_date' => $booking['check_in_date'],
             'check_out_date' => $booking['check_out_date'],
             'num_adults' => $booking['num_adults'],
@@ -121,32 +134,40 @@ try {
             'num_rooms' => $booking['num_rooms'],
             'total_nights' => $booking['total_nights'],
             'room_price' => $booking['room_price'],
+            'extra_guest_fee' => $booking['extra_guest_fee'] ?? 0,
+            'extra_bed_fee' => $booking['extra_bed_fee'] ?? 0,
+            'extra_beds' => $booking['extra_beds'] ?? 0,
+            'price_type_used' => $booking['price_type_used'] ?? 'double',
             'discount_amount' => $booking['discount_amount'],
             'total_amount' => $booking['total_amount'],
             'type_name' => $booking['type_name'],
+            'category' => $booking['category'],
             'room_number' => $booking['room_number'],
+            'floor' => $booking['floor'],
+            'building' => $booking['building'],
             'special_requests' => $booking['special_requests'],
             'created_at' => $booking['created_at']
         ],
         'customer' => [
             'user_id' => $booking['user_id'],
+            'is_guest' => $is_guest,
             'full_name' => $booking['full_name'],
             'email' => $booking['email'],
             'phone' => $booking['phone'],
-            'customer_since' => $booking['customer_since'],
+            'customer_since' => $is_guest ? null : $booking['customer_since'],
             'current_points' => $booking['current_points'] ?? 0,
             'lifetime_points' => $booking['lifetime_points'] ?? 0,
-            'tier_name' => $booking['tier_name'],
-            'tier_color' => $booking['color_code'],
-            'discount_percentage' => $booking['discount_percentage']
+            'tier_name' => $is_guest ? null : $booking['tier_name'],
+            'tier_color' => $is_guest ? null : $booking['color_code'],
+            'discount_percentage' => $is_guest ? 0 : ($booking['discount_percentage'] ?? 0)
         ],
-        'customer_stats' => $customer_stats,
-        'recent_bookings' => $recent_bookings,
+        'customer_stats' => $is_guest ? null : $customer_stats,
+        'recent_bookings' => $is_guest ? [] : $recent_bookings,
         'payments' => $payments
     ];
-    
+
     echo json_encode($response);
-    
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([

@@ -273,6 +273,7 @@ class Booking
                    b.total_nights, b.room_price, b.total_amount, b.special_requests,
                    b.guest_name, b.guest_email, b.guest_phone, b.status, b.created_at,
                    b.inquiry_message, b.duration_type,
+                   b.extra_guest_fee, b.extra_bed_fee, b.extra_beds, b.price_type_used,
                    rt.type_name, rt.category, rt.thumbnail,
                    r.room_number, r.floor, r.building,
                    COALESCE(p.status, b.payment_status) as payment_status, 

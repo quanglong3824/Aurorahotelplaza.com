@@ -11,7 +11,7 @@ $status_filter = $_GET['status'] ?? 'all';
 $search = $_GET['search'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $per_page = 20;
 $offset = ($page - 1) * $per_page;
 
@@ -27,7 +27,7 @@ if ($status_filter !== 'all') {
 if (!empty($search)) {
     // Smart search - hỗ trợ mã ngắn
     $possible_codes = BookingHelper::parseSmartCode($search);
-    
+
     $search_conditions = [];
     foreach ($possible_codes as $index => $code) {
         if (strpos($code, '%') !== false) {
@@ -38,13 +38,13 @@ if (!empty($search)) {
             $params[":code{$index}"] = $code;
         }
     }
-    
+
     // Thêm tìm kiếm theo tên, email, SĐT
     $search_conditions[] = "b.guest_name LIKE :search_text";
     $search_conditions[] = "b.guest_email LIKE :search_text";
     $search_conditions[] = "b.guest_phone LIKE :search_text";
     $params[':search_text'] = "%$search%";
-    
+
     $where_clauses[] = "(" . implode(' OR ', $search_conditions) . ")";
 }
 
@@ -62,14 +62,14 @@ $where_sql = !empty($where_clauses) ? 'WHERE ' . implode(' AND ', $where_clauses
 
 try {
     $db = getDB();
-    
+
     // Get total count
     $count_sql = "SELECT COUNT(*) as total FROM bookings b $where_sql";
     $stmt = $db->prepare($count_sql);
     $stmt->execute($params);
     $total_records = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     $total_pages = ceil($total_records / $per_page);
-    
+
     // Get bookings
     $sql = "
         SELECT b.*, u.full_name as user_name, rt.type_name, r.room_number
@@ -81,7 +81,7 @@ try {
         ORDER BY b.created_at DESC
         LIMIT :limit OFFSET :offset
     ";
-    
+
     $stmt = $db->prepare($sql);
     foreach ($params as $key => $value) {
         $stmt->bindValue($key, $value);
@@ -90,7 +90,7 @@ try {
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Get status counts
     $stmt = $db->query("
         SELECT 
@@ -103,7 +103,7 @@ try {
         FROM bookings
     ");
     $status_counts = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
 } catch (Exception $e) {
     error_log("Bookings page error: " . $e->getMessage());
     $bookings = [];
@@ -121,52 +121,58 @@ include 'includes/admin-header.php';
         <!-- Search -->
         <div class="search-box flex-1 min-w-[200px] relative group">
             <span class="search-icon material-symbols-outlined">search</span>
-            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
-                   placeholder="VD: 6C320B hoặc BK20251119..." class="form-input"
-                   title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ">
-            
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                placeholder="VD: 6C320B hoặc BK20251119..." class="form-input"
+                title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ">
+
             <!-- Tooltip -->
-            <div class="hidden group-hover:block absolute top-full left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-50">
+            <div
+                class="hidden group-hover:block absolute top-full left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-50">
                 <p class="font-semibold mb-2 text-sm">🔍 Tìm kiếm thông minh:</p>
                 <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-400">
-                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">6C320B</span> - Chỉ 6 ký tự cuối (tự động thêm ngày hôm nay)</li>
-                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK20251119</span> - Tìm tất cả đơn trong ngày</li>
-                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK202511196C320B</span> - Mã đầy đủ</li>
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">6C320B</span> - Chỉ 6 ký tự
+                        cuối (tự động thêm ngày hôm nay)</li>
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK20251119</span> - Tìm tất
+                        cả đơn trong ngày</li>
+                    <li>✅ <span class="font-mono bg-gray-100 dark:bg-gray-700 px-1 rounded">BK202511196C320B</span> - Mã
+                        đầy đủ</li>
                     <li>✅ Tên khách, email, số điện thoại</li>
                 </ul>
             </div>
         </div>
-        
+
         <!-- Status Filter -->
         <select name="status" class="form-select w-auto">
             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tất cả trạng thái</option>
             <option value="pending" <?php echo $status_filter === 'pending' ? 'selected' : ''; ?>>Chờ xác nhận</option>
             <option value="confirmed" <?php echo $status_filter === 'confirmed' ? 'selected' : ''; ?>>Đã xác nhận</option>
-            <option value="checked_in" <?php echo $status_filter === 'checked_in' ? 'selected' : ''; ?>>Đã nhận phòng</option>
-            <option value="checked_out" <?php echo $status_filter === 'checked_out' ? 'selected' : ''; ?>>Đã trả phòng</option>
+            <option value="checked_in" <?php echo $status_filter === 'checked_in' ? 'selected' : ''; ?>>Đã nhận phòng
+            </option>
+            <option value="checked_out" <?php echo $status_filter === 'checked_out' ? 'selected' : ''; ?>>Đã trả phòng
+            </option>
             <option value="cancelled" <?php echo $status_filter === 'cancelled' ? 'selected' : ''; ?>>Đã hủy</option>
         </select>
-        
+
         <!-- Date From -->
-        <input type="date" name="date_from" value="<?php echo htmlspecialchars($date_from); ?>" 
-               placeholder="Từ ngày" class="form-input w-auto">
-        
+        <input type="date" name="date_from" value="<?php echo htmlspecialchars($date_from); ?>" placeholder="Từ ngày"
+            class="form-input w-auto">
+
         <!-- Date To -->
-        <input type="date" name="date_to" value="<?php echo htmlspecialchars($date_to); ?>" 
-               placeholder="Đến ngày" class="form-input w-auto">
-        
+        <input type="date" name="date_to" value="<?php echo htmlspecialchars($date_to); ?>" placeholder="Đến ngày"
+            class="form-input w-auto">
+
         <!-- Buttons -->
         <button type="submit" class="btn btn-primary">
             <span class="material-symbols-outlined text-sm">filter_alt</span>
             Lọc
         </button>
-        
+
         <a href="bookings.php" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">refresh</span>
             Reset
         </a>
     </form>
-    
+
     <!-- Create Booking Button -->
     <a href="create-booking.php" class="btn btn-success">
         <span class="material-symbols-outlined text-sm">add</span>
@@ -216,7 +222,7 @@ include 'includes/admin-header.php';
             </a>
         </div>
     </div>
-    
+
     <div class="table-wrapper">
         <table class="data-table">
             <thead>
@@ -251,17 +257,18 @@ include 'includes/admin-header.php';
                             <td class="font-medium">
                                 <div class="flex items-center gap-2">
                                     <div>
-                                        <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" 
-                                           class="text-accent hover:underline">
+                                        <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>"
+                                            class="text-accent hover:underline">
                                             <?php echo BookingHelper::formatBookingCode($booking['booking_code'], true); ?>
                                         </a>
                                         <div class="text-xs text-gray-500 mt-1">
-                                            Mã ngắn: <span class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
+                                            Mã ngắn: <span
+                                                class="font-mono font-bold"><?php echo BookingHelper::getShortCode($booking['booking_code']); ?></span>
                                         </div>
                                     </div>
-                                    <button onclick="quickView(<?php echo $booking['booking_id']; ?>)" 
-                                            class="p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                                            title="Xem nhanh">
+                                    <button onclick="quickView(<?php echo $booking['booking_id']; ?>)"
+                                        class="p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                        title="Xem nhanh">
                                         <span class="material-symbols-outlined text-sm text-blue-600">visibility</span>
                                     </button>
                                 </div>
@@ -324,41 +331,42 @@ include 'includes/admin-header.php';
                                     'refunded' => 'Đã hoàn tiền'
                                 ];
                                 ?>
-                                <span class="badge <?php echo $payment_classes[$booking['payment_status']] ?? 'badge-secondary'; ?>">
+                                <span
+                                    class="badge <?php echo $payment_classes[$booking['payment_status']] ?? 'badge-secondary'; ?>">
                                     <?php echo $payment_labels[$booking['payment_status']] ?? $booking['payment_status']; ?>
                                 </span>
                             </td>
                             <td class="no-print">
                                 <div class="action-buttons">
-                                    <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" 
-                                       class="action-btn" title="Xem chi tiết">
+                                    <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" class="action-btn"
+                                        title="Xem chi tiết">
                                         <span class="material-symbols-outlined text-sm">visibility</span>
                                     </a>
-                                    
+
                                     <?php if ($booking['status'] === 'pending'): ?>
-                                        <button onclick="confirmBooking(<?php echo $booking['booking_id']; ?>)" 
-                                                class="action-btn text-green-600" title="Xác nhận">
+                                        <button onclick="confirmBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="action-btn text-green-600" title="Xác nhận">
                                             <span class="material-symbols-outlined text-sm">check_circle</span>
                                         </button>
                                     <?php endif; ?>
-                                    
+
                                     <?php if ($booking['status'] === 'confirmed'): ?>
-                                        <button onclick="checkinBooking(<?php echo $booking['booking_id']; ?>)" 
-                                                class="action-btn text-blue-600" title="Check-in">
+                                        <button onclick="checkinBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="action-btn text-blue-600" title="Check-in">
                                             <span class="material-symbols-outlined text-sm">login</span>
                                         </button>
                                     <?php endif; ?>
-                                    
+
                                     <?php if ($booking['status'] === 'checked_in'): ?>
-                                        <button onclick="checkoutBooking(<?php echo $booking['booking_id']; ?>)" 
-                                                class="action-btn text-orange-600" title="Check-out">
+                                        <button onclick="checkoutBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="action-btn text-orange-600" title="Check-out">
                                             <span class="material-symbols-outlined text-sm">logout</span>
                                         </button>
                                     <?php endif; ?>
-                                    
+
                                     <?php if (in_array($booking['status'], ['pending', 'confirmed'])): ?>
-                                        <button onclick="cancelBooking(<?php echo $booking['booking_id']; ?>)" 
-                                                class="action-btn text-red-600" title="Hủy đơn">
+                                        <button onclick="cancelBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="action-btn text-red-600" title="Hủy đơn">
                                             <span class="material-symbols-outlined text-sm">cancel</span>
                                         </button>
                                     <?php endif; ?>
@@ -370,7 +378,7 @@ include 'includes/admin-header.php';
             </tbody>
         </table>
     </div>
-    
+
     <!-- Pagination -->
     <?php if ($total_pages > 1): ?>
         <div class="card-footer flex items-center justify-between">
@@ -379,30 +387,29 @@ include 'includes/admin-header.php';
             </p>
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => 1])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => 1])); ?>" class="pagination-item">
                         <span class="material-symbols-outlined text-sm">first_page</span>
                     </a>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>"
+                        class="pagination-item">
                         <span class="material-symbols-outlined text-sm">chevron_left</span>
                     </a>
                 <?php endif; ?>
-                
+
                 <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>" 
-                       class="pagination-item <?php echo $i === $page ? 'active' : ''; ?>">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"
+                        class="pagination-item <?php echo $i === $page ? 'active' : ''; ?>">
                         <?php echo $i; ?>
                     </a>
                 <?php endfor; ?>
-                
+
                 <?php if ($page < $total_pages): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>"
+                        class="pagination-item">
                         <span class="material-symbols-outlined text-sm">chevron_right</span>
                     </a>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $total_pages])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $total_pages])); ?>"
+                        class="pagination-item">
                         <span class="material-symbols-outlined text-sm">last_page</span>
                     </a>
                 <?php endif; ?>
@@ -413,7 +420,8 @@ include 'includes/admin-header.php';
 
 <!-- Quick View Modal -->
 <div id="quickViewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <!-- Header -->
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Xem nhanh</h3>
@@ -421,7 +429,7 @@ include 'includes/admin-header.php';
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-        
+
         <!-- Content -->
         <div id="quickViewContent" class="flex-1 overflow-y-auto p-6">
             <div class="flex items-center justify-center py-12">
@@ -432,45 +440,57 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
-// Quick View Function
-function quickView(bookingId) {
-    const modal = document.getElementById('quickViewModal');
-    const content = document.getElementById('quickViewContent');
-    
-    modal.classList.remove('hidden');
-    content.innerHTML = '<div class="flex items-center justify-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div></div>';
-    
-    fetch(`api/quick-view-booking.php?booking_id=${bookingId}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                renderQuickView(data);
-            } else {
-                content.innerHTML = `<div class="text-center text-red-600 py-12">${data.message}</div>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            content.innerHTML = '<div class="text-center text-red-600 py-12">Có lỗi xảy ra</div>';
-        });
-}
+    // Quick View Function
+    function quickView(bookingId) {
+        const modal = document.getElementById('quickViewModal');
+        const content = document.getElementById('quickViewContent');
 
-function closeQuickView() {
-    document.getElementById('quickViewModal').classList.add('hidden');
-}
+        modal.classList.remove('hidden');
+        content.innerHTML = '<div class="flex items-center justify-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div></div>';
 
-function renderQuickView(data) {
-    const { booking, customer, customer_stats, recent_bookings, payments } = data;
-    
-    const statusLabels = {
-        'pending': { label: 'Chờ xác nhận', class: 'bg-yellow-100 text-yellow-800' },
-        'confirmed': { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
-        'checked_in': { label: 'Đã nhận phòng', class: 'bg-green-100 text-green-800' },
-        'checked_out': { label: 'Đã trả phòng', class: 'bg-gray-100 text-gray-800' },
-        'cancelled': { label: 'Đã hủy', class: 'bg-red-100 text-red-800' }
-    };
-    
-    const html = `
+        fetch(`api/quick-view-booking.php?booking_id=${bookingId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    renderQuickView(data);
+                } else {
+                    content.innerHTML = `<div class="text-center text-red-600 py-12">${data.message}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                content.innerHTML = '<div class="text-center text-red-600 py-12">Có lỗi xảy ra</div>';
+            });
+    }
+
+    function closeQuickView() {
+        document.getElementById('quickViewModal').classList.add('hidden');
+    }
+
+    function renderQuickView(data) {
+        const { booking, customer, customer_stats, recent_bookings, payments } = data;
+
+        const statusLabels = {
+            'pending': { label: 'Chờ xác nhận', class: 'bg-yellow-100 text-yellow-800' },
+            'confirmed': { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+            'checked_in': { label: 'Đã nhận phòng', class: 'bg-green-100 text-green-800' },
+            'checked_out': { label: 'Đã trả phòng', class: 'bg-gray-100 text-gray-800' },
+            'cancelled': { label: 'Đã hủy', class: 'bg-red-100 text-red-800' }
+        };
+
+        const priceTypeLabels = {
+            'single': 'Giá 1 người',
+            'double': 'Giá 2 người',
+            'short_stay': 'Nghỉ ngắn hạn',
+            'weekly': 'Giá tuần',
+            'daily': 'Giá ngày'
+        };
+
+        const isShortStay = booking.booking_type === 'short_stay';
+        const isInquiry = booking.booking_type === 'inquiry';
+        const isGuest = customer.is_guest;
+
+        const html = `
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Booking Info -->
             <div class="lg:col-span-2 space-y-6">
@@ -481,19 +501,29 @@ function renderQuickView(data) {
                             <h4 class="text-2xl font-bold" style="color: #d4af37;">${booking.booking_code}</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mã ngắn: <span class="font-mono font-bold">${booking.short_code}</span></p>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusLabels[booking.status].class}">
-                            ${statusLabels[booking.status].label}
-                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            ${isShortStay ? '<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">Nghỉ ngắn hạn</span>' : ''}
+                            ${isInquiry ? '<span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">Yêu cầu căn hộ</span>' : ''}
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusLabels[booking.status]?.class || 'bg-gray-100 text-gray-800'}">
+                                ${statusLabels[booking.status]?.label || booking.status}
+                            </span>
+                        </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                         <div>
                             <p class="text-gray-600 dark:text-gray-400">Loại phòng</p>
                             <p class="font-semibold">${booking.type_name}</p>
+                            <p class="text-xs text-gray-500">${booking.category === 'apartment' ? 'Căn hộ' : 'Khách sạn'}</p>
                         </div>
                         <div>
                             <p class="text-gray-600 dark:text-gray-400">Phòng số</p>
-                            <p class="font-semibold">${booking.room_number || 'Chưa phân'}</p>
+                            <p class="font-semibold">${booking.room_number || '<span class="text-yellow-600">Chưa phân</span>'}</p>
+                            ${booking.floor ? `<p class="text-xs text-gray-500">Tầng ${booking.floor}${booking.building ? ' - ' + booking.building : ''}</p>` : ''}
+                        </div>
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400">Số khách</p>
+                            <p class="font-semibold">${booking.num_adults} người lớn${booking.num_children > 0 ? `, ${booking.num_children} trẻ em` : ''}</p>
                         </div>
                         <div>
                             <p class="text-gray-600 dark:text-gray-400">Check-in</p>
@@ -507,16 +537,49 @@ function renderQuickView(data) {
                             <p class="text-gray-600 dark:text-gray-400">Số đêm</p>
                             <p class="font-semibold">${booking.total_nights} đêm</p>
                         </div>
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-400">Tổng tiền</p>
-                            <p class="font-bold text-lg" style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(booking.total_amount)}đ</p>
+                    </div>
+
+                    <!-- Price Details -->
+                    <div class="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="material-symbols-outlined text-amber-600 text-lg">receipt_long</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Chi tiết giá</span>
+                            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-semibold">${priceTypeLabels[booking.price_type_used] || booking.price_type_used || 'Giá 2 người'}</span>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tiền phòng (${booking.total_nights} đêm)</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.room_price * booking.total_nights)}đ</span>
+                            </div>
+                            ${booking.extra_guest_fee > 0 ? `
+                            <div class="flex justify-between text-blue-600">
+                                <span>Phụ thu khách thêm</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_guest_fee)}đ</span>
+                            </div>
+                            ` : ''}
+                            ${booking.extra_bed_fee > 0 ? `
+                            <div class="flex justify-between text-orange-600">
+                                <span>Phí giường phụ (${booking.extra_beds} giường)</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_bed_fee)}đ</span>
+                            </div>
+                            ` : ''}
+                            ${booking.discount_amount > 0 ? `
+                            <div class="flex justify-between text-green-600">
+                                <span>Giảm giá</span>
+                                <span class="font-medium">-${new Intl.NumberFormat('vi-VN').format(booking.discount_amount)}đ</span>
+                            </div>
+                            ` : ''}
+                            <div class="flex justify-between pt-2 border-t border-blue-200 dark:border-blue-700 font-bold text-lg">
+                                <span>Tổng cộng</span>
+                                <span style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(booking.total_amount)}đ</span>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="mt-4 flex gap-2">
                         <a href="booking-detail.php?id=${booking.booking_id}" class="btn btn-primary btn-sm flex-1">
                             <span class="material-symbols-outlined text-sm">open_in_new</span>
-                            Xem chi tiết
+                            Xem chi tiết đầy đủ
                         </a>
                         <a href="view-qrcode.php?id=${booking.booking_id}" class="btn btn-secondary btn-sm">
                             <span class="material-symbols-outlined text-sm">qr_code</span>
@@ -526,7 +589,7 @@ function renderQuickView(data) {
                 </div>
                 
                 <!-- Recent Bookings -->
-                ${recent_bookings.length > 0 ? `
+                ${recent_bookings && recent_bookings.length > 0 ? `
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                     <h5 class="font-bold mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined text-accent">history</span>
@@ -541,7 +604,7 @@ function renderQuickView(data) {
                                 </div>
                                 <div class="text-right">
                                     <p class="font-bold text-sm">${new Intl.NumberFormat('vi-VN').format(rb.total_amount)}đ</p>
-                                    <span class="text-xs px-2 py-0.5 rounded ${statusLabels[rb.status].class}">${statusLabels[rb.status].label}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded ${statusLabels[rb.status]?.class || 'bg-gray-100'}">${statusLabels[rb.status]?.label || rb.status}</span>
                                 </div>
                             </div>
                         `).join('')}
@@ -553,14 +616,15 @@ function renderQuickView(data) {
             <!-- Customer Info -->
             <div class="space-y-6">
                 <!-- Customer Card -->
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-6">
+                <div class="bg-gradient-to-br ${isGuest ? 'from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20' : 'from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20'} rounded-xl p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                            ${customer.full_name.charAt(0).toUpperCase()}
+                        <div class="w-12 h-12 ${isGuest ? 'bg-gradient-to-br from-gray-500 to-gray-700' : 'bg-gradient-to-br from-purple-500 to-purple-700'} rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            ${customer.full_name?.charAt(0).toUpperCase() || '?'}
                         </div>
                         <div class="flex-1">
                             <h5 class="font-bold text-lg">${customer.full_name}</h5>
-                            ${customer.tier_name ? `
+                            ${isGuest ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-gray-200 text-gray-700">Khách vãng lai</span>' : ''}
+                            ${!isGuest && customer.tier_name ? `
                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold" style="background-color: ${customer.tier_color}20; color: ${customer.tier_color};">
                                     <span class="material-symbols-outlined text-xs">workspace_premium</span>
                                     ${customer.tier_name}
@@ -576,21 +640,26 @@ function renderQuickView(data) {
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-gray-600">phone</span>
-                            <span>${customer.phone}</span>
+                            <a href="tel:${customer.phone}" class="text-blue-600 hover:underline">${customer.phone}</a>
                         </div>
+                        ${!isGuest && customer.current_points ? `
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-gray-600">stars</span>
                             <span>${new Intl.NumberFormat('vi-VN').format(customer.current_points)} điểm</span>
                         </div>
+                        ` : ''}
                     </div>
                     
+                    ${!isGuest ? `
                     <a href="customer-detail.php?id=${customer.user_id}" class="btn btn-secondary btn-sm w-full mt-4">
                         <span class="material-symbols-outlined text-sm">person</span>
                         Xem profile đầy đủ
                     </a>
+                    ` : ''}
                 </div>
                 
-                <!-- Stats Card -->
+                <!-- Stats Card (only for registered users) -->
+                ${!isGuest && customer_stats ? `
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                     <h5 class="font-bold mb-4">Thống kê khách hàng</h5>
                     <div class="space-y-3">
@@ -612,62 +681,63 @@ function renderQuickView(data) {
                         </div>
                     </div>
                 </div>
+                ` : ''}
             </div>
         </div>
     `;
-    
-    document.getElementById('quickViewContent').innerHTML = html;
-}
 
-function confirmBooking(id) {
-    if (confirm('Xác nhận đơn đặt phòng này?')) {
-        updateBookingStatus(id, 'confirmed');
+        document.getElementById('quickViewContent').innerHTML = html;
     }
-}
 
-function checkinBooking(id) {
-    if (confirm('Xác nhận khách đã check-in?')) {
-        updateBookingStatus(id, 'checked_in');
-    }
-}
-
-function checkoutBooking(id) {
-    if (confirm('Xác nhận khách đã check-out?')) {
-        updateBookingStatus(id, 'checked_out');
-    }
-}
-
-function cancelBooking(id) {
-    const reason = prompt('Lý do hủy đơn:');
-    if (reason !== null) {
-        updateBookingStatus(id, 'cancelled', reason);
-    }
-}
-
-function updateBookingStatus(id, status, reason = '') {
-    const formData = new FormData();
-    formData.append('booking_id', id);
-    formData.append('status', status);
-    if (reason) formData.append('reason', reason);
-    
-    fetch('api/update-booking-status.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Cập nhật thành công!', 'success');
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
+    function confirmBooking(id) {
+        if (confirm('Xác nhận đơn đặt phòng này?')) {
+            updateBookingStatus(id, 'confirmed');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
-    });
-}
+    }
+
+    function checkinBooking(id) {
+        if (confirm('Xác nhận khách đã check-in?')) {
+            updateBookingStatus(id, 'checked_in');
+        }
+    }
+
+    function checkoutBooking(id) {
+        if (confirm('Xác nhận khách đã check-out?')) {
+            updateBookingStatus(id, 'checked_out');
+        }
+    }
+
+    function cancelBooking(id) {
+        const reason = prompt('Lý do hủy đơn:');
+        if (reason !== null) {
+            updateBookingStatus(id, 'cancelled', reason);
+        }
+    }
+
+    function updateBookingStatus(id, status, reason = '') {
+        const formData = new FormData();
+        formData.append('booking_id', id);
+        formData.append('status', status);
+        if (reason) formData.append('reason', reason);
+
+        fetch('api/update-booking-status.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Cập nhật thành công!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
+    }
 </script>
 
 <?php include 'includes/admin-footer.php'; ?>
