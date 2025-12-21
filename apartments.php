@@ -105,9 +105,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                         <!-- Căn hộ mới -->
                         <?php if (!empty($new_apartments)): ?>
                             <div class="mb-20">
-                                <div class="section-header">
-                                    <h2 class="section-title text-accent"><?php _e('apartments_page.new_apartments'); ?></h2>
-                                    <span class="section-badge bg-gradient-to-r from-accent to-accent/80 text-white">
+                                <div class="section-header flex items-center gap-4 mb-8">
+                                    <h2 class="section-title text-accent text-3xl font-bold font-display">
+                                        <?php _e('apartments_page.new_apartments'); ?></h2>
+                                    <span
+                                        class="section-badge bg-gradient-to-r from-accent to-accent/80 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
+                                        <span class="material-symbols-outlined text-sm">apartment</span>
                                         <?php _e('apartments_page.apartments_count', ['count' => count($new_apartments)]); ?>
                                     </span>
                                 </div>
@@ -200,9 +203,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                         <!-- Căn hộ cũ/Khác -->
                         <?php if (!empty($old_apartments)): ?>
                             <section class="mb-16 pt-12 border-t border-white/10">
-                                <div class="section-header mb-8">
-                                    <h2 class="section-title text-white"><?php _e('apartments_page.old_apartments'); ?></h2>
-                                    <span class="section-badge bg-white/10 text-white">
+                                <div class="section-header flex items-center gap-4 mb-8">
+                                    <h2 class="section-title text-white text-3xl font-bold font-display">
+                                        <?php _e('apartments_page.old_apartments'); ?></h2>
+                                    <span
+                                        class="section-badge bg-white/10 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-2 backdrop-blur-md border border-white/10">
+                                        <span class="material-symbols-outlined text-sm">apartment</span>
                                         <?php _e('apartments_page.apartments_count', ['count' => count($old_apartments)]); ?>
                                     </span>
                                 </div>
