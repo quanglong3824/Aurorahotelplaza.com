@@ -369,6 +369,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         <span class="material-symbols-outlined">backup</span>
                         <span>Sao lưu dữ liệu</span>
                     </a>
+                    <a href="reset-database.php"
+                        class="sidebar-link <?php echo $current_page === 'reset-database' ? 'active' : ''; ?>">
+                        <span class="material-symbols-outlined">delete_forever</span>
+                        <span>Dọn dẹp hệ thống</span>
+                    </a>
                 <?php endif; ?>
 
                 <!-- Logout -->
