@@ -174,7 +174,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold truncate text-gray-900 dark:text-white">
-                            <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?></p>
+                            <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
+                        </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
                             <?php
                             $role_names = [
@@ -205,6 +206,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 <a href="bookings.php" class="sidebar-link <?php echo $current_page === 'bookings' ? 'active' : ''; ?>">
                     <span class="material-symbols-outlined">book_online</span>
                     <span>Quản lý đặt phòng</span>
+                </a>
+                <a href="apartment-inquiries.php"
+                    class="sidebar-link <?php echo $current_page === 'apartment-inquiries' ? 'active' : ''; ?>">
+                    <span class="material-symbols-outlined">apartment</span>
+                    <span>Yêu cầu căn hộ</span>
                 </a>
                 <a href="calendar.php" class="sidebar-link <?php echo $current_page === 'calendar' ? 'active' : ''; ?>">
                     <span class="material-symbols-outlined">calendar_month</span>
@@ -380,7 +386,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             <div class="flex items-center justify-between px-8 py-5">
                 <div class="flex-1">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        <?php echo $page_title ?? 'Admin Panel'; ?></h2>
+                        <?php echo $page_title ?? 'Admin Panel'; ?>
+                    </h2>
                     <?php if (isset($page_subtitle)): ?>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"><?php echo $page_subtitle; ?></p>
                     <?php endif; ?>
