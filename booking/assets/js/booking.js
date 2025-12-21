@@ -495,6 +495,18 @@ async function applyPromoCode() {
     // Only for booking mode
     if (isInquiryMode) return;
 
+    // Guest Restriction
+    if (typeof IS_LOGGED_IN !== 'undefined' && !IS_LOGGED_IN) {
+        const messageDiv = document.getElementById('promo_message');
+        messageDiv.innerHTML = `
+            <div class="text-yellow-500 flex items-start gap-2 text-sm mt-2">
+                <span class="material-symbols-outlined text-base mt-0.5">lock</span>
+                <span>Khách vãng lai không thể sử dụng mã giảm giá. Vui lòng <a href="../auth/login.php" class="underline font-bold hover:text-yellow-400">đăng nhập</a> để hưởng ưu đãi.</span>
+            </div>
+        `;
+        return;
+    }
+
     const promoCode = document.getElementById('promo_code').value.trim().toUpperCase();
     const messageDiv = document.getElementById('promo_message');
 

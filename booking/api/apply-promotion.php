@@ -13,9 +13,15 @@ if (empty($promo_code) || $total_amount <= 0) {
     exit;
 }
 
+// Enforce Login for Promotions
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Vui lòng đăng nhập để sử dụng mã giảm giá']);
+    exit;
+}
+
 try {
     $db = getDB();
-    
+
     // Get promotion
     $stmt = $db->prepare("
         SELECT * FROM promotions
@@ -25,15 +31,15 @@ try {
         AND end_date >= NOW()
         LIMIT 1
     ");
-    
+
     $stmt->execute([':code' => strtoupper($promo_code)]);
     $promo = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     if (!$promo) {
         echo json_encode(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn']);
         exit;
     }
-    
+
     // Check usage limit
     if ($promo['max_uses'] > 0) {
         $stmt = $db->prepare("
@@ -43,13 +49,13 @@ try {
         ");
         $stmt->execute([':code' => $promo['code']]);
         $usage = $stmt->fetch(PDO::FETCH_ASSOC)['usage_count'];
-        
+
         if ($usage >= $promo['max_uses']) {
             echo json_encode(['success' => false, 'message' => 'Mã giảm giá đã hết lượt sử dụng']);
             exit;
         }
     }
-    
+
     // Check minimum amount
     if ($promo['min_booking_amount'] > 0 && $total_amount < $promo['min_booking_amount']) {
         echo json_encode([
@@ -58,7 +64,7 @@ try {
         ]);
         exit;
     }
-    
+
     // Check user usage limit
     if (isset($_SESSION['user_id']) && $promo['max_uses_per_user'] > 0) {
         $stmt = $db->prepare("
@@ -71,19 +77,19 @@ try {
             ':user_id' => $_SESSION['user_id']
         ]);
         $user_usage = $stmt->fetch(PDO::FETCH_ASSOC)['user_usage'];
-        
+
         if ($user_usage >= $promo['max_uses_per_user']) {
             echo json_encode(['success' => false, 'message' => 'Bạn đã sử dụng hết lượt áp dụng mã này']);
             exit;
         }
     }
-    
+
     // Calculate discount
     $discount_amount = 0;
-    
+
     if ($promo['discount_type'] === 'percentage') {
         $discount_amount = ($total_amount * $promo['discount_value']) / 100;
-        
+
         // Check max discount
         if ($promo['max_discount_amount'] > 0 && $discount_amount > $promo['max_discount_amount']) {
             $discount_amount = $promo['max_discount_amount'];
@@ -91,15 +97,15 @@ try {
     } else {
         // Fixed amount
         $discount_amount = $promo['discount_value'];
-        
+
         // Discount cannot exceed total
         if ($discount_amount > $total_amount) {
             $discount_amount = $total_amount;
         }
     }
-    
+
     $final_amount = $total_amount - $discount_amount;
-    
+
     echo json_encode([
         'success' => true,
         'promotion' => [
@@ -113,7 +119,7 @@ try {
         'final_amount' => $final_amount,
         'message' => 'Áp dụng mã giảm giá thành công!'
     ]);
-    
+
 } catch (Exception $e) {
     error_log("Apply promotion error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Có lỗi xảy ra']);
