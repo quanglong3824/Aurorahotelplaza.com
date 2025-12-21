@@ -5,23 +5,29 @@
     align-items: center;
     text-align: center;
     padding: 1.5rem 1rem;
-    background: rgba(30, 41, 59, 0.7);
-    /* Unified Slate Glass 0.7 */
+    background: rgba(30, 41, 59, 0.6) !important;
+    /* Force Dark Slate Glass */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(212, 175, 55, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     transition: all 0.3s ease;
     height: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.glass-quick-link:hover {
+.glass-quick-link:hover,
+.glass-quick-link.active {
     transform: translateY(-5px);
-    background: rgba(30, 41, 59, 0.85);
-    /* Even darker on hover */
+    background: rgba(30, 41, 59, 0.85) !important;
     border-color: rgba(212, 175, 55, 0.8);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.glass-quick-link.active {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)) !important;
+    border-color: #d4af37;
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
 }
 
 .glass-quick-link-icon {
@@ -30,20 +36,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(212, 175, 55, 0.2);
-    /* Increased visibility */
-    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    /* Squared rounded for better look */
     margin-bottom: 1rem;
     color: #d4af37;
     transition: all 0.3s ease;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.glass-quick-link:hover .glass-quick-link-icon {
+.glass-quick-link:hover .glass-quick-link-icon,
+.glass-quick-link.active .glass-quick-link-icon {
     background: #d4af37;
     color: white;
     transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    border-color: #d4af37;
 }
 
 .glass-category-card {

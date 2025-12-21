@@ -69,7 +69,7 @@ try {
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/explore.css?v=explore_v2">
+    <link rel="stylesheet" href="assets/css/explore.css?v=<?php echo time(); ?>">
 </head>
 
 <body class="glass-page font-body text-white">
@@ -119,7 +119,7 @@ try {
 
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="rooms.php" class="glass-quick-link group">
+                        <a href="rooms.php" class="glass-quick-link active group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">hotel</span>
                             </div>
