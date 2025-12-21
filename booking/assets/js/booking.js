@@ -92,10 +92,38 @@ function checkBookingMode() {
 
 // Update UI for Inquiry Mode
 function updateUIForInquiry() {
-    // Hide Price Summary
-    const priceBox = document.getElementById('price_summary_box');
-    if (priceBox) priceBox.classList.add('hidden');
+    // ========== STEP 1 FIELDS ==========
+    // Hide Room Booking Fields
+    const roomFields = document.getElementById('room_booking_fields');
+    if (roomFields) roomFields.classList.add('hidden');
 
+    // Show Apartment Inquiry Fields
+    const apartmentFields = document.getElementById('apartment_inquiry_fields');
+    if (apartmentFields) apartmentFields.classList.remove('hidden');
+
+    // Update Step 1 Title
+    const step1Title = document.getElementById('step1_title');
+    if (step1Title) step1Title.textContent = 'Chọn căn hộ & thời gian cư trú';
+
+    // Update Apartment Name in Summary
+    const roomSelect = document.getElementById('room_type_id');
+    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+    const apartmentNameEl = document.getElementById('inquiry_apartment_name');
+    if (apartmentNameEl && selectedOption) {
+        apartmentNameEl.textContent = selectedOption.text.split(' - ')[0] || '--';
+    }
+
+    // Set minimum date for preferred check-in
+    const preferredCheckIn = document.getElementById('preferred_check_in');
+    if (preferredCheckIn) {
+        const today = new Date();
+        preferredCheckIn.min = today.toISOString().split('T')[0];
+        if (!preferredCheckIn.value) {
+            preferredCheckIn.value = today.toISOString().split('T')[0];
+        }
+    }
+
+    // ========== STEP 2 & 3 FIELDS ==========
     // Show Inquiry Fields in Step 2
     const inquiryFields = document.getElementById('inquiry_fields');
     if (inquiryFields) inquiryFields.classList.remove('hidden');
@@ -125,10 +153,20 @@ function updateUIForInquiry() {
 
 // Update UI for Standard Booking
 function updateUIForBooking() {
-    // Show Price Summary
-    const priceBox = document.getElementById('price_summary_box');
-    if (priceBox) priceBox.classList.remove('hidden');
+    // ========== STEP 1 FIELDS ==========
+    // Show Room Booking Fields
+    const roomFields = document.getElementById('room_booking_fields');
+    if (roomFields) roomFields.classList.remove('hidden');
 
+    // Hide Apartment Inquiry Fields
+    const apartmentFields = document.getElementById('apartment_inquiry_fields');
+    if (apartmentFields) apartmentFields.classList.add('hidden');
+
+    // Update Step 1 Title
+    const step1Title = document.getElementById('step1_title');
+    if (step1Title) step1Title.textContent = 'Chọn phòng & ngày';
+
+    // ========== STEP 2 & 3 FIELDS ==========
     // Hide Inquiry Fields
     const inquiryFields = document.getElementById('inquiry_fields');
     if (inquiryFields) inquiryFields.classList.add('hidden');
@@ -344,45 +382,68 @@ function prevStep(step) {
 function validateStep(step) {
     if (step === 1) {
         const roomType = document.getElementById('room_type_id').value;
-        const checkin = document.getElementById('check_in_date').value;
-        const checkout = document.getElementById('check_out_date').value;
-        const guests = document.getElementById('num_guests').value;
 
         if (!roomType) {
-            alert('Vui lòng chọn loại phòng');
+            alert('Vui lòng chọn loại phòng/căn hộ');
             return false;
         }
 
-        if (!checkin || !checkout) {
-            alert('Vui lòng chọn ngày nhận và trả phòng');
-            return false;
-        }
-
-        if (new Date(checkout) <= new Date(checkin)) {
-            alert('Ngày trả phòng phải sau ngày nhận phòng');
-            return false;
-        }
-
-        // Validate explicit ranges (Local Time check)
+        // Get today's date string for comparison
         const d = new Date();
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
 
-        if (checkin < todayStr) {
-            alert('Ngày nhận phòng không được nhỏ hơn ngày hiện tại');
-            return false;
-        }
+        if (isInquiryMode) {
+            // ========== APARTMENT VALIDATION ==========
+            const preferredCheckIn = document.getElementById('preferred_check_in').value;
+            const numAdults = document.getElementById('inquiry_num_adults').value;
 
-        if (checkout <= todayStr) { // Checkout must be future
-            alert('Ngày trả phòng phải là ngày trong tương lai');
-            return false;
-        }
+            if (!preferredCheckIn) {
+                alert('Vui lòng chọn ngày dự kiến nhận phòng');
+                return false;
+            }
 
-        if (!guests || guests < 1) {
-            alert('Vui lòng nhập số khách hợp lệ');
-            return false;
+            if (preferredCheckIn < todayStr) {
+                alert('Ngày dự kiến nhận phòng không được nhỏ hơn ngày hiện tại');
+                return false;
+            }
+
+            if (!numAdults || numAdults < 1) {
+                alert('Số người lớn phải ít nhất là 1');
+                return false;
+            }
+        } else {
+            // ========== ROOM VALIDATION ==========
+            const checkin = document.getElementById('check_in_date').value;
+            const checkout = document.getElementById('check_out_date').value;
+            const guests = document.getElementById('num_guests').value;
+
+            if (!checkin || !checkout) {
+                alert('Vui lòng chọn ngày nhận và trả phòng');
+                return false;
+            }
+
+            if (new Date(checkout) <= new Date(checkin)) {
+                alert('Ngày trả phòng phải sau ngày nhận phòng');
+                return false;
+            }
+
+            if (checkin < todayStr) {
+                alert('Ngày nhận phòng không được nhỏ hơn ngày hiện tại');
+                return false;
+            }
+
+            if (checkout <= todayStr) {
+                alert('Ngày trả phòng phải là ngày trong tương lai');
+                return false;
+            }
+
+            if (!guests || guests < 1) {
+                alert('Vui lòng nhập số khách hợp lệ');
+                return false;
+            }
         }
 
         return true;
@@ -396,11 +457,6 @@ function validateStep(step) {
         if (!name || !phone || !email) {
             alert('Vui lòng nhập đầy đủ thông tin bắt buộc');
             return false;
-        }
-
-        // Validate duration for inquiry
-        if (isInquiryMode) {
-            // Can add more validation here if needed
         }
 
         return true;
@@ -469,12 +525,50 @@ async function handleSubmit(e) {
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData);
 
-    // Add additional fields via JSON
-    const data = {
+    // Build data object based on booking type
+    let data = {
         ...formObject,
-        num_nights: calculateNights(), // ensure we have nights count
-        booking_type: isInquiryMode ? 'inquiry' : 'instant' // Pass booking type to backend
+        booking_type: isInquiryMode ? 'inquiry' : 'instant'
     };
+
+    if (isInquiryMode) {
+        // ========== APARTMENT INQUIRY DATA ==========
+        const preferredCheckIn = document.getElementById('preferred_check_in').value;
+        const durationType = document.getElementById('duration_type').value;
+        const numAdults = document.getElementById('inquiry_num_adults').value;
+        const numChildren = document.getElementById('inquiry_num_children').value;
+        const inquiryMsg = document.getElementById('inquiry_message')?.value || '';
+
+        // Calculate check-out date based on duration
+        let checkOutDate = preferredCheckIn;
+        if (preferredCheckIn) {
+            const startDate = new Date(preferredCheckIn);
+            let monthsToAdd = 1;
+            if (durationType === '3_months') monthsToAdd = 3;
+            if (durationType === '6_months') monthsToAdd = 6;
+            if (durationType === '12_months') monthsToAdd = 12;
+
+            const endDate = new Date(startDate);
+            endDate.setMonth(endDate.getMonth() + monthsToAdd);
+            checkOutDate = endDate.toISOString().split('T')[0];
+        }
+
+        data = {
+            ...data,
+            room_type_id: formObject.room_type_id,
+            check_in_date: preferredCheckIn,
+            check_out_date: checkOutDate,
+            num_guests: numAdults,
+            num_adults: numAdults,
+            num_children: numChildren,
+            duration_type: durationType,
+            message: inquiryMsg,
+            num_nights: 0 // Not applicable for inquiry
+        };
+    } else {
+        // ========== ROOM BOOKING DATA ==========
+        data.num_nights = calculateNights();
+    }
 
     const submitBtn = document.getElementById('submitBtn');
     const submitBtnText = document.getElementById('submitBtnText');

@@ -139,81 +139,156 @@ foreach ($room_types as $room) {
                             </div>
                         </div>
 
-                        <!-- Step 1: Room Selection -->
+                        <!-- Step 1: Room/Apartment Selection -->
                         <div class="form-step active" id="step1">
-                            <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.select_room_date'); ?></h3>
+                            <h3 class="text-xl font-bold mb-4" id="step1_title">
+                                <?php _e('booking_page.select_room_date'); ?></h3>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Room Type -->
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('booking_page.room_type'); ?> *</label>
-                                    <select name="room_type_id" id="room_type_id" class="form-input" required
-                                        data-preselected="<?php echo $selected_room_type_id ?? 'null'; ?>"
-                                        data-slug="<?php echo $selected_room_slug ?? 'null'; ?>">
-                                        <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
-                                        <?php foreach ($room_types as $room):
-                                            $is_available = $room['available_rooms'] > 0;
-                                            // Apartments are always "available" for inquiry
-                                            $is_inquiry = isset($room['booking_type']) && $room['booking_type'] === 'inquiry';
-                                            if ($is_inquiry)
-                                                $is_available = true;
+                            <!-- Room Type Selection (Common) -->
+                            <div class="form-group mb-6">
+                                <label class="form-label"><?php _e('booking_page.room_type'); ?> *</label>
+                                <select name="room_type_id" id="room_type_id" class="form-input" required
+                                    data-preselected="<?php echo $selected_room_type_id ?? 'null'; ?>"
+                                    data-slug="<?php echo $selected_room_slug ?? 'null'; ?>">
+                                    <option value="">-- <?php _e('booking_page.select_room_type'); ?> --</option>
+                                    <?php foreach ($room_types as $room):
+                                        $is_available = $room['available_rooms'] > 0;
+                                        // Apartments are always "available" for inquiry
+                                        $is_inquiry = isset($room['booking_type']) && $room['booking_type'] === 'inquiry';
+                                        if ($is_inquiry)
+                                            $is_available = true;
 
-                                            $availability_text = $is_available
-                                                ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
-                                                : "(" . __('booking_page.out_of_stock') . ")";
-                                            ?>
-                                            <option value="<?php echo $room['room_type_id']; ?>"
-                                                data-price="<?php echo $room['base_price']; ?>"
-                                                data-max-guests="<?php echo $room['max_occupancy']; ?>"
-                                                data-available="<?php echo $room['available_rooms']; ?>"
-                                                data-category="<?php echo $room['category']; ?>"
-                                                data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
-                                                <?php echo $room['type_name']; ?> -
-                                                <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($room['base_price']) . ' VNĐ/đêm ' . $availability_text; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                        $availability_text = $is_available
+                                            ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
+                                            : "(" . __('booking_page.out_of_stock') . ")";
+                                        ?>
+                                        <option value="<?php echo $room['room_type_id']; ?>"
+                                            data-price="<?php echo $room['base_price']; ?>"
+                                            data-max-guests="<?php echo $room['max_occupancy']; ?>"
+                                            data-available="<?php echo $room['available_rooms']; ?>"
+                                            data-category="<?php echo $room['category']; ?>"
+                                            data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
+                                            <?php echo $room['type_name']; ?> -
+                                            <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($room['base_price']) . ' VNĐ/đêm ' . $availability_text; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- ========== ROOM BOOKING FIELDS (instant) ========== -->
+                            <div id="room_booking_fields">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Number of Guests -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('booking_page.num_guests'); ?> *</label>
+                                        <input type="number" name="num_guests" id="num_guests" class="form-input"
+                                            min="1" max="10" value="<?php echo $prefilled_guests; ?>" required>
+                                    </div>
+
+                                    <div></div>
+
+                                    <!-- Check-in Date -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
+                                        <input type="date" name="check_in_date" id="check_in_date" class="form-input"
+                                            value="<?php echo $prefilled_check_in; ?>" required>
+                                    </div>
+
+                                    <!-- Check-out Date -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
+                                        <input type="date" name="check_out_date" id="check_out_date" class="form-input"
+                                            value="<?php echo $prefilled_check_out; ?>" required>
+                                    </div>
                                 </div>
 
-                                <!-- Number of Guests -->
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('booking_page.num_guests'); ?> *</label>
-                                    <input type="number" name="num_guests" id="num_guests" class="form-input" min="1"
-                                        max="10" value="<?php echo $prefilled_guests; ?>" required>
-                                </div>
-
-                                <!-- Check-in Date -->
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
-                                    <input type="date" name="check_in_date" id="check_in_date" class="form-input"
-                                        value="<?php echo $prefilled_check_in; ?>" required>
-                                </div>
-
-                                <!-- Check-out Date -->
-                                <div class="form-group">
-                                    <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
-                                    <input type="date" name="check_out_date" id="check_out_date" class="form-input"
-                                        value="<?php echo $prefilled_check_out; ?>" required>
+                                <!-- Price Summary (Room only) -->
+                                <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg transition-all duration-300"
+                                    id="price_summary_box">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
+                                        <span id="room_price_display">0 VNĐ</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="font-semibold"><?php _e('booking_page.num_nights'); ?>:</span>
+                                        <span id="num_nights">0</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
+                                        <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
+                                        <span id="estimated_total_display" class="text-xl font-bold text-accent">0
+                                            VNĐ</span>
+                                        <input type="hidden" id="estimated_total" value="0">
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Price Summary -->
-                            <div class="mt-6 p-4 bg-primary-light/20 dark:bg-gray-700 rounded-lg transition-all duration-300"
-                                id="price_summary_box">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
-                                    <span id="room_price_display">0 VNĐ</span>
+                            <!-- ========== APARTMENT INQUIRY FIELDS (inquiry) ========== -->
+                            <div id="apartment_inquiry_fields" class="hidden">
+                                <div class="p-4 mb-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-purple-400 mt-0.5">apartment</span>
+                                        <div>
+                                            <h4 class="font-semibold text-purple-400 mb-1"><?php _e('inquiry.title'); ?>
+                                            </h4>
+                                            <p class="text-sm text-gray-300">
+                                                <?php _e('inquiry.subtitle'); ?>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex justify-between items-center mt-2">
-                                    <span class="font-semibold"><?php _e('booking_page.num_nights'); ?>:</span>
-                                    <span id="num_nights">0</span>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Preferred Move-in Date -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('inquiry.check_in'); ?> *</label>
+                                        <input type="date" name="preferred_check_in" id="preferred_check_in"
+                                            class="form-input">
+                                    </div>
+
+                                    <!-- Duration Type -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('inquiry.duration_type'); ?> *</label>
+                                        <select name="duration_type" id="duration_type" class="form-input">
+                                            <option value="1_month">1 tháng</option>
+                                            <option value="3_months">3 tháng</option>
+                                            <option value="6_months">6 tháng</option>
+                                            <option value="12_months">12 tháng (1 năm)</option>
+                                            <option value="custom">Khác (ghi chú bên dưới)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Number of Adults -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('inquiry.num_adults'); ?> *</label>
+                                        <input type="number" name="num_adults" id="inquiry_num_adults"
+                                            class="form-input" min="1" max="10" value="1">
+                                    </div>
+
+                                    <!-- Number of Children -->
+                                    <div class="form-group">
+                                        <label class="form-label"><?php _e('inquiry.num_children'); ?></label>
+                                        <input type="number" name="num_children" id="inquiry_num_children"
+                                            class="form-input" min="0" max="10" value="0">
+                                    </div>
                                 </div>
-                                <div
-                                    class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
-                                    <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
-                                    <span id="estimated_total_display" class="text-xl font-bold text-accent">0
-                                        VNĐ</span>
-                                    <input type="hidden" id="estimated_total" value="0">
+
+                                <!-- Inquiry Summary Box -->
+                                <div class="mt-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                                    id="inquiry_summary_box">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-semibold text-purple-300">Loại căn hộ:</span>
+                                        <span id="inquiry_apartment_name" class="text-white">--</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="font-semibold text-purple-300">Giá tham khảo:</span>
+                                        <span class="text-accent font-bold">Liên hệ báo giá</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center mt-2 pt-2 border-t border-purple-500/20">
+                                        <span class="font-semibold text-purple-300">Hình thức:</span>
+                                        <span class="text-white"><?php _e('inquiry.contact_btn'); ?></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -280,26 +355,14 @@ foreach ($room_types as $room) {
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- INQUIRY FIELDS (Hidden by default) -->
+                                <!-- APARTMENT INQUIRY MESSAGE (Hidden by default, shown for apartments) -->
                                 <div class="form-group md:col-span-2 hidden" id="inquiry_fields">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Duration Type -->
-                                        <div class="form-group">
-                                            <label class="form-label"><?php _e('inquiry.duration_type'); ?></label>
-                                            <select name="duration_type" id="duration_type" class="form-input">
-                                                <option value="short_term"><?php _e('inquiry.short_term'); ?></option>
-                                                <option value="long_term"><?php _e('inquiry.long_term'); ?></option>
-                                                <option value="monthly"><?php _e('inquiry.monthly'); ?></option>
-                                                <option value="yearly"><?php _e('inquiry.yearly'); ?></option>
-                                            </select>
-                                        </div>
-                                        <!-- Message -->
-                                        <div class="form-group md:col-span-2">
-                                            <label class="form-label"><?php _e('inquiry.message'); ?></label>
-                                            <textarea name="message" id="inquiry_message" class="form-input" rows="3"
-                                                placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
-                                        </div>
-                                    </div>
+                                    <label class="form-label"><?php _e('inquiry.message'); ?></label>
+                                    <textarea name="message" id="inquiry_message" class="form-input" rows="4"
+                                        placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
+                                    <p class="text-xs text-white/50 mt-1">
+                                        Mô tả nhu cầu cụ thể của bạn (VD: thời gian muốn xem phòng, yêu cầu đặc biệt...)
+                                    </p>
                                 </div>
 
                                 <!-- Special Requests -->
