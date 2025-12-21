@@ -15,19 +15,19 @@ function changeDate() {
 function viewRoom(roomId) {
     document.getElementById('roomModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    
+
     fetch(`api/get-room-detail.php?room_id=${roomId}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 displayRoomDetail(data.room, data.current_booking, data.booking_history);
             } else {
-                document.getElementById('roomModalContent').innerHTML = 
+                document.getElementById('roomModalContent').innerHTML =
                     '<div class="text-center py-8 text-red-600">Không thể tải thông tin phòng</div>';
             }
         })
         .catch(err => {
-            document.getElementById('roomModalContent').innerHTML = 
+            document.getElementById('roomModalContent').innerHTML =
                 '<div class="text-center py-8 text-red-600">Có lỗi xảy ra</div>';
         });
 }
@@ -40,14 +40,14 @@ function displayRoomDetail(room, currentBooking, history) {
         'maintenance': 'bg-orange-100 text-orange-800',
         'cleaning': 'bg-blue-100 text-blue-800'
     };
-    
+
     const statusLabels = {
         'available': 'Trống',
         'occupied': 'Đang ở',
         'maintenance': 'Bảo trì',
         'cleaning': 'Dọn dẹp'
     };
-    
+
     let html = `
         <div class="space-y-6">
             <!-- Room Info -->
@@ -184,7 +184,7 @@ function displayRoomDetail(room, currentBooking, history) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('roomModalContent').innerHTML = html;
 }
 
@@ -198,20 +198,20 @@ async function changeRoomType(roomId, roomNumber) {
     document.getElementById('typeRoomId').value = roomId;
     document.getElementById('typeRoomNumber').textContent = roomNumber || roomId;
     document.getElementById('roomTypeModal').classList.remove('hidden');
-    
+
     // Load room types list
     try {
         const response = await fetch('api/get-room-types.php');
         const data = await response.json();
-        
+
         if (!data.success) {
             document.getElementById('roomTypeList').innerHTML = '<p class="text-center text-red-500 py-4">Không thể tải danh sách loại phòng</p>';
             return;
         }
-        
+
         const roomTypes = data.room_types;
         let html = '';
-        
+
         roomTypes.forEach(type => {
             const isRoom = type.category === 'room';
             html += `
@@ -231,7 +231,7 @@ async function changeRoomType(roomId, roomNumber) {
                 </button>
             `;
         });
-        
+
         document.getElementById('roomTypeList').innerHTML = html;
     } catch (error) {
         document.getElementById('roomTypeList').innerHTML = '<p class="text-center text-red-500 py-4">Có lỗi xảy ra</p>';
@@ -241,16 +241,16 @@ async function changeRoomType(roomId, roomNumber) {
 // Select room type
 async function selectRoomType(typeId) {
     const roomId = document.getElementById('typeRoomId').value;
-    
+
     try {
         const response = await fetch('api/update-room-type.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `room_id=${roomId}&room_type_id=${typeId}`
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             closeRoomTypeModal();
             showToast('Đã đổi loại phòng thành công!', 'success');
@@ -277,16 +277,16 @@ function changeRoomStatus(roomId, currentStatus, roomNumber) {
 // Select status
 async function selectStatus(status) {
     const roomId = document.getElementById('statusRoomId').value;
-    
+
     try {
         const response = await fetch('api/update-room-status.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `room_id=${roomId}&status=${status}`
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             closeStatusModal();
             showToast('Đã đổi trạng thái thành công!', 'success');
@@ -308,12 +308,12 @@ function toggleFloorMaintenance(floor, isCurrentlyMaintenance) {
     document.getElementById('maintenanceFloor').value = floor;
     document.getElementById('maintenanceFloorNumber').textContent = floor;
     document.getElementById('maintenanceCurrentStatus').value = isCurrentlyMaintenance ? '1' : '0';
-    
+
     // Reset form
     document.getElementById('maintenanceNote').value = '';
     document.getElementById('maintenanceStartDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('maintenanceEndDate').value = '';
-    
+
     // Toggle buttons based on current status
     if (isCurrentlyMaintenance) {
         document.getElementById('btnSaveMaintenance').classList.add('hidden');
@@ -322,7 +322,7 @@ function toggleFloorMaintenance(floor, isCurrentlyMaintenance) {
         document.getElementById('btnSaveMaintenance').classList.remove('hidden');
         document.getElementById('btnDisableMaintenance').classList.add('hidden');
     }
-    
+
     document.getElementById('floorMaintenanceModal').classList.remove('hidden');
 }
 
@@ -331,16 +331,16 @@ async function saveFloorMaintenance() {
     const note = document.getElementById('maintenanceNote').value;
     const startDate = document.getElementById('maintenanceStartDate').value;
     const endDate = document.getElementById('maintenanceEndDate').value;
-    
+
     try {
         const response = await fetch('api/floor-maintenance.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `floor=${floor}&is_maintenance=1&maintenance_note=${encodeURIComponent(note)}&start_date=${startDate}&end_date=${endDate}`
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             closeFloorMaintenanceModal();
             showToast(data.message, 'success');
@@ -355,18 +355,18 @@ async function saveFloorMaintenance() {
 
 async function disableFloorMaintenance() {
     const floor = document.getElementById('maintenanceFloor').value;
-    
+
     if (!confirm(`Bạn có chắc muốn tắt bảo trì tầng ${floor}?`)) return;
-    
+
     try {
         const response = await fetch('api/floor-maintenance.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `floor=${floor}&is_maintenance=0`
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             closeFloorMaintenanceModal();
             showToast(data.message, 'success');
@@ -393,7 +393,7 @@ function showToast(message, type = 'info') {
         ${message}
     `;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transition = 'opacity 0.3s';
@@ -405,16 +405,16 @@ function showToast(message, type = 'info') {
 async function quickJumpToRoom() {
     const input = document.getElementById('quickJumpInput');
     const roomNumber = input.value.trim();
-    
+
     if (!roomNumber) {
         input.focus();
         return;
     }
-    
+
     try {
         const response = await fetch(`api/get-room-by-number.php?room_number=${roomNumber}`);
         const data = await response.json();
-        
+
         if (data.success && data.room) {
             viewRoom(data.room.room_id);
             highlightRoom(roomNumber);
@@ -434,7 +434,7 @@ function highlightRoom(roomNumber) {
         card.style.transform = '';
         card.style.boxShadow = '';
     });
-    
+
     const roomCards = document.querySelectorAll('.room-card');
     roomCards.forEach(card => {
         const cardNumber = card.querySelector('.room-number')?.textContent;
@@ -442,9 +442,9 @@ function highlightRoom(roomNumber) {
             card.style.transform = 'scale(1.1)';
             card.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.8)';
             card.style.zIndex = '10';
-            
+
             card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
+
             setTimeout(() => {
                 card.style.transform = '';
                 card.style.boxShadow = '';
@@ -455,6 +455,46 @@ function highlightRoom(roomNumber) {
 }
 
 // Auto-focus on input when page loads
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('quickJumpInput')?.focus();
 });
+
+// Update floor status (Bulk update)
+async function updateFloorStatus(floor, status) {
+    const statusLabels = {
+        'available': 'Trống',
+        'occupied': 'Đang ở',
+        'maintenance': 'Bảo trì',
+        'cleaning': 'Dọn dẹp',
+        'reserved': 'Đã đặt'
+    };
+
+    const label = statusLabels[status] || status;
+
+    // Custom confirmation message for occupied/reserved which might be dangerous
+    let confirmMsg = `Bạn có chắc muốn đổi tất cả phòng tầng ${floor} sang trạng thái "${label}"?`;
+    if (status === 'occupied' || status === 'reserved') {
+        confirmMsg += '\nLƯU Ý: Việc này sẽ thay đổi trạng thái của cả các phòng đang có khách!';
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    try {
+        const response = await fetch('api/update-floor-status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `floor=${floor}&status=${status}`
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showToast(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra', 'error');
+        }
+    } catch (error) {
+        showToast('Có lỗi xảy ra: ' + error.message, 'error');
+    }
+}
