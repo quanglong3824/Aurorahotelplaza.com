@@ -112,8 +112,8 @@ $category_names = [
             <section class="relative min-h-[600px] flex items-center justify-center overflow-hidden">
                 <!-- Background Image -->
                 <div class="absolute inset-0">
-                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>" alt="Aurora Hotel"
-                        class="w-full h-full object-cover">
+                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>"
+                        alt="Aurora Hotel" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
                 </div>
 
@@ -380,8 +380,8 @@ $category_names = [
             <!-- CTA Section -->
             <section class="relative py-24 overflow-hidden">
                 <div class="absolute inset-0">
-                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>" alt="Aurora Hotel"
-                        class="w-full h-full object-cover">
+                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>"
+                        alt="Aurora Hotel" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60"></div>
                 </div>
 
