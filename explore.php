@@ -119,7 +119,7 @@ try {
 
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="rooms.php" class="glass-quick-link active group">
+                        <a href="rooms.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">hotel</span>
                             </div>
