@@ -310,6 +310,183 @@ function formatCurrency(amount) {
     }
 }
 
+// ========== APARTMENT RENT MODE FUNCTIONS ==========
+
+// Toggle between rent by month and rent by date
+function toggleRentMode() {
+    const mode = document.getElementById('rent_mode').value;
+    const byMonthSection = document.getElementById('rent_by_month');
+    const byDateSection = document.getElementById('rent_by_date');
+
+    if (mode === 'by_month') {
+        byMonthSection.classList.remove('hidden');
+        byDateSection.classList.add('hidden');
+        calculateEndDate(); // Recalculate when switching
+    } else {
+        byMonthSection.classList.add('hidden');
+        byDateSection.classList.remove('hidden');
+        // Clear and set minimum for manual end date
+        const preferredCheckIn = document.getElementById('preferred_check_in').value;
+        if (preferredCheckIn) {
+            document.getElementById('manual_end_date').min = preferredCheckIn;
+        }
+    }
+    updateDurationType();
+    updateInquirySummary();
+}
+
+// Calculate end date from months
+function calculateEndDate() {
+    const preferredCheckIn = document.getElementById('preferred_check_in').value;
+    const monthsSelect = document.getElementById('duration_months');
+    const calculatedEndDate = document.getElementById('calculated_end_date');
+
+    if (!preferredCheckIn || !monthsSelect) return;
+
+    const months = parseInt(monthsSelect.value) || 1;
+    const startDate = new Date(preferredCheckIn);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + months);
+
+    // Format as dd/mm/yyyy for display
+    const day = String(endDate.getDate()).padStart(2, '0');
+    const month = String(endDate.getMonth() + 1).padStart(2, '0');
+    const year = endDate.getFullYear();
+
+    if (calculatedEndDate) {
+        calculatedEndDate.value = `${day}/${month}/${year}`;
+    }
+
+    updateDurationType();
+    updateInquirySummary();
+}
+
+// Calculate end date from number of days
+function calculateEndDateFromDays() {
+    const preferredCheckIn = document.getElementById('preferred_check_in').value;
+    const daysInput = document.getElementById('duration_days');
+    const manualEndDate = document.getElementById('manual_end_date');
+
+    if (!preferredCheckIn || !daysInput.value) return;
+
+    const days = parseInt(daysInput.value) || 0;
+    if (days <= 0) return;
+
+    const startDate = new Date(preferredCheckIn);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + days);
+
+    // Set the manual end date field
+    const year = endDate.getFullYear();
+    const month = String(endDate.getMonth() + 1).padStart(2, '0');
+    const day = String(endDate.getDate()).padStart(2, '0');
+
+    if (manualEndDate) {
+        manualEndDate.value = `${year}-${month}-${day}`;
+    }
+
+    updateDurationType();
+    updateInquirySummary();
+}
+
+// Calculate days from selected end date
+function calculateDaysFromEndDate() {
+    const preferredCheckIn = document.getElementById('preferred_check_in').value;
+    const manualEndDate = document.getElementById('manual_end_date').value;
+    const daysInput = document.getElementById('duration_days');
+
+    if (!preferredCheckIn || !manualEndDate) return;
+
+    const startDate = new Date(preferredCheckIn);
+    const endDate = new Date(manualEndDate);
+    const diffTime = endDate - startDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0 && daysInput) {
+        daysInput.value = diffDays;
+    }
+
+    updateDurationType();
+    updateInquirySummary();
+}
+
+// Update hidden duration_type field based on current selection
+function updateDurationType() {
+    const mode = document.getElementById('rent_mode')?.value || 'by_month';
+    const durationTypeField = document.getElementById('duration_type');
+
+    if (mode === 'by_month') {
+        const months = document.getElementById('duration_months')?.value || '1';
+        durationTypeField.value = months + '_month' + (months > 1 ? 's' : '');
+    } else {
+        // For by_date mode, calculate approximate months or use 'custom'
+        const preferredCheckIn = document.getElementById('preferred_check_in').value;
+        const manualEndDate = document.getElementById('manual_end_date').value;
+
+        if (preferredCheckIn && manualEndDate) {
+            const startDate = new Date(preferredCheckIn);
+            const endDate = new Date(manualEndDate);
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            durationTypeField.value = 'custom_' + diffDays + '_days';
+        } else {
+            durationTypeField.value = 'custom';
+        }
+    }
+}
+
+// Update inquiry summary display
+function updateInquirySummary() {
+    const mode = document.getElementById('rent_mode')?.value || 'by_month';
+    const durationDisplay = document.getElementById('inquiry_duration_display');
+    const endDateDisplay = document.getElementById('inquiry_end_date_display');
+    const preferredCheckIn = document.getElementById('preferred_check_in').value;
+
+    if (!durationDisplay || !endDateDisplay) return;
+
+    if (mode === 'by_month') {
+        const months = document.getElementById('duration_months')?.value || '1';
+        durationDisplay.textContent = months + ' tháng';
+
+        // Get calculated end date
+        const calculatedEndDate = document.getElementById('calculated_end_date')?.value;
+        endDateDisplay.textContent = calculatedEndDate || '--';
+    } else {
+        const days = document.getElementById('duration_days')?.value;
+        const manualEndDate = document.getElementById('manual_end_date')?.value;
+
+        if (days) {
+            durationDisplay.textContent = days + ' ngày';
+        } else if (manualEndDate && preferredCheckIn) {
+            const startDate = new Date(preferredCheckIn);
+            const endDate = new Date(manualEndDate);
+            const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            durationDisplay.textContent = diffDays + ' ngày';
+        } else {
+            durationDisplay.textContent = '--';
+        }
+
+        if (manualEndDate) {
+            const d = new Date(manualEndDate);
+            endDateDisplay.textContent = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        } else {
+            endDateDisplay.textContent = '--';
+        }
+    }
+}
+
+// Update apartment name in summary
+document.addEventListener('change', function (e) {
+    if (e.target.id === 'preferred_check_in') {
+        calculateEndDate();
+        // Set min for manual end date
+        const manualEndDate = document.getElementById('manual_end_date');
+        if (manualEndDate) {
+            manualEndDate.min = e.target.value;
+        }
+    }
+});
+
 // Navigate to next step
 function nextStep(step) {
     // Validate current step
@@ -480,8 +657,8 @@ function updateSummary() {
         // ========== APARTMENT INQUIRY SUMMARY ==========
         const numAdults = document.getElementById('inquiry_num_adults').value || 1;
         const numChildren = document.getElementById('inquiry_num_children').value || 0;
-        const durationType = document.getElementById('duration_type').value;
         const preferredCheckIn = document.getElementById('preferred_check_in').value;
+        const rentMode = document.getElementById('rent_mode')?.value || 'by_month';
 
         // Update guest count
         let guestText = numAdults + ' người lớn';
@@ -494,16 +671,27 @@ function updateSummary() {
         document.getElementById('summary_checkin_label').textContent = 'Ngày dự kiến:';
         document.getElementById('summary_checkin').textContent = formatDate(preferredCheckIn);
 
-        // Show duration instead of checkout
-        document.getElementById('summary_checkout_label').textContent = 'Thời gian cư trú:';
-        const durationLabels = {
-            '1_month': '1 tháng',
-            '3_months': '3 tháng',
-            '6_months': '6 tháng',
-            '12_months': '12 tháng (1 năm)',
-            'custom': 'Khác (xem tin nhắn)'
-        };
-        document.getElementById('summary_checkout').textContent = durationLabels[durationType] || durationType;
+        // Show duration based on rent mode
+        document.getElementById('summary_checkout_label').textContent = 'Thời gian thuê:';
+
+        if (rentMode === 'by_month') {
+            const months = document.getElementById('duration_months')?.value || '1';
+            document.getElementById('summary_checkout').textContent = months + ' tháng';
+        } else {
+            const days = document.getElementById('duration_days')?.value;
+            const manualEndDate = document.getElementById('manual_end_date')?.value;
+
+            if (days) {
+                document.getElementById('summary_checkout').textContent = days + ' ngày';
+            } else if (manualEndDate && preferredCheckIn) {
+                const startDate = new Date(preferredCheckIn);
+                const endDate = new Date(manualEndDate);
+                const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('summary_checkout').textContent = diffDays + ' ngày';
+            } else {
+                document.getElementById('summary_checkout').textContent = '--';
+            }
+        }
 
         // Hide nights row for inquiry
         document.getElementById('summary_nights_row').style.display = 'none';
@@ -580,19 +768,31 @@ async function handleSubmit(e) {
         const numAdults = document.getElementById('inquiry_num_adults').value;
         const numChildren = document.getElementById('inquiry_num_children').value;
         const inquiryMsg = document.getElementById('inquiry_message')?.value || '';
+        const rentMode = document.getElementById('rent_mode')?.value || 'by_month';
 
-        // Calculate check-out date based on duration
+        // Calculate check-out date based on rent mode
         let checkOutDate = preferredCheckIn;
         if (preferredCheckIn) {
             const startDate = new Date(preferredCheckIn);
-            let monthsToAdd = 1;
-            if (durationType === '3_months') monthsToAdd = 3;
-            if (durationType === '6_months') monthsToAdd = 6;
-            if (durationType === '12_months') monthsToAdd = 12;
 
-            const endDate = new Date(startDate);
-            endDate.setMonth(endDate.getMonth() + monthsToAdd);
-            checkOutDate = endDate.toISOString().split('T')[0];
+            if (rentMode === 'by_month') {
+                // By month: use duration_months select
+                const months = parseInt(document.getElementById('duration_months')?.value) || 1;
+                const endDate = new Date(startDate);
+                endDate.setMonth(endDate.getMonth() + months);
+                checkOutDate = endDate.toISOString().split('T')[0];
+            } else {
+                // By date: use manual_end_date or calculate from days
+                const manualEndDate = document.getElementById('manual_end_date')?.value;
+                if (manualEndDate) {
+                    checkOutDate = manualEndDate;
+                } else {
+                    const days = parseInt(document.getElementById('duration_days')?.value) || 30;
+                    const endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + days);
+                    checkOutDate = endDate.toISOString().split('T')[0];
+                }
+            }
         }
 
         data = {

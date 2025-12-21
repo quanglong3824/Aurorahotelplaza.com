@@ -242,23 +242,68 @@ foreach ($room_types as $room) {
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Preferred Move-in Date -->
                                     <div class="form-group">
-                                        <label class="form-label"><?php _e('inquiry.check_in'); ?> *</label>
+                                        <label class="form-label">Ngày dự kiến nhận phòng *</label>
                                         <input type="date" name="preferred_check_in" id="preferred_check_in"
                                             class="form-input">
                                     </div>
 
-                                    <!-- Duration Type -->
+                                    <!-- Rent Mode Selection -->
                                     <div class="form-group">
-                                        <label class="form-label"><?php _e('inquiry.duration_type'); ?> *</label>
-                                        <select name="duration_type" id="duration_type" class="form-input">
-                                            <option value="1_month">1 tháng</option>
-                                            <option value="3_months">3 tháng</option>
-                                            <option value="6_months">6 tháng</option>
-                                            <option value="12_months">12 tháng (1 năm)</option>
-                                            <option value="custom">Khác (ghi chú bên dưới)</option>
+                                        <label class="form-label">Hình thức thuê *</label>
+                                        <select id="rent_mode" class="form-input" onchange="toggleRentMode()">
+                                            <option value="by_month">Theo tháng</option>
+                                            <option value="by_date">Theo ngày / Chọn ngày kết thúc</option>
                                         </select>
                                     </div>
+                                </div>
 
+                                <!-- BY MONTH Options -->
+                                <div id="rent_by_month" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Số tháng thuê *</label>
+                                        <select name="duration_months" id="duration_months" class="form-input"
+                                            onchange="calculateEndDate()">
+                                            <option value="1">1 tháng</option>
+                                            <option value="2">2 tháng</option>
+                                            <option value="3">3 tháng</option>
+                                            <option value="4">4 tháng</option>
+                                            <option value="5">5 tháng</option>
+                                            <option value="6">6 tháng</option>
+                                            <option value="9">9 tháng</option>
+                                            <option value="12">12 tháng (1 năm)</option>
+                                            <option value="24">24 tháng (2 năm)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Ngày dự kiến trả phòng</label>
+                                        <input type="text" id="calculated_end_date"
+                                            class="form-input bg-gray-700 cursor-not-allowed" readonly
+                                            placeholder="Tự động tính">
+                                    </div>
+                                </div>
+
+                                <!-- BY DATE Options (hidden by default) -->
+                                <div id="rent_by_date" class="hidden mt-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Số ngày thuê</label>
+                                            <input type="number" id="duration_days" class="form-input" min="1" max="730"
+                                                placeholder="VD: 45" onchange="calculateEndDateFromDays()">
+                                            <p class="text-xs text-white/50 mt-1">Nhập số ngày hoặc chọn ngày kết thúc
+                                                bên cạnh</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Hoặc chọn ngày kết thúc</label>
+                                            <input type="date" id="manual_end_date" class="form-input"
+                                                onchange="calculateDaysFromEndDate()">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden field for duration_type (for backend) -->
+                                <input type="hidden" name="duration_type" id="duration_type" value="1_month">
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <!-- Number of Adults -->
                                     <div class="form-group">
                                         <label class="form-label"><?php _e('inquiry.num_adults'); ?> *</label>
@@ -282,13 +327,17 @@ foreach ($room_types as $room) {
                                         <span id="inquiry_apartment_name" class="text-white">--</span>
                                     </div>
                                     <div class="flex justify-between items-center mt-2">
-                                        <span class="font-semibold text-purple-300">Giá tham khảo:</span>
-                                        <span class="text-accent font-bold">Liên hệ báo giá</span>
+                                        <span class="font-semibold text-purple-300">Thời gian thuê:</span>
+                                        <span id="inquiry_duration_display" class="text-white">--</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="font-semibold text-purple-300">Dự kiến trả phòng:</span>
+                                        <span id="inquiry_end_date_display" class="text-white">--</span>
                                     </div>
                                     <div
                                         class="flex justify-between items-center mt-2 pt-2 border-t border-purple-500/20">
-                                        <span class="font-semibold text-purple-300">Hình thức:</span>
-                                        <span class="text-white"><?php _e('inquiry.contact_btn'); ?></span>
+                                        <span class="font-semibold text-purple-300">Giá tham khảo:</span>
+                                        <span class="text-accent font-bold">Liên hệ báo giá</span>
                                     </div>
                                 </div>
                             </div>

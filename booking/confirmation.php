@@ -56,17 +56,31 @@ try {
     <?php include '../includes/header.php'; ?>
     <main class="booking-main" style="align-items: center;">
         <div class="booking-container" style="max-width: 40rem;">
-            <?php 
+            <?php
             $is_inquiry = ($booking['booking_type'] ?? 'instant') === 'inquiry';
-            $duration_labels = [
-                '1_month' => '1 tháng',
-                '3_months' => '3 tháng',
-                '6_months' => '6 tháng',
-                '12_months' => '12 tháng (1 năm)',
-                'custom' => 'Khác'
-            ];
+
+            // Parse duration for display
+            $duration_type = $booking['duration_type'] ?? '';
+            $duration_display = '';
+
+            // Check if it's a custom days format (custom_45_days)
+            if (preg_match('/^custom_(\d+)_days$/', $duration_type, $matches)) {
+                $days = (int) $matches[1];
+                $duration_display = $days . ' ngày';
+            } elseif (preg_match('/^(\d+)_month/', $duration_type, $matches)) {
+                $months = (int) $matches[1];
+                if ($months == 12) {
+                    $duration_display = $months . ' tháng (1 năm)';
+                } elseif ($months == 24) {
+                    $duration_display = $months . ' tháng (2 năm)';
+                } else {
+                    $duration_display = $months . ' tháng';
+                }
+            } else {
+                $duration_display = $duration_type ?: 'N/A';
+            }
             ?>
-            
+
             <!-- Header -->
             <div class="text-center mb-8">
                 <?php if ($is_inquiry): ?>
@@ -111,11 +125,12 @@ try {
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-purple-500/20">
                                 <span class="text-white/70">Ngày dự kiến nhận:</span>
-                                <span class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
+                                <span
+                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-purple-500/20">
-                                <span class="text-white/70">Thời gian cư trú:</span>
-                                <span class="font-semibold"><?php echo $duration_labels[$booking['duration_type']] ?? $booking['duration_type'] ?? 'N/A'; ?></span>
+                                <span class="text-white/70">Thời gian thuê:</span>
+                                <span class="font-semibold"><?php echo $duration_display; ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-purple-500/20">
                                 <span class="text-white/70">Số khách:</span>
@@ -128,7 +143,8 @@ try {
                             </div>
                             <div class="flex justify-between items-center py-2">
                                 <span class="text-white/70">Hình thức:</span>
-                                <span class="px-3 py-1 rounded-full text-sm font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                <span
+                                    class="px-3 py-1 rounded-full text-sm font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30">
                                     Liên hệ báo giá
                                 </span>
                             </div>
@@ -165,7 +181,8 @@ try {
                                 <span class="material-symbols-outlined">home</span>
                                 Về trang chủ
                             </a>
-                            <a href="../profile/bookings.php" class="btn-primary text-center" style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
+                            <a href="../profile/bookings.php" class="btn-primary text-center"
+                                style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
                                 <span class="material-symbols-outlined">list_alt</span>
                                 Xem yêu cầu
                             </a>
@@ -187,15 +204,19 @@ try {
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_in'); ?>:</span>
-                                <span class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
+                                <span
+                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_out'); ?>:</span>
-                                <span class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></span>
+                                <span
+                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.total_amount'); ?>:</span>
-                                <span class="font-bold text-xl text-accent"><?php echo number_format($booking['total_amount']); ?> VNĐ</span>
+                                <span
+                                    class="font-bold text-xl text-accent"><?php echo number_format($booking['total_amount']); ?>
+                                    VNĐ</span>
                             </div>
                             <div class="flex justify-between items-center py-2">
                                 <span class="text-white/70"><?php _e('booking_confirmation.status'); ?>:</span>

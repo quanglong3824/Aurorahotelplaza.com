@@ -105,14 +105,38 @@ try {
 
 $total_pages = ceil($total_inquiries / $per_page);
 
-// Duration labels
+// Duration labels for filter dropdown
 $duration_labels = [
     '1_month' => '1 tháng',
     '3_months' => '3 tháng',
     '6_months' => '6 tháng',
     '12_months' => '12 tháng',
-    'custom' => 'Khác'
+    'custom' => 'Khác (theo ngày)'
 ];
+
+// Helper function to parse duration for display
+function parseDuration($duration_type)
+{
+    if (empty($duration_type))
+        return 'N/A';
+
+    // Check if it's a custom days format (custom_45_days)
+    if (preg_match('/^custom_(\d+)_days$/', $duration_type, $matches)) {
+        return (int) $matches[1] . ' ngày';
+    }
+
+    // Check if it's a month format (1_month, 3_months, etc)
+    if (preg_match('/^(\d+)_month/', $duration_type, $matches)) {
+        $months = (int) $matches[1];
+        if ($months == 12)
+            return '12 tháng (1 năm)';
+        if ($months == 24)
+            return '24 tháng (2 năm)';
+        return $months . ' tháng';
+    }
+
+    return $duration_type;
+}
 
 // Status labels
 $status_labels = [
@@ -243,7 +267,7 @@ include 'includes/admin-header.php';
                             </td>
                             <td>
                                 <span class="badge badge-secondary">
-                                    <?= $duration_labels[$inquiry['duration_type']] ?? $inquiry['duration_type'] ?? 'N/A' ?>
+                                    <?= parseDuration($inquiry['duration_type']) ?>
                                 </span>
                             </td>
                             <td>
@@ -368,13 +392,26 @@ include 'includes/admin-header.php';
             .then(data => {
                 if (data.success) {
                     const i = data.inquiry;
-                    const durationLabels = {
-                        '1_month': '1 tháng',
-                        '3_months': '3 tháng',
-                        '6_months': '6 tháng',
-                        '12_months': '12 tháng (1 năm)',
-                        'custom': 'Khác'
-                    };
+
+                    // Parse duration for flexible formats
+                    function parseDuration(durationType) {
+                        if (!durationType) return 'N/A';
+
+                        // Check for custom days format (custom_45_days)
+                        const daysMatch = durationType.match(/^custom_(\d+)_days$/);
+                        if (daysMatch) return daysMatch[1] + ' ngày';
+
+                        // Check for month format (1_month, 3_months, etc)
+                        const monthMatch = durationType.match(/^(\d+)_month/);
+                        if (monthMatch) {
+                            const months = parseInt(monthMatch[1]);
+                            if (months === 12) return '12 tháng (1 năm)';
+                            if (months === 24) return '24 tháng (2 năm)';
+                            return months + ' tháng';
+                        }
+
+                        return durationType;
+                    }
 
                     document.getElementById('viewModalContent').innerHTML = `
                     <div class="space-y-4">
@@ -417,8 +454,8 @@ include 'includes/admin-header.php';
                                 <p class="font-medium">${i.check_in_date}</p>
                             </div>
                             <div>
-                                <label class="text-sm text-gray-500">Thời gian cư trú</label>
-                                <p class="font-medium">${durationLabels[i.duration_type] || i.duration_type || 'N/A'}</p>
+                                <label class="text-sm text-gray-500">Thời gian thuê</label>
+                                <p class="font-medium">${parseDuration(i.duration_type)}</p>
                             </div>
                             <div>
                                 <label class="text-sm text-gray-500">Số người lớn</label>
