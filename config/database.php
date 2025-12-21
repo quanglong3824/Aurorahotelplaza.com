@@ -6,12 +6,15 @@
  */
 
 // Tự động phát hiện môi trường
-$isLocal = (
-    $_SERVER['SERVER_NAME'] === 'localhost' || 
-    $_SERVER['SERVER_ADDR'] === '127.0.0.1' || 
-    $_SERVER['SERVER_ADDR'] === '::1' ||
-    strpos($_SERVER['HTTP_HOST'], 'localhost') !== false
-);
+$isLocal = true;
+if (isset($_SERVER['SERVER_NAME'])) {
+    $isLocal = (
+        $_SERVER['SERVER_NAME'] === 'localhost' ||
+        $_SERVER['SERVER_ADDR'] === '127.0.0.1' ||
+        $_SERVER['SERVER_ADDR'] === '::1' ||
+        strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false
+    );
+}
 
 // Cấu hình Local (XAMPP)
 define('DB_LOCAL_NAME', 'auroraho_aurorahotelplaza.com');
@@ -39,14 +42,15 @@ if ($isLocal) {
     define('DB_HOST', DB_HOST_HOST);
     define('DB_ENVIRONMENT', 'PRODUCTION');
 }
- 
+
 /** Database charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
 define('DB_DEBUG', false);
 
 
 //////
-class Database {
+class Database
+{
     private $host = DB_HOST;
     private $port = 3306;
     private $db_name = DB_NAME;
@@ -59,16 +63,17 @@ class Database {
     private $fallback_used = false;
 
     // Get database connection
-    public function getConnection() {
+    public function getConnection()
+    {
         $this->conn = null;
-        
+
         try {
             $hostWithoutPort = $this->parseHostAndPort($this->host);
             $dsn = "mysql:host=" . $hostWithoutPort . ";port=" . $this->port . ";dbname=" . $this->db_name . ";charset=" . $this->charset;
             $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch(PDOException $exception) {
+        } catch (PDOException $exception) {
             // Ghi nhận lỗi kết nối
             $this->last_error = $exception->getMessage();
             $this->last_error_code = $exception->getCode();
@@ -77,34 +82,39 @@ class Database {
             }
             return false;
         }
-        
+
         return $this->conn;
     }
-    
+
     // Close connection
-    public function closeConnection() {
+    public function closeConnection()
+    {
         $this->conn = null;
     }
 
-    public function getLastError() {
+    public function getLastError()
+    {
         return $this->last_error;
     }
 
-    public function getLastErrorCode() {
+    public function getLastErrorCode()
+    {
         return $this->last_error_code;
     }
 
-    public function isFallbackUsed() {
+    public function isFallbackUsed()
+    {
         return $this->fallback_used === true;
     }
 
-    private function parseHostAndPort($host) {
+    private function parseHostAndPort($host)
+    {
         if (strpos($host, ':') !== false) {
             $parts = explode(':', $host, 2);
             $host = $parts[0];
             $port = $parts[1];
             if (is_numeric($port)) {
-                $this->port = (int)$port;
+                $this->port = (int) $port;
             }
         }
         return $host;
@@ -112,12 +122,17 @@ class Database {
 }
 
 // Create database instance
-function getDB() {
+function getDB()
+{
     $database = new Database();
     return $database->getConnection();
 }
 
-function explainPDOError($message) {
+function explainPDOError($message)
+{
+    // ... existing explainPDOError function body implied or copied if I had it fully. 
+    // I only see it in Step 98 output.
+    // I'll copy it from Step 98 just safely.
     $msg = strtolower($message);
     if (strpos($msg, 'access denied for user') !== false) {
         return 'Sai user/password hoặc user không có quyền truy cập từ host hiện tại.';
@@ -137,7 +152,8 @@ function explainPDOError($message) {
     return 'Kiểm tra lại cấu hình DB_HOST, DB_USER, DB_PASSWORD, DB_NAME và firewall.';
 }
 
-function checkDBConnection($echo = true) {
+function checkDBConnection($echo = true)
+{
     $database = new Database();
     $conn = $database->getConnection();
     if ($conn === false) {
@@ -152,11 +168,11 @@ function checkDBConnection($echo = true) {
         if ($echo) {
             echo "<pre>{$output}</pre>";
         }
-        return [ 'success' => false, 'message' => $output ];
+        return ['success' => false, 'message' => $output];
     }
     if ($echo) {
         echo "<pre>Kết nối thành công. Host: " . DB_HOST . "</pre>";
     }
-    return [ 'success' => true, 'message' => 'OK' ];
+    return ['success' => true, 'message' => 'OK'];
 }
 ?>
