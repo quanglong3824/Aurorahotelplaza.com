@@ -25,6 +25,7 @@ if (!$booking_code && !$booking_id) {
         if ($booking_id) {
             $stmt = $db->prepare("
                 SELECT b.*, rt.type_name, rt.category, r.room_number,
+                       b.extra_guest_fee, b.extra_bed_fee, b.extra_beds, b.price_type_used, b.extra_guests_data,
                        u.full_name as guest_name, u.email, u.phone
                 FROM bookings b
                 JOIN room_types rt ON b.room_type_id = rt.room_type_id
@@ -164,7 +165,8 @@ $payment_labels = [
                                 <div
                                     class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-6">
                                     <h2 class="text-xl font-bold text-white uppercase tracking-wider">
-                                        <?php _e('booking_detail.booking_status'); ?></h2>
+                                        <?php _e('booking_detail.booking_status'); ?>
+                                    </h2>
                                     <div class="flex gap-3">
                                         <span class="px-4 py-1.5 text-sm font-bold rounded-full border <?php
                                         $status = $booking['status'];
@@ -193,14 +195,16 @@ $payment_labels = [
                                         <span
                                             class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.booked_date'); ?></span>
                                         <p class="text-white font-mono">
-                                            <?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?></p>
+                                            <?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?>
+                                        </p>
                                     </div>
                                     <?php if ($booking['checked_in_at']): ?>
                                         <div class="p-3 bg-white/5 rounded-lg border border-white/5">
                                             <span
                                                 class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.checked_in_date'); ?></span>
                                             <p class="text-white font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_in_at'])); ?></p>
+                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_in_at'])); ?>
+                                            </p>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($booking['checked_out_at']): ?>
@@ -208,7 +212,8 @@ $payment_labels = [
                                             <span
                                                 class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.checked_out_date'); ?></span>
                                             <p class="text-white font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?></p>
+                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?>
+                                            </p>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($booking['cancelled_at']): ?>
@@ -216,7 +221,8 @@ $payment_labels = [
                                             <span
                                                 class="block text-red-300/70 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.cancelled_date'); ?></span>
                                             <p class="text-red-300 font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?></p>
+                                                <?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?>
+                                            </p>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -226,7 +232,8 @@ $payment_labels = [
                                         <span
                                             class="font-bold text-red-300"><?php _e('booking_detail.cancel_reason'); ?>:</span>
                                         <p class="mt-1 text-red-200/80">
-                                            <?php echo htmlspecialchars($booking['cancellation_reason']); ?></p>
+                                            <?php echo htmlspecialchars($booking['cancellation_reason']); ?>
+                                        </p>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -248,7 +255,8 @@ $payment_labels = [
                                         <div class="space-y-6">
                                             <div>
                                                 <h4 class="text-2xl font-bold text-accent">
-                                                    <?php echo htmlspecialchars($booking['type_name']); ?></h4>
+                                                    <?php echo htmlspecialchars($booking['type_name']); ?>
+                                                </h4>
                                                 <?php if ($booking['description']): ?>
                                                     <p class="text-white/60 mt-2 leading-relaxed">
                                                         <?php echo htmlspecialchars($booking['description']); ?>
@@ -276,14 +284,49 @@ $payment_labels = [
                                                     <span
                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.num_guests'); ?></span>
                                                     <p class="text-white"><?php echo $booking['num_adults']; ?>
-                                                        <?php _e('booking_detail.adults'); ?>    <?php echo $booking['num_children'] ? ', ' . $booking['num_children'] . ' ' . __('booking_detail.children') : ''; ?>
+                                                        <?php _e('booking_detail.adults'); ?>
+                                                        <?php echo $booking['num_children'] ? ', ' . $booking['num_children'] . ' ' . __('booking_detail.children') : ''; ?>
                                                     </p>
                                                 </div>
                                                 <div>
                                                     <span
                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.num_nights'); ?></span>
                                                     <p class="text-white"><?php echo $booking['total_nights']; ?>
-                                                        <?php _e('profile_bookings.nights'); ?></p>
+                                                        <?php _e('profile_bookings.nights'); ?>
+                                                    </p>
+                                                </div>
+                                                <?php
+                                                $booking_type_val = $booking['booking_type'] ?? 'standard';
+                                                $is_short_stay = $booking_type_val === 'short_stay';
+                                                $price_type = $booking['price_type_used'] ?? 'double';
+                                                $price_type_labels = [
+                                                    'single' => 'Giá 1 người',
+                                                    'double' => 'Giá 2 người',
+                                                    'short_stay' => 'Nghỉ ngắn hạn',
+                                                    'weekly' => 'Giá tuần',
+                                                    'daily' => 'Giá ngày'
+                                                ];
+                                                ?>
+                                                <div>
+                                                    <span
+                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1">Loại
+                                                        hình</span>
+                                                    <span
+                                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                                                        <?php echo $is_short_stay ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300'; ?>">
+                                                        <span
+                                                            class="material-symbols-outlined text-xs"><?php echo $is_short_stay ? 'schedule' : 'hotel'; ?></span>
+                                                        <?php echo $is_short_stay ? 'Nghỉ ngắn hạn' : 'Nghỉ qua đêm'; ?>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span
+                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1">Loại
+                                                        giá</span>
+                                                    <span
+                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-medium">
+                                                        <?php echo $price_type_labels[$price_type] ?? $price_type; ?>
+                                                    </span>
                                                 </div>
                                                 <?php if ($booking['room_number']): ?>
                                                     <div
@@ -292,14 +335,16 @@ $payment_labels = [
                                                             <span
                                                                 class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.room_number'); ?></span>
                                                             <p class="text-xl font-bold text-accent">
-                                                                <?php echo $booking['room_number']; ?></p>
+                                                                <?php echo $booking['room_number']; ?>
+                                                            </p>
                                                         </div>
                                                         <div>
                                                             <span
                                                                 class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.floor'); ?></span>
                                                             <p class="text-white"><?php _e('booking_detail.floor'); ?>
                                                                 <?php echo $booking['floor']; ?>,
-                                                                <?php echo $booking['building']; ?></p>
+                                                                <?php echo $booking['building']; ?>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
@@ -310,7 +355,8 @@ $payment_labels = [
                                                     <span
                                                         class="font-bold text-white block mb-2"><?php _e('booking_detail.amenities'); ?>:</span>
                                                     <p class="text-white/70 text-sm">
-                                                        <?php echo htmlspecialchars($booking['amenities']); ?></p>
+                                                        <?php echo htmlspecialchars($booking['amenities']); ?>
+                                                    </p>
                                                 </div>
                                             <?php endif; ?>
 
@@ -341,21 +387,24 @@ $payment_labels = [
                                                 <span
                                                     class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.full_name'); ?></span>
                                                 <p class="text-lg font-bold text-white">
-                                                    <?php echo htmlspecialchars($booking['guest_name']); ?></p>
+                                                    <?php echo htmlspecialchars($booking['guest_name']); ?>
+                                                </p>
                                             </div>
                                             <div
                                                 class="p-3 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                                                 <span
                                                     class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.email'); ?></span>
                                                 <p class="text-white font-mono text-sm">
-                                                    <?php echo htmlspecialchars($booking['guest_email']); ?></p>
+                                                    <?php echo htmlspecialchars($booking['guest_email']); ?>
+                                                </p>
                                             </div>
                                             <div
                                                 class="p-3 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
                                                 <span
                                                     class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.phone'); ?></span>
                                                 <p class="text-white font-mono">
-                                                    <?php echo htmlspecialchars($booking['guest_phone']); ?></p>
+                                                    <?php echo htmlspecialchars($booking['guest_phone']); ?>
+                                                </p>
                                             </div>
                                             <?php if ($booking['guest_id_number']): ?>
                                                 <div
@@ -363,7 +412,8 @@ $payment_labels = [
                                                     <span
                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.id_number'); ?></span>
                                                     <p class="text-white font-mono">
-                                                        <?php echo htmlspecialchars($booking['guest_id_number']); ?></p>
+                                                        <?php echo htmlspecialchars($booking['guest_id_number']); ?>
+                                                    </p>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
@@ -390,6 +440,24 @@ $payment_labels = [
                                                     class="font-mono"><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?>
                                                     đ</span>
                                             </div>
+
+                                            <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
+                                                <div class="flex justify-between text-blue-400">
+                                                    <span>Phụ thu khách thêm</span>
+                                                    <span
+                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee']); ?>
+                                                        đ</span>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
+                                                <div class="flex justify-between text-orange-400">
+                                                    <span>Phí giường phụ (<?php echo $booking['extra_beds']; ?> giường)</span>
+                                                    <span
+                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee']); ?>
+                                                        đ</span>
+                                                </div>
+                                            <?php endif; ?>
 
                                             <?php if ($booking['service_charges'] > 0): ?>
                                                 <div class="flex justify-between text-white/80">
@@ -450,7 +518,8 @@ $payment_labels = [
                                                         <span
                                                             class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.transaction_id'); ?></span>
                                                         <p class="font-mono text-sm text-white break-all">
-                                                            <?php echo htmlspecialchars($booking['transaction_id']); ?></p>
+                                                            <?php echo htmlspecialchars($booking['transaction_id']); ?>
+                                                        </p>
                                                     </div>
                                                 <?php endif; ?>
 
@@ -459,7 +528,8 @@ $payment_labels = [
                                                         <span
                                                             class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.paid_at'); ?></span>
                                                         <p class="text-white font-mono">
-                                                            <?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?></p>
+                                                            <?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?>
+                                                        </p>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
@@ -469,7 +539,8 @@ $payment_labels = [
                                     <!-- Actions -->
                                     <div class="glass-card p-6">
                                         <h3 class="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">
-                                            <?php _e('booking_detail.actions'); ?></h3>
+                                            <?php _e('booking_detail.actions'); ?>
+                                        </h3>
 
                                         <div class="space-y-3">
                                             <?php if ($booking['status'] === 'pending'): ?>
@@ -605,7 +676,8 @@ $payment_labels = [
                                                             <?php if ($history['notes']): ?>
                                                                 <p
                                                                     class="text-sm text-white/80 bg-white/5 p-2 rounded border border-white/5 mt-1">
-                                                                    <?php echo htmlspecialchars($history['notes']); ?></p>
+                                                                    <?php echo htmlspecialchars($history['notes']); ?>
+                                                                </p>
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
@@ -791,7 +863,7 @@ $payment_labels = [
         // New Print Function
         function printBookingDetail() {
             const printWindow = window.open('', '_blank', 'width=900,height=900');
-            
+
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
@@ -910,7 +982,8 @@ $payment_labels = [
                             </div>
                             <div style="text-align: right; font-size: 12px; margin-top: 5px; opacity: 0.8;">
                                 <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
-                                <?php if($booking['payment_method']) echo ' - ' . ucfirst($booking['payment_method']); ?>
+                                <?php if ($booking['payment_method'])
+                                    echo ' - ' . ucfirst($booking['payment_method']); ?>
                             </div>
                         </div>
                     </div>
@@ -923,12 +996,12 @@ $payment_labels = [
                 </body>
                 </html>
             `);
-            
+
             printWindow.document.close(); // Necessary for IE >= 10
             printWindow.focus(); // Necessary for IE >= 10
-            
+
             // Wait for images to load
-            setTimeout(function() {
+            setTimeout(function () {
                 printWindow.print();
                 // printWindow.close(); // Optional: close after print
             }, 500);

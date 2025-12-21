@@ -16,8 +16,10 @@ try {
     // Get booking details
     $stmt = $db->prepare("
         SELECT b.*, b.booking_type, b.inquiry_message, b.duration_type,
+               b.extra_guest_fee, b.extra_bed_fee, b.extra_beds, b.price_type_used, b.extra_guests_data,
                u.full_name as user_name, u.email as user_email, u.phone as user_phone,
                rt.type_name, rt.category, rt.bed_type, rt.max_occupancy,
+               rt.price_published, rt.price_single_occupancy, rt.price_double_occupancy, rt.price_short_stay,
                r.room_number, r.floor, r.building
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
@@ -239,6 +241,59 @@ include 'includes/admin-header.php';
                     </div>
                 </div>
 
+                <!-- Booking Type & Pricing Details (NEW) -->
+                <?php
+                $is_short_stay = ($booking['booking_type'] ?? 'standard') === 'short_stay';
+                $price_type_labels = [
+                    'single' => 'Giá 1 người',
+                    'double' => 'Giá 2 người',
+                    'short_stay' => 'Giá nghỉ ngắn hạn',
+                    'weekly' => 'Giá tuần',
+                    'daily' => 'Giá ngày'
+                ];
+                $price_type = $booking['price_type_used'] ?? 'double';
+                ?>
+                <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-outlined text-amber-500">receipt_long</span>
+                        <h4 class="font-semibold">Chi tiết giá áp dụng</h4>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Loại hình</p>
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                                <?php echo $is_short_stay ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'; ?>">
+                                <span
+                                    class="material-symbols-outlined text-xs"><?php echo $is_short_stay ? 'schedule' : 'hotel'; ?></span>
+                                <?php echo $is_short_stay ? 'Nghỉ ngắn hạn' : 'Nghỉ qua đêm'; ?>
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Loại giá</p>
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                                <?php echo $price_type_labels[$price_type] ?? $price_type; ?>
+                            </span>
+                        </div>
+                        <?php if ($booking['extra_beds'] > 0): ?>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Giường phụ</p>
+                                <p class="font-medium text-orange-600"><?php echo $booking['extra_beds']; ?> giường</p>
+                            </div>
+                        <?php endif; ?>
+                        <?php
+                        $extra_guests = json_decode($booking['extra_guests_data'] ?? '[]', true);
+                        if (!empty($extra_guests)):
+                            ?>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Khách thêm</p>
+                                <p class="font-medium text-blue-600"><?php echo count($extra_guests); ?> khách</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <?php if ($booking['special_requests']): ?>
                     <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark">
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Yêu cầu đặc biệt</p>
@@ -278,7 +333,8 @@ include 'includes/admin-header.php';
                             <div class="mt-3">
                                 <p class="text-sm text-gray-500 mb-1">Tin nhắn / Yêu cầu cụ thể</p>
                                 <p class="text-sm p-3 bg-gray-50 dark:bg-gray-700 rounded-lg whitespace-pre-wrap">
-                                    <?php echo nl2br(htmlspecialchars($booking['inquiry_message'])); ?></p>
+                                    <?php echo nl2br(htmlspecialchars($booking['inquiry_message'])); ?>
+                                </p>
                             </div>
                         <?php endif; ?>
                         <div class="mt-4 flex gap-3">
@@ -359,6 +415,20 @@ include 'includes/admin-header.php';
                         <span
                             class="font-medium"><?php echo number_format($booking['room_price'], 0, ',', '.'); ?>đ</span>
                     </div>
+                    <?php if ($booking['extra_guest_fee'] > 0): ?>
+                        <div class="flex justify-between text-blue-600">
+                            <span>Phụ thu khách thêm</span>
+                            <span
+                                class="font-medium"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>đ</span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($booking['extra_bed_fee'] > 0): ?>
+                        <div class="flex justify-between text-orange-600">
+                            <span>Phí giường phụ (<?php echo $booking['extra_beds']; ?> giường)</span>
+                            <span
+                                class="font-medium"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
+                        </div>
+                    <?php endif; ?>
                     <?php if ($booking['service_charges'] > 0): ?>
                         <div class="flex justify-between">
                             <span>Phí dịch vụ</span>

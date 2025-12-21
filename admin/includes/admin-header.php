@@ -244,6 +244,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span class="material-symbols-outlined">payments</span>
                     <span>Quản lý giá</span>
                 </a>
+                <a href="pricing-detailed.php"
+                    class="sidebar-link <?php echo $current_page === 'pricing-detailed' ? 'active' : ''; ?>">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <span>Bảng giá chi tiết</span>
+                </a>
 
                 <!-- Customers -->
                 <div class="mt-6 mb-2">
