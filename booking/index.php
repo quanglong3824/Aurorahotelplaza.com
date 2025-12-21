@@ -302,28 +302,6 @@ foreach ($room_types as $room) {
                                     </div>
                                 </div>
 
-                                <!-- INQUIRY FIELDS (Hidden by default) -->
-                                <div class="form-group md:col-span-2 hidden" id="inquiry_fields">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Duration Type -->
-                                        <div class="form-group">
-                                            <label class="form-label"><?php _e('inquiry.duration_type'); ?></label>
-                                            <select name="duration_type" id="duration_type" class="form-input">
-                                                <option value="short_term"><?php _e('inquiry.short_term'); ?></option>
-                                                <option value="long_term"><?php _e('inquiry.long_term'); ?></option>
-                                                <option value="monthly"><?php _e('inquiry.monthly'); ?></option>
-                                                <option value="yearly"><?php _e('inquiry.yearly'); ?></option>
-                                            </select>
-                                        </div>
-                                        <!-- Message -->
-                                        <div class="form-group md:col-span-2">
-                                            <label class="form-label"><?php _e('inquiry.message'); ?></label>
-                                            <textarea name="message" id="inquiry_message" class="form-input" rows="3"
-                                                placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <!-- Special Requests -->
                                 <div class="form-group md:col-span-2">
                                     <label class="form-label"><?php _e('booking_page.special_requests'); ?></label>
