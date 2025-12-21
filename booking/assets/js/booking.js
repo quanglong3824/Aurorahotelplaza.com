@@ -2,24 +2,34 @@
 
 let currentStep = 1;
 let isInquiryMode = false;
+let currentBookingType = 'standard'; // 'standard' or 'short_stay'
+let extraGuests = []; // Array to store extra guests with heights
+const EXTRA_BED_PRICE = 650000;
+const EXTRA_GUEST_FEES = {
+    under1m: 0,      // Free
+    '1m_1m3': 200000, // 200,000 VND
+    over1m3: 400000   // 400,000 VND
+};
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM loaded, initializing booking form...');
 
     // Set minimum date to today
-    // Set minimum date to today (Local Time)
     const d = new Date();
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     const today = `${year}-${month}-${day}`;
 
-    document.getElementById('check_in_date').min = today;
+    const checkInDate = document.getElementById('check_in_date');
+    const checkOutDate = document.getElementById('check_out_date');
 
-    // Set default check-in to today and check-out to tomorrow (only if not pre-filled from URL)
-    if (!document.getElementById('check_in_date').value) {
-        document.getElementById('check_in_date').value = today;
+    if (checkInDate) checkInDate.min = today;
+
+    // Set default check-in to today and check-out to tomorrow
+    if (checkInDate && !checkInDate.value) {
+        checkInDate.value = today;
 
         const tomorrowDate = new Date();
         tomorrowDate.setDate(tomorrowDate.getDate() + 1);
@@ -27,53 +37,66 @@ document.addEventListener('DOMContentLoaded', function () {
         const tMonth = String(tomorrowDate.getMonth() + 1).padStart(2, '0');
         const tDay = String(tomorrowDate.getDate()).padStart(2, '0');
 
-        document.getElementById('check_out_date').value = `${tYear}-${tMonth}-${tDay}`;
+        if (checkOutDate) checkOutDate.value = `${tYear}-${tMonth}-${tDay}`;
     }
 
     // Always update checkout min based on check-in value
     updateCheckoutMin();
 
-    // Initial calculation with default dates
-    // Only auto-select first room if no room is pre-selected from URL
+    // Room type selection
     const roomSelect = document.getElementById('room_type_id');
-
-    // Check if a room is pre-selected from PHP (via data attribute or selected attribute)
-    const preselectedId = roomSelect.dataset.preselected;
+    const preselectedId = roomSelect?.dataset.preselected;
     const hasPreselection = preselectedId && preselectedId !== 'null' && preselectedId !== '';
 
-    if (hasPreselection) {
-        // Find and select the option with matching room_type_id
+    if (hasPreselection && roomSelect) {
         for (let i = 0; i < roomSelect.options.length; i++) {
             if (roomSelect.options[i].value === preselectedId) {
                 roomSelect.selectedIndex = i;
                 break;
             }
         }
-    } else {
-        // Keep default placeholder selected - do not auto-select first room
+    } else if (roomSelect) {
         roomSelect.selectedIndex = 0;
     }
+
+    // Initialize booking type selection
+    initBookingTypeSelection();
 
     // Check initial mode and calculate
     checkBookingMode();
     calculateTotal();
 
     // Event listeners
-    document.getElementById('check_in_date').addEventListener('change', function () {
-        updateCheckoutMin();
-        calculateTotal();
-    });
-    document.getElementById('check_out_date').addEventListener('change', calculateTotal);
-    document.getElementById('room_type_id').addEventListener('change', function () {
-        checkBookingMode();
-        calculateTotal();
-    });
+    if (checkInDate) {
+        checkInDate.addEventListener('change', function () {
+            updateCheckoutMin();
+            calculateTotal();
+        });
+    }
+    if (checkOutDate) {
+        checkOutDate.addEventListener('change', calculateTotal);
+    }
+    if (roomSelect) {
+        roomSelect.addEventListener('change', function () {
+            checkBookingMode();
+            updateShortStayAvailability();
+            calculateTotal();
+        });
+    }
 
-    // Recalculate price when number of guests changes (for 1-person vs 2-person rates)
-    const numGuestsInput = document.getElementById('num_guests');
-    if (numGuestsInput) {
-        numGuestsInput.addEventListener('change', calculateTotal);
-        numGuestsInput.addEventListener('input', calculateTotal);
+    // Recalculate price when adults/children changes
+    const numAdultsInput = document.getElementById('num_adults');
+    const numChildrenInput = document.getElementById('num_children');
+    const extraBedsInput = document.getElementById('extra_beds');
+
+    if (numAdultsInput) {
+        numAdultsInput.addEventListener('change', calculateTotal);
+    }
+    if (numChildrenInput) {
+        numChildrenInput.addEventListener('change', calculateTotal);
+    }
+    if (extraBedsInput) {
+        extraBedsInput.addEventListener('change', calculateTotal);
     }
 
     // Form submission
@@ -81,7 +104,239 @@ document.addEventListener('DOMContentLoaded', function () {
     if (form) {
         form.addEventListener('submit', handleSubmit);
     }
+
+    // Update short stay availability based on selected room
+    updateShortStayAvailability();
 });
+
+// Initialize booking type selection (standard vs short_stay)
+function initBookingTypeSelection() {
+    const bookingTypeOptions = document.querySelectorAll('.booking-type-option');
+    bookingTypeOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            const input = this.querySelector('input[type="radio"]');
+            if (input && !input.disabled) {
+                // Update visual state
+                bookingTypeOptions.forEach(opt => {
+                    opt.classList.remove('selected');
+                    const div = opt.querySelector('div');
+                    if (div) {
+                        div.classList.remove('border-amber-500', 'bg-amber-500/10');
+                        div.classList.add('border-gray-600', 'bg-gray-700/30');
+                    }
+                });
+
+                this.classList.add('selected');
+                const div = this.querySelector('div');
+                if (div) {
+                    div.classList.remove('border-gray-600', 'bg-gray-700/30');
+                    div.classList.add('border-amber-500', 'bg-amber-500/10');
+                }
+
+                input.checked = true;
+                currentBookingType = input.value;
+
+                // Show/hide short stay note
+                const shortStayNote = document.getElementById('short_stay_note');
+                const checkoutGroup = document.getElementById('checkout_group');
+
+                if (currentBookingType === 'short_stay') {
+                    if (shortStayNote) shortStayNote.classList.remove('hidden');
+                    if (checkoutGroup) checkoutGroup.classList.add('hidden');
+                } else {
+                    if (shortStayNote) shortStayNote.classList.add('hidden');
+                    if (checkoutGroup) checkoutGroup.classList.remove('hidden');
+                }
+
+                calculateTotal();
+            }
+        });
+    });
+}
+
+// Update short stay availability based on room type
+function updateShortStayAvailability() {
+    const roomSelect = document.getElementById('room_type_id');
+    const shortStayOption = document.getElementById('short_stay_option');
+
+    if (!roomSelect || !shortStayOption) return;
+
+    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+    const shortStayPrice = parseFloat(selectedOption?.dataset.priceShortStay) || 0;
+    const category = selectedOption?.dataset.category || 'room';
+
+    const input = shortStayOption.querySelector('input');
+    const div = shortStayOption.querySelector('div');
+
+    if (shortStayPrice > 0 && category === 'room') {
+        // Enable short stay
+        shortStayOption.classList.remove('opacity-50', 'cursor-not-allowed');
+        if (input) input.disabled = false;
+        if (div) div.classList.remove('opacity-50');
+    } else {
+        // Disable short stay
+        shortStayOption.classList.add('opacity-50', 'cursor-not-allowed');
+        if (input) input.disabled = true;
+        if (div) div.classList.add('opacity-50');
+
+        // Reset to standard if short_stay was selected
+        if (currentBookingType === 'short_stay') {
+            const standardOption = document.querySelector('.booking-type-option[data-type="standard"]');
+            if (standardOption) standardOption.click();
+        }
+    }
+
+    // Show/hide extra bed section for apartments
+    const extraBedSection = document.getElementById('extra_bed_section');
+    const extraBedWarning = document.getElementById('extra_bed_warning');
+
+    if (category === 'apartment') {
+        if (extraBedSection) extraBedSection.classList.add('hidden');
+        if (extraBedWarning) extraBedWarning.classList.remove('hidden');
+    } else {
+        if (extraBedSection) extraBedSection.classList.remove('hidden');
+        if (extraBedWarning) extraBedWarning.classList.add('hidden');
+    }
+}
+
+// Adjust numeric input values with +/- buttons
+function adjustValue(fieldId, delta) {
+    const input = document.getElementById(fieldId);
+    if (!input) return;
+
+    let value = parseInt(input.value) || 0;
+    let min = parseInt(input.min) || 0;
+    let max = parseInt(input.max) || 99;
+
+    value += delta;
+
+    if (value < min) value = min;
+    if (value > max) value = max;
+
+    input.value = value;
+
+    // Update total guests hidden field
+    updateTotalGuests();
+
+    // Recalculate
+    calculateTotal();
+}
+
+// Update the hidden num_guests field
+function updateTotalGuests() {
+    const numAdults = parseInt(document.getElementById('num_adults')?.value) || 1;
+    const numGuests = document.getElementById('num_guests');
+    if (numGuests) {
+        numGuests.value = numAdults;
+    }
+}
+
+// Toggle extra guests form visibility
+function toggleExtraGuests() {
+    const list = document.getElementById('extra_guests_list');
+    const btn = document.getElementById('toggle_extra_guests_btn');
+
+    if (list.classList.contains('hidden')) {
+        list.classList.remove('hidden');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">remove_circle</span> Ẩn';
+        // Add first guest if list is empty
+        if (extraGuests.length === 0) {
+            addExtraGuest();
+        }
+    } else {
+        list.classList.add('hidden');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">add_circle</span> Thêm khách';
+    }
+}
+
+// Add extra guest entry
+function addExtraGuest() {
+    const id = Date.now();
+    extraGuests.push({ id, height: 1.3, type: 'over1m3' });
+    renderExtraGuests();
+    calculateTotal();
+}
+
+// Remove extra guest
+function removeExtraGuest(id) {
+    extraGuests = extraGuests.filter(g => g.id !== id);
+    renderExtraGuests();
+    calculateTotal();
+
+    // Hide list if empty
+    if (extraGuests.length === 0) {
+        const list = document.getElementById('extra_guests_list');
+        const btn = document.getElementById('toggle_extra_guests_btn');
+        list.classList.add('hidden');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">add_circle</span> Thêm khách';
+    }
+}
+
+// Update extra guest height
+function updateExtraGuestHeight(id, height) {
+    const guest = extraGuests.find(g => g.id === id);
+    if (guest) {
+        guest.height = parseFloat(height);
+        if (height < 1.0) {
+            guest.type = 'under1m';
+        } else if (height <= 1.3) {
+            guest.type = '1m_1m3';
+        } else {
+            guest.type = 'over1m3';
+        }
+    }
+    updateExtraGuestsData();
+    calculateTotal();
+}
+
+// Render extra guests list
+function renderExtraGuests() {
+    const list = document.getElementById('extra_guests_list');
+    if (!list) return;
+
+    list.innerHTML = extraGuests.map((guest, index) => `
+        <div class="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg">
+            <span class="text-gray-400 text-sm">${index + 1}.</span>
+            <div class="flex-1">
+                <label class="text-xs text-gray-400 mb-1 block">Chiều cao (m)</label>
+                <select onchange="updateExtraGuestHeight(${guest.id}, this.value)" 
+                    class="form-input text-sm py-1">
+                    <option value="0.5" ${guest.height < 1.0 ? 'selected' : ''}>Dưới 1m (Miễn phí)</option>
+                    <option value="1.15" ${guest.height >= 1.0 && guest.height <= 1.3 ? 'selected' : ''}>1m - 1m3 (200.000đ)</option>
+                    <option value="1.5" ${guest.height > 1.3 ? 'selected' : ''}>Trên 1m3 (400.000đ)</option>
+                </select>
+            </div>
+            <div class="text-right">
+                <span class="text-sm font-semibold ${guest.type === 'under1m' ? 'text-green-400' : guest.type === '1m_1m3' ? 'text-yellow-400' : 'text-orange-400'}">
+                    ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000đ' : '400.000đ'}
+                </span>
+            </div>
+            <button type="button" onclick="removeExtraGuest(${guest.id})" 
+                class="text-red-400 hover:text-red-300 p-1">
+                <span class="material-symbols-outlined text-sm">delete</span>
+            </button>
+        </div>
+    `).join('');
+
+    // Add "Add more" button
+    list.innerHTML += `
+        <button type="button" onclick="addExtraGuest()" 
+            class="w-full p-2 border border-dashed border-blue-500/50 rounded-lg text-blue-400 text-sm flex items-center justify-center gap-1 hover:bg-blue-500/10 transition-colors">
+            <span class="material-symbols-outlined text-sm">add</span>
+            Thêm khách
+        </button>
+    `;
+
+    updateExtraGuestsData();
+}
+
+// Update hidden field with extra guests data
+function updateExtraGuestsData() {
+    const dataField = document.getElementById('extra_guests_data');
+    if (dataField) {
+        dataField.value = JSON.stringify(extraGuests);
+    }
+}
 
 // Check booking mode based on selected room
 function checkBookingMode() {
@@ -263,11 +518,18 @@ function calculateTotal() {
 
     const roomSelect = document.getElementById('room_type_id');
     const roomPriceDisplay = document.getElementById('room_price_display');
+    const roomSubtotalDisplay = document.getElementById('room_subtotal_display');
     const estimatedTotal = document.getElementById('estimated_total');
     const estimatedTotalDisplay = document.getElementById('estimated_total_display');
     const priceTypeLabel = document.getElementById('price_type_label');
     const originalPriceDisplay = document.getElementById('original_price_display');
     const priceTypeUsed = document.getElementById('price_type_used');
+    const extraGuestFeeRow = document.getElementById('extra_guest_fee_row');
+    const extraGuestFeeDisplay = document.getElementById('extra_guest_fee_display');
+    const extraBedFeeRow = document.getElementById('extra_bed_fee_row');
+    const extraBedFeeDisplay = document.getElementById('extra_bed_fee_display');
+    const extraGuestFeeInput = document.getElementById('extra_guest_fee');
+    const extraBedFeeInput = document.getElementById('extra_bed_fee');
 
     if (!roomSelect || !roomPriceDisplay || !estimatedTotal) return 0;
 
@@ -276,26 +538,44 @@ function calculateTotal() {
         estimatedTotal.value = '0';
         if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
         if (originalPriceDisplay) originalPriceDisplay.classList.add('hidden');
+        if (roomSubtotalDisplay) roomSubtotalDisplay.textContent = '0 VNĐ';
+        if (extraGuestFeeRow) extraGuestFeeRow.classList.add('hidden');
+        if (extraBedFeeRow) extraBedFeeRow.classList.add('hidden');
         return 0;
     }
 
     const selectedOption = roomSelect.options[roomSelect.selectedIndex];
     const category = selectedOption.dataset.category || 'room';
-    const numGuests = parseInt(document.getElementById('num_guests')?.value) || 2;
-    const nights = calculateNights();
+    const numAdults = parseInt(document.getElementById('num_adults')?.value) || 2;
+    const nights = currentBookingType === 'short_stay' ? 1 : calculateNights();
+    const numExtraBeds = parseInt(document.getElementById('extra_beds')?.value) || 0;
 
-    // Get prices based on room category and number of guests
+    // Update num_guests hidden field
+    updateTotalGuests();
+
+    // Get prices based on room category, booking type, and number of guests
     let price = 0;
     let priceLabel = 'Giá 2 người';
     let priceType = 'double';
     let originalPrice = parseFloat(selectedOption.dataset.pricePublished) || 0;
 
-    if (category === 'room') {
+    // Check for short stay
+    if (currentBookingType === 'short_stay' && category === 'room') {
+        const shortStayPrice = parseFloat(selectedOption.dataset.priceShortStay) || 0;
+        if (shortStayPrice > 0) {
+            price = shortStayPrice;
+            priceLabel = 'Giá nghỉ ngắn hạn';
+            priceType = 'short_stay';
+            originalPrice = 0;
+        }
+    }
+    // Standard pricing
+    else if (category === 'room') {
         // Hotel Room pricing
         const priceSingle = parseFloat(selectedOption.dataset.priceSingle) || 0;
         const priceDouble = parseFloat(selectedOption.dataset.priceDouble) || 0;
 
-        if (numGuests === 1 && priceSingle > 0) {
+        if (numAdults === 1 && priceSingle > 0) {
             price = priceSingle;
             priceLabel = 'Giá 1 người';
             priceType = 'single';
@@ -308,14 +588,12 @@ function calculateTotal() {
         // Apartment pricing
         const priceDailySingle = parseFloat(selectedOption.dataset.priceDailySingle) || 0;
         const priceDailyDouble = parseFloat(selectedOption.dataset.priceDailyDouble) || 0;
-        const priceWeeklySingle = parseFloat(selectedOption.dataset.priceWeeklySingle) || 0;
-        const priceWeeklyDouble = parseFloat(selectedOption.dataset.priceWeeklyDouble) || 0;
         const priceAvgWeeklySingle = parseFloat(selectedOption.dataset.priceAvgWeeklySingle) || 0;
         const priceAvgWeeklyDouble = parseFloat(selectedOption.dataset.priceAvgWeeklyDouble) || 0;
 
         // Check if weekly rate applies (7+ nights)
         if (nights >= 7) {
-            if (numGuests === 1 && priceAvgWeeklySingle > 0) {
+            if (numAdults === 1 && priceAvgWeeklySingle > 0) {
                 price = priceAvgWeeklySingle;
                 priceLabel = 'Giá tuần (1 người)';
                 priceType = 'weekly';
@@ -329,7 +607,7 @@ function calculateTotal() {
                 priceType = 'daily';
             }
         } else {
-            if (numGuests === 1 && priceDailySingle > 0) {
+            if (numAdults === 1 && priceDailySingle > 0) {
                 price = priceDailySingle;
                 priceLabel = 'Giá ngày (1 người)';
                 priceType = 'daily';
@@ -361,21 +639,66 @@ function calculateTotal() {
     // Update room price display
     roomPriceDisplay.textContent = formatCurrency(price);
 
-    if (nights <= 0) {
-        estimatedTotal.value = '0';
-        if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
-        return 0;
+    // Calculate room subtotal
+    const effectiveNights = currentBookingType === 'short_stay' ? 1 : (nights > 0 ? nights : 0);
+    const roomSubtotal = price * effectiveNights;
+    if (roomSubtotalDisplay) roomSubtotalDisplay.textContent = formatCurrency(roomSubtotal);
+
+    // Calculate extra guest fees
+    let extraGuestFee = 0;
+    extraGuests.forEach(guest => {
+        extraGuestFee += EXTRA_GUEST_FEES[guest.type] || 0;
+    });
+    // Extra guest fee is per night (or per stay for short stay)
+    extraGuestFee = extraGuestFee * effectiveNights;
+
+    // Show/hide extra guest fee row
+    if (extraGuestFeeRow) {
+        if (extraGuestFee > 0) {
+            extraGuestFeeRow.classList.remove('hidden');
+            if (extraGuestFeeDisplay) extraGuestFeeDisplay.textContent = formatCurrency(extraGuestFee);
+        } else {
+            extraGuestFeeRow.classList.add('hidden');
+        }
+    }
+    if (extraGuestFeeInput) extraGuestFeeInput.value = extraGuestFee;
+
+    // Calculate extra bed fees (only for rooms, not apartments)
+    let extraBedFee = 0;
+    if (category === 'room' && numExtraBeds > 0) {
+        extraBedFee = numExtraBeds * EXTRA_BED_PRICE * effectiveNights;
     }
 
-    const total = price * nights;
+    // Show/hide extra bed fee row
+    if (extraBedFeeRow) {
+        if (extraBedFee > 0) {
+            extraBedFeeRow.classList.remove('hidden');
+            if (extraBedFeeDisplay) extraBedFeeDisplay.textContent = formatCurrency(extraBedFee);
+        } else {
+            extraBedFeeRow.classList.add('hidden');
+        }
+    }
+    if (extraBedFeeInput) extraBedFeeInput.value = extraBedFee;
+
+    // Calculate total
+    const total = roomSubtotal + extraGuestFee + extraBedFee;
     estimatedTotal.value = total;
     if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = formatCurrency(total);
 
+    // Update num_nights display for short stay
+    const nightsElement = document.getElementById('num_nights');
+    if (nightsElement && currentBookingType === 'short_stay') {
+        nightsElement.textContent = 'Nghỉ ngắn hạn (dưới 4h)';
+    }
+
     // Store values for form submission
     roomSelect.setAttribute('data-calculated-total', total);
-    roomSelect.setAttribute('data-calculated-nights', nights);
+    roomSelect.setAttribute('data-calculated-nights', effectiveNights);
     roomSelect.setAttribute('data-room-price', price);
     roomSelect.setAttribute('data-price-type', priceType);
+    roomSelect.setAttribute('data-room-subtotal', roomSubtotal);
+    roomSelect.setAttribute('data-extra-guest-fee', extraGuestFee);
+    roomSelect.setAttribute('data-extra-bed-fee', extraBedFee);
 
     return total;
 }
@@ -682,15 +1005,10 @@ function validateStep(step) {
             // ========== ROOM VALIDATION ==========
             const checkin = document.getElementById('check_in_date').value;
             const checkout = document.getElementById('check_out_date').value;
-            const guests = document.getElementById('num_guests').value;
+            const numAdults = document.getElementById('num_adults')?.value || document.getElementById('num_guests').value;
 
-            if (!checkin || !checkout) {
-                alert('Vui lòng chọn ngày nhận và trả phòng');
-                return false;
-            }
-
-            if (new Date(checkout) <= new Date(checkin)) {
-                alert('Ngày trả phòng phải sau ngày nhận phòng');
+            if (!checkin) {
+                alert('Vui lòng chọn ngày nhận phòng');
                 return false;
             }
 
@@ -699,12 +1017,25 @@ function validateStep(step) {
                 return false;
             }
 
-            if (checkout <= todayStr) {
-                alert('Ngày trả phòng phải là ngày trong tương lai');
-                return false;
+            // Only validate checkout for standard bookings
+            if (currentBookingType !== 'short_stay') {
+                if (!checkout) {
+                    alert('Vui lòng chọn ngày trả phòng');
+                    return false;
+                }
+
+                if (new Date(checkout) <= new Date(checkin)) {
+                    alert('Ngày trả phòng phải sau ngày nhận phòng');
+                    return false;
+                }
+
+                if (checkout <= todayStr) {
+                    alert('Ngày trả phòng phải là ngày trong tương lai');
+                    return false;
+                }
             }
 
-            if (!guests || guests < 1) {
+            if (!numAdults || numAdults < 1) {
                 alert('Vui lòng nhập số khách hợp lệ');
                 return false;
             }
@@ -785,27 +1116,46 @@ function updateSummary() {
 
     } else {
         // ========== ROOM BOOKING SUMMARY ==========
-        document.getElementById('summary_guests').textContent = document.getElementById('num_guests').value + ' khách';
+        const numAdults = document.getElementById('num_adults')?.value || document.getElementById('num_guests')?.value || 2;
+        const numChildren = document.getElementById('num_children')?.value || 0;
+        let guestText = numAdults + ' người lớn';
+        if (numChildren > 0) {
+            guestText += ', ' + numChildren + ' trẻ em';
+        }
+        if (extraGuests.length > 0) {
+            guestText += ' + ' + extraGuests.length + ' khách thêm';
+        }
+        document.getElementById('summary_guests').textContent = guestText;
 
         // Reset labels
         document.getElementById('summary_checkin_label').textContent = 'Nhận phòng:';
-        document.getElementById('summary_checkout_label').textContent = 'Trả phòng:';
+        document.getElementById('summary_checkout_label').textContent = currentBookingType === 'short_stay' ? 'Loại hình:' : 'Trả phòng:';
         document.getElementById('summary_nights_label').textContent = 'Số đêm:';
 
         // Checkin/Checkout/Nights
         document.getElementById('summary_checkin').textContent = formatDate(document.getElementById('check_in_date').value);
-        document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
-        document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
+
+        if (currentBookingType === 'short_stay') {
+            document.getElementById('summary_checkout').textContent = 'Nghỉ ngắn hạn (dưới 4h)';
+            document.getElementById('summary_nights').textContent = '1 lượt';
+        } else {
+            document.getElementById('summary_checkout').textContent = formatDate(document.getElementById('check_out_date').value);
+            document.getElementById('summary_nights').textContent = document.getElementById('num_nights').textContent;
+        }
 
         // Show nights row
         document.getElementById('summary_nights_row').style.display = 'flex';
 
-        // Payment summaries
-        const subtotal = document.getElementById('estimated_total_display').textContent;
-        document.getElementById('summary_subtotal').textContent = subtotal;
+        // Payment summaries - get from calculated values
+        const roomSelect = document.getElementById('room_type_id');
+        const roomSubtotal = parseFloat(roomSelect.getAttribute('data-room-subtotal')) || 0;
+        const extraGuestFee = parseFloat(roomSelect.getAttribute('data-extra-guest-fee')) || 0;
+        const extraBedFee = parseFloat(roomSelect.getAttribute('data-extra-bed-fee')) || 0;
+        const total = parseFloat(roomSelect.getAttribute('data-calculated-total')) || 0;
+
+        document.getElementById('summary_subtotal').textContent = formatCurrency(roomSubtotal);
 
         const promoDiscount = document.getElementById('discount_amount_input').value;
-        const total = parseFloat(document.getElementById('estimated_total').value) || 0;
 
         let finalTotal = total;
         if (promoDiscount && promoDiscount > 0) {
@@ -897,16 +1247,31 @@ async function handleSubmit(e) {
     } else {
         // ========== ROOM BOOKING DATA ==========
         const roomSelect = document.getElementById('room_type_id');
-        const numNights = calculateNights();
+        const numAdults = parseInt(document.getElementById('num_adults')?.value) || 2;
+        const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;
+        const numExtraBeds = parseInt(document.getElementById('extra_beds')?.value) || 0;
+        const numNights = currentBookingType === 'short_stay' ? 1 : calculateNights();
         const roomPrice = parseFloat(roomSelect.getAttribute('data-room-price')) || 0;
         const calculatedTotal = parseFloat(roomSelect.getAttribute('data-calculated-total')) || 0;
         const priceType = roomSelect.getAttribute('data-price-type') || 'double';
+        const roomSubtotal = parseFloat(roomSelect.getAttribute('data-room-subtotal')) || 0;
+        const extraGuestFee = parseFloat(roomSelect.getAttribute('data-extra-guest-fee')) || 0;
+        const extraBedFee = parseFloat(roomSelect.getAttribute('data-extra-bed-fee')) || 0;
 
+        data.booking_type = currentBookingType; // 'standard' or 'short_stay'
+        data.num_adults = numAdults;
+        data.num_children = numChildren;
+        data.num_guests = numAdults;
         data.num_nights = numNights;
         data.calculated_nights = numNights;
         data.room_price = roomPrice;
+        data.room_subtotal = roomSubtotal;
         data.calculated_total = calculatedTotal;
         data.price_type_used = priceType;
+        data.extra_beds = numExtraBeds;
+        data.extra_bed_fee = extraBedFee;
+        data.extra_guest_fee = extraGuestFee;
+        data.extra_guests_data = JSON.stringify(extraGuests);
     }
 
     const submitBtn = document.getElementById('submitBtn');

@@ -162,9 +162,9 @@ foreach ($room_types as $room) {
                                         $availability_text = $is_available
                                             ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
                                             : "(" . __('booking_page.out_of_stock') . ")";
-                                        
+
                                         // Get display price based on category
-                                        $display_price = $room['category'] === 'room' 
+                                        $display_price = $room['category'] === 'room'
                                             ? ($room['price_double_occupancy'] ?? $room['base_price'])
                                             : ($room['price_daily_double'] ?? $room['base_price']);
                                         ?>
@@ -194,15 +194,77 @@ foreach ($room_types as $room) {
 
                             <!-- ========== ROOM BOOKING FIELDS (instant) ========== -->
                             <div id="room_booking_fields">
+                                <!-- Booking Type Selection -->
+                                <div class="form-group mb-4">
+                                    <label class="form-label">Loại hình đặt phòng *</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="booking-type-option selected" data-type="standard">
+                                            <input type="radio" name="booking_type" value="standard" checked
+                                                class="hidden">
+                                            <div
+                                                class="flex items-center gap-2 p-3 rounded-lg border-2 border-amber-500 bg-amber-500/10 cursor-pointer transition-all">
+                                                <span class="material-symbols-outlined text-amber-500">hotel</span>
+                                                <div>
+                                                    <div class="font-semibold text-sm">Nghỉ qua đêm</div>
+                                                    <div class="text-xs text-gray-400">Check-in 14:00 - Check-out 12:00
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <label class="booking-type-option" data-type="short_stay"
+                                            id="short_stay_option">
+                                            <input type="radio" name="booking_type" value="short_stay" class="hidden">
+                                            <div
+                                                class="flex items-center gap-2 p-3 rounded-lg border-2 border-gray-600 bg-gray-700/30 cursor-pointer transition-all">
+                                                <span class="material-symbols-outlined text-blue-400">schedule</span>
+                                                <div>
+                                                    <div class="font-semibold text-sm">Nghỉ ngắn hạn</div>
+                                                    <div class="text-xs text-gray-400">Dưới 4h, checkout trước 22h</div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <p id="short_stay_note" class="text-xs text-blue-400 mt-2 hidden">
+                                        <span class="material-symbols-outlined text-sm align-middle">info</span>
+                                        Nghỉ ngắn hạn không bao gồm ăn sáng
+                                    </p>
+                                </div>
+
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Number of Guests -->
+                                    <!-- Number of Adults -->
                                     <div class="form-group">
-                                        <label class="form-label"><?php _e('booking_page.num_guests'); ?> *</label>
-                                        <input type="number" name="num_guests" id="num_guests" class="form-input"
-                                            min="1" max="10" value="<?php echo $prefilled_guests; ?>" required>
+                                        <label class="form-label">Số người lớn *</label>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" onclick="adjustValue('num_adults', -1)"
+                                                class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined">remove</span>
+                                            </button>
+                                            <input type="number" name="num_adults" id="num_adults"
+                                                class="form-input text-center w-20" min="1" max="10" value="2" required
+                                                readonly>
+                                            <button type="button" onclick="adjustValue('num_adults', 1)"
+                                                class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined">add</span>
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <div></div>
+                                    <!-- Number of Children -->
+                                    <div class="form-group">
+                                        <label class="form-label">Số trẻ em (dưới 12 tuổi)</label>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" onclick="adjustValue('num_children', -1)"
+                                                class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined">remove</span>
+                                            </button>
+                                            <input type="number" name="num_children" id="num_children"
+                                                class="form-input text-center w-20" min="0" max="5" value="0" readonly>
+                                            <button type="button" onclick="adjustValue('num_children', 1)"
+                                                class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined">add</span>
+                                            </button>
+                                        </div>
+                                    </div>
 
                                     <!-- Check-in Date -->
                                     <div class="form-group">
@@ -212,49 +274,156 @@ foreach ($room_types as $room) {
                                     </div>
 
                                     <!-- Check-out Date -->
-                                    <div class="form-group">
+                                    <div class="form-group" id="checkout_group">
                                         <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
                                         <input type="date" name="check_out_date" id="check_out_date" class="form-input"
                                             value="<?php echo $prefilled_check_out; ?>" required>
                                     </div>
                                 </div>
 
-                                <!-- Price Summary (Room only) - Enhanced -->
+                                <!-- Extra Guests Section -->
+                                <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl"
+                                    id="extra_guests_section">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="font-semibold flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-blue-400">person_add</span>
+                                            Khách thêm (phụ thu)
+                                        </h4>
+                                        <button type="button" onclick="toggleExtraGuests()" id="toggle_extra_guests_btn"
+                                            class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">add_circle</span>
+                                            Thêm khách
+                                        </button>
+                                    </div>
+
+                                    <!-- Extra Guests Info -->
+                                    <div class="text-xs text-gray-400 mb-3 grid grid-cols-3 gap-2">
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                            Dưới 1m: <span class="text-green-400">Miễn phí</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                                            1m - 1m3: <span class="text-yellow-400">200.000đ</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                            Trên 1m3: <span class="text-orange-400">400.000đ</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Extra Guests List -->
+                                    <div id="extra_guests_list" class="hidden space-y-3">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        * Phí khách thêm bao gồm ăn sáng buffet
+                                    </p>
+                                </div>
+
+                                <!-- Extra Bed Section (Rooms Only) -->
+                                <div class="mt-4 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl"
+                                    id="extra_bed_section">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <span class="material-symbols-outlined text-orange-400">single_bed</span>
+                                            <div>
+                                                <h4 class="font-semibold">Giường phụ</h4>
+                                                <p class="text-xs text-gray-400">650.000đ/đêm</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" onclick="adjustValue('extra_beds', -1)"
+                                                class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined text-sm">remove</span>
+                                            </button>
+                                            <input type="number" name="extra_beds" id="extra_beds"
+                                                class="form-input text-center w-16 text-sm" min="0" max="2" value="0"
+                                                readonly>
+                                            <button type="button" onclick="adjustValue('extra_beds', 1)"
+                                                class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                                <span class="material-symbols-outlined text-sm">add</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-yellow-500 mt-2 hidden" id="extra_bed_warning">
+                                        <span class="material-symbols-outlined text-sm align-middle">warning</span>
+                                        Giường phụ không áp dụng cho căn hộ
+                                    </p>
+                                </div>
+
+                                <!-- Enhanced Price Summary -->
                                 <div class="mt-6 p-4 bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-gray-700 dark:to-gray-800 rounded-xl border border-amber-500/20 dark:border-gray-600 transition-all duration-300"
                                     id="price_summary_box">
-                                    <!-- Price Type Badge -->
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span id="price_type_badge" class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium rounded-full">
-                                            <span class="material-symbols-outlined text-sm">hotel</span>
-                                            <span id="price_type_label">Giá 2 người</span>
-                                        </span>
-                                        <span id="original_price_display" class="text-sm text-gray-500 line-through hidden">0 VNĐ</span>
+                                    <!-- Room Info Header -->
+                                    <div
+                                        class="flex items-center justify-between mb-3 pb-3 border-b border-gray-600/50">
+                                        <div class="flex items-center gap-2">
+                                            <span id="price_type_badge"
+                                                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
+                                                <span class="material-symbols-outlined text-sm">hotel</span>
+                                                <span id="price_type_label">Giá 2 người</span>
+                                            </span>
+                                        </div>
+                                        <span id="original_price_display"
+                                            class="text-sm text-gray-500 line-through hidden">0 VNĐ</span>
                                     </div>
-                                    
-                                    <!-- Price per night -->
-                                    <div class="flex justify-between items-center">
-                                        <span class="font-semibold"><?php _e('booking_page.price_per_night'); ?>:</span>
-                                        <span id="room_price_display" class="text-lg font-bold" style="color: #d4af37;">0 VNĐ</span>
+
+                                    <!-- Price Breakdown -->
+                                    <div class="space-y-2 text-sm">
+                                        <!-- Room Rate -->
+                                        <div class="flex justify-between items-center">
+                                            <span
+                                                class="text-gray-400"><?php _e('booking_page.price_per_night'); ?>:</span>
+                                            <span id="room_price_display" class="font-bold" style="color: #d4af37;">0
+                                                VNĐ</span>
+                                        </div>
+
+                                        <!-- Number of nights -->
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-400"><?php _e('booking_page.num_nights'); ?>:</span>
+                                            <span id="num_nights">0 đêm</span>
+                                        </div>
+
+                                        <!-- Room Subtotal -->
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-400">Tiền phòng:</span>
+                                            <span id="room_subtotal_display">0 VNĐ</span>
+                                        </div>
+
+                                        <!-- Extra Guest Fee -->
+                                        <div class="flex justify-between items-center hidden" id="extra_guest_fee_row">
+                                            <span class="text-gray-400">Phụ thu khách thêm:</span>
+                                            <span id="extra_guest_fee_display" class="text-blue-400">0 VNĐ</span>
+                                        </div>
+
+                                        <!-- Extra Bed Fee -->
+                                        <div class="flex justify-between items-center hidden" id="extra_bed_fee_row">
+                                            <span class="text-gray-400">Phí giường phụ:</span>
+                                            <span id="extra_bed_fee_display" class="text-orange-400">0 VNĐ</span>
+                                        </div>
                                     </div>
-                                    
-                                    <!-- Number of nights -->
-                                    <div class="flex justify-between items-center mt-2">
-                                        <span class="font-semibold"><?php _e('booking_page.num_nights'); ?>:</span>
-                                        <span id="num_nights">0</span>
-                                    </div>
-                                    
-                                    <!-- Subtotal -->
-                                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-300/50 dark:border-gray-600">
+
+                                    <!-- Total -->
+                                    <div
+                                        class="flex justify-between items-center mt-3 pt-3 border-t border-gray-300/50 dark:border-gray-600">
                                         <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
-                                        <span id="estimated_total_display" class="text-xl font-bold text-accent">0 VNĐ</span>
-                                        <input type="hidden" id="estimated_total" value="0">
+                                        <span id="estimated_total_display" class="text-2xl font-bold text-accent">0
+                                            VNĐ</span>
+                                        <input type="hidden" id="estimated_total" name="estimated_total" value="0">
                                         <input type="hidden" id="price_type_used" name="price_type_used" value="double">
+                                        <input type="hidden" id="extra_guest_fee" name="extra_guest_fee" value="0">
+                                        <input type="hidden" id="extra_bed_fee" name="extra_bed_fee" value="0">
+                                        <input type="hidden" id="num_guests" name="num_guests" value="2">
+                                        <input type="hidden" id="extra_guests_data" name="extra_guests_data" value="[]">
                                     </div>
-                                    
+
                                     <!-- Tax Info Note -->
                                     <div class="mt-3 pt-3 border-t border-gray-300/30 dark:border-gray-600">
                                         <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm text-green-500">check_circle</span>
+                                            <span
+                                                class="material-symbols-outlined text-sm text-green-500">check_circle</span>
                                             Đã bao gồm 5% phí dịch vụ và 8% VAT
                                         </p>
                                     </div>
