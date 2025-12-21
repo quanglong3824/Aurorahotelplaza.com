@@ -349,16 +349,29 @@ $payment_labels = [
 
                                                                 <?php if (!empty($booking['payment_status'])): ?>
                                                                     <?php
-                                                                    $payColor = 'bg-gray-500/20 text-gray-300';
-                                                                    if ($booking['payment_status'] == 'paid')
-                                                                        $payColor = 'bg-green-500/20 text-green-300';
-                                                                    if ($booking['payment_status'] == 'unpaid')
-                                                                        $payColor = 'bg-red-500/20 text-red-300';
-                                                                    ?>
-                                                                    <span
-                                                                        class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider <?php echo $payColor; ?>">
-                                                                        <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
-                                                                    </span>
+                                                                    // Check if this is an inquiry booking (apartment)
+                                                                    $isInquiry = ($booking['booking_type'] ?? 'instant') === 'inquiry';
+
+                                                                    if ($isInquiry):
+                                                                        ?>
+                                                                        <span
+                                                                            class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider bg-purple-500/20 text-purple-300">
+                                                                            <span
+                                                                                class="material-symbols-outlined text-xs mr-1 align-middle">contact_support</span>
+                                                                            Liên hệ tư vấn
+                                                                        </span>
+                                                                    <?php else:
+                                                                        $payColor = 'bg-gray-500/20 text-gray-300';
+                                                                        if ($booking['payment_status'] == 'paid')
+                                                                            $payColor = 'bg-green-500/20 text-green-300';
+                                                                        if ($booking['payment_status'] == 'unpaid')
+                                                                            $payColor = 'bg-red-500/20 text-red-300';
+                                                                        ?>
+                                                                        <span
+                                                                            class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider <?php echo $payColor; ?>">
+                                                                            <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
+                                                                        </span>
+                                                                    <?php endif; ?>
                                                                 <?php endif; ?>
                                                             </div>
 
@@ -403,17 +416,31 @@ $payment_labels = [
                                                 <!-- Price & Actions -->
                                                 <div class="flex flex-col lg:items-end gap-4 min-w-[200px]">
                                                     <div class="text-left lg:text-right">
-                                                        <p class="text-2xl font-bold text-accent">
-                                                            <?php echo number_format($booking['total_amount']); ?> VNĐ
-                                                        </p>
-                                                        <p class="text-xs text-white/40 italic">
-                                                            <?php _e('profile_bookings.booked_on'); ?>
-                                                            <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
-                                                        </p>
+                                                        <?php
+                                                        $bookingIsInquiry = ($booking['booking_type'] ?? 'instant') === 'inquiry';
+                                                        if ($bookingIsInquiry):
+                                                            ?>
+                                                            <p class="text-xl font-bold text-purple-400 flex items-center gap-2">
+                                                                <span class="material-symbols-outlined text-lg">contact_phone</span>
+                                                                Liên hệ báo giá
+                                                            </p>
+                                                            <p class="text-xs text-white/40 italic">
+                                                                <?php _e('profile_bookings.booked_on'); ?>
+                                                                <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
+                                                            </p>
+                                                        <?php else: ?>
+                                                            <p class="text-2xl font-bold text-accent">
+                                                                <?php echo number_format($booking['total_amount']); ?> VNĐ
+                                                            </p>
+                                                            <p class="text-xs text-white/40 italic">
+                                                                <?php _e('profile_bookings.booked_on'); ?>
+                                                                <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
+                                                            </p>
+                                                        <?php endif; ?>
                                                     </div>
 
                                                     <div class="flex flex-wrap gap-2 lg:justify-end">
-                                                        <?php if ($booking['status'] === 'pending'): ?>
+                                                        <?php if ($booking['status'] === 'pending' && !$bookingIsInquiry): ?>
                                                             <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>"
                                                                 class="px-4 py-2 bg-gradient-to-r from-accent to-yellow-600 text-white rounded-lg hover:opacity-90 transition-all text-xs font-bold uppercase tracking-wider inline-flex items-center shadow-lg shadow-accent/20">
                                                                 <span

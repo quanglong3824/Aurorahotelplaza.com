@@ -472,7 +472,8 @@ async function handleSubmit(e) {
     // Add additional fields via JSON
     const data = {
         ...formObject,
-        num_nights: calculateNights() // ensure we have nights count
+        num_nights: calculateNights(), // ensure we have nights count
+        booking_type: isInquiryMode ? 'inquiry' : 'instant' // Pass booking type to backend
     };
 
     const submitBtn = document.getElementById('submitBtn');
@@ -484,12 +485,8 @@ async function handleSubmit(e) {
     submitBtnText.textContent = 'Đang xử lý...';
 
     try {
-        let apiUrl = './api/create_booking.php';
-
-        // Check if Inquiry Mode
-        if (isInquiryMode) {
-            apiUrl = './api/create_inquiry.php';
-        }
+        // Always use create_booking.php - it handles both instant and inquiry bookings
+        const apiUrl = './api/create_booking.php';
 
         // Send request
         const response = await fetch(apiUrl, {
@@ -503,13 +500,14 @@ async function handleSubmit(e) {
         const result = await response.json();
 
         if (result.success) {
-            if (isInquiryMode) {
-                // Success for inquiry - Show alert and redirect home or clear form
-                alert(result.message);
+            // Check booking type from response (more reliable than front-end state)
+            if (result.booking_type === 'inquiry') {
+                // Success for inquiry - Show alert and redirect home
+                alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!');
                 window.location.href = '../index.php';
             } else {
-                // Success for booking
-                if (data.payment_method === 'vnpay') {
+                // Success for instant booking
+                if (data.payment_method === 'vnpay' && result.payment_url) {
                     window.location.href = result.payment_url;
                 } else {
                     window.location.href = './confirmation.php?booking_code=' + result.booking_code;

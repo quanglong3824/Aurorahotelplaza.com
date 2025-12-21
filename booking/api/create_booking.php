@@ -25,6 +25,11 @@ $guest_phone = trim($input_data['guest_phone'] ?? '');
 $special_requests = $input_data['special_requests'] ?? '';
 $payment_method = $input_data['payment_method'] ?? 'cash';
 
+// Apartment Inquiry specific fields
+$is_inquiry_mode = ($input_data['booking_type'] ?? 'instant') === 'inquiry';
+$inquiry_message = $input_data['message'] ?? $input_data['inquiry_message'] ?? '';
+$duration_type = $input_data['duration_type'] ?? 'short_term';
+
 // Get calculated values from frontend
 $calculated_total = floatval($input_data['calculated_total'] ?? 0);
 $calculated_nights = intval($input_data['calculated_nights'] ?? 0);
@@ -108,51 +113,69 @@ try {
         }
     }
 
-    // Check room availability
-    $stmt = $db->prepare("
-        SELECT r.room_id 
-        FROM rooms r
-        WHERE r.room_type_id = ? 
-        AND r.status = 'available'
-        AND r.room_id NOT IN (
-            SELECT room_id 
-            FROM bookings 
-            WHERE room_id IS NOT NULL
-            AND status NOT IN ('cancelled', 'checked_out')
-            AND (
-                (check_in_date <= ? AND check_out_date > ?)
-                OR (check_in_date < ? AND check_out_date >= ?)
-                OR (check_in_date >= ? AND check_out_date <= ?)
+    // Check if this is an inquiry-type booking (apartments)
+    // Determine booking type based on room_type settings
+    $booking_type = $room_type['booking_type'] ?? 'instant';
+    if ($booking_type === 'inquiry' || $is_inquiry_mode) {
+        $booking_type = 'inquiry';
+    }
+
+    // For inquiry bookings (apartments), skip room availability check
+    $room_id = null;
+    if ($booking_type === 'instant') {
+        // Check room availability only for instant bookings
+        $stmt = $db->prepare("
+            SELECT r.room_id 
+            FROM rooms r
+            WHERE r.room_type_id = ? 
+            AND r.status = 'available'
+            AND r.room_id NOT IN (
+                SELECT room_id 
+                FROM bookings 
+                WHERE room_id IS NOT NULL
+                AND status NOT IN ('cancelled', 'checked_out')
+                AND (
+                    (check_in_date <= ? AND check_out_date > ?)
+                    OR (check_in_date < ? AND check_out_date >= ?)
+                    OR (check_in_date >= ? AND check_out_date <= ?)
+                )
             )
-        )
-        LIMIT 1
-    ");
-    $stmt->execute([
-        $room_type_id,
-        $check_in_date,
-        $check_in_date,
-        $check_out_date,
-        $check_out_date,
-        $check_in_date,
-        $check_out_date
-    ]);
-    $available_room = $stmt->fetch();
+            LIMIT 1
+        ");
+        $stmt->execute([
+            $room_type_id,
+            $check_in_date,
+            $check_in_date,
+            $check_out_date,
+            $check_out_date,
+            $check_in_date,
+            $check_out_date
+        ]);
+        $available_room = $stmt->fetch();
+        $room_id = $available_room['room_id'] ?? null;
+    }
 
-    $room_id = $available_room['room_id'] ?? null;
+    // Determine initial status based on booking type
+    $initial_status = $booking_type === 'inquiry' ? 'pending' : 'pending';
 
-    // Create booking
+    // Create booking with booking_type and inquiry fields
     $stmt = $db->prepare("
         INSERT INTO bookings (
-            booking_code, user_id, room_id, room_type_id,
+            booking_code, booking_type, user_id, room_id, room_type_id,
             check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
             room_price, total_amount,
             guest_name, guest_email, guest_phone, special_requests,
+            inquiry_message, duration_type,
             status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'unpaid')
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
     ");
+
+    // For inquiry bookings, payment status is N/A
+    $payment_status = $booking_type === 'inquiry' ? 'unpaid' : 'unpaid';
 
     $stmt->execute([
         $booking_code,
+        $booking_type,
         $user_id,
         $room_id,
         $room_type_id,
@@ -167,13 +190,16 @@ try {
         $guest_name,
         $guest_email,
         $guest_phone,
-        $special_requests
+        $special_requests,
+        $inquiry_message,
+        $duration_type,
+        $payment_status
     ]);
 
     $booking_id = $db->lastInsertId();
 
-    // Update room status if assigned
-    if ($room_id) {
+    // Update room status if assigned (only for instant bookings)
+    if ($room_id && $booking_type === 'instant') {
         $stmt = $db->prepare("UPDATE rooms SET status = 'occupied' WHERE room_id = ?");
         $stmt->execute([$room_id]);
     }
@@ -209,12 +235,12 @@ try {
             $emailSent = $mailer->sendBookingConfirmation($guest_email, $booking_data);
 
             if ($emailSent) {
-                error_log("✅ Booking confirmation email sent successfully to: $guest_email for booking: $booking_code");
+                error_log("Booking confirmation email sent successfully to: $guest_email for booking: $booking_code");
             } else {
-                error_log("❌ Failed to send booking confirmation email to: $guest_email for booking: $booking_code");
+                error_log("Failed to send booking confirmation email to: $guest_email for booking: $booking_code");
             }
         } else {
-            error_log("❌ Could not fetch booking data for email: $booking_code");
+            error_log("Could not fetch booking data for email: $booking_code");
         }
     } catch (Exception $emailError) {
         error_log("Email sending error for booking $booking_code: " . $emailError->getMessage());
@@ -226,8 +252,16 @@ try {
         'success' => true,
         'booking_id' => $booking_id,
         'booking_code' => $booking_code,
+        'booking_type' => $booking_type,
         'total_amount' => $total_amount
     ];
+
+    // For inquiry bookings, return a success message (no payment processing)
+    if ($booking_type === 'inquiry') {
+        $response['message'] = 'Yêu cầu tư vấn của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.';
+        echo json_encode($response);
+        exit;
+    }
 
     // If VNPay payment, create payment URL
     if ($payment_method === 'vnpay') {
