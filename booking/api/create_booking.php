@@ -185,8 +185,12 @@ try {
         error_log("Extra bed fee mismatch: frontend=$extra_bed_fee, backend=$backend_extra_bed_fee");
     }
 
-    // Calculate total amount using backend values
-    $total_amount = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee;
+    // Calculate pricing breakdown
+    $base_price = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee;
+    $service_fee = 0; // No service fee for now
+    $discount_amount = 0; // No discount for now
+    $final_price = $base_price - $discount_amount + $service_fee;
+    $total_amount = $final_price;
 
     if (abs($calculated_total - $total_amount) > 1000) {
         error_log("Total mismatch: frontend=$calculated_total, backend=$total_amount");
