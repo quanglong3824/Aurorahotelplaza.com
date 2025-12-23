@@ -894,8 +894,20 @@ function calculateTotal() {
 
     // Calculate total
     const total = roomSubtotal + extraGuestFee + extraBedFee;
+    
+    // Debug logging
+    console.log('=== CALCULATE TOTAL DEBUG ===');
+    console.log('Room Subtotal:', roomSubtotal);
+    console.log('Extra Guest Fee:', extraGuestFee);
+    console.log('Extra Bed Fee:', extraBedFee);
+    console.log('TOTAL:', total);
+    console.log('Formatted:', formatCurrency(total));
+    
     estimatedTotal.value = total;
-    if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = formatCurrency(total);
+    if (estimatedTotalDisplay) {
+        estimatedTotalDisplay.textContent = formatCurrency(total);
+        console.log('Updated estimatedTotalDisplay to:', estimatedTotalDisplay.textContent);
+    }
 
     // Update num_nights display for short stay
     const nightsElement = document.getElementById('num_nights');
