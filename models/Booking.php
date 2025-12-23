@@ -22,7 +22,7 @@ class Booking
             FROM rooms r
             WHERE r.room_type_id = ? 
             AND r.status = 'available'
-            AND r.id NOT IN (
+            AND r.room_id NOT IN (
                 SELECT room_id 
                 FROM bookings 
                 WHERE room_id IS NOT NULL
@@ -37,12 +37,9 @@ class Booking
 
         $stmt->execute([
             $room_type_id,
-            $check_in,
-            $check_in,
-            $check_out,
-            $check_out,
-            $check_in,
-            $check_out
+            $check_in, $check_in,
+            $check_out, $check_out,
+            $check_in, $check_out
         ]);
 
         $result = $stmt->fetch();
@@ -55,11 +52,11 @@ class Booking
     public function getAvailableRoom($room_type_id, $check_in, $check_out)
     {
         $stmt = $this->db->prepare("
-            SELECT r.id 
+            SELECT r.room_id 
             FROM rooms r
             WHERE r.room_type_id = ? 
             AND r.status = 'available'
-            AND r.id NOT IN (
+            AND r.room_id NOT IN (
                 SELECT room_id 
                 FROM bookings 
                 WHERE room_id IS NOT NULL
@@ -75,12 +72,9 @@ class Booking
 
         $stmt->execute([
             $room_type_id,
-            $check_in,
-            $check_in,
-            $check_out,
-            $check_out,
-            $check_in,
-            $check_out
+            $check_in, $check_in,
+            $check_out, $check_out,
+            $check_in, $check_out
         ]);
 
         return $stmt->fetch();
@@ -94,7 +88,7 @@ class Booking
         $stmt = $this->db->prepare("
             INSERT INTO bookings (
                 booking_code, user_id, room_id, room_type_id,
-                check_in_date, check_out_date, num_adults, num_children, num_nights,
+                check_in_date, check_out_date, num_adults, num_children, total_nights,
                 room_price, total_amount,
                 guest_name, guest_email, guest_phone, special_requests,
                 status, payment_status
@@ -110,13 +104,13 @@ class Booking
             $data['check_out_date'],
             $data['num_adults'] ?? $data['num_guests'] ?? 1,
             $data['num_children'] ?? 0,
-            $data['num_nights'],
+            $data['total_nights'] ?? $data['num_nights'],
             $data['room_price'],
             $data['total_amount'],
             $data['guest_name'],
             $data['guest_email'],
             $data['guest_phone'],
-            $data['special_requests'],
+            $data['special_requests'] ?? null,
             $data['status'] ?? 'pending',
             $data['payment_status'] ?? 'unpaid'
         ]);
@@ -131,9 +125,9 @@ class Booking
     {
         $stmt = $this->db->prepare("
             SELECT b.*, 
-                   rt.type_name, rt.category, rt.description, rt.amenities, rt.thumbnail,
+                   rt.type_name, rt.type_name_en, rt.category, rt.description, rt.amenities, rt.thumbnail, rt.bed_type, rt.size_sqm,
                    r.room_number, r.floor, r.building,
-                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status, p.amount as paid_amount,
+                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status_payment, p.amount as paid_amount,
                    u.full_name as user_name, u.email as user_email
             FROM bookings b
             LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
@@ -153,9 +147,9 @@ class Booking
     {
         $stmt = $this->db->prepare("
             SELECT b.*, 
-                   rt.type_name, rt.category, rt.description, rt.amenities,
+                   rt.type_name, rt.type_name_en, rt.category, rt.description, rt.amenities, rt.thumbnail, rt.bed_type, rt.size_sqm,
                    r.room_number, r.floor, r.building,
-                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status
+                   p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status_payment, p.amount as paid_amount
             FROM bookings b
             LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
             LEFT JOIN rooms r ON b.room_id = r.room_id
@@ -183,10 +177,10 @@ class Booking
         if ($paid_amount !== null) {
             $stmt = $this->db->prepare("
                 UPDATE bookings 
-                SET payment_status = ?, paid_amount = ? 
+                SET payment_status = ? 
                 WHERE booking_id = ?
             ");
-            return $stmt->execute([$payment_status, $paid_amount, $booking_id]);
+            return $stmt->execute([$payment_status, $booking_id]);
         } else {
             $stmt = $this->db->prepare("UPDATE bookings SET payment_status = ? WHERE booking_id = ?");
             return $stmt->execute([$payment_status, $booking_id]);
@@ -195,6 +189,7 @@ class Booking
 
     /**
      * Get user bookings with filters and pagination
+     * Đọc đầy đủ dữ liệu booking bao gồm phụ thu, giường phụ, loại giá
      */
     public function getUserBookings($user_id, $filters = [], $page = 1, $per_page = 10)
     {
@@ -224,22 +219,19 @@ class Booking
         }
 
         if (!empty($filters['search'])) {
-            // Smart search - support short code
             require_once __DIR__ . '/../helpers/booking-helper.php';
             $possible_codes = \BookingHelper::parseSmartCode($filters['search']);
 
             $search_conditions = [];
-            foreach ($possible_codes as $index => $code) {
+            foreach ($possible_codes as $code) {
                 if (strpos($code, '%') !== false) {
                     $search_conditions[] = 'b.booking_code LIKE ?';
-                    $params[] = $code;
                 } else {
                     $search_conditions[] = 'b.booking_code = ?';
-                    $params[] = $code;
                 }
+                $params[] = $code;
             }
 
-            // Add regular text search
             $search_param = '%' . $filters['search'] . '%';
             $search_conditions[] = 'b.guest_name LIKE ?';
             $params[] = $search_param;
@@ -263,20 +255,26 @@ class Booking
         $stmt->execute($params);
         $total = $stmt->fetch()['total'];
 
-        // Get bookings
+        // Get bookings - đọc đầy đủ các trường
         $offset = (int) (($page - 1) * $per_page);
         $per_page = (int) $per_page;
 
         $sql = "
-            SELECT b.booking_id, b.booking_code, b.booking_type, b.user_id, b.room_type_id, b.room_id,
-                   b.check_in_date, b.check_out_date, b.num_adults, b.num_children,
-                   b.total_nights, b.room_price, b.total_amount, b.special_requests,
-                   b.guest_name, b.guest_email, b.guest_phone, b.status, b.created_at,
-                   b.inquiry_message, b.duration_type,
-                   rt.type_name, rt.category, rt.thumbnail,
-                   r.room_number, r.floor, r.building,
-                   COALESCE(p.status, b.payment_status) as payment_status, 
-                   p.payment_method, p.paid_at, p.amount as paid_amount
+            SELECT 
+                b.booking_id, b.booking_code, b.booking_type, b.user_id, b.room_type_id, b.room_id,
+                b.check_in_date, b.check_out_date, b.num_adults, b.num_children, b.num_rooms,
+                b.total_nights, b.room_price, b.service_charges, b.discount_amount, b.points_used,
+                b.total_amount, b.special_requests, b.inquiry_message, b.duration_type,
+                b.guest_name, b.guest_email, b.guest_phone, b.guest_id_number,
+                b.status, b.payment_status AS booking_payment_status, b.qr_code, b.confirmation_sent,
+                b.checked_in_at, b.checked_out_at, b.cancelled_at, b.cancellation_reason,
+                b.created_at, b.updated_at,
+                b.occupancy_type, b.extra_guest_fee, b.extra_bed_fee, b.extra_beds,
+                b.short_stay_hours, b.expected_checkin_time, b.expected_checkout_time, b.price_type_used,
+                rt.type_name, rt.type_name_en, rt.category, rt.thumbnail, rt.bed_type, rt.size_sqm,
+                r.room_number, r.floor, r.building,
+                COALESCE(p.status, b.payment_status) as payment_status, 
+                p.payment_method, p.paid_at, p.amount as paid_amount, p.transaction_id
             FROM bookings b
             LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
             LEFT JOIN rooms r ON b.room_id = r.room_id
@@ -346,24 +344,20 @@ class Booking
      */
     public function cancelBooking($booking_id, $user_id, $reason = null)
     {
-        // Get booking details
         $booking = $this->getById($booking_id);
 
         if (!$booking) {
             return ['success' => false, 'message' => 'Không tìm thấy đặt phòng'];
         }
 
-        // Check if booking belongs to user
         if ($booking['user_id'] != $user_id) {
             return ['success' => false, 'message' => 'Bạn không có quyền hủy đặt phòng này'];
         }
 
-        // Check if booking can be cancelled
         if (!in_array($booking['status'], ['pending', 'confirmed'])) {
             return ['success' => false, 'message' => 'Không thể hủy đặt phòng ở trạng thái hiện tại'];
         }
 
-        // Check cancellation policy (24 hours before check-in)
         $check_in = new DateTime($booking['check_in_date']);
         $now = new DateTime();
         $hours_until_checkin = ($check_in->getTimestamp() - $now->getTimestamp()) / 3600;
@@ -375,7 +369,6 @@ class Booking
         try {
             $this->db->beginTransaction();
 
-            // Update booking status
             $stmt = $this->db->prepare("
                 UPDATE bookings 
                 SET status = 'cancelled', 
@@ -386,10 +379,8 @@ class Booking
             ");
             $stmt->execute([$user_id, $reason, $booking_id]);
 
-            // Add to booking history
             $this->addHistory($booking_id, $booking['status'], 'cancelled', $user_id, $reason);
 
-            // If payment was made, create refund record
             if ($booking['payment_status'] === 'paid') {
                 $stmt = $this->db->prepare("
                     UPDATE payments 
@@ -448,12 +439,10 @@ class Booking
             return false;
         }
 
-        // Check status
         if (!in_array($booking['status'], ['pending', 'confirmed'])) {
             return false;
         }
 
-        // Check time (24 hours before check-in)
         $check_in = new DateTime($booking['check_in_date']);
         $now = new DateTime();
         $hours_until_checkin = ($check_in->getTimestamp() - $now->getTimestamp()) / 3600;
@@ -469,7 +458,6 @@ class Booking
         $where_conditions = ['b.user_id = ?'];
         $params = [$user_id];
 
-        // Apply filters
         if (!empty($filters['status'])) {
             $where_conditions[] = 'b.status = ?';
             $params[] = $filters['status'];
@@ -497,9 +485,14 @@ class Booking
                 b.total_nights,
                 b.num_adults,
                 b.num_children,
+                b.room_price,
+                b.extra_guest_fee,
+                b.extra_bed_fee,
                 b.total_amount,
                 b.status,
-                p.status as payment_status,
+                b.occupancy_type,
+                b.price_type_used,
+                COALESCE(p.status, b.payment_status) as payment_status,
                 p.payment_method,
                 b.guest_name,
                 b.guest_phone,

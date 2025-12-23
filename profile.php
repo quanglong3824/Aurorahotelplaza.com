@@ -146,7 +146,7 @@ function getStatusBadge($status)
     $badges = [
         'pending' => '<span class="badge badge-warning">Chờ xác nhận</span>',
         'confirmed' => '<span class="badge badge-success">Đã xác nhận</span>',
-        'checked_in' => '<span class="badge badge-info">Đang ở</span>',
+        'checked_in' => '<span class="badge badge-info">Đang ở</span>',;
         'checked_out' => '<span class="badge badge-secondary">Đã trả phòng</span>',
         'cancelled' => '<span class="badge badge-danger">Đã hủy</span>',
     ];
@@ -415,7 +415,7 @@ function getContactStatusBadge($status)
                                 class="material-symbols-outlined text-purple-400 p-2 bg-purple-400/10 rounded-lg group-hover:bg-purple-500 group-hover:text-white transition-colors">emoji_events</span>
                         </div>
                         <p class="text-3xl font-bold text-white tracking-tight">
-                            <?php echo number_format($user['lifetime_points'] ?? 0); ?></p>
+                            <?php echo number_format($user['lifetime_points'] ?? 0);; ?></p>
                         <p class="text-xs text-slate-500 mt-1">Total earned</p>
                     </div>
 
@@ -526,7 +526,7 @@ function getContactStatusBadge($status)
                                 <button class="tab-button w-full sm:w-auto flex items-center justify-center gap-2"
                                     onclick="switchTab('points')">
                                     <span class="material-symbols-outlined">stars</span>
-                                    <span><?php _e('profile_full.points_history'); ?></span>
+                                    <span><?php _e('profile_full.points_history');; ?></span>
                                 </button>
                                 <button class="tab-button w-full sm:w-auto flex items-center justify-center gap-2"
                                     onclick="switchTab('payments')">
@@ -700,7 +700,7 @@ function getContactStatusBadge($status)
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php endif;; ?>
                                 </div>
 
                                 <!-- Contacts Tab -->

@@ -39,10 +39,10 @@
 * **Yêu cầu:** Thêm 1 giường phụ.
 
 **Phân tích tính toán:**
-1. **Giá phòng gốc (Double):** 1.900.000 VNĐ
+1. **Giá phòng gốc (Double):** 1.600.000 VNĐ
 2. **Phụ thu trẻ em (1.2m):** 200.000 VNĐ
 3. **Phụ thu khách thêm (>1.3m):** 400.000 VNĐ (trẻ 1.4m tính là khách thêm)
 4. **Giường phụ:** 650.000 VNĐ
 
 **Tổng cộng kỳ vọng:**
-`1.900.000 + 200.000 + 400.000 + 650.000 = 3.150.000 VNĐ`
+`1.600.000 + 200.000 + 400.000 + 650.000 = 2.850.000 `
