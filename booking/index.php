@@ -702,8 +702,24 @@ foreach ($room_types as $room) {
                                     <!-- PAYMENT SPECIFIC SUMMARY -->
                                     <div id="payment_summary_rows">
                                         <div class="flex justify-between">
-                                            <span><?php _e('booking_page.subtotal'); ?>:</span>
+                                            <span>Tiền phòng:</span>
                                             <span id="summary_subtotal" class="font-semibold"></span>
+                                        </div>
+                                        <div class="flex justify-between text-blue-500" id="summary_extra_guest_row"
+                                            style="display: none;">
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">person_add</span>
+                                                Phụ thu khách thêm:
+                                            </span>
+                                            <span id="summary_extra_guest_fee" class="font-semibold"></span>
+                                        </div>
+                                        <div class="flex justify-between text-orange-500" id="summary_extra_bed_row"
+                                            style="display: none;">
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">single_bed</span>
+                                                Phí giường phụ:
+                                            </span>
+                                            <span id="summary_extra_bed_fee" class="font-semibold"></span>
                                         </div>
                                         <div class="flex justify-between text-green-600" id="discount_row"
                                             style="display: none;">

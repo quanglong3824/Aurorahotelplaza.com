@@ -868,7 +868,7 @@ function calculateTotal() {
     if (extraGuestFeeRow) {
         if (extraGuestFee > 0) {
             extraGuestFeeRow.classList.remove('hidden');
-            if (extraGuestFeeDisplay) extraGuestFeeDisplay.textContent = formatCurrency(extraGuestFee);
+            if (extraGuestFeeDisplay) extraGuestFeeDisplay.textContent = '+' + formatCurrency(extraGuestFee);
         } else {
             extraGuestFeeRow.classList.add('hidden');
         }
@@ -885,7 +885,7 @@ function calculateTotal() {
     if (extraBedFeeRow) {
         if (extraBedFee > 0) {
             extraBedFeeRow.classList.remove('hidden');
-            if (extraBedFeeDisplay) extraBedFeeDisplay.textContent = formatCurrency(extraBedFee);
+            if (extraBedFeeDisplay) extraBedFeeDisplay.textContent = '+' + formatCurrency(extraBedFee);
         } else {
             extraBedFeeRow.classList.add('hidden');
         }
@@ -1366,6 +1366,28 @@ function updateSummary() {
         const total = parseFloat(roomSelect.getAttribute('data-calculated-total')) || 0;
 
         document.getElementById('summary_subtotal').textContent = formatCurrency(roomSubtotal);
+
+        // Show/hide extra guest fee row
+        const extraGuestRow = document.getElementById('summary_extra_guest_row');
+        if (extraGuestRow) {
+            if (extraGuestFee > 0) {
+                extraGuestRow.style.display = 'flex';
+                document.getElementById('summary_extra_guest_fee').textContent = '+' + formatCurrency(extraGuestFee);
+            } else {
+                extraGuestRow.style.display = 'none';
+            }
+        }
+
+        // Show/hide extra bed fee row
+        const extraBedRow = document.getElementById('summary_extra_bed_row');
+        if (extraBedRow) {
+            if (extraBedFee > 0) {
+                extraBedRow.style.display = 'flex';
+                document.getElementById('summary_extra_bed_fee').textContent = '+' + formatCurrency(extraBedFee);
+            } else {
+                extraBedRow.style.display = 'none';
+            }
+        }
 
         const promoDiscount = document.getElementById('discount_amount_input').value;
 
