@@ -18,6 +18,8 @@ try {
     // Get booking details
     $stmt = $db->prepare("
         SELECT b.*, b.booking_type, b.duration_type, b.inquiry_message,
+               b.extra_guest_fee, b.extra_bed_fee, b.extra_beds, 
+               b.occupancy_type, b.price_type_used,
                rt.type_name as room_type_name, rt.description as room_description, rt.category,
                r.room_number, u.email as user_email
         FROM bookings b
@@ -204,20 +206,85 @@ try {
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_in'); ?>:</span>
-                                <span
-                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
+                                <span class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_out'); ?>:</span>
-                                <span
-                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></span>
+                                <span class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
-                                <span class="text-white/70"><?php _e('booking_confirmation.total_amount'); ?>:</span>
-                                <span
-                                    class="font-bold text-xl text-accent"><?php echo number_format($booking['total_amount']); ?>
-                                    VNĐ</span>
+                                <span class="text-white/70">Số đêm:</span>
+                                <span class="font-semibold"><?php echo $booking['total_nights']; ?> đêm</span>
                             </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/10">
+                                <span class="text-white/70">Số khách:</span>
+                                <span class="font-semibold">
+                                    <?php echo $booking['num_adults'] ?? 2; ?> người lớn
+                                    <?php if (($booking['num_children'] ?? 0) > 0): ?>
+                                        + <?php echo $booking['num_children']; ?> trẻ em
+                                    <?php endif; ?>
+                                </span>
+                            </div>
+                            
+                            <!-- Price Breakdown -->
+                            <div class="py-2 border-b border-white/10">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-white/70">Giá phòng/đêm:</span>
+                                    <span class="font-semibold"><?php echo number_format($booking['room_price']); ?> VNĐ</span>
+                                </div>
+                                <?php 
+                                $room_subtotal = $booking['room_price'] * $booking['total_nights'];
+                                ?>
+                                <div class="flex justify-between items-center text-sm text-white/50">
+                                    <span>Tiền phòng (<?php echo $booking['total_nights']; ?> đêm):</span>
+                                    <span><?php echo number_format($room_subtotal); ?> VNĐ</span>
+                                </div>
+                            </div>
+                            
+                            <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
+                            <div class="flex justify-between items-center py-2 border-b border-white/10">
+                                <span class="text-blue-400 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">person_add</span>
+                                    Phụ thu khách thêm:
+                                </span>
+                                <span class="font-semibold text-blue-400">+<?php echo number_format($booking['extra_guest_fee']); ?> VNĐ</span>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
+                            <div class="flex justify-between items-center py-2 border-b border-white/10">
+                                <span class="text-orange-400 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">single_bed</span>
+                                    Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?> giường):
+                                </span>
+                                <span class="font-semibold text-orange-400">+<?php echo number_format($booking['extra_bed_fee']); ?> VNĐ</span>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <div class="flex justify-between items-center py-2 border-b border-white/10">
+                                <span class="text-white/70"><?php _e('booking_confirmation.total_amount'); ?>:</span>
+                                <span class="font-bold text-xl text-accent"><?php echo number_format($booking['total_amount']); ?> VNĐ</span>
+                            </div>
+                            
+                            <?php 
+                            // Price type badge
+                            $price_type = $booking['price_type_used'] ?? 'double';
+                            $price_type_labels = [
+                                'single' => ['label' => 'Giá 1 người', 'color' => 'bg-blue-500/20 text-blue-400'],
+                                'double' => ['label' => 'Giá 2 người', 'color' => 'bg-green-500/20 text-green-400'],
+                                'short_stay' => ['label' => 'Nghỉ ngắn hạn', 'color' => 'bg-purple-500/20 text-purple-400'],
+                                'weekly' => ['label' => 'Giá tuần', 'color' => 'bg-amber-500/20 text-amber-400'],
+                                'daily' => ['label' => 'Giá ngày', 'color' => 'bg-cyan-500/20 text-cyan-400']
+                            ];
+                            $type_info = $price_type_labels[$price_type] ?? $price_type_labels['double'];
+                            ?>
+                            <div class="flex justify-between items-center py-2 border-b border-white/10">
+                                <span class="text-white/70">Loại giá áp dụng:</span>
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold <?php echo $type_info['color']; ?>">
+                                    <?php echo $type_info['label']; ?>
+                                </span>
+                            </div>
+                            
                             <div class="flex justify-between items-center py-2">
                                 <span class="text-white/70"><?php _e('booking_confirmation.status'); ?>:</span>
                                 <span id="bookingStatus" class="px-3 py-1 rounded-full text-sm font-semibold

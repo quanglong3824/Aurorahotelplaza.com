@@ -231,16 +231,25 @@ try {
     // Determine initial status based on booking type
     $initial_status = $booking_type === 'inquiry' ? 'pending' : 'pending';
 
-    // Create booking with booking_type and inquiry fields
+    // Determine occupancy type based on number of adults
+    $occupancy_type = 'double';
+    if ($num_adults == 1) {
+        $occupancy_type = 'single';
+    } elseif ($num_adults > 2 || $num_children > 0) {
+        $occupancy_type = 'family';
+    }
+
+    // Create booking with booking_type, inquiry fields, and extra fees
     $stmt = $db->prepare("
         INSERT INTO bookings (
             booking_code, booking_type, user_id, room_id, room_type_id,
             check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
-            room_price, total_amount,
+            room_price, extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
             guest_name, guest_email, guest_phone, special_requests,
             inquiry_message, duration_type,
+            occupancy_type, price_type_used,
             status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
     ");
 
     // For inquiry bookings, payment status is N/A
@@ -254,11 +263,14 @@ try {
         $room_type_id,
         $check_in_date,
         $check_out_date,
-        $num_guests,
-        0,
+        $num_adults,
+        $num_children,
         1,
         $num_nights,
         $room_price,
+        $backend_extra_guest_fee,
+        $backend_extra_bed_fee,
+        $extra_beds,
         $total_amount,
         $guest_name,
         $guest_email,
@@ -266,6 +278,8 @@ try {
         $special_requests,
         $inquiry_message,
         $duration_type,
+        $occupancy_type,
+        $price_type_used,
         $payment_status
     ]);
 

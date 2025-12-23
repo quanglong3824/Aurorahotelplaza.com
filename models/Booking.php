@@ -87,16 +87,18 @@ class Booking
     {
         $stmt = $this->db->prepare("
             INSERT INTO bookings (
-                booking_code, user_id, room_id, room_type_id,
+                booking_code, booking_type, user_id, room_id, room_type_id,
                 check_in_date, check_out_date, num_adults, num_children, total_nights,
-                room_price, total_amount,
+                room_price, extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
                 guest_name, guest_email, guest_phone, special_requests,
+                occupancy_type, price_type_used,
                 status, payment_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
             $data['booking_code'],
+            $data['booking_type'] ?? 'instant',
             $data['user_id'],
             $data['room_id'],
             $data['room_type_id'],
@@ -106,11 +108,16 @@ class Booking
             $data['num_children'] ?? 0,
             $data['total_nights'] ?? $data['num_nights'],
             $data['room_price'],
+            $data['extra_guest_fee'] ?? 0,
+            $data['extra_bed_fee'] ?? 0,
+            $data['extra_beds'] ?? 0,
             $data['total_amount'],
             $data['guest_name'],
             $data['guest_email'],
             $data['guest_phone'],
             $data['special_requests'] ?? null,
+            $data['occupancy_type'] ?? 'double',
+            $data['price_type_used'] ?? 'double',
             $data['status'] ?? 'pending',
             $data['payment_status'] ?? 'unpaid'
         ]);
@@ -125,6 +132,8 @@ class Booking
     {
         $stmt = $this->db->prepare("
             SELECT b.*, 
+                   b.extra_guest_fee, b.extra_bed_fee, b.extra_beds,
+                   b.occupancy_type, b.price_type_used,
                    rt.type_name, rt.type_name_en, rt.category, rt.description, rt.amenities, rt.thumbnail, rt.bed_type, rt.size_sqm,
                    r.room_number, r.floor, r.building,
                    p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status_payment, p.amount as paid_amount,
@@ -147,6 +156,8 @@ class Booking
     {
         $stmt = $this->db->prepare("
             SELECT b.*, 
+                   b.extra_guest_fee, b.extra_bed_fee, b.extra_beds,
+                   b.occupancy_type, b.price_type_used,
                    rt.type_name, rt.type_name_en, rt.category, rt.description, rt.amenities, rt.thumbnail, rt.bed_type, rt.size_sqm,
                    r.room_number, r.floor, r.building,
                    p.payment_method, p.transaction_id, p.paid_at, p.status as payment_status_payment, p.amount as paid_amount
