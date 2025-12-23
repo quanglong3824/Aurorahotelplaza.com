@@ -181,6 +181,8 @@ foreach ($room_types as $room) {
                                             data-price-avg-weekly-single="<?php echo $room['price_avg_weekly_single'] ?? 0; ?>"
                                             data-price-avg-weekly-double="<?php echo $room['price_avg_weekly_double'] ?? 0; ?>"
                                             data-max-guests="<?php echo $room['max_occupancy']; ?>"
+                                            data-max-adults="<?php echo $room['max_adults'] ?? 2; ?>"
+                                            data-max-children="<?php echo $room['max_children'] ?? 1; ?>"
                                             data-available="<?php echo $room['available_rooms']; ?>"
                                             data-category="<?php echo $room['category']; ?>"
                                             data-size="<?php echo $room['size_sqm'] ?? 0; ?>"
@@ -281,6 +283,23 @@ foreach ($room_types as $room) {
                                     </div>
                                 </div>
 
+                                <!-- Smart Suggestion Box -->
+                                <div id="smart_suggestion_box" class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl hidden">
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-amber-400 mt-0.5">lightbulb</span>
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold text-amber-400 mb-2">Gợi ý phụ thu</h4>
+                                            <p id="suggestion_message" class="text-sm text-white/80 mb-3"></p>
+                                            <div id="suggestion_actions" class="flex flex-wrap gap-2">
+                                                <!-- Dynamic buttons will be added here -->
+                                            </div>
+                                        </div>
+                                        <button type="button" onclick="dismissSuggestion()" class="text-white/50 hover:text-white/80">
+                                            <span class="material-symbols-outlined text-sm">close</span>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <!-- Extra Guests Section -->
                                 <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl"
                                     id="extra_guests_section">
@@ -304,11 +323,11 @@ foreach ($room_types as $room) {
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                                            1m - 1m3: <span class="text-yellow-400">200.000đ</span>
+                                            1m - dưới 1m3: <span class="text-yellow-400">200.000đ/đêm</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                                            Trên 1m3: <span class="text-orange-400">400.000đ</span>
+                                            Từ 1m3 trở lên: <span class="text-orange-400">400.000đ/đêm</span>
                                         </div>
                                     </div>
 
@@ -318,7 +337,7 @@ foreach ($room_types as $room) {
                                     </div>
 
                                     <p class="text-xs text-gray-500 mt-2">
-                                        * Phí khách thêm bao gồm ăn sáng buffet
+                                        * Phí khách thêm tính theo đêm, bao gồm ăn sáng buffet
                                     </p>
                                 </div>
 

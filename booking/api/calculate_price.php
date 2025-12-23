@@ -94,25 +94,37 @@ try {
     $totalRoomPrice = $roomPricePerUnit * $numRooms;
 
     // Calculate extra guest fees
+    // Phí khách thêm = phí/đêm × số đêm
     $extraGuestFee = 0;
     $extraGuestDetails = [];
 
     foreach ($extraGuests as $guest) {
-        $guestFee = calculateExtraGuestFee(
-            (float) ($guest['height_m'] ?? 1.7),
-            (bool) ($guest['includes_breakfast'] ?? true)
-        );
+        $height = (float) ($guest['height_m'] ?? 1.7);
+        
+        // Determine fee per night based on height
+        if ($height < 1.0) {
+            $feePerNight = 0;           // Dưới 1m: Miễn phí
+            $category_guest = 'child_under_1m';
+        } elseif ($height >= 1.0 && $height < 1.3) {
+            $feePerNight = 200000;      // 1m - 1m3: 200,000đ/đêm
+            $category_guest = 'child_1m_1m3';
+        } else {
+            $feePerNight = 400000;      // Trên 1m3: 400,000đ/đêm
+            $category_guest = 'adult';
+        }
 
-        // Per night fee
+        // Multiply by number of nights (or 1 for short stay)
         $nightMultiplier = $bookingType === 'short_stay' ? 1 : max(1, $numNights);
-        $totalGuestFee = $guestFee['fee'] * $nightMultiplier;
+        $totalGuestFee = $feePerNight * $nightMultiplier;
 
         $extraGuestFee += $totalGuestFee;
         $extraGuestDetails[] = [
-            'category' => $guestFee['category'],
-            'fee_per_night' => $guestFee['fee'],
+            'height_m' => $height,
+            'category' => $category_guest,
+            'fee_per_night' => $feePerNight,
+            'num_nights' => $nightMultiplier,
             'total_fee' => $totalGuestFee,
-            'includes_breakfast' => $guestFee['includes_breakfast']
+            'includes_breakfast' => true
         ];
     }
 

@@ -146,12 +146,46 @@ try {
     // Calculate room subtotal
     $room_subtotal = $room_price * $num_nights;
 
-    // Validate extra fees from frontend (trust frontend calculation for now)
-    // In production, recalculate on backend for security
-    $backend_extra_guest_fee = $extra_guest_fee; // Use frontend value
-    $backend_extra_bed_fee = $extra_bed_fee;     // Use frontend value
+    // ========== RECALCULATE EXTRA FEES ON BACKEND (for security) ==========
+    require_once '../../helpers/pricing_calculator.php';
+    
+    // Parse extra guests data from frontend
+    $extra_guests_array = json_decode($extra_guests_data, true) ?? [];
+    
+    // Recalculate extra guest fee on backend
+    $backend_extra_guest_fee = 0;
+    foreach ($extra_guests_array as $guest) {
+        $height = floatval($guest['height'] ?? 1.5);
+        
+        // Determine fee based on height
+        if ($height < 1.0) {
+            $fee_per_night = 0;           // Dưới 1m: Miễn phí
+        } elseif ($height >= 1.0 && $height < 1.3) {
+            $fee_per_night = 200000;      // 1m - 1m3: 200,000đ/đêm
+        } else {
+            $fee_per_night = 400000;      // Trên 1m3: 400,000đ/đêm
+        }
+        
+        // Multiply by number of nights
+        $backend_extra_guest_fee += $fee_per_night * $num_nights;
+    }
+    
+    // Recalculate extra bed fee on backend
+    $backend_extra_bed_fee = 0;
+    if ($category === 'room' && $extra_beds > 0) {
+        $extra_bed_price_per_night = 650000; // 650,000đ/đêm
+        $backend_extra_bed_fee = $extra_beds * $extra_bed_price_per_night * $num_nights;
+    }
+    
+    // Log if there's a mismatch between frontend and backend calculations
+    if (abs($extra_guest_fee - $backend_extra_guest_fee) > 1000) {
+        error_log("Extra guest fee mismatch: frontend=$extra_guest_fee, backend=$backend_extra_guest_fee");
+    }
+    if (abs($extra_bed_fee - $backend_extra_bed_fee) > 1000) {
+        error_log("Extra bed fee mismatch: frontend=$extra_bed_fee, backend=$backend_extra_bed_fee");
+    }
 
-    // Calculate total amount
+    // Calculate total amount using backend values
     $total_amount = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee;
 
     if (abs($calculated_total - $total_amount) > 1000) {

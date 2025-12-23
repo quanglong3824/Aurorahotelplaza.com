@@ -91,38 +91,34 @@ function calculateRoomPrice($roomType, $numAdults = 2, $numNights = 1, $bookingT
 
 /**
  * Tính phí khách thêm dựa trên chiều cao
+ * Phí này là PHÍ/ĐÊM - sẽ được nhân với số đêm ở nơi gọi hàm
  * 
  * @param float $heightM Chiều cao tính bằng mét
- * @param bool $includeBreakfast Có bao gồm bữa sáng không
- * @return array ['fee' => phí, 'category' => phân loại]
+ * @param bool $includeBreakfast Có bao gồm bữa sáng không (mặc định có)
+ * @return array ['fee' => phí/đêm, 'category' => phân loại]
  */
 function calculateExtraGuestFee($heightM, $includeBreakfast = true)
 {
-    // Theo bảng giá lễ tân
+    // Theo bảng giá lễ tân - PHÍ/ĐÊM (bao gồm ăn sáng)
     $fee = 0;
     $category = 'adult';
 
     if ($heightM < 1.0) {
-        // Trẻ em dưới 1m - Miễn phí
+        // Trẻ em dưới 1m - Miễn phí (bao gồm ăn sáng)
         $fee = 0;
         $category = 'child_under_1m';
     } elseif ($heightM >= 1.0 && $heightM < 1.3) {
-        // Trẻ em 1m - 1m3 - 200,000 VND
+        // Trẻ em 1m - 1m3 - 200,000 VND/đêm (bao gồm ăn sáng)
         $fee = 200000;
         $category = 'child_1m_1m3';
     } else {
-        // Người lớn và trẻ trên 1m3 - 400,000 VND
+        // Người lớn và trẻ trên 1m3 - 400,000 VND/đêm (bao gồm ăn sáng)
         $fee = 400000;
         $category = 'adult';
     }
 
-    // Nếu không bao gồm bữa sáng, có thể giảm phí (tùy chính sách)
-    if (!$includeBreakfast) {
-        $fee = max(0, $fee - 150000); // Giảm 150k nếu không bao gồm sáng
-    }
-
     return [
-        'fee' => $fee,
+        'fee' => $fee,           // Phí/đêm
         'category' => $category,
         'includes_breakfast' => $includeBreakfast
     ];

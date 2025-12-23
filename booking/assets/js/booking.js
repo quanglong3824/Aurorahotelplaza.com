@@ -4,12 +4,211 @@ let currentStep = 1;
 let isInquiryMode = false;
 let currentBookingType = 'standard'; // 'standard' or 'short_stay'
 let extraGuests = []; // Array to store extra guests with heights
-const EXTRA_BED_PRICE = 650000;
+let suggestionDismissed = false; // Track if user dismissed suggestion
+
+// ========== PRICING CONSTANTS (must match backend) ==========
+const EXTRA_BED_PRICE = 650000; // 650,000đ/đêm
 const EXTRA_GUEST_FEES = {
-    under1m: 0,      // Free
-    '1m_1m3': 200000, // 200,000 VND
-    over1m3: 400000   // 400,000 VND
+    under1m: 0,       // Dưới 1m: Miễn phí (bao gồm ăn sáng)
+    '1m_1m3': 200000, // 1m - 1m3: 200,000đ/đêm (bao gồm ăn sáng)
+    over1m3: 400000   // Trên 1m3: 400,000đ/đêm (bao gồm ăn sáng)
 };
+
+// ========== SMART SUGGESTION ALGORITHM ==========
+/**
+ * Thuật toán gợi ý phụ thu thông minh
+ * 
+ * LOGIC:
+ * 1. Lấy thông tin phòng: max_adults, max_children, category
+ * 2. Lấy số khách hiện tại: num_adults, num_children
+ * 3. Tính tổng khách: total_guests = num_adults + num_children
+ * 4. So sánh với giới hạn phòng và đưa ra gợi ý:
+ * 
+ * CASES:
+ * - Case A: num_adults >= max_adults && num_children >= 1
+ *   → Gợi ý: "Bạn có trẻ em đi cùng. Vui lòng khai báo chiều cao để tính phụ thu."
+ *   → Action: Mở form thêm khách với số lượng = num_children
+ * 
+ * - Case B: num_adults >= max_adults && num_children >= 2
+ *   → Gợi ý: "Bạn có nhiều trẻ em. Có thể cần thêm giường phụ."
+ *   → Action: Gợi ý thêm giường + mở form thêm khách
+ * 
+ * - Case C: total_guests > max_occupancy
+ *   → Gợi ý: "Số khách vượt quá sức chứa phòng. Vui lòng khai báo phụ thu."
+ *   → Action: Mở form thêm khách
+ * 
+ * - Case D: num_children > 0 && extraGuests.length === 0
+ *   → Gợi ý nhẹ: "Bạn có trẻ em đi cùng. Nhớ khai báo chiều cao nếu cần phụ thu."
+ */
+function checkAndShowSuggestion() {
+    if (isInquiryMode || suggestionDismissed) return;
+    
+    const roomSelect = document.getElementById('room_type_id');
+    const selectedOption = roomSelect?.options[roomSelect.selectedIndex];
+    
+    if (!selectedOption || !selectedOption.value) {
+        hideSuggestion();
+        return;
+    }
+    
+    const category = selectedOption.dataset.category || 'room';
+    const maxAdults = parseInt(selectedOption.dataset.maxAdults) || 2;
+    const maxChildren = parseInt(selectedOption.dataset.maxChildren) || 1;
+    const maxOccupancy = parseInt(selectedOption.dataset.maxGuests) || 3;
+    
+    const numAdults = parseInt(document.getElementById('num_adults')?.value) || 2;
+    const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;
+    const totalGuests = numAdults + numChildren;
+    const numExtraBeds = parseInt(document.getElementById('extra_beds')?.value) || 0;
+    
+    // Số khách thêm đã khai báo
+    const declaredExtraGuests = extraGuests.length;
+    
+    let suggestion = null;
+    
+    // Case A: Đã đạt max adults và có trẻ em nhưng chưa khai báo
+    if (numAdults >= maxAdults && numChildren >= 1 && declaredExtraGuests < numChildren) {
+        const undeclared = numChildren - declaredExtraGuests;
+        
+        if (numChildren >= 2) {
+            // Case B: Nhiều trẻ em - gợi ý thêm giường
+            suggestion = {
+                type: 'warning',
+                message: `Bạn có ${numChildren} trẻ em đi cùng ${numAdults} người lớn. ` +
+                         `Vui lòng khai báo chiều cao trẻ em để tính phụ thu chính xác. ` +
+                         `${category === 'room' ? 'Bạn cũng có thể cần thêm giường phụ.' : ''}`,
+                actions: [
+                    { label: `Khai báo ${undeclared} trẻ em`, action: 'declareChildren', count: undeclared },
+                    ...(category === 'room' && numExtraBeds === 0 ? [{ label: 'Thêm giường phụ', action: 'addBed' }] : [])
+                ]
+            };
+        } else {
+            // Case A: 1 trẻ em
+            suggestion = {
+                type: 'info',
+                message: `Bạn có ${numChildren} trẻ em đi cùng. Vui lòng khai báo chiều cao để tính phụ thu (nếu có).`,
+                actions: [
+                    { label: 'Khai báo chiều cao', action: 'declareChildren', count: undeclared }
+                ]
+            };
+        }
+    }
+    // Case C: Tổng khách vượt quá sức chứa
+    else if (totalGuests > maxOccupancy && declaredExtraGuests < (totalGuests - maxOccupancy)) {
+        const extraNeeded = totalGuests - maxOccupancy - declaredExtraGuests;
+        suggestion = {
+            type: 'warning',
+            message: `Số khách (${totalGuests} người) vượt quá sức chứa tiêu chuẩn của phòng (${maxOccupancy} người). ` +
+                     `Vui lòng khai báo ${extraNeeded} khách thêm để tính phụ thu.`,
+            actions: [
+                { label: `Khai báo ${extraNeeded} khách thêm`, action: 'declareExtra', count: extraNeeded }
+            ]
+        };
+    }
+    // Case D: Có trẻ em nhưng chưa khai báo (gợi ý nhẹ)
+    else if (numChildren > 0 && declaredExtraGuests === 0) {
+        suggestion = {
+            type: 'hint',
+            message: `Lưu ý: Nếu trẻ em cao từ 1m trở lên sẽ có phụ thu. Bạn có muốn khai báo chiều cao không?`,
+            actions: [
+                { label: 'Khai báo ngay', action: 'declareChildren', count: numChildren },
+                { label: 'Bỏ qua', action: 'dismiss' }
+            ]
+        };
+    }
+    
+    if (suggestion) {
+        showSuggestion(suggestion);
+    } else {
+        hideSuggestion();
+    }
+}
+
+function showSuggestion(suggestion) {
+    const box = document.getElementById('smart_suggestion_box');
+    const message = document.getElementById('suggestion_message');
+    const actions = document.getElementById('suggestion_actions');
+    
+    if (!box || !message || !actions) return;
+    
+    // Update message
+    message.textContent = suggestion.message;
+    
+    // Update border color based on type
+    box.classList.remove('border-amber-500/30', 'border-red-500/30', 'border-blue-500/30');
+    box.classList.remove('bg-amber-500/10', 'bg-red-500/10', 'bg-blue-500/10');
+    
+    if (suggestion.type === 'warning') {
+        box.classList.add('border-red-500/30', 'bg-red-500/10');
+    } else if (suggestion.type === 'hint') {
+        box.classList.add('border-blue-500/30', 'bg-blue-500/10');
+    } else {
+        box.classList.add('border-amber-500/30', 'bg-amber-500/10');
+    }
+    
+    // Build action buttons
+    actions.innerHTML = suggestion.actions.map(act => {
+        if (act.action === 'dismiss') {
+            return `<button type="button" onclick="dismissSuggestion()" 
+                class="px-3 py-1.5 text-xs bg-gray-600/50 hover:bg-gray-600 text-white rounded-lg transition-colors">
+                ${act.label}
+            </button>`;
+        }
+        return `<button type="button" onclick="handleSuggestionAction('${act.action}', ${act.count || 0})" 
+            class="px-3 py-1.5 text-xs bg-amber-500/80 hover:bg-amber-500 text-white rounded-lg transition-colors font-medium">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">${act.action === 'addBed' ? 'single_bed' : 'person_add'}</span>
+            ${act.label}
+        </button>`;
+    }).join('');
+    
+    box.classList.remove('hidden');
+}
+
+function hideSuggestion() {
+    const box = document.getElementById('smart_suggestion_box');
+    if (box) box.classList.add('hidden');
+}
+
+function dismissSuggestion() {
+    suggestionDismissed = true;
+    hideSuggestion();
+}
+
+function handleSuggestionAction(action, count) {
+    if (action === 'declareChildren' || action === 'declareExtra') {
+        // Mở form thêm khách và thêm số lượng cần thiết
+        const list = document.getElementById('extra_guests_list');
+        const btn = document.getElementById('toggle_extra_guests_btn');
+        
+        if (list.classList.contains('hidden')) {
+            list.classList.remove('hidden');
+            btn.innerHTML = '<span class="material-symbols-outlined text-sm">remove_circle</span> Ẩn';
+        }
+        
+        // Thêm số khách cần khai báo
+        for (let i = 0; i < count; i++) {
+            addExtraGuest();
+        }
+        
+        // Scroll to extra guests section
+        document.getElementById('extra_guests_section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } 
+    else if (action === 'addBed') {
+        // Thêm 1 giường phụ
+        const extraBedsInput = document.getElementById('extra_beds');
+        if (extraBedsInput) {
+            extraBedsInput.value = Math.min(parseInt(extraBedsInput.value || 0) + 1, 2);
+            calculateTotal();
+        }
+        
+        // Scroll to extra bed section
+        document.getElementById('extra_bed_section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // Ẩn gợi ý sau khi thực hiện action
+    hideSuggestion();
+    calculateTotal();
+}
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function () {
@@ -218,6 +417,14 @@ function adjustValue(fieldId, delta) {
     // Update total guests hidden field
     updateTotalGuests();
 
+    // Reset suggestion dismissed when user changes values
+    if (fieldId === 'num_adults' || fieldId === 'num_children') {
+        suggestionDismissed = false;
+    }
+
+    // Check and show smart suggestion
+    checkAndShowSuggestion();
+
     // Recalculate
     calculateTotal();
 }
@@ -270,6 +477,10 @@ function removeExtraGuest(id) {
         list.classList.add('hidden');
         btn.innerHTML = '<span class="material-symbols-outlined text-sm">add_circle</span> Thêm khách';
     }
+
+    // Re-check suggestion after removing guest
+    suggestionDismissed = false;
+    checkAndShowSuggestion();
 }
 
 // Update extra guest height
@@ -277,12 +488,13 @@ function updateExtraGuestHeight(id, height) {
     const guest = extraGuests.find(g => g.id === id);
     if (guest) {
         guest.height = parseFloat(height);
-        if (height < 1.0) {
-            guest.type = 'under1m';
-        } else if (height <= 1.3) {
-            guest.type = '1m_1m3';
+        // Mapping chiều cao sang loại phí (phải khớp với backend)
+        if (guest.height < 1.0) {
+            guest.type = 'under1m';      // Dưới 1m: Miễn phí
+        } else if (guest.height >= 1.0 && guest.height < 1.3) {
+            guest.type = '1m_1m3';       // 1m - dưới 1m3: 200,000đ/đêm
         } else {
-            guest.type = 'over1m3';
+            guest.type = 'over1m3';      // Từ 1m3 trở lên: 400,000đ/đêm
         }
     }
     updateExtraGuestsData();
@@ -302,13 +514,13 @@ function renderExtraGuests() {
                 <select onchange="updateExtraGuestHeight(${guest.id}, this.value)" 
                     class="form-input text-sm py-1">
                     <option value="0.5" ${guest.height < 1.0 ? 'selected' : ''}>Dưới 1m (Miễn phí)</option>
-                    <option value="1.15" ${guest.height >= 1.0 && guest.height <= 1.3 ? 'selected' : ''}>1m - 1m3 (200.000đ)</option>
-                    <option value="1.5" ${guest.height > 1.3 ? 'selected' : ''}>Trên 1m3 (400.000đ)</option>
+                    <option value="1.15" ${guest.height >= 1.0 && guest.height < 1.3 ? 'selected' : ''}>1m - dưới 1m3 (200.000đ/đêm)</option>
+                    <option value="1.5" ${guest.height >= 1.3 ? 'selected' : ''}>Từ 1m3 trở lên (400.000đ/đêm)</option>
                 </select>
             </div>
             <div class="text-right">
                 <span class="text-sm font-semibold ${guest.type === 'under1m' ? 'text-green-400' : guest.type === '1m_1m3' ? 'text-yellow-400' : 'text-orange-400'}">
-                    ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000đ' : '400.000đ'}
+                    ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000đ/đêm' : '400.000đ/đêm'}
                 </span>
             </div>
             <button type="button" onclick="removeExtraGuest(${guest.id})" 
