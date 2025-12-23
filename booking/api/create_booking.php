@@ -282,12 +282,13 @@ try {
         INSERT INTO bookings (
             booking_code, booking_type, user_id, room_id, room_type_id,
             check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
-            room_price, extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
+            room_price, base_price, service_fee, service_charges, discount_amount, final_price,
+            extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
             guest_name, guest_email, guest_phone, special_requests,
             inquiry_message, duration_type,
             occupancy_type, price_type_used,
             status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
     ");
 
     // For inquiry bookings, payment status is N/A
@@ -306,6 +307,11 @@ try {
         1,
         $num_nights,
         $room_price,
+        $base_price,
+        $service_fee,
+        0, // service_charges (deprecated, use service_fee)
+        $discount_amount,
+        $final_price,
         $backend_extra_guest_fee,
         $backend_extra_bed_fee,
         $extra_beds,
