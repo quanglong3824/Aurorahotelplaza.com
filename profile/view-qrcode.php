@@ -311,11 +311,11 @@ try {
                                             <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>đ</span>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if ($booking['service_charges'] > 0): ?>
+                                    <?php if ($booking['service_fee'] > 0): ?>
                                         <div class="flex justify-between">
                                             <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ</span>
                                             <span
-                                                class="text-gray-900 dark:text-white"><?php echo number_format($booking['service_charges'], 0, ',', '.'); ?>đ</span>
+                                                class="text-gray-900 dark:text-white"><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>đ</span>
                                         </div>
                                     <?php endif; ?>
                                     <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">

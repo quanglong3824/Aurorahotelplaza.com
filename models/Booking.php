@@ -274,7 +274,7 @@ class Booking
             SELECT 
                 b.booking_id, b.booking_code, b.booking_type, b.user_id, b.room_type_id, b.room_id,
                 b.check_in_date, b.check_out_date, b.num_adults, b.num_children, b.num_rooms,
-                b.total_nights, b.room_price, b.service_charges, b.discount_amount, b.points_used,
+                b.total_nights, b.room_price, b.service_fee, b.discount_amount, b.points_used,
                 b.total_amount, b.special_requests, b.inquiry_message, b.duration_type,
                 b.guest_name, b.guest_email, b.guest_phone, b.guest_id_number,
                 b.status, b.payment_status AS booking_payment_status, b.qr_code, b.confirmation_sent,

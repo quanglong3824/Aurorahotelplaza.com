@@ -427,11 +427,11 @@ include 'includes/admin-header.php';
                                 class="font-medium"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
                         </div>
                     <?php endif; ?>
-                    <?php if ($booking['service_charges'] > 0): ?>
+                    <?php if ($booking['service_fee'] > 0): ?>
                         <div class="flex justify-between">
                             <span>Phí dịch vụ</span>
                             <span
-                                class="font-medium"><?php echo number_format($booking['service_charges'], 0, ',', '.'); ?>đ</span>
+                                class="font-medium"><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>đ</span>
                         </div>
                     <?php endif; ?>
                     <?php if ($booking['discount_amount'] > 0): ?>

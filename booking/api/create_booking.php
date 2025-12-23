@@ -185,12 +185,23 @@ try {
         error_log("Extra bed fee mismatch: frontend=$extra_bed_fee, backend=$backend_extra_bed_fee");
     }
 
-    // Calculate pricing breakdown
-    $base_price = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee;
+    // ========== SIMPLE PRICING CALCULATION ==========
+    // Formula: total_amount = room_subtotal + extra_guest_fee + extra_bed_fee + service_fee - discount
     $service_fee = 0; // No service fee for now
     $discount_amount = 0; // No discount for now
-    $final_price = $base_price - $discount_amount + $service_fee;
-    $total_amount = $final_price;
+    $total_amount = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee + $service_fee - $discount_amount;
+
+    // Debug log
+    error_log("=== PRICING BREAKDOWN ===");
+    error_log("room_price (per night): $room_price");
+    error_log("num_nights: $num_nights");
+    error_log("room_subtotal: $room_subtotal");
+    error_log("backend_extra_guest_fee: $backend_extra_guest_fee");
+    error_log("backend_extra_bed_fee: $backend_extra_bed_fee");
+    error_log("service_fee: $service_fee");
+    error_log("discount_amount: $discount_amount");
+    error_log("total_amount: $total_amount");
+    error_log("========================");
 
     if (abs($calculated_total - $total_amount) > 1000) {
         error_log("Total mismatch: frontend=$calculated_total, backend=$total_amount");
@@ -277,18 +288,18 @@ try {
         $occupancy_type = 'family';
     }
 
-    // Create booking with booking_type, inquiry fields, and extra fees
+    // Create booking with simplified pricing structure
     $stmt = $db->prepare("
         INSERT INTO bookings (
             booking_code, booking_type, user_id, room_id, room_type_id,
             check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
-            room_price, base_price, service_fee, service_charges, discount_amount, final_price,
+            room_price, service_fee, discount_amount,
             extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
             guest_name, guest_email, guest_phone, special_requests,
             inquiry_message, duration_type,
             occupancy_type, price_type_used,
             status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
     ");
 
     // For inquiry bookings, payment status is N/A
@@ -306,12 +317,9 @@ try {
         $num_children,
         1,
         $num_nights,
-        $room_price,
-        $base_price,
+        $room_subtotal,  // room_price = total room price (per_night * nights)
         $service_fee,
-        0, // service_charges (deprecated, use service_fee)
         $discount_amount,
-        $final_price,
         $backend_extra_guest_fee,
         $backend_extra_bed_fee,
         $extra_beds,

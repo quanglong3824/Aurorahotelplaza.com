@@ -456,11 +456,11 @@ $payment_labels = [
                                                         </div>
                                                 <?php endif; ?>
 
-                                                <?php if ($booking['service_charges'] > 0): ?>
+                                                <?php if ($booking['service_fee'] > 0): ?>
                                                         <div class="flex justify-between text-white/80">
                                                             <span><?php _e('booking_detail.service_charges'); ?></span>
                                                             <span
-                                                                class="font-mono"><?php echo number_format($booking['service_charges']); ?>
+                                                                class="font-mono"><?php echo number_format($booking['service_fee']); ?>
                                                                 đ</span>
                                                         </div>
                                                 <?php endif; ?>
@@ -960,8 +960,8 @@ $payment_labels = [
                         <div class="section-title">Chi tiết thanh toán / Payment Details</div>
                         <div class="row"><span class="label">Giá phòng (<?php echo $booking['total_nights']; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng):</span> <span class="value"><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?> VND</span></div>
                         
-                        <?php if ($booking['service_charges'] > 0): ?>
-                        <div class="row"><span class="label">Phí dịch vụ:</span> <span class="value"><?php echo number_format($booking['service_charges']); ?> VND</span></div>
+                        <?php if ($booking['service_fee'] > 0): ?>
+                        <div class="row"><span class="label">Phí dịch vụ:</span> <span class="value"><?php echo number_format($booking['service_fee']); ?> VND</span></div>
                         <?php endif; ?>
                         
                         <?php if ($booking['discount_amount'] > 0): ?>
