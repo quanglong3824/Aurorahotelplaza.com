@@ -73,6 +73,11 @@ $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 $pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation']; // Added confirmation
 $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking']); // Added booking
 ?>
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"
+    style="position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: #d4af37; z-index: 99999; transition: width 0.1s ease-out;">
+</div>
+
 <!-- TopNavBar - Smart Header -->
 <header id="main-header"
     class="fixed top-0 z-50 w-full transition-all duration-300 <?php echo $header_class; ?> <?php echo $force_scrolled; ?>"

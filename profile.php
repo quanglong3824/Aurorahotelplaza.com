@@ -319,6 +319,8 @@ function getContactStatusBadge($status)
 
 <body class="bg-gray-900 font-body text-white min-h-screen flex flex-col relative overflow-x-hidden">
 
+
+
     <!-- Fixed Background -->
     <div class="fixed inset-0 z-0 pointer-events-none">
         <img src="assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg"
@@ -786,6 +788,8 @@ function getContactStatusBadge($status)
 
             </div>
         </main>
+
+
 
         <?php include 'includes/footer.php'; ?>
 

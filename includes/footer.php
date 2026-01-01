@@ -254,6 +254,17 @@ if (!function_exists('__')) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    // Scroll Progress Bar Logic
+    window.addEventListener('scroll', function () {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById("scroll-progress");
+        if (progressBar) {
+            progressBar.style.width = scrolled + "%";
+        }
+    }, { passive: true });
+
     // ============================================
     // BOOKING TYPE SELECTION
     // ============================================
