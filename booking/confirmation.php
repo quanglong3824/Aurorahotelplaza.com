@@ -298,6 +298,14 @@ try {
                                     <?php echo $booking['status'] === 'confirmed' ? __('booking_confirmation.confirmed') : __('booking_confirmation.pending'); ?>
                                 </span>
                             </div>
+                            
+                            <!-- Disclaimer Notes -->
+                            <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                                <p class="text-xs text-amber-400 flex items-start gap-1">
+                                    <span class="material-symbols-outlined text-sm mt-0.5">info</span>
+                                    <span><strong>Lưu ý:</strong> Đây là giá tạm tính. Tổng thanh toán cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh trong quá trình lưu trú.</span>
+                                </p>
+                            </div>
                         </div>
 
                         <?php if ($booking['status'] === 'pending'): ?>

@@ -444,10 +444,13 @@ foreach ($room_types as $room) {
 
                                     <!-- Tax Info Note -->
                                     <div class="mt-3 pt-3 border-t border-gray-300/30 dark:border-gray-600">
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                                            <span
-                                                class="material-symbols-outlined text-sm text-green-500">check_circle</span>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2">
+                                            <span class="material-symbols-outlined text-sm text-green-500">check_circle</span>
                                             Đã bao gồm 5% phí dịch vụ và 8% VAT
+                                        </p>
+                                        <p class="text-xs text-amber-500 dark:text-amber-400 flex items-start gap-1">
+                                            <span class="material-symbols-outlined text-sm mt-0.5">info</span>
+                                            <span>Đây là giá tạm tính. Giá cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh khi nhận phòng.</span>
                                         </p>
                                     </div>
                                 </div>
@@ -734,6 +737,12 @@ foreach ($room_types as $room) {
                                         <div class="flex justify-between text-lg font-bold text-accent">
                                             <span><?php _e('booking_page.total_payment'); ?>:</span>
                                             <span id="summary_total"></span>
+                                        </div>
+                                        <div class="mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                                            <p class="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1">
+                                                <span class="material-symbols-outlined text-sm mt-0.5">info</span>
+                                                <span><strong>Lưu ý:</strong> Giá trên là giá ước tính. Tổng thanh toán cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh trong quá trình lưu trú.</span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
