@@ -894,7 +894,7 @@ try {
 
     </div>
 
-    <!-- Main JavaScript -->
+    <!--  JavaScript -->
     <script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
 
 </body>
