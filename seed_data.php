@@ -1,198 +1,161 @@
 <?php
 /**
- * DATABASE STRESS TEST SEEDER (HIGH CONCURRENCY SIMULATION)
- * Mô phỏng luồng dữ liệu lớn tập trung trong một khoảng thời gian ngắn
- * Mục tiêu: Test khả năng xử lý bookings, check availability và reporting
+ * SMART STRESS TEST SEEDER (LOGIC AWARE)
+ * Mô phỏng người dùng thật: Kiểm tra còn phòng mới đặt.
+ * Mục tiêu: 
+ * 1. Lấp đầy lịch phòng để test logic Overbooking.
+ * 2. Gây áp lực lên câu lệnh SQL "Check Availability".
  */
 
 require_once 'config/database.php';
+require_once 'models/Booking.php'; // Sử dụng Model thật để check logic
 
 // Tăng giới hạn thực thi
 set_time_limit(600);
 ini_set('memory_limit', '1024M');
 
 $db = getDB();
+$bookingModel = new Booking($db);
 
 // Cấu hình test
-$NUM_THREADS = 200; // Số lượng "người dùng" giả lập đặt phòng cùng lúc
-$DATA_PER_THREAD = 3; // Mỗi người đặt tối thiểu 3 lần
-$TOTAL_BOOKINGS = $NUM_THREADS * $DATA_PER_THREAD; // Tổng 600 bookings
+$NUM_ATTEMPTS = 1000; // Số lần thử đặt phòng
+$PEAK_START_DATE = date('Y-m-d', strtotime('+30 days')); // Cao điểm tháng sau
+$PEAK_DURATION_DAYS = 14; // Kéo dài 2 tuần
 
-// Khoảng thời gian CAO ĐIỂM cần test (Ví dụ: Tết Nguyên Đán hoặc Lễ - Tháng tới)
-$PEAK_START_DATE = date('Y-m-d', strtotime('+30 days')); // Bắt đầu từ 30 ngày tới
-$PEAK_DURATION_DAYS = 7; // Cao điểm trong 1 tuần
-
-echo "<h1>Aurora Stress Test Seeder</h1>";
+echo "<h1>Smart Logic Seeder</h1>";
 echo "<div style='font-family: monospace; line-height: 1.5;'>";
-echo "<strong>Configuration:</strong><br>";
-echo "- Virtual Threads (Concurrent Users): $NUM_THREADS<br>";
-echo "- Bookings per User: $DATA_PER_THREAD<br>";
-echo "- Total Bookings to Generate: $TOTAL_BOOKINGS<br>";
-echo "- Target Peak Period: $PEAK_START_DATE (for $PEAK_DURATION_DAYS days)<br>";
-echo "<hr>";
 
 try {
-    // 1. Chuẩn bị dữ liệu Room Types & Pricing
-    $stmt = $db->query("SELECT room_type_id, base_price, category FROM room_types WHERE status = 'active'");
-    $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // 1. Lấy thông tin Room Types và SỐ LƯỢNG PHÒNG THỰC TẾ
+    $sql = "
+        SELECT rt.room_type_id, rt.type_name, rt.base_price, rt.category, 
+               (SELECT COUNT(*) FROM rooms r WHERE r.room_type_id = rt.room_type_id AND r.status = 'available') as total_rooms
+        FROM room_types rt 
+        WHERE rt.status = 'active'
+    ";
+    $room_types = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($room_types)) {
-        die("Lỗi: Không tìm thấy loại phòng nào. Vui lòng thêm loại phòng trước.");
+        die("Lỗi: Không tìm thấy loại phòng nào.");
     }
 
-    // 2. Tạo 200 Users giả ("Threads")
-    echo "Creating $NUM_THREADS concurrent users... ";
-    $faker_names = ['Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Huynh', 'Phan', 'Vu', 'Vo', 'Dang', 'Bui', 'Do', 'Ho', 'Ngo', 'Duong', 'Ly'];
-    $faker_mids = ['Van', 'Thi', 'Minh', 'Duc', 'Quoc', 'Tuan', 'Thanh', 'Ngoc', 'Hai', 'Xuan'];
-    $faker_lasts = ['An', 'Binh', 'Cuong', 'Dung', 'Giang', 'Hieu', 'Hung', 'Khanh', 'Long', 'Minh', 'Nam', 'Phuc', 'Quan', 'Son', 'Thang', 'Tung'];
-
-    $user_ids = [];
-    $insert_user = $db->prepare("
-        INSERT IGNORE INTO users (email, password_hash, full_name, phone, user_role, status, email_verified, created_at) 
-        VALUES (:email, :pass, :name, :phone, 'customer', 'active', 1, NOW())
-    ");
-
-    $db->beginTransaction();
-    for ($i = 0; $i < $NUM_THREADS; $i++) {
-        $name = $faker_names[array_rand($faker_names)] . ' ' . $faker_mids[array_rand($faker_mids)] . ' ' . $faker_lasts[array_rand($faker_lasts)];
-        $email = 'perf_test_' . uniqid() . $i . '@test.com'; // Unique email
-        $phone = '09' . str_pad(rand(0, 99999999), 8, '0', STR_PAD_LEFT);
-
-        $insert_user->execute([
-            ':email' => $email,
-            ':pass' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password: password
-            ':name' => $name,
-            ':phone' => $phone
-        ]);
-
-        // Lấy ID vừa tạo hoặc ID của email đã tồn tại (nếu duplicate)
-        $uid = $db->lastInsertId();
-        if ($uid == 0) {
-            $stmt_uid = $db->prepare("SELECT user_id FROM users WHERE email = ?");
-            $stmt_uid->execute([$email]);
-            $uid = $stmt_uid->fetchColumn();
-        }
-        $user_ids[] = $uid;
+    // In ra năng lực phục vụ hiện tại
+    echo "<strong>Current Inventory:</strong><br>";
+    foreach ($room_types as $rt) {
+        // Nếu chưa khai báo phòng cụ thể, giả lập năng lực là 5
+        if ($rt['total_rooms'] == 0)
+            $rt['total_rooms'] = 5;
+        echo "- {$rt['type_name']} ({$rt['category']}): {$rt['total_rooms']} rooms available.<br>";
     }
-    $db->commit();
-    echo "Done.<br>";
+    echo "<hr>";
 
-    // 3. Bắt đầu xả data (600 Bookings tập trung)
-    echo "<h3>Injecting $TOTAL_BOOKINGS bookings into peak period...</h3>";
+    // 2. Chuẩn bị User ID pool
+    $stmt = $db->query("SELECT user_id FROM users WHERE user_role = 'customer' LIMIT 100");
+    $user_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    $insert_booking = $db->prepare("
-        INSERT INTO bookings (
-            booking_code, booking_type, user_id, room_id, room_type_id,
-            check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
-            room_price, extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
-            guest_name, guest_email, guest_phone,
-            occupancy_type, price_type_used, status, payment_status, created_at
-        ) VALUES (
-            :code, :type, :uid, :rid, :rtid,
-            :cin, :cout, :adults, :kids, 1, :nights,
-            :price, 0, :bed_fee, :beds, :total,
-            :gname, :gemail, :gphone,
-            'double', 'double', :status, :pay_status, :created
-        )
-    ");
+    // Nếu chưa có user, tạo nhanh 10 user
+    if (empty($user_ids)) {
+        // Tạo user fallback logic ở đây nếu cần
+        die("Vui lòng chạy tool cũ 1 lần để tạo user trước.");
+    }
 
-    // Lấy thông tin chi tiết user để map vào booking
-    $stmt_users = $db->query("SELECT user_id, full_name, email, phone FROM users WHERE email LIKE 'perf_test_%'");
+    echo "<h3>Starting Intelligent Simulation ($NUM_ATTEMPTS requests)...</h3>";
+
+    $success_count = 0;
+    $full_count = 0;
+    $start_time = microtime(true);
+
+    // Chuẩn bị User Info Map để đỡ query nhiều
+    $stmt_users = $db->query("SELECT user_id, full_name, email, phone FROM users WHERE user_id IN (" . implode(',', $user_ids) . ")");
     $users_map = [];
     while ($row = $stmt_users->fetch(PDO::FETCH_ASSOC)) {
         $users_map[$row['user_id']] = $row;
     }
 
-    $count = 0;
-    $collisions_expected = 0;
-    $start_time = microtime(true);
+    for ($i = 0; $i < $NUM_ATTEMPTS; $i++) {
 
-    $db->beginTransaction();
+        // A. Random Yêu cầu đặt phòng
+        $rt = $room_types[array_rand($room_types)];
+        $user_id = $user_ids[array_rand($user_ids)];
+        $u_info = $users_map[$user_id];
 
-    foreach ($user_ids as $uid) {
-        $u_info = $users_map[$uid] ?? ['full_name' => 'Tester', 'email' => 'test@test.com', 'phone' => '0000000000'];
+        // Random ngày trong đợt cao điểm
+        $day_offset = rand(0, $PEAK_DURATION_DAYS);
+        $check_in = date('Y-m-d', strtotime("$PEAK_START_DATE + $day_offset days"));
 
-        // Mỗi user thử đặt 3 lần trong khoảng thời gian cao điểm
-        for ($k = 0; $k < $DATA_PER_THREAD; $k++) {
+        // Logic đêm nghỉ
+        if ($rt['category'] == 'apartment') {
+            $nights = rand(3, 10); // Căn hộ thuê lâu hơn
+        } else {
+            $nights = rand(1, 3); // Phòng khách sạn thuê ngắn
+        }
+        $check_out = date('Y-m-d', strtotime("$check_in + $nights days"));
 
-            // Random ngày trong tuần cao điểm => Tỉ lệ trùng lặp cao
-            $random_day_offset = rand(0, $PEAK_DURATION_DAYS);
-            $check_in = date('Y-m-d', strtotime("$PEAK_START_DATE + $random_day_offset days"));
-            $nights = rand(1, 3);
-            $check_out = date('Y-m-d', strtotime("$check_in + $nights days"));
+        // B. KIỂM TRA PHÒNG TRỐNG (LOGIC THẬT)
+        // Đây là bước quan trọng nhất để làm "nóng" database
+        $is_available = $bookingModel->checkAvailability($rt['room_type_id'], $check_in, $check_out);
 
-            $room_type = $room_types[array_rand($room_types)];
+        if ($is_available) {
+            // C. Nếu còn phòng => INSERT
+            // Tự động gán phòng (room_id) luôn để đúng chuẩn
+            $assigned_room = $bookingModel->getAvailableRoom($rt['room_type_id'], $check_in, $check_out);
+            $room_id = $assigned_room ? $assigned_room['room_id'] : null;
 
-            // Tính giá
-            $base_price = $room_type['base_price'];
-            $room_total = $base_price * $nights;
-            $extra_beds = (rand(0, 100) > 80) ? 1 : 0; // 20% cần giường phụ
-            $extra_bed_fee = $extra_beds * 650000 * $nights;
-            $total = $room_total + $extra_bed_fee;
+            // Tính giá & Status
+            $total_amount = $rt['base_price'] * $nights;
+            $bcode = 'SMART' . date('dm') . strtoupper(bin2hex(random_bytes(2))) . $i;
 
-            // STATUS: Mô phỏng hỗn loạn
-            // 70% Pending (chờ admin duyệt vì quá tải), 20% Confirmed, 10% Cancelled
-            $rand_status = rand(0, 100);
-            if ($rand_status < 70) {
-                $status = 'pending';
-                $pay_status = 'unpaid';
-            } elseif ($rand_status < 90) {
-                $status = 'confirmed';
-                $pay_status = 'paid';
-            } else {
-                $status = 'cancelled';
-                $pay_status = 'refunded';
-            }
-
-            // Booking Code: BK + TIMESTAMP + RANDOM (Mô phỏng request cùng giây)
-            // Để test collision, ta không sleep() ở đây.
-            $bcode = 'STRESS' . date('dm') . strtoupper(bin2hex(random_bytes(3)));
-
-            // Created At: Dồn vào thời điểm hiện tại hoặc rải rác trong 1 giờ qua
-            $created_at = date('Y-m-d H:i:s', strtotime('-' . rand(0, 60) . ' minutes'));
-
-            $insert_booking->execute([
-                ':code' => $bcode,
-                ':type' => 'instant',
-                ':uid' => $uid,
-                ':rid' => null, // Chưa xếp phòng (Overbooking scenario)
-                ':rtid' => $room_type['room_type_id'],
-                ':cin' => $check_in,
-                ':cout' => $check_out,
-                ':adults' => 2,
-                ':kids' => 0,
-                ':nights' => $nights,
-                ':price' => $base_price,
-                ':bed_fee' => $extra_bed_fee,
-                ':beds' => $extra_beds,
-                ':total' => $total,
-                ':gname' => $u_info['full_name'],
-                ':gemail' => $u_info['email'],
-                ':gphone' => $u_info['phone'],
-                ':status' => $status,
-                ':pay_status' => $pay_status,
-                ':created' => $created_at
+            $bookingModel->create([
+                'booking_code' => $bcode,
+                'booking_type' => 'instant',
+                'user_id' => $user_id,
+                'room_type_id' => $rt['room_type_id'],
+                'room_id' => $room_id, // Gán phòng luôn
+                'check_in_date' => $check_in,
+                'check_out_date' => $check_out,
+                'num_adults' => 2,
+                'num_children' => 0,
+                'total_nights' => $nights,
+                'room_price' => $rt['base_price'] * $nights,
+                'payment_status' => 'paid',
+                'status' => 'confirmed', // Đã check availability nên auto confirm
+                'total_amount' => $total_amount,
+                'guest_name' => $u_info['full_name'],
+                'guest_email' => $u_info['email'],
+                'guest_phone' => $u_info['phone']
             ]);
 
-            $count++;
-            if ($count % 100 == 0)
-                echo ". ";
+            $success_count++;
+            // echo "<span style='color:green'>+</span> "; 
+        } else {
+            // D. Hết phòng => Bỏ qua (Mô phỏng khách hàng bỏ đi hoặc chọn ngày khác)
+            $full_count++;
+            // echo "<span style='color:red'>x</span> ";
+        }
+
+        if ($i % 50 == 0) {
+            echo ". ";
+            flush();
         }
     }
 
-    $db->commit();
     $end_time = microtime(true);
-    $duration = round($end_time - $start_time, 4);
+    $duration = round($end_time - $start_time, 2);
 
-    echo "<br><br><strong>SUCCESS!</strong><br>";
-    echo "Generated $count bookings in $duration seconds.<br>";
-    echo "Average insertion speed: " . round($count / $duration) . " bookings/sec.<br>";
-    echo "Data is focused between $PEAK_START_DATE and " . date('Y-m-d', strtotime("$PEAK_START_DATE + $PEAK_DURATION_DAYS days")) . ".<br>";
-    echo "<a href='index.php'>[Back to Home]</a>";
+    echo "<br><br><strong>SIMULATION RESULTS:</strong><br>";
+    echo "Total Requests: $NUM_ATTEMPTS<br>";
+    echo "- Success (Booked): <span style='color:green'>$success_count</span><br>";
+    echo "- Rejected (Full): <span style='color:red'>$full_count</span><br>";
+    echo "Time taken: {$duration}s<br>";
+
+    if ($success_count > 0) {
+        echo "Avg Booking Speed: " . round($success_count / $duration, 2) . " bookings/sec (including logic check)<br>";
+    }
+
+    echo "<i>Note: This test runs real 'Check Availability' logic against your database. High 'Rejected' count means your hotel is fully booked for the peak period.</i>";
+    echo "<br><br><a href='index.php'>[Back to Home]</a>";
 
 } catch (Exception $e) {
-    if ($db->inTransaction())
-        $db->rollBack();
     echo "<br><strong style='color:red'>ERROR:</strong> " . $e->getMessage();
 }
 echo "</div>";
