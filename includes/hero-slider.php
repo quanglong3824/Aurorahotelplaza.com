@@ -29,7 +29,7 @@
     <div class="relative z-10 flex flex-col items-center gap-8 text-center text-white px-4">
         <div class="flex flex-col gap-4">
             <span class="glass-badge-accent mx-auto">
-                <span class="text-accent">★★★★★</span>
+                <span class="text-accent">★★★★</span>
                 <?php _e('hero.badge'); ?>
             </span>
             <h1 class="font-display text-4xl font-black leading-tight tracking-tight md:text-6xl">Aurora Hotel Plaza

@@ -288,7 +288,7 @@ return [
         'reception_24_7' => 'Lễ tân 24/7',
         'about_us' => 'Về chúng tôi',
         'welcome_title' => 'Chào mừng đến với Aurora Hotel Plaza',
-        'welcome_desc' => 'Tọa lạc tại trung tâm thành phố Biên Hòa, Aurora Hotel Plaza mang đến trải nghiệm sang trọng và thanh bình vô song. Với hơn 10 năm kinh nghiệm trong ngành khách sạn, chúng tôi cam kết mang đến dịch vụ 5 sao với giá cả hợp lý nhất.',
+        'welcome_desc' => 'Tọa lạc tại trung tâm thành phố Biên Hòa, Aurora Hotel Plaza mang đến trải nghiệm sang trọng và thanh bình vô song. Với hơn 10 năm kinh nghiệm trong ngành khách sạn, chúng tôi cam kết mang đến dịch vụ 4 sao với giá cả hợp lý nhất.',
         'rooms_apartments' => 'Phòng & Căn hộ',
         'happy_customers' => 'Khách hàng hài lòng',
         'years_experience' => 'Năm kinh nghiệm',
@@ -344,7 +344,7 @@ return [
         'professional_service' => 'Dịch vụ chuyên nghiệp',
         'professional_service_desc' => 'Đội ngũ nhân viên được đào tạo bài bản, thân thiện và tận tâm phục vụ 24/7.',
         'reasonable_price' => 'Giá cả hợp lý',
-        'reasonable_price_desc' => 'Dịch vụ 5 sao với mức giá cạnh tranh, nhiều chương trình khuyến mãi hấp dẫn quanh năm.',
+        'reasonable_price_desc' => 'Dịch vụ 4 sao với mức giá cạnh tranh, nhiều chương trình khuyến mãi hấp dẫn quanh năm.',
         'quality_guaranteed' => 'Chất lượng đảm bảo',
         'quality_guaranteed_desc' => 'Phòng ốc sạch sẽ, trang thiết bị hiện đại, được bảo trì thường xuyên đảm bảo chất lượng.',
         'security_24_7' => 'An ninh 24/7',
@@ -1194,7 +1194,7 @@ return [
 
     // Hero slider
     'hero' => [
-        'badge' => 'Khách sạn 5 sao tại Biên Hòa',
+        'badge' => 'Khách sạn 4 sao tại Biên Hòa',
         'subtitle' => 'Trải nghiệm đẳng cấp sang trọng với dịch vụ hoàn hảo tại trung tâm thành phố Biên Hòa, Đồng Nai',
         'check_in' => 'Ngày nhận phòng',
         'check_out' => 'Ngày trả phòng',

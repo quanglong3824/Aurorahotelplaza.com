@@ -158,7 +158,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-gray-900 dark:text-white">Aurora Hotel Plaza</h1>
-                    <p class="text-xs font-semibold" style="color: #d4af37;">★★★★★ Luxury</p>
+                    <p class="text-xs font-semibold" style="color: #d4af37;">★★★★ Luxury</p>
                 </div>
             </div>
 
