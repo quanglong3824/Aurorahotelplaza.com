@@ -86,11 +86,13 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     data-fixed-transparent="<?php echo $is_fixed_transparent ? 'true' : 'false'; ?>">
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
-            <img id="header-logo"
-                src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>"
-                data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
-                data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
-                alt="Aurora Hotel Plaza Logo" class="h-16 w-auto transition-all duration-300">
+            <a href="<?php echo $base_path; ?>index.php">
+                <img id="header-logo"
+                    src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>"
+                    data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
+                    data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
+                    alt="Aurora Hotel Plaza Logo" class="h-16 w-auto transition-all duration-300">
+            </a>
         </div>
         <nav class="hidden items-center gap-10 md:flex">
             <a class="text-base font-medium nav-link"

@@ -74,7 +74,7 @@ if (!function_exists('__')) {
                     <li><a class="text-white/70 hover:text-accent transition-colors"
                             href="<?php echo $base_path; ?>services.php"><?php _e('footer.services'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/aurora-restaurant.php"><?php _e('footer.restaurant'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"><?php _e('footer.restaurant'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
                             href="<?php echo $base_path; ?>gallery.php"><?php _e('footer.gallery'); ?></a></li>
@@ -94,22 +94,22 @@ if (!function_exists('__')) {
                     <li><a class="text-white/70 hover:text-accent transition-colors"
                             href="<?php echo $base_path; ?>booking/"><?php _e('footer.online_booking'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/aurora-restaurant.php"><?php _e('footer.restaurant_bar'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"><?php _e('footer.restaurant_bar'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/conference-service.php"><?php _e('footer.conference_events'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"><?php _e('footer.conference_events'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/therapeutic-massage.php"><?php _e('footer.spa_massage'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=therapeutic-massage"><?php _e('footer.spa_massage'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/pool-gym.php"><?php _e('footer.swimming_pool'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=pool-gym"><?php _e('footer.swimming_pool'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/pool-gym.php"><?php _e('footer.gym'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=pool-gym"><?php _e('footer.gym'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $base_path; ?>services-pages/dich-vu/airport-transfer.php"><?php _e('footer.shuttle_service'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=airport-transfer"><?php _e('footer.shuttle_service'); ?></a>
                     </li>
                 </ul>
             </div>
