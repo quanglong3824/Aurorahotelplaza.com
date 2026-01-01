@@ -146,7 +146,7 @@ function getStatusBadge($status)
     $badges = [
         'pending' => '<span class="badge badge-warning">Chờ xác nhận</span>',
         'confirmed' => '<span class="badge badge-success">Đã xác nhận</span>',
-        'checked_in' => '<span class="badge badge-info">Đang ở</span>',;
+        'checked_in' => '<span class="badge badge-info">Đang ở</span>',
         'checked_out' => '<span class="badge badge-secondary">Đã trả phòng</span>',
         'cancelled' => '<span class="badge badge-danger">Đã hủy</span>',
     ];
@@ -351,7 +351,8 @@ function getContactStatusBadge($status)
 
                             <div class="text-center md:text-left">
                                 <h1 class="text-3xl font-heading font-bold text-white mb-1">
-                                    <?php echo htmlspecialchars($user['full_name']); ?></h1>
+                                    <?php echo htmlspecialchars($user['full_name']); ?>
+                                </h1>
                                 <div
                                     class="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-slate-400 text-sm">
                                     <span class="flex items-center gap-1"><span
@@ -402,7 +403,8 @@ function getContactStatusBadge($status)
                                 class="material-symbols-outlined text-accent p-2 bg-accent/10 rounded-lg group-hover:bg-accent group-hover:text-white transition-colors">stars</span>
                         </div>
                         <p class="text-3xl font-bold text-white tracking-tight">
-                            <?php echo number_format($user['current_points'] ?? 0); ?></p>
+                            <?php echo number_format($user['current_points'] ?? 0); ?>
+                        </p>
                         <p class="text-xs text-slate-500 mt-1">Available to use</p>
                     </div>
 
@@ -415,7 +417,9 @@ function getContactStatusBadge($status)
                                 class="material-symbols-outlined text-purple-400 p-2 bg-purple-400/10 rounded-lg group-hover:bg-purple-500 group-hover:text-white transition-colors">emoji_events</span>
                         </div>
                         <p class="text-3xl font-bold text-white tracking-tight">
-                            <?php echo number_format($user['lifetime_points'] ?? 0);; ?></p>
+                            <?php echo number_format($user['lifetime_points'] ?? 0);
+                            ; ?>
+                        </p>
                         <p class="text-xs text-slate-500 mt-1">Total earned</p>
                     </div>
 
@@ -526,7 +530,8 @@ function getContactStatusBadge($status)
                                 <button class="tab-button w-full sm:w-auto flex items-center justify-center gap-2"
                                     onclick="switchTab('points')">
                                     <span class="material-symbols-outlined">stars</span>
-                                    <span><?php _e('profile_full.points_history');; ?></span>
+                                    <span><?php _e('profile_full.points_history');
+                                    ; ?></span>
                                 </button>
                                 <button class="tab-button w-full sm:w-auto flex items-center justify-center gap-2"
                                     onclick="switchTab('payments')">
@@ -588,14 +593,16 @@ function getContactStatusBadge($status)
                                                         class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2 text-sm pt-4 border-t border-white/5">
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">
-                                                                <?php _e('profile_full.check_in'); ?></div>
+                                                                <?php _e('profile_full.check_in'); ?>
+                                                            </div>
                                                             <div class="font-semibold text-white">
                                                                 <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
                                                             </div>
                                                         </div>
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">
-                                                                <?php _e('profile_full.check_out'); ?></div>
+                                                                <?php _e('profile_full.check_out'); ?>
+                                                            </div>
                                                             <div class="font-semibold text-white">
                                                                 <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
                                                             </div>
@@ -603,12 +610,14 @@ function getContactStatusBadge($status)
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">Duration</div>
                                                             <div class="font-semibold text-white">
-                                                                <?php echo $booking['total_nights']; ?> nights</div>
+                                                                <?php echo $booking['total_nights']; ?> nights
+                                                            </div>
                                                         </div>
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">Total</div>
                                                             <div class="font-bold text-accent">
-                                                                <?php echo number_format($booking['total_amount']); ?> đ</div>
+                                                                <?php echo number_format($booking['total_amount']); ?> đ
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -669,7 +678,8 @@ function getContactStatusBadge($status)
                                 <div id="tab-payments" class="tab-content">
                                     <?php if (empty($payments)): ?>
                                         <div class="text-center py-12 text-slate-400">
-                                            <?php _e('profile_full.no_payments'); ?></div>
+                                            <?php _e('profile_full.no_payments'); ?>
+                                        </div>
                                     <?php else: ?>
                                         <div class="space-y-3">
                                             <?php foreach ($payments as $payment): ?>
@@ -683,10 +693,12 @@ function getContactStatusBadge($status)
                                                         </div>
                                                         <div>
                                                             <div class="font-bold text-white">
-                                                                <?php echo number_format($payment['amount']); ?> đ</div>
+                                                                <?php echo number_format($payment['amount']); ?> đ
+                                                            </div>
                                                             <div class="text-xs text-slate-500">Ref:
                                                                 <?php echo $payment['booking_code']; ?> •
-                                                                <?php echo strtoupper($payment['payment_method']); ?></div>
+                                                                <?php echo strtoupper($payment['payment_method']); ?>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="text-right">
@@ -700,7 +712,8 @@ function getContactStatusBadge($status)
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
-                                    <?php endif;; ?>
+                                    <?php endif;
+                                    ; ?>
                                 </div>
 
                                 <!-- Contacts Tab -->
@@ -779,14 +792,18 @@ function getContactStatusBadge($status)
     </div>
 
     <!-- Contact Detail Modal -->
-    <div id="contactModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300" id="contactModalContainer">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur-xl z-20">
+    <div id="contactModal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300"
+            id="contactModalContainer">
+            <div
+                class="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur-xl z-20">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
                     <span class="material-symbols-outlined text-accent">mail_lock</span>
                     <?php _e('profile_full.contact_detail'); ?>
                 </h3>
-                <button onclick="closeContactModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-slate-400 hover:text-white">
+                <button onclick="closeContactModal()"
+                    class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-slate-400 hover:text-white">
                     <span class="material-symbols-outlined text-xl">close</span>
                 </button>
             </div>
@@ -829,10 +846,10 @@ function getContactStatusBadge($status)
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
+
             // Animation
             setTimeout(() => {
-                if(container) {
+                if (container) {
                     container.classList.remove('scale-95', 'opacity-0');
                     container.classList.add('scale-100', 'opacity-100');
                 }
@@ -914,12 +931,12 @@ function getContactStatusBadge($status)
         function closeContactModal() {
             const modal = document.getElementById('contactModal');
             const container = document.getElementById('contactModalContainer');
-            
-            if(container) {
+
+            if (container) {
                 container.classList.remove('scale-100', 'opacity-100');
                 container.classList.add('scale-95', 'opacity-0');
             }
-            
+
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
