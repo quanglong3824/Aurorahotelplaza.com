@@ -1,166 +1,120 @@
 <?php
 /**
- * ULTIMATE SEEDER (USER GEN + SMART BOOKING)
- * Tự động tạo user nếu thiếu và đặt phòng thông minh.
+ * EXTREME SEEDER (ALL-IN-ONE)
+ * 1. Tự tạo User.
+ * 2. Bắn 20k request theo Batch.
  */
 
 require_once 'config/database.php';
 require_once 'models/Booking.php';
 
-set_time_limit(1200);
-ini_set('memory_limit', '1024M');
+set_time_limit(3600);
+ini_set('memory_limit', '2048M');
 
 $db = getDB();
-$bookingModel = new Booking($db); // Model xử lý logic check phòng
+$bookingModel = new Booking($db);
 
-// Cấu hình
-$NUM_USERS_TO_CREATE = 200;   // Tăng user lên để đa dạng
-$NUM_ATTEMPTS = 9000;         // Tăng số lượt bắn data lên 9000
-$PEAK_START_DATE = date('Y-m-d', strtotime('-30 days')); // Bắn từ quá khứ đến tương lai
-$PEAK_DURATION_DAYS = 90;     // Kéo dài 3 tháng để dàn trải data
+$NUM_USERS = 200;
+$NUM_REQUESTS = 20000;
+$BATCH_SIZE = 500;
+$PEAK_START_DATE = date('Y-m-d', strtotime('-60 days'));
+$PEAK_DURATION_DAYS = 120;
 
-echo "<h1>Ultimate Data Seeder</h1>";
+echo "<h1>Extreme Data Seeder (Full Package)</h1>";
 echo "<div style='font-family: monospace; line-height: 1.5;'>";
 
 try {
-    // ---------------------------------------------------------
-    // BƯỚC 1: KIỂM TRA & TẠO USER (Nếu thiếu)
-    // ---------------------------------------------------------
-    echo "<h3>1. Checking User Base...</h3>";
-
-    // Đếm số user hiện có
-    $stmt = $db->query("SELECT COUNT(*) FROM users WHERE user_role = 'customer'");
-    $current_users = $stmt->fetchColumn();
-
-    $user_ids = [];
-
-    if ($current_users < $NUM_USERS_TO_CREATE) {
-        echo "Found only $current_users users. Generating more...<br>";
-
+    // ----------------------------------------------------------------
+    // 1. TẠO USER (NẾU CHƯA CÓ)
+    // ----------------------------------------------------------------
+    $stmt = $db->query("SELECT count(*) FROM users WHERE user_role = 'customer'");
+    if ($stmt->fetchColumn() < $NUM_USERS) {
+        echo "Creating $NUM_USERS users... ";
         $faker_first = ['Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Huynh', 'Phan', 'Vu', 'Vo', 'Dang'];
-        $faker_last = ['An', 'Binh', 'Cuong', 'Dung', 'Giang', 'Hieu', 'Hung', 'Khanh', 'Long', 'Minh', 'Nam'];
-
-        $insert_user = $db->prepare("
-            INSERT IGNORE INTO users (email, password_hash, full_name, phone, user_role, status, email_verified, created_at) 
-            VALUES (?, ?, ?, ?, 'customer', 'active', 1, NOW())
-        ");
+        $insert = $db->prepare("INSERT IGNORE INTO users (email, password_hash, full_name, phone, user_role, status, email_verified, created_at) VALUES (?, ?, ?, ?, 'customer', 'active', 1, NOW())");
 
         $db->beginTransaction();
-        for ($i = 0; $i < $NUM_USERS_TO_CREATE; $i++) {
-            $name = $faker_first[array_rand($faker_first)] . ' ' . $faker_last[array_rand($faker_last)];
-            $email = 'user_' . uniqid() . '@example.com';
-            $phone = '09' . rand(10000000, 99999999);
-            $pass = password_hash('123456', PASSWORD_DEFAULT);
-
-            $insert_user->execute([$email, $pass, $name, $phone]);
+        for ($i = 0; $i < $NUM_USERS; $i++) {
+            $email = 'u' . uniqid() . $i . '@test.com';
+            $name = $faker_first[array_rand($faker_first)] . ' User ' . $i;
+            $insert->execute([$email, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', $name, '0123456789']);
         }
         $db->commit();
-        echo "Created $NUM_USERS_TO_CREATE new users.<br>";
-    } else {
-        echo "User base is sufficient ($current_users users).<br>";
+        echo "Done.<br>";
     }
 
-    // Lấy danh sách ID user để dùng
-    $stmt = $db->query("SELECT user_id FROM users WHERE user_role = 'customer' LIMIT 100");
-    $user_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $user_ids = $db->query("SELECT user_id FROM users WHERE user_role='customer'")->fetchAll(PDO::FETCH_COLUMN);
+    $room_types = $db->query("SELECT room_type_id, base_price, category FROM room_types")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Load thông tin user vào RAM để dùng dần
-    $stmt_users = $db->query("SELECT user_id, full_name, email, phone FROM users WHERE user_id IN (" . implode(',', $user_ids) . ")");
-    $users_map = [];
-    while ($row = $stmt_users->fetch(PDO::FETCH_ASSOC)) {
-        $users_map[$row['user_id']] = $row;
-    }
-
-    // ---------------------------------------------------------
-    // BƯỚC 2: CHUẨN BỊ INVENTORY (KHO PHÒNG)
-    // ---------------------------------------------------------
-    echo "<h3>2. Analyzing Inventory...</h3>";
-    $sql = "
-        SELECT rt.room_type_id, rt.type_name, rt.base_price, rt.category, 
-               (SELECT COUNT(*) FROM rooms r WHERE r.room_type_id = rt.room_type_id AND r.status = 'available') as total_rooms
-        FROM room_types rt 
-        WHERE rt.status = 'active'
-    ";
-    $room_types = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-    if (empty($room_types))
-        die("Error: No room types found.");
-
-    foreach ($room_types as $rt) {
-        $qty = $rt['total_rooms'] > 0 ? $rt['total_rooms'] : 5; // Fallback 5 nếu chưa khai báo phòng
-        echo "- {$rt['type_name']}: $qty rooms.<br>";
-    }
-
-    // ---------------------------------------------------------
-    // BƯỚC 3: SMART BOOKING SIMULATION
-    // ---------------------------------------------------------
-    echo "<h3>3. Starting Simulation ($NUM_ATTEMPTS requests)...</h3>";
-
+    // ----------------------------------------------------------------
+    // 2. BẮN DATA (BATCH MODE)
+    // ----------------------------------------------------------------
+    echo "<h3>Starting 20,000 Booking Requests...</h3>";
     $success = 0;
     $rejected = 0;
     $start_time = microtime(true);
 
-    for ($i = 0; $i < $NUM_ATTEMPTS; $i++) {
-        // Random dữ liệu đầu vào
+    $db->beginTransaction(); // Batch đầu tiên
+
+    for ($i = 0; $i < $NUM_REQUESTS; $i++) {
         $rt = $room_types[array_rand($room_types)];
         $uid = $user_ids[array_rand($user_ids)];
-        $u_info = $users_map[$uid];
 
-        $day_offset = rand(0, $PEAK_DURATION_DAYS);
-        $check_in = date('Y-m-d', strtotime("$PEAK_START_DATE + $day_offset days"));
+        $check_in = date('Y-m-d', strtotime("$PEAK_START_DATE + " . rand(0, $PEAK_DURATION_DAYS) . " days"));
+        $nights = ($rt['category'] == 'apartment') ? rand(2, 5) : rand(1, 2);
+        // Date object cho check_out
+        $d = new DateTime($check_in);
+        $d->modify("+$nights days");
+        $check_out = $d->format('Y-m-d');
 
-        $nights = ($rt['category'] == 'apartment') ? rand(2, 7) : rand(1, 3);
-        $check_out = date('Y-m-d', strtotime("$check_in + $nights days"));
+        // Check availability
+        if ($bookingModel->checkAvailability($rt['room_type_id'], $check_in, $check_out)) {
+            $assigned = $bookingModel->getAvailableRoom($rt['room_type_id'], $check_in, $check_out);
+            $rid = $assigned ? $assigned['room_id'] : null;
 
-        // *** CORE LOGIC ***
-        $is_available = $bookingModel->checkAvailability($rt['room_type_id'], $check_in, $check_out);
+            // Raw Insert
+            $stmt = $db->prepare("INSERT INTO bookings (booking_code, booking_type, user_id, room_id, room_type_id, check_in_date, check_out_date, num_adults, total_nights, room_price, total_amount, status, payment_status, guest_name, guest_email, guest_phone, created_at) VALUES (?, 'instant', ?, ?, ?, ?, ?, 2, ?, ?, ?, 'confirmed', 'paid', ?, ?, ?, NOW())");
 
-        if ($is_available) {
-            // Lấy phòng trống cụ thể để gán
-            $assigned_room = $bookingModel->getAvailableRoom($rt['room_type_id'], $check_in, $check_out);
-            $room_id = $assigned_room ? $assigned_room['room_id'] : null;
-
-            $bookingModel->create([
-                'booking_code' => 'AUTO' . date('dm') . strtoupper(bin2hex(random_bytes(2))) . $i,
-                'booking_type' => 'instant',
-                'user_id' => $uid,
-                'room_type_id' => $rt['room_type_id'],
-                'room_id' => $room_id,
-                'check_in_date' => $check_in,
-                'check_out_date' => $check_out,
-                'num_adults' => 2,
-                'total_nights' => $nights,
-                'room_price' => $rt['base_price'] * $nights,
-                'total_amount' => $rt['base_price'] * $nights,
-                'status' => 'confirmed',
-                'payment_status' => 'paid',
-                'guest_name' => $u_info['full_name'],
-                'guest_email' => $u_info['email'],
-                'guest_phone' => $u_info['phone']
+            $stmt->execute([
+                'X' . $i . strtoupper(bin2hex(random_bytes(2))),
+                $uid,
+                $rid,
+                $rt['room_type_id'],
+                $check_in,
+                $check_out,
+                $nights,
+                $rt['base_price'] * $nights,
+                $rt['base_price'] * $nights,
+                'Stress Tester',
+                'test@test.com',
+                '0987654321'
             ]);
             $success++;
         } else {
             $rejected++;
         }
 
-        if ($i % 50 == 0) {
+        // Batch Commit
+        if (($i + 1) % $BATCH_SIZE == 0) {
+            $db->commit();
+            if (function_exists('gc_collect_cycles'))
+                gc_collect_cycles();
+            $db->beginTransaction(); // Batch mới
             echo ". ";
             flush();
+            if (($i + 1) % ($BATCH_SIZE * 20) == 0)
+                echo ($i + 1) . "<br>";
         }
     }
+    $db->commit(); // Commit cuối cùng
 
     $duration = round(microtime(true) - $start_time, 2);
-
-    echo "<br><hr>";
-    echo "<strong>RESULT:</strong><br>";
-    echo "User Base: " . count($user_ids) . " users.<br>";
-    echo "Total Requests: $NUM_ATTEMPTS<br>";
-    echo "Successful Bookings: <strong style='color:green'>$success</strong><br>";
-    echo "Rejected (Full): <strong style='color:red'>$rejected</strong><br>";
-    echo "Time: {$duration}s (" . round($success / $duration) . " bookings/sec)<br>";
-    echo "<br><a href='index.php'>[Go Home]</a>";
+    echo "<br><hr><strong>DONE!</strong> Time: {$duration}s. Success: <strong style='color:green'>$success</strong>. Full: <strong style='color:red'>$rejected</strong>.<br>";
+    echo "<a href='index.php'>[Home]</a>";
 
 } catch (Exception $e) {
+    if ($db->inTransaction())
+        $db->rollBack();
     echo "Error: " . $e->getMessage();
 }
 echo "</div>";
