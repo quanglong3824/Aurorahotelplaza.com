@@ -6,7 +6,7 @@
 /* ===== Base Styles ===== */
 body {
     min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* ===== Background with Hero Image ===== */
@@ -65,7 +65,7 @@ main {
 
 /* ===== Header Section ===== */
 .auth-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: white;

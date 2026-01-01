@@ -334,7 +334,7 @@ $total_rooms = array_sum($stats);
 }
 
 .roommap-hero-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 12px;

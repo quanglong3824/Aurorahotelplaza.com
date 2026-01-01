@@ -1,9 +1,16 @@
-/* Import local fonts */
-@import url('../fonts/plus-jakarta-sans.css');
-@import url('../fonts/be-vietnam-pro.css');
+/* Import Inter - Professional Sans-Serif Font for Hotel Website */
+@import url('../fonts/inter.css');
 @import url('../fonts/material-symbols.css');
 
-/* Override all Montserrat font declarations with Be Vietnam Pro */
+/* Apply Inter font globally (exclude code and Material Icons) */
 *:not(code):not(pre):not([class*='material-symbols']) {
-  font-family: 'Be Vietnam Pro', sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Optimize Inter font rendering for better readability */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
 }

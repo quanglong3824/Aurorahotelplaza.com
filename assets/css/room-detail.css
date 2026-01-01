@@ -142,7 +142,7 @@
 }
 
 .page-title {
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 64px;
     font-weight: 900;
     margin-bottom: 24px;
@@ -359,7 +359,7 @@ html:not(.dark) .spec-item {
     font-weight: 700;
     margin-bottom: 28px;
     color: #111827;
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Inter', sans-serif;
     position: relative;
     padding-bottom: 15px;
 }
@@ -552,7 +552,7 @@ html:not(.dark) .spec-item {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 1;
     letter-spacing: -1px;
 }
@@ -711,7 +711,7 @@ html:not(.dark) .spec-item {
 }
 
 .section-title-center {
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 48px;
     font-weight: 700;
     text-align: center;

@@ -3,7 +3,7 @@
 /* ===== Page Background ===== */
 body.booking-page {
     min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     position: relative;
     background: url('../../../assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg');
     background-size: cover;
@@ -101,7 +101,7 @@ body.booking-page .user-menu-item.text-red-400:hover {
 
 /* ===== Header Section ===== */
 .booking-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: white;

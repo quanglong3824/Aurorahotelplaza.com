@@ -1012,7 +1012,7 @@ header.scrolled .auth-btn {
 }
 
 .hero-dark .hero-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 48px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -1062,7 +1062,7 @@ header.scrolled .auth-btn {
 .room-card-title,
 section#rooms .text-xl.font-bold,
 section#apartments .text-xl.font-bold {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     line-height: 1.3;
 }

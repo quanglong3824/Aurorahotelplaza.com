@@ -122,7 +122,7 @@ main {
 }
 
 .hero-title-glass {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 3.5rem;
     font-weight: 700;
     color: white;
@@ -238,7 +238,7 @@ main {
 }
 
 .service-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: white;
@@ -616,7 +616,7 @@ main {
     font-weight: 700;
     color: white;
     margin-bottom: 0.25rem;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .stat-label {
@@ -671,7 +671,7 @@ main {
 }
 
 .package-price-large {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: #d4af37;
@@ -747,7 +747,7 @@ main {
 .package-price-mini {
     font-weight: 700;
     color: #d4af37;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .service-desc {
