@@ -82,7 +82,7 @@ body.booking-page .user-menu-item.text-red-400:hover {
 
 /* ===== Main Container ===== */
 .booking-main {
-    padding-top: 10rem;
+    padding-top: 12rem;
     padding-bottom: 4rem;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -805,6 +805,10 @@ body.booking-page .font-bold {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .booking-main {
+        padding-top: 11rem;
+    }
+
     .booking-hero {
         min-height: 60vh;
         padding: 100px 16px 60px;
