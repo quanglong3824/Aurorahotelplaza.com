@@ -430,13 +430,18 @@ $payment_labels = [
                                             <?php _e('booking_detail.price_detail'); ?>
                                         </h3>
 
+                                        <?php
+                                        // room_price in DB already stores total (per_night × nights)
+                                        $room_total = (float)$booking['room_price'];
+                                        $total_nights_display = max(1, (int)$booking['total_nights']);
+                                        ?>
                                         <div class="space-y-4">
                                             <div class="flex justify-between text-white/80">
                                                 <span><?php _e('booking_detail.room_price'); ?> <br><span
-                                                        class="text-xs text-white/40">(<?php echo $booking['total_nights']; ?>
+                                                        class="text-xs text-white/40">(<?php echo $total_nights_display; ?>
                                                         <?php _e('profile_bookings.nights'); ?>)</span></span>
                                                 <span
-                                                    class="font-mono"><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?>
+                                                    class="font-mono"><?php echo number_format($room_total); ?>
                                                     đ</span>
                                             </div>
 
@@ -958,7 +963,7 @@ $payment_labels = [
                     
                     <div class="section">
                         <div class="section-title">Chi tiết thanh toán / Payment Details</div>
-                        <div class="row"><span class="label">Giá phòng (<?php echo $booking['total_nights']; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng):</span> <span class="value"><?php echo number_format($booking['room_price'] * $booking['total_nights']); ?> VND</span></div>
+                        <div class="row"><span class="label">Giá phòng (<?php echo $booking['total_nights']; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng):</span> <span class="value"><?php echo number_format($booking['room_price']); ?> VND</span></div>
                         
                         <?php if ($booking['service_fee'] > 0): ?>
                         <div class="row"><span class="label">Phí dịch vụ:</span> <span class="value"><?php echo number_format($booking['service_fee']); ?> VND</span></div>

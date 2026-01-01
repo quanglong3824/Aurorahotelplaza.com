@@ -227,17 +227,21 @@ try {
                             </div>
                             
                             <!-- Price Breakdown -->
+                            <?php 
+                            // room_price in DB already stores total (per_night × nights)
+                            // Calculate per-night rate for display
+                            $room_total = (float)$booking['room_price'];
+                            $total_nights = max(1, (int)$booking['total_nights']);
+                            $room_per_night = $room_total / $total_nights;
+                            ?>
                             <div class="py-2 border-b border-white/10">
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-white/70">Giá phòng/đêm:</span>
-                                    <span class="font-semibold"><?php echo number_format($booking['room_price']); ?> VNĐ</span>
+                                    <span class="font-semibold"><?php echo number_format($room_per_night); ?> VNĐ</span>
                                 </div>
-                                <?php 
-                                $room_subtotal = $booking['room_price'] * $booking['total_nights'];
-                                ?>
                                 <div class="flex justify-between items-center text-sm text-white/50">
                                     <span>Tiền phòng (<?php echo $booking['total_nights']; ?> đêm):</span>
-                                    <span><?php echo number_format($room_subtotal); ?> VNĐ</span>
+                                    <span><?php echo number_format($room_total); ?> VNĐ</span>
                                 </div>
                             </div>
                             

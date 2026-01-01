@@ -238,13 +238,19 @@ include 'includes/admin-header.php';
                         Chi tiết thanh toán
                     </h4>
                     <div class="space-y-2 text-sm">
+                        <?php 
+                        // room_price in DB stores total (per_night × nights)
+                        $room_total_admin = (float)$booking['room_price'];
+                        $nights_admin = max(1, (int)$nights);
+                        $room_per_night_admin = $room_total_admin / $nights_admin;
+                        ?>
                         <div class="flex justify-between">
                             <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm</span>
-                            <span><?php echo number_format($booking['room_price'], 0, ',', '.'); ?>đ</span>
+                            <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>đ</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-500 dark:text-gray-400">Số đêm x Số phòng</span>
-                            <span><?php echo $nights; ?> x <?php echo $booking['num_rooms']; ?></span>
+                            <span class="text-gray-500 dark:text-gray-400">Tiền phòng (<?php echo $nights; ?> đêm × <?php echo $booking['num_rooms']; ?> phòng)</span>
+                            <span><?php echo number_format($room_total_admin, 0, ',', '.'); ?>đ</span>
                         </div>
                         <?php if ($booking['discount_amount'] > 0): ?>
                         <div class="flex justify-between text-green-600">
