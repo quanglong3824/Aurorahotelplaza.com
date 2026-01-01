@@ -618,9 +618,29 @@ include 'includes/admin-header.php';
     }
 
     function checkinBooking(id) {
-        if (confirm('Xác nhận khách đã check-in?')) {
-            updateBookingStatus(id, 'checked_in');
-        }
+        // Load booking data and available rooms for check-in
+        fetch(`api/get-available-rooms.php?booking_id=${id}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.booking) {
+                    // Check if room is already assigned
+                    if (data.booking.room_id) {
+                        // Room already assigned, just do check-in
+                        if (confirm('Xác nhận khách đã check-in?')) {
+                            updateBookingStatus(id, 'checked_in');
+                        }
+                    } else {
+                        // No room assigned, show room selection modal
+                        loadAvailableRoomsForCheckin(id, data.booking);
+                    }
+                } else {
+                    showToast('Không thể tải thông tin đơn đặt phòng', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
     }
 
     function checkoutBooking(id) {

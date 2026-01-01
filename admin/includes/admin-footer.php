@@ -98,5 +98,6 @@ function formatDateTime(dateString) {
 </script>
 
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/checkin-room-selection.js"></script>
 </body>
 </html>

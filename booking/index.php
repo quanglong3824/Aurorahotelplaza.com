@@ -62,6 +62,10 @@ if (isset($_GET['room_type'])) {
     }
 }
 
+// Get pre-selected room details from map
+$selected_room_id = isset($_GET['selected_room_id']) ? (int) $_GET['selected_room_id'] : null;
+$selected_room_number = isset($_GET['selected_room_number']) ? htmlspecialchars($_GET['selected_room_number']) : null;
+
 // Get pre-filled dates and guests from URL
 $prefilled_check_in = isset($_GET['check_in']) ? htmlspecialchars($_GET['check_in']) : '';
 $prefilled_check_out = isset($_GET['check_out']) ? htmlspecialchars($_GET['check_out']) : '';

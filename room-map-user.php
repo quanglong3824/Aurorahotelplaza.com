@@ -607,8 +607,9 @@ function showRoomModal(room) {
     // Actions
     let actionsHtml = '';
     if (room.display_status === 'available') {
+        const bookingUrl = `booking/index.php?room_type=${room.room_type_id}&selected_room_id=${room.room_id}&selected_room_number=${room.room_number}`;
         actionsHtml = `
-            <a href="booking/index.php?room_type=${room.room_type_id}" class="btn-glass-primary w-full justify-center">
+            <a href="${bookingUrl}" class="btn-glass-primary w-full justify-center">
                 <span class="material-symbols-outlined">calendar_month</span>
                 Đặt phòng ngay
             </a>
