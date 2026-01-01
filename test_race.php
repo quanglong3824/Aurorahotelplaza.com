@@ -99,7 +99,8 @@
                 payload.append('guest_name', 'Racer ' + (i + 1));
                 payload.append('guest_email', `racer${i + 1}@test.com`);
                 payload.append('guest_phone', '0999999999');
-                payload.append('payment_method', 'cash'); // Skip payment
+                payload.append('payment_status', 'paid');
+                payload.append('status', 'checked_in'); // Cố gắng set status checkin luôn
 
                 // Gọi API thật
                 const req = fetch('booking/api/create_booking.php', {
