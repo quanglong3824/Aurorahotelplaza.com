@@ -61,65 +61,70 @@ $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
 
 try {
     $db = getDB();
-    
-    // Kiểm tra xem cột user_id có tồn tại không
-    $columns = $db->query("SHOW COLUMNS FROM contact_submissions LIKE 'user_id'")->fetchAll();
-    $has_user_id = count($columns) > 0;
-    
-    // Lưu vào database
+
+    // Generate contact code/submission id beforehand
+    $random_id = mt_rand(10000000, 99999999);
+    $contact_code = str_pad($random_id, 8, '0', STR_PAD_LEFT);
+    $submission_id_val = $random_id;
+
+    // Kiểm tra xem cột user_id và submission_id có tồn tại không
+    // (Checked dynamically to prevent breaking on older schemas)
+    $columns_query = $db->query("SHOW COLUMNS FROM contact_submissions");
+    $columns = $columns_query->fetchAll(PDO::FETCH_COLUMN);
+
+    $has_user_id = in_array('user_id', $columns);
+    $has_contact_code = in_array('contact_code', $columns);
+    $has_submission_id = in_array('submission_id', $columns);
+
+    // Build Dynamic Query
+    $fields = ['name', 'email', 'phone', 'subject', 'message', 'ip_address', 'status', 'created_at'];
+    $values = [
+        ':name' => $name,
+        ':email' => $email,
+        ':phone' => $phone,
+        ':subject' => $subject,
+        ':message' => $message,
+        ':ip_address' => $ip_address
+    ];
+
     if ($has_user_id) {
-        $stmt = $db->prepare("
-            INSERT INTO contact_submissions (name, email, phone, subject, message, ip_address, user_id, status, created_at)
-            VALUES (:name, :email, :phone, :subject, :message, :ip_address, :user_id, 'new', NOW())
-        ");
-        $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':phone' => $phone,
-            ':subject' => $subject,
-            ':message' => $message,
-            ':ip_address' => $ip_address,
-            ':user_id' => $user_id
-        ]);
-    } else {
-        $stmt = $db->prepare("
-            INSERT INTO contact_submissions (name, email, phone, subject, message, ip_address, status, created_at)
-            VALUES (:name, :email, :phone, :subject, :message, :ip_address, 'new', NOW())
-        ");
-        $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':phone' => $phone,
-            ':subject' => $subject,
-            ':message' => $message,
-            ':ip_address' => $ip_address
-        ]);
+        $fields[] = 'user_id';
+        $values[':user_id'] = $user_id;
     }
-    
+
+    if ($has_contact_code) {
+        $fields[] = 'contact_code';
+        $values[':contact_code'] = $contact_code;
+    }
+
+    // Fix: submission_id is NOT NULL in some schemas
+    if ($has_submission_id) {
+        $fields[] = 'submission_id';
+        $values[':submission_id'] = $submission_id_val;
+    }
+
+    $field_str = implode(', ', $fields);
+    $value_str = implode(', ', array_keys($values));
+
+    $stmt = $db->prepare("INSERT INTO contact_submissions ($field_str) VALUES ($value_str, NOW())");
+    $stmt->execute($values);
+
     $db_id = $db->lastInsertId();
-    
-    // Tạo mã liên hệ random 8 số
-    $contact_code = str_pad(mt_rand(10000000, 99999999), 8, '0', STR_PAD_LEFT);
-    
-    // Cập nhật mã liên hệ vào database
-    try {
-        // Thử cập nhật contact_code
-        $update_stmt = $db->prepare("UPDATE contact_submissions SET contact_code = :code WHERE id = :id");
-        $update_stmt->execute([':code' => $contact_code, ':id' => $db_id]);
-    } catch (Exception $e) {
-        // Nếu không có cột contact_code, dùng ID làm mã
+
+    // Nếu bảng không có contact_code, dùng ID làm mã
+    if (!$has_contact_code) {
         $contact_code = str_pad($db_id, 8, '0', STR_PAD_LEFT);
     }
-    
+
     // Dùng contact_code cho email và response
     $submission_id = $contact_code;
-    
+
     // Load contact email templates
     require_once '../includes/email-templates/contact-templates.php';
-    
+
     // Gửi email xác nhận cho khách hàng
     $mailer = getMailer();
-    
+
     $customerEmailData = [
         'name' => $name,
         'email' => $email,
@@ -130,29 +135,29 @@ try {
         'created_at' => date('d/m/Y H:i'),
         'user_id' => $user_id
     ];
-    
+
     $customerSubject = "Xác nhận liên hệ - Aurora Hotel Plaza";
     $customerBody = ContactEmailTemplates::getCustomerConfirmationTemplate($customerEmailData);
     $customerSent = $mailer->send($email, $customerSubject, $customerBody);
-    
+
     // Gửi email thông báo cho khách sạn
     $hotelEmail = 'info@aurorahotelplaza.com';
     $hotelSubject = "[Liên hệ mới #{$submission_id}] {$subject} - {$name}";
     $hotelBody = ContactEmailTemplates::getHotelNotificationTemplate($customerEmailData);
     $hotelSent = $mailer->send($hotelEmail, $hotelSubject, $hotelBody);
-    
+
     // Log activity
     if (function_exists('logActivity')) {
         logActivity('contact_submit', 'contact', $submission_id, "Khách hàng {$name} gửi liên hệ: {$subject}");
     }
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.',
         'submission_id' => $submission_id,
         'email_sent' => $customerSent
     ]);
-    
+
 } catch (Exception $e) {
     error_log("Contact form error: " . $e->getMessage());
     echo json_encode([
