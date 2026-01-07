@@ -107,12 +107,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showSuccessModal(submissionId) {
+        // Scroll to top for better modal visibility
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
         // Create modal with liquid glass style
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+        modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0;';
         modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" onclick="this.parentElement.remove()"></div>
-            <div class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full p-10 text-center animate-scale-in border border-white/20">
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;" onclick="this.parentElement.remove()"></div>
+            <div class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full p-10 text-center animate-scale-in border border-white/20" style="position: relative; z-index: 10;">
                 <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/30">
                     <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
@@ -133,6 +137,17 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         document.body.appendChild(modal);
+        
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+        
+        // Restore scroll when modal is closed
+        modal.querySelector('button').addEventListener('click', () => {
+            document.body.style.overflow = '';
+        });
+        modal.querySelector('.fixed.inset-0.bg-black\\/60').addEventListener('click', () => {
+            document.body.style.overflow = '';
+        });
     }
 });
 

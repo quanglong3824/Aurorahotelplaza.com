@@ -120,6 +120,11 @@ try {
     // Gửi email xác nhận cho khách hàng
     $mailer = getMailer();
 
+    // Check if mailer is configured
+    if (!$mailer->isReady()) {
+        error_log("Contact form - Mailer not configured: " . $mailer->getLastError());
+    }
+
     $customerEmailData = [
         'name' => $name,
         'email' => $email,
@@ -133,13 +138,29 @@ try {
 
     $customerSubject = "Xác nhận liên hệ - Aurora Hotel Plaza";
     $customerBody = ContactEmailTemplates::getCustomerConfirmationTemplate($customerEmailData);
+
+    error_log("Contact form - Attempting to send customer email to: {$email}");
     $customerSent = $mailer->send($email, $customerSubject, $customerBody);
+
+    if (!$customerSent) {
+        error_log("Contact form - Failed to send customer email: " . $mailer->getLastError());
+    } else {
+        error_log("Contact form - Customer email sent successfully to: {$email}");
+    }
 
     // Gửi email thông báo cho khách sạn
     $hotelEmail = 'info@aurorahotelplaza.com';
     $hotelSubject = "[Liên hệ mới #{$submission_id}] {$subject} - {$name}";
     $hotelBody = ContactEmailTemplates::getHotelNotificationTemplate($customerEmailData);
+
+    error_log("Contact form - Attempting to send hotel notification to: {$hotelEmail}");
     $hotelSent = $mailer->send($hotelEmail, $hotelSubject, $hotelBody);
+
+    if (!$hotelSent) {
+        error_log("Contact form - Failed to send hotel notification: " . $mailer->getLastError());
+    } else {
+        error_log("Contact form - Hotel notification sent successfully to: {$hotelEmail}");
+    }
 
     // Log activity
     if (function_exists('logActivity')) {
@@ -150,7 +171,13 @@ try {
         'success' => true,
         'message' => 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.',
         'submission_id' => $submission_id,
-        'email_sent' => $customerSent
+        'email_sent' => $customerSent,
+        'debug' => EMAIL_DEBUG ? [
+            'customer_email_sent' => $customerSent,
+            'hotel_email_sent' => $hotelSent,
+            'mailer_ready' => $mailer->isReady(),
+            'mailer_error' => $mailer->getLastError()
+        ] : null
     ]);
 
 } catch (Exception $e) {
