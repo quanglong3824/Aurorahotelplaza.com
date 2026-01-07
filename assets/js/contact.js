@@ -78,17 +78,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Helper functions
     function setLoading(loading) {
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        
         if (loading) {
             submitBtn.disabled = true;
-            btnText.classList.add('hidden');
-            btnLoading.classList.remove('hidden');
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            const icon = submitBtn.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.textContent = 'hourglass_empty';
+                icon.classList.add('animate-pulse');
+            }
         } else {
             submitBtn.disabled = false;
-            btnText.classList.remove('hidden');
-            btnLoading.classList.add('hidden');
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            const icon = submitBtn.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.textContent = 'send';
+                icon.classList.remove('animate-pulse');
+            }
         }
     }
     
