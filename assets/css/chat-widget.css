@@ -12,7 +12,7 @@
   --cw-radius: 20px;
   --cw-shadow:
     0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(212, 175, 55, 0.2);
-  --cw-z: 9990; /* Dưới booking modal (9999) */
+  --cw-z: 10005; /* Đè lên toàn bộ Modal/BackToTop (10000) */
 }
 
 /* ── Floating Button ───────────────────────────────────────── */
@@ -157,8 +157,8 @@
      floating-booking-toggle (bottom:94,right:28), backToTop (bottom:6,right:90) */
 @media (max-width: 767px) {
   #cwBtn {
-    bottom: 80px;
-    right: 20px;
+    bottom: 160px;
+    right: 24px;
     left: auto;
     transition:
       transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
