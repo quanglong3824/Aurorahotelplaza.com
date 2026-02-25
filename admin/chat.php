@@ -1,4 +1,5 @@
 <?php
+session_start();
 $page_title = 'Tin nhắn';
 $page_subtitle = 'Hỗ trợ & chat trực tuyến với khách hàng';
 $current_page = 'chat';

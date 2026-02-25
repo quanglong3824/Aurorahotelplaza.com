@@ -1,4 +1,5 @@
 <?php
+session_start();
 $page_title = 'Cài đặt Chat';
 $page_subtitle = 'Cấu hình hệ thống chat & quản lý mẫu trả lời nhanh';
 $current_page = 'chat-settings';   // ← fix highlight sidebar
@@ -185,8 +186,8 @@ foreach ($qr as $r) {
                                 </div>
                                 <?php if ($r['shortcut']): ?>
                                     <code class="text-xs text-amber-600 bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded">
-                                                    /<?php echo htmlspecialchars($r['shortcut']); ?>
-                                                </code>
+                                                                /<?php echo htmlspecialchars($r['shortcut']); ?>
+                                                            </code>
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs">

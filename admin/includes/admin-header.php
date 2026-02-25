@@ -1,10 +1,15 @@
 <?php
 // Admin Header with Sidebar Navigation
 
+// ── Đảm bảo session luôn được start trước mọi thứ ──────────────────────────
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Load session helper
 require_once __DIR__ . '/../../helpers/session-helper.php';
 
-// Load environment (cho BASE_URL)
+// Load environment (cho BASE_URL + window.siteBase)
 if (!defined('BASE_URL')) {
     require_once __DIR__ . '/../../config/environment.php';
 }
