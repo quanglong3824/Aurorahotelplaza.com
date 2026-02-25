@@ -17,6 +17,12 @@ const ChatWidget = {
     isAtBottom:  true,
     unread:      0,
 
+    // ── URL helper — dùng window.siteBase inject bởi PHP ─────────────────
+    _url(path) {
+        const base = (window.siteBase || '').replace(/\/$/, '');
+        return base + '/' + path.replace(/^\//, '');
+    },
+
     // ── Init ──────────────────────────────────────────────────────────────
     init() {
         // Chỉ init nếu user đã đăng nhập (PHP render data-logged-in)
@@ -62,7 +68,7 @@ const ChatWidget = {
 
     // ── Check / Create conversation ───────────────────────────────────────
     checkExistingConversation() {
-        fetch('/api/chat/get-conversations.php')
+        fetch(this._url('api/chat/get-conversations.php'))
             .then(r => r.json())
             .then(data => {
                 if (data.success && data.data?.length > 0) {
@@ -90,7 +96,7 @@ const ChatWidget = {
                 </div>`;
         }
 
-        return fetch('/api/chat/create-conversation.php', {
+        return fetch(this._url('api/chat/create-conversation.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ subject, booking_id: bookingId, source: 'website' })
@@ -128,7 +134,7 @@ const ChatWidget = {
     loadMessages() {
         if (!this.convId) return;
 
-        fetch(`/api/chat/get-messages.php?conversation_id=${this.convId}&limit=30`)
+        fetch(this._url(`api/chat/get-messages.php?conversation_id=${this.convId}&limit=30`))
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
@@ -147,7 +153,7 @@ const ChatWidget = {
         const connect = () => {
             if (!this.isOpen) return; // Không kết nối nếu widget đóng
             this.sseConn = new EventSource(
-                `/api/chat/stream.php?type=conv&id=${this.convId}&last_id=${this.lastMsgId}`
+                this._url(`api/chat/stream.php?type=conv&id=${this.convId}&last_id=${this.lastMsgId}`)
             );
 
             this.sseConn.addEventListener('message', (e) => {
@@ -213,7 +219,7 @@ const ChatWidget = {
         input.value = '';
         input.style.height = 'auto';
 
-        fetch('/api/chat/send-message.php', {
+        fetch(this._url('api/chat/send-message.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -257,7 +263,7 @@ const ChatWidget = {
 
     _sendTyping(isTyping) {
         if (!this.convId) return;
-        fetch('/api/chat/typing.php', {
+        fetch(this._url('api/chat/typing.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ conversation_id: this.convId, is_typing: isTyping })

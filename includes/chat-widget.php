@@ -26,6 +26,12 @@ $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 
 // base_path đã được set ở footer.php
 $bp = $base_path ?? '';
+
+// BASE_URL cho JS
+if (!defined('BASE_URL')) {
+    require_once __DIR__ . '/../config/environment.php';
+}
+$cw_base = rtrim(BASE_URL, '/');
 ?>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -145,10 +151,11 @@ $bp = $base_path ?? '';
 </div><!-- /cwPanel -->
 
 
-<!-- ══════════════════════════════════════════════════════════
-     JS — defer để không block render
-══════════════════════════════════════════════════════════ -->
-<script src="<?php echo $bp; ?>assets/js/chat-widget.js?v=1.0.0" defer></script>
+<!-- ══════════════════════════════════════════
+     JS — siteBase inject trước, defer sau
+══════════════════════════════════════════ -->
+<script>window.siteBase = '<?php echo $cw_base; ?>';</script>
+<script src="<?php echo $bp; ?>assets/js/chat-widget.js?v=1.0.1" defer></script>
 
 <?php if ($is_logged): ?>
     <script>

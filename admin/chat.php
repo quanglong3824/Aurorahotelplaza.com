@@ -582,7 +582,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
 
     // Lock conversation
     ChatManager.lockConversation = function (convId) {
-        fetch('/admin/api/manage-conversation.php', {
+        fetch((window.siteBase || '') + '/admin/api/manage-conversation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'lock', conversation_id: convId })
@@ -620,7 +620,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
         // Status dot colour
         const dot = document.getElementById('hdrStatusDot');
         dot.className = `absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white dark:ring-slate-900 ${conv.status === 'assigned' ? 'bg-green-500' :
-                conv.status === 'open' ? 'bg-red-500 urgent-dot' : 'bg-gray-400'
+            conv.status === 'open' ? 'bg-red-500 urgent-dot' : 'bg-gray-400'
             }`;
 
         // Info panel
@@ -746,7 +746,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
     }
 
     function loadStaffList() {
-        fetch('/admin/api/get-staff-list.php')
+        fetch((window.siteBase || '') + '/admin/api/get-staff-list.php')
             .then(r => r.json())
             .then(data => {
                 const list = document.getElementById('staffList');
@@ -773,7 +773,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
     }
 
     function assignToStaff(staffId) {
-        fetch('/admin/api/manage-conversation.php', {
+        fetch((window.siteBase || '') + '/admin/api/manage-conversation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

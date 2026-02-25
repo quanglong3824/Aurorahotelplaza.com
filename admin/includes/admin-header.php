@@ -4,6 +4,11 @@
 // Load session helper
 require_once __DIR__ . '/../../helpers/session-helper.php';
 
+// Load environment (cho BASE_URL)
+if (!defined('BASE_URL')) {
+    require_once __DIR__ . '/../../config/environment.php';
+}
+
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale', 'receptionist'])) {
     header('Location: ../auth/login.php');
@@ -35,6 +40,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="assets/css/admin.css">
     <link rel="stylesheet" href="assets/css/admin-enhanced.css">
+    <!-- ★ siteBase: dùng cho mọi fetch/SSE trong JS Admin -->
+    <script>window.siteBase = '<?php echo rtrim(BASE_URL, "/"); ?>';</script>
     <style>
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

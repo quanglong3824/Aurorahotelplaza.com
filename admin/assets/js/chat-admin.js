@@ -23,6 +23,12 @@ const ChatManager = {
     soundEnabled:    true,
     quickReplies:    [],
 
+    // ── URL helper — dùng siteBase inject bởi PHP ────────────────────────────
+    _url(path) {
+        const base = (window.siteBase || '').replace(/\/$/, '');
+        return base + '/' + path.replace(/^\//, '');
+    },
+
     // ── DOM refs (set sau khi DOMContentLoaded) ──────────────────────────────
     els: {},
 
@@ -57,7 +63,7 @@ const ChatManager = {
         if (this.globalSSE) return; // Không mở 2 lần
 
         const connect = () => {
-            this.globalSSE = new EventSource('/api/chat/stream.php?type=global');
+            this.globalSSE = new EventSource(this._url('api/chat/stream.php?type=global'));
 
             this.globalSSE.addEventListener('list_update', (e) => {
                 const data = JSON.parse(e.data);
@@ -122,7 +128,7 @@ const ChatManager = {
             if (this.activeConvId !== convId) return; // User đã chuyển sang conv khác
 
             this.convSSE = new EventSource(
-                `/api/chat/stream.php?type=conv&id=${convId}&last_id=${this.lastMsgId}`
+                this._url(`api/chat/stream.php?type=conv&id=${convId}&last_id=${this.lastMsgId}`)
             );
 
             this.convSSE.addEventListener('message', (e) => {
@@ -155,7 +161,7 @@ const ChatManager = {
     // ════════════════════════════════════════════════════════════════════════
     loadConversations(params = {}) {
         const qs = new URLSearchParams({ status: 'active', ...params }).toString();
-        return fetch(`/api/chat/get-conversations.php?${qs}`)
+        return fetch(this._url(`api/chat/get-conversations.php?${qs}`))
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
@@ -167,7 +173,7 @@ const ChatManager = {
     },
 
     loadMessages(convId) {
-        return fetch(`/api/chat/get-messages.php?conversation_id=${convId}&limit=30`)
+        return fetch(this._url(`api/chat/get-messages.php?conversation_id=${convId}&limit=30`))
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
@@ -181,7 +187,7 @@ const ChatManager = {
     },
 
     loadQuickReplies() {
-        fetch('/admin/api/get-quick-replies.php')
+        fetch(this._url('admin/api/get-quick-replies.php'))
             .then(r => r.json())
             .then(data => {
                 if (data.success) this.quickReplies = data.data;
@@ -216,7 +222,7 @@ const ChatManager = {
         this.hideQuickReplyPopup();
 
         // Gửi lên server
-        fetch('/api/chat/send-message.php', {
+        fetch(this._url('api/chat/send-message.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -273,7 +279,7 @@ const ChatManager = {
 
     sendTyping(isTyping) {
         if (!this.activeConvId) return;
-        fetch('/api/chat/typing.php', {
+        fetch(this._url('api/chat/typing.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -541,7 +547,7 @@ const ChatManager = {
     // ACTIONS (Assign, Close, Claim...)
     // ════════════════════════════════════════════════════════════════════════
     claimConversation(convId) {
-        fetch('/admin/api/manage-conversation.php', {
+        fetch(this._url('admin/api/manage-conversation.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'claim', conversation_id: convId })
@@ -554,7 +560,7 @@ const ChatManager = {
 
     closeConversation(convId) {
         if (!confirm('Đóng cuộc trò chuyện này?')) return;
-        fetch('/admin/api/manage-conversation.php', {
+        fetch(this._url('admin/api/manage-conversation.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'close', conversation_id: convId })
