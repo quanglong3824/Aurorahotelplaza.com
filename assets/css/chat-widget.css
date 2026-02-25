@@ -37,7 +37,8 @@
   justify-content: center;
   transition:
     transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   color: #fff;
 }
 #cwBtn:hover {
@@ -151,19 +152,46 @@
   }
 }
 
-/* Mobile: slide up từ dưới */
-@media (max-width: 480px) {
-  #cwPanel {
-    width: 100vw;
-    height: 75vh;
-    bottom: 0;
-    right: 0;
-    border-radius: 24px 24px 0 0;
-    transform-origin: bottom center;
-  }
+/* Mobile (≤767px): button sang TRÁI, panel slide-up full-width
+   — Tránh đụng cụm nút bên phải: floating-menu (bottom:24,right:24)
+     floating-booking-toggle (bottom:94,right:28), backToTop (bottom:6,right:90) */
+@media (max-width: 767px) {
   #cwBtn {
     bottom: 20px;
-    right: 16px;
+    right: auto;   /* bỏ right */
+    left: 16px;    /* ← góc trái */
+    transition:
+      transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.2s ease,
+      bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Khi panel mở: button nhô lên trên panel */
+  #cwBtn.open {
+    bottom: calc(76vh + 12px);
+  }
+  #cwPanel {
+    width: 100vw;
+    height: 76vh;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-radius: 22px 22px 0 0;
+    transform-origin: bottom center;
+  }
+}
+
+/* iPhone safe-area (home bar / notch) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (max-width: 767px) {
+    #cwBtn {
+      bottom: calc(20px + env(safe-area-inset-bottom));
+    }
+    #cwBtn.open {
+      bottom: calc(76vh + 12px + env(safe-area-inset-bottom));
+    }
+    #cwInputArea {
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
   }
 }
 
