@@ -160,6 +160,7 @@ const ChatWidget = {
                 const msg = JSON.parse(e.data);
                 if (+msg.message_id > this.lastMsgId) {
                     this.lastMsgId = +msg.message_id;
+                    if (document.querySelector(`[data-msg-id="${msg.message_id}"]`)) return;
                     this.appendMessage(msg);
                 }
             });
@@ -208,9 +209,11 @@ const ChatWidget = {
 
         sendBtn.disabled = true;
 
+        const tempId = 'pending_' + Date.now();
+
         // Optimistic UI
         this.appendMessage({
-            message_id:  Date.now(),
+            message_id:  tempId,
             sender_type: 'customer',
             message:     msg,
             created_at:  new Date().toISOString(),
@@ -233,8 +236,18 @@ const ChatWidget = {
         .then(data => {
             if (!data.success) {
                 // Rollback
-                const tmpEl = document.querySelector(`[data-pending="${msg.substring(0,20)}"]`);
-                tmpEl?.remove();
+                document.querySelector(`[data-msg-id="${tempId}"]`)?.remove();
+            } else {
+                const tmpEl = document.querySelector(`[data-msg-id="${tempId}"]`);
+                if (document.querySelector(`[data-msg-id="${data.message_id}"]`)) {
+                    tmpEl?.remove();
+                } else if (tmpEl) {
+                    tmpEl.setAttribute('data-msg-id', data.message_id);
+                    const bubble = tmpEl.querySelector('.cw-bubble');
+                    if (bubble) bubble.style.opacity = '1';
+                    const timeEl = tmpEl.querySelector('.cw-bubble-time');
+                    if (timeEl) timeEl.innerHTML = timeEl.innerHTML.replace('⏳', '✓');
+                }
             }
         })
         .catch(() => {})
@@ -338,7 +351,7 @@ const ChatWidget = {
         const isSystem = msg.sender_type === 'system';
 
         if (isSystem) {
-            return `<div class="cw-system-msg">${this.esc(msg.message)}</div>`;
+            return `<div class="cw-system-msg" data-msg-id="${msg.message_id}">${this.esc(msg.message)}</div>`;
         }
 
         const time  = msg.created_at
@@ -348,7 +361,7 @@ const ChatWidget = {
 
         if (isUser) {
             return `
-                <div class="cw-bubble-row user" ${msg.pending ? 'data-pending="'+this.esc(msg.message.substring(0,20))+'"' : ''}>
+                <div class="cw-bubble-row user" data-msg-id="${msg.message_id}">
                     <div>
                         <div class="cw-bubble" style="${msg.pending ? 'opacity:.7' : ''}">
                             ${this.esc(msg.message)}
@@ -359,7 +372,7 @@ const ChatWidget = {
         }
 
         return `
-            <div class="cw-bubble-row staff">
+            <div class="cw-bubble-row staff" data-msg-id="${msg.message_id}">
                 <div class="cw-staff-avatar-micro">${this.esc(init)}</div>
                 <div>
                     <div class="cw-bubble">${this.esc(msg.message)}</div>

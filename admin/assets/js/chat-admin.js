@@ -135,6 +135,7 @@ const ChatManager = {
                 const msg = JSON.parse(e.data);
                 if (msg.message_id > this.lastMsgId) {
                     this.lastMsgId = msg.message_id;
+                    if (document.querySelector(`[data-msg="${msg.message_id}"]`)) return;
                     this.appendMessage(msg);
                 }
             });
@@ -205,9 +206,11 @@ const ChatManager = {
 
         this.els.sendBtn.disabled = true;
 
+        const tempId = 'pending_' + Date.now();
+
         // Optimistic UI: hiện ngay lên màn hình
         const optimistic = {
-            message_id:  Date.now(), // temp id
+            message_id:  tempId, // temp id
             sender_type: 'staff',
             message:     msg,
             is_internal: isInternal,
@@ -236,12 +239,23 @@ const ChatManager = {
         .then(data => {
             if (!data.success) {
                 // Rollback optimistic message
-                document.querySelector(`[data-temp="${optimistic.message_id}"]`)?.remove();
+                document.querySelector(`[data-msg="${tempId}"]`)?.remove();
                 this.showError('Gửi tin nhắn thất bại, vui lòng thử lại');
+            } else {
+                const tmpEl = document.querySelector(`[data-msg="${tempId}"]`);
+                if (document.querySelector(`[data-msg="${data.message_id}"]`)) {
+                    tmpEl?.remove();
+                } else if (tmpEl) {
+                    tmpEl.setAttribute('data-msg', data.message_id);
+                    const bubble = tmpEl.querySelector('.bg-gradient-to-br');
+                    if (bubble) bubble.classList.remove('opacity-75');
+                    const timeEl = tmpEl.querySelector('.flex.items-center.justify-end');
+                    if (timeEl) timeEl.innerHTML = timeEl.innerHTML.replace('⏳', '✓').replace('text-gray-400', 'text-green-500');
+                }
             }
         })
         .catch(() => {
-            document.querySelector(`[data-temp="${optimistic.message_id}"]`)?.remove();
+            document.querySelector(`[data-msg="${tempId}"]`)?.remove();
             this.showError('Mất kết nối, vui lòng thử lại');
         })
         .finally(() => {
@@ -369,6 +383,14 @@ const ChatManager = {
         }
 
         this.els.convList.innerHTML = convs.map(c => this.renderConvItem(c)).join('');
+
+        // Cập nhật header nếu đang mở một conv có trong danh sách
+        if (this.activeConvId && typeof this.updateChatHeader === 'function') {
+            const activeConv = convs.find(c => c.conversation_id == this.activeConvId);
+            if (activeConv) {
+                this.updateChatHeader(activeConv);
+            }
+        }
     },
 
     renderConvItem(c) {
@@ -446,7 +468,6 @@ const ChatManager = {
         if (!this.els.msgContainer) return;
         const el = document.createElement('div');
         el.innerHTML = this.renderBubble(msg);
-        el.dataset.temp = msg.message_id;
         this.els.msgContainer.appendChild(el.firstElementChild);
         this.scrollToBottom();
 
@@ -527,6 +548,13 @@ const ChatManager = {
                 newEl.innerHTML = this.renderConvItem(conv);
                 this.els.convList?.prepend(newEl.firstElementChild);
             }
+
+            // Cập nhật header nếu đang mở conv này
+            if (this.activeConvId == conv.conversation_id) {
+                if (typeof this.updateChatHeader === 'function') {
+                    this.updateChatHeader(conv);
+                }
+            }
         });
     },
 
@@ -554,7 +582,10 @@ const ChatManager = {
         })
         .then(r => r.json())
         .then(d => {
-            if (d.success) this.showToast('Đã nhận xử lý cuộc trò chuyện', 'success');
+            if (d.success) {
+                this.showToast('Đã nhận xử lý cuộc trò chuyện', 'success');
+                this.loadConversations();
+            }
         });
     },
 

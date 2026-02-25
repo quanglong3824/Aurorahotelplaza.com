@@ -74,14 +74,15 @@ try {
             SELECT conversation_id, status FROM chat_conversations
             WHERE conversation_id = :cid AND customer_id = :uid
         ");
+        $check->execute([':cid' => $conv_id, ':uid' => $user_id]);
     } else {
         // Staff xem tất cả
         $check = $db->prepare("
             SELECT conversation_id, status FROM chat_conversations
             WHERE conversation_id = :cid
         ");
+        $check->execute([':cid' => $conv_id]);
     }
-    $check->execute([':cid' => $conv_id, ':uid' => $user_id]);
     $conv = $check->fetch();
 
     if (!$conv) {
