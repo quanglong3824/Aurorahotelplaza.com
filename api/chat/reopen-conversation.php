@@ -39,7 +39,7 @@ try {
         // Ghi log session mới vào chat_messages
         $insertSys = $db->prepare("
             INSERT INTO chat_messages (conversation_id, sender_id, sender_type, message_type, message, is_internal, is_read, created_at)
-            VALUES (:cid, 0, 'system', 'text', '───────────── Bắt đầu phiên trò chuyện mới ─────────────', 0, 0, NOW())
+            VALUES (:cid, 0, 'system', 'text', '───── Bắt đầu phiên trò chuyện mới ─────', 0, 0, NOW())
         ");
         $insertSys->execute([':cid' => $conv_id]);
 
