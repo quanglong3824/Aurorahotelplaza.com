@@ -36,6 +36,20 @@ try {
 
     // Check if it was updated
     if ($stmt->rowCount() > 0) {
+        // Ghi log session mới vào chat_messages
+        $insertSys = $db->prepare("
+            INSERT INTO chat_messages (conversation_id, sender_id, sender_type, message_type, message, is_internal, is_read, created_at)
+            VALUES (:cid, 0, 'system', 'text', '───────────── Bắt đầu phiên trò chuyện mới ─────────────', 0, 0, NOW())
+        ");
+        $insertSys->execute([':cid' => $conv_id]);
+
+        $db->prepare("
+            UPDATE chat_conversations
+            SET last_message_at = NOW(),
+                last_message_preview = 'Bắt đầu phiên trò chuyện mới'
+            WHERE conversation_id = :cid
+        ")->execute([':cid' => $conv_id]);
+
         echo json_encode(['success' => true, 'message' => 'Đã mở lại cuộc trò chuyện']);
     } else {
         // Có thể KH không có quyền, hoặc conv không closed
