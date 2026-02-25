@@ -157,7 +157,7 @@
      floating-booking-toggle (bottom:94,right:28), backToTop (bottom:6,right:90) */
 @media (max-width: 767px) {
   #cwBtn {
-    bottom: 160px;
+    bottom: 24px;
     right: 24px;
     left: auto;
     transition:
@@ -184,7 +184,7 @@
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   @media (max-width: 767px) {
     #cwBtn {
-      bottom: calc(20px + env(safe-area-inset-bottom));
+      bottom: calc(24px + env(safe-area-inset-bottom));
     }
     #cwBtn.open {
       bottom: calc(76vh + 12px + env(safe-area-inset-bottom));

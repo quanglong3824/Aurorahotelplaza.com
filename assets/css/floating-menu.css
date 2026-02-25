@@ -7,7 +7,7 @@
 /* ===== Floating Menu Container ===== */
 .floating-menu {
     position: fixed;
-    bottom: 24px;
+    bottom: 96px;
     right: 24px;
     z-index: 9999;
     display: none;
@@ -436,7 +436,7 @@
 /* ===== Safe Area for iPhone ===== */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
     .floating-menu {
-        bottom: calc(24px + env(safe-area-inset-bottom));
+        bottom: calc(96px + env(safe-area-inset-bottom));
         right: calc(24px + env(safe-area-inset-right));
     }
 }
@@ -469,7 +469,7 @@
     border: none;
     cursor: pointer;
     position: fixed;
-    bottom: 94px;
+    bottom: 168px;
     right: 28px;
     z-index: 9998;
     display: none;
@@ -699,7 +699,7 @@
     }
 
     .floating-booking-toggle {
-        bottom: calc(94px + env(safe-area-inset-bottom));
+        bottom: calc(168px + env(safe-area-inset-bottom));
     }
 }
 
