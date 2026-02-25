@@ -274,6 +274,20 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <span>Liên hệ</span>
                 </a>
 
+                <!-- Tương tác -->
+                <div class="mt-6 mb-2">
+                    <p class="px-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Tương
+                        tác</p>
+                </div>
+                <a href="chat.php" class="sidebar-link <?php echo $current_page === 'chat' ? 'active' : ''; ?>">
+                    <span class="material-symbols-outlined">forum</span>
+                    <span>Tin nhắn</span>
+                    <span id="chatSidebarBadge" class="ml-auto bg-red-500 text-white text-[10px] font-bold
+                                 px-1.5 py-0.5 rounded-full hidden leading-none">
+                        0
+                    </span>
+                </a>
+
                 <!-- Services -->
                 <div class="mt-6 mb-2">
                     <p
@@ -403,7 +417,17 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <?php endif; ?>
                 </div>
                 <div class="flex items-center gap-3">
-                    <!-- Notifications -->
+                    <!-- Chat quick access -->
+                    <a href="chat.php" id="chatHeaderBtn"
+                        class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Tin nhắn">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300">forum</span>
+                        <span id="chatUnreadBadge" class="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white
+                                     text-[9px] font-bold rounded-full hidden flex items-center
+                                     justify-center ring-2 ring-white dark:ring-slate-900 leading-none">
+                            0
+                        </span>
+                    </a>
                     <div class="relative notification-dropdown">
                         <button onclick="toggleNotifications()"
                             class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
