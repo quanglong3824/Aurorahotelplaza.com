@@ -95,6 +95,16 @@ try {
         exit;
     }
 
+    $is_closing = false;
+    if ($sender_type === 'staff' && strpos($message, '[STOP_CHAT]') !== false) {
+        $is_closing = true;
+        $message = trim(str_replace('[STOP_CHAT]', '', $message));
+        if ($message === '') {
+            $message = 'Cuộc trò chuyện đã kết thúc. Nhấn Bắt đầu để tiếp tục.';
+            $sender_type = 'system';
+        }
+    }
+
     // ── 2. Insert tin nhắn ───────────────────────────────────────────────────
     $insertMsg = $db->prepare("
         INSERT INTO chat_messages
@@ -145,10 +155,12 @@ try {
                 unread_staff         = 0,
                 last_message_at      = NOW(),
                 last_message_preview = :preview,
+                status               = IF(:is_closing = 1, 'closed', status),
                 updated_at           = NOW()
             WHERE conversation_id = :cid
         ")->execute([
                     ':preview' => mb_substr($message, 0, 100),
+                    ':is_closing' => $is_closing ? 1 : 0,
                     ':cid' => $conv_id
                 ]);
     }

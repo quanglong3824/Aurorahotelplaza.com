@@ -75,15 +75,86 @@ const ChatWidget = {
                     const conv = data.data[0]; // Conv mới nhất
                     this.convId = conv.conversation_id;
 
+                    // Update UI if closed
+                    this.updateConvStatus(conv.status);
+
                     // Cập nhật unread badge
                     const unread = parseInt(conv.unread_customer) || 0;
                     if (unread > 0) this.setUnread(unread);
 
-                    // Load messages nếu panel đang mở
+            // Load messages nếu panel đang mở
                     if (this.isOpen) this.loadMessages();
                 }
             })
             .catch(() => {});
+    },
+
+    updateConvStatus(status) {
+        const inputRow = document.getElementById('cwInputRow');
+        const hint = document.getElementById('cwInputHint');
+        const cwInputArea = document.getElementById('cwInputArea');
+        if (!inputRow || !hint || !cwInputArea) return;
+
+        let restartBtn = document.getElementById('cwRestartBtn');
+        if (restartBtn) restartBtn.remove();
+        
+        if (status === 'closed') {
+            inputRow.style.display = 'none';
+            hint.style.display = 'none';
+            
+            const btn = document.createElement('button');
+            btn.id = 'cwRestartBtn';
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:18px">play_arrow</span> Bắt đầu trò chuyện mới`;
+            btn.style.cssText = `
+                width: 100%;
+                padding: 12px;
+                background: linear-gradient(135deg, var(--cw-gold) 0%, var(--cw-gold-dark) 100%);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 10px;
+                transition: transform 0.2s;
+            `;
+            btn.onmouseover = () => btn.style.transform = 'scale(1.02)';
+            btn.onmouseout = () => btn.style.transform = 'scale(1)';
+            btn.onmousedown = () => btn.style.transform = 'scale(0.95)';
+            btn.onmouseup = () => btn.style.transform = 'scale(1.02)';
+            btn.onclick = () => {
+                this.reopenConversation();
+            };
+            cwInputArea.appendChild(btn);
+        } else {
+            inputRow.style.display = 'flex';
+            hint.style.display = 'block';
+        }
+    },
+
+    reopenConversation() {
+        if (!this.convId) return;
+        const restartBtn = document.getElementById('cwRestartBtn');
+        if (restartBtn) restartBtn.style.opacity = '0.5';
+
+        fetch(this._url('api/chat/reopen-conversation.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conversation_id: this.convId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                this.updateConvStatus('open');
+            } else {
+                alert(data.message || 'Có lỗi xảy ra');
+                if (restartBtn) restartBtn.style.opacity = '1';
+            }
+        });
     },
 
     createOrGetConversation(subject = 'Hỗ trợ khách hàng', bookingId = null) {
@@ -170,6 +241,11 @@ const ChatWidget = {
                 // Chỉ hiển thị typing của staff
                 const hasStaffTyping = data.users?.some(u => u.user_type === 'staff');
                 hasStaffTyping ? this.showTyping() : this.hideTyping();
+            });
+
+            this.sseConn.addEventListener('status_change', (e) => {
+                const data = JSON.parse(e.data);
+                this.updateConvStatus(data.status);
             });
 
             this.sseConn.onerror = () => {

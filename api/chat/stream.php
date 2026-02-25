@@ -243,6 +243,20 @@ if ($mode === 'conv') {
                 sseEvent('message', array_merge($msg, ['type' => 'message']), (int) $msg['message_id']);
             }
 
+            // Lấy trạng thái của conv
+            $convStatusStmt = $db->prepare("SELECT status FROM chat_conversations WHERE conversation_id = :cid");
+            $convStatusStmt->execute([':cid' => $conv_id]);
+            $current_status = $convStatusStmt->fetchColumn();
+
+            // Push status every round or only when changed (in our case it's small, can push every round or track in a static var)
+            // But since loop varies, let's just push it always if we have a connection and then chat-widget.js handles idempotecy.
+            // Or better:
+            static $last_status = '';
+            if ($current_status !== $last_status) {
+                sseEvent('status_change', ['type' => 'status_change', 'status' => $current_status]);
+                $last_status = $current_status;
+            }
+
             // ── Lấy typing status ────────────────────────────────────────────
             // Chỉ hiển thị typing của phía đối diện
             $typing_type = $is_staff ? 'customer' : 'staff';
