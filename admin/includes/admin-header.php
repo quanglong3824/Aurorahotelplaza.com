@@ -287,6 +287,11 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         0
                     </span>
                 </a>
+                <a href="chat-settings.php"
+                    class="sidebar-link <?php echo $current_page === 'chat-settings' ? 'active' : ''; ?>">
+                    <span class="material-symbols-outlined">settings_applications</span>
+                    <span>Cài đặt Chat</span>
+                </a>
 
                 <!-- Services -->
                 <div class="mt-6 mb-2">

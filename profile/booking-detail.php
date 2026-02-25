@@ -432,263 +432,287 @@ $payment_labels = [
 
                                         <?php
                                         // room_price in DB already stores total (per_night × nights)
-                                        $room_total = (float)$booking['room_price'];
-                                        $total_nights_display = max(1, (int)$booking['total_nights']);
+                                        $room_total = (float) $booking['room_price'];
+                                        $total_nights_display = max(1, (int) $booking['total_nights']);
                                         ?>
                                         <div class="space-y-4">
                                             <div class="flex justify-between text-white/80">
                                                 <span><?php _e('booking_detail.room_price'); ?> <br><span
                                                         class="text-xs text-white/40">(<?php echo $total_nights_display; ?>
                                                         <?php _e('profile_bookings.nights'); ?>)</span></span>
-                                                <span
-                                                    class="font-mono"><?php echo number_format($room_total); ?>
+                                                <span class="font-mono"><?php echo number_format($room_total); ?>
                                                     đ</span>
                                             </div>
 
                                             <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
                                                 <div class="flex justify-between items-center text-sm text-blue-300">
-                                                            <span>Phụ thu khách thêm</span>
-                                                            <span
-                                                                class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>đ</span>
-                                                        </div>
-                                                <?php endif; ?>
+                                                    <span>Phụ thu khách thêm</span>
+                                                    <span
+                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>đ</span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                                <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
-                                                        <div class="flex justify-between items-center text-sm text-orange-300">
-                                                            <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?> giường)</span>
-                                                            <span
-                                                                class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
-                                                        </div>
-                                                <?php endif; ?>
+                                            <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
+                                                <div class="flex justify-between items-center text-sm text-orange-300">
+                                                    <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?>
+                                                        giường)</span>
+                                                    <span
+                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                                <?php if ($booking['service_fee'] > 0): ?>
-                                                        <div class="flex justify-between text-white/80">
-                                                            <span><?php _e('booking_detail.service_charges'); ?></span>
-                                                            <span
-                                                                class="font-mono"><?php echo number_format($booking['service_fee']); ?>
-                                                                đ</span>
-                                                        </div>
-                                                <?php endif; ?>
+                                            <?php if ($booking['service_fee'] > 0): ?>
+                                                <div class="flex justify-between text-white/80">
+                                                    <span><?php _e('booking_detail.service_charges'); ?></span>
+                                                    <span
+                                                        class="font-mono"><?php echo number_format($booking['service_fee']); ?>
+                                                        đ</span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                                <?php if ($booking['discount_amount'] > 0): ?>
-                                                        <div class="flex justify-between text-green-400">
-                                                            <span><?php _e('booking_detail.discount'); ?></span>
-                                                            <span
-                                                                class="font-mono">-<?php echo number_format($booking['discount_amount']); ?>
-                                                                đ</span>
-                                                        </div>
-                                                <?php endif; ?>
+                                            <?php if ($booking['discount_amount'] > 0): ?>
+                                                <div class="flex justify-between text-green-400">
+                                                    <span><?php _e('booking_detail.discount'); ?></span>
+                                                    <span
+                                                        class="font-mono">-<?php echo number_format($booking['discount_amount']); ?>
+                                                        đ</span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                                <?php if ($booking['points_used'] > 0): ?>
-                                                        <div class="flex justify-between text-accent">
-                                                            <span><?php _e('booking_detail.points_used'); ?></span>
-                                                            <span class="font-mono">-<?php echo $booking['points_used']; ?>
-                                                                <?php _e('profile_loyalty.points'); ?></span>
-                                                        </div>
-                                                <?php endif; ?>
+                                            <?php if ($booking['points_used'] > 0): ?>
+                                                <div class="flex justify-between text-accent">
+                                                    <span><?php _e('booking_detail.points_used'); ?></span>
+                                                    <span class="font-mono">-<?php echo $booking['points_used']; ?>
+                                                        <?php _e('profile_loyalty.points'); ?></span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                                <div class="border-t border-white/10 pt-4 mt-2">
-                                                    <div class="flex justify-between text-lg font-bold text-white">
-                                                        <span><?php _e('booking_detail.total'); ?></span>
-                                                        <span
-                                                            class="text-accent font-mono"><?php echo number_format($booking['total_amount']); ?>
-                                                            VNĐ</span>
-                                                    </div>
+                                            <div class="border-t border-white/10 pt-4 mt-2">
+                                                <div class="flex justify-between text-lg font-bold text-white">
+                                                    <span><?php _e('booking_detail.total'); ?></span>
+                                                    <span
+                                                        class="text-accent font-mono"><?php echo number_format($booking['total_amount']); ?>
+                                                        VNĐ</span>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <!-- Payment Information -->
-                                        <?php if ($booking['payment_method']): ?>
-                                                <div class="glass-card p-6">
-                                                    <h3
-                                                        class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
-                                                        <span class="material-symbols-outlined text-accent">payment</span>
-                                                        <?php _e('booking_detail.payment_info'); ?>
-                                                    </h3>
-
-                                                    <div class="space-y-4">
-                                                        <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                            <span
-                                                                class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.payment_method'); ?></span>
-                                                            <p class="text-white capitalize"><?php echo $booking['payment_method']; ?>
-                                                            </p>
-                                                        </div>
-
-                                                        <?php if ($booking['transaction_id']): ?>
-                                                                <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                                    <span
-                                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.transaction_id'); ?></span>
-                                                                    <p class="font-mono text-sm text-white break-all">
-                                                                        <?php echo htmlspecialchars($booking['transaction_id']); ?>
-                                                                    </p>
-                                                                </div>
-                                                        <?php endif; ?>
-
-                                                        <?php if ($booking['paid_at']): ?>
-                                                                <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                                    <span
-                                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.paid_at'); ?></span>
-                                                                    <p class="text-white font-mono">
-                                                                        <?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?>
-                                                                    </p>
-                                                                </div>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                        <?php endif; ?>
-
-                                        <!-- Actions -->
+                                    <!-- Payment Information -->
+                                    <?php if ($booking['payment_method']): ?>
                                         <div class="glass-card p-6">
-                                            <h3 class="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">
-                                                <?php _e('booking_detail.actions'); ?>
+                                            <h3
+                                                class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
+                                                <span class="material-symbols-outlined text-accent">payment</span>
+                                                <?php _e('booking_detail.payment_info'); ?>
                                             </h3>
 
-                                            <div class="space-y-3">
-                                                <?php if ($booking['status'] === 'pending'): ?>
-                                                        <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>"
-                                                            class="w-full px-4 py-3 bg-gradient-to-r from-accent to-yellow-600 text-white rounded-xl hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
-                                                            <span class="material-symbols-outlined">check_circle</span>
-                                                            <?php _e('booking_detail.confirm_booking'); ?>
-                                                        </a>
+                                            <div class="space-y-4">
+                                                <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                                                    <span
+                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.payment_method'); ?></span>
+                                                    <p class="text-white capitalize"><?php echo $booking['payment_method']; ?>
+                                                    </p>
+                                                </div>
+
+                                                <?php if ($booking['transaction_id']): ?>
+                                                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                                                        <span
+                                                            class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.transaction_id'); ?></span>
+                                                        <p class="font-mono text-sm text-white break-all">
+                                                            <?php echo htmlspecialchars($booking['transaction_id']); ?>
+                                                        </p>
+                                                    </div>
                                                 <?php endif; ?>
 
-                                                <button onclick="printBookingDetail()"
-                                                    class="w-full px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all font-semibold flex items-center justify-center gap-2">
-                                                    <span class="material-symbols-outlined text-accent">print</span>
-                                                    <?php _e('booking_detail.print'); ?>
-                                                </button>
-
-                                                <button onclick="shareBooking()"
-                                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
-                                                    <span class="material-symbols-outlined text-accent">share</span>
-                                                    <?php _e('booking_detail.share'); ?>
-                                                </button>
-
-                                                <!-- QR Code Button -->
-                                                <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>"
-                                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
-                                                    <span class="material-symbols-outlined text-accent">qr_code</span>
-                                                    <?php _e('booking_detail.view_qr'); ?>
-                                                </a>
-
-                                                <!-- Cancellation Policy & Refund Info -->
-                                                <?php if ($can_cancel && $refund_info): ?>
-                                                        <div class="space-y-3 pt-4 border-t border-white/10 mt-4">
-                                                            <!-- Refund Information -->
-                                                            <div class="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                                                                <h4
-                                                                    class="font-bold text-sm mb-3 text-blue-300 flex items-center gap-2">
-                                                                    <span class="material-symbols-outlined text-sm">info</span>
-                                                                    <?php _e('booking_detail.refund_info'); ?>
-                                                                </h4>
-                                                                <div class="space-y-2 text-sm text-white/80">
-                                                                    <div class="flex justify-between">
-                                                                        <span><?php _e('booking_detail.time_remaining'); ?>:</span>
-                                                                        <span
-                                                                            class="font-bold text-white"><?php echo round($refund_info['days_until_checkin'], 1); ?>
-                                                                            <?php _e('booking_detail.days'); ?></span>
-                                                                    </div>
-                                                                    <div class="flex justify-between">
-                                                                        <span><?php _e('booking_detail.total_booking'); ?>:</span>
-                                                                        <span
-                                                                            class="font-bold text-white"><?php echo number_format($refund_info['total_amount']); ?>
-                                                                            đ</span>
-                                                                    </div>
-                                                                    <div class="flex justify-between text-green-400">
-                                                                        <span><?php _e('booking_detail.refund_amount'); ?>:</span>
-                                                                        <span
-                                                                            class="font-bold text-lg"><?php echo number_format($refund_info['refund_amount']); ?>
-                                                                            đ</span>
-                                                                    </div>
-                                                                    <?php if ($refund_info['processing_fee'] > 0): ?>
-                                                                            <div class="flex justify-between text-xs text-white/50">
-                                                                                <span><?php _e('booking_detail.processing_fee'); ?>:</span>
-                                                                                <span>-<?php echo number_format($refund_info['processing_fee']); ?>
-                                                                                    đ</span>
-                                                                            </div>
-                                                                    <?php endif; ?>
-                                                                    <div class="pt-2 border-t border-blue-500/20 mt-2">
-                                                                        <p class="text-xs text-blue-200/70 italic">
-                                                                            <?php echo $refund_info['policy_message']; ?>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Cancel Button -->
-                                                            <button onclick="showCancelModal()"
-                                                                class="w-full px-4 py-3 border border-red-500/50 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2">
-                                                                <span class="material-symbols-outlined">cancel</span>
-                                                                <?php _e('booking_detail.cancel_booking'); ?>
-                                                            </button>
-                                                        </div>
-                                                <?php elseif ($booking['status'] === 'confirmed' || $booking['status'] === 'pending'): ?>
-                                                        <div
-                                                            class="mt-4 p-3 bg-white/5 rounded-xl text-sm text-white/60 border border-white/10 text-center italic">
-                                                            <span
-                                                                class="material-symbols-outlined text-sm mr-1 align-text-bottom">info</span>
-                                                            <?php _e('booking_detail.cannot_cancel'); ?>
-                                                        </div>
+                                                <?php if ($booking['paid_at']): ?>
+                                                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                                                        <span
+                                                            class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.paid_at'); ?></span>
+                                                        <p class="text-white font-mono">
+                                                            <?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?>
+                                                        </p>
+                                                    </div>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
+                                    <?php endif; ?>
 
-                                        <!-- Booking History Timeline -->
-                                        <?php if (!empty($booking_history)): ?>
-                                                <div class="glass-card p-6">
-                                                    <h3
-                                                        class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
-                                                        <span class="material-symbols-outlined text-accent">history</span>
-                                                        <?php _e('booking_detail.history'); ?>
-                                                    </h3>
+                                    <!-- Actions -->
+                                    <div class="glass-card p-6">
+                                        <h3 class="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">
+                                            <?php _e('booking_detail.actions'); ?>
+                                        </h3>
 
-                                                    <div class="space-y-0">
-                                                        <?php foreach ($booking_history as $history): ?>
-                                                                <div class="flex gap-4 relative">
-                                                                    <div class="flex flex-col items-center">
-                                                                        <div
-                                                                            class="w-3 h-3 bg-accent rounded-full shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)] z-10">
-                                                                        </div>
-                                                                        <?php if ($history !== end($booking_history)): ?>
-                                                                                <div class="w-0.5 h-full bg-white/10 -mt-1 pb-4"></div>
-                                                                        <?php endif; ?>
-                                                                    </div>
-                                                                    <div class="flex-1 pb-6 relative -top-1.5">
-                                                                        <div class="flex items-center gap-3 mb-1 flex-wrap">
-                                                                            <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded border <?php
-                                                                            $h_status = $history['new_status'];
-                                                                            echo ($h_status == 'confirmed') ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                                                                (($h_status == 'pending') ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                                                                                    (($h_status == 'cancelled') ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                                                                        'bg-gray-500/10 text-gray-400 border-gray-500/20'));
-                                                                            ?>">
-                                                                                <?php echo $status_labels[$h_status]['label'] ?? $h_status; ?>
-                                                                            </span>
-                                                                            <span class="text-xs text-white/40 font-mono">
-                                                                                <?php echo date('d/m/Y H:i', strtotime($history['created_at'])); ?>
-                                                                            </span>
-                                                                        </div>
-                                                                        <?php if ($history['changed_by_name']): ?>
-                                                                                <p class="text-xs text-white/50 mb-1">
-                                                                                    Bởi: <span
-                                                                                        class="text-white/80"><?php echo htmlspecialchars($history['changed_by_name']); ?></span>
-                                                                                </p>
-                                                                        <?php endif; ?>
-                                                                        <?php if ($history['notes']): ?>
-                                                                                <p
-                                                                                    class="text-sm text-white/80 bg-white/5 p-2 rounded border border-white/5 mt-1">
-                                                                                    <?php echo htmlspecialchars($history['notes']); ?>
-                                                                                </p>
-                                                                        <?php endif; ?>
-                                                                    </div>
-                                                                </div>
-                                                        <?php endforeach; ?>
+                                        <div class="space-y-3">
+                                            <?php if ($booking['status'] === 'pending'): ?>
+                                                <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>"
+                                                    class="w-full px-4 py-3 bg-gradient-to-r from-accent to-yellow-600 text-white rounded-xl hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
+                                                    <span class="material-symbols-outlined">check_circle</span>
+                                                    <?php _e('booking_detail.confirm_booking'); ?>
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <button onclick="printBookingDetail()"
+                                                class="w-full px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all font-semibold flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-accent">print</span>
+                                                <?php _e('booking_detail.print'); ?>
+                                            </button>
+
+                                            <button onclick="shareBooking()"
+                                                class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-accent">share</span>
+                                                <?php _e('booking_detail.share'); ?>
+                                            </button>
+
+                                            <!-- QR Code Button -->
+                                            <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>"
+                                                class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-accent">qr_code</span>
+                                                <?php _e('booking_detail.view_qr'); ?>
+                                            </a>
+
+                                            <?php if (isset($_SESSION['user_id'])): ?>
+                                                <!-- Chat về đặt phòng này -->
+                                                <button id="chatAboutBookingBtn"
+                                                    onclick="openChatAboutBooking(<?php echo (int) $booking['booking_id']; ?>, '<?php echo addslashes($booking['booking_code']); ?>')"
+                                                    class="w-full px-4 py-3 relative overflow-hidden
+                                                               bg-gradient-to-r from-amber-500/20 to-amber-400/10
+                                                               border border-amber-500/40 text-amber-300 rounded-xl
+                                                               hover:from-amber-500/30 hover:border-amber-400/60
+                                                               transition-all font-semibold
+                                                               flex items-center justify-center gap-2 group">
+                                                    <div
+                                                        class="absolute inset-0 bg-gradient-to-r from-transparent
+                                                                via-white/5 to-transparent translate-x-[-100%]
+                                                                group-hover:translate-x-[100%] transition-transform duration-700">
                                                     </div>
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0"
+                                                        style="box-shadow:0 0 0 3px rgba(74,222,128,.25);animation:pulse 2s ease-in-out infinite"></span>
+                                                    <span
+                                                        class="material-symbols-outlined text-amber-400 text-lg relative z-10">chat</span>
+                                                    <span class="relative z-10">Chat với nhân viên</span>
+                                                </button>
+                                            <?php endif; ?>
+
+
+                                            <!-- Cancellation Policy & Refund Info -->
+                                            <?php if ($can_cancel && $refund_info): ?>
+                                                <div class="space-y-3 pt-4 border-t border-white/10 mt-4">
+                                                    <!-- Refund Information -->
+                                                    <div class="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                                                        <h4
+                                                            class="font-bold text-sm mb-3 text-blue-300 flex items-center gap-2">
+                                                            <span class="material-symbols-outlined text-sm">info</span>
+                                                            <?php _e('booking_detail.refund_info'); ?>
+                                                        </h4>
+                                                        <div class="space-y-2 text-sm text-white/80">
+                                                            <div class="flex justify-between">
+                                                                <span><?php _e('booking_detail.time_remaining'); ?>:</span>
+                                                                <span
+                                                                    class="font-bold text-white"><?php echo round($refund_info['days_until_checkin'], 1); ?>
+                                                                    <?php _e('booking_detail.days'); ?></span>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <span><?php _e('booking_detail.total_booking'); ?>:</span>
+                                                                <span
+                                                                    class="font-bold text-white"><?php echo number_format($refund_info['total_amount']); ?>
+                                                                    đ</span>
+                                                            </div>
+                                                            <div class="flex justify-between text-green-400">
+                                                                <span><?php _e('booking_detail.refund_amount'); ?>:</span>
+                                                                <span
+                                                                    class="font-bold text-lg"><?php echo number_format($refund_info['refund_amount']); ?>
+                                                                    đ</span>
+                                                            </div>
+                                                            <?php if ($refund_info['processing_fee'] > 0): ?>
+                                                                <div class="flex justify-between text-xs text-white/50">
+                                                                    <span><?php _e('booking_detail.processing_fee'); ?>:</span>
+                                                                    <span>-<?php echo number_format($refund_info['processing_fee']); ?>
+                                                                        đ</span>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                            <div class="pt-2 border-t border-blue-500/20 mt-2">
+                                                                <p class="text-xs text-blue-200/70 italic">
+                                                                    <?php echo $refund_info['policy_message']; ?>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Cancel Button -->
+                                                    <button onclick="showCancelModal()"
+                                                        class="w-full px-4 py-3 border border-red-500/50 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2">
+                                                        <span class="material-symbols-outlined">cancel</span>
+                                                        <?php _e('booking_detail.cancel_booking'); ?>
+                                                    </button>
                                                 </div>
-                                        <?php endif; ?>
+                                            <?php elseif ($booking['status'] === 'confirmed' || $booking['status'] === 'pending'): ?>
+                                                <div
+                                                    class="mt-4 p-3 bg-white/5 rounded-xl text-sm text-white/60 border border-white/10 text-center italic">
+                                                    <span
+                                                        class="material-symbols-outlined text-sm mr-1 align-text-bottom">info</span>
+                                                    <?php _e('booking_detail.cannot_cancel'); ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
+
+                                    <!-- Booking History Timeline -->
+                                    <?php if (!empty($booking_history)): ?>
+                                        <div class="glass-card p-6">
+                                            <h3
+                                                class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
+                                                <span class="material-symbols-outlined text-accent">history</span>
+                                                <?php _e('booking_detail.history'); ?>
+                                            </h3>
+
+                                            <div class="space-y-0">
+                                                <?php foreach ($booking_history as $history): ?>
+                                                    <div class="flex gap-4 relative">
+                                                        <div class="flex flex-col items-center">
+                                                            <div
+                                                                class="w-3 h-3 bg-accent rounded-full shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)] z-10">
+                                                            </div>
+                                                            <?php if ($history !== end($booking_history)): ?>
+                                                                <div class="w-0.5 h-full bg-white/10 -mt-1 pb-4"></div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <div class="flex-1 pb-6 relative -top-1.5">
+                                                            <div class="flex items-center gap-3 mb-1 flex-wrap">
+                                                                <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded border <?php
+                                                                $h_status = $history['new_status'];
+                                                                echo ($h_status == 'confirmed') ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                                                                    (($h_status == 'pending') ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
+                                                                        (($h_status == 'cancelled') ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                                                            'bg-gray-500/10 text-gray-400 border-gray-500/20'));
+                                                                ?>">
+                                                                    <?php echo $status_labels[$h_status]['label'] ?? $h_status; ?>
+                                                                </span>
+                                                                <span class="text-xs text-white/40 font-mono">
+                                                                    <?php echo date('d/m/Y H:i', strtotime($history['created_at'])); ?>
+                                                                </span>
+                                                            </div>
+                                                            <?php if ($history['changed_by_name']): ?>
+                                                                <p class="text-xs text-white/50 mb-1">
+                                                                    Bởi: <span
+                                                                        class="text-white/80"><?php echo htmlspecialchars($history['changed_by_name']); ?></span>
+                                                                </p>
+                                                            <?php endif; ?>
+                                                            <?php if ($history['notes']): ?>
+                                                                <p
+                                                                    class="text-sm text-white/80 bg-white/5 p-2 rounded border border-white/5 mt-1">
+                                                                    <?php echo htmlspecialchars($history['notes']); ?>
+                                                                </p>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
+                            </div>
 
                         <?php endif; ?>
                     </div>
@@ -710,11 +734,39 @@ $payment_labels = [
                     url: window.location.href
                 });
             } else {
-                // Fallback: copy to clipboard
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     alert('Đã sao chép link vào clipboard!');
                 });
             }
+        }
+
+        // Mở chat widget về đơn đặt phòng
+        function openChatAboutBooking(bookingId, bookingCode) {
+            if (typeof ChatWidget === 'undefined') {
+                alert('Vui lòng đăng nhập để sử dụng chat!');
+                return;
+            }
+            // Mở panel
+            if (!ChatWidget.isOpen) ChatWidget.open();
+
+            // Nếu chưa có conv → tạo mới kèm booking_id
+            if (!ChatWidget.convId) {
+                ChatWidget.createOrGetConversation(
+                    'Hỗ trợ đặt phòng #' + bookingCode,
+                    bookingId
+                );
+            } else {
+                // Đã có conv → focus input với prefill
+                const input = document.getElementById('cwInput');
+                if (input && !input.value) {
+                    input.value = 'Tôi muốn hỏi về đặt phòng #' + bookingCode + ' ';
+                    input.focus();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
+            }
+
+            // Scroll to button để user thấy widget
+            document.getElementById('chatAboutBookingBtn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // Cancel Modal
