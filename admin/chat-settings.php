@@ -15,11 +15,19 @@ if (!in_array($user_role, ['admin', 'receptionist'])) {
 
 $db = getDB();
 
-// Load quick replies
-$qr = $db->query("SELECT * FROM chat_quick_replies ORDER BY category, sort_order, title")->fetchAll();
+$migrationNeeded = false;
+$qr = [];
+$settingsRaw = [];
 
-// Load chat settings
-$settingsRaw = $db->query("SELECT setting_key, setting_value FROM chat_settings")->fetchAll();
+try {
+    // Load quick replies
+    $qr = $db->query("SELECT * FROM chat_quick_replies ORDER BY category, sort_order, title")->fetchAll();
+    // Load chat settings
+    $settingsRaw = $db->query("SELECT setting_key, setting_value FROM chat_settings")->fetchAll();
+} catch (PDOException $e) {
+    $migrationNeeded = true; // bảng chưa tồn tại
+}
+
 $settings = [];
 foreach ($settingsRaw as $s)
     $settings[$s['setting_key']] = $s['setting_value'];
@@ -44,6 +52,25 @@ foreach ($qr as $r) {
     $qrByCategory[$r['category'] ?? 'Chung'][] = $r;
 }
 ?>
+
+<?php if ($migrationNeeded): ?>
+    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;
+            padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px">
+        <span style="font-size:32px">⚠️</span>
+        <div>
+            <p style="font-weight:700;color:#92400e;font-size:15px;margin:0 0 6px">Chưa chạy database migration!</p>
+            <p style="color:#78350f;font-size:13px;margin:0 0 12px">
+                Bảng <code>chat_quick_replies</code> / <code>chat_settings</code> chưa tồn tại.
+                Chạy migration trước khi dùng tính năng chat.
+            </p>
+            <a href="chat-install.php" style="background:#d4af37;color:#fff;padding:8px 18px;border-radius:8px;
+                  text-decoration:none;font-weight:700;font-size:13px">
+                🚀 Chạy Migration ngay
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
 
 <style>
     .settings-tab {
@@ -154,11 +181,12 @@ foreach ($qr as $r) {
                             data-category="<?php echo htmlspecialchars($r['category'] ?? 'Chung'); ?>">
                             <td class="px-4 py-3">
                                 <div class="font-semibold text-gray-900 dark:text-white">
-                                    <?php echo htmlspecialchars($r['title']); ?></div>
+                                    <?php echo htmlspecialchars($r['title']); ?>
+                                </div>
                                 <?php if ($r['shortcut']): ?>
                                     <code class="text-xs text-amber-600 bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded">
-                                        /<?php echo htmlspecialchars($r['shortcut']); ?>
-                                    </code>
+                                                    /<?php echo htmlspecialchars($r['shortcut']); ?>
+                                                </code>
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs">
