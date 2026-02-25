@@ -133,8 +133,8 @@ const ChatManager = {
 
             this.convSSE.addEventListener('message', (e) => {
                 const msg = JSON.parse(e.data);
-                if (msg.message_id > this.lastMsgId) {
-                    this.lastMsgId = msg.message_id;
+                if (Number(msg.message_id) > this.lastMsgId) {
+                    this.lastMsgId = Number(msg.message_id);
                     if (document.querySelector(`[data-msg="${msg.message_id}"]`)) return;
                     this.appendMessage(msg);
                 }
