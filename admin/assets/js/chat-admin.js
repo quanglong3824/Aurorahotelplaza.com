@@ -360,7 +360,7 @@ const ChatManager = {
     },
 
     applyQuickReply(replyId) {
-        const reply = this.quickReplies.find(r => r.reply_id === replyId);
+        const reply = this.quickReplies.find(r => r.reply_id == replyId);
         if (!reply || !this.els.inputBox) return;
         this.els.inputBox.value = reply.content;
         this.hideQuickReplyPopup();

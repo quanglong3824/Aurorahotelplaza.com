@@ -16,6 +16,7 @@
  */
 
 session_start();
+session_write_close();
 
 // ── Kiểm tra auth trước khi giữ kết nối ─────────────────────────────────────
 if (!isset($_SESSION['user_id'])) {
