@@ -439,7 +439,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 <?php endif; ?>
 
 <!-- Header Styles & Script -->
-<?php $asset_version = '1.0.8'; // Update this when assets change ?>
+<?php $asset_version = time(); // Update this when assets change ?>
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">

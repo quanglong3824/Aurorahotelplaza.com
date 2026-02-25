@@ -37,7 +37,7 @@ $cw_base = rtrim(BASE_URL, '/');
 <!-- ══════════════════════════════════════════════════════════════
      CHAT WIDGET — CSS & JS (chỉ load 2 file này)
 ══════════════════════════════════════════════════════════════ -->
-<link rel="stylesheet" href="<?php echo $bp; ?>assets/css/chat-widget.css?v=1.0.0">
+<link rel="stylesheet" href="<?php echo $bp; ?>assets/css/chat-widget.css?v=<?php echo time(); ?>">
 
 <!-- ══════════════════════════════════════════════════════════════
      FLOATING BUTTON
@@ -155,7 +155,7 @@ $cw_base = rtrim(BASE_URL, '/');
      JS — siteBase inject trước, defer sau
 ══════════════════════════════════════════ -->
 <script>window.siteBase = '<?php echo $cw_base; ?>';</script>
-<script src="<?php echo $bp; ?>assets/js/chat-widget.js?v=1.0.1" defer></script>
+<script src="<?php echo $bp; ?>assets/js/chat-widget.js?v=<?php echo time(); ?>" defer></script>
 
 <?php if ($is_logged): ?>
     <script>
