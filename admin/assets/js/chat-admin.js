@@ -537,6 +537,12 @@ const ChatManager = {
     },
 
     patchConversationList(updatedConvs) {
+        // Xoá cục "Đang tải" nếu nó còn tồn tại khi load lần đầu qua SSE
+        if (this.els.convList) {
+            const loader = this.els.convList.querySelector('.animate-spin');
+            if (loader) loader.parentElement.remove();
+        }
+
         updatedConvs.forEach(conv => {
             const el = this.els.convList?.querySelector(`[data-conv="${conv.conversation_id}"]`);
             if (el) {
@@ -600,6 +606,23 @@ const ChatManager = {
         .then(d => {
             if (d.success) {
                 this.showToast('Đã đóng cuộc trò chuyện', 'success');
+                
+                // Khóa input ngay tại giao diện nếu đang mở chính frame vừa đóng
+                if (this.activeConvId == convId) {
+                    const input = document.getElementById('chatInput');
+                    const btn = document.getElementById('chatSendBtn');
+                    if (input) { input.disabled = true; input.placeholder = "Cuộc trò chuyện đã bị đóng."; }
+                    if (btn) btn.disabled = true;
+                    const hdrStatus = document.getElementById('hdrStatusLabel');
+                    if (hdrStatus) {
+                        hdrStatus.textContent = 'Đã đóng';
+                        hdrStatus.className = 'text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500';
+                    }
+                    const hdrDot = document.getElementById('hdrStatusDot');
+                    if (hdrDot) hdrDot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white dark:ring-slate-900 bg-gray-400';
+                    document.getElementById('moreActionsDropdown')?.classList.add('hidden');
+                }
+                
                 this.loadConversations();
             }
         });

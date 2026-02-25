@@ -210,12 +210,15 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
     /* ── Placeholder khi chưa chọn conv ─────────────── */
     #chatPlaceholder {
         flex: 1;
-        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 12px;
         color: #94a3b8;
+    }
+
+    #chatPlaceholder:not(.hidden) {
+        display: flex;
     }
 
     /* ── Urgency pulse ───────────────────────────────── */
@@ -623,6 +626,22 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
         dot.className = `absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white dark:ring-slate-900 ${conv.status === 'assigned' ? 'bg-green-500' :
             conv.status === 'open' ? 'bg-red-500 urgent-dot' : 'bg-gray-400'
             }`;
+
+        // Cập nhật Input Form dựa vào Status
+        const isClosed = conv.status === 'closed';
+        const input = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('chatSendBtn');
+        const internalToggle = document.getElementById('internalNoteToggle');
+
+        if (isClosed) {
+            if (input) { input.disabled = true; input.placeholder = "Cuộc trò chuyện đã bị đóng."; }
+            if (sendBtn) sendBtn.disabled = true;
+            if (internalToggle) internalToggle.disabled = true;
+        } else {
+            if (input) { input.disabled = false; input.placeholder = "Nhập tin nhắn hoặc gõ / để dùng mẫu nhanh..."; }
+            if (sendBtn) sendBtn.disabled = false;
+            if (internalToggle) internalToggle.disabled = false;
+        }
 
         // Info panel
         ChatManager.updateInfoPanel(conv);
