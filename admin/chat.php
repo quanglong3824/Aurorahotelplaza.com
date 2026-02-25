@@ -632,8 +632,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
         const input = document.getElementById('chatInput');
         const sendBtn = document.getElementById('chatSendBtn');
         const internalToggle = document.getElementById('internalNoteToggle');
-
-        if (isClosed) {
+ if (isClosed) {
             if (input) { input.disabled = true; input.placeholder = "Cuộc trò chuyện đã bị đóng."; }
             if (sendBtn) sendBtn.disabled = true;
             if (internalToggle) internalToggle.disabled = true;
@@ -689,12 +688,6 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
     // Override openConversation để cập nhật header
     const _origOpen = ChatManager.openConversation.bind(ChatManager);
     ChatManager.openConversation = function (convId) {
-        // Hiện chat window, ẩn placeholder
-        document.getElementById('chatPlaceholder').classList.add('hidden');
-        const wrapper = document.getElementById('chatWindowWrapper');
-        wrapper.classList.remove('hidden');
-        wrapper.classList.add('flex');
-
         // Lấy data conv hiện tại từ DOM
         const convEl = document.querySelector(`[data-conv="${convId}"]`);
         if (convEl) {

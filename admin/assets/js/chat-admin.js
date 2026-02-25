@@ -108,6 +108,30 @@ const ChatManager = {
 
         this.activeConvId = convId;
         this.lastMsgId    = 0;
+        
+        // Hiện spinner Clear DOM cũ tránh lỗi overlap UI trong lúc chờ Request fetch
+        if (this.els.msgContainer) {
+            this.els.msgContainer.innerHTML = '<div class="flex items-center justify-center p-8 w-full"><div class="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div></div>';
+        }
+
+        // Hiện chat window, ẩn placeholder
+        document.getElementById('chatPlaceholder')?.classList.add('hidden');
+        document.getElementById('chatWindowWrapper')?.classList.remove('hidden');
+        document.getElementById('chatWindowWrapper')?.classList.add('flex');
+
+        // Lấy data conv hiện tại từ DOM để update Header liền
+        const convEl = document.querySelector(`[data-conv="${convId}"]`);
+        if (convEl) {
+            const name = convEl.querySelector('.font-semibold')?.textContent?.trim();
+            if (typeof this.updateChatHeader === 'function') {
+                this.updateChatHeader({
+                    customer_name: name,
+                    status: convEl.dataset.status || 'open',
+                    staff_id: convEl.dataset.staffId || null,
+                    booking_code: convEl.dataset.booking || null,
+                });
+            }
+        }
 
         // Load lịch sử trước
         this.loadMessages(convId).then(() => {
@@ -177,10 +201,13 @@ const ChatManager = {
         return fetch(this._url(`api/chat/get-messages.php?conversation_id=${convId}&limit=30`))
             .then(r => r.json())
             .then(data => {
+                // Sửa lỗi tin nhắn của người trước nhảy vào box của người sau (Race Condition)
+                if (this.activeConvId != convId) return;
+
                 if (data.success) {
                     this.renderMessages(data.messages);
                     if (data.messages.length > 0) {
-                        this.lastMsgId = Math.max(...data.messages.map(m => m.message_id));
+                        this.lastMsgId = Math.max(...data.messages.map(m => Number(m.message_id)));
                     }
                 }
             })
