@@ -185,7 +185,8 @@ if (!function_exists('__')) {
 <?php require_once __DIR__ . '/chat-widget.php'; ?>
 
 <button id="backToTopBtn" type="button" aria-label="Back to top"
-    class="fixed bottom-6 right-[90px] z-[10000] hidden h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/80 text-white shadow-lg transition-all hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50">
+    class="fixed bottom-6 right-[90px] z-[10000] hidden h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/80 text-white shadow-lg hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50"
+    style="-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:-webkit-transform .3s cubic-bezier(.34,1.56,.64,1);transition:transform .3s cubic-bezier(.34,1.56,.64,1);">
     <span class="material-symbols-outlined">arrow_upward</span>
 </button>
 
