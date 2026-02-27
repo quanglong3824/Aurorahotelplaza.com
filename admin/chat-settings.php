@@ -64,10 +64,10 @@ foreach ($qr as $r) {
                 Bảng <code>chat_quick_replies</code> / <code>chat_settings</code> chưa tồn tại.
                 Chạy migration trước khi dùng tính năng chat.
             </p>
-            <a href="chat-install.php" style="background:#d4af37;color:#fff;padding:8px 18px;border-radius:8px;
-                  text-decoration:none;font-weight:700;font-size:13px">
-                🚀 Chạy Migration ngay
-            </a>
+            <span style="background:#d4af37;color:#fff;padding:8px 18px;border-radius:8px;
+                  font-weight:700;font-size:13px;display:inline-block">
+                ⚠️ Vui lòng import file <code>docs/chat_migration.sql</code> qua phpMyAdmin
+            </span>
         </div>
     </div>
 <?php endif; ?>
@@ -186,8 +186,8 @@ foreach ($qr as $r) {
                                 </div>
                                 <?php if ($r['shortcut']): ?>
                                     <code class="text-xs text-amber-600 bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded">
-                                                                /<?php echo htmlspecialchars($r['shortcut']); ?>
-                                                            </code>
+                                                                            /<?php echo htmlspecialchars($r['shortcut']); ?>
+                                                                        </code>
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs">

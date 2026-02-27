@@ -37,11 +37,6 @@ include 'includes/admin-header.php';
 
 <!-- Quick Actions -->
 <div class="flex flex-wrap gap-3 mb-6">
-    <a href="run_pricing_migration.php" class="btn btn-warning btn-sm"
-        onclick="return confirm('Bạn có chắc muốn chạy migration cập nhật giá?');">
-        <span class="material-symbols-outlined text-sm">sync</span>
-        Chạy Migration Giá
-    </a>
     <a href="room-type-form.php" class="btn btn-primary btn-sm">
         <span class="material-symbols-outlined text-sm">add</span>
         Thêm loại phòng
@@ -239,7 +234,8 @@ include 'includes/admin-header.php';
                                     <?php if (!$hasOnePerson): ?>
                                         <td class="font-semibold"><?php echo htmlspecialchars($apt['type_name']); ?></td>
                                         <td class="text-center">
-                                            <?php echo $apt['size_sqm'] ? number_format($apt['size_sqm']) . 'm²' : '-'; ?></td>
+                                            <?php echo $apt['size_sqm'] ? number_format($apt['size_sqm']) . 'm²' : '-'; ?>
+                                        </td>
                                     <?php endif; ?>
                                     <td class="text-center">
                                         <span class="badge badge-success">2 người</span>
