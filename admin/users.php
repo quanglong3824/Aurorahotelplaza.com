@@ -304,16 +304,30 @@ include 'includes/admin-header.php';
 
 <script>
     function openUserModal() {
+        console.log('openUserModal called');
+        const modal = document.getElementById('userModal');
+        console.log('modal element:', modal);
+        if (!modal) {
+            alert('ERROR: Modal element #userModal not found!');
+            return;
+        }
         document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
         document.getElementById('userForm').reset();
         document.getElementById('user_id').value = '';
         document.getElementById('password').required = true;
         document.getElementById('passwordGroup').style.display = 'block';
-        document.getElementById('userModal').classList.add('active');
+        modal.classList.add('active');
+        modal.style.display = 'flex'; // Force display as backup
+        console.log('modal classes after:', modal.className);
+        console.log('modal computed display:', getComputedStyle(modal).display);
     }
 
     function closeUserModal() {
-        document.getElementById('userModal').classList.remove('active');
+        const modal = document.getElementById('userModal');
+        if (modal) {
+            modal.classList.remove('active');
+            modal.style.display = ''; // Remove inline display
+        }
     }
 
     function editUser(user) {
