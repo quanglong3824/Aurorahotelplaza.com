@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 initLanguage();
@@ -66,10 +67,10 @@ try {
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <script src="assets/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/explore.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/explore.css'); ?>">
 </head>
 
 <body class="glass-page font-body text-white">

@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 initLanguage();
@@ -32,10 +33,10 @@ try {
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <script src="assets/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/rooms.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/rooms.css'); ?>">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>');
@@ -125,8 +126,8 @@ try {
                                     <!-- Image -->
                                     <div class="room-img-container">
                                         <?php if ($room['thumbnail']): ?>
-                                            <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>"
-                                                alt="<?php echo htmlspecialchars($room['type_name']); ?>">
+                                            <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                                alt="<?php echo htmlspecialchars($room['type_name']); ?>" loading="lazy">
                                         <?php else: ?>
                                             <div
                                                 class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">

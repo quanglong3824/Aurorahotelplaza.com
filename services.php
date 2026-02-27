@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 initLanguage();
@@ -42,9 +43,9 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     <script src="assets/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/hero-banner/caffe-aurora-hotel-1.jpg'); ?>');

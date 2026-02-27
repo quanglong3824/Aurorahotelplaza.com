@@ -5,6 +5,7 @@ session_start();
 // Load environment configuration
 require_once __DIR__ . '/config/environment.php';
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/performance.php';
 require_once __DIR__ . '/helpers/image-helper.php';
 require_once __DIR__ . '/helpers/language.php';
 initLanguage();
@@ -140,20 +141,24 @@ try {
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('home.meta_title'); ?></title>
 
+    <!-- DNS Prefetch & Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- Tailwind CSS -->
-    <script src="<?php echo asset('js/tailwindcss-cdn.js'); ?>?v=<?php echo time(); ?>"></script>
-    <link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet" />
+    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>"></script>
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Tailwind Configuration -->
-    <script src="<?php echo asset('js/tailwind-config.js'); ?>?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo assetVersion('js/tailwind-config.js'); ?>"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/pages-glass.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/responsive-index.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/index-upgrade.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/featured-apartments-glass.css'); ?>?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -895,7 +900,7 @@ try {
     </div>
 
     <!--  JavaScript -->
-    <script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>" defer></script>
 
 </body>
 

@@ -10,170 +10,177 @@
 /* Ensure all room/apartment cards have same height */
 section#rooms .grid,
 section#apartments .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 
 @media (max-width: 1023px) {
-
-    section#rooms .grid,
-    section#apartments .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  section#rooms .grid,
+  section#apartments .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 639px) {
-
-    section#rooms .grid,
-    section#apartments .grid {
-        grid-template-columns: 1fr;
-    }
+  section#rooms .grid,
+  section#apartments .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Room/Apartment Card - Fixed Layout */
 section#rooms .glass-card-solid,
 section#apartments .glass-card-solid {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 420px;
-    background: rgba(30, 41, 59, 0.6);
-    /* Unified Slate Glass 0.6 */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    /* Lighter border for contrast */
-    border-radius: 1.25rem;
-    overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    color: white;
-    /* Default text color white */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 420px;
+  background: rgba(30, 41, 59, 0.6);
+  /* Unified Slate Glass 0.6 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Lighter border for contrast */
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  color: white;
+  /* Default text color white */
 }
 
 .dark section#rooms .glass-card-solid,
 .dark section#apartments .glass-card-solid {
-    background: rgba(30, 41, 59, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 section#rooms .glass-card-solid:hover,
 section#apartments .glass-card-solid:hover {
-    transform: translateY(-8px);
-    background: rgba(30, 41, 59, 0.7);
-    /* Slightly darker on hover */
-    box-shadow:
-        0 15px 30px rgba(0, 0, 0, 0.5),
-        /* Stronger shadow */
-        0 0 0 1px rgba(212, 175, 55, 0.4);
-    /* Gold border glow */
+  transform: translateY(-8px);
+  background: rgba(30, 41, 59, 0.7);
+  /* Slightly darker on hover */
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.5),
+    /* Stronger shadow */ 0 0 0 1px rgba(212, 175, 55, 0.4);
+  /* Gold border glow */
 }
 
 /* Card Image Container - Fixed Aspect Ratio */
 section#rooms .glass-card-solid .aspect-\[4\/3\],
 section#apartments .glass-card-solid .aspect-\[4\/3\] {
-    position: relative;
-    width: 100%;
-    padding-top: 75%;
-    /* 4:3 aspect ratio */
-    overflow: hidden;
-    flex-shrink: 0;
+  position: relative;
+  width: 100%;
+  padding-top: 75%;
+  /* 4:3 aspect ratio */
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 section#rooms .glass-card-solid .aspect-\[4\/3\] img,
 section#apartments .glass-card-solid .aspect-\[4\/3\] img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
 }
 
 section#rooms .glass-card-solid:hover .aspect-\[4\/3\] img,
 section#apartments .glass-card-solid:hover .aspect-\[4\/3\] img {
-    transform: scale(1.08);
+  transform: scale(1.08);
 }
 
 /* Card Content - Fixed Padding */
 section#rooms .glass-card-solid .p-5,
 section#apartments .glass-card-solid .p-5 {
-    padding: 1.25rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Room/Apartment Badge - Liquid Glass Style */
 section#rooms .glass-badge,
 section#apartments .glass-badge {
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.15) 0%,
-            rgba(255, 255, 255, 0.08) 100%);
-    /* backdrop-filter: blur(12px) saturate(150%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  /* backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%); */
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: white;
 }
 
 /* Price Overlay - Enhanced */
 section#rooms .absolute.bottom-0,
 section#apartments .absolute.bottom-0 {
-    background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.85) 0%,
-            rgba(0, 0, 0, 0.6) 50%,
-            transparent 100%);
-    padding: 1.5rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    transparent 100%
+  );
+  padding: 1.5rem;
 }
 
 section#rooms .font-bold.text-lg,
 section#apartments .font-bold.text-lg {
-    font-size: 1.375rem;
-    font-weight: 800;
-    color: #d4af37;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #d4af37;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Room Features - Liquid Glass Tags */
 section#rooms .flex-wrap.gap-3,
 section#apartments .flex-wrap.gap-3 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.625rem;
-    margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: auto;
 }
 
 section#rooms .flex.items-center.gap-1,
 section#apartments .flex.items-center.gap-1 {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.08) 0%,
-            rgba(212, 175, 55, 0.04) 100%);
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    color: var(--text-secondary-light);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08) 0%,
+    rgba(212, 175, 55, 0.04) 100%
+  );
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary-light);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .dark section#rooms .flex.items-center.gap-1,
 .dark section#apartments .flex.items-center.gap-1 {
-    background: rgba(212, 175, 55, 0.12);
-    border-color: rgba(212, 175, 55, 0.2);
-    color: var(--text-secondary-dark);
+  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(212, 175, 55, 0.2);
+  color: var(--text-secondary-dark);
 }
 
 section#rooms .flex.items-center.gap-1:hover,
 section#apartments .flex.items-center.gap-1:hover {
-    background: rgba(212, 175, 55, 0.15);
-    border-color: rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 /* ============================================
@@ -181,14 +188,16 @@ section#apartments .flex.items-center.gap-1:hover {
    ============================================ */
 
 .glass-info-bar {
-    background: linear-gradient(135deg,
-            rgba(17, 24, 39, 0.9) 0%,
-            rgba(17, 24, 39, 0.85) 100%);
-    /* backdrop-filter: blur(8px);
+  background: linear-gradient(
+    135deg,
+    rgba(17, 24, 39, 0.9) 0%,
+    rgba(17, 24, 39, 0.85) 100%
+  );
+  /* backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    position: relative;
-    overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
 }
 
 /* Shimmer effect - DISABLED for performance */
@@ -217,19 +226,22 @@ section#apartments .flex.items-center.gap-1:hover {
 */
 
 .glass-info-bar .glass-tag {
-    background: rgba(255, 255, 255, 0.06);
-    /* backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.06);
+  /* backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .glass-info-bar .glass-tag:hover {
-    background: rgba(212, 175, 55, 0.15);
-    border-color: rgba(212, 175, 55, 0.3);
-    transform: translateY(-2px);
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-2px);
 }
 
 /* ============================================
@@ -237,11 +249,13 @@ section#apartments .flex.items-center.gap-1:hover {
    ============================================ */
 
 .glass-promo-banner {
-    background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.95) 0%,
-            rgba(184, 148, 31, 0.9) 100%);
-    position: relative;
-    overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.95) 0%,
+    rgba(184, 148, 31, 0.9) 100%
+  );
+  position: relative;
+  overflow: hidden;
 }
 
 /* Promo banner glow - DISABLED for performance */
@@ -268,23 +282,25 @@ section#apartments .flex.items-center.gap-1:hover {
 */
 
 .glass-promo-code {
-    background: rgba(255, 255, 255, 0.15);
-    /* backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.15);
+  /* backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); */
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.75rem;
-    color: white;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .glass-promo-code:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
 }
 
 /* ============================================
@@ -292,111 +308,121 @@ section#apartments .flex.items-center.gap-1:hover {
    ============================================ */
 
 .glass-stat-card-light {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1.5rem;
-    text-align: center;
-    border-radius: 1.25rem;
-    background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.1) 0%,
-            rgba(212, 175, 55, 0.05) 100%);
-    /* backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.1) 0%,
+    rgba(212, 175, 55, 0.05) 100%
+  );
+  /* backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); */
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Highlight effect */
 .glass-stat-card-light::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.06) 0%,
-            transparent 100%);
-    pointer-events: none;
-    border-radius: 1.25rem 1.25rem 0 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: 1.25rem 1.25rem 0 0;
 }
 
 /* Shimmer animation - DISABLED for performance */
 /* Static glow instead of animated shimmer */
 .glass-stat-card-light::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 30% 20%,
-            rgba(212, 175, 55, 0.04) 0%,
-            transparent 60%);
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(212, 175, 55, 0.04) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
 }
 
 .glass-stat-card-light:hover {
-    transform: translateY(-6px);
-    box-shadow:
-        0 20px 50px rgba(212, 175, 55, 0.12),
-        0 0 0 1px rgba(212, 175, 55, 0.15) inset;
-    border-color: rgba(212, 175, 55, 0.25);
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 50px rgba(212, 175, 55, 0.12),
+    0 0 0 1px rgba(212, 175, 55, 0.15) inset;
+  border-color: rgba(212, 175, 55, 0.25);
 }
 
 .glass-stat-card-light .stat-value {
-    font-size: 2.25rem;
-    font-weight: 800;
-    color: #d4af37;
-    line-height: 1;
-    position: relative;
-    z-index: 1;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #d4af37;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .glass-stat-card-light .stat-label {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--text-secondary-light);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    position: relative;
-    z-index: 1;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
 }
 
 .dark .glass-stat-card-light .stat-label {
-    color: var(--text-secondary-dark);
+  color: var(--text-secondary-dark);
 }
 
 /* Glow effect class */
 .glass-glow {
-    position: relative;
+  position: relative;
 }
 
 .glass-glow::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.2) 0%,
-            transparent 50%,
-            rgba(212, 175, 55, 0.1) 100%);
-    border-radius: inherit;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.2) 0%,
+    transparent 50%,
+    rgba(212, 175, 55, 0.1) 100%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .glass-glow:hover::before {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* ============================================
@@ -404,91 +430,97 @@ section#apartments .flex.items-center.gap-1:hover {
    ============================================ */
 
 .glass-service-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1.25rem;
-    height: 320px;
-    cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  height: 320px;
+  cursor: pointer;
 }
 
 .glass-service-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-service-card:hover img {
-    transform: scale(1.12);
+  transform: scale(1.12);
 }
 
 .glass-service-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top,
-            rgba(30, 41, 59, 0.9) 0%,
-            rgba(30, 41, 59, 0.5) 40%,
-            rgba(30, 41, 59, 0.2) 70%,
-            transparent 100%);
-    transition: opacity 0.4s ease;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(30, 41, 59, 0.9) 0%,
+    rgba(30, 41, 59, 0.5) 40%,
+    rgba(30, 41, 59, 0.2) 70%,
+    transparent 100%
+  );
+  transition: opacity 0.4s ease;
 }
 
 .glass-service-card:hover .glass-service-overlay {
-    background: linear-gradient(to top,
-            rgba(30, 41, 59, 0.95) 0%,
-            rgba(30, 41, 59, 0.6) 50%,
-            transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(30, 41, 59, 0.95) 0%,
+    rgba(30, 41, 59, 0.6) 50%,
+    transparent 100%
+  );
 }
 
 .glass-service-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1.75rem;
-    color: white;
-    transform: translateY(0);
-    transition: transform 0.4s ease;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.75rem;
+  color: white;
+  transform: translateY(0);
+  transition: transform 0.4s ease;
 }
 
 .glass-service-card:hover .glass-service-content {
-    transform: translateY(-8px);
+  transform: translateY(-8px);
 }
 
 .glass-service-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.12) 0%,
-            rgba(255, 255, 255, 0.06) 100%);
-    /* backdrop-filter: blur(12px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  /* backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px); */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .glass-service-badge .material-symbols-outlined {
-    font-size: 1rem;
-    color: #d4af37;
+  font-size: 1rem;
+  color: #d4af37;
 }
 
 .glass-service-content h3 {
-    font-size: 1.375rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .glass-service-content p {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.5;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
 }
 
 /* ============================================
@@ -496,44 +528,51 @@ section#apartments .flex.items-center.gap-1:hover {
    ============================================ */
 
 .glass-amenity-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 1.25rem;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.8) 0%,
-            rgba(255, 255, 255, 0.6) 100%);
-    /* backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  /* backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); */
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 1rem;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    cursor: default;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 1rem;
+  text-align: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  cursor: default;
 }
 
 .dark .glass-amenity-card {
-    background: linear-gradient(135deg,
-            rgba(30, 41, 59, 0.8) 0%,
-            rgba(30, 41, 59, 0.6) 100%);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.8) 0%,
+    rgba(30, 41, 59, 0.6) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .glass-amenity-card:hover {
-    border-color: rgba(212, 175, 55, 0.4);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.12);
+  border-color: rgba(212, 175, 55, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.12);
 }
 
 .glass-amenity-card .material-symbols-outlined {
-    font-size: 1.75rem;
-    color: #d4af37;
-    transition: transform 0.3s ease;
+  font-size: 1.75rem;
+  color: #d4af37;
+  transition: transform 0.3s ease;
 }
 
 .glass-amenity-card:hover .material-symbols-outlined {
-    transform: scale(1.15);
+  transform: scale(1.15);
 }
 
 /* ============================================
@@ -542,69 +581,157 @@ section#apartments .flex.items-center.gap-1:hover {
 
 /* Optimization: Target specific ID and class found in PHP */
 section#why-choose-us .glass-card {
-    background: rgba(255, 255, 255, 0.08);
-    /* Lighter Glass (Apple Style) */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.25rem;
-    transition: transform 0.4s ease, background-color 0.4s ease;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  transition:
+    transform 0.4s ease,
+    background-color 0.4s ease;
 }
 
 section#why-choose-us .glass-card:hover {
-    transform: translateY(-6px);
-    background: rgba(255, 255, 255, 0.12);
-    /* Slightly brighter on hover */
-    border-color: rgba(212, 175, 55, 0.3);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   ABOUT SECTION - 4 SERVICE CARDS FIX
+   ============================================ */
+section#about .glass-card-solid {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.85) 0%,
+    rgba(15, 23, 42, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  color: white;
+}
+
+section#about .glass-card-solid:hover {
+  transform: translateY(-6px);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(15, 23, 42, 1) 100%
+  );
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(212, 175, 55, 0.3);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+section#about .glass-card-solid h3 {
+  color: white;
+}
+
+section#about .glass-card-solid:hover h3 {
+  color: #d4af37;
+}
+
+section#about .glass-card-solid p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Icon circle inside about service cards */
+section#about .glass-card-solid .bg-accent\/10 {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.15) 0%,
+    rgba(212, 175, 55, 0.08) 100%
+  ) !important;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+section#about .glass-card-solid:hover .bg-accent\/10 {
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%) !important;
+  border-color: transparent;
+  transform: scale(1.1);
+}
+
+/* Icon default: gold, hover: white */
+section#about .glass-card-solid .bg-accent\/10 .material-symbols-outlined {
+  color: #d4af37;
+  transition: color 0.3s ease;
+}
+
+section#about
+  .glass-card-solid:hover
+  .bg-accent\/10
+  .material-symbols-outlined {
+  color: white;
 }
 
 /* Backwards compatibility for the solid class if used elsewhere */
 section:has(.glass-card-solid.flex.gap-4) .glass-card-solid {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
 }
 
 .dark section:has(.glass-card-solid.flex.gap-4) .glass-card-solid {
-    background: linear-gradient(135deg,
-            rgba(30, 41, 59, 0.9) 0%,
-            rgba(30, 41, 59, 0.7) 100%);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.9) 0%,
+    rgba(30, 41, 59, 0.7) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.1);
 }
-
 
 /* Update text colors for dark cards */
 section:has(.glass-card-solid.flex.gap-4) h3 {
-    color: #d4af37 !important;
+  color: #d4af37 !important;
 }
 
 section:has(.glass-card-solid.flex.gap-4) p {
-    color: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 section:has(.glass-card-solid.flex.gap-4) .glass-card-solid:hover {
-    transform: translateY(-6px);
-    background: rgba(15, 23, 42, 0.95);
-    box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(212, 175, 55, 0.3);
+  transform: translateY(-6px);
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(212, 175, 55, 0.3);
 }
 
 /* Icon container */
 section:has(.glass-card-solid.flex.gap-4) .h-14.w-14 {
-    width: 3.5rem;
-    height: 3.5rem;
-    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-    border-radius: 0.875rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+section:has(.glass-card-solid.flex.gap-4)
+  .h-14.w-14
+  .material-symbols-outlined {
+  color: white !important;
 }
 
 section:has(.glass-card-solid.flex.gap-4) .glass-card-solid:hover .h-14.w-14 {
-    transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
 }
 
 /* ============================================
@@ -612,45 +739,48 @@ section:has(.glass-card-solid.flex.gap-4) .glass-card-solid:hover .h-14.w-14 {
    ============================================ */
 
 section#blog .glass-card-solid {
-    background: rgba(15, 23, 42, 0.85);
-    /* Dark Glass */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.25rem;
-    overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    color: white;
+  background: rgba(15, 23, 42, 0.85);
+  /* Dark Glass */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white;
 }
 
 .dark section#blog .glass-card-solid {
-    background: rgba(30, 41, 59, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 section#blog .glass-card-solid:hover {
-    transform: translateY(-8px);
-    background: rgba(15, 23, 42, 0.95);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-    border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-8px);
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 section#blog h3,
 section#blog h3 a {
-    color: white !important;
+  color: white !important;
 }
 
 section#blog p {
-    color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 section#blog .glass-badge {
-    background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.9) 0%,
-            /* Gold badge for contrast */
-            rgba(184, 148, 31, 0.9) 100%);
-    /* backdrop-filter: blur(12px);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.9) 0%,
+    /* Gold badge for contrast */ rgba(184, 148, 31, 0.9) 100%
+  );
+  /* backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px); */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 /* ============================================
@@ -658,70 +788,80 @@ section#blog .glass-badge {
    ============================================ */
 
 section#location .glass-card {
-    background: rgba(255, 255, 255, 0.08);
-    /* Lighter Glass (Apple Style) */
-    /* background: rgba(15, 23, 42, 0.9); Dark Glass */
-    /* backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  /* Lighter Glass (Apple Style) */
+  /* background: rgba(15, 23, 42, 0.9); Dark Glass */
+  /* backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    color: white;
-    border-radius: 1.25rem;
-    /* Ensure radius matches */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  color: white;
+  border-radius: 1.25rem;
+  /* Ensure radius matches */
 }
 
 section#location h3 {
-    color: #d4af37 !important;
-    /* Gold headings */
-    font-weight: 700;
+  color: #d4af37 !important;
+  /* Gold headings */
+  font-weight: 700;
 }
 
 section#location p,
 section#location a {
-    color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .dark section#location .glass-card {
-    background: rgba(30, 41, 59, 0.92);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 section#location .glass-card:hover {
-    border-color: rgba(212, 175, 55, 0.5);
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 /* Contact icon containers */
 section#location .w-12.h-12 {
-    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25);
-    transition: transform 0.3s ease;
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25);
+  transition: transform 0.3s ease;
 }
 
-section#location .glass-card-solid:hover .w-12.h-12 {
-    transform: scale(1.1);
+/* Icon inside gold circle: white by default */
+section#location .w-12.h-12 .material-symbols-outlined {
+  color: white !important;
+}
+
+section#location .glass-card:hover .w-12.h-12 {
+  transform: scale(1.1);
 }
 
 /* Map container */
 section#location .rounded-2xl.overflow-hidden {
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.15);
 }
 
 /* Nearby places */
 section#location .rounded-lg.hover\:bg-accent\/5 {
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
-    border-radius: 0.625rem;
+  transition:
+    background-color 0.3s ease,
+    padding-left 0.3s ease;
+  border-radius: 0.625rem;
 }
 
 section#location .rounded-lg.hover\:bg-accent\/5:hover {
-    background: rgba(212, 175, 55, 0.08);
-    padding-left: 0.75rem;
+  background: rgba(212, 175, 55, 0.08);
+  padding-left: 0.75rem;
 }
 
 /* ============================================
@@ -729,12 +869,9 @@ section#location .rounded-lg.hover\:bg-accent\/5:hover {
    ============================================ */
 
 section:has(.bg-gradient-to-br.from-accent) {
-    background: linear-gradient(135deg,
-            #d4af37 0%,
-            #c9a02c 50%,
-            #b8941f 100%);
-    position: relative;
-    overflow: hidden;
+  background: linear-gradient(135deg, #d4af37 0%, #c9a02c 50%, #b8941f 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 /* CTA glow - DISABLED for performance */
@@ -767,19 +904,16 @@ section:has(.bg-gradient-to-br.from-accent)::before {
    ============================================ */
 
 section h2 {
-    position: relative;
+  position: relative;
 }
 
 .text-accent.font-semibold.text-sm {
-    background: linear-gradient(135deg,
-            #d4af37 0%,
-            #e5c54d 50%,
-            #d4af37 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+  background: linear-gradient(135deg, #d4af37 0%, #e5c54d 50%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  letter-spacing: 0.15em;
 }
 
 /* ============================================
@@ -787,42 +921,42 @@ section h2 {
    ============================================ */
 
 @media (max-width: 639px) {
-    .glass-stat-card-light {
-        padding: 1rem;
-    }
+  .glass-stat-card-light {
+    padding: 1rem;
+  }
 
-    .glass-stat-card-light .stat-value {
-        font-size: 1.5rem;
-    }
+  .glass-stat-card-light .stat-value {
+    font-size: 1.5rem;
+  }
 
-    .glass-stat-card-light .stat-label {
-        font-size: 0.6875rem;
-    }
+  .glass-stat-card-light .stat-label {
+    font-size: 0.6875rem;
+  }
 
-    .glass-service-card {
-        height: 200px;
-    }
+  .glass-service-card {
+    height: 200px;
+  }
 
-    .glass-service-content {
-        padding: 1rem;
-    }
+  .glass-service-content {
+    padding: 1rem;
+  }
 
-    .glass-service-content h3 {
-        font-size: 1.125rem;
-    }
+  .glass-service-content h3 {
+    font-size: 1.125rem;
+  }
 
-    .glass-amenity-card {
-        padding: 0.875rem;
-    }
+  .glass-amenity-card {
+    padding: 0.875rem;
+  }
 
-    .glass-amenity-card .material-symbols-outlined {
-        font-size: 1.5rem;
-    }
+  .glass-amenity-card .material-symbols-outlined {
+    font-size: 1.5rem;
+  }
 
-    section#rooms .glass-card-solid,
-    section#apartments .glass-card-solid {
-        min-height: 380px;
-    }
+  section#rooms .glass-card-solid,
+  section#apartments .glass-card-solid {
+    min-height: 380px;
+  }
 }
 
 /* ============================================
@@ -832,20 +966,14 @@ section h2 {
 section#rooms .glass-card-solid img,
 section#apartments .glass-card-solid img,
 section#blog .glass-card-solid img {
-    background: linear-gradient(135deg,
-            #f3f4f6 0%,
-            #e5e7eb 50%,
-            #f3f4f6 100%);
-    min-height: 180px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  min-height: 180px;
 }
 
 .dark section#rooms .glass-card-solid img,
 .dark section#apartments .glass-card-solid img,
 .dark section#blog .glass-card-solid img {
-    background: linear-gradient(135deg,
-            #1f2937 0%,
-            #374151 50%,
-            #1f2937 100%);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
 }
 
 /* Error state for images */
@@ -853,15 +981,15 @@ section#rooms .glass-card-solid img[src=""],
 section#apartments .glass-card-solid img[src=""],
 section#rooms .glass-card-solid img:not([src]),
 section#apartments .glass-card-solid img:not([src]) {
-    position: relative;
+  position: relative;
 }
 
 section#rooms .glass-card-solid img[src=""]::after,
 section#apartments .glass-card-solid img[src=""]::after {
-    content: '🏨';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
+  content: "🏨";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
 }

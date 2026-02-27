@@ -107,7 +107,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                             <div class="mb-20">
                                 <div class="section-header flex items-center gap-4 mb-8">
                                     <h2 class="section-title text-accent text-3xl font-bold font-display">
-                                        <?php _e('apartments_page.new_apartments'); ?></h2>
+                                        <?php _e('apartments_page.new_apartments'); ?>
+                                    </h2>
                                     <span
                                         class="section-badge bg-gradient-to-r from-accent to-accent/80 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
                                         <span class="material-symbols-outlined text-sm">apartment</span>
@@ -123,8 +124,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                         <div class="apt-card-glass">
                                             <div class="apt-img-container">
                                                 <?php if ($apt['thumbnail']): ?>
-                                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>"
-                                                        alt="<?php echo htmlspecialchars($apt['type_name']); ?>">
+                                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                                        alt="<?php echo htmlspecialchars($apt['type_name']); ?>" loading="lazy">
                                                 <?php else: ?>
                                                     <div
                                                         class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
@@ -205,7 +206,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                             <section class="mb-16 pt-12 border-t border-white/10">
                                 <div class="section-header flex items-center gap-4 mb-8">
                                     <h2 class="section-title text-white text-3xl font-bold font-display">
-                                        <?php _e('apartments_page.old_apartments'); ?></h2>
+                                        <?php _e('apartments_page.old_apartments'); ?>
+                                    </h2>
                                     <span
                                         class="section-badge bg-white/10 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-2 backdrop-blur-md border border-white/10">
                                         <span class="material-symbols-outlined text-sm">apartment</span>
@@ -221,8 +223,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                         <div class="apt-card-glass">
                                             <div class="apt-img-container">
                                                 <?php if ($apt['thumbnail']): ?>
-                                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>?v=<?php echo time(); ?>"
-                                                        alt="<?php echo htmlspecialchars($apt['type_name']); ?>">
+                                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>"
+                                                        alt="<?php echo htmlspecialchars($apt['type_name']); ?>" loading="lazy">
                                                 <?php else: ?>
                                                     <div
                                                         class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
