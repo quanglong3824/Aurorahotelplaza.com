@@ -630,3 +630,54 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     }
                 });
             </script>
+
+            <!-- Staff Heartbeat: báo nhân viên đang online -->
+            <script>
+                (function () {
+                    const base = window.siteBase || '';
+                    let heartbeatInterval = null;
+
+                    function sendHeartbeat() {
+                        fetch(base + '/api/chat/staff-heartbeat.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: 'ping' })
+                        }).catch(() => { });
+                    }
+
+                    function startHeartbeat() {
+                        sendHeartbeat(); // gửi ngay lập tức
+                        if (!heartbeatInterval) {
+                            heartbeatInterval = setInterval(sendHeartbeat, 30000); // mỗi 30 giây
+                        }
+                    }
+
+                    function stopHeartbeat() {
+                        if (heartbeatInterval) {
+                            clearInterval(heartbeatInterval);
+                            heartbeatInterval = null;
+                        }
+                    }
+
+                    // Khi tab visible → gửi heartbeat, khi ẩn → dừng
+                    document.addEventListener('visibilitychange', function () {
+                        if (document.hidden) {
+                            stopHeartbeat();
+                        } else {
+                            startHeartbeat();
+                        }
+                    });
+
+                    // Start khi trang load
+                    document.addEventListener('DOMContentLoaded', startHeartbeat);
+
+                    // Gửi heartbeat offline khi đóng trang
+                    window.addEventListener('beforeunload', function () {
+                        // Dùng navigator.sendBeacon để gửi cuối cùng
+                        navigator.sendBeacon(
+                            base + '/api/chat/staff-heartbeat.php',
+                            new Blob([JSON.stringify({ action: 'offline' })], { type: 'application/json' })
+                        );
+                    });
+                })();
+            </script>

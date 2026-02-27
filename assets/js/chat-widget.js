@@ -16,6 +16,8 @@ const ChatWidget = {
     isOpen:      false,
     isAtBottom:  true,
     unread:      0,
+    staffOnline: false,
+    _staffCheckInterval: null,
 
     // ── URL helper — dùng window.siteBase inject bởi PHP ─────────────────
     _url(path) {
@@ -30,6 +32,11 @@ const ChatWidget = {
         if (!btn) return;
 
         this.bindEvents();
+        
+        // Kiểm tra nhân viên online ngay lập tức
+        this.checkStaffOnline();
+        // Kiểm tra lại mỗi 30 giây
+        this._staffCheckInterval = setInterval(() => this.checkStaffOnline(), 30000);
 
         // Nếu đã đăng nhập, load conversations ngay
         if (btn.dataset.loggedIn === '1') {
@@ -540,6 +547,46 @@ const ChatWidget = {
             .replace(/>/g,'&gt;')
             .replace(/"/g,'&quot;')
             .replace(/\n/g,'<br>');
+    },
+
+    // ── Staff Online Status ──────────────────────────────────────────────
+    checkStaffOnline() {
+        fetch(this._url('api/chat/check-staff-online.php'))
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    this.staffOnline = data.is_online;
+                    this.updateStaffStatusUI(data);
+                }
+            })
+            .catch(() => {});
+    },
+
+    updateStaffStatusUI(data) {
+        const dot = document.getElementById('cwOnlineDot');
+        const text = document.getElementById('cwStatusText');
+        const offlineBar = document.getElementById('cwOfflineBar');
+        
+        if (dot) {
+            if (data.is_online) {
+                dot.style.background = '#22c55e';
+                dot.style.boxShadow = '0 0 6px rgba(34, 197, 94, 0.6)';
+                dot.style.animation = 'none';
+            } else {
+                dot.style.background = '#94a3b8';
+                dot.style.boxShadow = 'none';
+                dot.style.animation = 'cwOfflinePulse 2s ease-in-out infinite';
+            }
+        }
+        
+        if (text) {
+            text.textContent = data.status_text || 'Hỗ trợ trực tuyến';
+        }
+        
+        // Hiện/ẩn offline bar
+        if (offlineBar) {
+            offlineBar.style.display = data.is_online ? 'none' : 'flex';
+        }
     },
 
     // ── Event bindings ────────────────────────────────────────────────────

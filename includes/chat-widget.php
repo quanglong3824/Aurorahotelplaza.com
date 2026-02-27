@@ -69,9 +69,9 @@ $cw_base = rtrim(BASE_URL, '/');
         </div>
         <div class="flex-1 min-w-0">
             <div class="cw-title">Aurora Hotel Plaza</div>
-            <div class="cw-subtitle">
-                <span class="cw-online-dot"></span>
-                Hỗ trợ trực tuyến
+            <div class="cw-subtitle" id="cwStaffStatus">
+                <span class="cw-online-dot" id="cwOnlineDot"></span>
+                <span id="cwStatusText">Đang kiểm tra...</span>
             </div>
         </div>
         <button id="cwCloseBtn" class="cw-close-btn" aria-label="Đóng chat">
