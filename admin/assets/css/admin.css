@@ -151,27 +151,49 @@
 
 /* Modal Styles */
 .modal {
-    @apply fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 hidden;
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .modal.active {
-    @apply flex;
+    display: flex;
 }
 
 .modal-content {
-    @apply bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+    background: var(--surface-light, #fff);
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1);
+    max-width: 42rem;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-header {
-    @apply px-6 py-4 border-b border-border-light dark:border-border-dark flex items-center justify-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .modal-body {
-    @apply p-6;
+    padding: 1.5rem;
 }
 
 .modal-footer {
-    @apply px-6 py-4 border-t border-border-light dark:border-border-dark flex items-center justify-end gap-3;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
 }
 
 /* Pagination */
