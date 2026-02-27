@@ -35,18 +35,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
             // 1. Nhóm dữ liệu Giao dịch & Tương tác (Xóa ở cả 2 chế độ)
             // Bao gồm: Đặt phòng, Thanh toán, Lịch sử, Logs, Liên hệ, Đánh giá...
             $transaction_tables = [
-                'booking_extra_guests', // Bảng mới
-                'booking_history',      // Bảng mới
-                'service_bookings',
-                'booking_services',
-                'payments',
-                'bookings',
-                'contact_submissions',
-                'reviews',
-                'notifications',
                 'activity_logs',
+                'blog_comments',
+                'blog_likes',
+                'blog_ratings',
+                'blog_shares',
+                'booking_extra_guests',
+                'booking_history',
+                'bookings',
+                'chat_conversations',
+                'chat_messages',
+                'chat_typing',
+                'contact_submissions',
+                'csrf_tokens',
                 'email_logs',
-                'blog_comments'
+                'floor_maintenance',
+                'notifications',
+                'password_resets',
+                'payments',
+                'points_transactions',
+                'promotion_usage',
+                'push_subscriptions',
+                'rate_limits',
+                'refunds',
+                'review_responses',
+                'reviews',
+                'service_bookings',
+                'user_sessions'
             ];
 
             $tables_to_truncate = array_merge($tables_to_truncate, $transaction_tables);
@@ -55,17 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
             // Bao gồm: Phòng, Dịch vụ, Bài viết, Hình ảnh, Cấu hình giá...
             if ($reset_mode === 'full') {
                 $master_tables = [
-                    'rooms',
-                    'room_types',
-                    'pricing_policies', // Bảng mới
-                    'seasonal_pricing',
-                    'services',
-                    'promotions',
+                    'amenities',
                     'banners',
+                    'blog_categories',
                     'blog_posts',
-                    'gallery',
+                    'chat_quick_replies',
                     'faqs',
-                    'membership_tiers'
+                    'gallery',
+                    'membership_tiers',
+                    'page_content',
+                    'pricing_policies',
+                    'promotions',
+                    'room_pricing',
+                    'room_types',
+                    'rooms',
+                    'service_packages',
+                    'services'
                 ];
                 $tables_to_truncate = array_merge($tables_to_truncate, $master_tables);
             }
