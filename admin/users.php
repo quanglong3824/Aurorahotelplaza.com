@@ -232,66 +232,84 @@ include 'includes/admin-header.php';
     </div>
 </div>
 
-<!-- User Modal -->
-<div id="userModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="font-semibold" id="modalTitle">Thêm nhân viên mới</h3>
-            <button onclick="closeUserModal()"
-                class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark">
-                <span class="material-symbols-outlined">close</span>
+<!-- New Pure Tailwind User Modal -->
+<div id="tailwindUserModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden" id="tailwindModalContent">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white" id="modalTitle">Thêm nhân viên mới</h3>
+            <button type="button" onclick="closeUserModal()" class="text-gray-400 hover:text-red-500 transition-colors rounded-full p-1 hover:bg-red-50 dark:hover:bg-red-900/20">
+                <span class="material-symbols-outlined block">close</span>
             </button>
         </div>
-        <div class="modal-body">
-            <form id="userForm">
+        
+        <!-- Body -->
+        <div class="p-6 max-h-[75vh] overflow-y-auto w-full text-left">
+            <form id="userForm" autocomplete="off">
                 <input type="hidden" id="user_id" name="user_id">
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-group">
-                        <label class="form-label">Họ tên *</label>
-                        <input type="text" id="full_name" name="full_name" class="form-input" required>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left items-start">
+                    <!-- Tên -->
+                    <div class="form-group mb-0 text-left">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Họ tên <span class="text-red-500">*</span></label>
+                        <input type="text" id="full_name" name="full_name" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Email *</label>
-                        <input type="email" id="email" name="email" class="form-input" required>
+                    <!-- Email -->
+                    <div class="form-group mb-0 text-left">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Email <span class="text-red-500">*</span></label>
+                        <input type="email" id="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="tel" id="phone" name="phone" class="form-input">
+                    <!-- Phone -->
+                    <div class="form-group mb-0 text-left">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Vai trò *</label>
-                        <select id="user_role" name="user_role" class="form-select" required>
+                    <!-- Role -->
+                    <div class="form-group mb-0 text-left">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Vai trò <span class="text-red-500">*</span></label>
+                        <select id="user_role" name="user_role" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white">
                             <option value="receptionist">Lễ tân</option>
                             <option value="sale">Sale</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
 
-                    <div class="form-group" id="passwordGroup">
-                        <label class="form-label">Mật khẩu *</label>
-                        <input type="password" id="password" name="password" class="form-input" minlength="6">
-                        <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
-                            Tối thiểu 6 ký tự
-                        </p>
+                    <!-- Password -->
+                    <div class="form-group mb-0 text-left" id="passwordGroup">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Mật khẩu <span id="passReqStar" class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" minlength="6" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white pr-10">
+                            <button type="button" onclick="const p=document.getElementById('password'); p.type=p.type==='password'?'text':'password';" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+                                <span class="material-symbols-outlined text-[20px]">visibility</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1.5" id="passHint">Tối thiểu 6 ký tự. (Để trống nếu không muốn đổi mật khẩu khi sửa)</p>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Trạng thái *</label>
-                        <select id="status" name="status" class="form-select" required>
+                    <!-- Status -->
+                    <div class="form-group mb-0 text-left">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left w-full">Trạng thái <span class="text-red-500">*</span></label>
+                        <select id="status" name="status" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-gray-900 dark:text-white">
                             <option value="active">Hoạt động</option>
-                            <option value="inactive">Không hoạt động</option>
+                            <option value="inactive">Khóa tài khoản</option>
                         </select>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
-            <button type="button" onclick="closeUserModal()" class="btn btn-secondary">Hủy</button>
-            <button type="button" onclick="submitUser()" class="btn btn-primary">Lưu</button>
+        
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-700 flex justify-end gap-3 bg-gray-50 dark:bg-slate-800/50">
+            <button type="button" onclick="closeUserModal()" class="px-5 py-2.5 rounded-xl font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+                Hủy bỏ
+            </button>
+            <button type="button" id="btnSubmitUser" onclick="submitUser()" class="px-6 py-2.5 rounded-xl font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-500/30 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">save</span>
+                <span>Lưu nhân viên</span>
+            </button>
         </div>
     </div>
 </div>
