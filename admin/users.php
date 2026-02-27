@@ -100,36 +100,37 @@ include 'includes/admin-header.php';
 </div>
 
 <!-- Action Bar -->
-<div class="flex items-center justify-between mb-6">
-    <form method="GET" class="flex gap-2 flex-wrap">
-        <div class="search-box">
-            <span class="search-icon material-symbols-outlined">search</span>
+<div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
+    <form method="GET" class="flex flex-wrap gap-3 items-center w-full xl:w-auto">
+        <div class="search-box relative">
+            <span class="search-icon material-symbols-outlined text-gray-500 absolute left-3 top-2.5">search</span>
             <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
-                placeholder="Tìm nhân viên..." class="form-input">
+                placeholder="Tìm nhân viên..." class="form-input pl-10 border rounded-lg py-2">
         </div>
 
-        <select name="role" class="form-select">
+        <select name="role" class="form-select border rounded-lg py-2 bg-white">
             <option value="all">Tất cả vai trò</option>
             <option value="admin" <?php echo $role_filter === 'admin' ? 'selected' : ''; ?>>Admin</option>
             <option value="sale" <?php echo $role_filter === 'sale' ? 'selected' : ''; ?>>Sale</option>
             <option value="receptionist" <?php echo $role_filter === 'receptionist' ? 'selected' : ''; ?>>Lễ tân</option>
         </select>
 
-        <select name="status" class="form-select">
-            <option value="all">Tất cả trạng thái</option>
+        <select name="status" class="form-select border rounded-lg py-2 bg-white">
+            <option value="all">Trạng thái</option>
             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Hoạt động</option>
-            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Không hoạt động
-            </option>
+            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Tạm khóa</option>
         </select>
 
-        <button type="submit" class="btn btn-primary">
+        <button type="submit"
+            class="btn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">filter_alt</span>
             Lọc
         </button>
     </form>
 
-    <button onclick="openUserModal()" class="btn btn-primary">
-        <span class="material-symbols-outlined text-sm">add</span>
+    <button type="button" onclick="openUserModal()"
+        class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 shadow-sm whitespace-nowrap">
+        <span class="material-symbols-outlined text-sm">person_add</span>
         Thêm nhân viên
     </button>
 </div>
