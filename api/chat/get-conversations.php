@@ -99,9 +99,9 @@ try {
     $countStmt->execute($params);
     $total = (int) $countStmt->fetchColumn();
 
-    // Data
-    $params[':limit'] = $limit;
-    $params[':offset'] = $offset;
+    // Data - LIMIT/OFFSET phải dùng intval vì PDO::execute() ép thành string
+    $limitInt = (int) $limit;
+    $offsetInt = (int) $offset;
 
     $stmt = $db->prepare("
         SELECT
@@ -133,7 +133,7 @@ try {
         LEFT JOIN users su ON c.staff_id    = su.user_id
         WHERE $whereClause
         ORDER BY priority_score DESC, c.last_message_at DESC
-        LIMIT :limit OFFSET :offset
+        LIMIT $limitInt OFFSET $offsetInt
     ");
     $stmt->execute($params);
     $convs = $stmt->fetchAll();

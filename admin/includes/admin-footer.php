@@ -55,9 +55,9 @@
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-up ${type === 'success' ? 'bg-green-500' :
-                type === 'error' ? 'bg-red-500' :
-                    type === 'warning' ? 'bg-yellow-500' :
-                        'bg-blue-500'
+            type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' :
+                    'bg-blue-500'
             } text-white`;
         toast.textContent = message;
         document.body.appendChild(toast);
@@ -103,7 +103,7 @@
     // Chat unread badge — poll mỗi 30s trên mọi trang admin
     (function () {
         function fetchChatBadge() {
-            fetch('/api/chat/get-conversations.php?status=active&page=1&limit=1')
+            fetch((window.siteBase || '') + '/api/chat/get-conversations.php?status=active&page=1&limit=1')
                 .then(r => r.json())
                 .then(data => {
                     if (!data.success) return;

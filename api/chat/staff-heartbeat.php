@@ -55,7 +55,7 @@ try {
         $stmt = $db->prepare("UPDATE chat_settings SET setting_value = ? WHERE setting_key = 'staff_online'");
         $stmt->execute([$json]);
     } else {
-        $stmt = $db->prepare("INSERT INTO chat_settings (setting_key, setting_value, setting_type) VALUES ('staff_online', ?, 'json')");
+        $stmt = $db->prepare("INSERT INTO chat_settings (setting_key, setting_value, description) VALUES ('staff_online', ?, 'Danh sách nhân viên đang online')");
         $stmt->execute([$json]);
     }
 
