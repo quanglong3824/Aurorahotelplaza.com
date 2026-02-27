@@ -203,214 +203,205 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
             </div>
 
             <!-- Navigation -->
-            <nav class="space-y-1">
-                <a href="dashboard.php"
-                    class="sidebar-link <?php echo $current_page === 'dashboard' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">dashboard</span>
-                    <span>Dashboard</span>
-                </a>
+            <nav class="space-y-1.5 pb-24">
+                <?php
+                $menu_groups = [
+                    [
+                        'label' => false,
+                        'items' => [
+                            ['page' => 'dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard']
+                        ]
+                    ],
+                    [
+                        'label' => 'Đặt phòng',
+                        'icon' => 'book_online',
+                        'items' => [
+                            ['page' => 'bookings', 'icon' => 'calendar_today', 'label' => 'Quản lý đặt phòng'],
+                            ['page' => 'apartment-inquiries', 'icon' => 'apartment', 'label' => 'Yêu cầu căn hộ'],
+                            ['page' => 'calendar', 'icon' => 'calendar_month', 'label' => 'Lịch đặt phòng'],
+                            ['page' => 'refunds', 'icon' => 'payments', 'label' => 'Hoàn tiền']
+                        ]
+                    ],
+                    [
+                        'label' => 'Phòng',
+                        'icon' => 'meeting_room',
+                        'items' => [
+                            ['page' => 'room-types', 'icon' => 'local_offer', 'label' => 'Loại phòng'],
+                            ['page' => 'rooms', 'icon' => 'hotel', 'label' => 'Danh sách phòng'],
+                            ['page' => 'room-map', 'icon' => 'map', 'label' => 'Sơ đồ phòng'],
+                            ['page' => 'pricing', 'icon' => 'attach_money', 'label' => 'Quản lý giá'],
+                            ['page' => 'pricing-detailed', 'icon' => 'receipt_long', 'label' => 'Bảng giá chi tiết']
+                        ]
+                    ],
+                    [
+                        'label' => 'Khách hàng',
+                        'icon' => 'group',
+                        'items' => [
+                            ['page' => 'customers', 'icon' => 'people', 'label' => 'Khách hàng'],
+                            ['page' => 'loyalty', 'icon' => 'loyalty', 'label' => 'Chương trình thành viên'],
+                            ['page' => 'reviews', 'icon' => 'star', 'label' => 'Đánh giá'],
+                            ['page' => 'contacts', 'icon' => 'contact_mail', 'label' => 'Liên hệ']
+                        ]
+                    ],
+                    [
+                        'label' => 'Tương tác',
+                        'icon' => 'forum',
+                        'items' => [
+                            ['page' => 'chat', 'icon' => 'chat', 'label' => 'Tin nhắn', 'badge' => 'chatSidebarBadge'],
+                            ['page' => 'chat-settings', 'icon' => 'settings_applications', 'label' => 'Cài đặt Chat']
+                        ]
+                    ],
+                    [
+                        'label' => 'Dịch vụ',
+                        'icon' => 'room_service',
+                        'items' => [
+                            ['page' => 'service-packages', 'icon' => 'inventory_2', 'label' => 'Dịch vụ & Gói'],
+                            ['page' => 'services', 'icon' => 'spa', 'label' => 'Dịch vụ phụ'],
+                            ['page' => 'service-bookings', 'icon' => 'list_alt', 'label' => 'Đơn dịch vụ']
+                        ]
+                    ],
+                    [
+                        'label' => 'Marketing',
+                        'icon' => 'campaign',
+                        'items' => [
+                            ['page' => 'promotions', 'icon' => 'local_offer', 'label' => 'Khuyến mãi'],
+                            ['page' => 'banners', 'icon' => 'image', 'label' => 'Banner']
+                        ]
+                    ],
+                    [
+                        'label' => 'Nội dung',
+                        'icon' => 'newspaper',
+                        'items' => [
+                            ['page' => 'blog', 'icon' => 'article', 'label' => 'Blog'],
+                            ['page' => 'gallery', 'icon' => 'photo_library', 'label' => 'Thư viện ảnh'],
+                            ['page' => 'faqs', 'icon' => 'help', 'label' => 'FAQs']
+                        ]
+                    ],
+                    [
+                        'label' => 'Hệ thống',
+                        'icon' => 'settings',
+                        'role' => 'admin',
+                        'items' => [
+                            ['page' => 'users', 'icon' => 'manage_accounts', 'label' => 'Người dùng'],
+                            ['page' => 'permissions', 'icon' => 'admin_panel_settings', 'label' => 'Phân quyền'],
+                            ['page' => 'activity-logs', 'icon' => 'history', 'label' => 'Nhật ký hoạt động'],
+                            ['page' => 'reports', 'icon' => 'analytics', 'label' => 'Báo cáo'],
+                            ['page' => 'notifications', 'icon' => 'notifications', 'label' => 'Thông báo'],
+                            ['page' => 'settings', 'icon' => 'settings', 'label' => 'Khởi tạo cấu hình'],
+                            ['page' => 'backup-database', 'icon' => 'backup', 'label' => 'Sao lưu dữ liệu'],
+                            ['page' => 'reset-database', 'icon' => 'delete_forever', 'label' => 'Dọn dẹp hệ thống']
+                        ]
+                    ]
+                ];
+                ?>
 
-                <!-- Bookings -->
-                <div class="mt-6 mb-2">
-                    <p class="px-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Đặt
-                        phòng</p>
-                </div>
-                <a href="bookings.php" class="sidebar-link <?php echo $current_page === 'bookings' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">book_online</span>
-                    <span>Quản lý đặt phòng</span>
-                </a>
-                <a href="apartment-inquiries.php"
-                    class="sidebar-link <?php echo $current_page === 'apartment-inquiries' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">apartment</span>
-                    <span>Yêu cầu căn hộ</span>
-                </a>
-                <a href="calendar.php" class="sidebar-link <?php echo $current_page === 'calendar' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">calendar_month</span>
-                    <span>Lịch đặt phòng</span>
-                </a>
-                <a href="refunds.php" class="sidebar-link <?php echo $current_page === 'refunds' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">payments</span>
-                    <span>Hoàn tiền</span>
-                </a>
+                <?php foreach ($menu_groups as $group): ?>
+                    <?php
+                    // Kiểm tra Role
+                    if (isset($group['role']) && $_SESSION['user_role'] !== $group['role']) {
+                        continue;
+                    }
 
-                <!-- Rooms -->
-                <div class="mt-6 mb-2">
-                    <p
-                        class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                        Phòng</p>
-                </div>
-                <a href="room-types.php"
-                    class="sidebar-link <?php echo $current_page === 'room-types' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">meeting_room</span>
-                    <span>Loại phòng</span>
-                </a>
-                <a href="rooms.php" class="sidebar-link <?php echo $current_page === 'rooms' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">hotel</span>
-                    <span>Danh sách phòng</span>
-                </a>
-                <a href="room-map.php" class="sidebar-link <?php echo $current_page === 'room-map' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">map</span>
-                    <span>Sơ đồ phòng</span>
-                </a>
-                <a href="pricing.php" class="sidebar-link <?php echo $current_page === 'pricing' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">payments</span>
-                    <span>Quản lý giá</span>
-                </a>
-                <a href="pricing-detailed.php"
-                    class="sidebar-link <?php echo $current_page === 'pricing-detailed' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">receipt_long</span>
-                    <span>Bảng giá chi tiết</span>
-                </a>
+                    // Kiểm tra trạng thái collapse đóng/mở
+                    $isOpened = false;
+                    foreach ($group['items'] as $item) {
+                        if ($current_page === $item['page']) {
+                            $isOpened = true;
+                            break;
+                        }
+                    }
+                    ?>
 
-                <!-- Customers -->
-                <div class="mt-6 mb-2">
-                    <p
-                        class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                        Khách hàng</p>
-                </div>
-                <a href="customers.php"
-                    class="sidebar-link <?php echo $current_page === 'customers' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">people</span>
-                    <span>Khách hàng</span>
-                </a>
-                <a href="loyalty.php" class="sidebar-link <?php echo $current_page === 'loyalty' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">loyalty</span>
-                    <span>Chương trình thành viên</span>
-                </a>
-                <a href="reviews.php" class="sidebar-link <?php echo $current_page === 'reviews' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">star</span>
-                    <span>Đánh giá</span>
-                </a>
-                <a href="contacts.php" class="sidebar-link <?php echo $current_page === 'contacts' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">contact_mail</span>
-                    <span>Liên hệ</span>
-                </a>
+                    <?php if ($group['label'] === false): ?>
+                        <!-- Items đơn (Ví dụ: Dashboard) -->
+                        <?php foreach ($group['items'] as $item): ?>
+                            <a href="<?php echo $item['page']; ?>.php"
+                                class="sidebar-link <?php echo $current_page === $item['page'] ? 'active bg-indigo-50 dark:bg-slate-800' : 'hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'; ?>">
+                                <span class="material-symbols-outlined"><?php echo $item['icon']; ?></span>
+                                <span><?php echo $item['label']; ?></span>
+                                <?php if (!empty($item['badge'])): ?>
+                                    <span id="<?php echo $item['badge']; ?>"
+                                        class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden leading-none">0</span>
+                                <?php endif; ?>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Group Có Dropdown Collapse -->
+                        <div class="sidebar-group <?php echo $isOpened ? 'opened' : ''; ?>">
+                            <button onclick="toggleMenuGroup(this)" type="button"
+                                class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer outline-none <?php echo $isOpened ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-slate-800' : ''; ?>">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-[20px]"><?php echo $group['icon']; ?></span>
+                                    <span><?php echo $group['label']; ?></span>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined transition-transform duration-200 <?php echo $isOpened ? 'rotate-180' : ''; ?>">expand_more</span>
+                            </button>
+                            <div
+                                class="sidebar-group-items overflow-hidden transition-all duration-300 <?php echo $isOpened ? 'max-h-[800px] opacity-100 mt-1' : 'max-h-0 opacity-0'; ?>">
+                                <div
+                                    class="pl-[18px] pr-2 space-y-0.5 border-l-[1.5px] border-gray-200 dark:border-slate-700 ml-6 py-1">
+                                    <?php foreach ($group['items'] as $item): ?>
+                                        <a href="<?php echo $item['page']; ?>.php"
+                                            class="flex items-center gap-3 py-2 px-3 rounded-lg text-sm transition-all text-gray-600 dark:text-gray-400 <?php echo $current_page === $item['page'] ? 'active font-bold !text-indigo-600 bg-indigo-50 dark:bg-slate-700/50' : 'hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'; ?>">
+                                            <?php if ($current_page === $item['page']): ?>
+                                                <div class="w-1 h-4 bg-indigo-600 rounded-full absolute -ml-[23.5px]"></div>
+                                            <?php endif; ?>
+                                            <span class="material-symbols-outlined !text-[18px]"><?php echo $item['icon']; ?></span>
+                                            <span><?php echo $item['label']; ?></span>
+                                            <?php if (!empty($item['badge'])): ?>
+                                                <span id="<?php echo $item['badge']; ?>"
+                                                    class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden leading-none">0</span>
+                                            <?php endif; ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
 
-                <!-- Tương tác -->
-                <div class="mt-6 mb-2">
-                    <p class="px-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Tương
-                        tác</p>
-                </div>
-                <a href="chat.php" class="sidebar-link <?php echo $current_page === 'chat' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">forum</span>
-                    <span>Tin nhắn</span>
-                    <span id="chatSidebarBadge" class="ml-auto bg-red-500 text-white text-[10px] font-bold
-                                 px-1.5 py-0.5 rounded-full hidden leading-none">
-                        0
-                    </span>
-                </a>
-                <a href="chat-settings.php"
-                    class="sidebar-link <?php echo $current_page === 'chat-settings' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">settings_applications</span>
-                    <span>Cài đặt Chat</span>
-                </a>
+                <script>
+                    function toggleMenuGroup(button) {
+                        const group = button.closest('.sidebar-group');
+                        const items = group.querySelector('.sidebar-group-items');
+                        const icon = button.querySelector('.material-symbols-outlined:last-child');
 
-                <!-- Services -->
-                <div class="mt-6 mb-2">
-                    <p
-                        class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                        Dịch vụ</p>
-                </div>
-                <a href="service-packages.php"
-                    class="sidebar-link <?php echo $current_page === 'service-packages' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">inventory_2</span>
-                    <span>Dịch vụ & Gói</span>
-                </a>
-                <a href="services.php" class="sidebar-link <?php echo $current_page === 'services' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">room_service</span>
-                    <span>Dịch vụ phụ</span>
-                </a>
-                <a href="service-bookings.php"
-                    class="sidebar-link <?php echo $current_page === 'service-bookings' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">list_alt</span>
-                    <span>Đơn dịch vụ</span>
-                </a>
+                        const isOpened = group.classList.contains('opened');
 
-                <!-- Marketing -->
-                <div class="mt-6 mb-2">
-                    <p
-                        class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                        Marketing</p>
-                </div>
-                <a href="promotions.php"
-                    class="sidebar-link <?php echo $current_page === 'promotions' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">local_offer</span>
-                    <span>Khuyến mãi</span>
-                </a>
-                <a href="banners.php" class="sidebar-link <?php echo $current_page === 'banners' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">image</span>
-                    <span>Banner</span>
-                </a>
+                        // Accordion Behavior (Đóng các menu khác đi nếu muốn - Optional)
+                        /*
+                        document.querySelectorAll('.sidebar-group.opened').forEach(g => {
+                            if (g !== group) {
+                                g.classList.remove('opened');
+                                g.querySelector('button').classList.remove('text-indigo-600', 'bg-indigo-50');
+                                g.querySelector('.sidebar-group-items').classList.replace('max-h-[800px]', 'max-h-0');
+                                g.querySelector('.sidebar-group-items').classList.replace('opacity-100', 'opacity-0');
+                                g.querySelector('.material-symbols-outlined:last-child').classList.remove('rotate-180');
+                            }
+                        });
+                        */
 
-                <!-- Content -->
-                <div class="mt-6 mb-2">
-                    <p
-                        class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                        Nội dung</p>
-                </div>
-                <a href="blog.php" class="sidebar-link <?php echo $current_page === 'blog' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">article</span>
-                    <span>Blog</span>
-                </a>
-                <a href="gallery.php" class="sidebar-link <?php echo $current_page === 'gallery' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">photo_library</span>
-                    <span>Thư viện ảnh</span>
-                </a>
-                <a href="faqs.php" class="sidebar-link <?php echo $current_page === 'faqs' ? 'active' : ''; ?>">
-                    <span class="material-symbols-outlined">help</span>
-                    <span>FAQs</span>
-                </a>
-
-                <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                    <!-- System -->
-                    <div class="mt-6 mb-2">
-                        <p
-                            class="px-4 text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                            Hệ thống</p>
-                    </div>
-                    <a href="users.php" class="sidebar-link <?php echo $current_page === 'users' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">manage_accounts</span>
-                        <span>Người dùng</span>
-                    </a>
-                    <a href="permissions.php"
-                        class="sidebar-link <?php echo $current_page === 'permissions' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">admin_panel_settings</span>
-                        <span>Phân quyền</span>
-                    </a>
-                    <a href="activity-logs.php"
-                        class="sidebar-link <?php echo $current_page === 'activity-logs' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">history</span>
-                        <span>Nhật ký hoạt động</span>
-                    </a>
-                    <a href="reports.php" class="sidebar-link <?php echo $current_page === 'reports' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">analytics</span>
-                        <span>Báo cáo</span>
-                    </a>
-                    <a href="notifications.php"
-                        class="sidebar-link <?php echo $current_page === 'notifications' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">notifications</span>
-                        <span>Thông báo</span>
-                    </a>
-                    <a href="settings.php" class="sidebar-link <?php echo $current_page === 'settings' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">settings</span>
-                        <span>Cài đặt</span>
-                    </a>
-                    <a href="backup-database.php"
-                        class="sidebar-link <?php echo $current_page === 'backup-database' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">backup</span>
-                        <span>Sao lưu dữ liệu</span>
-                    </a>
-                    <a href="reset-database.php"
-                        class="sidebar-link <?php echo $current_page === 'reset-database' ? 'active' : ''; ?>">
-                        <span class="material-symbols-outlined">delete_forever</span>
-                        <span>Dọn dẹp hệ thống</span>
-                    </a>
-                <?php endif; ?>
+                        if (isOpened) {
+                            group.classList.remove('opened');
+                            button.classList.remove('text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'dark:text-indigo-400');
+                            items.classList.remove('max-h-[800px]', 'opacity-100', 'mt-1');
+                            items.classList.add('max-h-0', 'opacity-0');
+                            icon.classList.remove('rotate-180');
+                        } else {
+                            group.classList.add('opened');
+                            button.classList.add('text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'dark:text-indigo-400');
+                            items.classList.remove('max-h-0', 'opacity-0');
+                            items.classList.add('max-h-[800px]', 'opacity-100', 'mt-1');
+                            icon.classList.add('rotate-180');
+                        }
+                    }
+                </script>
 
                 <!-- Logout -->
-                <div class="mt-6 pt-6 border-t border-border-light dark:border-border-dark">
+                <div class="mt-6 border-t border-border-light dark:border-border-dark pt-3">
                     <a href="../auth/logout.php"
-                        class="sidebar-link text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                        class="sidebar-link text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold transition-colors">
                         <span class="material-symbols-outlined">logout</span>
                         <span>Đăng xuất</span>
                     </a>
