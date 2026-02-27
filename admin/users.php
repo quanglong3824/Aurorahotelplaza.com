@@ -305,44 +305,65 @@ include 'includes/admin-header.php';
 
 <script>
     function openUserModal() {
-        console.log('openUserModal called');
-        const modal = document.getElementById('userModal');
-        console.log('modal element:', modal);
-        if (!modal) {
-            alert('ERROR: Modal element #userModal not found!');
-            return;
-        }
-        document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
+        // Reset form
         document.getElementById('userForm').reset();
         document.getElementById('user_id').value = '';
+
+        // Setup for "Add" mode
+        document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
         document.getElementById('password').required = true;
-        document.getElementById('passwordGroup').style.display = 'block';
-        modal.classList.add('active');
-        modal.style.display = 'flex'; // Force display as backup
-        console.log('modal classes after:', modal.className);
-        console.log('modal computed display:', getComputedStyle(modal).display);
+        document.getElementById('passReqStar').style.display = 'inline';
+        document.getElementById('passHint').textContent = 'Tối thiểu 6 ký tự.';
+
+        // Show modal via Tailwind classes
+        const modal = document.getElementById('tailwindUserModal');
+        const content = document.getElementById('tailwindModalContent');
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+
+        content.classList.remove('scale-95');
+        content.classList.add('scale-100');
     }
 
     function closeUserModal() {
-        const modal = document.getElementById('userModal');
-        if (modal) {
-            modal.classList.remove('active');
-            modal.style.display = ''; // Remove inline display
-        }
+        const modal = document.getElementById('tailwindUserModal');
+        const content = document.getElementById('tailwindModalContent');
+
+        // Hide modal
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+
+        content.classList.remove('scale-100');
+        content.classList.add('scale-95');
     }
 
     function editUser(user) {
-        document.getElementById('modalTitle').textContent = 'Sửa thông tin nhân viên';
+        document.getElementById('modalTitle').textContent = 'Cập nhật nhân viên';
+
+        // Fill data
         document.getElementById('user_id').value = user.user_id;
         document.getElementById('full_name').value = user.full_name;
         document.getElementById('email').value = user.email;
         document.getElementById('phone').value = user.phone || '';
         document.getElementById('user_role').value = user.user_role;
         document.getElementById('status').value = user.status;
+
+        // Setup password field for editing
         document.getElementById('password').required = false;
         document.getElementById('password').value = '';
-        document.getElementById('passwordGroup').style.display = 'none';
-        document.getElementById('userModal').classList.add('active');
+        document.getElementById('passReqStar').style.display = 'none';
+        document.getElementById('passHint').textContent = 'Để trống nếu không muốn đổi mật khẩu.';
+
+        // Show modal
+        const modal = document.getElementById('tailwindUserModal');
+        const content = document.getElementById('tailwindModalContent');
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+
+        content.classList.remove('scale-95');
+        content.classList.add('scale-100');
     }
 
     function submitUser() {
