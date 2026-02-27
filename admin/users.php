@@ -39,7 +39,7 @@ $where_sql = 'WHERE ' . implode(' AND ', $where_clauses);
 
 try {
     $db = getDB();
-    
+
     // Get users
     $sql = "
         SELECT u.*,
@@ -48,11 +48,11 @@ try {
         $where_sql
         ORDER BY u.created_at DESC
     ";
-    
+
     $stmt = $db->prepare($sql);
     $stmt->execute($params);
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Get counts
     $stmt = $db->query("
         SELECT 
@@ -65,7 +65,7 @@ try {
         WHERE user_role != 'customer'
     ");
     $counts = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
 } catch (Exception $e) {
     error_log("Users page error: " . $e->getMessage());
     $users = [];
@@ -104,29 +104,30 @@ include 'includes/admin-header.php';
     <form method="GET" class="flex gap-2 flex-wrap">
         <div class="search-box">
             <span class="search-icon material-symbols-outlined">search</span>
-            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
-                   placeholder="Tìm nhân viên..." class="form-input">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                placeholder="Tìm nhân viên..." class="form-input">
         </div>
-        
+
         <select name="role" class="form-select">
             <option value="all">Tất cả vai trò</option>
             <option value="admin" <?php echo $role_filter === 'admin' ? 'selected' : ''; ?>>Admin</option>
             <option value="sale" <?php echo $role_filter === 'sale' ? 'selected' : ''; ?>>Sale</option>
             <option value="receptionist" <?php echo $role_filter === 'receptionist' ? 'selected' : ''; ?>>Lễ tân</option>
         </select>
-        
+
         <select name="status" class="form-select">
             <option value="all">Tất cả trạng thái</option>
             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Hoạt động</option>
-            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Không hoạt động</option>
+            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Không hoạt động
+            </option>
         </select>
-        
+
         <button type="submit" class="btn btn-primary">
             <span class="material-symbols-outlined text-sm">filter_alt</span>
             Lọc
         </button>
     </form>
-    
+
     <button onclick="openUserModal()" class="btn btn-primary">
         <span class="material-symbols-outlined text-sm">add</span>
         Thêm nhân viên
@@ -165,8 +166,8 @@ include 'includes/admin-header.php';
                             <td>
                                 <div class="flex items-center gap-3">
                                     <?php if ($user['avatar']): ?>
-                                        <img src="<?php echo htmlspecialchars($user['avatar']); ?>" 
-                                             alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+                                        <img src="<?php echo htmlspecialchars($user['avatar']); ?>" alt="Avatar"
+                                            class="w-10 h-10 rounded-full object-cover">
                                     <?php else: ?>
                                         <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                                             <span class="material-symbols-outlined text-accent">person</span>
@@ -206,17 +207,17 @@ include 'includes/admin-header.php';
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button onclick='editUser(<?php echo json_encode($user); ?>)' 
-                                            class="action-btn" title="Sửa">
+                                    <button onclick='editUser(<?php echo json_encode($user); ?>)' class="action-btn"
+                                        title="Sửa">
                                         <span class="material-symbols-outlined text-sm">edit</span>
                                     </button>
-                                    <button onclick="resetPassword(<?php echo $user['user_id']; ?>)" 
-                                            class="action-btn text-orange-600" title="Reset mật khẩu">
+                                    <button onclick="resetPassword(<?php echo $user['user_id']; ?>)"
+                                        class="action-btn text-orange-600" title="Reset mật khẩu">
                                         <span class="material-symbols-outlined text-sm">lock_reset</span>
                                     </button>
                                     <?php if ($user['user_id'] != $_SESSION['user_id']): ?>
-                                        <button onclick="deleteUser(<?php echo $user['user_id']; ?>)" 
-                                                class="action-btn text-red-600" title="Xóa">
+                                        <button onclick="deleteUser(<?php echo $user['user_id']; ?>)"
+                                            class="action-btn text-red-600" title="Xóa">
                                             <span class="material-symbols-outlined text-sm">delete</span>
                                         </button>
                                     <?php endif; ?>
@@ -235,30 +236,31 @@ include 'includes/admin-header.php';
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="font-semibold" id="modalTitle">Thêm nhân viên mới</h3>
-            <button onclick="closeUserModal()" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark">
+            <button onclick="closeUserModal()"
+                class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
         <div class="modal-body">
             <form id="userForm">
                 <input type="hidden" id="user_id" name="user_id">
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-group">
                         <label class="form-label">Họ tên *</label>
                         <input type="text" id="full_name" name="full_name" class="form-input" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Email *</label>
                         <input type="email" id="email" name="email" class="form-input" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Số điện thoại</label>
                         <input type="tel" id="phone" name="phone" class="form-input">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Vai trò *</label>
                         <select id="user_role" name="user_role" class="form-select" required>
@@ -267,7 +269,7 @@ include 'includes/admin-header.php';
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group" id="passwordGroup">
                         <label class="form-label">Mật khẩu *</label>
                         <input type="password" id="password" name="password" class="form-input" minlength="6">
@@ -275,7 +277,7 @@ include 'includes/admin-header.php';
                             Tối thiểu 6 ký tự
                         </p>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Trạng thái *</label>
                         <select id="status" name="status" class="form-select" required>
@@ -294,121 +296,175 @@ include 'includes/admin-header.php';
 </div>
 
 <style>
-.badge-purple { background: #f3e8ff; color: #7c3aed; }
+    .badge-purple {
+        background: #f3e8ff;
+        color: #7c3aed;
+    }
 </style>
 
 <script>
-function openUserModal() {
-    document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
-    document.getElementById('userForm').reset();
-    document.getElementById('user_id').value = '';
-    document.getElementById('password').required = true;
-    document.getElementById('passwordGroup').style.display = 'block';
-    document.getElementById('userModal').classList.add('active');
-}
+    function openUserModal() {
+        document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
+        document.getElementById('userForm').reset();
+        document.getElementById('user_id').value = '';
+        document.getElementById('password').required = true;
+        document.getElementById('passwordGroup').style.display = 'block';
+        document.getElementById('userModal').classList.add('active');
+    }
 
-function closeUserModal() {
-    document.getElementById('userModal').classList.remove('active');
-}
+    function closeUserModal() {
+        document.getElementById('userModal').classList.remove('active');
+    }
 
-function editUser(user) {
-    document.getElementById('modalTitle').textContent = 'Sửa thông tin nhân viên';
-    document.getElementById('user_id').value = user.user_id;
-    document.getElementById('full_name').value = user.full_name;
-    document.getElementById('email').value = user.email;
-    document.getElementById('phone').value = user.phone || '';
-    document.getElementById('user_role').value = user.user_role;
-    document.getElementById('status').value = user.status;
-    document.getElementById('password').required = false;
-    document.getElementById('password').value = '';
-    document.getElementById('passwordGroup').style.display = 'none';
-    document.getElementById('userModal').classList.add('active');
-}
+    function editUser(user) {
+        document.getElementById('modalTitle').textContent = 'Sửa thông tin nhân viên';
+        document.getElementById('user_id').value = user.user_id;
+        document.getElementById('full_name').value = user.full_name;
+        document.getElementById('email').value = user.email;
+        document.getElementById('phone').value = user.phone || '';
+        document.getElementById('user_role').value = user.user_role;
+        document.getElementById('status').value = user.status;
+        document.getElementById('password').required = false;
+        document.getElementById('password').value = '';
+        document.getElementById('passwordGroup').style.display = 'none';
+        document.getElementById('userModal').classList.add('active');
+    }
 
-function submitUser() {
-    const form = document.getElementById('userForm');
-    const formData = new FormData(form);
-    
-    fetch('api/save-user.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Lưu thành công!', 'success');
+    function submitUser() {
+        const form = document.getElementById('userForm');
+
+        // Kích hoạt HTML5 validation
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const fullName = document.getElementById('full_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const userId = document.getElementById('user_id').value;
+        const password = document.getElementById('password').value;
+
+        // Double-check validation
+        if (!fullName || !email) {
+            showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
+            return;
+        }
+
+        // Kiểm tra mật khẩu khi tạo mới
+        if (!userId && (!password || password.length < 6)) {
+            showToast('Mật khẩu phải có ít nhất 6 ký tự', 'error');
+            return;
+        }
+
+        // Disable button tránh double-click
+        const submitBtn = document.querySelector('#userModal .btn-primary');
+        const originalText = submitBtn?.textContent;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang lưu...';
+        }
+
+        const formData = new FormData(form);
+
+        fetch('api/save-user.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+                return response.text();
+            })
+            .then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Server trả về dữ liệu không hợp lệ');
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    showToast('Lưu thành công!', 'success');
+                    closeUserModal();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast(error.message || 'Có lỗi kết nối server', 'error');
+            })
+            .finally(() => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText || 'Lưu';
+                }
+            });
+    }
+
+    function resetPassword(userId) {
+        const newPassword = prompt('Nhập mật khẩu mới (tối thiểu 6 ký tự):');
+        if (!newPassword || newPassword.length < 6) {
+            showToast('Mật khẩu phải có ít nhất 6 ký tự', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('new_password', newPassword);
+
+        fetch('api/reset-password.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Reset mật khẩu thành công!', 'success');
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
+    }
+
+    function deleteUser(userId) {
+        if (!confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) return;
+
+        fetch('api/delete-user.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'user_id=' + userId
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Xóa thành công!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('userModal')?.addEventListener('click', function (e) {
+        if (e.target === this) {
             closeUserModal();
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
     });
-}
-
-function resetPassword(userId) {
-    const newPassword = prompt('Nhập mật khẩu mới (tối thiểu 6 ký tự):');
-    if (!newPassword || newPassword.length < 6) {
-        showToast('Mật khẩu phải có ít nhất 6 ký tự', 'error');
-        return;
-    }
-    
-    const formData = new FormData();
-    formData.append('user_id', userId);
-    formData.append('new_password', newPassword);
-    
-    fetch('api/reset-password.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Reset mật khẩu thành công!', 'success');
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
-    });
-}
-
-function deleteUser(userId) {
-    if (!confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) return;
-    
-    fetch('api/delete-user.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'user_id=' + userId
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Xóa thành công!', 'success');
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
-    });
-}
-
-// Close modal when clicking outside
-document.getElementById('userModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeUserModal();
-    }
-});
 </script>
 
 <?php include 'includes/admin-footer.php'; ?>

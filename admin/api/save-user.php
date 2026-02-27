@@ -34,7 +34,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 try {
     $db = getDB();
-    
+
     // Check duplicate email
     if ($user_id) {
         $stmt = $db->prepare("SELECT user_id FROM users WHERE email = :email AND user_id != :id");
@@ -43,14 +43,15 @@ try {
         $stmt = $db->prepare("SELECT user_id FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
     }
-    
+
     if ($stmt->fetch()) {
         echo json_encode(['success' => false, 'message' => 'Email đã tồn tại']);
         exit;
     }
-    
+
     if ($user_id) {
         // Update existing user
+        $is_new = false;
         $stmt = $db->prepare("
             UPDATE users SET
                 full_name = :full_name,
@@ -61,7 +62,7 @@ try {
                 updated_at = NOW()
             WHERE user_id = :user_id
         ");
-        
+
         $stmt->execute([
             ':full_name' => $full_name,
             ':email' => $email,
@@ -70,18 +71,19 @@ try {
             ':status' => $status,
             ':user_id' => $user_id
         ]);
-        
+
         $message = 'Cập nhật nhân viên thành công';
-        
+
     } else {
         // Insert new user
+        $is_new = true;
         if (empty($password) || strlen($password) < 6) {
             echo json_encode(['success' => false, 'message' => 'Mật khẩu phải có ít nhất 6 ký tự']);
             exit;
         }
-        
+
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        
+
         $stmt = $db->prepare("
             INSERT INTO users (
                 email, password_hash, full_name, phone, user_role, 
@@ -91,7 +93,7 @@ try {
                 :status, 1, NOW()
             )
         ");
-        
+
         $stmt->execute([
             ':email' => $email,
             ':password_hash' => $password_hash,
@@ -100,30 +102,34 @@ try {
             ':user_role' => $user_role,
             ':status' => $status
         ]);
-        
+
         $user_id = $db->lastInsertId();
         $message = 'Thêm nhân viên thành công';
     }
-    
-    // Log activity
-    $stmt = $db->prepare("
-        INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, created_at)
-        VALUES (:user_id, :action, 'user', :entity_id, :description, :ip_address, NOW())
-    ");
-    $stmt->execute([
-        ':user_id' => $_SESSION['user_id'],
-        ':action' => $user_id ? 'update_user' : 'create_user',
-        ':entity_id' => $user_id,
-        ':description' => "$message: $full_name",
-        ':ip_address' => $_SERVER['REMOTE_ADDR']
-    ]);
-    
+
+    // Log activity (không để crash user creation)
+    try {
+        $stmt = $db->prepare("
+            INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, created_at)
+            VALUES (:user_id, :action, 'user', :entity_id, :description, :ip_address, NOW())
+        ");
+        $stmt->execute([
+            ':user_id' => $_SESSION['user_id'],
+            ':action' => $is_new ? 'create_user' : 'update_user',
+            ':entity_id' => $user_id,
+            ':description' => "$message: $full_name",
+            ':ip_address' => $_SERVER['REMOTE_ADDR']
+        ]);
+    } catch (Exception $logErr) {
+        error_log("Activity log error: " . $logErr->getMessage());
+    }
+
     echo json_encode([
         'success' => true,
         'message' => $message,
         'user_id' => $user_id
     ]);
-    
+
 } catch (Exception $e) {
     error_log("Save user error: " . $e->getMessage());
     echo json_encode([
