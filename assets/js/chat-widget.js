@@ -199,10 +199,12 @@ const ChatWidget = {
 
     showChatArea() {
         const loginPrompt = document.getElementById('cwLoginPrompt');
-        const chatArea    = document.getElementById('cwChatArea');
-        loginPrompt?.classList.add('hidden');
-        chatArea?.classList.remove('hidden');
-        chatArea?.classList.add('flex');
+        const messages    = document.getElementById('cwMessages');
+        const inputArea   = document.getElementById('cwInputArea');
+        
+        if (loginPrompt) loginPrompt.style.display = 'none';
+        if (messages) messages.style.display = 'block';
+        if (inputArea) inputArea.style.display = 'block';
 
         // Focus input
         setTimeout(() => document.getElementById('cwInput')?.focus(), 100);

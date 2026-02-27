@@ -618,6 +618,11 @@ const ChatManager = {
             if (d.success) {
                 this.showToast('Đã nhận xử lý cuộc trò chuyện', 'success');
                 this.loadConversations();
+                if (this.activeConvId == convId) {
+                    this.loadMessages(convId);
+                }
+            } else {
+                this.showToast(d.message || 'Lỗi', 'error');
             }
         });
     },

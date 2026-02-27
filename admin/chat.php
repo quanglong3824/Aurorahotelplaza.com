@@ -632,7 +632,7 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
         const input = document.getElementById('chatInput');
         const sendBtn = document.getElementById('chatSendBtn');
         const internalToggle = document.getElementById('internalNoteToggle');
- if (isClosed) {
+        if (isClosed) {
             if (input) { input.disabled = true; input.placeholder = "Cuộc trò chuyện đã bị đóng."; }
             if (sendBtn) sendBtn.disabled = true;
             if (internalToggle) internalToggle.disabled = true;
@@ -797,7 +797,15 @@ $user_name = $_SESSION['user_name'] ?? 'Nhân viên';
         })
             .then(r => r.json())
             .then(d => {
-                if (d.success) ChatManager.showToast('Đã gán nhân viên thành công', 'success');
+                if (d.success) {
+                    ChatManager.showToast('Đã gán nhân viên thành công', 'success');
+                    ChatManager.loadConversations();
+                    if (ChatManager.activeConvId) {
+                        ChatManager.loadMessages(ChatManager.activeConvId);
+                    }
+                } else {
+                    ChatManager.showToast(d.message || 'Lỗi hệ thống', 'error');
+                }
                 document.getElementById('assignDropdown')?.classList.add('hidden');
             });
     }
