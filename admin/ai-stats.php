@@ -159,12 +159,14 @@ $percent_tokens = $max_daily_tokens > 0 ? min(100, round(($total_tokens / $max_d
                 </tr>
             </thead>
             <tbody>
-                <?php if (empty($today_stats)): ?>
+                <?php if (empty($valid_keys)): ?>
                     <tr>
-                        <td colspan="6" class="p-8 text-center text-gray-500">Chưa có dữ liệu API được sử dụng hôm nay.</td>
+                        <td colspan="6" class="p-8 text-center text-gray-500">Chưa có API Key nào được cấu hình trong hệ
+                            thống.</td>
                     </tr>
                 <?php else: ?>
-                    <?php foreach ($today_stats as $k_idx => $stat):
+                    <?php foreach ($valid_keys as $k_idx => $key_val):
+                        $stat = $today_stats[$k_idx] ?? [];
                         $at = $stat['admin_tokens'] ?? $stat['tokens'] ?? 0;
                         $ct = $stat['client_tokens'] ?? 0;
                         $tt = $stat['tokens'] ?? 0;
