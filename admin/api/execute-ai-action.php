@@ -21,6 +21,10 @@ $table = $input['table'] ?? '';
 $data = $input['data'] ?? [];
 
 try {
+    $db = getDB();
+    if (!$db)
+        throw new Exception("Không thể kết nối CSDL!");
+
     $affected = 0;
 
     // Switch on the recognized intent from Gemini

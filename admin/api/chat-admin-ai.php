@@ -63,6 +63,11 @@ try {
     ";
 
     // Lấy context
+    $db = getDB();
+    if (!$db) {
+        throw new Exception("Lỗi kết nối CSDL!");
+    }
+
     $stmt = $db->query("SELECT room_type_id, type_name as name, base_price FROM room_types");
     if (!$stmt) {
         throw new Exception("Không truy vấn được bảng room_types.");
