@@ -342,7 +342,9 @@ require_once 'includes/admin-header.php';
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    appendTerminal(`Received Gemini Response. Parsing JSON structure.`, 'SUCCESS');
+                    appendTerminal(`[QUOTA REPORT] System is running on Active ${data.key_info}.`, 'INFO');
+                    appendTerminal(`[QUOTA REPORT] API Request cost: ${data.tokens} Total Tokens used.`, 'SUCCESS');
+                    appendTerminal(`Received Gemini Payload Response. Parsing JSON structure.`, 'SUCCESS');
                     renderMessage('ai', data.reply);
                 } else if (data.error_type === 'QUOTA_EXCEEDED') {
                     // Hiển thị Quota Exceeded log nhưng báo cho Admin biết là hệ thống đang tự Handle

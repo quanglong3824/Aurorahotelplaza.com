@@ -86,3 +86,13 @@ function get_all_valid_keys()
 
     return $valid_keys;
 }
+
+function get_active_key_index()
+{
+    $index_file = __DIR__ . '/../config/current_key_idx.txt';
+    if (file_exists($index_file)) {
+        return (int) file_get_contents($index_file);
+    }
+    return 0;
+}
+

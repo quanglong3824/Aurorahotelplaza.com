@@ -187,9 +187,22 @@ PROMPT;
 
     $bot_reply = $res_json['candidates'][0]['content']['parts'][0]['text'];
 
+    // Lấy thông tin về việc tiêu hao Token
+    $usage = $res_json['usageMetadata'] ?? null;
+    $total_tokens = $usage ? $usage['totalTokenCount'] : 0;
+
+    // Lấy thông tin Key Code đang dùng
+    $current_key_idx = get_active_key_index();
+    $total_keys = count(get_all_valid_keys());
+
     // Dọn nháp output và xuất JSON chuẩn
     ob_clean();
-    echo json_encode(['success' => true, 'reply' => $bot_reply]);
+    echo json_encode([
+        'success' => true,
+        'reply' => $bot_reply,
+        'key_info' => "Key " . ($current_key_idx + 1) . " (trong tổng số $total_keys Keys)",
+        'tokens' => $total_tokens
+    ]);
 
 } catch (\Throwable $e) {
     ob_clean(); // Xóa rác, đảm bảo json ko lỗi
