@@ -92,12 +92,12 @@ PROMPT;
     $confirmed_bookings = $db->query("SELECT count(*) FROM bookings WHERE status='confirmed'")->fetchColumn();
 
     // 4. Doanh thu tổng (Chỉ tính các booking đã hoàn thành thanh toán - assumed confirmed/completed)
-    $stmtRev = $db->query("SELECT SUM(total_price) FROM bookings WHERE status IN ('confirmed', 'completed')");
+    $stmtRev = $db->query("SELECT SUM(total_amount) FROM bookings WHERE status IN ('confirmed', 'completed')");
     $total_revenue = $stmtRev->fetchColumn() ?: 0;
 
     // 5. Thống kê xu hướng: 10 Booking gần nhất
     $stmtRecent = $db->query("
-        SELECT b.booking_id, b.status, b.total_price, b.check_in_date, b.check_out_date, u.full_name 
+        SELECT b.booking_id, b.status, b.total_amount, b.check_in_date, b.check_out_date, u.full_name 
         FROM bookings b 
         LEFT JOIN users u ON b.user_id = u.user_id 
         ORDER BY b.created_at DESC LIMIT 10
@@ -114,7 +114,7 @@ PROMPT;
     $bi_context .= "\n--- DANH SÁCH 10 LƯỢT ĐẶT PHÒNG (BOOKINGS) GẦN ĐÂY NHẤT ĐỂ PHÂN TÍCH XU HƯỚNG ---\n";
     if ($recent_bookings) {
         foreach ($recent_bookings as $b) {
-            $bi_context .= "- Mã Đơn #{$b['booking_id']}: Khách {$b['full_name']} | Check-in: {$b['check_in_date']} -> Check-out: {$b['check_out_date']} | Giá trị: " . number_format($b['total_price'], 0, ',', '.') . " VNĐ | Trạng thái: {$b['status']}\n";
+            $bi_context .= "- Mã Đơn #{$b['booking_id']}: Khách {$b['full_name']} | Check-in: {$b['check_in_date']} -> Check-out: {$b['check_out_date']} | Giá trị: " . number_format($b['total_amount'], 0, ',', '.') . " VNĐ | Trạng thái: {$b['status']}\n";
         }
     } else {
         $bi_context .= "- Khách sạn chưa có đơn đặt phòng nào mới.\n";
