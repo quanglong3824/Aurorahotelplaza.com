@@ -281,22 +281,56 @@ require_once 'includes/admin-header.php';
                             actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
                         }
 
-                        const base64Call = generateCallCode(actionData);
+                        // Phân cấp Nhanh/Chậm theo Risk Level (A,S = Chờ Duyệt / C = Chạy Ngay)
+                        let isAutoExecute = false;
+                        let btnHtml = '';
+                        let tagHtml = '';
+                        let autoHtml = '';
+                        
+                        if (actionData.level === 'C') {
+                            isAutoExecute = true;
+                            tagHtml = `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded ml-2 font-bold mb-1">Cấp C (Cơ Bản)</span>`;
+                            autoHtml = `<div class="text-sm text-green-600 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>Đã Tự Động Phê Duyệt</div>`;
+                        } else {
+                            let levelName = actionData.level === 'S' ? 'Cấp S (Nguy Hiểm)' : 'Cấp A (Cảnh Báo)';
+                            let levelColor = actionData.level === 'S' ? 'red' : 'yellow';
+                            tagHtml = `<span class="bg-${levelColor}-100 text-${levelColor}-700 text-[10px] px-2 py-0.5 rounded ml-2 font-bold mb-1">${levelName}</span>`;
+                            btnHtml = `<div class="mt-3 flex space-x-2">
+                                <button onclick='executeAIAction(this, "${generateCallCode(actionData)}")' class="bg-indigo-600 text-white px-3 py-1.5 rounded text-sm hover:bg-indigo-700 transition flex items-center shadow-sm">
+                                    <span class="material-symbols-outlined text-[14px] mr-1">done_all</span> PHÊ DUYỆT LỆNH
+                                </button>
+                                <button onclick='rejectAIAction(this)' class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-sm hover:bg-gray-200 transition flex items-center border border-gray-300">
+                                    <span class="material-symbols-outlined text-[14px] mr-1">close</span> HỦY LỆNH NÀY
+                                </button>
+                            </div>`;
+                        }
 
-                        actionBoxesHtml += `
+                        // Layout HTML
+                        let actionHtml = `
                             <div class="action-box mt-4 p-4 border-2 border-indigo-200 bg-indigo-50/50 rounded-xl">
-                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]</h4>
+                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]${tagHtml}</h4>
                                 ${actionPreviewHtml}
-                                <div class="flex gap-2 mt-3">
-                                    <button onclick="executeAIAction(this, '${base64Call}')" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg text-xs font-bold transition-colors shadow-md shadow-green-600/20 flex items-center justify-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">done_all</span> PHÊ DUYỆT LỆNH
-                                    </button>
-                                    <button onclick="rejectAIAction(this)" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg text-xs font-bold transition-colors border border-red-200 flex items-center justify-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">close</span> HỦY LỆNH NÀY
-                                    </button>
-                                </div>
+                                ${autoHtml}
+                                ${btnHtml}
                             </div>
                         `;
+
+                        actionBoxesHtml += actionHtml;
+
+                        // Chạy tự động luôn nếu là lệnh Cấp C
+                        if (isAutoExecute) {
+                            setTimeout(() => {
+                                // Find the action box that was just added
+                                const currentActionBox = div.querySelector('.action-box:last-child');
+                                if (currentActionBox) {
+                                    // Simulate clicking the execute button
+                                    const executeButton = currentActionBox.querySelector('button:first-child');
+                                    if (executeButton) {
+                                        executeAIAction(executeButton, generateCallCode(actionData));
+                                    }
+                                }
+                            }, 500); // Trì hoãn một chút để UI render được mượt
+                        }
                     } catch (e) {
                         console.error("Parse JSON error", e);
                     }
