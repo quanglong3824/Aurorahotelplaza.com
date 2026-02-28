@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
                 'contact_submissions',
                 'csrf_tokens',
                 'email_logs',
-                'floor_maintenance',
                 'notifications',
                 'password_resets',
                 'payments',
