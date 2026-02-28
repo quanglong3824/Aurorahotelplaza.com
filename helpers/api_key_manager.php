@@ -155,6 +155,28 @@ function log_key_usage($key_index, $tokens_used, $role = 'admin')
     file_put_contents($log_file, json_encode($stats, JSON_PRETTY_PRINT));
 }
 
+// Ghi nhận một Key bị dính Rate Limit (HTTP 429) và thời gian sống sót
+function mark_key_rate_limited($key_index, $retry_seconds = 60)
+{
+    $file = __DIR__ . '/../config/rate_limits.json';
+    $limits = [];
+    if (file_exists($file)) {
+        $limits = json_decode(file_get_contents($file), true) ?: [];
+    }
+    // Lưu timestamp thời điểm sẽ được "thả tự do"
+    $limits[$key_index] = time() + (int) $retry_seconds;
+    file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+}
+
+// Lấy danh sách các Key đang bị Rate Limit và Timestamp tha bổng
+function get_key_rate_limits()
+{
+    $file = __DIR__ . '/../config/rate_limits.json';
+    if (!file_exists($file))
+        return [];
+    return json_decode(file_get_contents($file), true) ?: [];
+}
+
 // Lấy thông kê sử dụng của các Key trong ngày
 function get_key_usage_stats()
 {

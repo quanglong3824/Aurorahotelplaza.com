@@ -256,6 +256,17 @@ Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 
 
     // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
     if ($http_code === 429) {
+        $errData = json_decode($response, true);
+        $retryDelay = '60s';
+        if (isset($errData['error']['details'])) {
+            foreach ($errData['error']['details'] as $detail) {
+                if (isset($detail['retryDelay']))
+                    $retryDelay = $detail['retryDelay'];
+            }
+        }
+        $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
+        mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+
         $new_key = rotate_gemini_key();
         if ($new_key && $new_key !== $api_key) {
             // Thử Gọi lại API với Key Mới

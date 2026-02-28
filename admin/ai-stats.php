@@ -56,6 +56,7 @@ $current_active_key_idx = get_active_key_index();
 
 $percent_tokens = $max_daily_tokens > 0 ? min(100, round(($total_tokens / $max_daily_tokens) * 100, 2)) : 0;
 $last_updated_time = file_exists($log_file) ? date('d/m/Y H:i:s', filemtime($log_file)) : 'Chưa có dữ liệu';
+$rate_limits = get_key_rate_limits();
 ?>
 
 <div class="flex justify-between items-center mb-6">
@@ -194,30 +195,46 @@ $last_updated_time = file_exists($log_file) ? date('d/m/Y H:i:s', filemtime($log
 
                         $quota_pct = round(($tt / $budget_tokens_per_key) * 100, 1);
                         $quota_color = $quota_pct > 90 ? 'bg-red-500' : ($quota_pct > 70 ? 'bg-orange-500' : 'bg-green-500');
+
+                        $limit_ts = $rate_limits[$k_idx] ?? 0;
+                        $is_limited = ($limit_ts > time());
+                        $wait_sec = $is_limited ? ($limit_ts - time()) : 0;
                         ?>
                         <tr>
                             <td class="font-mono text-center">
                                 <b>#
                                     <?php echo $k_idx; ?>
                                 </b>
-                                <?php if ($isActive): ?>
+                                <?php if ($is_limited): ?>
+                                    <br><span class="badge badge-danger mt-1 shadow-sm"><span
+                                            class="material-symbols-outlined text-[12px] mr-1">timer</span>Bị giới hạn</span>
+                                <?php elseif ($isActive): ?>
                                     <br><span class="badge badge-success mt-1 shadow-sm"><span
                                             class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></span>Active</span>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <div class="flex flex-col gap-1 w-32">
-                                    <div class="flex justify-between text-xs text-gray-500">
-                                        <span>Quota</span>
-                                        <b>
-                                            <?php echo $quota_pct; ?>%
-                                        </b>
+                                <?php if ($is_limited): ?>
+                                    <div class="flex items-center gap-2 text-red-600 dark:text-red-400 text-sm font-bold">
+                                        <span class="material-symbols-outlined animate-pulse">warning</span>
+                                        Quota Exceeded
                                     </div>
-                                    <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5">
-                                        <div class="<?php echo $quota_color; ?> h-1.5 rounded-full"
-                                            style="width: <?php echo min(100, $quota_pct); ?>%"></div>
+                                    <div class="text-xs text-red-500 mt-1">Mở khóa lại sau: <b><?php echo $wait_sec; ?></b> giây
                                     </div>
-                                </div>
+                                <?php else: ?>
+                                    <div class="flex flex-col gap-1 w-32">
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>Quota</span>
+                                            <b>
+                                                <?php echo $quota_pct; ?>%
+                                            </b>
+                                        </div>
+                                        <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5">
+                                            <div class="<?php echo $quota_color; ?> h-1.5 rounded-full"
+                                                style="width: <?php echo min(100, $quota_pct); ?>%"></div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <div class="font-bold text-gray-900 dark:text-white">
