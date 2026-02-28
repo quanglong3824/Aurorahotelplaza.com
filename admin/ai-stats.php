@@ -55,7 +55,23 @@ $max_daily_tokens = $total_keys * $budget_tokens_per_key;
 $current_active_key_idx = get_active_key_index();
 
 $percent_tokens = $max_daily_tokens > 0 ? min(100, round(($total_tokens / $max_daily_tokens) * 100, 2)) : 0;
+$last_updated_time = file_exists($log_file) ? date('d/m/Y H:i:s', filemtime($log_file)) : 'Chưa có dữ liệu';
 ?>
+
+<div class="flex justify-between items-center mb-6">
+    <div
+        class="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px] text-indigo-500 animate-spin-slow">sync</span>
+        Cập nhật lần cuối: <b class="text-gray-900 dark:text-white">
+            <?php echo $last_updated_time; ?>
+        </b>
+    </div>
+    <button onclick="window.location.reload()"
+        class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors border border-indigo-100 dark:border-indigo-800">
+        <span class="material-symbols-outlined text-[18px]">refresh</span>
+        Làm mới dữ liệu
+    </button>
+</div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Thống kê chung -->
