@@ -345,39 +345,24 @@ require_once 'includes/admin-header.php';
                     appendTerminal(`Received Gemini Response. Parsing JSON structure.`, 'SUCCESS');
                     renderMessage('ai', data.reply);
                 } else if (data.error_type === 'QUOTA_EXCEEDED') {
-                    // Hiển thị trên terminal, KHÔNG hiện trên chat
+                    // Hiển thị Quota Exceeded log nhưng báo cho Admin biết là hệ thống đang tự Handle
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-                    appendTerminal(`[QUOTA] Hết giới hạn Free Tier Gemini API!`, 'ERROR');
-                    appendTerminal(`[QUOTA] Giới hạn: ${data.quota_limit} requests/ngày (${data.quota_id})`, 'ERROR');
-                    appendTerminal(`[QUOTA] Cooldown: ${data.retry_after}s — Đang đếm ngược...`, 'ERROR');
-                    appendTerminal(`[QUOTA] Để tăng quota → https://ai.dev/rate-limit`, 'INFO');
+                    appendTerminal(`[QUOTA] Hết dung lượng (Quota) API Key hiện tại!`, 'ERROR');
+                    appendTerminal(`[SYSTEM] Đang tự động luân chuyển sang API Key dự phòng...`, 'CMD');
+                    if (data.retry_after) {
+                        appendTerminal(`[DETAIL] ${data.message}`, 'INFO');
+                    }
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
 
-                    // Khóa input trong thời gian cooldown
-                    input.disabled = true;
-                    btn.disabled = true;
-                    input.placeholder = `Cooldown: ${data.retry_after}s...`;
+                    // Render tạm để Admin biết mà bấm lại
+                    renderMessage('ai', 'Dạ, API Key hiện tại đã vắt kiệt công suất (Quota). Em đã tự động Swap sang dự phòng thành công, Sếp bấm gửi lại lệnh là ăn luôn ạ!');
 
-                    let remaining = data.retry_after;
-                    const countdownInterval = setInterval(() => {
-                        remaining--;
-                        input.placeholder = `Cooldown: ${remaining}s — Vui lòng đợi...`;
-                        if (remaining % 10 === 0 && remaining > 0) {
-                            appendTerminal(`[QUOTA] Retry in ${remaining}s...`, 'INFO');
-                        }
-                        if (remaining <= 0) {
-                            clearInterval(countdownInterval);
-                            input.disabled = false;
-                            btn.disabled = false;
-                            input.placeholder = 'Nhập lệnh cho Aurora AI...';
-                            appendTerminal(`[QUOTA] ✅ Cooldown kết thúc. AI sẵn sàng nhận lệnh.`, 'SUCCESS');
-                        }
-                    }, 1000);
                 } else {
                     // Lỗi khác: chỉ log terminal, không hiện chat
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
                     appendTerminal(`[ERROR] AI Core: ${data.message}`, 'ERROR');
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
+                    renderMessage('ai', 'Dạ hệ thống AI đang gặp sự cố nhỏ: ' + data.message);
                 }
             })
             .catch(er => {
