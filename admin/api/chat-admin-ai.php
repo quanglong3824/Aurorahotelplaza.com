@@ -239,6 +239,14 @@ PROMPT;
         }
         $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT);
 
+        $rate_limits = get_key_rate_limits();
+        $blocked_keys = [];
+        $now = time();
+        foreach ($rate_limits as $idx => $ts) {
+            if ($ts > $now)
+                $blocked_keys[$idx] = $ts - $now;
+        }
+
         ob_clean();
         echo json_encode([
             'success' => false,
@@ -246,6 +254,7 @@ PROMPT;
             'retry_after' => $retrySeconds ?: 60,
             'quota_limit' => $quotaLimit,
             'quota_id' => $quotaId,
+            'blocked_keys' => $blocked_keys,
             'message' => "Hết lưu lượng. Đang bị phạt chờ! Xin làm mới lại sau {$retryDelay}.",
         ]);
         exit;
@@ -340,13 +349,22 @@ PROMPT;
     $real_stats = get_key_usage_stats();
 
     // Dọn nháp output và xuất JSON chuẩn
+    $rate_limits = get_key_rate_limits();
+    $blocked_keys = [];
+    $now = time();
+    foreach ($rate_limits as $idx => $ts) {
+        if ($ts > $now)
+            $blocked_keys[$idx] = $ts - $now;
+    }
+
     ob_clean();
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
-        'key_info' => "Key " . ($current_key_idx + 1) . " (trong tổng số $total_keys Keys)",
+        'key_info' => "Key #" . $current_key_idx . " (trong tổng số $total_keys Keys)",
         'tokens' => $total_tokens,
         'key_idx' => $current_key_idx,
+        'blocked_keys' => $blocked_keys,
         'stats' => $real_stats
     ]);
 

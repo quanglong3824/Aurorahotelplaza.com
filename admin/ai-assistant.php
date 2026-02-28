@@ -377,6 +377,12 @@ require_once 'includes/admin-header.php';
         })
             .then(r => r.json())
             .then(data => {
+                if (data.blocked_keys && Object.keys(data.blocked_keys).length > 0) {
+                    Object.keys(data.blocked_keys).forEach(idx => {
+                        appendTerminal(`[RATE LIMIT] API Key #${idx} đang bị Block Quota, chờ mở khóa sau ${data.blocked_keys[idx]}s`, 'ERROR');
+                    });
+                }
+
                 if (data.success) {
                     appendTerminal(`[QUOTA REPORT] System is running on Active ${data.key_info}.`, 'INFO');
 
@@ -392,17 +398,16 @@ require_once 'includes/admin-header.php';
                     appendTerminal(`Received Gemini Payload Response. Parsing JSON structure.`, 'SUCCESS');
                     renderMessage('ai', data.reply);
                 } else if (data.error_type === 'QUOTA_EXCEEDED') {
-                    // Hiển thị Quota Exceeded log nhưng báo cho Admin biết là hệ thống đang tự Handle
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-                    appendTerminal(`[QUOTA] Hết dung lượng (Quota) API Key hiện tại!`, 'ERROR');
-                    appendTerminal(`[SYSTEM] Đang tự động luân chuyển sang API Key dự phòng...`, 'CMD');
+                    appendTerminal(`[API QUOTA] Hệ thống đã thử luân chuyển toàn bộ API Key!`, 'ERROR');
+                    appendTerminal(`[SYSTEM] Báo động: TẤT CẢ các API Key hiện tại đều đang bị cấm do quá tải.`, 'ERROR');
                     if (data.retry_after) {
                         appendTerminal(`[DETAIL] ${data.message}`, 'INFO');
                     }
                     appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
 
                     // Render tạm để Admin biết mà bấm lại
-                    renderMessage('ai', 'Dạ, API Key hiện tại đã vắt kiệt công suất (Quota). Em đã tự động Swap sang dự phòng thành công, Sếp bấm gửi lại lệnh là ăn luôn ạ!');
+                    renderMessage('ai', 'Dạ, toàn bộ băng thông API Key dự phòng của chúng ta đều đã cạn kiệt do quá tải cục bộ. Sếp đợi vài chục giây nữa (như báo cáo ở trên) rồi bấm gửi lại giúp em nhé!');
 
                 } else {
                     // Lỗi khác: chỉ log terminal, không hiện chat
