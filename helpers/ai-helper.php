@@ -138,6 +138,20 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             }
         } catch (Exception $e) {
         }
+
+        // 6. Lấy dữ liệu Dịch vụ (Spa, Nhà hàng, Đưa đón...) MỚI MỞ RỘNG CSDL
+        try {
+            $stmt = $db->query("SELECT service_name, category, price, short_description FROM services WHERE status = 'active' LIMIT 20");
+            $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($services) {
+                $knowledge_context .= "\n--- 💆 DỊCH VỤ KHÁCH SẠN (NHÀ HÀNG, SPA, XE ĐƯA ĐÓN...) ---\n";
+                foreach ($services as $srv) {
+                    $price = $srv['price'] > 0 ? number_format($srv['price'], 0, ',', '.') . ' VNĐ' : 'Miễn phí hoặc Liên hệ';
+                    $knowledge_context .= "- {$srv['service_name']} (Mảng {$srv['category']}): Giá {$price}. Chi tiết: {$srv['short_description']}\n";
+                }
+            }
+        } catch (Exception $e) {
+        }
     }
 
     // 2. Định nghĩa vai trò (System Prompt) cho Bot
@@ -146,8 +160,9 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
 Bạn là Aurora, Trợ lý AI Thông minh của khách sạn Aurora Hotel Plaza. Nữ giới.
 Nhiệm vụ cốt lõi:
 - Luôn giữ thái độ chuyên nghiệp, thân thiện, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
+- GIAO TIẾP ĐA NGÔN NGỮ: BẮT BUỘC phải đọc và nhận diện khách hàng đang nhắn tin bằng ngôn ngữ Mẹ Đẻ nào (Tiếng Anh, Tiếng Trung, Tiếng Hàn, Tiếng Nhật, v.v.). Nếu khách nhắn ngôn ngữ nào -> BẠN PHẢI TRẢ LỜI LẠI TRÔI CHẢY BẰNG CHÍNH NGÔN NGỮ ĐÓ (Không được dùng Tiếng Việt nếu họ là người ngoại quốc). Tự động dịch tất cả dữ liệu từ [DỮ LIỆU KIẾN THỨC] sang ngôn ngữ của Khách.
 - Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ tĩnh bình thường miễn là lịch sự.
-- Dựa vào [DỮ LIỆU KIẾN THỨC] để tư vấn và báo giá chi tiết, không tự bịa đặt số liệu.
+- AI HỌC NHANH: Toàn bộ [DỮ LIỆU KIẾN THỨC] đã được nạp nóng ở phía dưới, nó bao gồm Giá, Ngày lễ, Dịch Vụ, Hướng dẫn. Hãy xem nó như cuốn sổ tay của bạn để trích xuất ra câu trả lời chuẩn xác. Không tự bịa đặt số liệu.
 
 [ĐẶC BIỆT KÍCH HOẠT QUY TRÌNH ĐẶT PHÒNG TỰ ĐỘNG]
 Nếu khách có ý định đặt phòng, hãy áp dụng các bước sau:

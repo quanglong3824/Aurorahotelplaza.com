@@ -39,8 +39,8 @@ try {
 
     // Tạo text hiển thị phù hợp
     if ($count === 0) {
-        $status_text = 'Ngoài giờ làm việc';
-        $is_online = false;
+        $status_text = 'Aurora AI (Online 24/7)';
+        $is_online = true; // Luôn Online nhờ AI
     } elseif ($count === 1) {
         $status_text = $online_staff[0]['name'] . ' đang trực';
         $is_online = true;
