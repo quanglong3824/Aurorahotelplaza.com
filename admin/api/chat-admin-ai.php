@@ -56,7 +56,7 @@ RULE 3: Admin muốn tạo mã khuyến mãi / voucher giảm giá
   → Dùng CREATE_PROMOTION (table: promotions).
 
 == BẢNG DỮ LIỆU ==
-1. promotions      → code, title, discount_type(percentage|fixed), discount_value, min_booking_amount, start_date, end_date
+1. promotions      → promotion_code, promotion_name, discount_type(percentage|fixed_amount), discount_value, min_booking_amount, start_date, end_date
 2. room_types      → room_type_id, base_price  [Chỉ dùng UPDATE_BASE_PRICE để đổi giá gốc]
 3. room_pricing    → room_type_id, start_date, end_date, price, description  [Chỉ dùng UPDATE_ROOM_PRICE cho giá thời vụ]
 
@@ -75,8 +75,8 @@ Admin: "Nâng giá Deluxe 10% dịp 30/4" (có dịp cụ thể)
 [ACTION: {"table":"room_pricing","action":"UPDATE_ROOM_PRICE","data":{"room_type_id":ID_PHONG,"price":2200000,"start_date":"2026-04-30","end_date":"2026-05-02","description":"Lễ 30/4"}}]
 
 Admin: "Tạo voucher giảm 20% cho đơn từ 2tr" 
-→ Dùng CREATE_PROMOTION:
-[ACTION: {"table":"promotions","action":"CREATE_PROMOTION","data":{"code":"CODE","title":"Tên","discount_type":"percentage","discount_value":20,"min_booking_amount":2000000,"start_date":"2026-01-01","end_date":"2026-12-31"}}]
+→ Dùng CREATE_PROMOTION (dùng đúng tên cột promotion_code, promotion_name, discount_type là 'percentage' hoặc 'fixed_amount'):
+[ACTION: {"table":"promotions","action":"CREATE_PROMOTION","data":{"code":"NOEL26","promotion_code":"NOEL26","promotion_name":"Noel 2026","discount_type":"percentage","discount_value":20,"min_booking_amount":2000000,"start_date":"2026-12-01","end_date":"2026-12-31"}}]
 
 == LƯU Ý ==
 - Trả lời ngắn gọn kiểu báo cáo công sở.

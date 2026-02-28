@@ -30,13 +30,18 @@ try {
     // Switch on the recognized intent from Gemini
     if ($action === 'CREATE_PROMOTION' && $table === 'promotions') {
         $stmt = $db->prepare("
-            INSERT INTO promotions (code, title, discount_type, discount_value, min_booking_amount, start_date, end_date)
+            INSERT INTO promotions (promotion_code, promotion_name, discount_type, discount_value, min_booking_amount, start_date, end_date)
             VALUES (:code, :title, :type, :val, :min, :sd, :ed)
         ");
+        // Map discount_type: AI may say 'fixed', DB expects 'fixed_amount'
+        $discountType = $data['discount_type'] ?? 'percentage';
+        if ($discountType === 'fixed')
+            $discountType = 'fixed_amount';
+
         $stmt->execute([
-            'code' => $data['code'],
-            'title' => $data['title'] ?? 'AI Generated Promo',
-            'type' => $data['discount_type'] ?? 'percentage',
+            'code' => $data['code'] ?? ($data['promotion_code'] ?? 'AI' . strtoupper(substr(uniqid(), -4))),
+            'title' => $data['title'] ?? ($data['promotion_name'] ?? 'AI Generated Promo'),
+            'type' => $discountType,
             'val' => $data['discount_value'] ?? 10,
             'min' => $data['min_booking_amount'] ?? 0,
             'sd' => $data['start_date'] ?? date('Y-m-d'),

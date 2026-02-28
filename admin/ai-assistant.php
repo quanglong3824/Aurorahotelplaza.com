@@ -244,7 +244,9 @@ require_once 'includes/admin-header.php';
                         const actionData = JSON.parse(match[1]);
                         let actionPreviewHtml = '';
                         if (actionData.table === 'promotions') {
-                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO promotions (<br>&nbsp;&nbsp;code='<b class="text-red-600">${actionData.data.code}</b>', <br>&nbsp;&nbsp;title='<b class="text-blue-600">${actionData.data.title}</b>', ...<br>)</div>`;
+                            const pCode = actionData.data.promotion_code || actionData.data.code || '???';
+                            const pName = actionData.data.promotion_name || actionData.data.title || '???';
+                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO promotions (<br>&nbsp;&nbsp;promotion_code='<b class="text-red-600">${pCode}</b>', <br>&nbsp;&nbsp;promotion_name='<b class="text-blue-600">${pName}</b>', ...<br>)</div>`;
                         } else if (actionData.table === 'room_pricing') {
                             actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;date='${actionData.data.date || actionData.data.start_date}'<br>)</div>`;
                         } else if (actionData.table === 'room_types') {
