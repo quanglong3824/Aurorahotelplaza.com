@@ -73,6 +73,22 @@ try {
         ]);
         $affected = $stmt->rowCount();
 
+    } elseif ($action === 'RAPID_CRUD') {
+        // JARVIS RAW SQL EXECUTION
+        $sql = $data['query'] ?? '';
+        if (empty($sql)) {
+            throw new Exception("Lỗi Cú Pháp: AI không khởi tạo được lệnh SQL.");
+        }
+
+        $upper_sql = strtoupper($sql);
+        if (strpos($upper_sql, 'DROP ') !== false || strpos($upper_sql, 'TRUNCATE ') !== false || strpos($upper_sql, 'ALTER ') !== false || strpos($upper_sql, 'GRANT ') !== false) {
+            throw new Exception("Cảnh Báo Bảo Mật: Cấm thực thi trực tiếp các lệnh phá hoại cấu trúc Database!");
+        }
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $affected = $stmt->rowCount();
+
     } else {
         throw new Exception("Lệnh ($action) không được hỗ trợ để chạy Auto-CRUD.");
     }

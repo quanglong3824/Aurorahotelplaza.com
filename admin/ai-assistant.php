@@ -272,6 +272,11 @@ require_once 'includes/admin-header.php';
                             actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;date='${actionData.data.date || actionData.data.start_date}'<br>)</div>`;
                         } else if (actionData.table === 'room_types') {
                             actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">UPDATE room_types SET<br>&nbsp;&nbsp;base_price='<b class="text-green-600">${actionData.data.base_price}</b>'<br>WHERE room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>'</div>`;
+                        } else if (actionData.action === 'RAPID_CRUD') {
+                            actionPreviewHtml = `<div class="bg-gray-900 shadow-inner p-3 overflow-x-auto text-xs font-mono text-green-400 border border-gray-700 rounded-lg">
+                                <span class="text-gray-500 block mb-2 select-none">-- RAW SQL PREVIEW --</span>
+                                ${actionData.data.query}
+                            </div>`;
                         } else {
                             actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
                         }
