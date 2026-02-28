@@ -84,7 +84,7 @@ PROMPT;
     $occupied_rooms = $db->query("SELECT count(*) FROM rooms WHERE status='occupied'")->fetchColumn();
 
     // 2. Tình trạng Lượt Khách hàng
-    $total_users = $db->query("SELECT count(*) FROM users WHERE role='customer'")->fetchColumn();
+    $total_users = $db->query("SELECT count(*) FROM users WHERE user_role='customer'")->fetchColumn();
 
     // 3. Tình trạng Đơn Booking Tổng Quan
     $total_bookings = $db->query("SELECT count(*) FROM bookings")->fetchColumn();
