@@ -456,31 +456,54 @@ const ChatWidget = {
         let extraUiHtml = '';
         
         if (isBot) {
-            const bookRegex = /\[BOOK_NOW_BTN:\s*slug=([^,\]]+),\s*name=([^,\]]+),\s*cin=([^,\]]+),\s*cout=([^\]]+)\]/i;
-            const match = contentHtml.match(bookRegex);
+            // Check for success tag first
+            const successRegex = /\[BOOK_NOW_BTN_SUCCESS:\s*booking_code=([^,\]]+),\s*booking_id=([^\]]+)\]/i;
+            const successMatch = contentHtml.match(successRegex);
             
-            if (match) {
-                const slug = match[1].trim();
-                const name = match[2].trim();
-                const cin = match[3].trim();
-                const cout = match[4].trim();
-                
-                contentHtml = contentHtml.replace(match[0], '').trim();
-                
+            if (successMatch) {
+                const booking_code = successMatch[1].trim();
+                const booking_id = successMatch[2].trim();
+                contentHtml = contentHtml.replace(successMatch[0], '').trim();
                 extraUiHtml = `
                     <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
-                        <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
-                           🎫 Xác nhận Đặt phòng Tự động
+                        <div style="text-align:center; padding:10px 0;">
+                            <div style="color:#16a34a; font-weight:bold; margin-bottom:8px; font-size:14px;">✅ ĐẶT PHÒNG THÀNH CÔNG</div>
+                            <div style="font-size:16px; font-weight:bold; color:#ca8a04; margin-bottom:12px; letter-spacing:1px;">Mã: ${booking_code}</div>
+                            <a href="/profile/view-qrcode.php?id=${booking_id}" target="_blank" 
+                               style="display:inline-block; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                               MỞ XEM QR CODE
+                            </a>
                         </div>
-                        <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại phòng:</b> ${name}</div>
-                        <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày ở:</b> ${cin} - ${cout}</div>
-                        <button onclick="ChatWidget.confirmAiBooking('${slug}', '${cin}', '${cout}', this)" 
-                           style="display:block; width:100%; border:none; cursor:pointer; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; font-family:inherit; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
-                           XÁC NHẬN & NHẬN MÃ QR
-                        </button>
-                        <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
                     </div>
                 `;
+            } else {
+                // Not success, check for confirm tag
+                const bookRegex = /\[BOOK_NOW_BTN:\s*slug=([^,\]]+),\s*name=([^,\]]+),\s*cin=([^,\]]+),\s*cout=([^\]]+)\]/i;
+                const match = contentHtml.match(bookRegex);
+                
+                if (match) {
+                    const slug = match[1].trim();
+                    const name = match[2].trim();
+                    const cin = match[3].trim();
+                    const cout = match[4].trim();
+                    
+                    contentHtml = contentHtml.replace(match[0], '').trim();
+                    
+                    extraUiHtml = `
+                        <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
+                            <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
+                               🎫 Xác nhận Đặt phòng Tự động
+                            </div>
+                            <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại phòng:</b> ${name}</div>
+                            <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày ở:</b> ${cin} - ${cout}</div>
+                            <button onclick="ChatWidget.confirmAiBooking('${slug}', '${cin}', '${cout}', ${msg.message_id}, this)" 
+                               style="display:block; width:100%; border:none; cursor:pointer; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; font-family:inherit; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
+                               XÁC NHẬN & NHẬN MÃ QR
+                            </button>
+                            <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -582,7 +605,7 @@ const ChatWidget = {
     },
 
     // ── AI Booking Confirmation ─────────────────────────────────────────────
-    confirmAiBooking(slug, cin, cout, btnElement) {
+    confirmAiBooking(slug, cin, cout, messageId, btnElement) {
         if (btnElement) {
             btnElement.innerHTML = 'Đang tiến hành đặt phòng...';
             btnElement.style.pointerEvents = 'none';
@@ -592,7 +615,7 @@ const ChatWidget = {
         fetch(this._url('api/chat/confirm-booking.php'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug: slug, check_in: cin, check_out: cout })
+            body: JSON.stringify({ slug: slug, check_in: cin, check_out: cout, message_id: messageId })
         })
         .then(r => r.json())
         .then(data => {

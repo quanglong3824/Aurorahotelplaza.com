@@ -13,6 +13,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 $slug = $input['slug'] ?? '';
 $check_in = $input['check_in'] ?? '';
 $check_out = $input['check_out'] ?? '';
+$message_id = $input['message_id'] ?? 0;
 $user_id = $_SESSION['user_id'];
 
 if (!$slug || !$check_in || !$check_out) {
@@ -22,6 +23,17 @@ if (!$slug || !$check_in || !$check_out) {
 
 try {
     $db = getDB();
+
+    $msgRow = null;
+    if ($message_id > 0) {
+        $stmtCheck = $db->prepare("SELECT message FROM chat_messages WHERE message_id = ?");
+        $stmtCheck->execute([$message_id]);
+        $msgRow = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+        if ($msgRow && strpos($msgRow['message'], '[BOOK_NOW_BTN_SUCCESS:') !== false) {
+            throw new Exception("Quý khách đã xác nhận đặt phòng này rồi!");
+        }
+    }
 
     // Convert DD/MM/YYYY to YYYY-MM-DD if needed, assuming Gemini might output format like 15/05/2026
     $dCheckIn = DateTime::createFromFormat('d/m/Y', $check_in);
@@ -123,6 +135,15 @@ try {
 
     if ($room_id && $bType === 'instant') {
         $db->prepare("UPDATE rooms SET status = 'occupied' WHERE room_id = ?")->execute([$room_id]);
+    }
+
+    if ($message_id > 0 && $msgRow) {
+        $newMessage = preg_replace(
+            '/\[BOOK_NOW_BTN:\s*slug=[^,\]]+,\s*name=[^,\]]+,\s*cin=[^,\]]+,\s*cout=[^\]]+\]/i',
+            '[BOOK_NOW_BTN_SUCCESS: booking_code=' . $booking_code . ', booking_id=' . $booking_id . ']',
+            $msgRow['message']
+        );
+        $db->prepare("UPDATE chat_messages SET message = ? WHERE message_id = ?")->execute([$newMessage, $message_id]);
     }
 
     echo json_encode([
