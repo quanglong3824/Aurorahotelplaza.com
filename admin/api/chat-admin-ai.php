@@ -108,7 +108,7 @@ PROMPT;
     // ─────────────────────────────────────────────────────────────────────────
     // Gọi Gemini API
     // ─────────────────────────────────────────────────────────────────────────
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
 
     $reqData = [
         "system_instruction" => [
