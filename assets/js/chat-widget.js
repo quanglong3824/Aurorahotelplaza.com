@@ -455,6 +455,18 @@ const ChatWidget = {
         let contentHtml = this.esc(msg.message);
         let extraUiHtml = '';
         
+        // --- Parse Markdown Images ---
+        // Converts ![alt text](url) into an actual <img> tag
+        const imgRegex = /!\[([^\]]+)\]\(([^)]+)\)/g;
+        contentHtml = contentHtml.replace(imgRegex, (match, alt, url) => {
+            return `
+                <div style="margin-top:8px; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0;">
+                    <img src="${url}" alt="${alt}" style="width:100%; height:auto; display:block; object-fit:cover; max-height:200px;">
+                    <div style="font-size:10px; color:#64748b; background:#f8fafc; padding:4px 8px; text-align:center;">${alt}</div>
+                </div>
+            `;
+        });
+        
         if (isBot) {
             // Check for success tag first
             const successRegex = /\[BOOK_NOW_BTN_SUCCESS:\s*booking_code=([^,\]]+),\s*booking_id=([^\]]+)\]/i;
