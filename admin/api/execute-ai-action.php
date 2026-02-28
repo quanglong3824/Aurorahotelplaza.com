@@ -41,9 +41,19 @@ try {
         $affected = $stmt->rowCount();
 
     } elseif ($action === 'UPDATE_ROOM_PRICE' || $table === 'room_pricing') {
-        // AI wanted to update room prices for dates
-        // Let's create an abstraction. For this simple PoC, if missing details, throw error.
-        throw new Exception("Hàm nâng cao Cập nhật Giá Theo Ngày hiện đang bảo trì.");
+        // AI Update Room Pricing
+        $stmt = $db->prepare("
+            INSERT INTO room_pricing (room_type_id, start_date, end_date, price, pricing_type, description)
+            VALUES (:rt, :sd, :ed, :pr, 'special', :dsc)
+        ");
+        $stmt->execute([
+            'rt' => $data['room_type_id'],
+            'sd' => $data['start_date'] ?? date('Y-m-d'),
+            'ed' => $data['end_date'] ?? date('Y-m-t'),
+            'pr' => $data['price'],
+            'dsc' => $data['description'] ?? 'Admin AI Updated Pricing'
+        ]);
+        $affected = $stmt->rowCount();
     } else {
         throw new Exception("Lệnh ($action) không được hỗ trợ để chạy Auto-CRUD.");
     }

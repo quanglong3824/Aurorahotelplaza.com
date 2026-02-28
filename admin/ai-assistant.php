@@ -52,7 +52,8 @@ require_once 'includes/admin-header.php';
                         <p class="font-bold text-indigo-600 dark:text-indigo-400 mb-2">Xin chào Sếp
                             <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>!
                         </p>
-                        <p>Em là <b> Aurora AI</b> được cấp quyền tối cao. Em có thể thay sếp thực thi nhanh các nghiệp vụ
+                        <p>Em là <b> Aurora AI</b> được cấp quyền tối cao. Em có thể thay sếp thực thi nhanh các nghiệp
+                            vụ
                             sau:</p>
                         <ul class="list-disc ml-5 mt-2 space-y-1 text-gray-600 dark:text-gray-400">
                             <li>Cập nhật giá phòng hàng loạt (<b>UPDATE</b> room_pricing)</li>
@@ -227,45 +228,49 @@ require_once 'includes/admin-header.php';
             // Xóa thẻ code markdown bao lấy json (nếu AI rảnh rỗi nhét vào)
             content = content.replace(/```json\n/g, '').replace(/```\n/g, '').replace(/```/g, '');
 
-            const regex = /\[ACTION:\s*({.*})\s*\]/is;
-            const match = content.match(regex);
+            // Extract all ACTION tags using matchAll
+            const regex = /\[ACTION:\s*(\{[\s\S]*?\})\s*\]/gi;
+            const matches = [...content.matchAll(regex)];
 
-            if (match) {
-                try {
-                    const actionData = JSON.parse(match[1]);
-                    displayHtml = escapeHtml(content.replace(match[0], '').trim());
+            let actionBoxesHtml = '';
 
-                    // Render Markdown basic
-                    displayHtml = displayHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            if (matches.length > 0) {
+                // Strip all ACTION tags from the display text
+                displayHtml = escapeHtml(content.replace(/\[ACTION:\s*(\{[\s\S]*?\})\s*\]/gi, '').trim());
+                displayHtml = displayHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
 
-                    let actionPreviewHtml = '';
-                    if (actionData.table === 'promotions') {
-                        actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO promotions (<br>&nbsp;&nbsp;code='<b class="text-red-600">${actionData.data.code}</b>', <br>&nbsp;&nbsp;title='<b class="text-blue-600">${actionData.data.title}</b>', ...<br>)</div>`;
-                    } else if (actionData.table === 'room_pricing') {
-                        actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;start='${actionData.data.start_date}', end='${actionData.data.end_date}'<br>)</div>`;
-                    } else {
-                        actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
-                    }
+                matches.forEach(match => {
+                    try {
+                        const actionData = JSON.parse(match[1]);
+                        let actionPreviewHtml = '';
+                        if (actionData.table === 'promotions') {
+                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO promotions (<br>&nbsp;&nbsp;code='<b class="text-red-600">${actionData.data.code}</b>', <br>&nbsp;&nbsp;title='<b class="text-blue-600">${actionData.data.title}</b>', ...<br>)</div>`;
+                        } else if (actionData.table === 'room_pricing') {
+                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;date='${actionData.data.date}'<br>)</div>`;
+                        } else {
+                            actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
+                        }
 
-                    const base64Call = generateCallCode(actionData);
+                        const base64Call = generateCallCode(actionData);
 
-                    actionBox = `
-                        <div class="action-box mt-4 p-4 border-2 border-indigo-200 bg-indigo-50/50 rounded-xl">
-                            <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]</h4>
-                            ${actionPreviewHtml}
-                            <div class="flex gap-2 mt-3">
-                                <button onclick="executeAIAction(this, '${base64Call}')" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg text-xs font-bold transition-colors shadow-md shadow-green-600/20 flex items-center justify-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">done_all</span> PHÊ DUYỆT & TRUY VẤN
-                                </button>
-                                <button onclick="rejectAIAction(this)" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg text-xs font-bold transition-colors border border-red-200 flex items-center justify-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">close</span> HỦY LỆNH NÀY
-                                </button>
+                        actionBoxesHtml += `
+                            <div class="action-box mt-4 p-4 border-2 border-indigo-200 bg-indigo-50/50 rounded-xl">
+                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]</h4>
+                                ${actionPreviewHtml}
+                                <div class="flex gap-2 mt-3">
+                                    <button onclick="executeAIAction(this, '${base64Call}')" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg text-xs font-bold transition-colors shadow-md shadow-green-600/20 flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">done_all</span> PHÊ DUYỆT LỆNH
+                                    </button>
+                                    <button onclick="rejectAIAction(this)" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg text-xs font-bold transition-colors border border-red-200 flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">close</span> HỦY LỆNH NÀY
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Parse JSON error", e);
-                }
+                        `;
+                    } catch (e) {
+                        console.error("Parse JSON error", e);
+                    }
+                });
             } else {
                 displayHtml = displayHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
             }
@@ -277,7 +282,7 @@ require_once 'includes/admin-header.php';
                 <div class="flex-1">
                     <div class="bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 dark:border-slate-700 text-sm leading-relaxed inline-block">
                         ${displayHtml}
-                        ${actionBox}
+                        ${actionBoxesHtml}
                     </div>
                 </div>
             `;
