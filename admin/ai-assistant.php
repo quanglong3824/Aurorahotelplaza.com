@@ -343,7 +343,16 @@ require_once 'includes/admin-header.php';
             .then(data => {
                 if (data.success) {
                     appendTerminal(`[QUOTA REPORT] System is running on Active ${data.key_info}.`, 'INFO');
-                    appendTerminal(`[QUOTA REPORT] API Request cost: ${data.tokens} Total Tokens used.`, 'SUCCESS');
+
+                    // Render Tracking Usage of Key
+                    if (data.stats && data.stats[data.key_idx]) {
+                        const s = data.stats[data.key_idx];
+                        const budget = 1000000;
+                        const percent = ((s.tokens / budget) * 100).toFixed(2);
+                        appendTerminal(`[USAGE LIMIT] Tokens: ${s.tokens}/${budget} (${percent}%) | Request: ${s.requests}/1500 limit/day`, 'CMD');
+                    }
+
+                    appendTerminal(`[PERFORMANCE] API Request cost: ${data.tokens} Total Tokens used.`, 'SUCCESS');
                     appendTerminal(`Received Gemini Payload Response. Parsing JSON structure.`, 'SUCCESS');
                     renderMessage('ai', data.reply);
                 } else if (data.error_type === 'QUOTA_EXCEEDED') {

@@ -96,3 +96,51 @@ function get_active_key_index()
     return 0;
 }
 
+// Hàm ghi nhận chi tiêu (Tokens và Request) của một Key
+function log_key_usage($key_index, $tokens_used)
+{
+    $log_file = __DIR__ . '/../config/key_usage_stats.json';
+    $stats = [];
+
+    // Đọc log cũ nếu có
+    if (file_exists($log_file)) {
+        $data = file_get_contents($log_file);
+        $stats = json_decode($data, true) ?: [];
+    }
+
+    // Khởi tạo nếu key này chưa được track ngày hôm nay
+    $today = date('Y-m-d');
+    if (!isset($stats[$today])) {
+        // Reset sạch dữ liệu ngày cũ nếu sang ngày mới để tránh rác
+        $stats = [$today => []];
+    }
+
+    if (!isset($stats[$today][$key_index])) {
+        $stats[$today][$key_index] = [
+            'requests' => 0,
+            'tokens' => 0,
+            'last_used' => null
+        ];
+    }
+
+    // Cộng dồn
+    $stats[$today][$key_index]['requests'] += 1;
+    $stats[$today][$key_index]['tokens'] += (int) $tokens_used;
+    $stats[$today][$key_index]['last_used'] = date('H:i:s');
+
+    // Lưu lại
+    file_put_contents($log_file, json_encode($stats, JSON_PRETTY_PRINT));
+}
+
+// Lấy thông kê sử dụng của các Key trong ngày
+function get_key_usage_stats()
+{
+    $log_file = __DIR__ . '/../config/key_usage_stats.json';
+    if (!file_exists($log_file))
+        return [];
+
+    $stats = json_decode(file_get_contents($log_file), true);
+    $today = date('Y-m-d');
+    return $stats[$today] ?? [];
+}
+

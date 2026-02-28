@@ -225,13 +225,19 @@ PROMPT;
     $current_key_idx = get_active_key_index();
     $total_keys = count(get_all_valid_keys());
 
+    // Cầm số token đã dùng đẩy vào Logger
+    log_key_usage($current_key_idx, $total_tokens);
+    $real_stats = get_key_usage_stats();
+
     // Dọn nháp output và xuất JSON chuẩn
     ob_clean();
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
         'key_info' => "Key " . ($current_key_idx + 1) . " (trong tổng số $total_keys Keys)",
-        'tokens' => $total_tokens
+        'tokens' => $total_tokens,
+        'key_idx' => $current_key_idx,
+        'stats' => $real_stats
     ]);
 
 } catch (\Throwable $e) {
