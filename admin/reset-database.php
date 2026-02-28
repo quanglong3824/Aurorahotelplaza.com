@@ -73,18 +73,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
                     'banners',
                     'blog_categories',
                     'blog_posts',
+                    'bot_knowledge',
                     'chat_quick_replies',
+                    'chat_settings',
                     'faqs',
                     'gallery',
                     'membership_tiers',
                     'page_content',
                     'pricing_policies',
                     'promotions',
+                    'role_permissions',
                     'room_pricing',
                     'room_types',
                     'rooms',
                     'service_packages',
-                    'services'
+                    'services',
+                    'system_settings',
+                    'translations'
                 ];
                 $tables_to_truncate = array_merge($tables_to_truncate, $master_tables);
             }
