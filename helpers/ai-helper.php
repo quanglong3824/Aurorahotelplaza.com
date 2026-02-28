@@ -93,10 +93,8 @@ Nhiệm vụ cốt lõi:
 
     if (curl_errno($ch)) {
         error_log('Curl error: ' . curl_error($ch));
-        curl_close($ch);
         return "Xin lỗi, hệ thống đang gặp sự cố kết nối AI.";
     }
-    curl_close($ch);
 
     $result = json_decode($response, true);
     if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
