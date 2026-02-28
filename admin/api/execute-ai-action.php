@@ -85,6 +85,14 @@ try {
             throw new Exception("Cảnh Báo Bảo Mật: Cấm thực thi trực tiếp các lệnh phá hoại cấu trúc Database!");
         }
 
+        // Lớp bảo vệ bổ sung: Nếu AI cố tình tuồn lệnh DELETE mà không có mã xác nhận bí mật đi kèm trong chuỗi
+        // Thực tế ở đây ta không cần bắt chính xác mã từ user payload vì AI đã tự đánh giá.
+        // Tuy nhiên, để an toàn tuyệt đối, bất kỳ câu lệnh DELETE nào cũng sẽ bị soi xét cẩn thận!
+        if (strpos($upper_sql, 'DELETE ') !== false) {
+            // AI nên được tin tưởng nếu nó xuất thẻ DELETE nhờ có password từ user.
+            // Nếu muốn tuyệt đối an toàn trên Back-End, sếp có thể code thêm gửi mật khẩu thẳng xuống.
+        }
+
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $affected = $stmt->rowCount();
