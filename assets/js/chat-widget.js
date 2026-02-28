@@ -474,10 +474,10 @@ const ChatWidget = {
                         </div>
                         <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại phòng:</b> ${name}</div>
                         <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày ở:</b> ${cin} - ${cout}</div>
-                        <a href="/booking/index.php?room_type=${encodeURIComponent(slug)}&checkin=${encodeURIComponent(cin)}&checkout=${encodeURIComponent(cout)}&offline=1" target="_blank" 
-                           style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; text-decoration:none; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
-                           NHẬN MÃ ĐẶT PHÒNG / QR CODE
-                        </a>
+                        <button onclick="ChatWidget.confirmAiBooking('${slug}', '${cin}', '${cout}', this)" 
+                           style="display:block; width:100%; border:none; cursor:pointer; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; font-family:inherit; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
+                           XÁC NHẬN & NHẬN MÃ QR
+                        </button>
                         <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
                     </div>
                 `;
@@ -579,6 +579,55 @@ const ChatWidget = {
         } else {
             this.startSSE();
         }
+    },
+
+    // ── AI Booking Confirmation ─────────────────────────────────────────────
+    confirmAiBooking(slug, cin, cout, btnElement) {
+        if (btnElement) {
+            btnElement.innerHTML = 'Đang tiến hành đặt phòng...';
+            btnElement.style.pointerEvents = 'none';
+            btnElement.style.opacity = '0.7';
+        }
+        
+        fetch(this._url('api/chat/confirm-booking.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug: slug, check_in: cin, check_out: cout })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                if (btnElement && btnElement.parentElement) {
+                    btnElement.parentElement.innerHTML = `
+                        <div style="text-align:center; padding:10px 0;">
+                            <div style="color:#16a34a; font-weight:bold; margin-bottom:8px; font-size:14px;">✅ ĐẶT PHÒNG THÀNH CÔNG</div>
+                            <div style="font-size:16px; font-weight:bold; color:#ca8a04; margin-bottom:12px; letter-spacing:1px;">Mã: ${data.booking_code}</div>
+                            <a href="${this._url('profile/view-qrcode.php?id=' + data.booking_id)}" target="_blank" 
+                               style="display:inline-block; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                               MỞ XEM QR CODE
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    window.open(this._url('profile/view-qrcode.php?id=' + data.booking_id), '_blank');
+                }
+            } else {
+                alert(data.message || 'Lỗi đặt phòng. Vui lòng thử lại!');
+                if (btnElement) {
+                    btnElement.innerHTML = 'XÁC NHẬN & NHẬN MÃ QR';
+                    btnElement.style.pointerEvents = 'auto';
+                    btnElement.style.opacity = '1';
+                }
+            }
+        })
+        .catch(err => {
+            alert('Lỗi kết nối tới máy chủ!');
+            if (btnElement) {
+                btnElement.innerHTML = 'XÁC NHẬN & NHẬN MÃ QR';
+                btnElement.style.pointerEvents = 'auto';
+                btnElement.style.opacity = '1';
+            }
+        });
     },
 
     // ── Helpers ───────────────────────────────────────────────────────────
