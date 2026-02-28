@@ -7,7 +7,7 @@
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
     // Để tích hợp thật, bạn hãy thay API_KEY thật vào đây.
-    $api_key = 'AIzaSyCTfxfJW2c72Q8FjgrtzD27D3dLtE5cc6o'; // ĐIỀN API KEY Ở ĐÂY
+    $api_key = 'AIzaSyB3VUnCFNDZdEGGNeqPMCcjnRIB5V1aZtY'; // ĐIỀN API KEY Ở ĐÂY
 
     // 1. (RAG) Kéo tri thức từ Database
     $knowledge_context = "";
