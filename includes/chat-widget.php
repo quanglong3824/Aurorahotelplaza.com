@@ -74,6 +74,10 @@ $cw_base = rtrim(BASE_URL, '/');
                 <span id="cwStatusText">Đang kiểm tra...</span>
             </div>
         </div>
+        <button id="cwResetAiBtn" class="cw-close-btn" aria-label="Làm mới AI" title="Xoá lịch sử hội thoại hiện tại"
+            style="margin-right:4px;">
+            <span class="material-symbols-outlined" style="font-size:18px">refresh</span>
+        </button>
         <button id="cwCloseBtn" class="cw-close-btn" aria-label="Đóng chat">
             <span class="material-symbols-outlined" style="font-size:18px">close</span>
         </button>

@@ -155,8 +155,8 @@ try {
             // Require helper module AI mà ta vừa tạo
             require_once '../../helpers/ai-helper.php';
 
-            // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được
-            $ai_reply = generate_ai_reply($message, $db);
+            // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được và lịch sử ($conv_id)
+            $ai_reply = generate_ai_reply($message, $db, $conv_id);
 
             if ($ai_reply) {
                 // Nhét câu phản hồi của AIBot vào DB

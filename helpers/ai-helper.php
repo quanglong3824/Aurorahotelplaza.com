@@ -4,24 +4,53 @@
  * ===============================================
  */
 
-function generate_ai_reply($user_message, $db)
+function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
     // Để tích hợp thật, bạn hãy thay API_KEY thật vào đây.
-    // Ví dụ API Gemini từ Google (rất rẻ và thông minh)
     $api_key = 'AIzaSyCTfxfJW2c72Q8FjgrtzD27D3dLtE5cc6o'; // ĐIỀN API KEY Ở ĐÂY
 
     // 1. (RAG) Kéo tri thức từ Database
     $knowledge_context = "";
+    $history_context = "";
+
     if ($db) {
+        // ... (Fetch history context) ...
+        try {
+            if ($conv_id > 0) {
+                // Lấy 8 tin nhắn gần nhất để làm Context ngữ cảnh
+                $stmtH = $db->prepare("
+                    SELECT sender_type, message 
+                    FROM chat_messages 
+                    WHERE conversation_id = ? 
+                      AND message_type = 'text' 
+                      AND is_internal = 0
+                    ORDER BY message_id DESC 
+                    LIMIT 8
+                ");
+                $stmtH->execute([$conv_id]);
+                $rows = $stmtH->fetchAll(PDO::FETCH_ASSOC);
+                $rows = array_reverse($rows);
+
+                if (count($rows) > 1) { // Lớn hơn 1 vì dòng cuối cùng chính là user_message hiện tại
+                    $history_context .= "\n[LỊCH SỬ TRÒ CHUYỆN GẦN NHẤT ĐỂ THAM KHẢO NGỮ CẢNH]\n";
+                    foreach ($rows as $r) {
+                        $roleName = ($r['sender_type'] === 'customer') ? 'Khách' : (($r['sender_type'] === 'bot') ? 'AI' : 'Lễ tân');
+                        $history_context .= "{$roleName}: {$r['message']}\n";
+                    }
+                    $history_context .= "[KẾT THÚC LỊCH SỬ]\n";
+                }
+            }
+        } catch (Exception $e) {
+        }
+
         // Lấy tất cả kiến thức động từ bảng bot_knowledge (ví dụ chính sách, giờ check in)
         try {
             $stmt = $db->query("SELECT topic, content FROM bot_knowledge");
-            $knowledges = $stmt->fetchAll();
+            $knowledges = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($knowledges as $k) {
                 $knowledge_context .= "- " . $k['topic'] . ": " . $k['content'] . "\n";
             }
         } catch (Exception $e) {
-            // Chưa có bảng bot_knowledge thì bỏ qua
             $knowledge_context .= "- Chưa có đủ dữ liệu, hãy tìm kiếm thêm từ hệ thống nội bộ.\n";
         }
 
@@ -62,9 +91,9 @@ Nhiệm vụ cốt lõi:
 
 [ĐẶC BIỆT KÍCH HOẠT QUY TRÌNH ĐẶT PHÒNG TỰ ĐỘNG]
 Nếu khách có ý định đặt phòng, hãy áp dụng các bước sau:
-1. Xin thông tin chi tiết (Ngày Check-in, Ngày Check-out, Số lượng người).
+1. Xin thông tin chi tiết (Ngày Check-in, Ngày Check-out, Số lượng người). Chú ý nếu đã có trong lịch sử trò chuyện thì KHÔNG HỎI LẠI TRÙNG LẶP.
 2. Khi khách đã cung cấp các thông tin và chọn muốn Đặt 1 loại phòng cụ thể, hãy xác nhận tóm tắt lại và mời khách LẤY MÃ ĐẶT PHÒNG/MÃ QR để đến khách sạn nhận phòng (Không yêu cầu thanh toán ngay).
-3. Đính kèm thông tin địa chỉ kèm Google Maps để tiện cho khách di chuyển. Ví dụ: 'Khách sạn có địa chỉ tại: 253 Phạm Văn Thuận, KP 17, Phường Tam Hiệp, Biên Hòa, Đồng Nai. Maps:  https://maps.app.goo.gl/aurorahotel'
+3. Đính kèm thông tin địa chỉ kèm Google Maps để tiện cho khách di chuyển. Ví dụ: 'Khách sạn có địa chỉ tại: 253 Phạm Văn Thuận, KP 17, Phường Tam Hiệp, Biên Hòa, Đồng Nai. Maps:  https://maps.app.goo.gl/BMaDERxfuXuWi2AZA?g_st=ic'
 4. QUAN TRỌNG: Để sinh ra Nút lấy mã QR/Mã Đặt Phòng trên giao diện chat cho khách, bạn BẮT BUỘC phải chèn đoạn mã sau vào CHÍNH XÁC ở cuối của đoạn chat bạn gửi cho họ:
 [BOOK_NOW_BTN: slug={Mã tham chiếu}, name={Tên phòng}, cin={Ngày checkin định dạng do người dùng nhập}, cout={Ngày checkout định dạng do người dùng}]
 --- Ví dụ xuất ra:
@@ -74,6 +103,7 @@ Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 
 
 [DỮ LIỆU KIẾN THỨC (CẬP NHẬT REALTIME)]
 {$knowledge_context}
+{$history_context}
     ";
 
     // Thực hiện cURL POST Request tới Google Gemini API

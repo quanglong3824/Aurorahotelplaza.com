@@ -642,6 +642,30 @@ const ChatWidget = {
         document.getElementById('cwCloseBtn')
             ?.addEventListener('click', () => this.close());
 
+        // Reset AI button in panel header
+        const resetBtn = document.getElementById('cwResetAiBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                if (!this.convId) return;
+                if (!confirm('Bạn muốn xoá cuộc trò chuyện hiện tại để làm mới trí nhớ của AI?')) return;
+                
+                fetch(this._url('api/chat/reset-ai.php'), {
+                    method: 'POST',
+                    headers:{ 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversation_id: this.convId })
+                }).then(r => r.json()).then(data => {
+                    if (data.success) {
+                        const cwMessages = document.getElementById('cwMessages');
+                        if (cwMessages) cwMessages.innerHTML = '';
+                        this.lastMsgId = 0;
+                        this.loadMessages(); // Will load empty text and welcome message
+                    } else {
+                        alert('Có lỗi xảy ra khi làm mới phiên AI.');
+                    }
+                });
+            });
+        }
+
         // Input: typing + auto-resize
         const input = document.getElementById('cwInput');
         input?.addEventListener('input', () => {
