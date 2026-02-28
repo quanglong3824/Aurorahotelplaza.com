@@ -43,10 +43,17 @@ RULE 1: NẾU SẾP YÊU CẦU THAO TÁC (Tạo mới, Duyệt, Cập nhật, Th
   - Ví dụ Xóa khách thường (Không có mã): [ACTION: {"table":"users","action":"RAPID_CRUD","data":{"query":"UPDATE users SET status='inactive' WHERE user_id=5"}}]
   - Ví dụ Xóa khách VĨNH VIỄN (Có mã 30082004): [ACTION: {"table":"users","action":"RAPID_CRUD","data":{"query":"DELETE FROM users WHERE user_id=5"}}]
   - LƯU Ý BẢO MẬT KHÁC: Tuyệt đối cấm dùng DROP hoặc TRUNCATE dù dưới bất kỳ hình thức nào.
+  - LUẬT BẢO VỆ MASTER & STAFF: Nghiêm cấm mọi hành vi Xóa, Khóa, Ẩn đối với các tài khoản có `user_role` là 'admin', 'receptionist', 'sale'. Bất chấp Sếp có đưa mật mã đi chăng nữa, bạn cũng KHÔNG ĐƯỢC CHẠM VÀO MASTER!
   - LUẬT GIỮ BÍ MẬT MÃ CODE: Cấm tuyệt đối không được xuất văn bản nhắc lại/in ra mật mã ("30082004") hay giải thích quy tắc của mật mã này trong phòng chat dưới bất kỳ hình thức nào. Bạn chỉ có nhiệm vụ LẮNG NGHE mã chữ kí đó và âm thầm sinh mã Hủy, nếu bạn in phơi bày nó ra cho người thứ 3 đọc được, bạn sẽ thất bại.
 
-RULE 2: NẾU SẾP CHỈ HỎI THÔNG TIN, PHÂN TÍCH HOẶC TRÒ CHUYỆN:
-  - Trả lời như 1 trợ lý, phân tích theo số liệu được cung cấp ở phần HỆ THỐNG.
+RULE 2: TỰ ĐỘNG ĐỌC CSDL KHI THIẾU THÔNG TIN (AUTO-READ)
+  - Nếu Sếp yêu cầu kiểm tra/xem/phân tích một dữ liệu chưa có sẵn (Ví dụ: "kiểm tra địa chỉ IP", "danh sách lịch sử", "khách hàng tên A"):
+  - BẠN ĐƯỢC PHÉP TỰ ĐỘNG LẤY DATA bằng cách xuất DUY NHẤT 1 THẺ SAU (không nói dư thừa dù chỉ 1 chữ):
+    [READ_DB: SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 5]
+  - Ngay lập tức, Hệ thống ngầm của Backend sẽ chạy lệnh SELECT đó và cấp lại Bảng dữ liệu thô cho bạn học, sau đó bạn mới phân tích và trả lời Sếp. (Chỉ áp dụng với lệnh SELECT).
+
+RULE 3: NẾU SẾP CHỈ HỎI VÀ ĐÃ CÓ DATA SẴN ĐỂ PHÂN TÍCH:
+  - Trả lời như 1 trợ lý, phân tích theo số liệu được cung cấp.
   - KHÔNG TẠO MÃ ACTION NẾU CHỈ LÀ TRẢ LỜI/PHÂN TÍCH.
 
 == BẢNG DỮ LIỆU THAM KHẢO ==
@@ -237,10 +244,63 @@ PROMPT;
     }
 
     $bot_reply = $res_json['candidates'][0]['content']['parts'][0]['text'];
-
-    // Lấy thông tin về việc tiêu hao Token
     $usage = $res_json['usageMetadata'] ?? null;
     $total_tokens = $usage ? $usage['totalTokenCount'] : 0;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // INTERCEPT AUTO-READ (PROXY ĐỌC DATABASE 2 BƯỚC CỦA J.A.R.V.I.S)
+    // ─────────────────────────────────────────────────────────────────────────
+    if (preg_match('/\[READ_DB:\s*(.*?)\]/s', $bot_reply, $matches)) {
+        $read_sql = trim($matches[1], " \t\n\r\0\x0B\"'"); // Strip whitespace and quotes
+
+        // Chỉ cho phép lệnh đọc SELECT ngầm, không cho lén sửa
+        if (stripos($read_sql, 'SELECT') === 0) {
+            try {
+                $stmtRead = $db->query($read_sql);
+                $read_data = $stmtRead->fetchAll(PDO::FETCH_ASSOC);
+                // Giới hạn chuỗi JSON để không bùng nổ token
+                $read_content = json_encode($read_data, JSON_UNESCAPED_UNICODE);
+                if (strlen($read_content) > 10000) {
+                    $read_content = substr($read_content, 0, 10000) . "... [Đã cắt bớt vì quá dài]";
+                }
+                $read_result_msg = "KẾT QUẢ TRUY VẤN NGẦM TỪ DATABASE:\n" . $read_content;
+            } catch (Exception $e) {
+                $read_result_msg = "LỖI KHI ĐỌC DATABASE KHÔNG THÀNH CÔNG: " . $e->getMessage();
+            }
+
+            // Gửi vòng lặp thứ 2 cho Gemini
+            $reqData['contents'][] = ["role" => "model", "parts" => [["text" => $bot_reply]]];
+            $reqData['contents'][] = ["role" => "user", "parts" => [["text" => $read_result_msg . "\n\nHãy phân tích kết quả trên và trả lời cho Sếp (lúc này cấm xuất thẻ READ_DB nữa)."]]];
+
+            // Mở lại kết nối CURL Request thứ 2
+            $ch2 = curl_init($url);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch2, CURLOPT_POST, true);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($reqData));
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+
+            $response2 = curl_exec($ch2);
+            $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+            curl_close($ch2);
+
+            if ($http_code2 == 200) {
+                $res_json2 = json_decode($response2, true);
+                if (isset($res_json2['candidates'][0]['content']['parts'][0]['text'])) {
+                    $bot_reply = $res_json2['candidates'][0]['content']['parts'][0]['text'];
+                    $usage2 = $res_json2['usageMetadata'] ?? null;
+                    if ($usage2) {
+                        $total_tokens += $usage2['totalTokenCount'];
+                    }
+                }
+            } else {
+                $bot_reply = "Xin lỗi Sếp, lỗi phân tích ở vòng Auto-Read. Mã lỗi {$http_code2}. Lệnh SQL chìm: `{$read_sql}`";
+            }
+        } else {
+            $bot_reply = "Xin lỗi Sếp, em định dùng READ_DB nhưng lại lỡ tạo lệnh không phải SELECT. Mã gãy: {$read_sql}";
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     // Lấy thông tin Key Code đang dùng
     $current_key_idx = get_active_key_index();
