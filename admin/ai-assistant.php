@@ -281,16 +281,18 @@ require_once 'includes/admin-header.php';
                             actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
                         }
 
+                        let uniqueId = 'btn_' + Math.random().toString(36).substr(2, 9);
                         // Phân cấp Nhanh/Chậm theo Risk Level (A,S = Chờ Duyệt / C = Chạy Ngay)
                         let isAutoExecute = false;
                         let btnHtml = '';
                         let tagHtml = '';
                         let autoHtml = '';
-                        
+
                         if (actionData.level === 'C') {
                             isAutoExecute = true;
                             tagHtml = `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded ml-2 font-bold mb-1">Cấp C (Cơ Bản)</span>`;
-                            autoHtml = `<div class="text-sm text-green-600 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>Đã Tự Động Phê Duyệt</div>`;
+                            autoHtml = `<div class="text-sm text-green-600 font-semibold mb-2"><span class="material-symbols-outlined text-[14px] animate-spin align-middle mr-1">refresh</span> Đang Tự Động Thực Thi...</div>`;
+                            btnHtml = `<button id="${uniqueId}" class="hidden" style="display:none;"></button>`;
                         } else {
                             let levelName = actionData.level === 'S' ? 'Cấp S (Nguy Hiểm)' : 'Cấp A (Cảnh Báo)';
                             let levelColor = actionData.level === 'S' ? 'red' : 'yellow';
@@ -308,7 +310,7 @@ require_once 'includes/admin-header.php';
                         // Layout HTML
                         let actionHtml = `
                             <div class="action-box mt-4 p-4 border-2 border-indigo-200 bg-indigo-50/50 rounded-xl">
-                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]${tagHtml}</h4>
+                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]${tagHtml}</h5>
                                 ${actionPreviewHtml}
                                 ${autoHtml}
                                 ${btnHtml}
@@ -320,14 +322,9 @@ require_once 'includes/admin-header.php';
                         // Chạy tự động luôn nếu là lệnh Cấp C
                         if (isAutoExecute) {
                             setTimeout(() => {
-                                // Find the action box that was just added
-                                const currentActionBox = div.querySelector('.action-box:last-child');
-                                if (currentActionBox) {
-                                    // Simulate clicking the execute button
-                                    const executeButton = currentActionBox.querySelector('button:first-child');
-                                    if (executeButton) {
-                                        executeAIAction(executeButton, generateCallCode(actionData));
-                                    }
+                                const executeButton = div.querySelector(`#${uniqueId}`);
+                                if (executeButton) {
+                                    executeAIAction(executeButton, generateCallCode(actionData));
                                 }
                             }, 500); // Trì hoãn một chút để UI render được mượt
                         }
