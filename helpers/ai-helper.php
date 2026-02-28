@@ -6,8 +6,22 @@
 
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
-    // Để tích hợp thật, bạn hãy thay API_KEY thật vào đây.
-    $api_key = 'AIzaSyB3VUnCFNDZdEGGNeqPMCcjnRIB5V1aZtY'; // ĐIỀN API KEY Ở ĐÂY
+    // Lấy API Key động từ file Config bí mật (Không đẩy lên Github)
+    $api_key = '';
+    $key_file = __DIR__ . '/../config/api_keys.php';
+    if (file_exists($key_file)) {
+        require_once $key_file;
+        if (defined('GEMINI_API_KEY')) {
+            $api_key = GEMINI_API_KEY;
+        }
+    } else {
+        // Fallback đọc từ biến môi trường (nếu cài đặt trực tiếp trên CPanel/Hosting)
+        $api_key = getenv('GEMINI_API_KEY');
+    }
+
+    if (empty($api_key)) {
+        return "Xin lỗi, hệ thống chưa được cấu hình khóa API (API Key) để Trợ lý ảo hoạt động.";
+    }
 
     // 1. (RAG) Kéo tri thức từ Database
     $knowledge_context = "";

@@ -2,6 +2,7 @@
 
 # Sensitive files
 config/database.php
+config/api_keys.php
 auth/key-google-web-app.json
 .env
 .env.local
