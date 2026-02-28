@@ -434,6 +434,7 @@ const ChatWidget = {
     renderBubble(msg) {
         const isUser   = msg.sender_type === 'customer';
         const isSystem = msg.sender_type === 'system';
+        const isBot    = msg.sender_type === 'bot';
 
         if (isSystem) {
             return `<div class="cw-system-msg" data-msg-id="${msg.message_id}">${this.esc(msg.message)}</div>`;
@@ -442,7 +443,13 @@ const ChatWidget = {
         const time  = msg.created_at
             ? new Date(msg.created_at).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})
             : '';
-        const init  = isUser ? '' : 'NV';
+            
+        let init = '';
+        if (isBot) {
+            init = '🤖';
+        } else if (!isUser) {
+            init = 'NV';
+        }
 
         if (isUser) {
             return `
@@ -458,8 +465,9 @@ const ChatWidget = {
 
         return `
             <div class="cw-bubble-row staff" data-msg-id="${msg.message_id}">
-                <div class="cw-staff-avatar-micro">${this.esc(init)}</div>
+                <div class="cw-staff-avatar-micro" ${isBot ? 'style="font-size:16px;background:linear-gradient(135deg, #a855f7, #3b82f6);"' : ''}>${init}</div>
                 <div>
+                    ${isBot ? '<div style="font-size:11px; color:#3b82f6; font-weight:bold; margin-bottom:2px">Trợ lý ảo Aurora 🌟</div>' : ''}
                     <div class="cw-bubble">${this.esc(msg.message)}</div>
                     <div class="cw-bubble-time">${time}</div>
                 </div>

@@ -147,6 +147,44 @@ try {
                     ':preview' => mb_substr($message, 0, 100),
                     ':cid' => $conv_id
                 ]);
+
+        // ==========================================
+        // KIẾN TRÚC AI TRỢ LÝ ẢO (RAG)
+        // ==========================================
+        if ($conv['status'] === 'open') {
+            // Require helper module AI mà ta vừa tạo
+            require_once '../../helpers/ai-helper.php';
+
+            // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được
+            $ai_reply = generate_ai_reply($message, $db);
+
+            if ($ai_reply) {
+                // Nhét câu phản hồi của AIBot vào DB
+                $db->prepare("
+                    INSERT INTO chat_messages
+                        (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
+                    VALUES
+                        (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
+                ")->execute([
+                            ':cid' => $conv_id,
+                            ':msg' => $ai_reply
+                        ]);
+
+                // Cập nhật lại conversation: Có tin nhắn mới từ Bot (Cho customer thấy số đỏ)
+                $db->prepare("
+                    UPDATE chat_conversations
+                    SET unread_customer = unread_customer + 1,
+                        unread_staff = 0,
+                        last_message_at = NOW(),
+                        last_message_preview = :preview,
+                        updated_at = NOW()
+                    WHERE conversation_id = :cid
+                ")->execute([
+                            ':preview' => mb_substr($ai_reply, 0, 100),
+                            ':cid' => $conv_id
+                        ]);
+            }
+        }
     } else {
         // Staff gửi → tăng unread_customer, reset unread_staff
         $db->prepare("
