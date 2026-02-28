@@ -49,11 +49,8 @@ RULE 2: NẾU SẾP CHỈ HỎI THÔNG TIN, PHÂN TÍCH HOẶC TRÒ CHUYỆN:
   - KHÔNG TẠO MÃ ACTION NẾU CHỈ LÀ TRẢ LỜI/PHÂN TÍCH.
 
 == BẢNG DỮ LIỆU THAM KHẢO ==
-1. promotions      → promotion_code, promotion_name, discount_type(percentage|fixed_amount), discount_value, min_booking_amount, start_date, end_date
-2. room_types      → room_type_id, base_price  
-3. room_pricing    → room_type_id, start_date, end_date, price, description  
-4. bookings        → booking_id, user_id, room_type_id, status (pending|confirmed|completed|cancelled), total_amount
-5. users           → user_id, full_name, user_role (admin|customer|receptionist|sale), status
+- Chi tiết cấu trúc các bảng SQL (Tên cột chính xác như email, user_role, status...) được đính kèm ở dưới cùng của yêu cầu này. Em phải đọc cột động ở đó để viết câu SQL cho đúng.
+- NẾU SẾP YÊU CẦU THÊM CỘT HOẶC SỬA BẢNG (Ví dụ: "Thêm cột email"), Em ĐƯỢC PHÉP dùng lệnh ALTER TABLE!
 
 == LƯU Ý GIAO TIẾP ==
 - Hãy xưng hô là "Em" và gọi "Sếp". Em là nữ trợ lý ảo quyền năng nhất mang tên Aurora J.A.R.V.I.S.
@@ -124,7 +121,24 @@ PROMPT;
         $bi_context .= "- Khách sạn chưa có đơn đặt phòng nào mới.\n";
     }
 
-    $full_prompt = $system_prompt . $room_context . $bi_context;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Tự động Cào Schema Từ CSDL để Bơm Trực Tiếp Cho AI
+    // ─────────────────────────────────────────────────────────────────────────
+    $tables = ['users', 'bookings', 'rooms', 'room_types', 'promotions', 'payments', 'booking_history', 'reviews'];
+    $schema_context = "\n--- CẤU TRÚC DATABASE ĐỘNG (Dùng các cột này để viết SQL chính xác Không Bị Lỗi) ---\n";
+    foreach ($tables as $tbl) {
+        try {
+            $stmtSchema = $db->query("DESCRIBE $tbl");
+            if ($stmtSchema) {
+                $cols = $stmtSchema->fetchAll(PDO::FETCH_COLUMN); // FETCH_COLUMN mặc định lấy Field (Cột 0)
+                $schema_context .= "- Bảng `$tbl`: " . implode(", ", $cols) . "\n";
+            }
+        } catch (Exception $e) {
+            // Không log để tránh treo AI nếu bảng không tồn tại
+        }
+    }
+
+    $full_prompt = $system_prompt . $room_context . $bi_context . $schema_context;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Gọi Gemini API
