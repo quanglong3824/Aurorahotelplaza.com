@@ -344,19 +344,53 @@ require_once 'includes/admin-header.php';
                 if (data.success) {
                     appendTerminal(`Received Gemini Response. Parsing JSON structure.`, 'SUCCESS');
                     renderMessage('ai', data.reply);
+                } else if (data.error_type === 'QUOTA_EXCEEDED') {
+                    // Hiển thị trên terminal, KHÔNG hiện trên chat
+                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
+                    appendTerminal(`[QUOTA] Hết giới hạn Free Tier Gemini API!`, 'ERROR');
+                    appendTerminal(`[QUOTA] Giới hạn: ${data.quota_limit} requests/ngày (${data.quota_id})`, 'ERROR');
+                    appendTerminal(`[QUOTA] Cooldown: ${data.retry_after}s — Đang đếm ngược...`, 'ERROR');
+                    appendTerminal(`[QUOTA] Để tăng quota → https://ai.dev/rate-limit`, 'INFO');
+                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
+
+                    // Khóa input trong thời gian cooldown
+                    input.disabled = true;
+                    btn.disabled = true;
+                    input.placeholder = `Cooldown: ${data.retry_after}s...`;
+
+                    let remaining = data.retry_after;
+                    const countdownInterval = setInterval(() => {
+                        remaining--;
+                        input.placeholder = `Cooldown: ${remaining}s — Vui lòng đợi...`;
+                        if (remaining % 10 === 0 && remaining > 0) {
+                            appendTerminal(`[QUOTA] Retry in ${remaining}s...`, 'INFO');
+                        }
+                        if (remaining <= 0) {
+                            clearInterval(countdownInterval);
+                            input.disabled = false;
+                            btn.disabled = false;
+                            input.placeholder = 'Nhập lệnh cho Aurora AI...';
+                            appendTerminal(`[QUOTA] ✅ Cooldown kết thúc. AI sẵn sàng nhận lệnh.`, 'SUCCESS');
+                        }
+                    }, 1000);
                 } else {
-                    appendTerminal(`AI Core Error: ${data.message}`, 'ERROR');
-                    renderMessage('ai', 'Dạ sếp, lõi AI đang gặp lỗi: ' + data.message);
+                    // Lỗi khác: chỉ log terminal, không hiện chat
+                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
+                    appendTerminal(`[ERROR] AI Core: ${data.message}`, 'ERROR');
+                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
                 }
             })
             .catch(er => {
-                appendTerminal(`Connection to Google AI Studio failed.`, 'ERROR');
-                renderMessage('ai', 'Không có kết nối, vui lòng thử lại.');
+                appendTerminal(`[ERROR] Network/Connection failed: ${er.message}`, 'ERROR');
             })
             .finally(() => {
-                btn.disabled = false;
+                // Chỉ mở lại nút nếu không phải đang cooldown 429
+                if (!input.disabled) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
+                }
                 btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
-                input.focus();
+                if (!input.disabled) input.focus();
             });
     }
 

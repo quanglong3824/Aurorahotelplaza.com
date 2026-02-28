@@ -143,6 +143,39 @@ PROMPT;
         throw new Exception("Lỗi cURL: " . $err);
     }
 
+    if ($http_code === 429) {
+        // Quota exceeded - parse details for frontend countdown
+        $errData = json_decode($response, true);
+        $retryDelay = '60s';
+        $quotaLimit = 'N/A';
+        $quotaId = 'N/A';
+
+        if (isset($errData['error']['details'])) {
+            foreach ($errData['error']['details'] as $detail) {
+                if (isset($detail['retryDelay'])) {
+                    $retryDelay = $detail['retryDelay'];
+                }
+                if (isset($detail['violations'][0])) {
+                    $v = $detail['violations'][0];
+                    $quotaLimit = $v['quotaValue'] ?? 'N/A';
+                    $quotaId = $v['quotaId'] ?? 'N/A';
+                }
+            }
+        }
+        $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT);
+
+        ob_clean();
+        echo json_encode([
+            'success' => false,
+            'error_type' => 'QUOTA_EXCEEDED',
+            'retry_after' => $retrySeconds ?: 60,
+            'quota_limit' => $quotaLimit,
+            'quota_id' => $quotaId,
+            'message' => "Quota: {$quotaLimit} req/day. Retry in {$retryDelay}.",
+        ]);
+        exit;
+    }
+
     if ($http_code != 200) {
         throw new Exception("Lỗi gọi Gemini API (HTTP {$http_code}): " . $response);
     }
