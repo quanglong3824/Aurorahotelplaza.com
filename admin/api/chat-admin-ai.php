@@ -122,20 +122,22 @@ PROMPT;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Tự động Cào Schema Từ CSDL để Bơm Trực Tiếp Cho AI
+    // Tự động Cào Toàn Bộ Schema Từ MỌI BẢNG CSDL để Bơm Trực Tiếp Cho AI
     // ─────────────────────────────────────────────────────────────────────────
-    $tables = ['users', 'bookings', 'rooms', 'room_types', 'promotions', 'payments', 'booking_history', 'reviews'];
-    $schema_context = "\n--- CẤU TRÚC DATABASE ĐỘNG (Dùng các cột này để viết SQL chính xác Không Bị Lỗi) ---\n";
-    foreach ($tables as $tbl) {
-        try {
-            $stmtSchema = $db->query("DESCRIBE $tbl");
+    try {
+        $stmtAllTables = $db->query("SHOW TABLES");
+        $all_tables = $stmtAllTables->fetchAll(PDO::FETCH_COLUMN);
+
+        $schema_context = "\n--- CẤU TRÚC DATABASE ĐỘNG TOÀN DIỆN (Đọc tất cả bảng để viết SQL chuẩn) ---\n";
+        foreach ($all_tables as $tbl) {
+            $stmtSchema = $db->query("DESCRIBE `$tbl`");
             if ($stmtSchema) {
-                $cols = $stmtSchema->fetchAll(PDO::FETCH_COLUMN); // FETCH_COLUMN mặc định lấy Field (Cột 0)
+                $cols = $stmtSchema->fetchAll(PDO::FETCH_COLUMN);
                 $schema_context .= "- Bảng `$tbl`: " . implode(", ", $cols) . "\n";
             }
-        } catch (Exception $e) {
-            // Không log để tránh treo AI nếu bảng không tồn tại
         }
+    } catch (Exception $e) {
+        $schema_context = "\n Lỗi đọc Schema: " . $e->getMessage();
     }
 
     $full_prompt = $system_prompt . $room_context . $bi_context . $schema_context;
