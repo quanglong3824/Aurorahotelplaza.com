@@ -67,14 +67,60 @@ PROMPT;
     if (!$stmt) {
         throw new Exception("Không truy vấn được bảng room_types.");
     }
-
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $room_context = "\n\nDANH SÁCH PHÒNG THỰC TẾ (Dùng room_type_id này khi tạo JSON):\n";
+
+    $room_context = "\n--- THÔNG TIN CÁC HẠNG PHÒNG THỰC TẾ (Dùng room_type_id này khi thực thi lệnh) ---\n";
     foreach ($room_types as $rt) {
-        $room_context .= "  room_type_id={$rt['room_type_id']} | Tên: {$rt['name']} | Giá gốc hiện tại: {$rt['base_price']} VND\n";
+        $room_context .= "- Mã ID: {$rt['room_type_id']} | Tên: {$rt['name']} | Giá gốc đang cài: {$rt['base_price']} VNĐ\n";
     }
 
-    $full_prompt = $system_prompt . $room_context;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Lấy context database: Toàn bộ tri thức thống kê của KS để AI làm BI (Business Intelligence)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // 1. Tỉ lệ số lượng phòng & Đang hoạt động
+    $total_rooms = $db->query("SELECT count(*) FROM rooms")->fetchColumn();
+    $available_rooms = $db->query("SELECT count(*) FROM rooms WHERE status='available'")->fetchColumn();
+    $occupied_rooms = $db->query("SELECT count(*) FROM rooms WHERE status='occupied'")->fetchColumn();
+
+    // 2. Tình trạng Lượt Khách hàng
+    $total_users = $db->query("SELECT count(*) FROM users WHERE role='customer'")->fetchColumn();
+
+    // 3. Tình trạng Đơn Booking Tổng Quan
+    $total_bookings = $db->query("SELECT count(*) FROM bookings")->fetchColumn();
+    $pending_bookings = $db->query("SELECT count(*) FROM bookings WHERE status='pending'")->fetchColumn();
+    $confirmed_bookings = $db->query("SELECT count(*) FROM bookings WHERE status='confirmed'")->fetchColumn();
+
+    // 4. Doanh thu tổng (Chỉ tính các booking đã hoàn thành thanh toán - assumed confirmed/completed)
+    $stmtRev = $db->query("SELECT SUM(total_price) FROM bookings WHERE status IN ('confirmed', 'completed')");
+    $total_revenue = $stmtRev->fetchColumn() ?: 0;
+
+    // 5. Thống kê xu hướng: 10 Booking gần nhất
+    $stmtRecent = $db->query("
+        SELECT b.booking_id, b.status, b.total_price, b.check_in_date, b.check_out_date, u.full_name 
+        FROM bookings b 
+        LEFT JOIN users u ON b.user_id = u.user_id 
+        ORDER BY b.created_at DESC LIMIT 10
+    ");
+    $recent_bookings = $stmtRecent->fetchAll(PDO::FETCH_ASSOC);
+
+    // Xây dựng khối kiến thức RAG khổng lồ cho Admin AI
+    $bi_context = "\n--- THỰC TRẠNG HOẠT ĐỘNG TOÀN KHÁCH SẠN HIỆN TẠI (Dữ liệu Đọc từ Hệ Thống) ---\n";
+    $bi_context .= "+ KHO PHÒNG: Tổng cộng {$total_rooms} phòng vật lý. Đang có khách ở: {$occupied_rooms} phòng, Trống sẵn sàng: {$available_rooms} phòng.\n";
+    $bi_context .= "+ DỮ LIỆU KHÁCH HÀNG: Tổng có {$total_users} tài khoản khách hàng trên hệ thống.\n";
+    $bi_context .= "+ TỔNG QUAN ĐẶT PHÒNG: Tổng hệ thống đã ghi nhận {$total_bookings} đơn đặt phòng. Trong đó Đang chờ Duyệt/Thanh toán: {$pending_bookings} đơn, Đã chốt/Hoàn thành: {$confirmed_bookings} đơn.\n";
+    $bi_context .= "+ DOANH THU ƯỚC TÍNH (Từ Đơn Confirmed/Completed): " . number_format($total_revenue, 0, ',', '.') . " VNĐ.\n";
+
+    $bi_context .= "\n--- DANH SÁCH 10 LƯỢT ĐẶT PHÒNG (BOOKINGS) GẦN ĐÂY NHẤT ĐỂ PHÂN TÍCH XU HƯỚNG ---\n";
+    if ($recent_bookings) {
+        foreach ($recent_bookings as $b) {
+            $bi_context .= "- Mã Đơn #{$b['booking_id']}: Khách {$b['full_name']} | Check-in: {$b['check_in_date']} -> Check-out: {$b['check_out_date']} | Giá trị: " . number_format($b['total_price'], 0, ',', '.') . " VNĐ | Trạng thái: {$b['status']}\n";
+        }
+    } else {
+        $bi_context .= "- Khách sạn chưa có đơn đặt phòng nào mới.\n";
+    }
+
+    $full_prompt = $system_prompt . $room_context . $bi_context;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Gọi Gemini API
