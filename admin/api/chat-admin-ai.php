@@ -246,7 +246,7 @@ PROMPT;
             'retry_after' => $retrySeconds ?: 60,
             'quota_limit' => $quotaLimit,
             'quota_id' => $quotaId,
-            'message' => "Quota: {$quotaLimit} req/day. Retry in {$retryDelay}.",
+            'message' => "Hết lưu lượng. Đang bị phạt chờ! Xin làm mới lại sau {$retryDelay}.",
         ]);
         exit;
     }

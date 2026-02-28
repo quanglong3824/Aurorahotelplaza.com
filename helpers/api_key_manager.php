@@ -28,6 +28,27 @@ function get_active_gemini_key()
         file_put_contents($index_file, 0);
     }
 
+    // Kiểm tra xem Rate Limit có đang block key này không
+    $limits = get_key_rate_limits();
+    $now = time();
+    $start_idx = $current_idx;
+
+    // Tìm key đầu tiên không bị block
+    while (isset($limits[$current_idx]) && $limits[$current_idx] > $now) {
+        $current_idx++;
+        if ($current_idx >= count($valid_keys))
+            $current_idx = 0;
+        if ($current_idx == $start_idx) {
+            // Tất cả các key đều bị block! Trả về key có thời gian chờ NGẮN NHẤT
+            return $valid_keys[$start_idx]; // fallback (sẽ bị lỗi limit tiếp, nhưng để cho người dùng xem lỗi)
+        }
+    }
+
+    // Nếu phải xoay vòng để tìm ra key sống sót, update lại file
+    if ($current_idx != $start_idx) {
+        file_put_contents($index_file, $current_idx);
+    }
+
     return $valid_keys[$current_idx];
 }
 
@@ -44,10 +65,19 @@ function rotate_gemini_key()
         $current_idx = (int) file_get_contents($index_file);
     }
 
-    $current_idx++;
-    if ($current_idx >= count($valid_keys)) {
-        $current_idx = 0;
-    }
+    $limits = get_key_rate_limits();
+    $now = time();
+    $start_idx = $current_idx;
+
+    do {
+        $current_idx++;
+        if ($current_idx >= count($valid_keys)) {
+            $current_idx = 0;
+        }
+        if ($current_idx == $start_idx) {
+            break; // Đã xoay 1 vòng, tất cả đều tèo
+        }
+    } while (isset($limits[$current_idx]) && $limits[$current_idx] > $now);
 
     // Cập nhật index xuống file
     file_put_contents($index_file, $current_idx);
