@@ -451,12 +451,45 @@ const ChatWidget = {
             init = 'NV';
         }
 
+        // Parse booking UI if it's a bot message
+        let contentHtml = this.esc(msg.message);
+        let extraUiHtml = '';
+        
+        if (isBot) {
+            const bookRegex = /\[BOOK_NOW_BTN:\s*slug=([^,\]]+),\s*name=([^,\]]+),\s*cin=([^,\]]+),\s*cout=([^\]]+)\]/i;
+            const match = contentHtml.match(bookRegex);
+            
+            if (match) {
+                const slug = match[1].trim();
+                const name = match[2].trim();
+                const cin = match[3].trim();
+                const cout = match[4].trim();
+                
+                contentHtml = contentHtml.replace(match[0], '').trim();
+                
+                extraUiHtml = `
+                    <div style="margin-top:12px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+                        <div style="font-weight:bold; color:#1e293b; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
+                           Xác nhận đặt phòng
+                        </div>
+                        <div style="font-size:12px; color:#475569; margin-bottom:4px;"><b>Phòng:</b> ${name}</div>
+                        <div style="font-size:12px; color:#475569; margin-bottom:12px;"><b>Ngày:</b> ${cin} - ${cout}</div>
+                        <a href="/booking/index.php?room_type=${encodeURIComponent(slug)}&checkin=${encodeURIComponent(cin)}&checkout=${encodeURIComponent(cout)}" target="_blank" 
+                           style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; border-radius:6px; text-decoration:none; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(16,185,129,0.3); transition:all 0.2s;">
+                           TIẾP TỤC ĐỂ THANH TOÁN
+                        </a>
+                        <div style="font-size:10px; color:#94a3b8; text-align:center; margin-top:8px; font-style:italic;">Bạn sẽ được chuyển hướng tới trang thanh toán bảo mật.</div>
+                    </div>
+                `;
+            }
+        }
+
         if (isUser) {
             return `
                 <div class="cw-bubble-row user" data-msg-id="${msg.message_id}">
                     <div>
                         <div class="cw-bubble" style="${msg.pending ? 'opacity:.7' : ''}">
-                            ${this.esc(msg.message)}
+                            ${contentHtml}
                         </div>
                         <div class="cw-bubble-time">${time} ${msg.pending ? '⏳' : '✓'}</div>
                     </div>
@@ -468,7 +501,7 @@ const ChatWidget = {
                 <div class="cw-staff-avatar-micro" ${isBot ? 'style="font-size:12px; font-weight:bold; color:#fff; background:linear-gradient(135deg, #4f46e5, #3b82f6);"' : ''}>${init}</div>
                 <div>
                     ${isBot ? '<div style="font-size:11px; color:#4f46e5; font-weight:bold; margin-bottom:2px">Aurora AI</div>' : ''}
-                    <div class="cw-bubble">${this.esc(msg.message)}</div>
+                    <div class="cw-bubble">${contentHtml}${extraUiHtml}</div>
                     <div class="cw-bubble-time">${time}</div>
                 </div>
             </div>`;

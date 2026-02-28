@@ -28,7 +28,7 @@ function generate_ai_reply($user_message, $db)
         // 2. Lấy dữ liệu Phòng (Real-time Database)
         try {
             $stmt = $db->query("
-                SELECT rt.type_name as name, rt.base_price as price_per_night, rt.max_occupancy, COUNT(r.room_id) as available_count
+                SELECT rt.type_name as name, rt.slug, rt.base_price as price_per_night, rt.max_occupancy, COUNT(r.room_id) as available_count
                 FROM room_types rt
                 JOIN rooms r ON rt.room_type_id = r.room_type_id
                 WHERE r.status = 'available' AND rt.status = 'active'
@@ -41,7 +41,7 @@ function generate_ai_reply($user_message, $db)
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n";
                 foreach ($rooms as $room) {
                     $price = number_format($room['price_per_night'], 0, ',', '.');
-                    $knowledge_context .= "- Loại phòng: {$room['name']} - Giá từ: {$price} VNĐ/đêm - Sức chứa tối đa: {$room['max_occupancy']} người (Còn trống {$room['available_count']} phòng).\n";
+                    $knowledge_context .= "- Loại phòng: {$room['name']} (Mã tham chiếu: {$room['slug']}) - Giá từ: {$price} VNĐ/đêm - Sức chứa tối đa: {$room['max_occupancy']} người (Còn trống {$room['available_count']} phòng).\n";
                 }
             } else {
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n- Hiện tại khách sạn đang hết phòng trống.\n";
@@ -57,9 +57,19 @@ function generate_ai_reply($user_message, $db)
 Bạn là Aurora, Trợ lý AI Thông minh của khách sạn Aurora Hotel Plaza. Nữ giới.
 Nhiệm vụ cốt lõi:
 - Luôn giữ thái độ chuyên nghiệp, thân thiện, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
-- Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ bình thường miễn là lịch sự.
+- Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ tĩnh bình thường miễn là lịch sự.
 - Dựa vào [DỮ LIỆU KIẾN THỨC] để tư vấn và báo giá chi tiết, không tự bịa đặt số liệu.
-- Lưu ý cực quan trọng: Chỉ khi nào khách yêu cầu khiếu nại gay gắt hoặc đòi hỏi dịch vụ nằm ngoài khả năng trả lời thì mới xin phép chuyển qua người thật. Tuyệt đối không tự động nói câu 'vấn đề này hơi khó, để em chuyển một bạn hỗ trợ viên' khi khách chỉ hỏi thăm bình thường.
+
+[ĐẶC BIỆT KÍCH HOẠT QUY TRÌNH ĐẶT PHÒNG TỰ ĐỘNG]
+Nếu khách có ý định đặt phòng, hãy áp dụng các bước sau:
+1. Xin thông tin chi tiết (Ngày Check-in, Ngày Check-out, Số lượng người).
+2. Khi khách đã cung cấp các thông tin và chọn muốn Đặt 1 loại phòng cụ thể, hãy xác nhận tóm tắt lại và sau đó MỜI KHÁCH THANH TOÁN.
+3. QUAN TRỌNG: Để hiển thị Nút Thanh Toán trên giao diện chat cho khách, bạn BẮT BUỘC phải chèn đoạn mã sau vào CHÍNH XÁC ở cuối của đoạn chat bạn gửi cho họ:
+[BOOK_NOW_BTN: slug={Mã tham chiếu}, name={Tên phòng}, cin={Ngày checkin định dạng do người dùng nhập}, cout={Ngày checkout định dạng do người dùng}]
+--- Ví dụ xuất ra:
+Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 cho Quý khách. Quý khách vui lòng bấm nút xác nhận dưới đây để thanh toán nhé ạ!
+[BOOK_NOW_BTN: slug=deluxe, name=Deluxe Room, cin=15/05/2026, cout=18/05/2026]
+(Không thêm thẻ markdown code bao quanh mã nút này)
 
 [DỮ LIỆU KIẾN THỨC (CẬP NHẬT REALTIME)]
 {$knowledge_context}
