@@ -550,6 +550,28 @@ const ChatManager = {
                 </div>`;
         }
 
+        if (msg.sender_type === 'bot') {
+            let cleanMsg = msg.message
+                .replace(/\[BOOK_NOW_BTN_SUCCESS:[^\]]+\]/gi, '\n*📌 Khách hàng vừa nhận mã xác nhận đặt phòng qua AI.*')
+                .replace(/\[BOOK_NOW_BTN:[^\]]+\]/gi, '\n*📌 AI đã đưa ra phiếu thông tin đặt phòng tự động.*');
+                
+            return `
+                <div class="flex justify-start my-2 px-4" data-msg="${msg.message_id || ''}">
+                    <div class="max-w-[75%]">
+                        <div class="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-900 dark:text-indigo-200
+                                    border border-indigo-100 dark:border-indigo-800
+                                    rounded-[18px_18px_18px_4px] px-4 py-2.5 shadow-sm">
+                            <div class="flex items-center gap-1 mb-1 text-indigo-500">
+                                <span class="material-symbols-outlined text-[14px]">psychology</span>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Aurora AI</span>
+                            </div>
+                            <p class="text-[13.5px] leading-relaxed whitespace-pre-wrap ${msg.pending ? 'opacity-75' : ''}">${this.escHtml(cleanMsg)}</p>
+                        </div>
+                        <span class="text-xs text-gray-400 mt-1 block pl-1">Aurora AI · ${time}</span>
+                    </div>
+                </div>`;
+        }
+
         // Customer
         return `
             <div class="flex justify-start my-2 px-4" data-msg="${msg.message_id || ''}">
