@@ -28,7 +28,7 @@ function generate_ai_reply($user_message, $db)
         // 2. Lấy dữ liệu Phòng (Real-time Database)
         try {
             $stmt = $db->query("
-                SELECT rt.type_name as name, rt.base_price as price_per_night, rt.max_adults, rt.max_children, COUNT(r.room_id) as available_count
+                SELECT rt.type_name as name, rt.base_price as price_per_night, rt.max_occupancy, COUNT(r.room_id) as available_count
                 FROM room_types rt
                 JOIN rooms r ON rt.room_type_id = r.room_type_id
                 WHERE r.status = 'available' AND rt.status = 'active'
@@ -41,7 +41,7 @@ function generate_ai_reply($user_message, $db)
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n";
                 foreach ($rooms as $room) {
                     $price = number_format($room['price_per_night'], 0, ',', '.');
-                    $knowledge_context .= "- Loại phòng: {$room['name']} - Giá từ: {$price} VNĐ/đêm - Sức chứa: {$room['max_adults']} NL, {$room['max_children']} TE (Còn trống {$room['available_count']} phòng).\n";
+                    $knowledge_context .= "- Loại phòng: {$room['name']} - Giá từ: {$price} VNĐ/đêm - Sức chứa tối đa: {$room['max_occupancy']} người (Còn trống {$room['available_count']} phòng).\n";
                 }
             } else {
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n- Hiện tại khách sạn đang hết phòng trống.\n";
@@ -66,11 +66,17 @@ Nhiệm vụ cốt lõi:
     ";
 
     // Thực hiện cURL POST Request tới Google Gemini API
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
 
     $data = [
         "contents" => [
             ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
+        ],
+        "generationConfig" => [
+            "temperature" => 0.7,
+            "topK" => 40,
+            "topP" => 0.95,
+            "maxOutputTokens" => 1024,
         ]
     ];
     $json_data = json_encode($data);

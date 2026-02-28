@@ -20,7 +20,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
 define('DB_LOCAL_NAME', 'auroraho_aurorahotelplaza.com');
 define('DB_LOCAL_USER', 'root');
 define('DB_LOCAL_PASSWORD', '');
-define('DB_LOCAL_HOST', 'localhost:3306');
+define('DB_LOCAL_HOST', '127.0.0.1:3306');
 
 // Cấu hình Host/Production
 define('DB_HOST_NAME', 'auroraho_aurorahotelplaza.com');
