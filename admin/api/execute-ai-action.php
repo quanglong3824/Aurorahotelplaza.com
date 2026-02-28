@@ -58,6 +58,16 @@ try {
             'dsc' => $data['description'] ?? 'Admin AI Updated Pricing'
         ]);
         $affected = $stmt->rowCount();
+
+    } elseif ($action === 'UPDATE_BASE_PRICE' || $table === 'room_types') {
+        // AI Update Base Price
+        $stmt = $db->prepare("UPDATE room_types SET base_price = :pr WHERE room_type_id = :rt");
+        $stmt->execute([
+            'pr' => $data['base_price'],
+            'rt' => $data['room_type_id']
+        ]);
+        $affected = $stmt->rowCount();
+
     } else {
         throw new Exception("Lệnh ($action) không được hỗ trợ để chạy Auto-CRUD.");
     }

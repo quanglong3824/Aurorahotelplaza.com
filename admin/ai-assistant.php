@@ -246,7 +246,9 @@ require_once 'includes/admin-header.php';
                         if (actionData.table === 'promotions') {
                             actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO promotions (<br>&nbsp;&nbsp;code='<b class="text-red-600">${actionData.data.code}</b>', <br>&nbsp;&nbsp;title='<b class="text-blue-600">${actionData.data.title}</b>', ...<br>)</div>`;
                         } else if (actionData.table === 'room_pricing') {
-                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;date='${actionData.data.date}'<br>)</div>`;
+                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">INSERT INTO room_pricing (<br>&nbsp;&nbsp;room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>',<br>&nbsp;&nbsp;price='<b class="text-green-600">${actionData.data.price}</b>',<br>&nbsp;&nbsp;date='${actionData.data.date || actionData.data.start_date}'<br>)</div>`;
+                        } else if (actionData.table === 'room_types') {
+                            actionPreviewHtml = `<div class="text-xs text-indigo-700 mb-2 font-mono bg-white p-2 border border-indigo-100 rounded">UPDATE room_types SET<br>&nbsp;&nbsp;base_price='<b class="text-green-600">${actionData.data.base_price}</b>'<br>WHERE room_type_id='<b class="text-red-600">${actionData.data.room_type_id}</b>'</div>`;
                         } else {
                             actionPreviewHtml = `<div class="bg-indigo-50 p-2 text-xs font-mono break-all text-indigo-700 border border-indigo-100 rounded">${JSON.stringify(actionData.data)}</div>`;
                         }

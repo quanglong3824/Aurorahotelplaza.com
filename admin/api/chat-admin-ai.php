@@ -48,18 +48,23 @@ try {
 
     NẾU CẦN THỰC THI NHIỀU LỆNH CÙNG LÚC (ví dụ: cập nhật giá nhiều loại phòng, hoặc vừa tạo giá vừa tạo voucher), HÃY TẠO NHIỀU BLOCK [ACTION: {...}] RIÊNG BIỆT!
 
-    Bảng Cơ sở dữ liệu:
+    Bảng Cơ sở dữ liệu bạn được quyền truy cập:
     1. `promotions` (code, title, discount_type, discount_value, min_booking_amount, start_date, end_date)
     2. `room_pricing` (room_type_id, start_date, end_date, price, description)
+    3. `room_types` (room_type_id, base_price) - Dùng khi Admin muốn ĐỔI GIÁ GỐC NIÊM YẾT của phòng.
 
     Cú pháp ACTION JSON mẫu đối với Tạo Khuyến mãi:
     [ACTION: {\"table\":\"promotions\",\"action\":\"CREATE_PROMOTION\",\"data\":{\"code\":\"LE3004\",\"title\":\"Mừng lễ 30/4\",\"discount_type\":\"fixed\",\"discount_value\":300000,\"min_booking_amount\":2000000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-02\"}}]
 
-    Cú pháp ACTION JSON mẫu đối với Cập nhật Giá phòng (Tạo từng ACTION cho từng room_type_id nếu cần Cập nhật nhiều phòng):
-    [ACTION: {\"table\":\"room_pricing\",\"action\":\"UPDATE_ROOM_PRICE\",\"data\":{\"room_type_id\":1,\"price\":3000000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-05\",\"description\":\"Tăng giá dịp lễ 30/4\"}}]
-    [ACTION: {\"table\":\"room_pricing\",\"action\":\"UPDATE_ROOM_PRICE\",\"data\":{\"room_type_id\":2,\"price\":3500000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-05\",\"description\":\"Tăng giá dịp lễ 30/4\"}}]
+    Cú pháp ACTION JSON mẫu đối với Đổi Giá Gốc Niêm Yết Của Phòng (Cập nhật thẳng vào room_types):
+    [ACTION: {\"table\":\"room_types\",\"action\":\"UPDATE_BASE_PRICE\",\"data\":{\"room_type_id\":1,\"base_price\":2500000}}]
 
-    LƯU Ý: Tuyệt đối không tự ý thực thi. Bạn chỉ SẢN SINH CÁC KHỐI JSON để Admin Phê Duyệt.
+    Cú pháp ACTION JSON mẫu đối với Cập nhật Giá Thời Vụ dịp Lễ (Tạo từng ACTION cho từng room_type_id nếu cần Cập nhật nhiều phòng):
+    [ACTION: {\"table\":\"room_pricing\",\"action\":\"UPDATE_ROOM_PRICE\",\"data\":{\"room_type_id\":1,\"price\":3000000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-05\",\"description\":\"Tăng giá dịp lễ\"}}]
+
+    LƯU Ý CỰC KỲ QUAN TRỌNG: 
+    - Tuyệt đối không tự ý thực thi. Bạn chỉ SẢN SINH CÁC KHỐI JSON để Admin Phê Duyệt.
+    - Câu trả lời thật ngắn gọn để tiết kiệm Output Tokens tránh đứt gãy JSON!
     ";
 
     // Lấy context
@@ -90,7 +95,7 @@ try {
         ],
         "generationConfig" => [
             "temperature" => 0.2,
-            "maxOutputTokens" => 1024,
+            "maxOutputTokens" => 4096,
         ]
     ];
 
