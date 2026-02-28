@@ -96,7 +96,9 @@ try {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'unpaid', 'AI Quick Booking Offline')
     ");
 
-    $bType = $roomType['booking_type'] === 'inquiry' ? 'inquiry' : 'instant';
+    $guest_name = $user['full_name'] ?? 'Khách';
+    $guest_email = $user['email'] ?? '';
+    $guest_phone = $user['phone'] ?? '';
 
     $stmtCreate->execute([
         $booking_code,
@@ -112,9 +114,9 @@ try {
         $nights,
         $total_amount,
         $total_amount,
-        $user['full_name'],
-        $user['email'],
-        $user['phone']
+        $guest_name,
+        $guest_email,
+        $guest_phone
     ]);
 
     $booking_id = $db->lastInsertId();
