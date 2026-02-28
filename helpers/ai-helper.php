@@ -272,6 +272,12 @@ Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 
 
     $result = json_decode($response, true);
     if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+        // Ghi nhận log usage cho Client
+        $tokens_used = $result['usageMetadata']['totalTokenCount'] ?? 0;
+        if ($tokens_used > 0) {
+            $current_idx = get_active_key_index();
+            log_key_usage($current_idx, $tokens_used, 'client');
+        }
         return $result['candidates'][0]['content']['parts'][0]['text'];
     }
 

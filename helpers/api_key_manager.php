@@ -97,7 +97,7 @@ function get_active_key_index()
 }
 
 // Hàm ghi nhận chi tiêu (Tokens và Request) của một Key
-function log_key_usage($key_index, $tokens_used)
+function log_key_usage($key_index, $tokens_used, $role = 'admin')
 {
     $log_file = __DIR__ . '/../config/key_usage_stats.json';
     $stats = [];
@@ -119,13 +119,36 @@ function log_key_usage($key_index, $tokens_used)
         $stats[$today][$key_index] = [
             'requests' => 0,
             'tokens' => 0,
+            'admin_requests' => 0,
+            'admin_tokens' => 0,
+            'client_requests' => 0,
+            'client_tokens' => 0,
             'last_used' => null
         ];
     }
 
+    // Cần khởi tạo giá trị default cho keys cũ chưa có cột admin/client
+    if (!isset($stats[$today][$key_index]['admin_requests']))
+        $stats[$today][$key_index]['admin_requests'] = 0;
+    if (!isset($stats[$today][$key_index]['admin_tokens']))
+        $stats[$today][$key_index]['admin_tokens'] = 0;
+    if (!isset($stats[$today][$key_index]['client_requests']))
+        $stats[$today][$key_index]['client_requests'] = 0;
+    if (!isset($stats[$today][$key_index]['client_tokens']))
+        $stats[$today][$key_index]['client_tokens'] = 0;
+
     // Cộng dồn
     $stats[$today][$key_index]['requests'] += 1;
     $stats[$today][$key_index]['tokens'] += (int) $tokens_used;
+
+    if ($role === 'admin') {
+        $stats[$today][$key_index]['admin_requests'] += 1;
+        $stats[$today][$key_index]['admin_tokens'] += (int) $tokens_used;
+    } else {
+        $stats[$today][$key_index]['client_requests'] += 1;
+        $stats[$today][$key_index]['client_tokens'] += (int) $tokens_used;
+    }
+
     $stats[$today][$key_index]['last_used'] = date('H:i:s');
 
     // Lưu lại

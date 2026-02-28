@@ -265,7 +265,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'icon' => 'smart_toy',
                         'role' => 'admin',
                         'items' => [
-                            ['page' => 'ai-assistant', 'icon' => 'generating_tokens', 'label' => 'Trợ Lý Admin AI']
+                            ['page' => 'ai-assistant', 'icon' => 'generating_tokens', 'label' => 'Trợ Lý Admin AI'],
+                            ['page' => 'ai-stats', 'icon' => 'query_stats', 'label' => 'Thống Kê API AI']
                         ]
                     ],
                     [
