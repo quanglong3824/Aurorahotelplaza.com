@@ -171,9 +171,10 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             $stmt = $db->query("SELECT amenity_name, category FROM amenities WHERE status = 'active'");
             $amenities = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if ($amenities) {
-                $knowledge_context .= "\n--- 🏊‍♂️ TIỆN NGHI VÀ TRANG THIẾT BỊ CỦA KHÁCH SẠN (AMENITIES) ---\nKhách sạn có các tiện ích sau: ";
+                $knowledge_context .= "\n--- TIỆN NGHI VÀ TRANG THIẾT BỊ CỦA KHÁCH SẠN (AMENITIES) ---\nKhách sạn có các tiện ích sau: ";
                 $amenity_names = array_map(function ($a) {
-                    return $a['amenity_name']; }, $amenities);
+                    return $a['amenity_name'];
+                }, $amenities);
                 $knowledge_context .= implode(", ", $amenity_names) . ".\n";
             }
         } catch (Exception $e) {
@@ -184,7 +185,7 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             $stmt = $db->query("SELECT code, title, discount_type, discount_value, min_booking_amount FROM promotions WHERE status = 'active' AND end_date >= CURRENT_DATE()");
             $promos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if ($promos) {
-                $knowledge_context .= "\n--- 🎁 CÁC ƯU ĐÃI KHUYẾN MÃI ĐANG MỞ (PROMOTIONS & COUPONS) ---\n";
+                $knowledge_context .= "\n--- CÁC ƯU ĐÃI KHUYẾN MÃI ĐANG MỞ (PROMOTIONS & COUPONS) ---\n";
                 foreach ($promos as $p) {
                     $val = $p['discount_type'] == 'percentage' ? $p['discount_value'] . '%' : number_format($p['discount_value'], 0, ',', '.') . ' VNĐ';
                     $knowledge_context .= "- Mã '{$p['code']}': {$p['title']} (Giảm {$val}, áp dụng cho đơn từ " . number_format($p['min_booking_amount'], 0, ',', '.') . " VNĐ).\n";
@@ -198,7 +199,7 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             $stmt = $db->query("SELECT tier_name, required_points, discount_percent FROM membership_tiers");
             $tiers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if ($tiers) {
-                $knowledge_context .= "\n--- 💎 CHÍNH SÁCH HẠNG THÀNH VIÊN (LOYALTY) ---\n";
+                $knowledge_context .= "\n--- CHÍNH SÁCH HẠNG THÀNH VIÊN (LOYALTY) ---\n";
                 foreach ($tiers as $t) {
                     $knowledge_context .= "- Hạng {$t['tier_name']}: Cần {$t['required_points']} điểm tích lũy. Đặc quyền giảm giá trực tiếp: {$t['discount_percent']}%.\n";
                 }
@@ -215,6 +216,7 @@ Nhiệm vụ cốt lõi:
 - Luôn giữ thái độ chuyên nghiệp, thân thiện, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
 - GIAO TIẾP ĐA NGÔN NGỮ: BẮT BUỘC phải đọc và nhận diện khách hàng đang nhắn tin bằng ngôn ngữ Mẹ Đẻ nào (Tiếng Anh, Tiếng Trung, Tiếng Hàn, Tiếng Nhật, v.v.). Nếu khách nhắn ngôn ngữ nào -> BẠN PHẢI TRẢ LỜI LẠI TRÔI CHẢY BẰNG CHÍNH NGÔN NGỮ ĐÓ (Không được dùng Tiếng Việt nếu họ là người ngoại quốc). Tự động dịch tất cả dữ liệu từ [DỮ LIỆU KIẾN THỨC] sang ngôn ngữ của Khách.
 - AI 'BIẾT TUỐT' DỮ LIỆU CÔNG TY: Toàn bộ [DỮ LIỆU KIẾN THỨC] đã được nạp ở phía dưới, nó bao gồm Giá, Ngày lễ, Dịch Vụ, Cài Đặt Hệ Thống, Thiết bị phòng, Khuyến mãi, Thẻ Thành viên. Bạn là Bách khoa toàn thư của khách sạn. Hỏi gì trong [DỮ LIỆU KIẾN THỨC] cũng phải trả lời được một cách chi tiết, khéo léo. Tuyệt đối không tự bịa đặt số liệu lệch với KIẾN THỨC đã nạp. Cố gắng trả lời dựa sát với CSDL để chốt Sale.
+- NẾU KHÁCH HỎI THÔNG TIN KHÔNG CÓ TRONG CSDL: Nếu khách hỏi những tiện ích, dịch vụ, món ăn, hoặc thông tin mà HOÀN TOÀN KHÔNG TỒN TẠI trong [DỮ LIỆU KIẾN THỨC], TUYỆT ĐỐI KHÔNG ĐƯỢC BỊA ĐẶT HOẶC ĐOÁN MÒ. Hãy lịch sự xin lỗi khách hàng, thông báo rằng hiện tại khách sạn chưa có/chưa cập nhật thông tin về dịch vụ đó, và khuyên khách hàng để lại số điện thoại hoặc liên hệ Hotline để bộ phận Lễ tân hỗ trợ chi tiết hơn.
 - Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ tĩnh bình thường miễn là lịch sự.
 
 
