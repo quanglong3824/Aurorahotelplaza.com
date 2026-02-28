@@ -23,7 +23,7 @@ require_once 'includes/admin-header.php';
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        Super AI 🚀
+                        Super AI
                         <span
                             class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold border border-green-200">System
                             Root</span>

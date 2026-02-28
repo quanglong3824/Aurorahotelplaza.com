@@ -8,7 +8,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
 }
 
 require_once '../../config/database.php';
-require_once '../../config/api_keys.php';
+$api_key = '';
+$key_file = __DIR__ . '/../../config/api_keys.php';
+if (file_exists($key_file)) {
+    require_once $key_file;
+    if (defined('GEMINI_API_KEY')) {
+        $api_key = GEMINI_API_KEY;
+    }
+} else {
+    $api_key = getenv('GEMINI_API_KEY');
+}
+
+if (empty($api_key)) {
+    echo json_encode(['success' => false, 'message' => 'Lỗi API Key: Chưa cấu hình GEMINI_API_KEY']);
+    exit;
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 $user_message = $input['message'] ?? '';
@@ -52,7 +66,7 @@ try {
     $system_prompt .= "\n\nHệ thống phòng hiện hữu: \n" . $room_context;
 
     // Execute Call
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . GEMINI_API_KEY;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
 
     $reqData = [
         "contents" => [
