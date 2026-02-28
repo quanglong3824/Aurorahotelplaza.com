@@ -468,17 +468,17 @@ const ChatWidget = {
                 contentHtml = contentHtml.replace(match[0], '').trim();
                 
                 extraUiHtml = `
-                    <div style="margin-top:12px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
-                        <div style="font-weight:bold; color:#1e293b; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
-                           Xác nhận đặt phòng
+                    <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
+                        <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
+                           🎫 Xác nhận Đặt phòng Tự động
                         </div>
-                        <div style="font-size:12px; color:#475569; margin-bottom:4px;"><b>Phòng:</b> ${name}</div>
-                        <div style="font-size:12px; color:#475569; margin-bottom:12px;"><b>Ngày:</b> ${cin} - ${cout}</div>
-                        <a href="/booking/index.php?room_type=${encodeURIComponent(slug)}&checkin=${encodeURIComponent(cin)}&checkout=${encodeURIComponent(cout)}" target="_blank" 
-                           style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; border-radius:6px; text-decoration:none; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(16,185,129,0.3); transition:all 0.2s;">
-                           TIẾP TỤC ĐỂ THANH TOÁN
+                        <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại phòng:</b> ${name}</div>
+                        <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày ở:</b> ${cin} - ${cout}</div>
+                        <a href="/booking/index.php?room_type=${encodeURIComponent(slug)}&checkin=${encodeURIComponent(cin)}&checkout=${encodeURIComponent(cout)}&offline=1" target="_blank" 
+                           style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; text-decoration:none; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
+                           NHẬN MÃ ĐẶT PHÒNG / QR CODE
                         </a>
-                        <div style="font-size:10px; color:#94a3b8; text-align:center; margin-top:8px; font-style:italic;">Bạn sẽ được chuyển hướng tới trang thanh toán bảo mật.</div>
+                        <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
                     </div>
                 `;
             }
