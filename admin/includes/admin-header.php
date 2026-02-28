@@ -261,6 +261,14 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         ]
                     ],
                     [
+                        'label' => 'AI',
+                        'icon' => 'smart_toy',
+                        'role' => 'admin',
+                        'items' => [
+                            ['page' => 'ai-assistant', 'icon' => 'generating_tokens', 'label' => 'Trợ Lý Admin AI']
+                        ]
+                    ],
+                    [
                         'label' => 'Marketing',
                         'icon' => 'campaign',
                         'items' => [
