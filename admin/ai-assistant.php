@@ -132,6 +132,27 @@ require_once 'includes/admin-header.php';
     const btn = document.getElementById('aiBtnSend');
     const terminal = document.getElementById('aiTerminal');
 
+    // ── Lịch sử trò chuyện (localStorage) ──────────────────────────────────
+    const HISTORY_KEY = 'aurora_admin_ai_history';
+
+    function saveHistory(user, content) {
+        const arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        arr.push({ user, content });
+        // Giới hạn 200 tin nhắn gần nhất
+        if (arr.length > 200) arr.splice(0, arr.length - 200);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+    }
+
+    function restoreHistory() {
+        const arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        if (arr.length === 0) return;
+        appendTerminal(`Loaded ${arr.length} messages from local history.`, 'INFO');
+        arr.forEach(({ user, content }) => {
+            // Khi restore, các action box đã phê duyệt/hủy sẽ được đánh dấu là đã xử lý
+            renderMessage(user, content, true);
+        });
+    }
+
     // Chặn enter vô duyên
     function fillPrompt(text) {
         input.value = text;
@@ -205,7 +226,7 @@ require_once 'includes/admin-header.php';
         `;
     }
 
-    function renderMessage(user, content) {
+    function renderMessage(user, content, isRestore = false) {
         const div = document.createElement('div');
         div.className = 'flex items-start gap-4';
 
@@ -286,7 +307,7 @@ require_once 'includes/admin-header.php';
                 <div class="flex-1">
                     <div class="bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 dark:border-slate-700 text-sm leading-relaxed inline-block">
                         ${displayHtml}
-                        ${actionBoxesHtml}
+                        ${isRestore ? restoreActionBoxesHtml(actionBoxesHtml) : actionBoxesHtml}
                     </div>
                 </div>
             `;
@@ -294,6 +315,11 @@ require_once 'includes/admin-header.php';
 
         windowChat.appendChild(div);
         windowChat.scrollTo({ top: windowChat.scrollHeight, behavior: 'smooth' });
+
+        // Lưu vào lịch sử (trừ khi đang restore)
+        if (!isRestore) {
+            saveHistory(user, content);
+        }
     }
 
     form.onsubmit = (e) => {
@@ -334,11 +360,31 @@ require_once 'includes/admin-header.php';
             });
     }
 
+    // Action box khi restore: chuyển nút thành trạng thái "đã xử lý trong phiên trước"
+    function restoreActionBoxesHtml(html) {
+        if (!html) return '';
+        // Thay toàn bộ action-box bằng trạng thái archived
+        const dummy = document.createElement('div');
+        dummy.innerHTML = html;
+        dummy.querySelectorAll('.action-box').forEach(box => {
+            box.innerHTML = `
+                <div class="text-center p-2 text-yellow-700 bg-yellow-50 rounded-xl border border-yellow-200 text-xs">
+                    <span class="material-symbols-outlined text-sm align-middle">history</span>
+                    <b>Lệnh từ phiên trước</b> — Nếu cần thực thi lại, hãy nhập lại yêu cầu.
+                </div>`;
+        });
+        return dummy.innerHTML;
+    }
+
     function clearChat() {
-        const childs = windowChat.querySelectorAll(':scope > div:not(:first-child)');
+        const childs = windowChat.querySelectorAll(':scope > div:not(.system-banner)');
         childs.forEach(c => c.remove());
+        localStorage.removeItem(HISTORY_KEY);
         appendTerminal(`Chat history cleared.`, 'INFO');
     }
+
+    // Restore lịch sử khi tải trang
+    restoreHistory();
 </script>
 
 <?php require_once 'includes/admin-footer.php'; ?>
