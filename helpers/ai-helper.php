@@ -81,16 +81,62 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($rooms) {
-                $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n";
+                $knowledge_context .= "\n--- THÔNG TIN CÁC HẠNG PHÒNG TRỐNG MÀ HOTEL ĐANG CÓ ---\n";
                 foreach ($rooms as $room) {
                     $price = number_format($room['price_per_night'], 0, ',', '.');
-                    $knowledge_context .= "- Loại phòng: {$room['name']} (Mã tham chiếu: {$room['slug']}) - Giá từ: {$price} VNĐ/đêm - Sức chứa tối đa: {$room['max_occupancy']} người (Còn trống {$room['available_count']} phòng).\n";
+                    $knowledge_context .= "- Loại phòng: {$room['name']} (Mã tham chiếu: {$room['slug']}) - CHÚ Ý ĐÂY LÀ GIÁ GỐC THẤP NHẤT: {$price} VNĐ/đêm - Sức chứa: {$room['max_occupancy']} người.\n";
                 }
             } else {
-                $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n- Hiện tại khách sạn đang hết phòng trống.\n";
+                $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG ---\n- Hiện khách sạn đang full không còn phòng trống.\n";
             }
         } catch (Exception $e) {
-            // Error silently ignored
+        }
+
+        // 3. Lấy dữ liệu Báo giá Hậu Cần Tăng Giá Động Lễ/Tết (MỚI)
+        try {
+            $stmt = $db->query("
+                SELECT rt.type_name, rp.start_date, rp.end_date, rp.price, rp.description
+                FROM room_pricing rp
+                JOIN room_types rt ON rp.room_type_id = rt.room_type_id
+                WHERE rp.end_date >= CURRENT_DATE()
+            ");
+            $pricing_rules = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($pricing_rules) {
+                $knowledge_context .= "\n--- 💰💰 LỊCH BÁO GIÁ ĐỘNG (THAY ĐỔI THEO LỄ/TẾT) ĐANG ÁP DỤNG ---\n";
+                foreach ($pricing_rules as $rp) {
+                    $knowledge_context .= "- Phòng {$rp['type_name']} bị báo ĐỔI GIÁ thành: " . number_format($rp['price'], 0, ',', '.') . " VNĐ/đêm từ ngày " . date('d/m/Y', strtotime($rp['start_date'])) . " đến " . date('d/m/Y', strtotime($rp['end_date'])) . ". Vì lý do là: {$rp['description']}.\n";
+                }
+                $knowledge_context .= "(CẢNH BÁO QUAN TRỌNG: Nếu khách hỏi giá đúng Giai đoạn Ngày Lễ bên trên, AI BẮT BUỘC phải bỏ Giá Gốc đi, mà BÁO MỨC GIÁ CHUẨN LỄ TẾT trên. Nếu khách đặt nhiều đêm (Ví dụ 1 ngày lễ, 1 ngày thường), AI phải tự cộng dồn thông minh 2 khoảng tiền trước khi trả lời Tổng Kết để Khách chốt deal!)\n";
+            }
+        } catch (Exception $e) {
+        }
+
+        // 4. Lấy hình ảnh thiết bị trực quan từ thư viện (Thẻ Markdown)
+        try {
+            $stmt = $db->query("SELECT title, image_url, category FROM gallery WHERE status = 'active' LIMIT 15");
+            $galleries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($galleries) {
+                $knowledge_context .= "\n--- 📸 HỆ THỐNG GỌI HÌNH ẢNH THỰC TẾ TRỰC QUAN KHUYẾN GỢI MUA HÀNG ---\n";
+                foreach ($galleries as $gal) {
+                    $full_img_url = "https://aurorahotelplaza.com/2025/" . $gal['image_url'];
+                    $knowledge_context .= "+ Tên ảnh: [{$gal['title']}] (Album {$gal['category']}) -> MÃ GỌI ẢNH (Bảo mật):  ![{$gal['title']}]({$full_img_url})\n";
+                }
+                $knowledge_context .= "(LUẬT XUẤT ẢNH CHO KHÁCH XEM: Khi Khách muốn 'Xem không gian phòng', 'Tư vấn view phòng' hoặc bạn thấy Cần Thuyết Phục Khách bằng sự đẹp Mắt, NẾU Data trên có cái Ảnh khớp -> AI hãy Vứt ngay đoạn Mã Gọi Ảnh `![...](...)` này Trực Tiếp vào cuối phần chát. Đừng sáng tác Link ảnh giả mạo. Giao diện Chat của Guest sẽ Bốc Ảnh Phóng To Ra Màn Hình Khách Sạn!)\n";
+            }
+        } catch (Exception $e) {
+        }
+
+        // 5. Cài đặt các FAQs Hỏi Xoáy Đáp Xoay của Khách MỚI
+        try {
+            $stmt = $db->query("SELECT question, answer FROM faqs WHERE status = 'active'");
+            $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($faqs) {
+                $knowledge_context .= "\n--- 🛎 BỘ CẨM NANG HỎI XOÁY ĐÁP XOAY (FAQs) ---\n";
+                foreach ($faqs as $faq) {
+                    $knowledge_context .= "Hỏi: {$faq['question']} -> Đáp luôn: {$faq['answer']}\n";
+                }
+            }
+        } catch (Exception $e) {
         }
     }
 
