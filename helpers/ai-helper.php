@@ -6,21 +6,11 @@
 
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
-    // Lấy API Key động từ file Config bí mật (Không đẩy lên Github)
-    $api_key = '';
-    $key_file = __DIR__ . '/../config/api_keys.php';
-    if (file_exists($key_file)) {
-        require_once $key_file;
-        if (defined('GEMINI_API_KEY')) {
-            $api_key = GEMINI_API_KEY;
-        }
-    } else {
-        // Fallback đọc từ biến môi trường (nếu cài đặt trực tiếp trên CPanel/Hosting)
-        $api_key = getenv('GEMINI_API_KEY');
-    }
+    require_once __DIR__ . '/api_key_manager.php';
+    $api_key = get_active_gemini_key();
 
     if (empty($api_key)) {
-        return "Xin lỗi, hệ thống chưa được cấu hình khóa API (API Key) để Trợ lý ảo hoạt động.";
+        return "Xin lỗi, hệ thống chưa được cấu hình khóa API (API Key) để Trợ lý ảo hoạt động. Quý khách vui lòng cấu hình tại config/api_keys.php";
     }
 
     // 1. (RAG) Kéo tri thức từ Database
@@ -262,6 +252,18 @@ Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
+    if ($http_code === 429) {
+        $new_key = rotate_gemini_key();
+        if ($new_key && $new_key !== $api_key) {
+            // Thử Gọi lại API với Key Mới
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $response = curl_exec($ch);
+        }
+    }
 
     if (curl_errno($ch)) {
         error_log('Curl error: ' . curl_error($ch));

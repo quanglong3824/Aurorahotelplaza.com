@@ -3,6 +3,7 @@
 # Sensitive files
 config/database.php
 config/api_keys.php
+config/current_key_idx.txt
 auth/key-google-web-app.json
 .env
 .env.local

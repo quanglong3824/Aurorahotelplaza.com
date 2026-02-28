@@ -11,25 +11,12 @@ try {
 
     require_once '../../config/database.php';
 
-    // Khởi tạo $api_key
-    $api_key = '';
-    $key_file = __DIR__ . '/../../config/api_keys.php';
-    if (file_exists($key_file)) {
-        require_once $key_file;
-        if (defined('GEMINI_API_KEY')) {
-            $api_key = GEMINI_API_KEY;
-        }
-    } else {
-        $api_key = getenv('GEMINI_API_KEY');
-    }
+    // Khởi tạo và Quản lý Tự động Chọn/Rotate API Key Mới Nhất
+    require_once __DIR__ . '/../../helpers/api_key_manager.php';
+    $api_key = get_active_gemini_key();
 
     if (empty($api_key)) {
-        throw new Exception("Lỗi API Key: Chưa cấu hình GEMINI_API_KEY. Vui lòng thêm khóa trong config/api_keys.php");
-    }
-
-    // Nếu API Key là key mặc định -> Từ chối chạy luôn.
-    if (strpos($api_key, 'ĐIỀN_API_KEY') !== false || $api_key === 'YOUR_API_KEY_HERE') {
-        throw new Exception("API Key của bạn là key ảo chưa được thay thế. Vui lòng mở /config/api_keys.php để thay bằng Key thật!");
+        throw new Exception("Lỗi API Key: Chưa cấu hình GEMINI_API_KEYS. Vui lòng thêm khóa trong config/api_keys.php");
     }
 
     $input = json_decode(file_get_contents('php://input'), true);
@@ -137,6 +124,19 @@ PROMPT;
     $response = curl_exec($ch);
     $err = curl_error($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
+    if ($http_code === 429) {
+        $new_key = rotate_gemini_key();
+        if ($new_key && $new_key !== $api_key) {
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $response = curl_exec($ch);
+            $err = curl_error($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        }
+    }
+
     curl_close($ch);
 
     if ($err) {
