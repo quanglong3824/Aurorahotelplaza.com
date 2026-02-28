@@ -27,12 +27,12 @@ function generate_ai_reply($user_message, $db)
 
         // 2. Lấy dữ liệu Phòng (Real-time Database)
         try {
-            // Cập nhật câu query cho phù hợp với cấu trúc bảng thực tế của bạn
-            // Giả sử bạn có bảng `rooms` hoặc `room_types`
             $stmt = $db->query("
-                SELECT name, price_per_night, max_adults, max_children, status 
-                FROM rooms 
-                WHERE status = 'available' 
+                SELECT rt.type_name as name, rt.base_price as price_per_night, rt.max_adults, rt.max_children, COUNT(r.room_id) as available_count
+                FROM room_types rt
+                JOIN rooms r ON rt.room_type_id = r.room_type_id
+                WHERE r.status = 'available' AND rt.status = 'active'
+                GROUP BY rt.room_type_id
                 LIMIT 10
             ");
             $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,25 +41,27 @@ function generate_ai_reply($user_message, $db)
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n";
                 foreach ($rooms as $room) {
                     $price = number_format($room['price_per_night'], 0, ',', '.');
-                    $knowledge_context .= "- {$room['name']}: Giá {$price} VNĐ/đêm. Tiêu chuẩn: {$room['max_adults']} NL, {$room['max_children']} TE.\n";
+                    $knowledge_context .= "- Loại phòng: {$room['name']} - Giá từ: {$price} VNĐ/đêm - Sức chứa: {$room['max_adults']} NL, {$room['max_children']} TE (Còn trống {$room['available_count']} phòng).\n";
                 }
             } else {
                 $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG HIỆN TẠI ---\n- Hiện tại khách sạn đang hết phòng trống.\n";
             }
         } catch (Exception $e) {
-            // Bỏ qua nếu cấu trúc tên bảng bị sai lệch đôi chút
+            // Error silently ignored
         }
     }
 
     // 2. Định nghĩa vai trò (System Prompt) cho Bot
     // Đây là "não bộ" của Bot
     $system_prompt = "
-Bạn là Aurora, Lễ tân ảo CSKH của khách sạn Aurora Hotel Plaza.
-Bạn phải luôn giữ thái độ niềm nở, lịch sự, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
-Tuyệt đối không bịa đặt thông tin. Nếu có thông tin trong [DỮ LIỆU KIẾN THỨC] dưới đây, hãy trả lời theo nó.
-Nếu khách hỏi gì nằm ngoài dữ liệu hệ thống, hãy nói 'Dạ, vấn đề này em sẽ chuyển cho nhân viên hỗ trợ trực tiếp. Quý khách vui lòng đợi trong giây lát ạ.'
+Bạn là Aurora, Trợ lý AI Thông minh của khách sạn Aurora Hotel Plaza. Nữ giới.
+Nhiệm vụ cốt lõi:
+- Luôn giữ thái độ chuyên nghiệp, thân thiện, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
+- Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ bình thường miễn là lịch sự.
+- Dựa vào [DỮ LIỆU KIẾN THỨC] để tư vấn và báo giá chi tiết, không tự bịa đặt số liệu.
+- Lưu ý cực quan trọng: Chỉ khi nào khách yêu cầu khiếu nại gay gắt hoặc đòi hỏi dịch vụ nằm ngoài khả năng trả lời thì mới xin phép chuyển qua người thật. Tuyệt đối không tự động nói câu 'vấn đề này hơi khó, để em chuyển một bạn hỗ trợ viên' khi khách chỉ hỏi thăm bình thường.
 
-[DỮ LIỆU KIẾN THỨC BẠN ĐÃ HỌC]
+[DỮ LIỆU KIẾN THỨC (CẬP NHẬT REALTIME)]
 {$knowledge_context}
     ";
 

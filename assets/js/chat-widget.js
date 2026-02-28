@@ -446,7 +446,7 @@ const ChatWidget = {
             
         let init = '';
         if (isBot) {
-            init = '🤖';
+            init = 'AI';
         } else if (!isUser) {
             init = 'NV';
         }
@@ -465,9 +465,9 @@ const ChatWidget = {
 
         return `
             <div class="cw-bubble-row staff" data-msg-id="${msg.message_id}">
-                <div class="cw-staff-avatar-micro" ${isBot ? 'style="font-size:16px;background:linear-gradient(135deg, #a855f7, #3b82f6);"' : ''}>${init}</div>
+                <div class="cw-staff-avatar-micro" ${isBot ? 'style="font-size:12px; font-weight:bold; color:#fff; background:linear-gradient(135deg, #4f46e5, #3b82f6);"' : ''}>${init}</div>
                 <div>
-                    ${isBot ? '<div style="font-size:11px; color:#3b82f6; font-weight:bold; margin-bottom:2px">Trợ lý ảo Aurora 🌟</div>' : ''}
+                    ${isBot ? '<div style="font-size:11px; color:#4f46e5; font-weight:bold; margin-bottom:2px">Aurora AI</div>' : ''}
                     <div class="cw-bubble">${this.esc(msg.message)}</div>
                     <div class="cw-bubble-time">${time}</div>
                 </div>
