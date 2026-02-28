@@ -49,8 +49,8 @@ try {
     }
 
     // Log ai execution
-    $logStmt = $db->prepare("INSERT INTO admin_activity_logs (user_id, action, details) VALUES (?, ?, ?)");
-    $logStmt->execute([$_SESSION['user_id'], 'ai_execution', "AI Entity executed via Admin Chat: " . json_encode($input)]);
+    $logStmt = $db->prepare("INSERT INTO activity_logs (user_id, action, description) VALUES (?, ?, ?)");
+    $logStmt->execute([$_SESSION['user_id'], 'ai_execution', "AI executed CRUD via Admin Chat: " . json_encode($input)]);
 
     echo json_encode(['success' => true, 'affected_rows' => $affected]);
 

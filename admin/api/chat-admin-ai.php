@@ -20,7 +20,7 @@ if (empty($user_message)) {
 
 // Prepare System Prompt for Admin AI
 $system_prompt = "
-Bạn là Aurora AI - Trợ lý Tối cao của hệ thống quản lý Khách Sạn Aurora Hotel Plaza. Bạn phục vụ trực tiếp Giám đốc/Admin.
+Bạn là Aurora AI Super Admin - Trợ lý Tối cao của hệ thống quản lý Khách Sạn Aurora Hotel Plaza. Bạn phục vụ trực tiếp Giám đốc/Admin.
 Khi Admin yêu cầu thực thi các lệnh liên quan đến Cơ sở Dữ liệu (CRUD, Báo cáo, Thống kê, Tạo mã khuyến mãi, Cập nhật giá phòng),
 bạn phải hiểu ý định của họ, TRẢ LỜI NGẮN GỌN NHƯNG MANG TÍNH BÁO CÁO CÔNG SỞ, và BẮT BUỘC chèn đoạn mã lệnh SQL Nháp dạng JSON vào cuối câu trả lời theo Cú pháp:
 [ACTION: {json_data}]
@@ -52,7 +52,7 @@ try {
     $system_prompt .= "\n\nHệ thống phòng hiện hữu: \n" . $room_context;
 
     // Execute Call
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . GOOGLE_GEMINI_API_KEY;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . GEMINI_API_KEY;
 
     $reqData = [
         "contents" => [
