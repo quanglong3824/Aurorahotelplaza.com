@@ -39,35 +39,54 @@ try {
         throw new Exception("Nội dung rỗng.");
     }
 
-    // Prepare System Prompt for Admin AI
-    $system_prompt = "
-    Bạn là Aurora AI Super Admin - Trợ lý Tối cao của hệ thống quản lý Khách Sạn Aurora Hotel Plaza. Bạn phục vụ trực tiếp Giám đốc/Admin.
-    Khi Admin yêu cầu thực thi các lệnh liên quan đến Cơ sở Dữ liệu (Tạo mã khuyến mãi, Cập nhật giá phòng),
-    bạn phải hiểu ý định, TRẢ LỜI NGẮN GỌN BÁO CÁO CÔNG SỞ, và BẮT BUỘC chèn đoạn mã lệnh SQL Nháp dạng JSON vào cuối câu theo Cú pháp:
-    [ACTION: {json_data}]
+    // ─────────────────────────────────────────────────────────────────────────
+    // SYSTEM PROMPT - Bắt buộc AI phải chọn đúng loại lệnh
+    // ─────────────────────────────────────────────────────────────────────────
+    $system_prompt = <<<'PROMPT'
+Bạn là Aurora AI Super Admin - Trợ lý siêu cấp của Khách Sạn Aurora Hotel Plaza.
 
-    NẾU CẦN THỰC THI NHIỀU LỆNH CÙNG LÚC (ví dụ: cập nhật giá nhiều loại phòng, hoặc vừa tạo giá vừa tạo voucher), HÃY TẠO NHIỀU BLOCK [ACTION: {...}] RIÊNG BIỆT!
+== QUY TẮC CHỌN LỆNH (QUAN TRỌNG NHẤT) ==
+RULE 1: Admin nói "cập nhật giá phòng X lên Y" mà KHÔNG đề cập ngày/dịp cụ thể
+  → LUÔN LUÔN dùng UPDATE_BASE_PRICE (table: room_types) để đổi giá gốc niêm yết.
 
-    Bảng Cơ sở dữ liệu bạn được quyền truy cập:
-    1. `promotions` (code, title, discount_type, discount_value, min_booking_amount, start_date, end_date)
-    2. `room_pricing` (room_type_id, start_date, end_date, price, description)
-    3. `room_types` (room_type_id, base_price) - Dùng khi Admin muốn ĐỔI GIÁ GỐC NIÊM YẾT của phòng.
+RULE 2: Admin nói "dịp lễ...", "tháng ...đến tháng...", "từ ngày...đến ngày..."
+  → Dùng UPDATE_ROOM_PRICE (table: room_pricing) với start_date + end_date đầy đủ.
 
-    Cú pháp ACTION JSON mẫu đối với Tạo Khuyến mãi:
-    [ACTION: {\"table\":\"promotions\",\"action\":\"CREATE_PROMOTION\",\"data\":{\"code\":\"LE3004\",\"title\":\"Mừng lễ 30/4\",\"discount_type\":\"fixed\",\"discount_value\":300000,\"min_booking_amount\":2000000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-02\"}}]
+RULE 3: Admin muốn tạo mã khuyến mãi / voucher giảm giá
+  → Dùng CREATE_PROMOTION (table: promotions).
 
-    Cú pháp ACTION JSON mẫu đối với Đổi Giá Gốc Niêm Yết Của Phòng (Cập nhật thẳng vào room_types):
-    [ACTION: {\"table\":\"room_types\",\"action\":\"UPDATE_BASE_PRICE\",\"data\":{\"room_type_id\":1,\"base_price\":2500000}}]
+== BẢNG DỮ LIỆU ==
+1. promotions      → code, title, discount_type(percentage|fixed), discount_value, min_booking_amount, start_date, end_date
+2. room_types      → room_type_id, base_price  [Chỉ dùng UPDATE_BASE_PRICE để đổi giá gốc]
+3. room_pricing    → room_type_id, start_date, end_date, price, description  [Chỉ dùng UPDATE_ROOM_PRICE cho giá thời vụ]
 
-    Cú pháp ACTION JSON mẫu đối với Cập nhật Giá Thời Vụ dịp Lễ (Tạo từng ACTION cho từng room_type_id nếu cần Cập nhật nhiều phòng):
-    [ACTION: {\"table\":\"room_pricing\",\"action\":\"UPDATE_ROOM_PRICE\",\"data\":{\"room_type_id\":1,\"price\":3000000,\"start_date\":\"2026-04-30\",\"end_date\":\"2026-05-05\",\"description\":\"Tăng giá dịp lễ\"}}]
+== FORMAT JSON BẮT BUỘC ==
+[ACTION: {"table":"TÊN_BẢNG","action":"TÊN_HÀNH_ĐỘNG","data":{...}}]
 
-    LƯU Ý CỰC KỲ QUAN TRỌNG: 
-    - Tuyệt đối không tự ý thực thi. Bạn chỉ SẢN SINH CÁC KHỐI JSON để Admin Phê Duyệt.
-    - Câu trả lời thật ngắn gọn để tiết kiệm Output Tokens tránh đứt gãy JSON!
-    ";
+Nếu nhiều lệnh: xuất NHIỀU block [ACTION] riêng biệt nhau.
 
-    // Lấy context
+== VÍ DỤ CHUẨN ==
+Admin: "Cập nhật giá Deluxe lên 2.5 triệu" (không có ngày cụ thể)
+→ BẮT BUỘC dùng UPDATE_BASE_PRICE:
+[ACTION: {"table":"room_types","action":"UPDATE_BASE_PRICE","data":{"room_type_id":ID_PHONG,"base_price":2500000}}]
+
+Admin: "Nâng giá Deluxe 10% dịp 30/4" (có dịp cụ thể)
+→ Dùng UPDATE_ROOM_PRICE với ngày:
+[ACTION: {"table":"room_pricing","action":"UPDATE_ROOM_PRICE","data":{"room_type_id":ID_PHONG,"price":2200000,"start_date":"2026-04-30","end_date":"2026-05-02","description":"Lễ 30/4"}}]
+
+Admin: "Tạo voucher giảm 20% cho đơn từ 2tr" 
+→ Dùng CREATE_PROMOTION:
+[ACTION: {"table":"promotions","action":"CREATE_PROMOTION","data":{"code":"CODE","title":"Tên","discount_type":"percentage","discount_value":20,"min_booking_amount":2000000,"start_date":"2026-01-01","end_date":"2026-12-31"}}]
+
+== LƯU Ý ==
+- Trả lời ngắn gọn kiểu báo cáo công sở.
+- Tuyệt đối chỉ xuất JSON để Admin phê duyệt, KHÔNG tự thực thi.
+- Thay ID_PHONG bằng room_type_id thật từ danh sách phòng phía dưới.
+PROMPT;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Lấy context database: Danh sách phòng thực tế
+    // ─────────────────────────────────────────────────────────────────────────
     $db = getDB();
     if (!$db) {
         throw new Exception("Lỗi kết nối CSDL!");
@@ -79,22 +98,27 @@ try {
     }
 
     $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $room_context = "Các loại phòng đang có (Sử dụng ID này nếu tạo room_pricing): \n";
+    $room_context = "\n\nDANH SÁCH PHÒNG THỰC TẾ (Dùng room_type_id này khi tạo JSON):\n";
     foreach ($room_types as $rt) {
-        $room_context .= "ID: {$rt['room_type_id']} | Tên: {$rt['name']} | Giá niêm yết: {$rt['base_price']}\n";
+        $room_context .= "  room_type_id={$rt['room_type_id']} | Tên: {$rt['name']} | Giá gốc hiện tại: {$rt['base_price']} VND\n";
     }
 
-    $system_prompt .= "\n\nHệ thống phòng hiện hữu: \n" . $room_context;
+    $full_prompt = $system_prompt . $room_context;
 
-    // Execute Call
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Gọi Gemini API
+    // ─────────────────────────────────────────────────────────────────────────
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
 
     $reqData = [
+        "system_instruction" => [
+            "parts" => [["text" => $full_prompt]]
+        ],
         "contents" => [
-            ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nSếp chat: " . $user_message]]]
+            ["role" => "user", "parts" => [["text" => $user_message]]]
         ],
         "generationConfig" => [
-            "temperature" => 0.2,
+            "temperature" => 0.1,
             "maxOutputTokens" => 4096,
         ]
     ];
@@ -108,7 +132,6 @@ try {
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($reqData));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    // Add timeout cho Prod để tránh treo ngầm 500 server
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
     $response = curl_exec($ch);
@@ -121,7 +144,7 @@ try {
     }
 
     if ($http_code != 200) {
-        throw new Exception("Lỗi gọi Gemini API (Code {$http_code}): " . $response);
+        throw new Exception("Lỗi gọi Gemini API (HTTP {$http_code}): " . $response);
     }
 
     $res_json = json_decode($response, true);
