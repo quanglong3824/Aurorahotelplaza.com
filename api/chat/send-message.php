@@ -193,7 +193,7 @@ try {
                 unread_staff         = 0,
                 last_message_at      = NOW(),
                 last_message_preview = :preview,
-                status               = IF(:is_closing = 1, 'closed', status),
+                status               = IF(:is_closing = 1, 'closed', 'assigned'),
                 updated_at           = NOW()
             WHERE conversation_id = :cid
         ")->execute([
