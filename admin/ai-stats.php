@@ -221,20 +221,19 @@ $rate_limits = get_key_rate_limits();
                         $safe_key = substr($key_val, 0, 8) . '...' . substr($key_val, -4);
                         ?>
                         <tr>
-                            <td class="font-mono text-center">
-                                <b class="text-xs text-slate-800 dark:text-slate-300"
-                                    title="<?php echo htmlspecialchars($key_val); ?>">
-                                    <?php echo $safe_key; ?>
-                                </b>
-                                <?php if ($is_limited): ?>
-                                    <br><span class="badge badge-danger mt-1 shadow-sm"><span
-                                            class="material-symbols-outlined text-[12px] mr-1">timer</span>Bị giới hạn</span>
-                                <?php elseif ($isActive): ?>
-                                    <br><span class="badge badge-success mt-1 shadow-sm"><span
-                                            class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></span>Active</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
+                                                <td class="font-mono text-center">
+                                                    <div class="flex flex-col items-center gap-1 mt-2">
+                                                        <b class="text-xs text-slate-800 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded" title="<?php echo htmlspecialchars($key_val); ?>">
+                                                            <?php echo $safe_key; ?>
+                                                        </b>
+                                                        <?php if ($is_limited): ?>
+                                                            <span class="badge badge-danger shadow-sm flex items-center justify-center gap-1 text-[10px] w-full"><span class="material-symbols-outlined text-[12px]">timer</span>Bị giới hạn</span>
+                                                        <?php elseif ($isActive): ?>
+                                                            <span class="badge badge-success shadow-sm flex items-center justify-center gap-1 text-[10px] w-full"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>Active</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </td>
+                                                <td>
                                 <?php if ($is_limited): ?>
                                     <div class="flex items-center gap-2 text-red-600 dark:text-red-400 text-sm font-bold">
                                         <span class="material-symbols-outlined animate-pulse">warning</span>
