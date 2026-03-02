@@ -218,7 +218,7 @@ include 'includes/admin-header.php';
                     <!-- Price -->
                     <div class="mb-3 pt-3 border-t border-border-light dark:border-border-dark">
                         <p class="text-xl font-bold text-accent">
-                            <?php echo number_format($service['price'], 0, ',', '.'); ?>đ
+                            <?php echo number_format($service['price'], 0, ',', '.'); ?>VNĐ
                             <?php if ($service['unit']): ?>
                                 <span
                                     class="text-sm font-normal text-text-secondary-light dark:text-text-secondary-dark">/<?php echo htmlspecialchars($service['unit']); ?></span>

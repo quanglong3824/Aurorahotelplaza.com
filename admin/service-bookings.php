@@ -85,7 +85,8 @@ include 'includes/admin-header.php';
     <div class="card">
         <div class="card-body text-center">
             <div class="text-3xl font-bold text-blue-600 mb-1">
-                <?php echo number_format($stats['total_revenue'], 0, ',', '.'); ?>VNĐ</div>
+                <?php echo number_format($stats['total_revenue'], 0, ',', '.'); ?>VNĐ
+            </div>
             <div class="text-sm text-gray-600">Doanh thu</div>
         </div>
     </div>
@@ -158,7 +159,7 @@ include 'includes/admin-header.php';
                                 <td><?php echo htmlspecialchars($booking['service_name']); ?></td>
                                 <td><?php echo $booking['quantity']; ?></td>
                                 <td class="font-bold" style="color: #d4af37;">
-                                    <?php echo number_format($booking['total_price'], 0, ',', '.'); ?>đ
+                                    <?php echo number_format($booking['total_price'], 0, ',', '.'); ?>VNĐ
                                 </td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($booking['service_date'])); ?></td>
                                 <td>

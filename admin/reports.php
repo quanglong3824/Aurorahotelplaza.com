@@ -167,7 +167,7 @@ include 'includes/admin-header.php';
             <span class="material-symbols-outlined text-green-600">trending_up</span>
         </div>
         <p class="text-3xl font-bold text-green-600">
-            <?php echo number_format($revenue_stats['total_revenue'], 0, ',', '.'); ?>đ
+            <?php echo number_format($revenue_stats['total_revenue'], 0, ',', '.'); ?>VNĐ
         </p>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
             Từ <?php echo $revenue_stats['total_bookings']; ?> đơn đặt phòng
@@ -180,7 +180,7 @@ include 'includes/admin-header.php';
             <span class="material-symbols-outlined text-blue-600">receipt_long</span>
         </div>
         <p class="text-3xl font-bold text-blue-600">
-            <?php echo number_format($revenue_stats['avg_booking_value'], 0, ',', '.'); ?>đ
+            <?php echo number_format($revenue_stats['avg_booking_value'], 0, ',', '.'); ?>VNĐ
         </p>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
             Trung bình mỗi đơn
@@ -227,26 +227,26 @@ include 'includes/admin-header.php';
         </div>
         <div class="card-body">
             <?php if (empty($daily_revenue)): ?>
-                <div class="empty-state py-8">
-                    <span class="empty-state-icon material-symbols-outlined">show_chart</span>
-                    <p class="empty-state-description">Không có dữ liệu trong khoảng thời gian này</p>
-                </div>
+                    <div class="empty-state py-8">
+                        <span class="empty-state-icon material-symbols-outlined">show_chart</span>
+                        <p class="empty-state-description">Không có dữ liệu trong khoảng thời gian này</p>
+                    </div>
             <?php else: ?>
-                <div class="space-y-2">
-                    <?php foreach ($daily_revenue as $day): ?>
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm w-24"><?php echo date('d/m/Y', strtotime($day['date'])); ?></span>
-                            <div
-                                class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
-                                <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
-                                    style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
-                                    <?php echo number_format($day['revenue'], 0, ',', '.'); ?>đ
+                    <div class="space-y-2">
+                        <?php foreach ($daily_revenue as $day): ?>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-sm w-24"><?php echo date('d/m/Y', strtotime($day['date'])); ?></span>
+                                    <div
+                                        class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
+                                        <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
+                                            style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
+                                            <?php echo number_format($day['revenue'], 0, ',', '.'); ?>VNĐ
+                                        </div>
+                                    </div>
+                                    <span class="text-sm w-16 text-right"><?php echo $day['bookings']; ?> đơn</span>
                                 </div>
-                            </div>
-                            <span class="text-sm w-16 text-right"><?php echo $day['bookings']; ?> đơn</span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+                        <?php endforeach; ?>
+                    </div>
             <?php endif; ?>
         </div>
     </div>
@@ -258,47 +258,47 @@ include 'includes/admin-header.php';
         </div>
         <div class="card-body">
             <?php if (empty($status_distribution)): ?>
-                <div class="empty-state py-8">
-                    <span class="empty-state-icon material-symbols-outlined">pie_chart</span>
-                    <p class="empty-state-description">Không có dữ liệu</p>
-                </div>
+                    <div class="empty-state py-8">
+                        <span class="empty-state-icon material-symbols-outlined">pie_chart</span>
+                        <p class="empty-state-description">Không có dữ liệu</p>
+                    </div>
             <?php else: ?>
-                <div class="space-y-3">
-                    <?php
-                    $total_status = array_sum(array_column($status_distribution, 'count'));
-                    $status_labels = [
-                        'pending' => 'Chờ xác nhận',
-                        'confirmed' => 'Đã xác nhận',
-                        'checked_in' => 'Đã nhận phòng',
-                        'checked_out' => 'Đã trả phòng',
-                        'cancelled' => 'Đã hủy',
-                        'no_show' => 'Không đến'
-                    ];
-                    $status_colors = [
-                        'pending' => 'bg-yellow-500',
-                        'confirmed' => 'bg-blue-500',
-                        'checked_in' => 'bg-green-500',
-                        'checked_out' => 'bg-gray-500',
-                        'cancelled' => 'bg-red-500',
-                        'no_show' => 'bg-orange-500'
-                    ];
-                    foreach ($status_distribution as $status):
-                        $percentage = ($status['count'] / $total_status) * 100;
-                        ?>
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <span
-                                    class="text-sm"><?php echo $status_labels[$status['status']] ?? $status['status']; ?></span>
-                                <span class="text-sm font-medium"><?php echo $status['count']; ?>
-                                    (<?php echo number_format($percentage, 1); ?>%)</span>
-                            </div>
-                            <div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2">
-                                <div class="<?php echo $status_colors[$status['status']] ?? 'bg-gray-500'; ?> h-2 rounded-full"
-                                    style="width: <?php echo $percentage; ?>%"></div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+                    <div class="space-y-3">
+                        <?php
+                        $total_status = array_sum(array_column($status_distribution, 'count'));
+                        $status_labels = [
+                            'pending' => 'Chờ xác nhận',
+                            'confirmed' => 'Đã xác nhận',
+                            'checked_in' => 'Đã nhận phòng',
+                            'checked_out' => 'Đã trả phòng',
+                            'cancelled' => 'Đã hủy',
+                            'no_show' => 'Không đến'
+                        ];
+                        $status_colors = [
+                            'pending' => 'bg-yellow-500',
+                            'confirmed' => 'bg-blue-500',
+                            'checked_in' => 'bg-green-500',
+                            'checked_out' => 'bg-gray-500',
+                            'cancelled' => 'bg-red-500',
+                            'no_show' => 'bg-orange-500'
+                        ];
+                        foreach ($status_distribution as $status):
+                            $percentage = ($status['count'] / $total_status) * 100;
+                            ?>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span
+                                            class="text-sm"><?php echo $status_labels[$status['status']] ?? $status['status']; ?></span>
+                                        <span class="text-sm font-medium"><?php echo $status['count']; ?>
+                                            (<?php echo number_format($percentage, 1); ?>%)</span>
+                                    </div>
+                                    <div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2">
+                                        <div class="<?php echo $status_colors[$status['status']] ?? 'bg-gray-500'; ?> h-2 rounded-full"
+                                            style="width: <?php echo $percentage; ?>%"></div>
+                                    </div>
+                                </div>
+                        <?php endforeach; ?>
+                    </div>
             <?php endif; ?>
         </div>
     </div>
@@ -322,21 +322,21 @@ include 'includes/admin-header.php';
             </thead>
             <tbody>
                 <?php if (empty($room_performance)): ?>
-                    <tr>
-                        <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
-                            Không có dữ liệu
-                        </td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($room_performance as $room): ?>
                         <tr>
-                            <td class="font-medium"><?php echo htmlspecialchars($room['type_name']); ?></td>
-                            <td><?php echo $room['bookings']; ?></td>
-                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VNĐ</td>
-                            <td><?php echo number_format($room['avg_nights'], 1); ?> đêm</td>
-                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VNĐ</td>
+                            <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
+                                Không có dữ liệu
+                            </td>
                         </tr>
-                    <?php endforeach; ?>
+                <?php else: ?>
+                        <?php foreach ($room_performance as $room): ?>
+                                <tr>
+                                    <td class="font-medium"><?php echo htmlspecialchars($room['type_name']); ?></td>
+                                    <td><?php echo $room['bookings']; ?></td>
+                                    <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VNĐ</td>
+                                    <td><?php echo number_format($room['avg_nights'], 1); ?> đêm</td>
+                                    <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VNĐ</td>
+                                </tr>
+                        <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -361,22 +361,23 @@ include 'includes/admin-header.php';
             </thead>
             <tbody>
                 <?php if (empty($top_customers)): ?>
-                    <tr>
-                        <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
-                            Không có dữ liệu
-                        </td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($top_customers as $index => $customer): ?>
                         <tr>
-                            <td class="font-bold"><?php echo $index + 1; ?></td>
-                            <td class="font-medium"><?php echo htmlspecialchars($customer['full_name']); ?></td>
-                            <td><?php echo htmlspecialchars($customer['email']); ?></td>
-                            <td><?php echo $customer['total_bookings']; ?></td>
-                            <td class="font-medium text-green-600">
-                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VNĐ</td>
+                            <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
+                                Không có dữ liệu
+                            </td>
                         </tr>
-                    <?php endforeach; ?>
+                <?php else: ?>
+                        <?php foreach ($top_customers as $index => $customer): ?>
+                                <tr>
+                                    <td class="font-bold"><?php echo $index + 1; ?></td>
+                                    <td class="font-medium"><?php echo htmlspecialchars($customer['full_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($customer['email']); ?></td>
+                                    <td><?php echo $customer['total_bookings']; ?></td>
+                                    <td class="font-medium text-green-600">
+                                        <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VNĐ
+                                    </td>
+                                </tr>
+                        <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -385,34 +386,34 @@ include 'includes/admin-header.php';
 
 <!-- Payment Methods -->
 <?php if (!empty($payment_methods)): ?>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="font-semibold">Phương thức thanh toán</h3>
-        </div>
-        <div class="card-body">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <?php
-                $method_labels = [
-                    // 'vnpay' => 'VNPay',
-                    'cash' => 'Tiền mặt',
-                    'bank_transfer' => 'Chuyển khoản',
-                    'credit_card' => 'Thẻ tín dụng'
-                ];
-                foreach ($payment_methods as $method):
-                    ?>
-                    <div class="stat-card">
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
-                            <?php echo $method_labels[$method['payment_method']] ?? $method['payment_method']; ?>
-                        </p>
-                        <p class="text-xl font-bold"><?php echo $method['count']; ?> giao dịch</p>
-                        <p class="text-sm text-green-600 mt-1">
-                            <?php echo number_format($method['total_amount'], 0, ',', '.'); ?>đ
-                        </p>
-                    </div>
-                <?php endforeach; ?>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="font-semibold">Phương thức thanh toán</h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <?php
+                    $method_labels = [
+                        // 'vnpay' => 'VNPay',
+                        'cash' => 'Tiền mặt',
+                        'bank_transfer' => 'Chuyển khoản',
+                        'credit_card' => 'Thẻ tín dụng'
+                    ];
+                    foreach ($payment_methods as $method):
+                        ?>
+                            <div class="stat-card">
+                                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
+                                    <?php echo $method_labels[$method['payment_method']] ?? $method['payment_method']; ?>
+                                </p>
+                                <p class="text-xl font-bold"><?php echo $method['count']; ?> giao dịch</p>
+                                <p class="text-sm text-green-600 mt-1">
+                                    <?php echo number_format($method['total_amount'], 0, ',', '.'); ?>VNĐ
+                                </p>
+                            </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
-    </div>
 <?php endif; ?>
 
 <!-- Export Button -->

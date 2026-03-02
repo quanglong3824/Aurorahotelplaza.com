@@ -115,7 +115,8 @@ include 'includes/admin-header.php';
                 <span class="material-symbols-outlined text-white">workspace_premium</span>
             </div>
             <div class="text-3xl font-bold mb-1" style="color: #d4af37;">
-                <?php echo number_format($stats['members_with_tier']); ?></div>
+                <?php echo number_format($stats['members_with_tier']); ?>
+            </div>
             <div class="text-sm text-gray-600">Có hạng thành viên</div>
         </div>
     </div>
@@ -273,7 +274,7 @@ include 'includes/admin-header.php';
                                 </td>
                                 <td>
                                     <span class="font-semibold" style="color: #d4af37;">
-                                        <?php echo number_format($member['total_spent'] ?? 0, 0, ',', '.'); ?>đ
+                                        <?php echo number_format($member['total_spent'] ?? 0, 0, ',', '.'); ?>VNĐ
                                     </span>
                                 </td>
                                 <td>

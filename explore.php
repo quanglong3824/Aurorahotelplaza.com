@@ -425,7 +425,7 @@ try {
                                         </h3>
                                         <?php if ($service['price'] > 0): ?>
                                             <p class="text-xs text-accent font-bold"><?php _e('explore_page.from_price'); ?>
-                                                <?php echo number_format($service['price'], 0, ',', '.'); ?>đ
+                                                <?php echo number_format($service['price'], 0, ',', '.'); ?>VNĐ
                                             </p>
                                         <?php else: ?>
                                             <p class="text-xs text-green-400 font-bold"><?php _e('explore_page.free'); ?></p>

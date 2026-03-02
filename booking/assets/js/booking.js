@@ -1583,7 +1583,7 @@ async function applyPromoCode() {
         messageDiv.innerHTML = `
             <div class="text-yellow-500 flex items-start gap-2 text-sm mt-2">
                 <span class="material-symbols-outlined text-base mt-0.5">lock</span>
-                <span>Khách vãng lai không thể sử dụng mã giảm giá. Vui lòng <a href="../auth/login.php" class="underline font-bold hover:text-yellow-400">đăng nhập</a> để hưởng ưu đãi.</span>
+                <span>Khách vãng lai không thể sử dụng mã giảm giá. Vui lòng <a href="../auth/login.php" class="underline font-bold hover:text-yellow-400">VNĐăng nhập</a> để hưởng ưu đãi.</span>
             </div>
         `;
         return;

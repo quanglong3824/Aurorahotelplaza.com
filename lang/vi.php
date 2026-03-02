@@ -570,7 +570,7 @@ return [
     'explore_page' => [
         'title' => 'Khám phá - Aurora Hotel Plaza',
         'badge' => 'Khám phá Aurora Hotel Plaza',
-        'hero_title' => 'Trải nghiệm <span class="text-accent">đẳng cấp</span><br>tại trung tâm Biên Hòa',
+        'hero_title' => 'Trải nghiệm <span class="text-accent">VNĐẳng cấp</span><br>tại trung tâm Biên Hòa',
         'hero_desc' => 'Khám phá không gian sang trọng, dịch vụ 5 sao và những trải nghiệm tuyệt vời đang chờ đón bạn tại Aurora Hotel Plaza',
         'book_now' => 'Đặt phòng ngay',
         'explore_more' => 'Khám phá thêm',

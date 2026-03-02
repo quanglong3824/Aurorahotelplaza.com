@@ -497,7 +497,7 @@ include 'includes/admin-header.php';
                                 <div
                                     class="flex items-center justify-between p-3 bg-background-light dark:bg-background-dark rounded-lg">
                                     <div>
-                                        <p class="font-medium"><?php echo number_format($payment['amount'], 0, ',', '.'); ?>đ
+                                        <p class="font-medium"><?php echo number_format($payment['amount'], 0, ',', '.'); ?>VNĐ
                                         </p>
                                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                             <?php
@@ -544,11 +544,11 @@ include 'includes/admin-header.php';
                                     <p class="font-medium"><?php echo htmlspecialchars($service['service_name']); ?></p>
                                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                         Số lượng: <?php echo $service['quantity']; ?> ×
-                                        <?php echo number_format($service['unit_price'], 0, ',', '.'); ?>đ
+                                        <?php echo number_format($service['unit_price'], 0, ',', '.'); ?>VNĐ
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="font-medium"><?php echo number_format($service['total_price'], 0, ',', '.'); ?>đ
+                                    <p class="font-medium"><?php echo number_format($service['total_price'], 0, ',', '.'); ?>VNĐ
                                     </p>
                                     <span
                                         class="badge badge-<?php echo $service['status'] === 'completed' ? 'success' : 'warning'; ?>">
@@ -948,7 +948,7 @@ include 'includes/admin-header.php';
                     Khách hàng: <?php echo htmlspecialchars($booking['guest_name']); ?>
                 </p>
                 <p class="text-lg font-bold text-accent mt-2">
-                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>đ
+                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ
                 </p>
             </div>
 

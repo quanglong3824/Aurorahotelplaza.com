@@ -549,29 +549,29 @@ include 'includes/admin-header.php';
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Tiền phòng (${booking.total_nights} đêm)</span>
-                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.room_price * booking.total_nights)}đ</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.room_price * booking.total_nights)}VNĐ</span>
                             </div>
                             ${booking.extra_guest_fee > 0 ? `
                             <div class="flex justify-between text-blue-600">
                                 <span>Phụ thu khách thêm</span>
-                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_guest_fee)}đ</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_guest_fee)}VNĐ</span>
                             </div>
                             ` : ''}
                             ${booking.extra_bed_fee > 0 ? `
                             <div class="flex justify-between text-orange-600">
                                 <span>Phí giường phụ (${booking.extra_beds} giường)</span>
-                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_bed_fee)}đ</span>
+                                <span class="font-medium">${new Intl.NumberFormat('vi-VN').format(booking.extra_bed_fee)}VNĐ</span>
                             </div>
                             ` : ''}
                             ${booking.discount_amount > 0 ? `
                             <div class="flex justify-between text-green-600">
                                 <span>Giảm giá</span>
-                                <span class="font-medium">-${new Intl.NumberFormat('vi-VN').format(booking.discount_amount)}đ</span>
+                                <span class="font-medium">-${new Intl.NumberFormat('vi-VN').format(booking.discount_amount)}VNĐ</span>
                             </div>
                             ` : ''}
                             <div class="flex justify-between pt-2 border-t border-blue-200 dark:border-blue-700 font-bold text-lg">
                                 <span>Tổng cộng</span>
-                                <span style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(booking.total_amount)}đ</span>
+                                <span style="color: #d4af37;">${new Intl.NumberFormat('vi-VN').format(booking.total_amount)}VNĐ</span>
                             </div>
                         </div>
                     </div>
@@ -603,7 +603,7 @@ include 'includes/admin-header.php';
                                     <p class="text-xs text-gray-500">${rb.type_name} • ${new Date(rb.check_in_date).toLocaleDateString('vi-VN')}</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="font-bold text-sm">${new Intl.NumberFormat('vi-VN').format(rb.total_amount)}đ</p>
+                                    <p class="font-bold text-sm">${new Intl.NumberFormat('vi-VN').format(rb.total_amount)}VNĐ</p>
                                     <span class="text-xs px-2 py-0.5 rounded ${statusLabels[rb.status]?.class || 'bg-gray-100'}">${statusLabels[rb.status]?.label || rb.status}</span>
                                 </div>
                             </div>

@@ -330,7 +330,7 @@ try {
                                         <div class="flex justify-between items-center">
                                             <span class="font-semibold text-gray-900 dark:text-white">Tổng cộng</span>
                                             <span class="font-bold text-2xl" style="color: #d4af37;">
-                                                <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>đ
+                                                <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ
                                             </span>
                                         </div>
                                     </div>

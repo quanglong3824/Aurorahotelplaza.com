@@ -253,7 +253,7 @@ include 'includes/admin-header.php';
                            value="<?php echo htmlspecialchars($settings['points_per_vnd']); ?>" 
                            class="form-input" min="1" required>
                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
-                        Mỗi <?php echo number_format($settings['points_per_vnd']); ?>đ = 1 điểm
+                        Mỗi <?php echo number_format($settings['points_per_vnd']); ?>VNĐ = 1 điểm
                     </p>
                 </div>
                 

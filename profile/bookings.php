@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -427,12 +426,12 @@ $payment_labels = [
                                                                             class="material-symbols-outlined text-sm text-amber-400">receipt_long</span>
                                                                         <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
                                                                             <span
-                                                                                class="text-blue-300 text-xs">+<?php echo number_format($booking['extra_guest_fee']); ?>đ
+                                                                                class="text-blue-300 text-xs">+<?php echo number_format($booking['extra_guest_fee']); ?>VNĐ
                                                                                 khách</span>
                                                                         <?php endif; ?>
                                                                         <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
                                                                             <span
-                                                                                class="text-orange-300 text-xs">+<?php echo number_format($booking['extra_bed_fee']); ?>đ
+                                                                                class="text-orange-300 text-xs">+<?php echo number_format($booking['extra_bed_fee']); ?>VNĐ
                                                                                 giường</span>
                                                                         <?php endif; ?>
                                                                     </div>

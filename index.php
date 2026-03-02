@@ -349,7 +349,7 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ
+                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>VNĐ
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 
@@ -431,7 +431,7 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>đ
+                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>VNĐ
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 

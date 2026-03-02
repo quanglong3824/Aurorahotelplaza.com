@@ -83,7 +83,7 @@ include 'includes/admin-header.php';
                                     </span>
                                 </td>
                                 <td class="font-bold" style="color: #d4af37;">
-                                    <?php echo number_format($type['base_price'], 0, ',', '.'); ?>đ
+                                    <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VNĐ
                                 </td>
                                 <td><?php echo $type['max_occupancy']; ?> người</td>
                                 <td>
@@ -145,7 +145,7 @@ include 'includes/admin-header.php';
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-lg" style="color: #d4af37;">
-                                <?php echo number_format($pricing['price'], 0, ',', '.'); ?>đ
+                                <?php echo number_format($pricing['price'], 0, ',', '.'); ?>VNĐ
                             </p>
                             <p class="text-xs text-gray-500">
                                 <?php

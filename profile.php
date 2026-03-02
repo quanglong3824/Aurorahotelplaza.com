@@ -452,7 +452,7 @@ function getContactStatusBadge($status)
                         </div>
                         <p class="text-2xl font-bold text-white tracking-tight truncate"
                             title="<?php echo number_format($stats['total_spent']); ?>">
-                            <?php echo number_format($stats['total_spent']); ?> đ
+                            <?php echo number_format($stats['total_spent']); ?> VNĐ
                         </p>
                         <p class="text-xs text-slate-500 mt-1">Lifetime value</p>
                     </div>
@@ -618,7 +618,7 @@ function getContactStatusBadge($status)
                                                         <div>
                                                             <div class="text-slate-500 text-xs mb-1">Total</div>
                                                             <div class="font-bold text-accent">
-                                                                <?php echo number_format($booking['total_amount']); ?> đ
+                                                                <?php echo number_format($booking['total_amount']); ?> VNĐ
                                                             </div>
                                                         </div>
                                                     </div>
@@ -695,7 +695,7 @@ function getContactStatusBadge($status)
                                                         </div>
                                                         <div>
                                                             <div class="font-bold text-white">
-                                                                <?php echo number_format($payment['amount']); ?> đ
+                                                                <?php echo number_format($payment['amount']); ?> VNĐ
                                                             </div>
                                                             <div class="text-xs text-slate-500">Ref:
                                                                 <?php echo $payment['booking_code']; ?> •

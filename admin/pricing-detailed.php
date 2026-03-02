@@ -104,19 +104,19 @@ include 'includes/admin-header.php';
                                 <td class="text-right">
                                     <span class="font-bold text-lg" style="color: #d4af37;">
                                         <?php echo $type['price_double_occupancy']
-                                            ? number_format($type['price_double_occupancy'], 0, ',', '.') . 'đ'
-                                            : number_format($type['base_price'], 0, ',', '.') . 'đ'; ?>
+                                            ? number_format($type['price_double_occupancy'], 0, ',', '.') . 'VNĐ'
+                                            : number_format($type['base_price'], 0, ',', '.') . 'VNĐ'; ?>
                                     </span>
                                 </td>
                                 <td class="text-right">
                                     <?php echo $type['price_single_occupancy']
-                                        ? number_format($type['price_single_occupancy'], 0, ',', '.') . 'đ'
+                                        ? number_format($type['price_single_occupancy'], 0, ',', '.') . 'VNĐ'
                                         : '-'; ?>
                                 </td>
                                 <td class="text-right">
                                     <?php if ($type['price_short_stay']): ?>
                                         <span class="text-blue-600 font-semibold">
-                                            <?php echo number_format($type['price_short_stay'], 0, ',', '.'); ?>đ
+                                            <?php echo number_format($type['price_short_stay'], 0, ',', '.'); ?>VNĐ
                                         </span>
                                         <br>
                                         <span class="text-xs text-gray-500">Dưới 4h, checkout trước 22h</span>
@@ -153,7 +153,7 @@ include 'includes/admin-header.php';
             <span class="material-symbols-outlined text-green-500">apartment</span>
             Bảng giá Căn hộ
         </h3>
-        <p class="text-sm text-gray-500 mt-1">Giá theo ngày và theo tuần (từ 7 đêm)</p>
+        <p class="text-sm text-gray-500 mt-1">Giá theo ngày và theo tuần (từ 7 VNĐêm)</p>
     </div>
     <div class="card-body">
         <div class="overflow-x-auto">
@@ -165,7 +165,7 @@ include 'includes/admin-header.php';
                         <th class="text-white text-center">Số người</th>
                         <th class="text-white text-right">Giá/ngày</th>
                         <th class="text-white text-right">Giá/tuần</th>
-                        <th class="text-white text-right">TB/đêm (tuần)</th>
+                        <th class="text-white text-right">TB/VNĐêm (tuần)</th>
                         <th class="text-white text-center">Trống</th>
                         <th class="text-white">Thao tác</th>
                     </tr>
@@ -195,18 +195,18 @@ include 'includes/admin-header.php';
                                     </td>
                                     <td class="text-right">
                                         <span class="font-bold" style="color: #d4af37;">
-                                            <?php echo number_format($apt['price_daily_single'], 0, ',', '.'); ?>đ
+                                            <?php echo number_format($apt['price_daily_single'], 0, ',', '.'); ?>VNĐ
                                         </span>
                                     </td>
                                     <td class="text-right">
                                         <?php echo $apt['price_weekly_single']
-                                            ? number_format($apt['price_weekly_single'], 0, ',', '.') . 'đ'
+                                            ? number_format($apt['price_weekly_single'], 0, ',', '.') . 'VNĐ'
                                             : '-'; ?>
                                     </td>
                                     <td class="text-right">
                                         <?php if ($apt['price_avg_weekly_single']): ?>
                                             <span class="text-green-600 font-semibold">
-                                                <?php echo number_format($apt['price_avg_weekly_single'], 0, ',', '.'); ?>đ
+                                                <?php echo number_format($apt['price_avg_weekly_single'], 0, ',', '.'); ?>VNĐ
                                             </span>
                                         <?php else: ?>
                                             -
@@ -242,18 +242,18 @@ include 'includes/admin-header.php';
                                     </td>
                                     <td class="text-right">
                                         <span class="font-bold" style="color: #d4af37;">
-                                            <?php echo number_format($apt['price_daily_double'], 0, ',', '.'); ?>đ
+                                            <?php echo number_format($apt['price_daily_double'], 0, ',', '.'); ?>VNĐ
                                         </span>
                                     </td>
                                     <td class="text-right">
                                         <?php echo $apt['price_weekly_double']
-                                            ? number_format($apt['price_weekly_double'], 0, ',', '.') . 'đ'
+                                            ? number_format($apt['price_weekly_double'], 0, ',', '.') . 'VNĐ'
                                             : '-'; ?>
                                     </td>
                                     <td class="text-right">
                                         <?php if ($apt['price_avg_weekly_double']): ?>
                                             <span class="text-green-600 font-semibold">
-                                                <?php echo number_format($apt['price_avg_weekly_double'], 0, ',', '.'); ?>đ
+                                                <?php echo number_format($apt['price_avg_weekly_double'], 0, ',', '.'); ?>VNĐ
                                             </span>
                                         <?php else: ?>
                                             -
@@ -306,13 +306,13 @@ include 'includes/admin-header.php';
                     <tr class="border-b border-gray-200 dark:border-gray-700">
                         <td class="py-3">Trẻ em từ 1m đến dưới 1m3</td>
                         <td class="py-3 text-right font-bold" style="color: #d4af37;">
-                            200.000đ
+                            200.000VNĐ
                         </td>
                     </tr>
                     <tr>
                         <td class="py-3">Người lớn & trẻ em trên 1m3</td>
                         <td class="py-3 text-right font-bold" style="color: #d4af37;">
-                            400.000đ
+                            400.000VNĐ
                         </td>
                     </tr>
                 </tbody>
@@ -331,7 +331,7 @@ include 'includes/admin-header.php';
         <div class="card-body">
             <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
                 <span>Phí giường phụ/đêm</span>
-                <span class="text-2xl font-bold" style="color: #d4af37;">650.000đ</span>
+                <span class="text-2xl font-bold" style="color: #d4af37;">650.000VNĐ</span>
             </div>
             <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                 <p class="text-sm text-yellow-800 dark:text-yellow-200 flex items-center gap-2">
