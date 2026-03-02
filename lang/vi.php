@@ -135,6 +135,7 @@ return [
         'num_children_age' => 'Số trẻ em (dưới 12 tuổi)',
         'extra_charge_suggestion' => 'Gợi ý phụ thu',
         'extra_guest' => 'Khách thêm (phụ thu)',
+        'extra_guest_subtitle' => 'Khai báo chiều cao trẻ em để tính phụ thu chính xác',
         'add_guest' => 'Thêm khách',
         'extra_guest_note' => '* Phí khách thêm tính theo đêm, bao gồm ăn sáng buffet',
         'extra_bed' => 'Giường phụ',

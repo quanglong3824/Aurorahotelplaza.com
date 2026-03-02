@@ -315,76 +315,111 @@ foreach ($room_types as $room) {
                                     </div>
                                 </div>
 
-                                <!-- Extra Guests Section -->
-                                <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl"
-                                    id="extra_guests_section">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <h4 class="font-semibold flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-blue-400">person_add</span>
-                                            <?php _e('booking_form.extra_guest'); ?>
-                                        </h4>
-                                        <button type="button" onclick="toggleExtraGuests()" id="toggle_extra_guests_btn"
-                                            class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">add_circle</span>
+                                <!-- Enhanced Extra Guests Section -->
+                                <div class="mt-6 bg-slate-800/50 rounded-xl p-5 border border-slate-700/50" id="extra_guests_section">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-blue-400 text-lg">person_add</span>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-lg font-semibold text-white"><?php _e('booking_form.extra_guest'); ?></h3>
+                                                <p class="text-sm text-gray-400 mt-1">Khai báo chiều cao trẻ em để tính phụ thu chính xác</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" id="toggle_extra_guests_btn"
+                                            class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all flex items-center gap-2 font-medium shadow-lg hover:shadow-xl"
+                                            onclick="toggleExtraGuests()">
+                                            <span class="material-symbols-outlined text-base">add</span>
                                             <?php _e('booking_form.add_guest'); ?>
                                         </button>
                                     </div>
-
-                                    <!-- Extra Guests Info -->
-                                    <div class="text-xs text-gray-400 mb-3 grid grid-cols-3 gap-2">
-                                        <div class="flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                                            Dưới 1m: <span class="text-green-400">Miễn phí</span>
+                                    
+                                    <!-- Smart Suggestion Box -->
+                                    <div id="smart_suggestion_box" class="mb-4 p-4 rounded-lg border border-amber-500/30 bg-amber-500/10 hidden transition-all duration-300">
+                                        <div class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-xl text-amber-400 mt-0.5">lightbulb</span>
+                                            <div class="flex-1">
+                                                <p class="text-sm text-gray-200 mb-3" id="suggestion_message"></p>
+                                                <div class="flex flex-wrap gap-2" id="suggestion_actions"></div>
+                                            </div>
+                                            <button type="button" onclick="hideSuggestion()" 
+                                                class="text-gray-400 hover:text-white transition-colors">
+                                                <span class="material-symbols-outlined">close</span>
+                                            </button>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                                            1m - dưới 1m3: <span class="text-yellow-400">200.000đ/đêm</span>
+                                    </div>
+                                    
+                                    <!-- Pricing Guide Cards -->
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                                        <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-3 text-center">
+                                            <div class="text-green-400 font-bold text-sm mb-1">Dưới 1m</div>
+                                            <div class="text-xs text-gray-300">Miễn phí</div>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                                            Từ 1m3 trở lên: <span class="text-orange-400">400.000đ/đêm</span>
+                                        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-center">
+                                            <div class="text-yellow-400 font-bold text-sm mb-1">1m - 1m3</div>
+                                            <div class="text-xs text-gray-300">200.000đ/đêm</div>
+                                        </div>
+                                        <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 text-center">
+                                            <div class="text-orange-400 font-bold text-sm mb-1">Trên 1m3</div>
+                                            <div class="text-xs text-gray-300">400.000đ/đêm</div>
                                         </div>
                                     </div>
 
-                                    <!-- Extra Guests List -->
-                                    <div id="extra_guests_list" class="hidden space-y-3">
+                                    <div id="extra_guests_list" class="hidden space-y-4">
                                         <!-- Dynamic entries will be added here -->
                                     </div>
 
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        <?php _e('booking_form.extra_guest_note'); ?>
-                                    </p>
+                                    <div class="mt-4 pt-4 border-t border-slate-700/50">
+                                        <p class="text-xs text-gray-400 flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-sm text-blue-400">info</span>
+                                            <?php _e('booking_form.extra_guest_note'); ?>
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <!-- Extra Bed Section (Rooms Only) -->
-                                <div class="mt-4 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl"
-                                    id="extra_bed_section">
-                                    <div class="flex items-center justify-between">
+                                <!-- Enhanced Extra Bed Section -->
+                                <div class="mt-4 bg-slate-800/50 rounded-xl p-5 border border-slate-700/50" id="extra_bed_section">
+                                    <div class="flex items-center justify-between mb-4">
                                         <div class="flex items-center gap-3">
-                                            <span class="material-symbols-outlined text-orange-400">single_bed</span>
+                                            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                                                <span class="material-symbols-outlined text-orange-400 text-lg">single_bed</span>
+                                            </div>
                                             <div>
-                                                <h4 class="font-semibold"><?php _e('booking_form.extra_bed'); ?></h4>
-                                                <p class="text-xs text-gray-400">
-                                                    650.000<?php _e('common.currency'); ?>/<?php _e('common.per_night'); ?>
-                                                </p>
+                                                <h3 class="text-lg font-semibold text-white"><?php _e('booking_form.extra_bed'); ?></h3>
+                                                <p class="text-sm text-gray-400 mt-1">Thêm giường phụ cho phòng (chỉ áp dụng cho phòng thường)</p>
                                             </div>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <button type="button" onclick="adjustValue('extra_beds', -1)"
-                                                class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                                <span class="material-symbols-outlined text-sm">remove</span>
-                                            </button>
-                                            <input type="number" name="extra_beds" id="extra_beds"
-                                                class="form-input text-center w-16 text-sm" min="0" max="2" value="0"
-                                                readonly>
-                                            <button type="button" onclick="adjustValue('extra_beds', 1)"
-                                                class="w-8 h-8 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                                <span class="material-symbols-outlined text-sm">add</span>
-                                            </button>
+                                        <div class="flex items-center gap-3">
+                                            <div class="text-right">
+                                                <div class="text-orange-400 font-bold">650.000<?php _e('common.currency'); ?></div>
+                                                <div class="text-xs text-gray-400"><?php _e('common.per_night'); ?></div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <button type="button" onclick="adjustValue('extra_beds', -1)"
+                                                    class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors shadow-md hover:shadow-lg">
+                                                    <span class="material-symbols-outlined text-base">remove</span>
+                                                </button>
+                                                <input type="number" name="extra_beds" id="extra_beds"
+                                                    class="form-input text-center w-16 text-lg font-bold bg-slate-700 border-slate-600" min="0" max="2" value="0"
+                                                    readonly>
+                                                <button type="button" onclick="adjustValue('extra_beds', 1)"
+                                                    class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors shadow-md hover:shadow-lg">
+                                                    <span class="material-symbols-outlined text-base">add</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <p class="text-xs text-yellow-500 mt-2 hidden" id="extra_bed_warning">
-                                        <span class="material-symbols-outlined text-sm align-middle">warning</span>
+                                    
+                                    <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mb-3">
+                                        <div class="flex items-center gap-2 text-amber-400 text-sm">
+                                            <span class="material-symbols-outlined text-base">warning</span>
+                                            <span>Lưu ý: Tối đa 2 giường phụ/phòng. Không áp dụng cho căn hộ.</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-xs text-gray-400 flex items-center gap-2" id="extra_bed_warning" style="display: none;">
+                                        <span class="material-symbols-outlined text-sm text-red-400">error</span>
                                         <?php _e('booking_form.extra_bed_not_for_apt'); ?>
                                     </p>
                                 </div>

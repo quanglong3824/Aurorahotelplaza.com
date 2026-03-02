@@ -134,19 +134,29 @@ function showSuggestion(suggestion) {
     // Update message
     message.textContent = suggestion.message;
     
-    // Update border color based on type
-    box.classList.remove('border-amber-500/30', 'border-red-500/30', 'border-blue-500/30');
-    box.classList.remove('bg-amber-500/10', 'bg-red-500/10', 'bg-blue-500/10');
+    // Update border color and icon based on type
+    box.classList.remove('border-amber-500/30', 'border-red-500/30', 'border-blue-500/30', 'bg-amber-500/10', 'bg-red-500/10', 'bg-blue-500/10');
+    
+    const icon = document.getElementById('suggestion_icon');
+    if (icon) {
+        icon.classList.remove('text-amber-400', 'text-red-400', 'text-blue-400');
+    }
     
     if (suggestion.type === 'warning') {
         box.classList.add('border-red-500/30', 'bg-red-500/10');
+        if (icon) icon.classList.add('text-red-400');
+        if (icon) icon.textContent = 'warning';
     } else if (suggestion.type === 'hint') {
         box.classList.add('border-blue-500/30', 'bg-blue-500/10');
+        if (icon) icon.classList.add('text-blue-400');
+        if (icon) icon.textContent = 'lightbulb';
     } else {
         box.classList.add('border-amber-500/30', 'bg-amber-500/10');
+        if (icon) icon.classList.add('text-amber-400');
+        if (icon) icon.textContent = 'info';
     }
     
-    // Build action buttons
+    // Build action buttons with enhanced styling
     actions.innerHTML = suggestion.actions.map(act => {
         if (act.action === 'dismiss') {
             return `<button type="button" onclick="dismissSuggestion()" 
@@ -154,14 +164,21 @@ function showSuggestion(suggestion) {
                 ${act.label}
             </button>`;
         }
+        const iconClass = act.action === 'addBed' ? 'single_bed' : 'person_add';
+        const bgColor = act.action === 'addBed' ? 'bg-orange-600 hover:bg-orange-500' : 'bg-blue-600 hover:bg-blue-500';
         return `<button type="button" onclick="handleSuggestionAction('${act.action}', ${act.count || 0})" 
-            class="px-3 py-1.5 text-xs bg-amber-500/80 hover:bg-amber-500 text-white rounded-lg transition-colors font-medium">
-            <span class="material-symbols-outlined text-sm align-middle mr-1">${act.action === 'addBed' ? 'single_bed' : 'person_add'}</span>
+            class="px-3 py-1.5 text-xs ${bgColor} text-white rounded-lg transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">${iconClass}</span>
             ${act.label}
         </button>`;
     }).join('');
     
     box.classList.remove('hidden');
+    
+    // Auto-scroll to suggestion if needed
+    setTimeout(() => {
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
 }
 
 function hideSuggestion() {
@@ -507,7 +524,7 @@ function renderExtraGuests() {
     if (!list) return;
 
     list.innerHTML = extraGuests.map((guest, index) => `
-        <div class="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg">
+        <div class="bg-slate-700/50 border border-slate-600 rounded-xl p-5 transition-all duration-300 hover:border-blue-500/50 shadow-sm hover:shadow-md">
             <span class="text-gray-400 text-sm">${index + 1}.</span>
             <div class="flex-1">
                 <label class="text-xs text-gray-400 mb-1 block">Chiều cao (m)</label>
@@ -1668,4 +1685,21 @@ function removePromotion() {
     document.getElementById('promotion_code_input').value = '';
     document.getElementById('discount_amount_input').value = '0';
     document.getElementById('promo_code').disabled = false;
+}
+// Update toggle button text based on guest count
+function updateToggleButtonText() {
+    const btn = document.getElementById('toggle_extra_guests_btn');
+    if (!btn) return;
+    
+    if (extraGuests.length > 0) {
+        btn.innerHTML = `
+            <span class="material-symbols-outlined text-base">remove</span>
+            Ẩn (${extraGuests.length})
+        `;
+    } else {
+        btn.innerHTML = `
+            <span class="material-symbols-outlined text-base">add</span>
+            Thêm khách
+        `;
+    }
 }
