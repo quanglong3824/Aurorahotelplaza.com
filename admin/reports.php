@@ -11,7 +11,7 @@ $date_to = $_GET['date_to'] ?? date('Y-m-d'); // Today
 
 try {
     $db = getDB();
-    
+
     // Revenue statistics
     $stmt = $db->prepare("
         SELECT 
@@ -24,7 +24,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $revenue_stats = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     // Daily revenue chart data
     $stmt = $db->prepare("
         SELECT 
@@ -39,7 +39,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $daily_revenue = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Room type performance
     $stmt = $db->prepare("
         SELECT 
@@ -56,7 +56,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $room_performance = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Top customers
     $stmt = $db->prepare("
         SELECT 
@@ -74,7 +74,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $top_customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Booking status distribution
     $stmt = $db->prepare("
         SELECT 
@@ -86,7 +86,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $status_distribution = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Payment method distribution
     $stmt = $db->prepare("
         SELECT 
@@ -100,7 +100,7 @@ try {
     ");
     $stmt->execute([':date_from' => $date_from, ':date_to' => $date_to]);
     $payment_methods = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Occupancy rate
     $stmt = $db->prepare("
         SELECT 
@@ -110,9 +110,9 @@ try {
     ");
     $stmt->execute();
     $occupancy = $stmt->fetch(PDO::FETCH_ASSOC);
-    $occupancy_rate = $occupancy['total_rooms'] > 0 ? 
+    $occupancy_rate = $occupancy['total_rooms'] > 0 ?
         ($occupancy['occupied_rooms'] / $occupancy['total_rooms']) * 100 : 0;
-    
+
 } catch (Exception $e) {
     error_log("Reports page error: " . $e->getMessage());
     $revenue_stats = ['total_bookings' => 0, 'total_revenue' => 0, 'avg_booking_value' => 0, 'cancelled_bookings' => 0];
@@ -133,28 +133,26 @@ include 'includes/admin-header.php';
         <form method="GET" class="flex flex-wrap items-center gap-4">
             <div class="form-group mb-0">
                 <label class="form-label">Từ ngày</label>
-                <input type="date" name="date_from" value="<?php echo $date_from; ?>" 
-                       class="form-input" required>
+                <input type="date" name="date_from" value="<?php echo $date_from; ?>" class="form-input" required>
             </div>
-            
+
             <div class="form-group mb-0">
                 <label class="form-label">Đến ngày</label>
-                <input type="date" name="date_to" value="<?php echo $date_to; ?>" 
-                       class="form-input" required>
+                <input type="date" name="date_to" value="<?php echo $date_to; ?>" class="form-input" required>
             </div>
-            
+
             <button type="submit" class="btn btn-primary mt-6">
                 <span class="material-symbols-outlined text-sm">search</span>
                 Xem báo cáo
             </button>
-            
-            <a href="?date_from=<?php echo date('Y-m-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>" 
-               class="btn btn-secondary mt-6">
+
+            <a href="?date_from=<?php echo date('Y-m-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>"
+                class="btn btn-secondary mt-6">
                 Tháng này
             </a>
-            
-            <a href="?date_from=<?php echo date('Y-01-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>" 
-               class="btn btn-secondary mt-6">
+
+            <a href="?date_from=<?php echo date('Y-01-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>"
+                class="btn btn-secondary mt-6">
                 Năm nay
             </a>
         </form>
@@ -175,7 +173,7 @@ include 'includes/admin-header.php';
             Từ <?php echo $revenue_stats['total_bookings']; ?> đơn đặt phòng
         </p>
     </div>
-    
+
     <div class="stat-card">
         <div class="flex items-center justify-between mb-2">
             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Giá trị TB/đơn</p>
@@ -188,7 +186,7 @@ include 'includes/admin-header.php';
             Trung bình mỗi đơn
         </p>
     </div>
-    
+
     <div class="stat-card">
         <div class="flex items-center justify-between mb-2">
             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tỷ lệ lấp đầy</p>
@@ -201,7 +199,7 @@ include 'includes/admin-header.php';
             <?php echo $occupancy['occupied_rooms']; ?>/<?php echo $occupancy['total_rooms']; ?> phòng
         </p>
     </div>
-    
+
     <div class="stat-card">
         <div class="flex items-center justify-between mb-2">
             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Đơn bị hủy</p>
@@ -211,8 +209,8 @@ include 'includes/admin-header.php';
             <?php echo $revenue_stats['cancelled_bookings']; ?>
         </p>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
-            <?php 
-            $cancel_rate = $revenue_stats['total_bookings'] > 0 ? 
+            <?php
+            $cancel_rate = $revenue_stats['total_bookings'] > 0 ?
                 ($revenue_stats['cancelled_bookings'] / $revenue_stats['total_bookings']) * 100 : 0;
             echo number_format($cancel_rate, 1);
             ?>% tổng đơn
@@ -238,9 +236,10 @@ include 'includes/admin-header.php';
                     <?php foreach ($daily_revenue as $day): ?>
                         <div class="flex items-center gap-3">
                             <span class="text-sm w-24"><?php echo date('d/m/Y', strtotime($day['date'])); ?></span>
-                            <div class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
+                            <div
+                                class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
                                 <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
-                                     style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
+                                    style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
                                     <?php echo number_format($day['revenue'], 0, ',', '.'); ?>đ
                                 </div>
                             </div>
@@ -251,7 +250,7 @@ include 'includes/admin-header.php';
             <?php endif; ?>
         </div>
     </div>
-    
+
     <!-- Status Distribution -->
     <div class="card">
         <div class="card-header">
@@ -265,7 +264,7 @@ include 'includes/admin-header.php';
                 </div>
             <?php else: ?>
                 <div class="space-y-3">
-                    <?php 
+                    <?php
                     $total_status = array_sum(array_column($status_distribution, 'count'));
                     $status_labels = [
                         'pending' => 'Chờ xác nhận',
@@ -283,17 +282,19 @@ include 'includes/admin-header.php';
                         'cancelled' => 'bg-red-500',
                         'no_show' => 'bg-orange-500'
                     ];
-                    foreach ($status_distribution as $status): 
+                    foreach ($status_distribution as $status):
                         $percentage = ($status['count'] / $total_status) * 100;
-                    ?>
+                        ?>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm"><?php echo $status_labels[$status['status']] ?? $status['status']; ?></span>
-                                <span class="text-sm font-medium"><?php echo $status['count']; ?> (<?php echo number_format($percentage, 1); ?>%)</span>
+                                <span
+                                    class="text-sm"><?php echo $status_labels[$status['status']] ?? $status['status']; ?></span>
+                                <span class="text-sm font-medium"><?php echo $status['count']; ?>
+                                    (<?php echo number_format($percentage, 1); ?>%)</span>
                             </div>
                             <div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2">
                                 <div class="<?php echo $status_colors[$status['status']] ?? 'bg-gray-500'; ?> h-2 rounded-full"
-                                     style="width: <?php echo $percentage; ?>%"></div>
+                                    style="width: <?php echo $percentage; ?>%"></div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -372,7 +373,8 @@ include 'includes/admin-header.php';
                             <td class="font-medium"><?php echo htmlspecialchars($customer['full_name']); ?></td>
                             <td><?php echo htmlspecialchars($customer['email']); ?></td>
                             <td><?php echo $customer['total_bookings']; ?></td>
-                            <td class="font-medium text-green-600"><?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>đ</td>
+                            <td class="font-medium text-green-600">
+                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>đ</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -389,15 +391,15 @@ include 'includes/admin-header.php';
         </div>
         <div class="card-body">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <?php 
+                <?php
                 $method_labels = [
-                    'vnpay' => 'VNPay',
+                    // 'vnpay' => 'VNPay',
                     'cash' => 'Tiền mặt',
                     'bank_transfer' => 'Chuyển khoản',
                     'credit_card' => 'Thẻ tín dụng'
                 ];
-                foreach ($payment_methods as $method): 
-                ?>
+                foreach ($payment_methods as $method):
+                    ?>
                     <div class="stat-card">
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
                             <?php echo $method_labels[$method['payment_method']] ?? $method['payment_method']; ?>

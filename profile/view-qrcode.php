@@ -295,10 +295,10 @@ try {
                                     Chi tiết thanh toán
                                 </h3>
                                 <div class="space-y-2 text-sm">
-                                    <?php 
+                                    <?php
                                     // room_price in DB stores total (per_night × nights)
-                                    $room_total_qr = (float)$booking['room_price'];
-                                    $nights_qr = max(1, (int)$nights);
+                                    $room_total_qr = (float) $booking['room_price'];
+                                    $nights_qr = max(1, (int) $nights);
                                     $room_per_night_qr = $room_total_qr / $nights_qr;
                                     ?>
                                     <div class="flex justify-between">
@@ -307,8 +307,11 @@ try {
                                             class="text-gray-900 dark:text-white"><?php echo number_format($room_per_night_qr, 0, ',', '.'); ?>đ</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-gray-500 dark:text-gray-400">Tiền phòng (<?php echo $nights; ?> đêm × <?php echo $booking['num_rooms']; ?> phòng)</span>
-                                        <span class="text-gray-900 dark:text-white"><?php echo number_format($room_total_qr, 0, ',', '.'); ?>đ</span>
+                                        <span class="text-gray-500 dark:text-gray-400">Tiền phòng
+                                            (<?php echo $nights; ?> đêm × <?php echo $booking['num_rooms']; ?>
+                                            phòng)</span>
+                                        <span
+                                            class="text-gray-900 dark:text-white"><?php echo number_format($room_total_qr, 0, ',', '.'); ?>đ</span>
                                     </div>
                                     <?php if ($booking['discount_amount'] > 0): ?>
                                         <div class="flex justify-between text-green-600">
@@ -337,7 +340,7 @@ try {
                                             <span class="text-gray-900 dark:text-white">
                                                 <?php
                                                 $payment_methods = [
-                                                    'vnpay' => 'VNPay',
+                                                    // 'vnpay' => 'VNPay',
                                                     'cash' => 'Tiền mặt',
                                                     'bank_transfer' => 'Chuyển khoản',
                                                     'credit_card' => 'Thẻ tín dụng'
