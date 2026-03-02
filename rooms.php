@@ -146,7 +146,7 @@ try {
                                         <!-- Price Badge -->
                                         <div class="price-badge">
                                             <span
-                                                class="price"><?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ</span>
+                                                class="price"><?php echo number_format($room['base_price'], 0, ',', '.'); ?>VNĐ</span>
                                             <span class="unit"><?php _e('common.per_night'); ?></span>
                                         </div>
                                     </div>

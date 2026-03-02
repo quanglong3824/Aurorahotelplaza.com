@@ -148,7 +148,8 @@ include 'includes/admin-header.php';
                 <div class="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Mã đặt phòng</p>
                     <p class="font-bold text-3xl" style="color: #d4af37;">
-                        <?php echo htmlspecialchars($booking['booking_code']); ?></p>
+                        <?php echo htmlspecialchars($booking['booking_code']); ?>
+                    </p>
                 </div>
 
                 <!-- Guest Information -->
@@ -221,13 +222,15 @@ include 'includes/admin-header.php';
                     <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg text-center">
                         <p class="text-xs text-green-600 dark:text-green-400 mb-1">CHECK-IN</p>
                         <p class="font-bold text-lg text-green-700 dark:text-green-300">
-                            <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
+                            <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
+                        </p>
                         <p class="text-xs text-green-600 dark:text-green-400">Sau 14:00</p>
                     </div>
                     <div class="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg text-center">
                         <p class="text-xs text-red-600 dark:text-red-400 mb-1">CHECK-OUT</p>
                         <p class="font-bold text-lg text-red-700 dark:text-red-300">
-                            <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
+                            <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                        </p>
                         <p class="text-xs text-red-600 dark:text-red-400">Trước 12:00</p>
                     </div>
                 </div>
@@ -254,23 +257,23 @@ include 'includes/admin-header.php';
                         ?>
                         <div class="flex justify-between">
                             <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm</span>
-                            <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>đ</span>
+                            <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>VNĐ</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-500 dark:text-gray-400">Tiền phòng (<?php echo $nights; ?> đêm ×
                                 <?php echo $booking['num_rooms']; ?> phòng)</span>
-                            <span><?php echo number_format($room_total_admin, 0, ',', '.'); ?>đ</span>
+                            <span><?php echo number_format($room_total_admin, 0, ',', '.'); ?>VNĐ</span>
                         </div>
                         <?php if ($booking['discount_amount'] > 0): ?>
                             <div class="flex justify-between text-green-600">
                                 <span>Giảm giá</span>
-                                <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>đ</span>
+                                <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>VNĐ</span>
                             </div>
                         <?php endif; ?>
                         <?php if ($booking['service_fee'] > 0): ?>
                             <div class="flex justify-between">
                                 <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ</span>
-                                <span><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>đ</span>
+                                <span><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>VNĐ</span>
                             </div>
                         <?php endif; ?>
                         <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
@@ -314,7 +317,8 @@ include 'includes/admin-header.php';
                             Yêu cầu đặc biệt
                         </h4>
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <?php echo nl2br(htmlspecialchars($booking['special_requests'])); ?></p>
+                            <?php echo nl2br(htmlspecialchars($booking['special_requests'])); ?>
+                        </p>
                     </div>
                 <?php endif; ?>
 
@@ -591,7 +595,7 @@ include 'includes/admin-header.php';
                     
                     <div class="total-amount">
                         <div class="total-label"><?php echo $nights; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng</div>
-                        <div class="total-value"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>đ</div>
+                        <div class="total-value"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ</div>
                     </div>
                 </div>
             </div>

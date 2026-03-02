@@ -292,7 +292,7 @@ include 'includes/admin-header.php';
                             <td><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></td>
                             <td><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></td>
                             <td class="text-center"><?php echo $booking['total_nights']; ?></td>
-                            <td class="font-medium"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>đ</td>
+                            <td class="font-medium"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ</td>
                             <td>
                                 <?php
                                 $status_classes = [

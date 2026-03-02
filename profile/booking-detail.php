@@ -448,7 +448,7 @@ $payment_labels = [
                                                 <div class="flex justify-between items-center text-sm text-blue-300">
                                                     <span>Phụ thu khách thêm</span>
                                                     <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>đ</span>
+                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>VNĐ</span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -457,7 +457,7 @@ $payment_labels = [
                                                     <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?>
                                                         giường)</span>
                                                     <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>đ</span>
+                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>VNĐ</span>
                                                 </div>
                                             <?php endif; ?>
 

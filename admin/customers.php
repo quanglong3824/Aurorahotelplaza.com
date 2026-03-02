@@ -8,7 +8,7 @@ $page_subtitle = 'Danh sách khách hàng và thông tin';
 // Get filter parameters
 $status_filter = $_GET['status'] ?? 'all';
 $search = $_GET['search'] ?? '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $per_page = 20;
 $offset = ($page - 1) * $per_page;
 
@@ -30,14 +30,14 @@ $where_sql = 'WHERE ' . implode(' AND ', $where_clauses);
 
 try {
     $db = getDB();
-    
+
     // Get total count
     $count_sql = "SELECT COUNT(*) as total FROM users $where_sql";
     $stmt = $db->prepare($count_sql);
     $stmt->execute($params);
     $total_records = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     $total_pages = ceil($total_records / $per_page);
-    
+
     // Get customers
     $sql = "
         SELECT u.*,
@@ -52,7 +52,7 @@ try {
         ORDER BY u.created_at DESC
         LIMIT :limit OFFSET :offset
     ";
-    
+
     $stmt = $db->prepare($sql);
     foreach ($params as $key => $value) {
         $stmt->bindValue($key, $value);
@@ -61,7 +61,7 @@ try {
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Get status counts
     $stmt = $db->query("
         SELECT 
@@ -73,7 +73,7 @@ try {
         WHERE user_role = 'customer'
     ");
     $counts = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
 } catch (Exception $e) {
     error_log("Customers page error: " . $e->getMessage());
     $customers = [];
@@ -110,22 +110,23 @@ include 'includes/admin-header.php';
     <form method="GET" class="flex flex-wrap items-center gap-4 w-full">
         <div class="search-box flex-1 min-w-[200px]">
             <span class="search-icon material-symbols-outlined">search</span>
-            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
-                   placeholder="Tìm tên, email, SĐT..." class="form-input">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                placeholder="Tìm tên, email, SĐT..." class="form-input">
         </div>
-        
+
         <select name="status" class="form-select w-auto">
             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tất cả trạng thái</option>
             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Đang hoạt động</option>
-            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Không hoạt động</option>
+            <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Không hoạt động
+            </option>
             <option value="banned" <?php echo $status_filter === 'banned' ? 'selected' : ''; ?>>Bị khóa</option>
         </select>
-        
+
         <button type="submit" class="btn btn-primary">
             <span class="material-symbols-outlined text-sm">filter_alt</span>
             Lọc
         </button>
-        
+
         <a href="customers.php" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">refresh</span>
             Reset
@@ -147,7 +148,7 @@ include 'includes/admin-header.php';
             Xuất Excel
         </a>
     </div>
-    
+
     <div class="table-wrapper">
         <table class="data-table">
             <thead>
@@ -180,8 +181,8 @@ include 'includes/admin-header.php';
                             <td>
                                 <div class="flex items-center gap-3">
                                     <?php if ($customer['avatar']): ?>
-                                        <img src="<?php echo htmlspecialchars($customer['avatar']); ?>" 
-                                             alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+                                        <img src="<?php echo htmlspecialchars($customer['avatar']); ?>" alt="Avatar"
+                                            class="w-10 h-10 rounded-full object-cover">
                                     <?php else: ?>
                                         <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                                             <span class="material-symbols-outlined text-accent">person</span>
@@ -207,7 +208,8 @@ include 'includes/admin-header.php';
                             </td>
                             <td>
                                 <?php if ($customer['tier_name']): ?>
-                                    <span class="badge" style="background-color: <?php echo $customer['color_code']; ?>20; color: <?php echo $customer['color_code']; ?>">
+                                    <span class="badge"
+                                        style="background-color: <?php echo $customer['color_code']; ?>20; color: <?php echo $customer['color_code']; ?>">
                                         <?php echo htmlspecialchars($customer['tier_name']); ?>
                                     </span>
                                 <?php else: ?>
@@ -216,14 +218,16 @@ include 'includes/admin-header.php';
                             </td>
                             <td>
                                 <div class="text-sm">
-                                    <p class="font-medium"><?php echo number_format($customer['current_points'] ?? 0); ?> điểm</p>
+                                    <p class="font-medium"><?php echo number_format($customer['current_points'] ?? 0); ?> điểm
+                                    </p>
                                     <p class="text-text-secondary-light dark:text-text-secondary-dark text-xs">
                                         Tích lũy: <?php echo number_format($customer['lifetime_points'] ?? 0); ?>
                                     </p>
                                 </div>
                             </td>
                             <td class="text-center font-medium"><?php echo $customer['total_bookings']; ?></td>
-                            <td class="font-medium"><?php echo number_format($customer['total_spent'] ?? 0, 0, ',', '.'); ?>đ</td>
+                            <td class="font-medium"><?php echo number_format($customer['total_spent'] ?? 0, 0, ',', '.'); ?>VNĐ
+                            </td>
                             <td>
                                 <?php
                                 $status_config = [
@@ -240,27 +244,28 @@ include 'includes/admin-header.php';
                             <td class="text-sm"><?php echo date('d/m/Y', strtotime($customer['created_at'])); ?></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="customer-detail.php?id=<?php echo $customer['user_id']; ?>" 
-                                       class="action-btn" title="Xem chi tiết">
+                                    <a href="customer-detail.php?id=<?php echo $customer['user_id']; ?>" class="action-btn"
+                                        title="Xem chi tiết">
                                         <span class="material-symbols-outlined text-sm">visibility</span>
                                     </a>
-                                    <a href="bookings.php?user_id=<?php echo $customer['user_id']; ?>" 
-                                       class="action-btn" title="Xem đơn hàng">
+                                    <a href="bookings.php?user_id=<?php echo $customer['user_id']; ?>" class="action-btn"
+                                        title="Xem đơn hàng">
                                         <span class="material-symbols-outlined text-sm">receipt_long</span>
                                     </a>
                                     <?php if ($customer['status'] !== 'banned'): ?>
-                                        <button onclick="banCustomer(<?php echo $customer['user_id']; ?>)" 
-                                                class="action-btn text-red-600" title="Khóa tài khoản">
+                                        <button onclick="banCustomer(<?php echo $customer['user_id']; ?>)"
+                                            class="action-btn text-red-600" title="Khóa tài khoản">
                                             <span class="material-symbols-outlined text-sm">block</span>
                                         </button>
                                     <?php else: ?>
-                                        <button onclick="unbanCustomer(<?php echo $customer['user_id']; ?>)" 
-                                                class="action-btn text-green-600" title="Mở khóa">
+                                        <button onclick="unbanCustomer(<?php echo $customer['user_id']; ?>)"
+                                            class="action-btn text-green-600" title="Mở khóa">
                                             <span class="material-symbols-outlined text-sm">check_circle</span>
                                         </button>
                                     <?php endif; ?>
-                                    <button onclick="deleteCustomer(<?php echo $customer['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($customer['full_name'])); ?>')" 
-                                            class="action-btn text-red-600" title="Xóa vĩnh viễn">
+                                    <button
+                                        onclick="deleteCustomer(<?php echo $customer['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($customer['full_name'])); ?>')"
+                                        class="action-btn text-red-600" title="Xóa vĩnh viễn">
                                         <span class="material-symbols-outlined text-sm">delete_forever</span>
                                     </button>
                                 </div>
@@ -271,7 +276,7 @@ include 'includes/admin-header.php';
             </tbody>
         </table>
     </div>
-    
+
     <!-- Pagination -->
     <?php if ($total_pages > 1): ?>
         <div class="card-footer flex items-center justify-between">
@@ -280,22 +285,22 @@ include 'includes/admin-header.php';
             </p>
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>"
+                        class="pagination-item">
                         <span class="material-symbols-outlined text-sm">chevron_left</span>
                     </a>
                 <?php endif; ?>
-                
+
                 <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>" 
-                       class="pagination-item <?php echo $i === $page ? 'active' : ''; ?>">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"
+                        class="pagination-item <?php echo $i === $page ? 'active' : ''; ?>">
                         <?php echo $i; ?>
                     </a>
                 <?php endfor; ?>
-                
+
                 <?php if ($page < $total_pages): ?>
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>" 
-                       class="pagination-item">
+                    <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>"
+                        class="pagination-item">
                         <span class="material-symbols-outlined text-sm">chevron_right</span>
                     </a>
                 <?php endif; ?>
@@ -305,87 +310,87 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
-function banCustomer(userId) {
-    const reason = prompt('Lý do khóa tài khoản:');
-    if (reason === null) return;
-    
-    updateCustomerStatus(userId, 'banned', reason);
-}
+    function banCustomer(userId) {
+        const reason = prompt('Lý do khóa tài khoản:');
+        if (reason === null) return;
 
-function unbanCustomer(userId) {
-    if (confirm('Mở khóa tài khoản này?')) {
-        updateCustomerStatus(userId, 'active');
+        updateCustomerStatus(userId, 'banned', reason);
     }
-}
 
-function updateCustomerStatus(userId, status, reason = '') {
-    const formData = new FormData();
-    formData.append('user_id', userId);
-    formData.append('status', status);
-    if (reason) formData.append('reason', reason);
-    
-    fetch('api/update-customer-status.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Cập nhật thành công!', 'success');
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
+    function unbanCustomer(userId) {
+        if (confirm('Mở khóa tài khoản này?')) {
+            updateCustomerStatus(userId, 'active');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
-    });
-}
-
-function deleteCustomer(userId, userName) {
-    // Hiển thị confirm với thông tin chi tiết
-    const confirmMsg = `⚠️ XÓA VĨNH VIỄN KHÁCH HÀNG ⚠️\n\n` +
-        `Bạn sắp xóa khách hàng: ${userName}\n\n` +
-        `Hành động này sẽ XÓA TẤT CẢ dữ liệu liên quan:\n` +
-        `- Thông tin tài khoản\n` +
-        `- Lịch sử đặt phòng\n` +
-        `- Điểm tích lũy\n` +
-        `- Đánh giá\n` +
-        `- Thông báo\n` +
-        `- Liên hệ\n\n` +
-        `⛔ KHÔNG THỂ HOÀN TÁC!\n\n` +
-        `Nhập "XOA" để xác nhận:`;
-    
-    const confirmation = prompt(confirmMsg);
-    if (confirmation !== 'XOA') {
-        if (confirmation !== null) {
-            showToast('Bạn cần nhập "XOA" để xác nhận', 'warning');
-        }
-        return;
     }
-    
-    fetch('api/delete-customer.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'user_id=' + encodeURIComponent(userId)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showToast('Đã xóa khách hàng và tất cả dữ liệu liên quan!', 'success');
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showToast(data.message || 'Có lỗi xảy ra', 'error');
+
+    function updateCustomerStatus(userId, status, reason = '') {
+        const formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('status', status);
+        if (reason) formData.append('reason', reason);
+
+        fetch('api/update-customer-status.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Cập nhật thành công!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
+    }
+
+    function deleteCustomer(userId, userName) {
+        // Hiển thị confirm với thông tin chi tiết
+        const confirmMsg = `⚠️ XÓA VĨNH VIỄN KHÁCH HÀNG ⚠️\n\n` +
+            `Bạn sắp xóa khách hàng: ${userName}\n\n` +
+            `Hành động này sẽ XÓA TẤT CẢ dữ liệu liên quan:\n` +
+            `- Thông tin tài khoản\n` +
+            `- Lịch sử đặt phòng\n` +
+            `- Điểm tích lũy\n` +
+            `- Đánh giá\n` +
+            `- Thông báo\n` +
+            `- Liên hệ\n\n` +
+            `⛔ KHÔNG THỂ HOÀN TÁC!\n\n` +
+            `Nhập "XOA" để xác nhận:`;
+
+        const confirmation = prompt(confirmMsg);
+        if (confirmation !== 'XOA') {
+            if (confirmation !== null) {
+                showToast('Bạn cần nhập "XOA" để xác nhận', 'warning');
+            }
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Có lỗi xảy ra', 'error');
-    });
-}
+
+        fetch('api/delete-customer.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'user_id=' + encodeURIComponent(userId)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Đã xóa khách hàng và tất cả dữ liệu liên quan!', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
+    }
 </script>
 
 <?php include 'includes/admin-footer.php'; ?>

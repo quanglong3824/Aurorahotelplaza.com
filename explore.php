@@ -289,7 +289,7 @@ try {
                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                             <div
                                                 class="absolute top-3 right-3 px-3 py-1 bg-accent text-white text-xs font-bold rounded-full">
-                                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
+                                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>VNĐ<?php _e('explore_page.per_night'); ?>
                                             </div>
                                         </div>
                                         <div class="p-5">
@@ -358,7 +358,7 @@ try {
                                             </div>
                                             <div
                                                 class="absolute top-3 right-3 px-3 py-1 bg-white/90 text-accent text-xs font-bold rounded-full">
-                                                <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>đ<?php _e('explore_page.per_night'); ?>
+                                                <?php echo number_format($apt['base_price'], 0, ',', '.'); ?>VNĐ<?php _e('explore_page.per_night'); ?>
                                             </div>
                                         </div>
                                         <div class="p-5">

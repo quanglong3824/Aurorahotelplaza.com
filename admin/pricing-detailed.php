@@ -96,7 +96,7 @@ include 'includes/admin-header.php';
                                 <td class="text-right text-gray-500">
                                     <?php if ($type['price_published']): ?>
                                         <span
-                                            class="line-through"><?php echo number_format($type['price_published'], 0, ',', '.'); ?>đ</span>
+                                            class="line-through"><?php echo number_format($type['price_published'], 0, ',', '.'); ?>VNĐ</span>
                                     <?php else: ?>
                                         -
                                     <?php endif; ?>

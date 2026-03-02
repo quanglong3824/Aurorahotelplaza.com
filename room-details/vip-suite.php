@@ -205,7 +205,7 @@ try {
                                     </p>
                                     <div class="flex items-end justify-center gap-1">
                                         <span
-                                            class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
+                                            class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>VNĐ</span>
                                         <span
                                             class="text-sm text-white/60 mb-1">/<?php _e('room_detail.night'); ?></span>
                                     </div>

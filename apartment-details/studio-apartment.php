@@ -153,7 +153,8 @@ try {
                             <!-- Gallery -->
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-6 text-center">
-                                    <?php _e('apartment_detail.gallery'); ?></h3>
+                                    <?php _e('apartment_detail.gallery'); ?>
+                                </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
                                         <img src="<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg'); ?>"
@@ -185,15 +186,17 @@ try {
                             <div class="sticky top-32 glass-booking-form !p-6 !block space-y-6">
                                 <div class="text-center pb-6 border-b border-white/10">
                                     <p class="text-sm text-white/60 uppercase tracking-wider mb-1">
-                                        <?php _e('apartment_detail.apartment_price'); ?></p>
+                                        <?php _e('apartment_detail.apartment_price'); ?>
+                                    </p>
                                     <div class="flex items-end justify-center gap-1">
                                         <span
-                                            class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>đ</span>
+                                            class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?>VNĐ</span>
                                         <span
                                             class="text-sm text-white/60 mb-1"><?php _e('apartment_detail.per_night'); ?></span>
                                     </div>
                                     <p class="text-xs text-white/60 mt-2 italic">
-                                        <?php _e('apartment_detail.discount_7days'); ?></p>
+                                        <?php _e('apartment_detail.discount_7days'); ?>
+                                    </p>
                                 </div>
 
                                 <form action="../booking/index.php" method="get" class="space-y-4 !block">
@@ -221,11 +224,14 @@ try {
                                         <div class="relative">
                                             <select name="guests" class="glass-input glass-select w-full text-white">
                                                 <option value="1" class="text-slate-800">1
-                                                    <?php _e('apartment_detail.persons'); ?></option>
+                                                    <?php _e('apartment_detail.persons'); ?>
+                                                </option>
                                                 <option value="2" selected class="text-slate-800">2
-                                                    <?php _e('apartment_detail.persons'); ?></option>
+                                                    <?php _e('apartment_detail.persons'); ?>
+                                                </option>
                                                 <option value="3" class="text-slate-800">3
-                                                    <?php _e('apartment_detail.persons'); ?></option>
+                                                    <?php _e('apartment_detail.persons'); ?>
+                                                </option>
                                             </select>
                                         </div>
                                     </div>

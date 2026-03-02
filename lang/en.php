@@ -1194,7 +1194,7 @@ return [
 
     // Hero slider
     'hero' => [
-        'badge' => '5-star hotel in Bien Hoa',
+        'badge' => '4-star hotel in Bien Hoa',
         'subtitle' => 'Experience luxury with perfect service in the heart of Bien Hoa City, Dong Nai',
         'check_in' => 'Check-in Date',
         'check_out' => 'Check-out Date',

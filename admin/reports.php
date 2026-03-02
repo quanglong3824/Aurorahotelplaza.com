@@ -332,9 +332,9 @@ include 'includes/admin-header.php';
                         <tr>
                             <td class="font-medium"><?php echo htmlspecialchars($room['type_name']); ?></td>
                             <td><?php echo $room['bookings']; ?></td>
-                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>đ</td>
+                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VNĐ</td>
                             <td><?php echo number_format($room['avg_nights'], 1); ?> đêm</td>
-                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>đ</td>
+                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VNĐ</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -374,7 +374,7 @@ include 'includes/admin-header.php';
                             <td><?php echo htmlspecialchars($customer['email']); ?></td>
                             <td><?php echo $customer['total_bookings']; ?></td>
                             <td class="font-medium text-green-600">
-                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>đ</td>
+                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VNĐ</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
