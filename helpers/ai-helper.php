@@ -47,252 +47,223 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
         } catch (Exception $e) {
         }
 
-        // Lấy tất cả kiến thức động từ bảng bot_knowledge (ví dụ chính sách, giờ check in)
-        try {
-            $stmt = $db->query("SELECT topic, content FROM bot_knowledge");
-            $knowledges = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($knowledges as $k) {
-                $knowledge_context .= "- " . $k['topic'] . ": " . $k['content'] . "\n";
-            }
-        } catch (Exception $e) {
-            $knowledge_context .= "- Chưa có đủ dữ liệu, hãy tìm kiếm thêm từ hệ thống nội bộ.\n";
-        }
-
-        // 2. Lấy dữ liệu Phòng (Real-time Database)
-        try {
-            $stmt = $db->query("
-                SELECT rt.type_name as name, rt.slug, rt.base_price as price_per_night, rt.max_occupancy, COUNT(r.room_id) as available_count
-                FROM room_types rt
-                JOIN rooms r ON rt.room_type_id = r.room_type_id
-                WHERE r.status = 'available' AND rt.status = 'active'
-                GROUP BY rt.room_type_id
-                LIMIT 10
-            ");
-            $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if ($rooms) {
-                $knowledge_context .= "\n--- THÔNG TIN CÁC HẠNG PHÒNG TRỐNG MÀ HOTEL ĐANG CÓ ---\n";
-                foreach ($rooms as $room) {
-                    $price = number_format($room['price_per_night'], 0, ',', '.');
-                    $knowledge_context .= "- Loại phòng: {$room['name']} (Mã tham chiếu: {$room['slug']}) - CHÚ Ý ĐÂY LÀ GIÁ GỐC THẤP NHẤT: {$price} VNĐ/đêm - Sức chứa: {$room['max_occupancy']} người.\n";
-                }
-            } else {
-                $knowledge_context .= "\n--- THÔNG TIN PHÒNG TRỐNG ---\n- Hiện khách sạn đang full không còn phòng trống.\n";
-            }
-        } catch (Exception $e) {
-        }
-
-        // 3. Lấy dữ liệu Báo giá Hậu Cần Tăng Giá Động Lễ/Tết (MỚI)
-        try {
-            $stmt = $db->query("
-                SELECT rt.type_name, rp.start_date, rp.end_date, rp.price, rp.description
-                FROM room_pricing rp
-                JOIN room_types rt ON rp.room_type_id = rt.room_type_id
-                WHERE rp.end_date >= CURRENT_DATE()
-            ");
-            $pricing_rules = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($pricing_rules) {
-                $knowledge_context .= "\n--- 💰💰 LỊCH BÁO GIÁ ĐỘNG (THAY ĐỔI THEO LỄ/TẾT) ĐANG ÁP DỤNG ---\n";
-                foreach ($pricing_rules as $rp) {
-                    $knowledge_context .= "- Phòng {$rp['type_name']} bị báo ĐỔI GIÁ thành: " . number_format($rp['price'], 0, ',', '.') . " VNĐ/đêm từ ngày " . date('d/m/Y', strtotime($rp['start_date'])) . " đến " . date('d/m/Y', strtotime($rp['end_date'])) . ". Vì lý do là: {$rp['description']}.\n";
-                }
-                $knowledge_context .= "(CẢNH BÁO QUAN TRỌNG: Nếu khách hỏi giá đúng Giai đoạn Ngày Lễ bên trên, AI BẮT BUỘC phải bỏ Giá Gốc đi, mà BÁO MỨC GIÁ CHUẨN LỄ TẾT trên. Nếu khách đặt nhiều đêm (Ví dụ 1 ngày lễ, 1 ngày thường), AI phải tự cộng dồn thông minh 2 khoảng tiền trước khi trả lời Tổng Kết để Khách chốt deal!)\n";
-            }
-        } catch (Exception $e) {
-        }
-
-        // 4. Lấy hình ảnh thiết bị trực quan từ thư viện (Thẻ Markdown)
-        try {
-            $stmt = $db->query("SELECT title, image_url, category FROM gallery WHERE status = 'active' LIMIT 15");
-            $galleries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($galleries) {
-                $knowledge_context .= "\n--- 📸 HỆ THỐNG GỌI HÌNH ẢNH THỰC TẾ TRỰC QUAN KHUYẾN GỢI MUA HÀNG ---\n";
-                foreach ($galleries as $gal) {
-                    $full_img_url = "https://aurorahotelplaza.com/2025/" . $gal['image_url'];
-                    $knowledge_context .= "+ Tên ảnh: [{$gal['title']}] (Album {$gal['category']}) -> MÃ GỌI ẢNH (Bảo mật):  ![{$gal['title']}]({$full_img_url})\n";
-                }
-                $knowledge_context .= "(LUẬT XUẤT ẢNH CHO KHÁCH XEM: Khi Khách muốn 'Xem không gian phòng', 'Tư vấn view phòng' hoặc bạn thấy Cần Thuyết Phục Khách bằng sự đẹp Mắt, NẾU Data trên có cái Ảnh khớp -> AI hãy Vứt ngay đoạn Mã Gọi Ảnh `![...](...)` này Trực Tiếp vào cuối phần chát. Đừng sáng tác Link ảnh giả mạo. Giao diện Chat của Guest sẽ Bốc Ảnh Phóng To Ra Màn Hình Khách Sạn!)\n";
-            }
-        } catch (Exception $e) {
-        }
-
-        // 5. Cài đặt các FAQs Hỏi Xoáy Đáp Xoay của Khách MỚI
-        try {
-            $stmt = $db->query("SELECT question, answer FROM faqs WHERE status = 'active'");
-            $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($faqs) {
-                $knowledge_context .= "\n--- 🛎 BỘ CẨM NANG HỎI XOÁY ĐÁP XOAY (FAQs) ---\n";
-                foreach ($faqs as $faq) {
-                    $knowledge_context .= "Hỏi: {$faq['question']} -> Đáp luôn: {$faq['answer']}\n";
-                }
-            }
-        } catch (Exception $e) {
-        }
-
-        // 6. Lấy dữ liệu Dịch vụ (Spa, Nhà hàng, Đưa đón...) MỚI MỞ RỘNG CSDL
-        try {
-            $stmt = $db->query("SELECT service_name, category, price, short_description FROM services WHERE status = 'active' LIMIT 20");
-            $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($services) {
-                $knowledge_context .= "\n--- DỊCH VỤ KHÁCH SẠN (NHÀ HÀNG, SPA, XE ĐƯA ĐÓN...) ---\n";
-                foreach ($services as $srv) {
-                    $price = $srv['price'] > 0 ? number_format($srv['price'], 0, ',', '.') . ' VNĐ' : 'Miễn phí hoặc Liên hệ';
-                    $knowledge_context .= "- {$srv['service_name']} (Mảng {$srv['category']}): Giá {$price}. Chi tiết: {$srv['short_description']}\n";
-                }
-            }
-        } catch (Exception $e) {
-        }
-
-        // 7. Lấy dữ liệu Cài đặt Hệ thống Khách sạn (Phone, Email, Giờ Check-in/out, Chính sách)
-        try {
-            $stmt = $db->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_group IN ('general', 'contact', 'booking')");
-            $settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($settings) {
-                $knowledge_context .= "\n--- THÔNG TIN CƠ BẢN CỦA KHÁCH SẠN (SYSTEM SETTINGS) ---\n";
-                foreach ($settings as $s) {
-                    $knowledge_context .= "- {$s['setting_key']}: {$s['setting_value']}\n";
-                }
-            }
-        } catch (Exception $e) {
-        }
-
-        // 8. Lấy dữ liệu Tiện nghi Trang thiết bị chung (Amenities)
-        try {
-            $stmt = $db->query("SELECT amenity_name, category FROM amenities WHERE status = 'active'");
-            $amenities = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($amenities) {
-                $knowledge_context .= "\n--- TIỆN NGHI VÀ TRANG THIẾT BỊ CỦA KHÁCH SẠN (AMENITIES) ---\nKhách sạn có các tiện ích sau: ";
-                $amenity_names = array_map(function ($a) {
-                    return $a['amenity_name'];
-                }, $amenities);
-                $knowledge_context .= implode(", ", $amenity_names) . ".\n";
-            }
-        } catch (Exception $e) {
-        }
-
-        // 9. Lấy dữ liệu Ưu đãi & Giảm giá (Promotions)
-        try {
-            $stmt = $db->query("SELECT code, title, discount_type, discount_value, min_booking_amount FROM promotions WHERE status = 'active' AND end_date >= CURRENT_DATE()");
-            $promos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($promos) {
-                $knowledge_context .= "\n--- CÁC ƯU ĐÃI KHUYẾN MÃI ĐANG MỞ (PROMOTIONS & COUPONS) ---\n";
-                foreach ($promos as $p) {
-                    $val = $p['discount_type'] == 'percentage' ? $p['discount_value'] . '%' : number_format($p['discount_value'], 0, ',', '.') . ' VNĐ';
-                    $knowledge_context .= "- Mã '{$p['code']}': {$p['title']} (Giảm {$val}, áp dụng cho đơn từ " . number_format($p['min_booking_amount'], 0, ',', '.') . " VNĐ).\n";
-                }
-            }
-        } catch (Exception $e) {
-        }
-
-        // 10. Lấy dữ liệu Hạng Thành viên (Membership Tiers)
-        try {
-            $stmt = $db->query("SELECT tier_name, required_points, discount_percent FROM membership_tiers");
-            $tiers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if ($tiers) {
-                $knowledge_context .= "\n--- CHÍNH SÁCH HẠNG THÀNH VIÊN (LOYALTY) ---\n";
-                foreach ($tiers as $t) {
-                    $knowledge_context .= "- Hạng {$t['tier_name']}: Cần {$t['required_points']} điểm tích lũy. Đặc quyền giảm giá trực tiếp: {$t['discount_percent']}%.\n";
-                }
-            }
-        } catch (Exception $e) {
-        }
+        // Tính năng Static RAG (SQL) cho (bot_knowledge, gallery, faqs, services, system_settings, amenities, promotions, membership_tiers)
+        // Đã được thay thế hoàn toàn bằng DB schema truyền trong System Prompt để AI tự gọi function `run_sql` giúp TỐI ƯU TOKEN tối đa.
     }
 
     // 2. Định nghĩa vai trò (System Prompt) cho Bot
-    // Đây là "não bộ" của Bot
     $system_prompt = "
-Bạn là Aurora, Trợ lý AI Thông minh của khách sạn Aurora Hotel Plaza. Nữ giới.
-Nhiệm vụ cốt lõi:
-- Luôn giữ thái độ chuyên nghiệp, thân thiện, xưng hô 'Dạ/Vâng', 'Quý khách/Em'.
-- GIAO TIẾP ĐA NGÔN NGỮ: BẮT BUỘC phải đọc và nhận diện khách hàng đang nhắn tin bằng ngôn ngữ Mẹ Đẻ nào (Tiếng Anh, Tiếng Trung, Tiếng Hàn, Tiếng Nhật, v.v.). Nếu khách nhắn ngôn ngữ nào -> BẠN PHẢI TRẢ LỜI LẠI TRÔI CHẢY BẰNG CHÍNH NGÔN NGỮ ĐÓ (Không được dùng Tiếng Việt nếu họ là người ngoại quốc). Tự động dịch tất cả dữ liệu từ [DỮ LIỆU KIẾN THỨC] sang ngôn ngữ của Khách.
-- AI 'BIẾT TUỐT' DỮ LIỆU CÔNG TY: Toàn bộ [DỮ LIỆU KIẾN THỨC] đã được nạp ở phía dưới, nó bao gồm Giá, Ngày lễ, Dịch Vụ, Cài Đặt Hệ Thống, Thiết bị phòng, Khuyến mãi, Thẻ Thành viên. Bạn là Bách khoa toàn thư của khách sạn. Hỏi gì trong [DỮ LIỆU KIẾN THỨC] cũng phải trả lời được một cách chi tiết, khéo léo. Tuyệt đối không tự bịa đặt số liệu lệch với KIẾN THỨC đã nạp. Cố gắng trả lời dựa sát với CSDL để chốt Sale.
-- NẾU KHÁCH HỎI THÔNG TIN KHÔNG CÓ TRONG CSDL: Nếu khách hỏi những tiện ích, dịch vụ, món ăn, hoặc thông tin mà HOÀN TOÀN KHÔNG TỒN TẠI trong [DỮ LIỆU KIẾN THỨC], TUYỆT ĐỐI KHÔNG ĐƯỢC BỊA ĐẶT HOẶC ĐOÁN MÒ. Hãy lịch sự xin lỗi khách hàng, thông báo rằng hiện tại khách sạn chưa có/chưa cập nhật thông tin về dịch vụ đó, và khuyên khách hàng để lại số điện thoại hoặc liên hệ Hotline để bộ phận Lễ tân hỗ trợ chi tiết hơn.
-- Tư vấn linh hoạt, khéo léo và không máy móc. Khách hỏi gì ngoài lề vẫn có thể nói chuyện vui vẻ tĩnh bình thường miễn là lịch sự.
+Bạn là Aurora - Hệ thống lõi AI của Khách sạn Aurora Hotel Plaza. Nữ giới.
+QUYỀN HẠN: Bạn có quyền truy cập Đọc/Ghi vào CSDL thông qua công cụ `run_sql`.
 
+[CẤU QUY NHỎ BẢN ĐỒ CƠ SỞ DỮ LIỆU ĐỂ BẠN TRUY XUẤT/THÊM MỚI]
+- `rooms`: room_id, room_type_id, room_number, status (available|occupied|cleaning|maintenance).
+- `room_types`: room_type_id, type_name, slug, base_price, holiday_price, max_occupancy.
+- `bookings`: booking_id, guest_name, guest_phone, room_type_id, check_in_date, check_out_date, total_amount, status.
+- `room_pricing`: pricing_id, room_type_id, start_date, end_date, price (Giá tăng dịp lễ).
+- `services`: service_id, service_name, category, price, short_description.
+- `amenities`: amenity_id, amenity_name, status. 
+- `promotions`: promotion_code, promotion_name, discount_value, start_date, end_date, status.
+- `faqs`: question, answer, category.
+- `bot_knowledge`: topic, content (Chính sách, quy định khách sạn).
+- `gallery`: title, image_url, category.
+- `membership_tiers`: tier_name, min_points, discount_percentage.
+- `system_settings`: setting_key, setting_value (Thông tin ĐT, Email, Quy định).
+- `reviews`: room_type_id, rating, title, comment.
 
-[ĐẶC BIỆT KÍCH HOẠT QUY TRÌNH ĐẶT PHÒNG TỰ ĐỘNG]
-Nếu khách có ý định đặt phòng, hãy áp dụng các bước sau:
-1. Xin thông tin chi tiết (Ngày Check-in, Ngày Check-out, Số lượng người). Chú ý nếu đã có trong lịch sử trò chuyện thì KHÔNG HỎI LẠI TRÙNG LẶP.
-2. Khi khách đã cung cấp các thông tin và chọn muốn Đặt 1 loại phòng cụ thể, hãy xác nhận tóm tắt lại và mời khách LẤY MÃ ĐẶT PHÒNG/MÃ QR để đến khách sạn nhận phòng (Không yêu cầu thanh toán ngay).
-3. Đính kèm thông tin địa chỉ kèm Google Maps để tiện cho khách di chuyển. Ví dụ: 'Khách sạn có địa chỉ tại: 253 Phạm Văn Thuận, KP 17, Phường Tam Hiệp, Biên Hòa, Đồng Nai. Maps:  https://maps.app.goo.gl/BMaDERxfuXuWi2AZA?g_st=ic'
-4. QUAN TRỌNG: Để sinh ra Nút lấy mã QR/Mã Đặt Phòng trên giao diện chat cho khách, bạn BẮT BUỘC phải chèn đoạn mã sau vào CHÍNH XÁC ở cuối của đoạn chat bạn gửi cho họ:
-[BOOK_NOW_BTN: slug={Mã tham chiếu}, name={Tên phòng}, cin={Ngày checkin định dạng do người dùng nhập}, cout={Ngày checkout định dạng do người dùng}]
---- Ví dụ xuất ra:
-Dạ vâng, em đã lên đơn xong phòng Deluxe từ ngày 15/05 đến 18/05 cho Quý khách. Quý khách vui lòng lưu lại Nút mã xác nhận dưới đây và đến trực tiếp khách sạn để check-in nhé ạ!
-[BOOK_NOW_BTN: slug=deluxe, name=Deluxe Room, cin=15/05/2026, cout=18/05/2026]
-(Không thêm thẻ markdown code bao quanh mã nút này)
+[QUY TẮC VẬN HÀNH TỐI ƯU CHI PHÍ]
+1. KHÔNG ĐOÁN MÒ: Nếu khách hỏi thông tin (ví dụ: 'Còn phòng không?', 'Giá phòng bao nhiêu?'), BẮT BUỘC gọi hàm `run_sql` với lệnh SELECT để lấy dữ liệu thực tế. Không trả lời dựa trên trí nhớ cũ.
+2. QUYỀN THAY ĐỔI DB: Nếu khách chốt đặt phòng hoặc Admin yêu cầu đổi giá, hãy gọi `run_sql` với lệnh INSERT hoặc UPDATE tương ứng.
+3. TIẾT KIỆM TOKEN: Chỉ SELECT những cột cần thiết. Tránh SELECT *.
+4. NGÔN NGỮ: BẮT BUỘC nhận diện và trả lời bằng ngôn ngữ của người dùng (Tiếng Việt, Anh, Trung, Hàn, Nhật...). Tự động dịch dữ liệu từ CSDL.
 
-[DỮ LIỆU KIẾN THỨC (CẬP NHẬT REALTIME)]
+[LUẬT ĐẶT PHÒNG TỰ ĐỘNG]
+Khi khách muốn đặt phòng:
+- Bước 1: Xin thông tin chi tiết (Ngày Check-in, Ngày Check-out, Số lượng người) nếu chat context chưa có.
+- Bước 2: Gọi `run_sql` với lệnh SELECT vào `room_pricing` và `rooms`, `room_types` để kiểm tra giá theo ngày lễ và tình trạng phòng trống. Tính tổng tiền.
+- Bước 3: Sau khi khách đồng ý chốt, gọi `run_sql` với lệnh INSERT vào bảng `bookings` lưu trữ.
+- Bước 4: Mời khách ấn nút lấy mã đặt phòng/QR bằng cách chèn ĐÚNG CÚ PHÁP ĐOẠN MÃ sau vào CUỐI văn bản:
+[BOOK_NOW_BTN: slug={Mã thao chiếu slug của phòng}, name={Tên phòng}, cin={Ngày check-in dd/mm/yyyy}, cout={Ngày check-out dd/mm/yyyy}]
+
+[QUY TẮC HIỂN THỊ HÌNH ẢNH (QUAN TRỌNG)]
+Nếu khách muốn xem ảnh phòng/không gian:
+- Bước 1: Gọi `run_sql` truy vấn bảng `gallery` để lấy `image_url` và `title`.
+- Bước 2: Hiển thị ĐÚNG chuẩn markdown: `![Mô tả title](https://aurorahotelplaza.com/2025/đường_dẫn_image_url)`. Tuyệt đối không tự chế ra ảnh ảo.
+
+[QUY TẮC GIAO TIẾP]
+- Luôn giữ thái độ chuyên nghiệp, thân thiện: 'Dạ/Vâng', 'Quý khách/Em'.
+- Nếu khách hỏi những thông tin mà HOÀN TOÀN KHÔNG TỒN TẠI trong CSDL, TUYỆT ĐỐI KHÔNG ĐƯỢC BỊA ĐẶT. Hãy lịch sự xin lỗi khách.
+
+[DỮ LIỆU KIẾN THỨC BỔ SUNG]
 {$knowledge_context}
 {$history_context}
     ";
 
-    // Thực hiện cURL POST Request tới Google Gemini API
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+    $contents = [
+        ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
+    ];
 
-    $data = [
-        "contents" => [
-            ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
-        ],
-        "generationConfig" => [
-            "temperature" => 0.7,
-            "topK" => 40,
-            "topP" => 0.95,
-            "maxOutputTokens" => 1024,
+    $tools = [
+        [
+            "functionDeclarations" => [
+                [
+                    "name" => "run_sql",
+                    "description" => "Thực thi câu lệnh SQL trực tiếp vào DB khách sạn để Lấy dữ liệu hoặc Cập nhật dữ liệu.",
+                    "parameters" => [
+                        "type" => "OBJECT",
+                        "properties" => [
+                            "sql" => [
+                                "type" => "STRING",
+                                "description" => "Câu lệnh SQL chuẩn MySQL. Được cấp quyền thực thi SELECT, INSERT, UPDATE, DELETE tùy theo tình huống."
+                            ]
+                        ],
+                        "required" => ["sql"]
+                    ]
+                ]
+            ]
         ]
     ];
-    $json_data = json_encode($data);
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $max_iterations = 4; // Cho phép AI suy nghĩ và gọi tối đa 4 lần Function
+    $final_response = "Dạ hệ thống AI đang bận xử lý, Quý khách vui lòng đợi trong giây lát hoặc liên hệ Hotline ạ.";
 
-    // Tắt verify SSL nếu chạy ở localhost bị lỗi SSL certificate (XAMPP thường bị)
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    for ($i = 0; $i < $max_iterations; $i++) {
+        $data = [
+            "contents" => $contents,
+            "tools" => $tools,
+            "generationConfig" => [
+                "temperature" => 0.4, // Giảm temperature để SQL chính xác hơn
+                "topK" => 40,
+                "topP" => 0.95,
+                "maxOutputTokens" => 1024,
+            ]
+        ];
+        $json_data = json_encode($data);
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
-    if ($http_code === 429) {
-        $errData = json_decode($response, true);
-        $retryDelay = '60s';
-        if (isset($errData['error']['details'])) {
-            foreach ($errData['error']['details'] as $detail) {
-                if (isset($detail['retryDelay']))
-                    $retryDelay = $detail['retryDelay'];
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // Xử lý Rate Limit (429) Của Gemini API
+        if ($http_code === 429) {
+            $errData = json_decode($response, true);
+            $retrySeconds = 60;
+            if (isset($errData['error']['details'])) {
+                foreach ($errData['error']['details'] as $detail) {
+                    if (isset($detail['retryDelay']))
+                        $retrySeconds = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
+                }
+            }
+            mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+            $new_key = rotate_gemini_key();
+            if ($new_key && $new_key !== $api_key) {
+                // Đổi Key Mới Và Gọi lại
+                $api_key = $new_key;
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
             }
         }
-        $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
-        mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
 
-        $new_key = rotate_gemini_key();
-        if ($new_key && $new_key !== $api_key) {
-            // Thử Gọi lại API với Key Mới
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $response = curl_exec($ch);
-        }
-    }
+        $result = json_decode($response, true);
 
-    if (curl_errno($ch)) {
-        error_log('Curl error: ' . curl_error($ch));
-        return "Xin lỗi, hệ thống đang gặp sự cố kết nối AI.";
-    }
-
-    $result = json_decode($response, true);
-    if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-        // Ghi nhận log usage cho Client
+        // Ghi log số Tokens nếu có
         $tokens_used = $result['usageMetadata']['totalTokenCount'] ?? 0;
         if ($tokens_used > 0) {
-            $current_idx = get_active_key_index();
-            log_key_usage($current_idx, $tokens_used, 'client');
+            log_key_usage(get_active_key_index(), $tokens_used, 'client');
         }
-        return $result['candidates'][0]['content']['parts'][0]['text'];
+
+        if (error_get_last() || !isset($result['candidates'][0]['content'])) {
+            error_log("Gemini Error: " . print_r($result, true));
+            break; // Trả về text mặc định do lỗi
+        }
+
+        $content_parts = $result['candidates'][0]['content']['parts'];
+
+        $has_function_call = false;
+        $text_response = "";
+
+        foreach ($content_parts as $part) {
+            if (isset($part['text'])) {
+                $text_response .= $part['text'];
+            }
+            if (isset($part['functionCall'])) {
+                $has_function_call = true;
+                $functionCall = $part['functionCall'];
+            }
+        }
+
+        if ($has_function_call) {
+            // AI Muốn Gọi Function
+            $contents[] = [
+                "role" => "model",
+                "parts" => [["functionCall" => $functionCall]]
+            ];
+
+            if ($functionCall['name'] === 'run_sql' && isset($functionCall['args']['sql'])) {
+                $sql = $functionCall['args']['sql'];
+                try {
+                    $stmt = $db->query($sql);
+                    if (preg_match('/^\s*(SELECT|SHOW|DESCRIBE|EXPLAIN|PRAGMA)/i', $sql)) {
+                        $db_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $response_data = ["result" => $db_result];
+                    } else {
+                        $response_data = ["status" => "success", "affected_rows" => $stmt->rowCount()];
+                    }
+                } catch (Exception $e) {
+                    $response_data = ["error" => "SQL Error: " . $e->getMessage()];
+                }
+
+                // Ràng buộc giới hạn size kết quả để tránh lỗi context too long
+                $json_res = json_encode($response_data);
+                if (strlen($json_res) > 4000) {
+                    $response_data = ["error" => "Kết quả mảng SQL quá lớn, bộ nhớ tràn. Hãy thiết kế QUERY SQL cẩn thận hơn bằng LIMIT hoặc WHERE."];
+                }
+
+                $contents[] = [
+                    "role" => "user",
+                    "parts" => [
+                        [
+                            "functionResponse" => [
+                                "name" => "run_sql",
+                                "response" => ["name" => "run_sql", "content" => $response_data]
+                            ]
+                        ]
+                    ]
+                ];
+            } else {
+                $contents[] = [
+                    "role" => "user",
+                    "parts" => [
+                        [
+                            "functionResponse" => [
+                                "name" => $functionCall['name'],
+                                "response" => ["error" => "Function không tồn tại trên hệ thống"]
+                            ]
+                        ]
+                    ]
+                ];
+            }
+        } else {
+            // Không nhận diện FunctionCall nữa -> AI đã trả về phản hồi cuối
+            if (!empty($text_response)) {
+                $final_response = $text_response;
+            }
+            break;
+        }
     }
 
-    // Fallback error logging for API failure
-    error_log("Gemini API Error Response: " . print_r($result, true));
-    return "Dạ vấn đề này hơi khó, để em chuyển một bạn hỗ trợ viên người thật tư vấn chi tiết hơn cho mình nhé! Quý khách giúp em đợi 1 xíu ạ.";
+    return $final_response;
 }
