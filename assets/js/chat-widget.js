@@ -501,7 +501,7 @@ const ChatWidget = {
                     
                     contentHtml = contentHtml.replace(match[0], '').trim();
                     
-                    extraUiHtml = `
+                    extraUiHtml += `
                         <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
                             <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
                                🎫 Xác nhận Đặt phòng Tự động
@@ -515,6 +515,49 @@ const ChatWidget = {
                             <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
                         </div>
                     `;
+                }
+
+                // Parse VIEW QR button
+                const qrRegex = /\[VIEW_QR_BTN:\s*code=([^,\]]+),\s*id=([^\]]+)\]/i;
+                const qrMatch = contentHtml.match(qrRegex);
+                if (qrMatch) {
+                    const qrcode = qrMatch[1].trim();
+                    const qrid = qrMatch[2].trim();
+                    contentHtml = contentHtml.replace(qrMatch[0], '').trim();
+                    extraUiHtml += `
+                        <div style="margin-top:8px; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px;">
+                            <div style="text-align:center; padding:5px 0;">
+                                <div style="color:#16a34a; font-weight:bold; margin-bottom:4px; font-size:13px;">✅ TÌM THẤY ĐƠN ĐẶT PHÒNG</div>
+                                <div style="font-size:14px; font-weight:bold; color:#ca8a04; margin-bottom:10px;">Mã: ${qrcode}</div>
+                                <a href="/profile/view-qrcode.php?id=${qrid}" target="_blank" 
+                                   style="display:inline-block; width:100%; text-align:center; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:10px 0; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                                   <span style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                                        <span class="material-symbols-outlined" style="font-size:16px;">qr_code_2</span> MỞ XEM QR CODE
+                                   </span>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Parse Link Buttons
+                const linkRegex = /\[LINK_BTN:\s*name=([^,\]]+),\s*url=([^\]]+)\]/gi;
+                let linkMatch;
+                let linkHtml = '';
+                while ((linkMatch = linkRegex.exec(contentHtml)) !== null) {
+                    const btnName = linkMatch[1].trim();
+                    const btnUrl = linkMatch[2].trim();
+                    linkHtml += `
+                        <a href="${btnUrl}" target="_blank" 
+                           style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; margin-top:8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; color:#3b82f6; text-decoration:none; font-size:13px; font-weight:600; transition:all 0.2s;">
+                           <span>${btnName}</span>
+                           <span class="material-symbols-outlined" style="font-size:16px; color:#94a3b8;">arrow_forward_ios</span>
+                        </a>
+                    `;
+                }
+                if (linkHtml !== '') {
+                    extraUiHtml += `<div style="margin-top:10px;">${linkHtml}</div>`;
+                    contentHtml = contentHtml.replace(linkRegex, '').trim();
                 }
             }
         }
