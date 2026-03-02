@@ -136,23 +136,26 @@ PROMPT;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Tự động Cào Toàn Bộ Schema Từ MỌI BẢNG CSDL để Bơm Trực Tiếp Cho AI
+    // Tối Ưu Cào Cấu Trúc Bảng DB (Static Schema thay cho `DESCRIBE` ngốn hàng nghìn token)
     // ─────────────────────────────────────────────────────────────────────────
-    try {
-        $stmtAllTables = $db->query("SHOW TABLES");
-        $all_tables = $stmtAllTables->fetchAll(PDO::FETCH_COLUMN);
-
-        $schema_context = "\n--- CẤU TRÚC DATABASE ĐỘNG TOÀN DIỆN (Đọc tất cả bảng để viết SQL chuẩn) ---\n";
-        foreach ($all_tables as $tbl) {
-            $stmtSchema = $db->query("DESCRIBE `$tbl`");
-            if ($stmtSchema) {
-                $cols = $stmtSchema->fetchAll(PDO::FETCH_COLUMN);
-                $schema_context .= "- Bảng `$tbl`: " . implode(", ", $cols) . "\n";
-            }
-        }
-    } catch (Exception $e) {
-        $schema_context = "\n Lỗi đọc Schema: " . $e->getMessage();
-    }
+    $schema_context = "\n--- CẤU TRÚC DATABASE THU GỌN ĐỂ VIẾT LỆNH SQL (Tra cứu / CRUD) ---\n";
+    $schema_context .= "- `users`: user_id, email, password_hash, full_name, phone, user_role, status.\n";
+    $schema_context .= "- `rooms`: room_id, room_type_id, room_number, status (available|occupied|cleaning|maintenance).\n";
+    $schema_context .= "- `room_types`: room_type_id, type_name, slug, base_price, holiday_price, max_occupancy.\n";
+    $schema_context .= "- `bookings`: booking_id, guest_name, guest_phone, room_type_id, room_id, check_in_date, check_out_date, total_amount, status, payment_status.\n";
+    $schema_context .= "- `room_pricing`: pricing_id, room_type_id, start_date, end_date, price.\n";
+    $schema_context .= "- `services`: service_id, service_name, category, price.\n";
+    $schema_context .= "- `amenities`: amenity_id, amenity_name, status.\n";
+    $schema_context .= "- `promotions`: promotion_code, promotion_name, discount_value, start_date, end_date, status.\n";
+    $schema_context .= "- `faqs`: question, answer, category.\n";
+    $schema_context .= "- `bot_knowledge`: topic, content.\n";
+    $schema_context .= "- `gallery`: title, image_url, category.\n";
+    $schema_context .= "- `membership_tiers`: tier_name, min_points, discount_percentage.\n";
+    $schema_context .= "- `system_settings`: setting_key, setting_value.\n";
+    $schema_context .= "- `reviews`: review_id, room_type_id, rating, comment.\n";
+    $schema_context .= "- `activity_logs`: log_id, user_id, action, description, created_at.\n";
+    $schema_context .= "- `chat_messages`: sender_type, message, created_at.\n";
+    $schema_context .= "(GỢI Ý: Nếu Sếp yêu cầu thông tin cột / bảng nào CHƯA CÓ ở trên, HÃY MẠNH DẠN dùng `[READ_DB: SHOW TABLES]` hoặc `[READ_DB: DESCRIBE ten_bang]` để tự chạy ngầm đọc trước nhé!).\n";
 
     $full_prompt = $system_prompt . $room_context . $bi_context . $schema_context;
 
