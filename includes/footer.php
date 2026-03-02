@@ -137,7 +137,7 @@ if (!function_exists('__')) {
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">location_on</span>
                         <a href="https://maps.app.goo.gl/XsdoqeYRinQfwVxv7" target="_blank"
                             class="text-white/70 hover:text-accent transition-colors">
-                            Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai
+                            <?php _e('home.address_full'); ?>
                         </a>
                     </li>
                     <li class="flex items-start gap-3">
@@ -196,7 +196,7 @@ if (!function_exists('__')) {
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
         <div
             class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-[#d4af37] to-[#b8941f]">
-            <h3 class="font-bold text-lg text-white" id="footerPopupTitle">Thông báo</h3>
+            <h3 class="font-bold text-lg text-white" id="footerPopupTitle"><?php _e('footer.notification'); ?></h3>
             <button onclick="closeFooterPopup()"
                 class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
                 <span class="material-symbols-outlined">close</span>
@@ -207,7 +207,8 @@ if (!function_exists('__')) {
                 <div class="w-12 h-12 rounded-full bg-[#d4af37]/10 flex items-center justify-center">
                     <span class="material-symbols-outlined text-[#d4af37] text-2xl">info</span>
                 </div>
-                <p class="text-gray-700 dark:text-gray-300" id="footerPopupContent">Nội dung sẽ được cập nhật sớm.</p>
+                <p class="text-gray-700 dark:text-gray-300" id="footerPopupContent">
+                    <?php _e('footer.content_coming_soon'); ?></p>
             </div>
             <button onclick="closeFooterPopup()" class="w-full btn btn-primary"><?php _e('common.close'); ?></button>
         </div>
@@ -219,8 +220,8 @@ if (!function_exists('__')) {
     document.querySelectorAll('.footer-link-popup').forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            const title = this.dataset.title || 'Thông báo';
-            const content = this.dataset.content || 'Nội dung sẽ được cập nhật sớm.';
+            const title = this.dataset.title || '<?php echo addslashes(__('footer.notification')); ?>';
+            const content = this.dataset.content || '<?php echo addslashes(__('footer.content_coming_soon')); ?>';
             document.getElementById('footerPopupTitle').textContent = title;
             document.getElementById('footerPopupContent').textContent = content;
             document.getElementById('footerPopupModal').classList.remove('hidden');
@@ -305,7 +306,7 @@ if (!function_exists('__')) {
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
             class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-[#d4af37] to-[#b8941f]">
-            <h3 class="font-bold text-lg text-white">Chọn loại đặt phòng</h3>
+            <h3 class="font-bold text-lg text-white"><?php _e('booking_modal.title'); ?></h3>
             <button id="close-type-modal" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -316,8 +317,8 @@ if (!function_exists('__')) {
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-green-400 text-3xl">person</span>
                     <div>
-                        <div class="font-bold text-white">Cá nhân / Gia đình</div>
-                        <div class="text-sm text-white/60">Đặt phòng 1-6 người, thanh toán online hoặc tại khách sạn.
+                        <div class="font-bold text-white"><?php _e('booking_modal.individual_family'); ?></div>
+                        <div class="text-sm text-white/60"><?php _e('booking_modal.individual_desc'); ?>
                         </div>
                     </div>
                 </div>
@@ -327,8 +328,8 @@ if (!function_exists('__')) {
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-amber-400 text-3xl">groups</span>
                     <div>
-                        <div class="font-bold text-white">Đoàn / Sự kiện</div>
-                        <div class="text-sm text-white/60">Đặt phòng số lượng lớn, công ty, đám cưới, hội nghị.</div>
+                        <div class="font-bold text-white"><?php _e('booking_modal.group_event'); ?></div>
+                        <div class="text-sm text-white/60"><?php _e('booking_modal.group_desc'); ?></div>
                     </div>
                 </div>
             </button>

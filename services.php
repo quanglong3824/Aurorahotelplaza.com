@@ -89,16 +89,17 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                     <div class="grid grid-cols-3 gap-8 pt-8 border-t border-white/10">
                         <div class="text-center">
                             <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">
-                                <?php echo count($services); ?>+</div>
-                            <div class="text-sm opacity-70">Dịch vụ</div>
+                                <?php echo count($services); ?>+
+                            </div>
+                            <div class="text-sm opacity-70"><?php _e('nav.services'); ?></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">5★</div>
-                            <div class="text-sm opacity-70">Tiêu chuẩn</div>
+                            <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">4★</div>
+                            <div class="text-sm opacity-70"><?php _e('common.standard'); ?></div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">24/7</div>
-                            <div class="text-sm opacity-70">Phục vụ</div>
+                            <div class="text-sm opacity-70"><?php _e('common.service'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -142,8 +143,8 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                     <?php if (!empty($main_services)): ?>
                         <div>
                             <div class="text-center mb-12">
-                                <span class="text-[#d4af37] font-semibold text-sm uppercase tracking-wider">Dịch vụ nổi
-                                    bật</span>
+                                <span
+                                    class="text-[#d4af37] font-semibold text-sm uppercase tracking-wider"><?php _e('services_page.featured_services'); ?></span>
                                 <h2 class="font-display text-4xl font-bold mt-2 mb-4 text-white">
                                     <?php _e('services_page.main_services'); ?>
                                 </h2>
@@ -155,7 +156,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                         <?php if ($service['thumbnail']): ?>
                                             <div class="service-img-container">
                                                 <img src="<?php echo imgUrl($service['thumbnail']); ?>"
-                                                    alt="<?php echo htmlspecialchars($service['service_name']); ?>">
+                                                    alt="<?php echo htmlspecialchars(_f($service, 'service_name')); ?>">
 
                                                 <?php if ($service['is_featured']): ?>
                                                     <div
@@ -168,10 +169,12 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                         <?php endif; ?>
 
                                         <div class="service-info">
-                                            <h3 class="service-name"><?php echo htmlspecialchars($service['service_name']); ?>
+                                            <h3 class="service-name">
+                                                <?php echo htmlspecialchars(_f($service, 'service_name')); ?>
                                             </h3>
                                             <p class="service-desc">
-                                                <?php echo htmlspecialchars($service['short_description']); ?></p>
+                                                <?php echo htmlspecialchars(_f($service, 'short_description')); ?>
+                                            </p>
 
                                             <?php if (!empty($service['packages'])): ?>
                                                 <div class="packages-list-mini">
@@ -205,9 +208,11 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
 
                     <!-- CTA Section -->
                     <div class="glass-cta-box">
-                        <h2 class="font-display text-4xl font-bold text-white mb-4">Cần tư vấn dịch vụ?</h2>
+                        <h2 class="font-display text-4xl font-bold text-white mb-4">
+                            <?php _e('services_page.need_consultation'); ?>
+                        </h2>
                         <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                            Liên hệ ngay với chúng tôi để được tư vấn và báo giá chi tiết cho các dịch vụ.
+                            <?php _e('services_page.contact_desc'); ?>
                         </p>
                         <div class="flex flex-wrap gap-4 justify-center relative z-10">
                             <a href="contact.php"

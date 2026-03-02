@@ -116,7 +116,7 @@ if ($is_logged_in) {
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-white mb-1"><?php _e('contact_page.address'); ?></h3>
-                                        <p class="text-white/70 text-sm">Số 253, Phạm Văn Thuận, KP2<br>Phường Tam Hiệp, Tỉnh Đồng Nai</p>
+                                        <p class="text-white/70 text-sm"><?php _e('home.address_full'); ?></p>
                                     </div>
                                 </div>
                                 
@@ -148,7 +148,7 @@ if ($is_logged_in) {
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-white mb-1"><?php _e('contact_page.working_hours'); ?></h3>
-                                        <p class="text-white/70 text-sm"><?php _e('contact_page.reception'); ?>: 24/7<br><?php _e('contact_page.restaurant'); ?>: 6:00 - 22:00</p>
+                                        <p class="text-white/70 text-sm"><?php _e('home.working_hours_detail'); ?></p>
                                     </div>
                                 </div>
                             </div>

@@ -213,7 +213,7 @@ initLanguage();
                             <?php _e('about_page.find_us'); ?>
                         </h2>
                         <p class="text-white/70">
-                            Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, TP. Biên Hòa, Tỉnh Đồng Nai
+                            <?php _e('home.address_full'); ?>
                         </p>
                     </div>
                     <div class="map-glass-wrapper">

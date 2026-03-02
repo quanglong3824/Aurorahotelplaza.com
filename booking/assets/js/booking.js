@@ -577,7 +577,7 @@ function updateUIForInquiry() {
 
     // Update Step 1 Title
     const step1Title = document.getElementById('step1_title');
-    if (step1Title) step1Title.textContent = 'Chọn căn hộ & thời gian cư trú';
+    if (step1Title) step1Title.textContent = translations.booking_form.checkin_title_apt;
 
     // Update Apartment Name in Summary
     const roomSelect = document.getElementById('room_type_id');
@@ -617,12 +617,12 @@ function updateUIForInquiry() {
     // Update Submit Button
     const submitBtnText = document.getElementById('submitBtnText');
     const submitBtnIcon = document.getElementById('submitBtnIcon');
-    if (submitBtnText) submitBtnText.textContent = 'Gửi yêu cầu tư vấn';
+    if (submitBtnText) submitBtnText.textContent = translations.booking_form.submit_btn_apt;
     if (submitBtnIcon) submitBtnIcon.textContent = 'send';
 
     // Update Step 3 Title
     const step3Title = document.getElementById('step3_title');
-    if (step3Title) step3Title.textContent = 'Xác nhận thông tin';
+    if (step3Title) step3Title.textContent = translations.booking_form.confirm_title_apt;
 }
 
 // Update UI for Standard Booking
@@ -638,7 +638,7 @@ function updateUIForBooking() {
 
     // Update Step 1 Title
     const step1Title = document.getElementById('step1_title');
-    if (step1Title) step1Title.textContent = 'Chọn phòng & ngày';
+    if (step1Title) step1Title.textContent = translations.booking_form.checkin_title_room;
 
     // ========== STEP 2 & 3 FIELDS ==========
     // Hide Inquiry Fields
@@ -660,12 +660,12 @@ function updateUIForBooking() {
     // Update Submit Button
     const submitBtnText = document.getElementById('submitBtnText');
     const submitBtnIcon = document.getElementById('submitBtnIcon');
-    if (submitBtnText) submitBtnText.textContent = 'Xác nhận đặt phòng';
+    if (submitBtnText) submitBtnText.textContent = translations.booking_form.submit_btn_room;
     if (submitBtnIcon) submitBtnIcon.textContent = 'lock';
 
     // Update Step 3 Title
     const step3Title = document.getElementById('step3_title');
-    if (step3Title) step3Title.textContent = 'Xác nhận thanh toán';
+    if (step3Title) step3Title.textContent = translations.booking_form.confirm_title_room;
 }
 
 // Update checkout minimum date
@@ -711,7 +711,7 @@ function calculateNights() {
         if (diffDays > 0) {
             const nightsElement = document.getElementById('num_nights');
             if (nightsElement) {
-                nightsElement.textContent = diffDays + ' đêm';
+                nightsElement.textContent = diffDays + ' ' + translations.common.nights;
             }
             return diffDays;
         }
@@ -719,7 +719,7 @@ function calculateNights() {
 
     const nightsElement = document.getElementById('num_nights');
     if (nightsElement) {
-        nightsElement.textContent = '0 đêm';
+        nightsElement.textContent = '0 ' + translations.common.nights;
     }
     return 0;
 }
@@ -746,11 +746,11 @@ function calculateTotal() {
     if (!roomSelect || !roomPriceDisplay || !estimatedTotal) return 0;
 
     if (!roomSelect.value) {
-        roomPriceDisplay.textContent = '0 VNĐ';
+        roomPriceDisplay.textContent = '0 ' + translations.common.currency;
         estimatedTotal.value = '0';
-        if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 VNĐ';
+        if (estimatedTotalDisplay) estimatedTotalDisplay.textContent = '0 ' + translations.common.currency;
         if (originalPriceDisplay) originalPriceDisplay.classList.add('hidden');
-        if (roomSubtotalDisplay) roomSubtotalDisplay.textContent = '0 VNĐ';
+        if (roomSubtotalDisplay) roomSubtotalDisplay.textContent = '0 ' + translations.common.currency;
         if (extraGuestFeeRow) extraGuestFeeRow.classList.add('hidden');
         if (extraBedFeeRow) extraBedFeeRow.classList.add('hidden');
         return 0;
@@ -767,7 +767,7 @@ function calculateTotal() {
 
     // Get prices based on room category, booking type, and number of guests
     let price = 0;
-    let priceLabel = 'Giá 2 người';
+    let priceLabel = translations.booking_form.price_for_2;
     let priceType = 'double';
     let originalPrice = parseFloat(selectedOption.dataset.pricePublished) || 0;
 
@@ -776,7 +776,7 @@ function calculateTotal() {
         const shortStayPrice = parseFloat(selectedOption.dataset.priceShortStay) || 0;
         if (shortStayPrice > 0) {
             price = shortStayPrice;
-            priceLabel = 'Giá nghỉ ngắn hạn';
+            priceLabel = translations.booking_form.price_short_stay;
             priceType = 'short_stay';
             originalPrice = 0;
         }
@@ -789,11 +789,11 @@ function calculateTotal() {
 
         if (numAdults === 1 && priceSingle > 0) {
             price = priceSingle;
-            priceLabel = 'Giá 1 người';
+            priceLabel = translations.booking_form.price_single;
             priceType = 'single';
         } else {
             price = priceDouble || parseFloat(selectedOption.dataset.price) || 0;
-            priceLabel = 'Giá 2 người';
+            priceLabel = translations.booking_form.price_for_2;
             priceType = 'double';
         }
     } else {
@@ -807,29 +807,29 @@ function calculateTotal() {
         if (nights >= 7) {
             if (numAdults === 1 && priceAvgWeeklySingle > 0) {
                 price = priceAvgWeeklySingle;
-                priceLabel = 'Giá tuần (1 người)';
+                priceLabel = translations.booking_form.price_weekly_1;
                 priceType = 'weekly';
             } else if (priceAvgWeeklyDouble > 0) {
                 price = priceAvgWeeklyDouble;
-                priceLabel = 'Giá tuần (2 người)';
+                priceLabel = translations.booking_form.price_weekly_2;
                 priceType = 'weekly';
             } else {
                 price = parseFloat(selectedOption.dataset.price) || 0;
-                priceLabel = 'Giá theo ngày';
+                priceLabel = translations.booking_form.price_daily;
                 priceType = 'daily';
             }
         } else {
             if (numAdults === 1 && priceDailySingle > 0) {
                 price = priceDailySingle;
-                priceLabel = 'Giá ngày (1 người)';
+                priceLabel = translations.booking_form.price_daily_1;
                 priceType = 'daily';
             } else if (priceDailyDouble > 0) {
                 price = priceDailyDouble;
-                priceLabel = 'Giá ngày (2 người)';
+                priceLabel = translations.booking_form.price_daily_2;
                 priceType = 'daily';
             } else {
                 price = parseFloat(selectedOption.dataset.price) || 0;
-                priceLabel = 'Giá theo ngày';
+                priceLabel = translations.booking_form.price_daily;
                 priceType = 'daily';
             }
         }
@@ -912,7 +912,7 @@ function calculateTotal() {
     // Update num_nights display for short stay
     const nightsElement = document.getElementById('num_nights');
     if (nightsElement && currentBookingType === 'short_stay') {
-        nightsElement.textContent = 'Nghỉ ngắn hạn (dưới 4h)';
+        nightsElement.textContent = translations.booking_form.short_stay_label;
     }
 
     // Store values for form submission
@@ -930,7 +930,7 @@ function calculateTotal() {
 // Format currency
 function formatCurrency(amount) {
     if (isNaN(amount) || amount === null || amount === undefined) {
-        return '0 VNĐ';
+        return '0 ' + translations.common.currency;
     }
 
     try {
@@ -940,7 +940,7 @@ function formatCurrency(amount) {
         }).format(amount);
     } catch (error) {
         console.error('Currency formatting error:', error);
-        return new Intl.NumberFormat('vi-VN').format(amount) + ' VNĐ';
+        return new Intl.NumberFormat('vi-VN').format(amount) + ' ' + translations.common.currency;
     }
 }
 
@@ -1080,7 +1080,7 @@ function updateInquirySummary() {
 
     if (mode === 'by_month') {
         const months = document.getElementById('duration_months')?.value || '1';
-        durationDisplay.textContent = months + ' tháng';
+        durationDisplay.textContent = months + ' ' + translations.common.month;
 
         // Get calculated end date
         const calculatedEndDate = document.getElementById('calculated_end_date')?.value;
@@ -1090,12 +1090,12 @@ function updateInquirySummary() {
         const manualEndDate = document.getElementById('manual_end_date')?.value;
 
         if (days) {
-            durationDisplay.textContent = days + ' ngày';
+            durationDisplay.textContent = days + ' ' + translations.common.day;
         } else if (manualEndDate && preferredCheckIn) {
             const startDate = new Date(preferredCheckIn);
             const endDate = new Date(manualEndDate);
             const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-            durationDisplay.textContent = diffDays + ' ngày';
+            durationDisplay.textContent = diffDays + ' ' + translations.common.day;
         } else {
             durationDisplay.textContent = '--';
         }
@@ -1195,7 +1195,7 @@ function validateStep(step) {
         const roomType = document.getElementById('room_type_id').value;
 
         if (!roomType) {
-            alert('Vui lòng chọn loại phòng/căn hộ');
+            alert(translations.booking_form.select_room_or_apt);
             return false;
         }
 
@@ -1212,17 +1212,17 @@ function validateStep(step) {
             const numAdults = document.getElementById('inquiry_num_adults').value;
 
             if (!preferredCheckIn) {
-                alert('Vui lòng chọn ngày dự kiến nhận phòng');
+                alert(translations.booking_form.select_est_checkin);
                 return false;
             }
 
             if (preferredCheckIn < todayStr) {
-                alert('Ngày dự kiến nhận phòng không được nhỏ hơn ngày hiện tại');
+                alert(translations.booking_form.checkin_not_past);
                 return false;
             }
 
             if (!numAdults || numAdults < 1) {
-                alert('Số người lớn phải ít nhất là 1');
+                alert(translations.booking_form.min_adults);
                 return false;
             }
         } else {
@@ -1232,35 +1232,35 @@ function validateStep(step) {
             const numAdults = document.getElementById('num_adults')?.value || document.getElementById('num_guests').value;
 
             if (!checkin) {
-                alert('Vui lòng chọn ngày nhận phòng');
+                alert(translations.booking_form.select_checkin_date);
                 return false;
             }
 
             if (checkin < todayStr) {
-                alert('Ngày nhận phòng không được nhỏ hơn ngày hiện tại');
+                alert(translations.booking_form.checkin_not_past);
                 return false;
             }
 
             // Only validate checkout for standard bookings
             if (currentBookingType !== 'short_stay') {
                 if (!checkout) {
-                    alert('Vui lòng chọn ngày trả phòng');
+                    alert(translations.booking_form.select_checkout_date);
                     return false;
                 }
 
                 if (new Date(checkout) <= new Date(checkin)) {
-                    alert('Ngày trả phòng phải sau ngày nhận phòng');
+                    alert(translations.booking_form.checkout_after_checkin);
                     return false;
                 }
 
                 if (checkout <= todayStr) {
-                    alert('Ngày trả phòng phải là ngày trong tương lai');
+                    alert(translations.booking_form.checkout_future);
                     return false;
                 }
             }
 
             if (!numAdults || numAdults < 1) {
-                alert('Vui lòng nhập số khách hợp lệ');
+                alert(translations.booking_form.invalid_guests);
                 return false;
             }
         }
@@ -1274,7 +1274,7 @@ function validateStep(step) {
         const email = document.getElementById('guest_email').value.trim();
 
         if (!name || !phone || !email) {
-            alert('Vui lòng nhập đầy đủ thông tin bắt buộc');
+            alert(translations.booking_form.fill_required);
             return false;
         }
 
@@ -1303,9 +1303,9 @@ function updateSummary() {
         const rentMode = document.getElementById('rent_mode')?.value || 'by_month';
 
         // Update guest count
-        let guestText = numAdults + ' người lớn';
+        let guestText = numAdults + ' ' + (numAdults > 1 ? translations.common.adults : translations.common.adult);
         if (numChildren > 0) {
-            guestText += ', ' + numChildren + ' trẻ em';
+            guestText += ', ' + numChildren + ' ' + (numChildren > 1 ? translations.common.children : translations.common.child);
         }
         document.getElementById('summary_guests').textContent = guestText;
 
@@ -1342,12 +1342,12 @@ function updateSummary() {
         // ========== ROOM BOOKING SUMMARY ==========
         const numAdults = document.getElementById('num_adults')?.value || document.getElementById('num_guests')?.value || 2;
         const numChildren = document.getElementById('num_children')?.value || 0;
-        let guestText = numAdults + ' người lớn';
+        let guestText = numAdults + ' ' + (numAdults > 1 ? translations.common.adults : translations.common.adult);
         if (numChildren > 0) {
-            guestText += ', ' + numChildren + ' trẻ em';
+            guestText += ', ' + numChildren + ' ' + (numChildren > 1 ? translations.common.children : translations.common.child);
         }
         if (extraGuests.length > 0) {
-            guestText += ' + ' + extraGuests.length + ' khách thêm';
+            guestText += ' + ' + extraGuests.length + ' ' + (extraGuests.length > 1 ? translations.common.guests : translations.common.guest_add);
         }
         document.getElementById('summary_guests').textContent = guestText;
 
@@ -1430,7 +1430,7 @@ async function handleSubmit(e) {
 
     // Validate terms
     if (!document.getElementById('agree_terms').checked) {
-        alert('Vui lòng đồng ý với điều khoản và điều kiện');
+        alert(translations.booking_form.agree_terms_alert);
         return;
     }
 
@@ -1526,7 +1526,7 @@ async function handleSubmit(e) {
 
     // Disable submit button
     submitBtn.disabled = true;
-    submitBtnText.textContent = 'Đang xử lý...';
+    submitBtnText.textContent = translations.common.processing;
 
     try {
         // Always use create_booking.php - it handles both instant and inquiry bookings
@@ -1583,7 +1583,7 @@ async function applyPromoCode() {
         messageDiv.innerHTML = `
             <div class="text-yellow-500 flex items-start gap-2 text-sm mt-2">
                 <span class="material-symbols-outlined text-base mt-0.5">lock</span>
-                <span>Khách vãng lai không thể sử dụng mã giảm giá. Vui lòng <a href="../auth/login.php" class="underline font-bold hover:text-yellow-400">VNĐăng nhập</a> để hưởng ưu đãi.</span>
+                <span>${translations.booking_form.guest_promo_lock} <a href="../auth/login.php" class="underline font-bold hover:text-yellow-400">${translations.auth.login}</a> ${translations.booking_form.guest_promo_lock_end}</span>
             </div>
         `;
         return;

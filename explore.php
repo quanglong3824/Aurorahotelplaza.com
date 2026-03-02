@@ -544,15 +544,18 @@ try {
                     <span
                         class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 border border-white/20">
                         <span class="material-symbols-outlined">support_agent</span>
-                        Hỗ trợ 24/7
+                        <?php _e('explore_page.cta_support'); ?>
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Sẵn sàng đặt phòng?</h2>
-                    <p class="text-white/80 max-w-2xl mx-auto mb-8">Liên hệ ngay với chúng tôi để được tư vấn và đặt
-                        phòng với giá tốt nhất</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        <?php _e('explore_page.ready_to_book'); ?>
+                    </h2>
+                    <p class="text-white/80 max-w-2xl mx-auto mb-8">
+                        <?php _e('explore_page.cta_desc'); ?>
+                    </p>
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="booking/index.php" class="btn-liquid-primary">
                             <span class="material-symbols-outlined">calendar_month</span>
-                            Đặt phòng ngay
+                            <?php _e('explore_page.book_now'); ?>
                         </a>
                         <a href="tel:+842513918888" class="btn-liquid-glass">
                             <span class="material-symbols-outlined">phone</span>
@@ -566,8 +569,10 @@ try {
             <section class="py-16">
                 <div class="mx-auto max-w-7xl px-4">
                     <div class="text-center mb-10">
-                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Khám phá thêm</h2>
-                        <p class="text-white/60">Các trang hữu ích khác</p>
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+                            <?php _e('explore_page.explore_more_title'); ?>
+                        </h2>
+                        <p class="text-white/60"><?php _e('explore_page.explore_more_desc'); ?></p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -580,8 +585,11 @@ try {
                             <div class="min-w-0">
                                 <h3
                                     class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
-                                    Về chúng tôi</h3>
-                                <p class="text-xs md:text-sm text-white/50 truncate">Giới thiệu Aurora</p>
+                                    <?php _e('explore_page.about_us'); ?>
+                                </h3>
+                                <p class="text-xs md:text-sm text-white/50 truncate">
+                                    <?php _e('explore_page.about_desc'); ?>
+                                </p>
                             </div>
                         </a>
 
@@ -594,8 +602,11 @@ try {
                             <div class="min-w-0">
                                 <h3
                                     class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
-                                    Sơ đồ phòng</h3>
-                                <p class="text-xs md:text-sm text-white/50 truncate">Xem vị trí phòng</p>
+                                    <?php _e('explore_page.room_map'); ?>
+                                </h3>
+                                <p class="text-xs md:text-sm text-white/50 truncate">
+                                    <?php _e('explore_page.room_map_desc'); ?>
+                                </p>
                             </div>
                         </a>
 
@@ -609,8 +620,11 @@ try {
                             <div class="min-w-0">
                                 <h3
                                     class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
-                                    Thư viện ảnh</h3>
-                                <p class="text-xs md:text-sm text-white/50 truncate">Hình ảnh khách sạn</p>
+                                    <?php _e('explore_page.gallery_hotel'); ?>
+                                </h3>
+                                <p class="text-xs md:text-sm text-white/50 truncate">
+                                    <?php _e('explore_page.hotel_images'); ?>
+                                </p>
                             </div>
                         </a>
 
@@ -623,8 +637,11 @@ try {
                             <div class="min-w-0">
                                 <h3
                                     class="font-bold text-sm md:text-base text-white group-hover:text-accent transition-colors truncate">
-                                    Liên hệ</h3>
-                                <p class="text-xs md:text-sm text-white/50 truncate">Gửi yêu cầu</p>
+                                    <?php _e('explore_page.contact_request'); ?>
+                                </h3>
+                                <p class="text-xs md:text-sm text-white/50 truncate">
+                                    <?php _e('explore_page.send_request'); ?>
+                                </p>
                             </div>
                         </a>
                     </div>

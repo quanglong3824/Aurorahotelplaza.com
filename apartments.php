@@ -79,12 +79,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                             <div class="text-white/70 text-sm"><?php _e('home.apartment'); ?></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-accent mb-1">5★</div>
-                            <div class="text-white/70 text-sm">Tiêu chuẩn</div>
+                            <div class="text-3xl font-bold text-accent mb-1">4★</div>
+                            <div class="text-white/70 text-sm"><?php _e('common.standard'); ?></div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-accent mb-1">24/7</div>
-                            <div class="text-white/70 text-sm">Phục vụ</div>
+                            <div class="text-white/70 text-sm"><?php _e('common.service'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -147,10 +147,10 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                             </div>
 
                                             <div class="apt-info">
-                                                <h3 class="apt-name"><?php echo htmlspecialchars($apt['type_name']); ?></h3>
+                                                <h3 class="apt-name"><?php echo htmlspecialchars(_f($apt, 'type_name')); ?></h3>
 
-                                                <?php if ($apt['short_description']): ?>
-                                                    <p class="apt-desc"><?php echo htmlspecialchars($apt['short_description']); ?></p>
+                                                <?php if ($short_desc = _f($apt, 'short_description')): ?>
+                                                    <p class="apt-desc"><?php echo htmlspecialchars($short_desc); ?></p>
                                                 <?php endif; ?>
 
                                                 <div class="specs-grid">
@@ -315,7 +315,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                         <?php _e('home.ready_for_vacation'); ?>
                     </h2>
                     <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                        Đặt căn hộ ngay hôm nay để nhận ưu đãi đặc biệt. Giảm 10% cho đặt phòng trực tuyến!
+                        <?php _e('apartments_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="booking/index.php" class="btn-glass-gold">

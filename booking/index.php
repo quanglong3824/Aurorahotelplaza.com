@@ -78,7 +78,7 @@ foreach ($room_types as $room) {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html class="light" lang="<?php echo getLang(); ?>">
 
 <head>
     <meta charset="utf-8" />
@@ -164,8 +164,8 @@ foreach ($room_types as $room) {
                                             $is_available = true;
 
                                         $availability_text = $is_available
-                                            ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_page.rooms_available') . ")")
-                                            : "(" . __('booking_page.out_of_stock') . ")";
+                                            ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_form.room_available') . ")")
+                                            : "(" . __('booking_form.out_of_stock') . ")";
 
                                         // Get display price based on category
                                         $display_price = $room['category'] === 'room'
@@ -191,8 +191,8 @@ foreach ($room_types as $room) {
                                             data-category="<?php echo $room['category']; ?>"
                                             data-size="<?php echo $room['size_sqm'] ?? 0; ?>"
                                             data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
-                                            <?php echo $room['type_name']; ?> -
-                                            <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($display_price) . ' VNĐ/đêm ' . $availability_text; ?>
+                                            <?php echo _f($room, 'type_name'); ?> -
+                                            <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($display_price) . ' ' . __('common.currency') . '/' . __('common.per_night') . ' ' . $availability_text; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -202,7 +202,7 @@ foreach ($room_types as $room) {
                             <div id="room_booking_fields">
                                 <!-- Booking Type Selection -->
                                 <div class="form-group mb-4">
-                                    <label class="form-label">Loại hình đặt phòng *</label>
+                                    <label class="form-label"><?php _e('booking_form.booking_type'); ?> *</label>
                                     <div class="grid grid-cols-2 gap-3">
                                         <label class="booking-type-option selected" data-type="standard">
                                             <input type="radio" name="booking_type" value="standard" checked
@@ -211,8 +211,11 @@ foreach ($room_types as $room) {
                                                 class="flex items-center gap-2 p-3 rounded-lg border-2 border-amber-500 bg-amber-500/10 cursor-pointer transition-all">
                                                 <span class="material-symbols-outlined text-amber-500">hotel</span>
                                                 <div>
-                                                    <div class="font-semibold text-sm">Nghỉ qua đêm</div>
-                                                    <div class="text-xs text-gray-400">Check-in 14:00 - Check-out 12:00
+                                                    <div class="font-semibold text-sm">
+                                                        <?php _e('booking_form.overnight'); ?>
+                                                    </div>
+                                                    <div class="text-xs text-gray-400">
+                                                        <?php _e('booking_form.overnight_desc'); ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -224,22 +227,26 @@ foreach ($room_types as $room) {
                                                 class="flex items-center gap-2 p-3 rounded-lg border-2 border-gray-600 bg-gray-700/30 cursor-pointer transition-all">
                                                 <span class="material-symbols-outlined text-blue-400">schedule</span>
                                                 <div>
-                                                    <div class="font-semibold text-sm">Nghỉ ngắn hạn</div>
-                                                    <div class="text-xs text-gray-400">Dưới 4h, checkout trước 22h</div>
+                                                    <div class="font-semibold text-sm">
+                                                        <?php _e('booking_form.short_stay'); ?>
+                                                    </div>
+                                                    <div class="text-xs text-gray-400">
+                                                        <?php _e('booking_form.short_stay_desc'); ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </label>
                                     </div>
                                     <p id="short_stay_note" class="text-xs text-blue-400 mt-2 hidden">
                                         <span class="material-symbols-outlined text-sm align-middle">info</span>
-                                        Nghỉ ngắn hạn không bao gồm ăn sáng
+                                        <?php _e('booking_form.short_stay_no_breakfast'); ?>
                                     </p>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Number of Adults -->
                                     <div class="form-group">
-                                        <label class="form-label">Số người lớn *</label>
+                                        <label class="form-label"><?php _e('booking_form.num_adults'); ?> *</label>
                                         <div class="flex items-center gap-2">
                                             <button type="button" onclick="adjustValue('num_adults', -1)"
                                                 class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
@@ -257,7 +264,7 @@ foreach ($room_types as $room) {
 
                                     <!-- Number of Children -->
                                     <div class="form-group">
-                                        <label class="form-label">Số trẻ em (dưới 12 tuổi)</label>
+                                        <label class="form-label"><?php _e('booking_form.num_children_age'); ?></label>
                                         <div class="flex items-center gap-2">
                                             <button type="button" onclick="adjustValue('num_children', -1)"
                                                 class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
@@ -293,7 +300,9 @@ foreach ($room_types as $room) {
                                     <div class="flex items-start gap-3">
                                         <span class="material-symbols-outlined text-amber-400 mt-0.5">lightbulb</span>
                                         <div class="flex-1">
-                                            <h4 class="font-semibold text-amber-400 mb-2">Gợi ý phụ thu</h4>
+                                            <h4 class="font-semibold text-amber-400 mb-2">
+                                                <?php _e('booking_form.extra_charge_suggestion'); ?>
+                                            </h4>
                                             <p id="suggestion_message" class="text-sm text-white/80 mb-3"></p>
                                             <div id="suggestion_actions" class="flex flex-wrap gap-2">
                                                 <!-- Dynamic buttons will be added here -->
@@ -312,12 +321,12 @@ foreach ($room_types as $room) {
                                     <div class="flex items-center justify-between mb-3">
                                         <h4 class="font-semibold flex items-center gap-2">
                                             <span class="material-symbols-outlined text-blue-400">person_add</span>
-                                            Khách thêm (phụ thu)
+                                            <?php _e('booking_form.extra_guest'); ?>
                                         </h4>
                                         <button type="button" onclick="toggleExtraGuests()" id="toggle_extra_guests_btn"
                                             class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
                                             <span class="material-symbols-outlined text-sm">add_circle</span>
-                                            Thêm khách
+                                            <?php _e('booking_form.add_guest'); ?>
                                         </button>
                                     </div>
 
@@ -343,7 +352,7 @@ foreach ($room_types as $room) {
                                     </div>
 
                                     <p class="text-xs text-gray-500 mt-2">
-                                        * Phí khách thêm tính theo đêm, bao gồm ăn sáng buffet
+                                        <?php _e('booking_form.extra_guest_note'); ?>
                                     </p>
                                 </div>
 
@@ -354,8 +363,10 @@ foreach ($room_types as $room) {
                                         <div class="flex items-center gap-3">
                                             <span class="material-symbols-outlined text-orange-400">single_bed</span>
                                             <div>
-                                                <h4 class="font-semibold">Giường phụ</h4>
-                                                <p class="text-xs text-gray-400">650.000đ/đêm</p>
+                                                <h4 class="font-semibold"><?php _e('booking_form.extra_bed'); ?></h4>
+                                                <p class="text-xs text-gray-400">
+                                                    650.000<?php _e('common.currency'); ?>/<?php _e('common.per_night'); ?>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-2">
@@ -374,7 +385,7 @@ foreach ($room_types as $room) {
                                     </div>
                                     <p class="text-xs text-yellow-500 mt-2 hidden" id="extra_bed_warning">
                                         <span class="material-symbols-outlined text-sm align-middle">warning</span>
-                                        Giường phụ không áp dụng cho căn hộ
+                                        <?php _e('booking_form.extra_bed_not_for_apt'); ?>
                                     </p>
                                 </div>
 
@@ -388,11 +399,13 @@ foreach ($room_types as $room) {
                                             <span id="price_type_badge"
                                                 class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
                                                 <span class="material-symbols-outlined text-sm">hotel</span>
-                                                <span id="price_type_label">Giá 2 người</span>
+                                                <span
+                                                    id="price_type_label"><?php _e('booking_form.price_for_2'); ?></span>
                                             </span>
                                         </div>
                                         <span id="original_price_display"
-                                            class="text-sm text-gray-500 line-through hidden">0 VNĐ</span>
+                                            class="text-sm text-gray-500 line-through hidden">0
+                                            <?php _e('common.currency'); ?></span>
                                     </div>
 
                                     <!-- Price Breakdown -->
@@ -402,31 +415,35 @@ foreach ($room_types as $room) {
                                             <span
                                                 class="text-gray-400"><?php _e('booking_page.price_per_night'); ?>:</span>
                                             <span id="room_price_display" class="font-bold" style="color: #d4af37;">0
-                                                VNĐ</span>
+                                                <?php _e('common.currency'); ?></span>
                                         </div>
 
                                         <!-- Number of nights -->
                                         <div class="flex justify-between items-center">
                                             <span class="text-gray-400"><?php _e('booking_page.num_nights'); ?>:</span>
-                                            <span id="num_nights">0 đêm</span>
+                                            <span id="num_nights">0 <?php _e('common.per_night'); ?></span>
                                         </div>
 
                                         <!-- Room Subtotal -->
                                         <div class="flex justify-between items-center">
-                                            <span class="text-gray-400">Tiền phòng:</span>
-                                            <span id="room_subtotal_display">0 VNĐ</span>
+                                            <span class="text-gray-400"><?php _e('booking_form.room_charge'); ?>:</span>
+                                            <span id="room_subtotal_display">0 <?php _e('common.currency'); ?></span>
                                         </div>
 
                                         <!-- Extra Guest Fee -->
                                         <div class="flex justify-between items-center hidden" id="extra_guest_fee_row">
-                                            <span class="text-gray-400">Phụ thu khách thêm:</span>
-                                            <span id="extra_guest_fee_display" class="text-blue-400">0 VNĐ</span>
+                                            <span
+                                                class="text-gray-400"><?php _e('booking_form.extra_guest_charge'); ?>:</span>
+                                            <span id="extra_guest_fee_display" class="text-blue-400">0
+                                                <?php _e('common.currency'); ?></span>
                                         </div>
 
                                         <!-- Extra Bed Fee -->
                                         <div class="flex justify-between items-center hidden" id="extra_bed_fee_row">
-                                            <span class="text-gray-400">Phí giường phụ:</span>
-                                            <span id="extra_bed_fee_display" class="text-orange-400">0 VNĐ</span>
+                                            <span
+                                                class="text-gray-400"><?php _e('booking_form.extra_bed_charge'); ?>:</span>
+                                            <span id="extra_bed_fee_display" class="text-orange-400">0
+                                                <?php _e('common.currency'); ?></span>
                                         </div>
                                     </div>
 
@@ -435,7 +452,7 @@ foreach ($room_types as $room) {
                                         class="flex justify-between items-center mt-3 pt-3 border-t border-gray-300/50 dark:border-gray-600">
                                         <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
                                         <span id="estimated_total_display" class="text-2xl font-bold text-accent">0
-                                            VNĐ</span>
+                                            <?php _e('common.currency'); ?></span>
                                         <input type="hidden" id="estimated_total" name="estimated_total" value="0">
                                         <input type="hidden" id="price_type_used" name="price_type_used" value="double">
                                         <input type="hidden" id="extra_guest_fee" name="extra_guest_fee" value="0">
@@ -450,12 +467,11 @@ foreach ($room_types as $room) {
                                             class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2">
                                             <span
                                                 class="material-symbols-outlined text-sm text-green-500">check_circle</span>
-                                            Đã bao gồm 5% phí dịch vụ và 8% VAT
+                                            <?php _e('booking_form.included_tax_service'); ?>
                                         </p>
                                         <p class="text-xs text-amber-500 dark:text-amber-400 flex items-start gap-1">
                                             <span class="material-symbols-outlined text-sm mt-0.5">info</span>
-                                            <span>Đây là giá tạm tính. Giá cuối cùng có thể thay đổi tùy theo các dịch
-                                                vụ phát sinh khi nhận phòng.</span>
+                                            <span><?php _e('booking_form.price_estimate_note'); ?></span>
                                         </p>
                                     </div>
                                 </div>
@@ -479,17 +495,18 @@ foreach ($room_types as $room) {
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Preferred Move-in Date -->
                                     <div class="form-group">
-                                        <label class="form-label">Ngày dự kiến nhận phòng *</label>
+                                        <label class="form-label"><?php _e('booking_form.est_checkin_date'); ?>
+                                            *</label>
                                         <input type="date" name="preferred_check_in" id="preferred_check_in"
                                             class="form-input">
                                     </div>
 
                                     <!-- Rent Mode Selection -->
                                     <div class="form-group">
-                                        <label class="form-label">Hình thức thuê *</label>
+                                        <label class="form-label"><?php _e('booking_form.rent_mode'); ?> *</label>
                                         <select id="rent_mode" class="form-input" onchange="toggleRentMode()">
-                                            <option value="by_month">Theo tháng</option>
-                                            <option value="by_date">Theo ngày / Chọn ngày kết thúc</option>
+                                            <option value="by_month"><?php _e('booking_form.by_month'); ?></option>
+                                            <option value="by_date"><?php _e('booking_form.by_day'); ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -497,25 +514,29 @@ foreach ($room_types as $room) {
                                 <!-- BY MONTH Options -->
                                 <div id="rent_by_month" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div class="form-group">
-                                        <label class="form-label">Số tháng thuê *</label>
+                                        <label class="form-label"><?php _e('booking_form.num_months'); ?> *</label>
                                         <select name="duration_months" id="duration_months" class="form-input"
                                             onchange="calculateEndDate()">
-                                            <option value="1">1 tháng</option>
-                                            <option value="2">2 tháng</option>
-                                            <option value="3">3 tháng</option>
-                                            <option value="4">4 tháng</option>
-                                            <option value="5">5 tháng</option>
-                                            <option value="6">6 tháng</option>
-                                            <option value="9">9 tháng</option>
-                                            <option value="12">12 tháng (1 năm)</option>
-                                            <option value="24">24 tháng (2 năm)</option>
+                                            <option value="1">1 <?php _e('booking_form.month'); ?></option>
+                                            <option value="2">2 <?php _e('booking_form.month'); ?></option>
+                                            <option value="3">3 <?php _e('booking_form.month'); ?></option>
+                                            <option value="4">4 <?php _e('booking_form.month'); ?></option>
+                                            <option value="5">5 <?php _e('booking_form.month'); ?></option>
+                                            <option value="6">6 <?php _e('booking_form.month'); ?></option>
+                                            <option value="9">9 <?php _e('booking_form.month'); ?></option>
+                                            <option value="12">12 <?php _e('booking_form.month'); ?> (1
+                                                <?php _e('booking_form.year'); ?>)
+                                            </option>
+                                            <option value="24">24 <?php _e('booking_form.month'); ?> (2
+                                                <?php _e('booking_form.year'); ?>)
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Ngày dự kiến trả phòng</label>
+                                        <label class="form-label"><?php _e('booking_form.est_checkout_date'); ?></label>
                                         <input type="text" id="calculated_end_date"
                                             class="form-input bg-gray-700 cursor-not-allowed" readonly
-                                            placeholder="Tự động tính">
+                                            placeholder="<?php _e('booking_form.auto_calc'); ?>">
                                     </div>
                                 </div>
 
@@ -523,14 +544,15 @@ foreach ($room_types as $room) {
                                 <div id="rent_by_date" class="hidden mt-4">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div class="form-group">
-                                            <label class="form-label">Số ngày thuê</label>
+                                            <label class="form-label"><?php _e('booking_form.num_days'); ?></label>
                                             <input type="number" id="duration_days" class="form-input" min="1" max="730"
                                                 placeholder="VD: 45" onchange="calculateEndDateFromDays()">
-                                            <p class="text-xs text-white/50 mt-1">Nhập số ngày hoặc chọn ngày kết thúc
-                                                bên cạnh</p>
+                                            <p class="text-xs text-white/50 mt-1"><?php _e('booking_form.days_hint'); ?>
+                                            </p>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Hoặc chọn ngày kết thúc</label>
+                                            <label
+                                                class="form-label"><?php _e('booking_form.or_select_end_date'); ?></label>
                                             <input type="date" id="manual_end_date" class="form-input"
                                                 onchange="calculateDaysFromEndDate()">
                                         </div>
@@ -560,21 +582,26 @@ foreach ($room_types as $room) {
                                 <div class="mt-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg"
                                     id="inquiry_summary_box">
                                     <div class="flex justify-between items-center">
-                                        <span class="font-semibold text-purple-300">Loại căn hộ:</span>
+                                        <span
+                                            class="font-semibold text-purple-300"><?php _e('booking_form.apt_type'); ?>:</span>
                                         <span id="inquiry_apartment_name" class="text-white">--</span>
                                     </div>
                                     <div class="flex justify-between items-center mt-2">
-                                        <span class="font-semibold text-purple-300">Thời gian thuê:</span>
+                                        <span
+                                            class="font-semibold text-purple-300"><?php _e('booking_form.rent_duration'); ?>:</span>
                                         <span id="inquiry_duration_display" class="text-white">--</span>
                                     </div>
                                     <div class="flex justify-between items-center mt-2">
-                                        <span class="font-semibold text-purple-300">Dự kiến trả phòng:</span>
+                                        <span
+                                            class="font-semibold text-purple-300"><?php _e('booking_form.est_checkout_date'); ?>:</span>
                                         <span id="inquiry_end_date_display" class="text-white">--</span>
                                     </div>
                                     <div
                                         class="flex justify-between items-center mt-2 pt-2 border-t border-purple-500/20">
-                                        <span class="font-semibold text-purple-300">Giá tham khảo:</span>
-                                        <span class="text-accent font-bold">Liên hệ báo giá</span>
+                                        <span
+                                            class="font-semibold text-purple-300"><?php _e('booking_form.reference_price'); ?>:</span>
+                                        <span
+                                            class="text-accent font-bold"><?php _e('booking_form.contact_for_quote'); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -595,16 +622,15 @@ foreach ($room_types as $room) {
                                         <span class="material-symbols-outlined text-yellow-500 mt-0.5">warning</span>
                                         <div>
                                             <h4 class="font-semibold text-yellow-500 mb-1">
-                                                Đặt phòng với tư cách Khách vãng lai
+                                                <?php _e('booking_form.guest_booking'); ?>
                                             </h4>
                                             <p class="text-sm text-gray-300 mb-3">
-                                                Bạn đang đặt phòng mà không đăng nhập. Bạn sẽ <strong>không thể sử dụng Mã
-                                                    giảm giá</strong> và <strong>không được tích điểm</strong>.
+                                                <?php _e('booking_form.guest_booking_note'); ?>
                                             </p>
                                             <a href="../auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
                                                 class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-700 transition-colors shadow-lg">
                                                 <span class="material-symbols-outlined text-sm">login</span>
-                                                Đăng nhập để nhận ưu đãi
+                                                <?php _e('booking_form.login_for_offers'); ?>
                                             </a>
                                         </div>
                                     </div>
@@ -648,7 +674,7 @@ foreach ($room_types as $room) {
                                     <textarea name="message" id="inquiry_message" class="form-input" rows="4"
                                         placeholder="<?php _e('inquiry.message_placeholder'); ?>"></textarea>
                                     <p class="text-xs text-white/50 mt-1">
-                                        Mô tả nhu cầu cụ thể của bạn (VD: thời gian muốn xem phòng, yêu cầu đặc biệt...)
+                                        <?php _e('inquiry.message_desc'); ?>
                                     </p>
                                 </div>
 
@@ -714,14 +740,14 @@ foreach ($room_types as $room) {
                                     <!-- PAYMENT SPECIFIC SUMMARY -->
                                     <div id="payment_summary_rows">
                                         <div class="flex justify-between">
-                                            <span>Tiền phòng:</span>
+                                            <span><?php _e('booking_form.room_charge'); ?>:</span>
                                             <span id="summary_subtotal" class="font-semibold"></span>
                                         </div>
                                         <div class="flex justify-between text-blue-500" id="summary_extra_guest_row"
                                             style="display: none;">
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-sm">person_add</span>
-                                                Phụ thu khách thêm:
+                                                <?php _e('booking_form.extra_guest_charge'); ?>:
                                             </span>
                                             <span id="summary_extra_guest_fee" class="font-semibold"></span>
                                         </div>
@@ -729,7 +755,7 @@ foreach ($room_types as $room) {
                                             style="display: none;">
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-sm">single_bed</span>
-                                                Phí giường phụ:
+                                                <?php _e('booking_form.extra_bed_charge'); ?>:
                                             </span>
                                             <span id="summary_extra_bed_fee" class="font-semibold"></span>
                                         </div>
@@ -747,9 +773,7 @@ foreach ($room_types as $room) {
                                             <p
                                                 class="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1">
                                                 <span class="material-symbols-outlined text-sm mt-0.5">info</span>
-                                                <span><strong>Lưu ý:</strong> Giá trên là giá ước tính. Tổng thanh toán
-                                                    cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh trong quá
-                                                    trình lưu trú.</span>
+                                                <span><?php _e('booking_form.note_price_estimate'); ?></span>
                                             </p>
                                         </div>
                                     </div>
@@ -837,6 +861,59 @@ foreach ($room_types as $room) {
     </div>
 
     <!-- Main JavaScript -->
+    <script>
+        // Expose translations to JS
+        const translations = {
+            booking_form: {
+                checkin_title_room: "<?php echo addslashes(__('booking_form.checkin_title_room')); ?>",
+                checkin_title_apt: "<?php echo addslashes(__('booking_form.checkin_title_apt')); ?>",
+                confirm_title_room: "<?php echo addslashes(__('booking_form.confirm_title_room')); ?>",
+                confirm_title_apt: "<?php echo addslashes(__('booking_form.confirm_title_apt')); ?>",
+                submit_btn_room: "<?php echo addslashes(__('booking_form.submit_btn_room')); ?>",
+                submit_btn_apt: "<?php echo addslashes(__('booking_form.submit_btn_apt')); ?>",
+                select_room_or_apt: "<?php echo addslashes(__('booking_form.select_room_or_apt')); ?>",
+                select_checkin_date: "<?php echo addslashes(__('booking_form.select_checkin_date')); ?>",
+                checkin_not_past: "<?php echo addslashes(__('booking_form.checkin_not_past')); ?>",
+                select_checkout_date: "<?php echo addslashes(__('booking_form.select_checkout_date')); ?>",
+                checkout_after_checkin: "<?php echo addslashes(__('booking_form.checkout_after_checkin')); ?>",
+                checkout_future: "<?php echo addslashes(__('booking_form.checkout_future')); ?>",
+                invalid_guests: "<?php echo addslashes(__('booking_form.invalid_guests')); ?>",
+                fill_required: "<?php echo addslashes(__('booking_form.fill_required')); ?>",
+                select_est_checkin: "<?php echo addslashes(__('booking_form.select_est_checkin')); ?>",
+                min_adults: "<?php echo addslashes(__('booking_form.min_adults')); ?>",
+                price_for_2: "<?php echo addslashes(__('booking_form.price_for_2')); ?>",
+                price_short_stay: "<?php echo addslashes(__('booking_form.price_short_stay')); ?>",
+                price_single: "<?php echo addslashes(__('booking_form.price_single')); ?>",
+                price_weekly_1: "<?php echo addslashes(__('booking_form.price_weekly_1')); ?>",
+                price_weekly_2: "<?php echo addslashes(__('booking_form.price_weekly_2')); ?>",
+                price_daily: "<?php echo addslashes(__('booking_form.price_daily')); ?>",
+                price_daily_1: "<?php echo addslashes(__('booking_form.price_daily_1')); ?>",
+                price_daily_2: "<?php echo addslashes(__('booking_form.price_daily_2')); ?>",
+                short_stay_label: "<?php echo addslashes(__('booking_form.short_stay_label')); ?>",
+                agree_terms_alert: "<?php echo addslashes(__('booking_form.agree_terms_alert')); ?>",
+                guest_promo_lock: "<?php echo addslashes(__('booking_form.guest_promo_lock')); ?>",
+                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>"
+            },
+            common: {
+                night: "<?php echo addslashes(__('common.night')); ?>",
+                nights: "<?php echo addslashes(__('common.nights')); ?>",
+                adult: "<?php echo addslashes(__('common.adult')); ?>",
+                adults: "<?php echo addslashes(__('common.adults')); ?>",
+                child: "<?php echo addslashes(__('common.child')); ?>",
+                children: "<?php echo addslashes(__('common.children')); ?>",
+                month: "<?php echo addslashes(__('booking_form.month')); ?>",
+                day: "<?php echo addslashes(__('common.day')); ?>",
+                currency: "<?php echo addslashes(__('common.currency')); ?>",
+                processing: "<?php echo addslashes(__('common.processing')); ?>",
+                guest: "<?php echo addslashes(__('common.guest')); ?>",
+                guests: "<?php echo addslashes(__('common.guests')); ?>",
+                guest_add: "<?php echo addslashes(__('common.guest_add')); ?>"
+            },
+            auth: {
+                login: "<?php echo addslashes(__('auth.login')); ?>"
+            }
+        };
+    </script>
     <script src="../assets/js/main.js"></script>
     <script src="./assets/js/booking.js"></script>
 

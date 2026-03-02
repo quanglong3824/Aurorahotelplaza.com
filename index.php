@@ -336,7 +336,7 @@ try {
 
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                        alt="<?php echo htmlspecialchars($room['type_name']); ?>" loading="lazy"
+                                        alt="<?php echo htmlspecialchars(_f($room, 'type_name')); ?>" loading="lazy"
                                         onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-1.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
@@ -349,12 +349,12 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>VNĐ
+                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>        <?php _e('common.currency'); ?>
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 
                                         <!-- Title -->
-                                        <h3><?php echo htmlspecialchars($room['type_name']); ?></h3>
+                                        <h3><?php echo htmlspecialchars(_f($room, 'type_name')); ?></h3>
 
                                         <!-- Info Icons Row -->
                                         <div class="info-row">
@@ -418,7 +418,7 @@ try {
 
                                     <!-- Image Layer -->
                                     <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                        alt="<?php echo htmlspecialchars($apartment['type_name']); ?>" loading="lazy"
+                                        alt="<?php echo htmlspecialchars(_f($apartment, 'type_name')); ?>" loading="lazy"
                                         onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg'); ?>'">
 
                                     <!-- Badge Top Left -->
@@ -431,12 +431,12 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>VNĐ
+                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>        <?php _e('common.currency'); ?>
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 
                                         <!-- Title -->
-                                        <h3><?php echo htmlspecialchars($apartment['type_name']); ?></h3>
+                                        <h3><?php echo htmlspecialchars(_f($apartment, 'type_name')); ?></h3>
 
                                         <!-- Info Icons Row -->
                                         <div class="info-row">

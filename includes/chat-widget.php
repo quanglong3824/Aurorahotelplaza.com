@@ -21,7 +21,7 @@ if (strpos($current_path, '/admin/') !== false)
     return;
 
 $is_logged = true; // Cho phép everyone chat
-$user_name = $_SESSION['user_name'] ?? 'Khách';
+$user_name = $_SESSION['user_name'] ?? __('chat.guest');
 $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 
 // base_path đã được set ở footer.php
@@ -42,7 +42,7 @@ $cw_base = rtrim(BASE_URL, '/');
 <!-- ══════════════════════════════════════════════════════════════
      FLOATING BUTTON
 ══════════════════════════════════════════════════════════════ -->
-<button id="cwBtn" aria-label="Mở chat hỗ trợ" data-logged-in="<?php echo $is_logged ? '1' : '0'; ?>">
+<button id="cwBtn" aria-label="<?php _e('chat.open_chat'); ?>" data-logged-in="<?php echo $is_logged ? '1' : '0'; ?>">
 
     <!-- Icon chat (khi đóng) -->
     <span class="cw-icon-chat material-symbols-outlined" style="font-size:26px">chat_bubble</span>
@@ -58,7 +58,7 @@ $cw_base = rtrim(BASE_URL, '/');
 <!-- ══════════════════════════════════════════════════════════════
      CHAT PANEL
 ══════════════════════════════════════════════════════════════ -->
-<div id="cwPanel" role="dialog" aria-label="Chat hỗ trợ Aurora Hotel Plaza">
+<div id="cwPanel" role="dialog" aria-label="<?php echo addslashes(__('chat.open_chat')); ?> Aurora Hotel Plaza">
 
     <!-- ── Header ──────────────────────────────────────────────── -->
     <div id="cwHeader">
@@ -71,14 +71,14 @@ $cw_base = rtrim(BASE_URL, '/');
             <div class="cw-title">Aurora Hotel Plaza</div>
             <div class="cw-subtitle" id="cwStaffStatus">
                 <span class="cw-online-dot" id="cwOnlineDot"></span>
-                <span id="cwStatusText">Đang kiểm tra...</span>
+                <span id="cwStatusText"><?php _e('chat.checking'); ?></span>
             </div>
         </div>
-        <button id="cwResetAiBtn" class="cw-close-btn" aria-label="Làm mới AI" title="Xoá lịch sử hội thoại hiện tại"
-            style="margin-right:4px;">
+        <button id="cwResetAiBtn" class="cw-close-btn" aria-label="<?php _e('chat.refresh_ai'); ?>"
+            title="<?php _e('chat.clear_history'); ?>" style="margin-right:4px;">
             <span class="material-symbols-outlined" style="font-size:18px">refresh</span>
         </button>
-        <button id="cwCloseBtn" class="cw-close-btn" aria-label="Đóng chat">
+        <button id="cwCloseBtn" class="cw-close-btn" aria-label="<?php _e('chat.close_chat'); ?>">
             <span class="material-symbols-outlined" style="font-size:18px">close</span>
         </button>
     </div>
@@ -94,10 +94,8 @@ $cw_base = rtrim(BASE_URL, '/');
             <div data-empty style="text-align:center;padding:32px 16px;color:#94a3b8">
                 <div style="font-size:36px;margin-bottom:8px"></div>
                 <p style="font-size:13px;line-height:1.6">
-                    Xin chào <strong>
-                        <?php echo htmlspecialchars($user_name ?: 'bạn'); ?>
-                    </strong>!<br>
-                    Chúng tôi sẵn sàng hỗ trợ.
+                    <?php _e('chat.welcome', ['name' => '<strong>' . htmlspecialchars($user_name ?: __('chat.guest')) . '</strong>']); ?><br>
+                    <?php _e('chat.ready_to_help'); ?>
                 </p>
             </div>
         </div>
@@ -107,25 +105,25 @@ $cw_base = rtrim(BASE_URL, '/');
 
         <!-- New message toast -->
         <div id="cwNewMsgToast" class="cw-new-msg-toast">
-            ↓ Tin nhắn mới
+            <?php _e('chat.new_message'); ?>
         </div>
 
         <!-- Offline bar -->
         <div id="cwOfflineBar">
             <span class="material-symbols-outlined" style="font-size:14px">wifi_off</span>
-            Ngoài giờ làm việc — Chúng tôi sẽ phản hồi sớm nhất
+            <?php _e('chat.offline_msg'); ?>
         </div>
 
         <!-- Input area -->
         <div id="cwInputArea">
             <div id="cwInputRow">
-                <textarea id="cwInput" rows="1" placeholder="Nhập tin nhắn của bạn..."
-                    aria-label="Nhập tin nhắn"></textarea>
-                <button id="cwSendBtn" aria-label="Gửi tin nhắn">
+                <textarea id="cwInput" rows="1" placeholder="<?php _e('chat.placeholder'); ?>"
+                    aria-label="<?php _e('chat.placeholder'); ?>"></textarea>
+                <button id="cwSendBtn" aria-label="<?php _e('chat.send'); ?>">
                     <span class="material-symbols-outlined" style="font-size:18px">send</span>
                 </button>
             </div>
-            <div id="cwInputHint">Nhấn Enter để gửi · Shift+Enter xuống dòng</div>
+            <div id="cwInputHint"><?php _e('chat.hint'); ?></div>
         </div>
 
     <?php else: ?>
@@ -137,17 +135,17 @@ $cw_base = rtrim(BASE_URL, '/');
                 <span class="material-symbols-outlined" style="font-size:28px;color:#fff">chat</span>
             </div>
             <p>
-                Đăng nhập để nhắn tin trực tiếp với nhân viên hỗ trợ của Aurora Hotel Plaza.
+                <?php _e('chat.login_prompt'); ?>
             </p>
             <a href="<?php echo $bp; ?>auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
                 class="cw-login-btn">
                 <span class="material-symbols-outlined" style="font-size:18px">login</span>
-                Đăng nhập để chat
+                <?php _e('chat.login_to_chat'); ?>
             </a>
             <a href="tel:+842513918888" style="display:flex;align-items:center;gap:6px;font-size:13px;
                       color:#d4af37;text-decoration:none;font-weight:600;margin-top:4px">
                 <span class="material-symbols-outlined" style="font-size:16px">call</span>
-                Gọi hotline: (+84-251) 391.8888
+                <?php _e('chat.call_hotline'); ?> (+84-251) 391.8888
             </a>
         </div>
     <?php endif; ?>

@@ -78,7 +78,7 @@ include 'includes/admin-header.php';
     <div class="mb-6">
         <a href="booking-detail.php?id=<?php echo $booking_id; ?>" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">arrow_back</span>
-            Quay lại
+            Quay lại (Back)
         </a>
     </div>
 
@@ -86,7 +86,7 @@ include 'includes/admin-header.php';
         <!-- QR Code Display -->
         <div class="card">
             <div class="card-header">
-                <h3 class="font-bold text-lg">Mã QR</h3>
+                <h3 class="font-bold text-lg">Mã QR (QR Code)</h3>
             </div>
             <div class="card-body">
                 <div class="bg-white p-8 rounded-xl flex items-center justify-center">
@@ -97,17 +97,17 @@ include 'includes/admin-header.php';
                 <div class="mt-6 space-y-3">
                     <button onclick="downloadQR()" class="btn btn-primary w-full">
                         <span class="material-symbols-outlined text-sm">download</span>
-                        Tải xuống QR Code
+                        Tải xuống QR Code (Download QR)
                     </button>
 
                     <button onclick="printBookingQR()" class="btn btn-secondary w-full">
                         <span class="material-symbols-outlined text-sm">print</span>
-                        In QR Code
+                        In QR Code (Print)
                     </button>
 
                     <button onclick="shareQR()" class="btn btn-secondary w-full">
                         <span class="material-symbols-outlined text-sm">share</span>
-                        Chia sẻ
+                        Chia sẻ (Share)
                     </button>
                 </div>
 
@@ -115,11 +115,11 @@ include 'includes/admin-header.php';
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-blue-600">info</span>
                         <div class="flex-1 text-sm text-blue-800 dark:text-blue-200">
-                            <p class="font-semibold mb-1">Hướng dẫn sử dụng:</p>
+                            <p class="font-semibold mb-1">Hướng dẫn sử dụng (Usage Instructions):</p>
                             <ul class="list-disc list-inside space-y-1">
-                                <li>Khách có thể chụp màn hình để lưu QR</li>
-                                <li>Quét QR tại quầy lễ tân khi check-in</li>
-                                <li>QR chứa thông tin booking đầy đủ</li>
+                                <li>Khách có thể chụp màn hình để lưu QR (Guests can take a screenshot)</li>
+                                <li>Quét QR tại quầy lễ tân khi check-in (Scan QR at reception)</li>
+                                <li>QR chứa thông tin booking đầy đủ (QR contains full booking info)</li>
                             </ul>
                         </div>
                     </div>
@@ -130,7 +130,7 @@ include 'includes/admin-header.php';
         <!-- Booking Info - Full Details -->
         <div class="card">
             <div class="card-header flex justify-between items-center">
-                <h3 class="font-bold text-lg">Thông tin đặt phòng</h3>
+                <h3 class="font-bold text-lg">Thông tin đặt phòng (Booking Info)</h3>
                 <div class="flex gap-2">
                     <span class="badge <?php echo $status_config[$booking['status']]['class'] ?? 'badge-secondary'; ?>">
                         <span
@@ -146,7 +146,7 @@ include 'includes/admin-header.php';
             <div class="card-body space-y-5">
                 <!-- Booking Code -->
                 <div class="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Mã đặt phòng</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Mã đặt phòng (Booking Code)</p>
                     <p class="font-bold text-3xl" style="color: #d4af37;">
                         <?php echo htmlspecialchars($booking['booking_code']); ?>
                     </p>
@@ -156,15 +156,15 @@ include 'includes/admin-header.php';
                 <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#d4af37]">person</span>
-                        Thông tin khách hàng
+                        Thông tin khách hàng (Guest Information)
                     </h4>
                     <div class="grid grid-cols-2 gap-3 text-sm">
                         <div>
-                            <p class="text-gray-500 dark:text-gray-400">Họ tên</p>
+                            <p class="text-gray-500 dark:text-gray-400">Họ tên (Full Name)</p>
                             <p class="font-semibold"><?php echo htmlspecialchars($booking['guest_name']); ?></p>
                         </div>
                         <div>
-                            <p class="text-gray-500 dark:text-gray-400">Số điện thoại</p>
+                            <p class="text-gray-500 dark:text-gray-400">Số điện thoại (Phone)</p>
                             <p class="font-semibold"><?php echo htmlspecialchars($booking['guest_phone']); ?></p>
                         </div>
                         <div class="col-span-2">
@@ -178,41 +178,41 @@ include 'includes/admin-header.php';
                 <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#d4af37]">hotel</span>
-                        Thông tin phòng
+                        Thông tin phòng (Room Info)
                     </h4>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <span class="text-gray-500 dark:text-gray-400">Loại phòng</span>
+                            <span class="text-gray-500 dark:text-gray-400">Loại phòng (Room Type)</span>
                             <span class="font-semibold"><?php echo htmlspecialchars($booking['type_name']); ?></span>
                         </div>
                         <?php if ($booking['room_number']): ?>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">Số phòng</span>
+                                <span class="text-gray-500 dark:text-gray-400">Số phòng (No. of Rooms)</span>
                                 <span
                                     class="font-bold text-green-600 text-lg"><?php echo htmlspecialchars($booking['room_number']); ?></span>
                             </div>
                             <?php if ($booking['floor']): ?>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Tầng</span>
+                                    <span class="text-gray-500 dark:text-gray-400">Tầng (Floor)</span>
                                     <span class="font-semibold"><?php echo $booking['floor']; ?></span>
                                 </div>
                             <?php endif; ?>
                         <?php else: ?>
                             <div class="bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-center">
-                                <p class="text-sm text-yellow-700 dark:text-yellow-300">Chưa phân phòng</p>
+                                <p class="text-sm text-yellow-700 dark:text-yellow-300">Chưa phân phòng (Not assigned)</p>
                             </div>
                         <?php endif; ?>
                         <div class="flex justify-between">
-                            <span class="text-gray-500 dark:text-gray-400">Số khách</span>
+                            <span class="text-gray-500 dark:text-gray-400">Số khách (No. of Guests)</span>
                             <span class="font-semibold">
-                                <?php echo $booking['num_adults']; ?> người lớn
+                                <?php echo $booking['num_adults']; ?> người lớn (adults)
                                 <?php if ($booking['num_children'] > 0): ?>, <?php echo $booking['num_children']; ?> trẻ
-                                    em<?php endif; ?>
+                                    em (children)<?php endif; ?>
                             </span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-500 dark:text-gray-400">Số phòng</span>
-                            <span class="font-semibold"><?php echo $booking['num_rooms']; ?> phòng</span>
+                            <span class="text-gray-500 dark:text-gray-400">Số phòng (No. of Rooms)</span>
+                            <span class="font-semibold"><?php echo $booking['num_rooms']; ?> phòng (rooms)</span>
                         </div>
                     </div>
                 </div>
@@ -224,21 +224,21 @@ include 'includes/admin-header.php';
                         <p class="font-bold text-lg text-green-700 dark:text-green-300">
                             <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
                         </p>
-                        <p class="text-xs text-green-600 dark:text-green-400">Sau 14:00</p>
+                        <p class="text-xs text-green-600 dark:text-green-400">Sau (After) 14:00</p>
                     </div>
                     <div class="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg text-center">
                         <p class="text-xs text-red-600 dark:text-red-400 mb-1">CHECK-OUT</p>
                         <p class="font-bold text-lg text-red-700 dark:text-red-300">
                             <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
                         </p>
-                        <p class="text-xs text-red-600 dark:text-red-400">Trước 12:00</p>
+                        <p class="text-xs text-red-600 dark:text-red-400">Trước (Before) 12:00</p>
                     </div>
                 </div>
 
                 <div class="text-center">
                     <span class="text-gray-500 dark:text-gray-400 text-sm">
                         <span class="material-symbols-outlined text-sm align-middle">dark_mode</span>
-                        <?php echo $nights; ?> đêm
+                        <?php echo $nights; ?> đêm (nights)
                     </span>
                 </div>
 
@@ -246,7 +246,7 @@ include 'includes/admin-header.php';
                 <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#d4af37]">payments</span>
-                        Chi tiết thanh toán
+                        Chi tiết thanh toán (Payment Details)
                     </h4>
                     <div class="space-y-2 text-sm">
                         <?php
@@ -256,7 +256,7 @@ include 'includes/admin-header.php';
                         $room_per_night_admin = $room_total_admin / $nights_admin;
                         ?>
                         <div class="flex justify-between">
-                            <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm</span>
+                            <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm (Room Price/Night)</span>
                             <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>VNĐ</span>
                         </div>
                         <div class="flex justify-between">
@@ -266,19 +266,19 @@ include 'includes/admin-header.php';
                         </div>
                         <?php if ($booking['discount_amount'] > 0): ?>
                             <div class="flex justify-between text-green-600">
-                                <span>Giảm giá</span>
+                                <span>Giảm giá (Discount)</span>
                                 <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>VNĐ</span>
                             </div>
                         <?php endif; ?>
                         <?php if ($booking['service_fee'] > 0): ?>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ</span>
+                                <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ (Service Fee)</span>
                                 <span><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>VNĐ</span>
                             </div>
                         <?php endif; ?>
                         <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                             <div class="flex justify-between items-center">
-                                <span class="font-semibold">Tổng cộng</span>
+                                <span class="font-semibold">Tổng cộng (Total)</span>
                                 <span class="font-bold text-2xl" style="color: #d4af37;">
                                     <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ
                                 </span>
@@ -286,14 +286,14 @@ include 'includes/admin-header.php';
                         </div>
                         <?php if ($booking['payment_method']): ?>
                             <div class="flex justify-between mt-2">
-                                <span class="text-gray-500 dark:text-gray-400">Phương thức</span>
+                                <span class="text-gray-500 dark:text-gray-400">Phương thức (Method)</span>
                                 <span>
                                     <?php
                                     $payment_methods = [
                                         // 'vnpay' => 'VNPay',
-                                        'cash' => 'Tiền mặt',
-                                        'bank_transfer' => 'Chuyển khoản',
-                                        'credit_card' => 'Thẻ tín dụng'
+                                        'cash' => 'Tiền mặt (Cash)',
+                                        'bank_transfer' => 'Chuyển khoản (Bank Transfer)',
+                                        'credit_card' => 'Thẻ tín dụng (Credit Card)'
                                     ];
                                     echo $payment_methods[$booking['payment_method']] ?? $booking['payment_method'];
                                     ?>

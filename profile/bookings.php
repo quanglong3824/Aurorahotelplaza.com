@@ -225,21 +225,24 @@ $payment_labels = [
                                             class="block text-xs font-medium mb-2 text-white/70 uppercase tracking-wider"><?php _e('profile_bookings.search'); ?></label>
                                         <input type="text" name="search"
                                             value="<?php echo htmlspecialchars($filters['search']); ?>"
-                                            placeholder="VD: 6C320B hoặc BK20251119..."
-                                            title="Tìm kiếm thông minh: Nhập 6 ký tự cuối hoặc mã đầy đủ"
+                                            placeholder="<?php _e('profile_bookings.search_placeholder'); ?>"
+                                            title="<?php _e('profile_bookings.search_title'); ?>"
                                             class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all">
 
                                         <!-- Tooltip -->
                                         <div
                                             class="hidden group-hover:block absolute top-full left-0 mt-2 w-72 bg-slate-800 rounded-lg shadow-xl border border-white/10 p-4 z-50">
-                                            <p class="font-semibold mb-2 text-xs text-accent">🔍 Tìm kiếm thông minh:
+                                            <p class="font-semibold mb-2 text-xs text-accent">
+                                                <?php _e('profile_bookings.smart_search_title'); ?>
                                             </p>
                                             <ul class="text-xs space-y-2 text-white/70">
-                                                <li>✅ <span class="font-mono bg-white/10 px-1 rounded">6C320B</span> - 6
-                                                    ký tự cuối</li>
+                                                <li>✅ <span class="font-mono bg-white/10 px-1 rounded">6C320B</span> -
+                                                    <?php _e('profile_bookings.smart_search_last6'); ?>
+                                                </li>
                                                 <li>✅ <span class="font-mono bg-white/10 px-1 rounded">BK20251119</span>
                                                     -
-                                                    Tất cả đơn trong ngày</li>
+                                                    <?php _e('profile_bookings.smart_search_date'); ?>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -358,7 +361,7 @@ $payment_labels = [
                                                                             class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider bg-purple-500/20 text-purple-300">
                                                                             <span
                                                                                 class="material-symbols-outlined text-xs mr-1 align-middle">contact_support</span>
-                                                                            Liên hệ tư vấn
+                                                                            <?php _e('booking_form.contact_for_quote'); ?>
                                                                         </span>
                                                                     <?php else:
                                                                         $payColor = 'bg-gray-500/20 text-gray-300';
@@ -392,10 +395,12 @@ $payment_labels = [
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="material-symbols-outlined text-sm">group</span>
-                                                                    <?php echo $booking['num_adults']; ?> người lớn
+                                                                    <?php echo $booking['num_adults']; ?>
+                                                                    <?php _e('common.adults'); ?>
                                                                     <?php if (($booking['num_children'] ?? 0) > 0): ?>
                                                                         <span class="text-white/40">+
-                                                                            <?php echo $booking['num_children']; ?> trẻ em</span>
+                                                                            <?php echo $booking['num_children']; ?>
+                                                                            <?php _e('common.children'); ?></span>
                                                                     <?php endif; ?>
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
@@ -406,8 +411,7 @@ $payment_labels = [
                                                                     $isShortStay = ($booking['booking_type'] ?? 'standard') === 'short_stay';
                                                                     if ($isShortStay): ?>
                                                                         <span
-                                                                            class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-xs">Ngắn
-                                                                            hạn</span>
+                                                                            class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-xs"><?php _e('booking_confirmation.price_short'); ?></span>
                                                                     <?php endif; ?>
                                                                 </div>
                                                                 <?php if ($booking['room_number']): ?>
@@ -427,12 +431,12 @@ $payment_labels = [
                                                                         <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
                                                                             <span
                                                                                 class="text-blue-300 text-xs">+<?php echo number_format($booking['extra_guest_fee']); ?>VNĐ
-                                                                                khách</span>
+                                                                                <?php _e('common.adult'); ?></span>
                                                                         <?php endif; ?>
                                                                         <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
                                                                             <span
-                                                                                class="text-orange-300 text-xs">+<?php echo number_format($booking['extra_bed_fee']); ?>VNĐ
-                                                                                giường</span>
+                                                                                class="text-orange-300 text-xs">+<?php echo number_format($booking['extra_bed_fee']); ?>                 <?php _e('common.currency'); ?>
+                                                                                <?php _e('booking_form.extra_bed'); ?></span>
                                                                         <?php endif; ?>
                                                                     </div>
                                                                 <?php endif; ?>
@@ -450,7 +454,7 @@ $payment_labels = [
                                                             ?>
                                                             <p class="text-xl font-bold text-purple-400 flex items-center gap-2">
                                                                 <span class="material-symbols-outlined text-lg">contact_phone</span>
-                                                                Liên hệ báo giá
+                                                                <?php _e('booking_form.contact_for_quote'); ?>
                                                             </p>
                                                             <p class="text-xs text-white/40 italic">
                                                                 <?php _e('profile_bookings.booked_on'); ?>
@@ -458,7 +462,7 @@ $payment_labels = [
                                                             </p>
                                                         <?php else: ?>
                                                             <p class="text-2xl font-bold text-accent">
-                                                                <?php echo number_format($booking['total_amount']); ?> VNĐ
+                                                                <?php echo number_format($booking['total_amount']); ?>              <?php _e('common.currency'); ?>
                                                             </p>
                                                             <p class="text-xs text-white/40 italic">
                                                                 <?php _e('profile_bookings.booked_on'); ?>
@@ -579,17 +583,16 @@ $payment_labels = [
 
     <script src="../assets/js/main.js"></script>
     <script>
-        // Cancel booking function
         function cancelBooking(bookingId, bookingCode) {
-            const reason = prompt('Vui lòng nhập lý do hủy đặt phòng (không bắt buộc):');
+            const reason = prompt('<?php echo addslashes(__('profile_bookings.cancel_reason_prompt')); ?>');
 
             if (reason !== null) { // User didn't click Cancel
-                if (confirm('Bạn có chắc chắn muốn hủy đặt phòng ' + bookingCode + '?\n\nLưu ý: Bạn chỉ có thể hủy đặt phòng trước 24 giờ check-in.')) {
+                if (confirm('<?php echo addslashes(__('profile_bookings.cancel_confirm_msg')); ?> ' + bookingCode + '?\n\n<?php echo addslashes(__('profile_bookings.cancel_note')); ?>')) {
                     // Show loading
                     const btn = event.target.closest('button');
                     const originalHTML = btn.innerHTML;
                     btn.disabled = true;
-                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm mr-1">progress_activity</span> Đang xử lý...';
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm mr-1">progress_activity</span> <?php echo addslashes(__('booking_confirmation.processing')); ?>';
                     btn.classList.add('opacity-70', 'cursor-not-allowed');
 
                     // Send cancel request
@@ -606,10 +609,10 @@ $payment_labels = [
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert('Đã hủy đặt phòng thành công!');
+                                alert('<?php echo addslashes(__('profile_bookings.cancel_success')); ?>');
                                 location.reload();
                             } else {
-                                alert('Lỗi: ' + data.message);
+                                alert('<?php echo addslashes(__('booking_confirmation.error_occurred')); ?>: ' + data.message);
                                 btn.disabled = false;
                                 btn.innerHTML = originalHTML;
                                 btn.classList.remove('opacity-70', 'cursor-not-allowed');
@@ -617,7 +620,7 @@ $payment_labels = [
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('Có lỗi xảy ra khi hủy đặt phòng. Vui lòng thử lại.');
+                            alert('<?php echo addslashes(__('profile_bookings.cancel_error')); ?>');
                             btn.disabled = false;
                             btn.innerHTML = originalHTML;
                             btn.classList.remove('opacity-70', 'cursor-not-allowed');

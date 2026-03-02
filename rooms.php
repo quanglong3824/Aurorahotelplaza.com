@@ -82,12 +82,12 @@ try {
                             <div class="text-white/70 text-sm"><?php _e('rooms_page.page_title'); ?></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-accent mb-1">5★</div>
-                            <div class="text-white/70 text-sm">Tiêu chuẩn</div>
+                            <div class="text-3xl font-bold text-accent mb-1">4★</div>
+                            <div class="text-white/70 text-sm"><?php _e('common.standard'); ?></div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-accent mb-1">24/7</div>
-                            <div class="text-white/70 text-sm">Phục vụ</div>
+                            <div class="text-white/70 text-sm"><?php _e('common.service'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ try {
                                     <div class="room-img-container">
                                         <?php if ($room['thumbnail']): ?>
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
-                                                alt="<?php echo htmlspecialchars($room['type_name']); ?>" loading="lazy">
+                                                alt="<?php echo htmlspecialchars(_f($room, 'type_name')); ?>" loading="lazy">
                                         <?php else: ?>
                                             <div
                                                 class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
@@ -153,10 +153,10 @@ try {
 
                                     <!-- Room Info -->
                                     <div class="room-info">
-                                        <h3 class="room-name"><?php echo htmlspecialchars($room['type_name']); ?></h3>
+                                        <h3 class="room-name"><?php echo htmlspecialchars(_f($room, 'type_name')); ?></h3>
 
-                                        <?php if ($room['short_description']): ?>
-                                            <p class="room-desc"><?php echo htmlspecialchars($room['short_description']); ?></p>
+                                        <?php if ($short_desc = _f($room, 'short_description')): ?>
+                                            <p class="room-desc"><?php echo htmlspecialchars($short_desc); ?></p>
                                         <?php endif; ?>
 
                                         <!-- Specs -->
@@ -221,7 +221,7 @@ try {
                         <?php _e('home.ready_for_vacation'); ?>
                     </h2>
                     <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                        Đặt phòng ngay hôm nay để nhận ưu đãi đặc biệt. Giảm 10% cho đặt phòng trực tuyến!
+                        <?php _e('rooms_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="booking/index.php" class="btn-glass-gold">
