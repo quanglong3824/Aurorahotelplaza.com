@@ -596,50 +596,8 @@ $payment_labels = [
                                             <?php endif; ?>
 
 
-                                            <!-- Cancellation Policy & Refund Info -->
-                                            <?php if ($can_cancel && $refund_info): ?>
+                                            <?php if ($can_cancel): ?>
                                                 <div class="space-y-3 pt-4 border-t border-white/10 mt-4">
-                                                    <!-- Refund Information -->
-                                                    <div class="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                                                        <h4
-                                                            class="font-bold text-sm mb-3 text-blue-300 flex items-center gap-2">
-                                                            <span class="material-symbols-outlined text-sm">info</span>
-                                                            <?php _e('booking_detail.refund_info'); ?>
-                                                        </h4>
-                                                        <div class="space-y-2 text-sm text-white/80">
-                                                            <div class="flex justify-between">
-                                                                <span><?php _e('booking_detail.time_remaining'); ?>:</span>
-                                                                <span
-                                                                    class="font-bold text-white"><?php echo round($refund_info['days_until_checkin'], 1); ?>
-                                                                    <?php _e('booking_detail.days'); ?></span>
-                                                            </div>
-                                                            <div class="flex justify-between">
-                                                                <span><?php _e('booking_detail.total_booking'); ?>:</span>
-                                                                <span
-                                                                    class="font-bold text-white"><?php echo number_format($refund_info['total_amount']); ?>
-                                                                    đ</span>
-                                                            </div>
-                                                            <div class="flex justify-between text-green-400">
-                                                                <span><?php _e('booking_detail.refund_amount'); ?>:</span>
-                                                                <span
-                                                                    class="font-bold text-lg"><?php echo number_format($refund_info['refund_amount']); ?>
-                                                                    đ</span>
-                                                            </div>
-                                                            <?php if ($refund_info['processing_fee'] > 0): ?>
-                                                                <div class="flex justify-between text-xs text-white/50">
-                                                                    <span><?php _e('booking_detail.processing_fee'); ?>:</span>
-                                                                    <span>-<?php echo number_format($refund_info['processing_fee']); ?>
-                                                                        đ</span>
-                                                                </div>
-                                                            <?php endif; ?>
-                                                            <div class="pt-2 border-t border-blue-500/20 mt-2">
-                                                                <p class="text-xs text-blue-200/70 italic">
-                                                                    <?php echo $refund_info['policy_message']; ?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
                                                     <!-- Cancel Button -->
                                                     <button onclick="showCancelModal()"
                                                         class="w-full px-4 py-3 border border-red-500/50 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2">
@@ -647,7 +605,6 @@ $payment_labels = [
                                                         <?php _e('booking_detail.cancel_booking'); ?>
                                                     </button>
                                                 </div>
-                                            <?php elseif ($booking['status'] === 'confirmed' || $booking['status'] === 'pending'): ?>
                                                 <div
                                                     class="mt-4 p-3 bg-white/5 rounded-xl text-sm text-white/60 border border-white/10 text-center italic">
                                                     <span
@@ -787,31 +744,11 @@ $payment_labels = [
                     </button>
                 </div>
                 
-                <!-- Refund Summary -->
-                <div class="mb-6 p-5 bg-gradient-to-br from-blue-900/40 to-slate-800 rounded-xl border border-blue-500/30">
-                    <h4 class="font-bold mb-4 flex items-center gap-2 text-blue-300 uppercase tracking-wider text-sm">
-                        <span class="material-symbols-outlined text-blue-400">payments</span>
-                        Thông tin hoàn tiền
-                    </h4>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between text-white/80">
-                            <span>Tổng tiền đặt phòng:</span>
-                            <span class="font-bold text-white font-mono"><?php echo number_format($refund_info['total_amount'] ?? 0); ?> VNĐ</span>
-                        </div>
-                        <?php if (($refund_info['processing_fee'] ?? 0) > 0): ?>
-                        <div class="flex justify-between text-red-300">
-                            <span>Phí xử lý (5%):</span>
-                            <span class="font-mono">-<?php echo number_format($refund_info['processing_fee']); ?> VNĐ</span>
-                        </div>
-                        <?php endif; ?>
-                        <div class="flex justify-between text-lg font-bold text-green-400 pt-3 border-t border-white/10 mt-2">
-                            <span>Số tiền hoàn lại:</span>
-                            <span class="font-mono"><?php echo number_format($refund_info['refund_amount'] ?? 0); ?> VNĐ</span>
-                        </div>
-                        <div class="pt-3 text-xs text-blue-200/70 border-t border-white/5 mt-2">
-                            <p><strong>Chính sách:</strong> <?php echo $refund_info['policy_message'] ?? ''; ?></p>
-                            <p class="mt-1"><strong>Thời gian hoàn tiền:</strong> 5-7 ngày làm việc</p>
-                        </div>
+                <!-- Cancel Policy Notice -->
+                <div class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10 text-sm text-white/70">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-amber-400 flex-shrink-0 mt-0.5">info</span>
+                        <p>Sau khi hủy, đơn đặt phòng sẽ không thể khôi phục. Quý khách vui lòng liên hệ lễ tân để được hỗ trợ thêm.</p>
                     </div>
                 </div>
                 
@@ -839,9 +776,7 @@ $payment_labels = [
                             </span>
                         </div>
                         <span class="text-sm text-white/70 group-hover:text-white transition-colors">
-                            Tôi đã đọc và đồng ý với chính sách hủy phòng. Tôi hiểu rằng số tiền hoàn lại sẽ là 
-                            <strong class="text-green-400"><?php echo number_format($refund_info['refund_amount'] ?? 0); ?> VNĐ</strong>
-                            và sẽ được xử lý trong vòng 5-7 ngày làm việc.
+                            Tôi đã đọc và đồng ý với chính sách hủy phòng của Aurora Hotel Plaza.
                         </span>
                     </label>
                 </div>

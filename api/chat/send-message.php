@@ -16,8 +16,8 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/database.php';
 
-// Phải đăng nhập
-if (!isset($_SESSION['user_id'])) {
+// Hỗ trợ khách vãng lai
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
@@ -38,7 +38,7 @@ $msg_type = in_array($input['message_type'] ?? '', ['text', 'image', 'file', 'sy
     : 'text';
 $is_internal = (bool) ($input['is_internal'] ?? false);
 
-$user_id = (int) $_SESSION['user_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
 $user_role = $_SESSION['user_role'] ?? 'customer';
 
 // Validate

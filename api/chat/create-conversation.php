@@ -12,11 +12,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/database.php';
 
-// Chỉ customer đã đăng nhập mới tạo được
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Vui lòng đăng nhập để sử dụng chat']);
-    exit;
+// Hỗ trợ khách vãng lai
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
+    $_SESSION['chat_guest_id'] = -mt_rand(100000, 9999999);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -26,18 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Parse input
-$input      = json_decode(file_get_contents('php://input'), true) ?: $_POST;
-$subject    = trim($input['subject']    ?? 'Hỗ trợ khách hàng');
-$booking_id = isset($input['booking_id']) ? (int)$input['booking_id'] : null;
-$source     = in_array($input['source'] ?? '', ['website','booking','profile'])
-            ? $input['source']
-            : 'website';
+$input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+$subject = trim($input['subject'] ?? 'Hỗ trợ khách hàng');
+$booking_id = isset($input['booking_id']) ? (int) $input['booking_id'] : null;
+$source = in_array($input['source'] ?? '', ['website', 'booking', 'profile'])
+    ? $input['source']
+    : 'website';
 
-$customer_id = (int)$_SESSION['user_id'];
+$customer_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
 
 try {
     $db = getDB();
-    if (!$db) throw new Exception('Không thể kết nối database');
+    if (!$db)
+        throw new Exception('Không thể kết nối database');
 
     // ── 1. Kiểm tra đã có conv OPEN/ASSIGNED của user chưa ──────────────────
     // Không tạo trùng nếu đã có conv đang mở (trừ khi gắn booking_id khác nhau)
@@ -63,9 +62,9 @@ try {
     if ($found) {
         // Trả về conv đã có, không tạo mới
         echo json_encode([
-            'success'         => true,
-            'conversation_id' => (int)$found['conversation_id'],
-            'is_existing'     => true
+            'success' => true,
+            'conversation_id' => (int) $found['conversation_id'],
+            'is_existing' => true
         ]);
         exit;
     }
@@ -79,12 +78,12 @@ try {
             (:cid, :bid, :subject, 'open', :source, 0, 0, NOW(), NOW())
     ");
     $stmt->execute([
-        ':cid'     => $customer_id,
-        ':bid'     => $booking_id,
+        ':cid' => $customer_id,
+        ':bid' => $booking_id,
         ':subject' => mb_substr($subject, 0, 255),
-        ':source'  => $source,
+        ':source' => $source,
     ]);
-    $conv_id = (int)$db->lastInsertId();
+    $conv_id = (int) $db->lastInsertId();
 
     // ── 3. Auto-assign staff (ít việc nhất đang online) ─────────────────────
     $staffStmt = $db->prepare("
@@ -132,9 +131,9 @@ try {
                 VALUES
                     (:cid, 0, 'system', :msg, 'text', 0, 0, NOW())
             ")->execute([
-                ':cid' => $conv_id,
-                ':msg' => $autoMsg
-            ]);
+                        ':cid' => $conv_id,
+                        ':msg' => $autoMsg
+                    ]);
 
             // Cập nhật preview conversation
             $db->prepare("
@@ -145,17 +144,17 @@ try {
                     updated_at           = NOW()
                 WHERE conversation_id = :cid
             ")->execute([
-                ':preview' => mb_substr($autoMsg, 0, 100),
-                ':cid'     => $conv_id
-            ]);
+                        ':preview' => mb_substr($autoMsg, 0, 100),
+                        ':cid' => $conv_id
+                    ]);
         }
     }
 
     echo json_encode([
-        'success'         => true,
+        'success' => true,
         'conversation_id' => $conv_id,
-        'is_existing'     => false,
-        'staff_assigned'  => $staff ? true : false
+        'is_existing' => false,
+        'staff_assigned' => $staff ? true : false
     ]);
 
 } catch (Exception $e) {

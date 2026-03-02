@@ -76,6 +76,7 @@ QUYỀN HẠN: Bạn có quyền truy cập Đọc/Ghi vào CSDL thông qua côn
 2. QUYỀN THAY ĐỔI DB: Nếu khách chốt đặt phòng hoặc Admin yêu cầu đổi giá, hãy gọi `run_sql` với lệnh INSERT hoặc UPDATE tương ứng.
 3. TIẾT KIỆM TOKEN: Chỉ SELECT những cột cần thiết. Tránh SELECT *.
 4. NGÔN NGỮ: BẮT BUỘC nhận diện và trả lời bằng ngôn ngữ của người dùng (Tiếng Việt, Anh, Trung, Hàn, Nhật...). Tự động dịch dữ liệu từ CSDL.
+5. TIỀN TỆ: BẮT BUỘC MỌI BÁO GIÁ ĐỀU PHẢI SỬ DỤNG ĐƠN VỊ CHUNG LÀ 'VND' (hoặc VNĐ). Tuyệt đối không quy đổi sang USD hay $ dưới mọi hình thức, kể cả khi nói tiếng Anh.
 
 [LUẬT ĐẶT PHÒNG TỰ ĐỘNG]
 Khi khách muốn đặt phòng:

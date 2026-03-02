@@ -19,7 +19,7 @@ session_start();
 session_write_close();
 
 // ── Kiểm tra auth trước khi giữ kết nối ─────────────────────────────────────
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     http_response_code(401);
     echo "data: " . json_encode(['type' => 'error', 'message' => 'Unauthorized']) . "\n\n";
     exit;
@@ -43,7 +43,7 @@ ini_set('zlib.output_compression', false);
 set_time_limit(90);
 
 // ── Config ───────────────────────────────────────────────────────────────────
-$user_id = (int) $_SESSION['user_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $is_staff = in_array($user_role, ['admin', 'receptionist', 'sale']);
 

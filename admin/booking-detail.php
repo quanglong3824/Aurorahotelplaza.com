@@ -978,9 +978,9 @@ include 'includes/admin-header.php';
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
                     <option value="">-- Chọn phương thức --</option>
                     <option value="cash">Tiền mặt</option>
-                    <option value="bank_transfer">Chuyển khoản ngân hàng</option>
+                    <option value="bank_transfer">Chuyển khoản</option>
                     <option value="credit_card">Thẻ tín dụng</option>
-                    <option value="vnpay">VNPay</option>
+                    <!-- <option value="vnpay">VNPay</option> -->
                 </select>
             </div>
 

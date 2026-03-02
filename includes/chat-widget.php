@@ -20,8 +20,8 @@ $current_path = $_SERVER['PHP_SELF'] ?? '';
 if (strpos($current_path, '/admin/') !== false)
     return;
 
-$is_logged = isset($_SESSION['user_id']);
-$user_name = $_SESSION['user_name'] ?? '';
+$is_logged = true; // Cho phép everyone chat
+$user_name = $_SESSION['user_name'] ?? 'Khách';
 $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 
 // base_path đã được set ở footer.php

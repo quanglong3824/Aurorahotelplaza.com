@@ -288,7 +288,8 @@ foreach ($room_types as $room) {
                                 </div>
 
                                 <!-- Smart Suggestion Box -->
-                                <div id="smart_suggestion_box" class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl hidden">
+                                <div id="smart_suggestion_box"
+                                    class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl hidden">
                                     <div class="flex items-start gap-3">
                                         <span class="material-symbols-outlined text-amber-400 mt-0.5">lightbulb</span>
                                         <div class="flex-1">
@@ -298,7 +299,8 @@ foreach ($room_types as $room) {
                                                 <!-- Dynamic buttons will be added here -->
                                             </div>
                                         </div>
-                                        <button type="button" onclick="dismissSuggestion()" class="text-white/50 hover:text-white/80">
+                                        <button type="button" onclick="dismissSuggestion()"
+                                            class="text-white/50 hover:text-white/80">
                                             <span class="material-symbols-outlined text-sm">close</span>
                                         </button>
                                     </div>
@@ -444,13 +446,16 @@ foreach ($room_types as $room) {
 
                                     <!-- Tax Info Note -->
                                     <div class="mt-3 pt-3 border-t border-gray-300/30 dark:border-gray-600">
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2">
-                                            <span class="material-symbols-outlined text-sm text-green-500">check_circle</span>
+                                        <p
+                                            class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2">
+                                            <span
+                                                class="material-symbols-outlined text-sm text-green-500">check_circle</span>
                                             Đã bao gồm 5% phí dịch vụ và 8% VAT
                                         </p>
                                         <p class="text-xs text-amber-500 dark:text-amber-400 flex items-start gap-1">
                                             <span class="material-symbols-outlined text-sm mt-0.5">info</span>
-                                            <span>Đây là giá tạm tính. Giá cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh khi nhận phòng.</span>
+                                            <span>Đây là giá tạm tính. Giá cuối cùng có thể thay đổi tùy theo các dịch
+                                                vụ phát sinh khi nhận phòng.</span>
                                         </p>
                                     </div>
                                 </div>
@@ -739,9 +744,12 @@ foreach ($room_types as $room) {
                                             <span id="summary_total"></span>
                                         </div>
                                         <div class="mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                                            <p class="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1">
+                                            <p
+                                                class="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1">
                                                 <span class="material-symbols-outlined text-sm mt-0.5">info</span>
-                                                <span><strong>Lưu ý:</strong> Giá trên là giá ước tính. Tổng thanh toán cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh trong quá trình lưu trú.</span>
+                                                <span><strong>Lưu ý:</strong> Giá trên là giá ước tính. Tổng thanh toán
+                                                    cuối cùng có thể thay đổi tùy theo các dịch vụ phát sinh trong quá
+                                                    trình lưu trú.</span>
                                             </p>
                                         </div>
                                     </div>
@@ -771,15 +779,7 @@ foreach ($room_types as $room) {
                                 <div class="form-group mb-6">
                                     <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
                                     <div class="space-y-3">
-                                        <label class="payment-option opacity-60 cursor-not-allowed"
-                                            onclick="alert('Tính năng thanh toán Online đang được phát triển. Vui lòng chọn Thanh toán tại khách sạn.'); return false;">
-                                            <input type="radio" name="payment_method" value="vnpay" disabled>
-                                            <div class="payment-option-content">
-                                                <img src="./assets/img/vnpay-logo.png" alt="VNPay"
-                                                    class="h-8 grayscale">
-                                                <span><?php _e('booking_page.pay_vnpay'); ?> (Đang phát triển)</span>
-                                            </div>
-                                        </label>
+                                        <!-- VNPay Payment Disabled -->
                                         <label class="payment-option">
                                             <input type="radio" name="payment_method" value="cash" checked>
                                             <div class="payment-option-content">

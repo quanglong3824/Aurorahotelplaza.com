@@ -3,8 +3,8 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once '../../config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để đặt phòng!']);
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Phiên làm việc hết hạn. Vui lòng tải lại trang!']);
     exit;
 }
 
@@ -14,7 +14,7 @@ $slug = $input['slug'] ?? '';
 $check_in = $input['check_in'] ?? '';
 $check_out = $input['check_out'] ?? '';
 $message_id = $input['message_id'] ?? 0;
-$user_id = $_SESSION['user_id'];
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['chat_guest_id'];
 
 if (!$slug || !$check_in || !$check_out) {
     echo json_encode(['success' => false, 'message' => 'Thiếu thông tin đặt phòng.']);
@@ -69,6 +69,7 @@ try {
     }
 
     $room_type_id = $roomType['room_type_id'];
+    $bType = $roomType['booking_type'] ?? 'instant';
 
     // Tính số đêm
     $ci = new DateTime($check_in_date);

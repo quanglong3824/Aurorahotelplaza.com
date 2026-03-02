@@ -148,15 +148,15 @@ try {
 
     // ========== RECALCULATE EXTRA FEES ON BACKEND (for security) ==========
     require_once '../../helpers/pricing_calculator.php';
-    
+
     // Parse extra guests data from frontend
     $extra_guests_array = json_decode($extra_guests_data, true) ?? [];
-    
+
     // Recalculate extra guest fee on backend
     $backend_extra_guest_fee = 0;
     foreach ($extra_guests_array as $guest) {
         $height = floatval($guest['height'] ?? 1.5);
-        
+
         // Determine fee based on height
         if ($height < 1.0) {
             $fee_per_night = 0;           // Dưới 1m: Miễn phí
@@ -165,18 +165,18 @@ try {
         } else {
             $fee_per_night = 400000;      // Trên 1m3: 400,000đ/đêm
         }
-        
+
         // Multiply by number of nights
         $backend_extra_guest_fee += $fee_per_night * $num_nights;
     }
-    
+
     // Recalculate extra bed fee on backend
     $backend_extra_bed_fee = 0;
     if ($category === 'room' && $extra_beds > 0) {
         $extra_bed_price_per_night = 650000; // 650,000đ/đêm
         $backend_extra_bed_fee = $extra_beds * $extra_bed_price_per_night * $num_nights;
     }
-    
+
     // Log if there's a mismatch between frontend and backend calculations
     if (abs($extra_guest_fee - $backend_extra_guest_fee) > 1000) {
         error_log("Extra guest fee mismatch: frontend=$extra_guest_fee, backend=$backend_extra_guest_fee");
@@ -208,7 +208,8 @@ try {
     }
 
     // Generate booking code
-    $booking_code = 'BK' . date('Ymd') . strtoupper(substr(uniqid(), -6));
+    $booking_prefix = isset($_SESSION['user_id']) ? 'BK' : 'BKG';
+    $booking_code = $booking_prefix . date('Ymd') . strtoupper(substr(uniqid(), -6));
 
     // Get user_id if logged in
     $user_id = $_SESSION['user_id'] ?? null;
@@ -228,7 +229,7 @@ try {
 
             $stmt = $db->prepare("
                 INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified) 
-                VALUES (?, ?, ?, ?, 'customer', 'active', 0)
+                VALUES (?, ?, ?, ?, 'guest', 'active', 0)
             ");
             $stmt->execute([$guest_email, $password_hash, $guest_name, $guest_phone]);
             $user_id = $db->lastInsertId();

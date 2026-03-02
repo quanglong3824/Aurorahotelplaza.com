@@ -8,13 +8,13 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once '../../config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 
-$user_id = (int) $_SESSION['user_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $is_staff = in_array($user_role, ['admin', 'receptionist', 'sale']);
 

@@ -218,8 +218,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'items' => [
                             ['page' => 'bookings', 'icon' => 'calendar_today', 'label' => 'Quản lý đặt phòng'],
                             ['page' => 'apartment-inquiries', 'icon' => 'apartment', 'label' => 'Yêu cầu căn hộ'],
-                            ['page' => 'calendar', 'icon' => 'calendar_month', 'label' => 'Lịch đặt phòng'],
-                            ['page' => 'refunds', 'icon' => 'payments', 'label' => 'Hoàn tiền']
+                            ['page' => 'calendar', 'icon' => 'calendar_month', 'label' => 'Lịch đặt phòng']
                         ]
                     ],
                     [
