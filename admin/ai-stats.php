@@ -27,10 +27,10 @@ $client_requests = 0;
 
 foreach ($today_stats as $key_idx => $stat) {
     // Tương thích lùi với logs cũ
-    $ar = $stat['admin_requests'] ?? 0;
-    $at = $stat['admin_tokens'] ?? 0;
-    $cr = $stat['client_requests'] ?? 0;
+    $at = isset($stat['admin_tokens']) ? $stat['admin_tokens'] : 0;
+    $ar = isset($stat['admin_requests']) ? $stat['admin_requests'] : 0;
     $ct = $stat['client_tokens'] ?? 0;
+    $cr = $stat['client_requests'] ?? 0;
 
     // Nếu chưa phân quyền (logs cũ), mặc định đổ hết cho Admin
     if (!isset($stat['admin_tokens']) && !isset($stat['client_tokens'])) {
@@ -38,8 +38,18 @@ foreach ($today_stats as $key_idx => $stat) {
         $ar = $stat['requests'] ?? 0;
     }
 
-    $total_tokens += ($stat['tokens'] ?? 0);
-    $total_requests += ($stat['requests'] ?? 0);
+    // Đôi khi $tt < $at + $ct do lỗi log cũ
+    $tt = $stat['tokens'] ?? 0;
+    $rt = $stat['requests'] ?? 0;
+
+    // Đảm bảo Total bao phủ đủ
+    if ($tt < ($at + $ct))
+        $tt = $at + $ct;
+    if ($rt < ($ar + $cr))
+        $rt = $ar + $cr;
+
+    $total_tokens += $tt;
+    $total_requests += $rt;
 
     $admin_tokens += $at;
     $admin_requests += $ar;
@@ -160,19 +170,19 @@ $rate_limits = get_key_rate_limits();
         class="p-6 border-b border-gray-200 dark:border-slate-700 font-bold text-gray-900 dark:text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-indigo-500">data_exploration</span>
-            Chi Tiết Tiêu Thụ Per API Key (Hôm Nay)
+            Chi Tiết Tiêu Thụ Theo Từng API Key (Hôm Nay)
         </div>
     </div>
     <div class="overflow-x-auto">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th class="w-24">Key Index</th>
+                    <th class="w-32">Mã Khóa API</th>
                     <th>Trạng Thái</th>
                     <th>Tokens Đã Dùng</th>
                     <th>Requests</th>
-                    <th>Phân Bổ Token (Admin vs Client)</th>
-                    <th>Sử Dụng Trễ Nhất (Last Use)</th>
+                    <th>Phân Bổ Định Tuyến (Lõi / Web)</th>
+                    <th>Lần Dùng Cuối</th>
                 </tr>
             </thead>
             <tbody>
@@ -184,10 +194,17 @@ $rate_limits = get_key_rate_limits();
                 <?php else: ?>
                     <?php foreach ($valid_keys as $k_idx => $key_val):
                         $stat = $today_stats[$k_idx] ?? [];
-                        $at = $stat['admin_tokens'] ?? $stat['tokens'] ?? 0;
+                        $at = isset($stat['admin_tokens']) ? $stat['admin_tokens'] : ($stat['tokens'] ?? 0);
                         $ct = $stat['client_tokens'] ?? 0;
-                        $tt = $stat['tokens'] ?? 0;
+                        // Kiểm tra an toàn tính toán tổng thể:
+                        $tt = $at + $ct;
+                        // Đè $tt về số nhỏ hơn hoặc bằng sum
+                        // Chống lỗi khi total > admin + client vì lí do nào đó
+                        if (isset($stat['tokens']) && $stat['tokens'] > $tt) {
+                            $tt = $stat['tokens'];
+                        }
                         $rt = $stat['requests'] ?? 0;
+
                         $isActive = ($k_idx == $current_active_key_idx);
 
                         $apct = $tt > 0 ? round(($at / $tt) * 100, 1) : 0;
@@ -199,11 +216,15 @@ $rate_limits = get_key_rate_limits();
                         $limit_ts = $rate_limits[$k_idx] ?? 0;
                         $is_limited = ($limit_ts > time());
                         $wait_sec = $is_limited ? ($limit_ts - time()) : 0;
+
+                        // Rút gọn Key để bảo mật
+                        $safe_key = substr($key_val, 0, 8) . '...' . substr($key_val, -4);
                         ?>
                         <tr>
                             <td class="font-mono text-center">
-                                <b>#
-                                    <?php echo $k_idx; ?>
+                                <b class="text-xs text-slate-800 dark:text-slate-300"
+                                    title="<?php echo htmlspecialchars($key_val); ?>">
+                                    <?php echo $safe_key; ?>
                                 </b>
                                 <?php if ($is_limited): ?>
                                     <br><span class="badge badge-danger mt-1 shadow-sm"><span

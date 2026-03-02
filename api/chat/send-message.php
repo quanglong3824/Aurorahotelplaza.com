@@ -149,9 +149,12 @@ try {
                 ]);
 
         // ==========================================
-        // KIẾN TRÚC AI TRỢ LÝ ẢO (RAG)
+        // KIẾN TRÚC AI TRỢ LÝ ẢO (RAG / Function Calling)
         // ==========================================
-        if ($conv['status'] === 'open') {
+        // Cho AI hoàn toàn tự động trả lời tự động khách hàng ngay cả khi 
+        // Admin đang xem cuộc trò chuyện (assigned) hoặc đang online.
+        // Chỉ dừng AI thả khi Admin đóng phòng chat (closed).
+        if ($conv['status'] !== 'closed') {
             // Require helper module AI mà ta vừa tạo
             require_once '../../helpers/ai-helper.php';
 
