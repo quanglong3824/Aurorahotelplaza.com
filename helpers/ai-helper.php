@@ -221,9 +221,14 @@ A: "Dạ tìm thấy booking:
         ]
     ];
 
-    // Số lần AI có thể suy nghĩ (giảm từ 5 → 3 để nhanh hơn)
-    $max_iterations = 3;
+    // Số lần AI có thể suy nghĩ (3-5 là hợp lý)
+    $max_iterations = 4;
     $final_response = "Dạ em đang xử lý. Xin vui lòng đợi ạ.";
+
+    // Debug logging
+    error_log("=== AI REQUEST ===");
+    error_log("Message length: " . strlen($user_message));
+    error_log("Conv ID: " . $conv_id);
 
     for ($i = 0; $i < $max_iterations; $i++) {
         $data = [
@@ -408,7 +413,7 @@ A: "Dạ tìm thấy booking:
                     $response_data = ["error" => "Vui lòng cung cấp số điện thoại HOẶC mã booking"];
                 } else {
                     try {
-                        $conditions = [];
+                        $conditions = []; // Khởi tạo array
                         $params = [];
                         
                         if ($phone) {
@@ -420,23 +425,28 @@ A: "Dạ tìm thấy booking:
                             $params['code'] = $booking_code;
                         }
                         
-                        $stmt = $db->prepare("
-                            SELECT booking_code, guest_name, guest_phone, 
-                                   check_in_date, check_out_date, 
-                                   num_adults, num_children,
-                                   status, payment_status, created_at
-                            FROM bookings
-                            WHERE " . implode(' OR ', $conditions) . "
-                            ORDER BY created_at DESC
-                            LIMIT 5
-                        ");
-                        $stmt->execute($params);
-                        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        
-                        if (empty($bookings)) {
-                            $response_data = ["result" => [], "note" => "Không tìm thấy booking nào"];
+                        // Nếu không có conditions (hiếm), fallback
+                        if (empty($conditions)) {
+                            $response_data = ["error" => "Vui lòng cung cấp thông tin tra cứu"];
                         } else {
-                            $response_data = ["result" => $bookings];
+                            $stmt = $db->prepare("
+                                SELECT booking_code, guest_name, guest_phone, 
+                                       check_in_date, check_out_date, 
+                                       num_adults, num_children,
+                                       status, payment_status, created_at
+                                FROM bookings
+                                WHERE " . implode(' OR ', $conditions) . "
+                                ORDER BY created_at DESC
+                                LIMIT 5
+                            ");
+                            $stmt->execute($params);
+                            $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            if (empty($bookings)) {
+                                $response_data = ["result" => [], "note" => "Không tìm thấy booking nào"];
+                            } else {
+                                $response_data = ["result" => $bookings];
+                            }
                         }
                     } catch (Exception $e) {
                         $response_data = ["error" => $e->getMessage()];
