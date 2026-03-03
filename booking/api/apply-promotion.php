@@ -60,7 +60,7 @@ try {
     if ($promo['min_booking_amount'] > 0 && $total_amount < $promo['min_booking_amount']) {
         echo json_encode([
             'success' => false,
-            'message' => 'Giá trị đơn hàng tối thiểu: ' . number_format($promo['min_booking_amount'], 0, ',', '.') . 'đ'
+            'message' => 'Giá trị đơn hàng tối thiểu: ' . number_format($promo['min_booking_amount'], 0, ',', '.') . ' VNĐ'
         ]);
         exit;
     }

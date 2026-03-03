@@ -144,14 +144,14 @@ function _f($row, $field) {
  */
 function formatMoney($amount, $lang = null) {
     $lang = $lang ?? getLang();
-    
+
     if ($lang === 'en') {
         // Convert VND to USD (tỷ giá ước tính)
         $usd = $amount / 24000;
         return '$' . number_format($usd, 0);
     }
-    
-    return number_format($amount, 0, ',', '.') . ' đ';
+
+    return number_format($amount, 0, ',', '.') . ' VNĐ';
 }
 
 /**

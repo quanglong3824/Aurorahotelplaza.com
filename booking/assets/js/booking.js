@@ -5,40 +5,43 @@ let isInquiryMode = false;
 let currentBookingType = 'standard'; // 'standard' or 'short_stay'
 let extraGuests = []; // Array to store extra guests with heights
 let suggestionDismissed = false; // Track if user dismissed suggestion
+let extraBedLocked = false; // Track if extra bed is locked (for 3 adults case)
 
 // ========== PRICING CONSTANTS (must match backend) ==========
-const EXTRA_BED_PRICE = 650000; // 650,000đ/đêm
+const EXTRA_BED_PRICE = 650000; // 650,000 VNĐ/đêm
 const EXTRA_GUEST_FEES = {
     under1m: 0,       // Dưới 1m: Miễn phí (bao gồm ăn sáng)
-    '1m_1m3': 200000, // 1m - 1m3: 200,000đ/đêm (bao gồm ăn sáng)
-    over1m3: 400000   // Trên 1m3: 400,000đ/đêm (bao gồm ăn sáng)
+    '1m_1m3': 200000, // 1m - 1m3: 200,000 VNĐ/đêm (bao gồm ăn sáng)
+    over1m3: 400000   // Trên 1m3: 400,000 VNĐ/đêm (bao gồm ăn sáng)
+};
+
+// ========== ROOM CONFIGURATION ==========
+// 4 loại phòng: Deluxe, Double Deluxe, Aurora Studio, Twin
+const ROOM_CONFIG = {
+    maxAdults: 3,
+    maxChildren: 1,
+    maxOccupancy: 3, // 3 người lớn HOẶC 2 lớn + 1 nhỏ
+    extraBedFor3Adults: 1 // Bắt buộc 1 giường phụ khi có 3 người lớn
 };
 
 // ========== SMART SUGGESTION ALGORITHM ==========
 /**
- * Thuật toán gợi ý phụ thu thông minh
+ * Thuật toán tính toán booking mới (2025)
  * 
- * LOGIC:
- * 1. Lấy thông tin phòng: max_adults, max_children, category
- * 2. Lấy số khách hiện tại: num_adults, num_children
- * 3. Tính tổng khách: total_guests = num_adults + num_children
- * 4. So sánh với giới hạn phòng và đưa ra gợi ý:
- * 
- * CASES:
- * - Case A: num_adults >= max_adults && num_children >= 1
- *   → Gợi ý: "Bạn có trẻ em đi cùng. Vui lòng khai báo chiều cao để tính phụ thu."
- *   → Action: Mở form thêm khách với số lượng = num_children
- * 
- * - Case B: num_adults >= max_adults && num_children >= 2
- *   → Gợi ý: "Bạn có nhiều trẻ em. Có thể cần thêm giường phụ."
- *   → Action: Gợi ý thêm giường + mở form thêm khách
- * 
- * - Case C: total_guests > max_occupancy
- *   → Gợi ý: "Số khách vượt quá sức chứa phòng. Vui lòng khai báo phụ thu."
- *   → Action: Mở form thêm khách
- * 
- * - Case D: num_children > 0 && extraGuests.length === 0
- *   → Gợi ý nhẹ: "Bạn có trẻ em đi cùng. Nhớ khai báo chiều cao nếu cần phụ thu."
+ * QUY TẮC:
+ * 1. Tối đa 3 người lớn, tối đa 2 lớn + 1 nhỏ
+ * 2. Nếu 3 người lớn:
+ *    - Disable thêm trẻ em (mặc định = 0)
+ *    - Tự động +1 phụ thu người lớn thứ 3
+ *    - Tự động +1 giường phụ (locked, không thể thay đổi)
+ * 3. Nếu 2 lớn + 1 nhỏ:
+ *    - Cho phép chọn chiều cao trẻ em
+ *    - Giường phụ mặc định = 0, có thể chọn thêm
+ *    - Nếu height >= 1.3m: PHẢI chọn giường phụ
+ * 4. Phụ thu trẻ em theo chiều cao:
+ *    - Dưới 1m: Miễn phí
+ *    - 1m - 1.3m: 200,000 VNĐ/đêm
+ *    - Trên 1.3m: 400,000 VNĐ/đêm
  */
 function checkAndShowSuggestion() {
     if (isInquiryMode || suggestionDismissed) return;
@@ -306,13 +309,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const extraBedsInput = document.getElementById('extra_beds');
 
     if (numAdultsInput) {
-        numAdultsInput.addEventListener('change', calculateTotal);
+        numAdultsInput.addEventListener('change', function() {
+            handleAdultsChange();
+            calculateTotal();
+        });
     }
     if (numChildrenInput) {
-        numChildrenInput.addEventListener('change', calculateTotal);
+        numChildrenInput.addEventListener('change', function() {
+            handleChildrenChange();
+            calculateTotal();
+        });
     }
     if (extraBedsInput) {
-        extraBedsInput.addEventListener('change', calculateTotal);
+        extraBedsInput.addEventListener('change', function() {
+            // If locked (3 adults case), prevent change
+            if (extraBedLocked) {
+                this.value = 1;
+                return;
+            }
+            calculateTotal();
+        });
     }
 
     // Form submission
@@ -473,6 +489,142 @@ function toggleExtraGuests() {
     }
 }
 
+// ========== NEW LOGIC: Handle Adults Change ==========
+function handleAdultsChange() {
+    const numAdultsInput = document.getElementById('num_adults');
+    const numChildrenInput = document.getElementById('num_children');
+    const extraBedsInput = document.getElementById('extra_beds');
+    
+    if (!numAdultsInput || !numChildrenInput) return;
+    
+    const numAdults = parseInt(numAdultsInput.value) || 1;
+    let numChildren = parseInt(numChildrenInput.value) || 0;
+    
+    // Case 1: 3 người lớn
+    if (numAdults >= 3) {
+        // Disable children input
+        numChildrenInput.value = 0;
+        numChildrenInput.disabled = true;
+        numChildren = 0;
+        
+        // Auto-add 1 extra guest for 3rd adult (phụ thu người lớn)
+        // Giả sử người lớn thứ 3 tính phí như over1m3 (400,000 VNĐ/đêm)
+        if (extraGuests.length < 1) {
+            extraGuests = [{ id: Date.now(), height: 1.7, type: 'over1m3', isAdult: true }];
+        } else {
+            extraGuests = [{ id: extraGuests[0]?.id || Date.now(), height: 1.7, type: 'over1m3', isAdult: true }];
+        }
+        
+        // Auto-add 1 extra bed (locked)
+        if (extraBedsInput) {
+            extraBedsInput.value = 1;
+            extraBedsInput.disabled = true;
+            extraBedLocked = true;
+        }
+        
+        // Hide extra guests section (vì đã tự động tính)
+        const extraGuestsSection = document.getElementById('extra_guests_section');
+        if (extraGuestsSection) extraGuestsSection.classList.add('hidden');
+        
+    } else {
+        // Case 2: 1-2 người lớn
+        // Enable children input
+        numChildrenInput.disabled = false;
+        
+        // Reset extra bed lock
+        extraBedLocked = false;
+        if (extraBedsInput) {
+            extraBedsInput.disabled = false;
+            if (numAdults < 2) {
+                extraBedsInput.value = 0;
+            }
+        }
+        
+        // Show extra guests section
+        const extraGuestsSection = document.getElementById('extra_guests_section');
+        if (extraGuestsSection) extraGuestsSection.classList.remove('hidden');
+        
+        // Clear extra guests if no children
+        if (numChildren === 0) {
+            extraGuests = [];
+            const list = document.getElementById('extra_guests_list');
+            const btn = document.getElementById('toggle_extra_guests_btn');
+            if (list) list.classList.add('hidden');
+            if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-sm">add_circle</span> Thêm khách';
+        }
+        
+        // Adjust numChildren if exceeds max (2 adults + 1 child = 3 total)
+        if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
+            numChildren = ROOM_CONFIG.maxOccupancy - numAdults;
+            numChildrenInput.value = numChildren;
+        }
+        
+        // Update extraGuests based on numChildren
+        if (numChildren > 0 && extraGuests.length === 0) {
+            // Add children entries
+            for (let i = 0; i < numChildren; i++) {
+                extraGuests.push({ id: Date.now() + i, height: 1.0, type: '1m_1m3', isAdult: false });
+            }
+        } else if (numChildren < extraGuests.length) {
+            // Remove extra entries
+            extraGuests = extraGuests.slice(0, numChildren);
+        }
+    }
+    
+    renderExtraGuests();
+}
+
+// ========== NEW LOGIC: Handle Children Change ==========
+function handleChildrenChange() {
+    const numAdultsInput = document.getElementById('num_adults');
+    const numChildrenInput = document.getElementById('num_children');
+    const extraBedsInput = document.getElementById('extra_beds');
+    
+    if (!numChildrenInput || !numAdultsInput) return;
+    
+    const numAdults = parseInt(numAdultsInput.value) || 1;
+    let numChildren = parseInt(numChildrenInput.value) || 0;
+    
+    // Enforce max children = 1 when adults = 2
+    if (numAdults >= 2 && numChildren > 1) {
+        numChildren = 1;
+        numChildrenInput.value = 1;
+    }
+    
+    // Enforce total <= 3
+    if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
+        numChildren = ROOM_CONFIG.maxOccupancy - numAdults;
+        numChildrenInput.value = numChildren;
+    }
+    
+    // Update extraGuests array
+    if (numChildren > 0) {
+        if (extraGuests.length < numChildren) {
+            // Add new entries
+            for (let i = extraGuests.length; i < numChildren; i++) {
+                extraGuests.push({ id: Date.now() + i, height: 1.0, type: '1m_1m3', isAdult: false });
+            }
+        } else if (extraGuests.length > numChildren) {
+            // Remove entries
+            extraGuests = extraGuests.slice(0, numChildren);
+        }
+    } else {
+        extraGuests = [];
+    }
+    
+    // Check if need to suggest extra bed (height >= 1.3m)
+    const needsExtraBed = extraGuests.some(g => g.height >= 1.3);
+    if (needsExtraBed && extraBedsInput && !extraBedsInput.disabled) {
+        // Auto-suggest but don't force (user can still remove)
+        if (parseInt(extraBedsInput.value) === 0) {
+            // Show suggestion but don't auto-add
+            showToast('Trẻ em cao từ 1.3m nên sử dụng giường phụ để đảm bảo thoải mái', 'info');
+        }
+    }
+    
+    renderExtraGuests();
+}
+
 // Add extra guest entry
 function addExtraGuest() {
     const id = Date.now();
@@ -509,9 +661,22 @@ function updateExtraGuestHeight(id, height) {
         if (guest.height < 1.0) {
             guest.type = 'under1m';      // Dưới 1m: Miễn phí
         } else if (guest.height >= 1.0 && guest.height < 1.3) {
-            guest.type = '1m_1m3';       // 1m - dưới 1m3: 200,000đ/đêm
+            guest.type = '1m_1m3';       // 1m - dưới 1m3: 200,000 VNĐ/đêm
         } else {
-            guest.type = 'over1m3';      // Từ 1m3 trở lên: 400,000đ/đêm
+            guest.type = 'over1m3';      // Từ 1m3 trở lên: 400,000 VNĐ/đêm
+        }
+        
+        // Nếu height >= 1.3m: đề xuất chọn giường phụ
+        if (guest.height >= 1.3 && !guest.isAdult) {
+            const extraBedsInput = document.getElementById('extra_beds');
+            if (extraBedsInput && parseInt(extraBedsInput.value) === 0 && !extraBedLocked) {
+                // Show warning but don't auto-add (user can decide)
+                const bedWarning = document.getElementById('extra_bed_warning');
+                if (bedWarning) {
+                    bedWarning.classList.remove('hidden');
+                    bedWarning.innerHTML = '<span class="material-symbols-outlined text-sm text-amber-400">warning</span> Trẻ em cao từ 1.3m nên sử dụng giường phụ (650,000 VNĐ/đêm)';
+                }
+            }
         }
     }
     updateExtraGuestsData();
@@ -528,19 +693,19 @@ function renderExtraGuests() {
             <span class="text-gray-400 text-sm">${index + 1}.</span>
             <div class="flex-1">
                 <label class="text-xs text-gray-400 mb-1 block">Chiều cao (m)</label>
-                <select onchange="updateExtraGuestHeight(${guest.id}, this.value)" 
+                <select onchange="updateExtraGuestHeight(${guest.id}, this.value)"
                     class="form-input text-sm py-1">
                     <option value="0.5" ${guest.height < 1.0 ? 'selected' : ''}>Dưới 1m (Miễn phí)</option>
-                    <option value="1.15" ${guest.height >= 1.0 && guest.height < 1.3 ? 'selected' : ''}>1m - dưới 1m3 (200.000đ/đêm)</option>
-                    <option value="1.5" ${guest.height >= 1.3 ? 'selected' : ''}>Từ 1m3 trở lên (400.000đ/đêm)</option>
+                    <option value="1.15" ${guest.height >= 1.0 && guest.height < 1.3 ? 'selected' : ''}>1m - dưới 1m3 (200.000 VNĐ/đêm)</option>
+                    <option value="1.5" ${guest.height >= 1.3 ? 'selected' : ''}>Từ 1m3 trở lên (400.000 VNĐ/đêm)</option>
                 </select>
             </div>
             <div class="text-right">
                 <span class="text-sm font-semibold ${guest.type === 'under1m' ? 'text-green-400' : guest.type === '1m_1m3' ? 'text-yellow-400' : 'text-orange-400'}">
-                    ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000đ/đêm' : '400.000đ/đêm'}
+                    ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000 VNĐ/đêm' : '400.000 VNĐ/đêm'}
                 </span>
             </div>
-            <button type="button" onclick="removeExtraGuest(${guest.id})" 
+            <button type="button" onclick="removeExtraGuest(${guest.id})"
                 class="text-red-400 hover:text-red-300 p-1">
                 <span class="material-symbols-outlined text-sm">delete</span>
             </button>
@@ -874,10 +1039,23 @@ function calculateTotal() {
     if (roomSubtotalDisplay) roomSubtotalDisplay.textContent = formatCurrency(roomSubtotal);
 
     // Calculate extra guest fees
+    // LƯU Ý: Tính phụ thu cho người lớn thứ 3 và trẻ em
     let extraGuestFee = 0;
+    const has3Adults = numAdults >= 3;
+    
+    // Nếu có 3 người lớn: tính phụ thu cho người thứ 3 (400,000 VNĐ/đêm - như over1m3)
+    if (has3Adults) {
+        extraGuestFee += EXTRA_GUEST_FEES.over1m3; // 400,000 VNĐ/đêm cho người lớn thứ 3
+    }
+    
+    // Tính phụ thu trẻ em (nếu có)
     extraGuests.forEach(guest => {
-        extraGuestFee += EXTRA_GUEST_FEES[guest.type] || 0;
+        // Chỉ tính phí nếu là trẻ em (isAdult = false hoặc undefined)
+        if (!guest.isAdult) {
+            extraGuestFee += EXTRA_GUEST_FEES[guest.type] || 0;
+        }
     });
+    
     // Extra guest fee is per night (or per stay for short stay)
     extraGuestFee = extraGuestFee * effectiveNights;
 
@@ -1541,6 +1719,33 @@ async function handleSubmit(e) {
     const submitBtnText = document.getElementById('submitBtnText');
     const originalText = submitBtnText.textContent;
 
+    // ========== PRE-SUBMIT VALIDATION (Anti-spam) ==========
+    // Check if user has existing bookings before submitting
+    try {
+        const validationResponse = await fetch('./api/validate-booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                check_in_date: data.check_in_date,
+                check_out_date: data.check_out_date
+            })
+        });
+        
+        const validation = await validationResponse.json();
+        
+        if (!validation.allowed) {
+            // Show error modal with existing bookings
+            showBookingConflictModal(validation);
+            submitBtn.disabled = false;
+            submitBtnText.textContent = originalText;
+            return; // Stop submission
+        }
+    } catch (error) {
+        console.error('Pre-validation error:', error);
+        // Continue with booking if validation API fails (don't block legitimate users)
+    }
+    // ========== END PRE-SUBMIT VALIDATION ==========
+
     // Disable submit button
     submitBtn.disabled = true;
     submitBtnText.textContent = translations.common.processing;
@@ -1575,7 +1780,14 @@ async function handleSubmit(e) {
                 }
             }
         } else {
-            alert('Có lỗi xảy ra: ' + result.message);
+            // Handle specific error types from backend
+            if (result.existing_bookings || result.overlapping_bookings) {
+                showBookingConflictModal(result);
+            } else if (result.retry_after) {
+                showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
+            } else {
+                alert('Có lỗi xảy ra: ' + result.message);
+            }
             submitBtn.disabled = false;
             submitBtnText.textContent = originalText;
         }
@@ -1584,6 +1796,107 @@ async function handleSubmit(e) {
         alert('Có lỗi xảy ra. Vui lòng thử lại.');
         submitBtn.disabled = false;
         submitBtnText.textContent = originalText;
+    }
+}
+
+// Show Booking Conflict Modal (Anti-spam)
+function showBookingConflictModal(result) {
+    const modal = document.createElement('div');
+    modal.id = 'bookingConflictModal';
+    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-500/30">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700">
+                <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined">warning</span>
+                    Không thể đặt phòng
+                </h3>
+                <button onclick="closeBookingConflictModal()" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">${result.message || 'Bạn đang có đặt phòng chưa hoàn tất.'}</p>
+                </div>
+                
+                ${result.existing_bookings && result.existing_bookings.length > 0 ? `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-red-600 mb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">list</span>
+                            Đặt phòng hiện có:
+                        </h4>
+                        <div class="space-y-2 max-h-60 overflow-y-auto">
+                            ${result.existing_bookings.map(booking => `
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-semibold text-sm text-blue-600 dark:text-blue-400">Mã: ${booking.booking_code}</span>
+                                        <span class="text-xs px-2 py-1 rounded ${
+                                            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                            booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 
+                                            'bg-gray-100 text-gray-800'
+                                        }">${booking.status === 'pending' ? 'Chờ xác nhận' : booking.status === 'confirmed' ? 'Đã xác nhận' : booking.status}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                                        <div>📅 ${booking.check_in_date} → ${booking.check_out_date}</div>
+                                        <div>💰 ${parseInt(booking.total_amount).toLocaleString()} VNĐ</div>
+                                        <div>⏰ Đặt cách đây ${booking.minutes_since_creation} phút</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${result.overlapping_bookings && result.overlapping_bookings.length > 0 ? `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-orange-600 mb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">event_busy</span>
+                            Trùng lịch sử đặt:
+                        </h4>
+                        <div class="space-y-2">
+                            ${result.overlapping_bookings.map(booking => `
+                                <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-800">
+                                    <div class="text-sm text-orange-900 dark:text-orange-100">
+                                        <strong>Mã ${booking.booking_code}</strong>: 
+                                        ${booking.check_in_date} → ${booking.check_out_date}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <h5 class="font-semibold text-blue-800 dark:text-blue-300 mb-2 text-sm">Bạn cần làm gì?</h5>
+                    <ul class="text-sm text-blue-700 dark:text-blue-400 space-y-1 list-disc list-inside">
+                        <li>Hoàn tất thanh toán cho đặt phòng cũ (nếu chưa thanh toán)</li>
+                        <li>Hủy đặt phòng cũ qua trang Quản lý đặt phòng</li>
+                        <li>Liên hệ lễ tân: <strong>(0251) 391.8888</strong> để được hỗ trợ</li>
+                        <li>Chọn ngày khác không trùng với đặt phòng hiện có</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+                <button onclick="closeBookingConflictModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    Đóng
+                </button>
+                <a href="../profile/bookings.php" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Xem đặt phòng của tôi
+                </a>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+function closeBookingConflictModal() {
+    const modal = document.getElementById('bookingConflictModal');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = '';
     }
 }
 
@@ -1702,4 +2015,21 @@ function updateToggleButtonText() {
             Thêm khách
         `;
     }
+}
+
+// Show toast notification
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-[9999] transition-all duration-300 transform translate-x-0 ${
+        type === 'success' ? 'bg-green-600 text-white' :
+        type === 'error' ? 'bg-red-600 text-white' :
+        'bg-blue-600 text-white'
+    }`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }

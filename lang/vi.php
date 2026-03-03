@@ -102,6 +102,15 @@ return [
         'group_desc' => 'Đặt phòng số lượng lớn, công ty, đám cưới, hội nghị.',
     ],
 
+    // Booking Modal
+    'booking_modal' => [
+        'title' => 'Chọn loại đặt phòng',
+        'individual_family' => 'Cá nhân / Gia đình',
+        'individual_desc' => 'Đặt phòng cho 1-6 khách, thanh toán online hoặc tại khách sạn.',
+        'group_event' => 'Đoàn / Sự kiện',
+        'group_desc' => 'Đặt số lượng lớn, công ty, đám cưới, hội nghị.',
+    ],
+
     // Chat Widget
     'chat' => [
         'open_chat' => 'Mở chat hỗ trợ',

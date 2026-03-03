@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 require_once '../../config/database.php';
 require_once '../../helpers/logger.php';
+require_once '../../helpers/booking-validator.php'; // Anti-spam & overlap detection
 
 // Get POST data
 $input_data = $_POST;
@@ -56,6 +57,47 @@ if (!$room_type_id || !$check_in_date || !$check_out_date || !$guest_name || !$g
     ]);
     exit;
 }
+
+// ========== ANTI-SPAM & OVERLAP DETECTION ==========
+$user_id = $_SESSION['user_id'] ?? null;
+$rate_limit_id = getRateLimitIdentifier();
+
+// 1. Check rate limiting (chống spam requests)
+$rate_limit = checkRateLimit($rate_limit_id, $max_requests = 5, $time_window = 60); // 5 requests/phút
+if (!$rate_limit['allowed']) {
+    echo json_encode([
+        'success' => false,
+        'message' => $rate_limit['message'],
+        'retry_after' => $rate_limit['retry_after']
+    ]);
+    exit;
+}
+
+// 2. Check for existing unpaid/pending bookings (chống spam đặt phòng)
+$spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
+if (!$spam_check['allowed']) {
+    // Log spam attempt
+    error_log("Booking spam detected - User: " . ($user_id ?? $guest_email) . " - Message: " . $spam_check['message']);
+    
+    echo json_encode([
+        'success' => false,
+        'message' => $spam_check['message'],
+        'existing_bookings' => $spam_check['existing_bookings']
+    ]);
+    exit;
+}
+
+// 3. Check for overlapping bookings (chồng chéo ngày)
+$overlap_check = checkBookingOverlap($user_id, $guest_email, $guest_phone, $check_in_date, $check_out_date);
+if (!$overlap_check['allowed']) {
+    echo json_encode([
+        'success' => false,
+        'message' => $overlap_check['message'],
+        'overlapping_bookings' => $overlap_check['overlapping_bookings']
+    ]);
+    exit;
+}
+// ========== END ANTI-SPAM ==========
 
 try {
     $db = getDB();

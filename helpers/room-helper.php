@@ -101,7 +101,7 @@ function getRoomBySlug($slug)
  */
 function formatPrice($price)
 {
-    return number_format($price, 0, ',', '.') . 'đ';
+    return number_format($price, 0, ',', '.') . ' VNĐ';
 }
 
 /**
