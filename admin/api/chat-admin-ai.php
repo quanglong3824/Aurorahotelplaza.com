@@ -257,8 +257,9 @@ PROMPT;
         $blocked_keys = [];
         $now = time();
         foreach ($rate_limits as $idx => $ts) {
-            if ($ts > $now)
-                $blocked_keys[$idx] = $ts - $now;
+            $check_ts = is_array($ts) ? ($ts['reset_time'] ?? 0) : $ts;
+            if ($check_ts > $now)
+                $blocked_keys[$idx] = $check_ts - $now;
         }
 
         ob_clean();
@@ -502,8 +503,9 @@ PROMPT;
     $blocked_keys = [];
     $now = time();
     foreach ($rate_limits as $idx => $ts) {
-        if ($ts > $now)
-            $blocked_keys[$idx] = $ts - $now;
+        $check_ts = is_array($ts) ? ($ts['reset_time'] ?? 0) : $ts;
+        if ($check_ts > $now)
+            $blocked_keys[$idx] = $check_ts - $now;
     }
 
     ob_clean();

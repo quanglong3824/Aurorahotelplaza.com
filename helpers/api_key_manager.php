@@ -34,7 +34,10 @@ function get_active_gemini_key()
     $start_idx = $current_idx;
 
     // Tìm key đầu tiên không bị block
-    while (isset($limits[$current_idx]) && $limits[$current_idx] > $now) {
+    while (isset($limits[$current_idx])) {
+        $check_ts = is_array($limits[$current_idx]) ? ($limits[$current_idx]['reset_time'] ?? 0) : $limits[$current_idx];
+        if ($check_ts <= $now) break;
+        
         $current_idx++;
         if ($current_idx >= count($valid_keys))
             $current_idx = 0;
@@ -77,7 +80,10 @@ function rotate_gemini_key()
         if ($current_idx == $start_idx) {
             break; // Đã xoay 1 vòng, tất cả đều tèo
         }
-    } while (isset($limits[$current_idx]) && $limits[$current_idx] > $now);
+        
+        $limit_val = $limits[$current_idx] ?? 0;
+        $check_ts = is_array($limit_val) ? ($limit_val['reset_time'] ?? 0) : $limit_val;
+    } while ($check_ts > $now);
 
     // Cập nhật index xuống file
     file_put_contents($index_file, $current_idx);

@@ -214,6 +214,10 @@ $rate_limits = get_key_rate_limits();
                         $quota_color = $quota_pct > 90 ? 'bg-red-500' : ($quota_pct > 70 ? 'bg-orange-500' : 'bg-green-500');
 
                         $limit_ts = $rate_limits[$k_idx] ?? 0;
+                        if (is_array($limit_ts)) {
+                            // Fix for old array-based rate limits if any remain
+                            $limit_ts = $limit_ts['reset_time'] ?? 0;
+                        }
                         $is_limited = ($limit_ts > time());
                         $wait_sec = $is_limited ? ($limit_ts - time()) : 0;
 
