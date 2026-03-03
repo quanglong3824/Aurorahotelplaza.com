@@ -440,15 +440,33 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
 <!-- Header Styles & Script -->
 <?php $asset_version = time(); // Update this when assets change ?>
-<!-- iOS & Performance Optimizations -->
-<link rel="stylesheet" href="<?php echo asset('css/ios-optimizations.css'); ?>?v=<?php echo $asset_version; ?>">
+<!-- iOS & Performance Optimizations - CHỈ load khi cần -->
+<!--[if iOS]><link rel="stylesheet" href="<?php echo asset('css/ios-optimizations.css'); ?>?v=<?php echo $asset_version; ?>"><![endif]-->
+<script>
+// Detect iOS and load optimizations
+(function() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+        // Load CSS
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '<?php echo asset('css/ios-optimizations.css'); ?>?v=<?php echo $asset_version; ?>';
+        document.head.appendChild(link);
+        
+        // Load JS
+        var script = document.createElement('script');
+        script.src = '<?php echo asset('js/ios-optimizations.js'); ?>?v=<?php echo $asset_version; ?>';
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+})();
+</script>
 <!-- Main Styles -->
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 <script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
-<script src="<?php echo asset('js/ios-optimizations.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 
 <script>
     (function () {
