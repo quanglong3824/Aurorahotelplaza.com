@@ -24,22 +24,11 @@ $spam_check_passed = true;
 $booking_block_message = '';
 $booking_block_bookings = [];
 
-// Get guest info from session OR POST (for form submissions)
-$guest_email = $_SESSION['guest_email'] ?? $_POST['guest_email'] ?? null;
-$guest_phone = $_SESSION['guest_phone'] ?? $_POST['guest_phone'] ?? null;
-
+// CHỈ CHECK VỚI USER ĐÃ ĐĂNG NHẬP
+// Guest (vãng lai) không block vì họ không thể đăng nhập để kiểm tra booking
 if (isset($_SESSION['user_id'])) {
     // User đã đăng ký: check theo user_id
     $booking_spam_check = checkBookingSpam($_SESSION['user_id'], null, null);
-    
-    if (!$booking_spam_check['allowed']) {
-        $spam_check_passed = false;
-        $booking_block_message = $booking_spam_check['message'];
-        $booking_block_bookings = $booking_spam_check['pending_bookings'];
-    }
-} elseif ($guest_email || $guest_phone) {
-    // Guest: check theo email/phone
-    $booking_spam_check = checkBookingSpam(null, $guest_email, $guest_phone);
     
     if (!$booking_spam_check['allowed']) {
         $spam_check_passed = false;

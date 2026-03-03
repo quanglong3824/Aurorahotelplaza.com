@@ -31,18 +31,12 @@ $check_out_date = $input_data['check_out_date'] ?? null;
 
 // Get user info
 $user_id = $_SESSION['user_id'] ?? null;
-$guest_email = $input_data['guest_email'] ?? $_SESSION['guest_email'] ?? null;
-$guest_phone = $input_data['guest_phone'] ?? $_SESSION['guest_phone'] ?? null;
+$guest_email = $input_data['guest_email'] ?? null;
+$guest_phone = $input_data['guest_phone'] ?? null;
 
-// If no email/phone provided and not logged in, skip validation
-if (!$guest_email && !$guest_phone && !$user_id) {
-    echo json_encode(['allowed' => true, 'message' => '']);
-    exit;
-}
-
-// 1. Check rate limiting
+// 1. Check rate limiting (CHO TẤT CẢ - user và guest)
 $rate_limit_id = getRateLimitIdentifier();
-$rate_limit = checkRateLimit($rate_limit_id, $max_requests = 10, $time_window = 60); // 10 requests/phút
+$rate_limit = checkRateLimit($rate_limit_id, $max_requests = 5, $time_window = 60); // 5 requests/phút
 
 if (!$rate_limit['allowed']) {
     echo json_encode([
@@ -54,23 +48,24 @@ if (!$rate_limit['allowed']) {
     exit;
 }
 
-// 2. Check for pending/incomplete bookings (SIẾT CHẶT)
-// User đã đăng ký: check theo user_id
-// Guest: check theo email/phone
-$spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
-
-if (!$spam_check['allowed']) {
-    echo json_encode([
-        'allowed' => false,
-        'message' => $spam_check['message'],
-        'pending_bookings' => $spam_check['pending_bookings'],
-        'type' => 'spam'
-    ]);
-    exit;
+// 2. CHỈ CHECK SPAM VỚI USER ĐÃ ĐĂNG NHẬP
+// Guest (vãng lai) không block vì họ không thể đăng nhập để kiểm tra booking
+if ($user_id) {
+    $spam_check = checkBookingSpam($user_id, null, null);
+    
+    if (!$spam_check['allowed']) {
+        echo json_encode([
+            'allowed' => false,
+            'message' => $spam_check['message'],
+            'pending_bookings' => $spam_check['pending_bookings'],
+            'type' => 'spam'
+        ]);
+        exit;
+    }
 }
 
-// 3. Check for overlapping bookings (if dates provided)
-if ($check_in_date && $check_out_date) {
+// 3. Check for overlapping bookings (nếu có ngày) - CHO TẤT CẢ
+if ($check_in_date && $check_out_date && ($user_id || $guest_email)) {
     $overlap_check = checkBookingOverlap($user_id, $guest_email, $guest_phone, $check_in_date, $check_out_date);
     
     if (!$overlap_check['allowed']) {
