@@ -28,7 +28,7 @@ $user_message = "Xin chào";
 echo "- Câu hỏi Test: '$user_message'\n";
 
 // Mình tự gọi nội tuyến để in thẳng kết quả Raw JSON Request ra màn hình dễ debug
-$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=" . $api_key;
+$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
 $data = [
     "contents" => [
         ["role" => "user", "parts" => [["text" => "Xin chào"]]]
@@ -48,7 +48,7 @@ if ($http_code === 429) {
     $new_key = rotate_gemini_key();
     if ($new_key && $new_key !== $api_key) {
         $api_key = $new_key;
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
         curl_setopt($ch, CURLOPT_URL, $url);
         echo "- THỬ LẠI VỚI KEY: " . substr($new_key, 0, 10) . "...........\n";
         $response = curl_exec($ch);

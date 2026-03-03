@@ -175,7 +175,7 @@ PROMPT;
     // Gọi Gemini API
     // ─────────────────────────────────────────────────────────────────────────
     $start_time = microtime(true);
-    $model_used = 'gemini-3-flash';
+    $model_used = 'gemini-2.5-flash';
     $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
 
     $reqData = [

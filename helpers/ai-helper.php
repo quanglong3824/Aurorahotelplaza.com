@@ -22,7 +22,7 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
     require_once __DIR__ . '/api_key_manager.php';
     $api_key = get_active_gemini_key();
     $start_time = microtime(true);
-    $model_used = 'gemini-3-flash';
+    $model_used = 'gemini-2.5-flash';
 
     if (empty($api_key)) {
         log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', 'Missing API Key', 0, $conv_id);
