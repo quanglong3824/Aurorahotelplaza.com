@@ -446,6 +446,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 <script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
+<!-- Performance Optimization -->
+<script src="<?php echo asset('js/performance.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 
 <script>
     (function () {
