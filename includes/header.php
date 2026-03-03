@@ -440,11 +440,15 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
 <!-- Header Styles & Script -->
 <?php $asset_version = time(); // Update this when assets change ?>
+<!-- iOS & Performance Optimizations -->
+<link rel="stylesheet" href="<?php echo asset('css/ios-optimizations.css'); ?>?v=<?php echo $asset_version; ?>">
+<!-- Main Styles -->
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 <script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
+<script src="<?php echo asset('js/ios-optimizations.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 
 <script>
     (function () {

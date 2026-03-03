@@ -1,0 +1,159 @@
+/* ============================================
+   iOS OPTIMIZATIONS & PERFORMANCE FIXES
+   ============================================ */
+
+/* Force hardware acceleration for smooth scrolling on iOS */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fix smooth scrolling on iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    html {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Fix for iOS position:fixed issues */
+    body {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* GPU acceleration for animations */
+.gpu-accelerate,
+[class*="transition"],
+[class*="animate-"] {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    will-change: transform, opacity;
+}
+
+/* Fix for iOS modal/overlay z-index issues */
+.modal,
+.dialog,
+.overlay,
+[class*="modal"],
+[class*="dialog"],
+[class*="overlay"] {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+/* Prevent iOS rubber band scrolling */
+.overscroll-none {
+    overscroll-behavior: none;
+    -webkit-overscroll-behavior: none;
+}
+
+/* Fix for iOS input focus zoom */
+@media screen and (max-width: 768px) {
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+}
+
+/* Optimize scroll containers */
+.scroll-smooth {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Fix sticky header on iOS */
+.sticky,
+[class*="sticky"] {
+    position: -webkit-sticky;
+    position: sticky;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+/* Performance: Reduce paint areas */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+.will-change-scroll {
+    will-change: scroll-position;
+}
+
+/* Fix for iOS Safari viewport height issues */
+:root {
+    --vh: 1vh;
+}
+
+@supports (-webkit-touch-callout: none) {
+    :root {
+        --vh: 100vh;
+    }
+}
+
+/* Prevent layout shift on iOS */
+img,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Optimize animations for iOS */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Fix for iOS tap highlight color */
+* {
+    -webkit-tap-highlight-color: rgba(204, 154, 44, 0.2);
+    tap-highlight-color: rgba(204, 154, 44, 0.2);
+}
+
+/* Optimize for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    /* Fix 100vh issue on iOS Safari */
+    .h-screen {
+        height: -webkit-fill-available;
+        height: 100vh;
+    }
+    
+    /* Fix for safe area insets (iPhone X+) */
+    .safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+    
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .safe-left {
+        padding-left: env(safe-area-inset-left);
+    }
+    
+    .safe-right {
+        padding-right: env(safe-area-inset-right);
+    }
+}
