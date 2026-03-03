@@ -36,6 +36,11 @@ return [
 
     // Common
     'common' => [
+        'note' => 'Note',
+        'day' => 'day',
+        'type' => 'type',
+        'standard' => 'Standard',
+        'service' => 'Service',
         'new' => 'New',
         'hot' => 'Hot',
         'view_all' => 'View All',
@@ -634,6 +639,7 @@ return [
 
     // Blog page
     'blog_page' => [
+        'no_posts_desc' => 'There are no posts here yet',
         'title' => 'Blog - Aurora Hotel Plaza',
         'news_articles' => 'News & Articles',
         'page_title' => 'News & Articles',
@@ -721,6 +727,7 @@ return [
 
     // Room detail page
     'room_detail' => [
+        'description' => 'Description',
         'deluxe_title' => 'Deluxe Room - Aurora Hotel Plaza',
         'deluxe_name' => 'Deluxe Room',
         'deluxe_subtitle' => 'Luxurious space with modern amenities',
@@ -1003,6 +1010,7 @@ return [
 
     // Profile bookings page
     'profile_bookings' => [
+        'no_permission' => 'No permission to access',
         'title' => 'Booking History - Aurora Hotel Plaza',
         'page_title' => 'Booking History',
         'page_subtitle' => 'View and manage your bookings',
@@ -1091,6 +1099,7 @@ return [
 
     // Booking confirmation page
     'booking_confirmation' => [
+        'price_short' => 'Short stay price',
         'title' => 'Booking Confirmation - Aurora Hotel Plaza',
         'page_title' => 'Booking Confirmation',
         'booking_code' => 'Booking Code',
@@ -1300,6 +1309,8 @@ return [
 
     // Profile page (full)
     'profile_full' => [
+        'edit' => 'Edit',
+        'logout' => 'Logout',
         'title' => 'Account Information',
         'not_updated' => 'Not updated',
         'user_not_found' => 'User not found',
@@ -1533,6 +1544,7 @@ return [
 
     // Booking Form
     'booking_form' => [
+        'price_single' => 'Price for 1',
         'booking_type' => 'Booking Type',
         'overnight' => 'Overnight Stay',
         'overnight_desc' => 'Check-in 14:00 - Check-out 12:00',

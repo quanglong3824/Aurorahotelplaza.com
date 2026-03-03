@@ -36,6 +36,11 @@ return [
 
     // Common
     'common' => [
+        'note' => 'Lưu ý',
+        'day' => 'ngày',
+        'type' => 'loại',
+        'standard' => 'Tiêu chuẩn',
+        'service' => 'Dịch vụ',
         'new' => 'Mới',
         'hot' => 'Hot',
         'view_all' => 'Xem tất cả',
@@ -133,6 +138,7 @@ return [
 
     // Booking Form
     'booking_form' => [
+        'price_single' => 'Giá 1 người',
         'booking_type' => 'Loại hình đặt phòng',
         'overnight' => 'Nghỉ qua đêm',
         'overnight_desc' => 'Check-in 14:00 - Check-out 12:00',
@@ -380,6 +386,7 @@ return [
 
     // Homepage
     'home' => [
+        'read_more' => 'Đọc thêm',
         'meta_title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
         'reception_24_7' => 'Lễ tân 24/7',
         'about_us' => 'Về chúng tôi',
@@ -738,6 +745,7 @@ return [
 
     // Blog page
     'blog_page' => [
+        'no_posts_desc' => 'Hiện tại chưa có bài viết nào',
         'title' => 'Bài viết - Aurora Hotel Plaza',
         'news_articles' => 'Tin tức & Bài viết',
         'page_title' => 'Tin tức & Bài viết',
@@ -825,6 +833,7 @@ return [
 
     // Room detail page
     'room_detail' => [
+        'description' => 'Mô tả',
         'deluxe_title' => 'Phòng Deluxe - Aurora Hotel Plaza',
         'deluxe_name' => 'Phòng Deluxe',
         'deluxe_subtitle' => 'Không gian sang trọng với đầy đủ tiện nghi hiện đại',
@@ -1107,6 +1116,7 @@ return [
 
     // Profile bookings page
     'profile_bookings' => [
+        'no_permission' => 'Bạn không có quyền truy cập',
         'title' => 'Lịch sử đặt phòng - Aurora Hotel Plaza',
         'page_title' => 'Lịch sử đặt phòng',
         'page_subtitle' => 'Xem và quản lý các đặt phòng của bạn',
@@ -1198,6 +1208,7 @@ return [
 
     // Booking confirmation page
     'booking_confirmation' => [
+        'price_short' => 'Giá ngắn hạn',
         'title' => 'Xác nhận đặt phòng - Aurora Hotel Plaza',
         'page_title' => 'Xác nhận đặt phòng',
         'booking_code' => 'Mã đặt phòng',
@@ -1407,6 +1418,8 @@ return [
 
     // Profile page (full)
     'profile_full' => [
+        'edit' => 'Chỉnh sửa',
+        'logout' => 'Đăng xuất',
         'title' => 'Thông tin tài khoản',
         'not_updated' => 'Chưa cập nhật',
         'user_not_found' => 'User không tồn tại',
@@ -1612,6 +1625,8 @@ return [
 
     // Apartment Inquiry
     'inquiry' => [
+        'message_desc' => 'Nội dung tin nhắn',
+        'not_inquiry_type' => 'Đây không phải dạng yêu cầu tư vấn',
         // Form
         'title' => 'Yêu cầu tư vấn căn hộ',
         'subtitle' => 'Để lại thông tin để được tư vấn chi tiết về căn hộ',
