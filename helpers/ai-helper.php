@@ -6,12 +6,25 @@
  * QUY TẮC: Không cung cấp auth, không tiết lộ giá, đọc thông tin chính xác
  */
 
+// Hàm ghi log chi tiết cho hệ thống AI (Success/Error/Usage)
+function log_ai_activity($db, $type, $prompt, $reply, $model, $tokens, $status, $error = '', $code = 200, $conv_id = 0, $exec_time = 0) {
+    try {
+        $stmt = $db->prepare("INSERT INTO ai_logs (ai_type, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code, execution_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$type, $conv_id, mb_substr($prompt, 0, 1000), mb_substr($reply, 0, 3000), $model, (int)$tokens, $status, $error, (int)$code, $exec_time]);
+    } catch (Exception $e) {
+        error_log("Failed to write AI log: " . $e->getMessage());
+    }
+}
+
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
     require_once __DIR__ . '/api_key_manager.php';
     $api_key = get_active_gemini_key();
+    $start_time = microtime(true);
+    $model_used = 'gemini-1.5-flash';
 
     if (empty($api_key)) {
+        log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', 'Missing API Key', 0, $conv_id);
         return "Xin lỗi, hệ thống chưa được cấu hình khóa API để Trợ lý ảo hoạt động.";
     }
 
@@ -255,8 +268,11 @@ PROMPT;
         $curl_error = curl_error($ch);
         curl_close($ch);
 
+        $exec_time = round(microtime(true) - $start_time, 2);
+
         if ($curl_error) {
             error_log("AI cURL Error: " . $curl_error);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', "cURL Error: $curl_error", $http_code, $conv_id, $exec_time);
             break;
         }
 
@@ -272,6 +288,8 @@ PROMPT;
                 }
             }
             mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, $conv_id, $exec_time);
+
             $new_key = rotate_gemini_key();
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
@@ -290,6 +308,7 @@ PROMPT;
 
         if ($http_code !== 200) {
             error_log("AI Gemini API Error (HTTP $http_code): " . $response);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', "API Error: " . mb_substr($response, 0, 500), $http_code, $conv_id, $exec_time);
             break;
         }
 
@@ -303,6 +322,7 @@ PROMPT;
 
         if (!isset($result['candidates'][0]['content'])) {
             error_log("AI Gemini Unexpected Response Format: " . $response);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, $tokens_used, 'error', "Unexpected Response Format", $http_code, $conv_id, $exec_time);
             break; // Trả về text mặc định do lỗi
         }
 
@@ -564,6 +584,7 @@ PROMPT;
             // Không nhận diện FunctionCall nữa -> AI đã trả về phản hồi cuối
             if (!empty($text_response)) {
                 $final_response = $text_response;
+                log_ai_activity($db, 'client', $user_message, $final_response, $model_used, $tokens_used, 'success', '', 200, $conv_id, $exec_time);
             }
             break;
         }
