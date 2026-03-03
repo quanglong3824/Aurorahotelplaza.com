@@ -7,10 +7,11 @@
  */
 
 // Hàm ghi log chi tiết cho hệ thống AI (Success/Error/Usage)
-function log_ai_activity($db, $type, $prompt, $reply, $model, $tokens, $status, $error = '', $code = 200, $conv_id = 0, $exec_time = 0) {
+function log_ai_activity($db, $type, $prompt, $reply, $model, $tokens, $status, $error = '', $code = 200, $conv_id = 0, $exec_time = 0)
+{
     try {
         $stmt = $db->prepare("INSERT INTO ai_logs (ai_type, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code, execution_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$type, $conv_id, mb_substr($prompt, 0, 1000), mb_substr($reply, 0, 3000), $model, (int)$tokens, $status, $error, (int)$code, $exec_time]);
+        $stmt->execute([$type, $conv_id, mb_substr($prompt, 0, 1000), mb_substr($reply, 0, 3000), $model, (int) $tokens, $status, $error, (int) $code, $exec_time]);
     } catch (Exception $e) {
         error_log("Failed to write AI log: " . $e->getMessage());
     }
@@ -117,7 +118,7 @@ PROMPT;
 
 
     $contents = [
-        ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
+        ["role" => "user", "parts" => [["text" => $user_message]]]
     ];
 
     // Định nghĩa các tools (functions) mà AI có thể gọi
@@ -244,6 +245,9 @@ PROMPT;
 
     for ($i = 0; $i < $max_iterations; $i++) {
         $data = [
+            "system_instruction" => [
+                "parts" => [["text" => $system_prompt]]
+            ],
             "contents" => $contents,
             "tools" => $tools,
             "generationConfig" => [
@@ -256,7 +260,7 @@ PROMPT;
         ];
         $json_data = json_encode($data);
 
-        $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -294,7 +298,7 @@ PROMPT;
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -354,7 +358,7 @@ PROMPT;
             // Xử lý từng function
             if ($function_name === 'run_sql' && isset($function_args['sql'])) {
                 $sql = $function_args['sql'];
-                
+
                 // Bảo mật: Chỉ cho phép SELECT, SHOW, DESCRIBE (đọc dữ liệu)
                 // KHÔNG cho phép INSERT, UPDATE, DELETE, DROP, TRUNCATE từ client
                 if (preg_match('/^\s*(INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|CREATE|REPLACE)/i', $sql)) {
@@ -392,7 +396,7 @@ PROMPT;
                     ");
                     $stmt->execute(['room_type' => "%{$room_type}%"]);
                     $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    
+
                     // Lấy amenities cho mỗi phòng
                     foreach ($rooms as &$room) {
                         $stmtA = $db->prepare("
@@ -405,7 +409,7 @@ PROMPT;
                         $stmtA->execute(['slug' => $room['slug']]);
                         $room['amenities'] = $stmtA->fetchAll(PDO::FETCH_COLUMN);
                     }
-                    
+
                     $response_data = ["result" => $rooms];
                 } catch (Exception $e) {
                     $response_data = ["error" => $e->getMessage()];
@@ -415,7 +419,7 @@ PROMPT;
                 // Kiểm tra phòng trống theo ngày
                 $check_in = $function_args['check_in'] ?? null;
                 $check_out = $function_args['check_out'] ?? null;
-                
+
                 if (!$check_in || !$check_out) {
                     $response_data = ["error" => "Vui lòng cung cấp ngày check-in và check-out"];
                 } else {
@@ -440,14 +444,14 @@ PROMPT;
                 // Tra cứu booking
                 $phone = $function_args['phone'] ?? null;
                 $booking_code = $function_args['booking_code'] ?? null;
-                
+
                 if (!$phone && !$booking_code) {
                     $response_data = ["error" => "Vui lòng cung cấp số điện thoại HOẶC mã booking"];
                 } else {
                     try {
                         $conditions = []; // Khởi tạo array
                         $params = [];
-                        
+
                         if ($phone) {
                             $conditions[] = "guest_phone = :phone";
                             $params['phone'] = $phone;
@@ -456,7 +460,7 @@ PROMPT;
                             $conditions[] = "booking_code = :code";
                             $params['code'] = $booking_code;
                         }
-                        
+
                         // Nếu không có conditions (hiếm), fallback
                         if (empty($conditions)) {
                             $response_data = ["error" => "Vui lòng cung cấp thông tin tra cứu"];
@@ -473,7 +477,7 @@ PROMPT;
                             ");
                             $stmt->execute($params);
                             $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            
+
                             if (empty($bookings)) {
                                 $response_data = ["result" => [], "note" => "Không tìm thấy booking nào"];
                             } else {
@@ -533,7 +537,7 @@ PROMPT;
                 try {
                     $conditions = [];
                     $params = [];
-                    
+
                     if ($category !== 'all') {
                         $conditions[] = "category = :category";
                         $params['category'] = $category;
@@ -542,9 +546,9 @@ PROMPT;
                         $conditions[] = "question LIKE :question";
                         $params['question'] = "%{$question}%";
                     }
-                    
+
                     $where = !empty($conditions) ? 'WHERE ' . implode(' AND ', $conditions) : '';
-                    
+
                     $stmt = $db->prepare("
                         SELECT question, answer, category 
                         FROM faqs 
