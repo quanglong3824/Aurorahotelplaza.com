@@ -175,8 +175,8 @@ PROMPT;
     // Gọi Gemini API
     // ─────────────────────────────────────────────────────────────────────────
     $start_time = microtime(true);
-    $model_used = 'gemini-2.0-flash';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
+    $model_used = 'gemini-3-flash';
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
 
     $reqData = [
         "system_instruction" => [
@@ -211,48 +211,25 @@ PROMPT;
     if ($http_code === 429) {
         $errData = json_decode($response, true);
         $retryDelay = '60s';
-        if (isset($errData['error']['message']) && stripos($errData['error']['message'], 'per day') !== false) {
-            $retryDelay = '86400s';
-        } elseif (isset($errData['error']['details'])) {
+        if (isset($errData['error']['details'])) {
             foreach ($errData['error']['details'] as $detail) {
                 if (isset($detail['retryDelay']))
                     $retryDelay = $detail['retryDelay'];
             }
         }
 
-        $total_keys = count(get_all_valid_keys());
         $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
+        mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, 0, $exec_time);
 
-        for ($attempt = 1; $attempt < $total_keys; $attempt++) {
-            mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
-            log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, 0, $exec_time);
-
-            $new_key = rotate_gemini_key();
-            if (!$new_key || $new_key === $api_key) {
-                break;
-            }
+        $new_key = rotate_gemini_key();
+        if ($new_key && $new_key !== $api_key) {
             $api_key = $new_key;
             $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
             curl_setopt($ch, CURLOPT_URL, $url);
             $response = curl_exec($ch);
             $err = curl_error($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            if ($http_code !== 429) {
-                break;
-            }
-
-            $errData = json_decode($response, true);
-            $retryDelay = '60s';
-            if (isset($errData['error']['message']) && stripos($errData['error']['message'], 'per day') !== false) {
-                $retryDelay = '86400s';
-            } elseif (isset($errData['error']['details'])) {
-                foreach ($errData['error']['details'] as $detail) {
-                    if (isset($detail['retryDelay']))
-                        $retryDelay = $detail['retryDelay'];
-                }
-            }
-            $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
         }
     }
 
@@ -361,33 +338,23 @@ PROMPT;
 
             // Tự động Xoay Key nếu dính Quota (429) ở vòng lặp thứ 2
             if ($http_code2 === 429) {
-                $total_keys = count(get_all_valid_keys());
-                for ($attempt = 1; $attempt < $total_keys; $attempt++) {
-                    $errData2 = json_decode($response2, true);
-                    $retrySeconds2 = 60;
-                    if (isset($errData2['error']['message']) && stripos($errData2['error']['message'], 'per day') !== false) {
-                        $retrySeconds2 = 86400;
-                    } elseif (isset($errData2['error']['details'])) {
-                        foreach ($errData2['error']['details'] as $detail) {
-                            if (isset($detail['retryDelay']))
-                                $retrySeconds2 = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
-                        }
+                $errData2 = json_decode($response2, true);
+                $retrySeconds2 = 60;
+                if (isset($errData2['error']['details'])) {
+                    foreach ($errData2['error']['details'] as $detail) {
+                        if (isset($detail['retryDelay']))
+                            $retrySeconds2 = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
                     }
-                    mark_key_rate_limited(get_active_key_index(), $retrySeconds2 + 5);
+                }
+                mark_key_rate_limited(get_active_key_index(), $retrySeconds2 + 5);
 
-                    $new_key = rotate_gemini_key();
-                    if (!$new_key || $new_key === $api_key) {
-                        break;
-                    }
+                $new_key = rotate_gemini_key();
+                if ($new_key && $new_key !== $api_key) {
                     $api_key = $new_key;
                     $url2 = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
                     curl_setopt($ch2, CURLOPT_URL, $url2);
                     $response2 = curl_exec($ch2);
                     $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-
-                    if ($http_code2 !== 429) {
-                        break;
-                    }
                 }
             }
 

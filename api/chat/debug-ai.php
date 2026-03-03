@@ -28,7 +28,7 @@ $user_message = "Xin chào";
 echo "- Câu hỏi Test: '$user_message'\n";
 
 // Mình tự gọi nội tuyến để in thẳng kết quả Raw JSON Request ra màn hình dễ debug
-$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
+$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=" . $api_key;
 $data = [
     "contents" => [
         ["role" => "user", "parts" => [["text" => "Xin chào"]]]
@@ -45,16 +45,10 @@ $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 if ($http_code === 429) {
     echo "\n⚠️ LỖI QUOTA EXCEEDED (HTTP 429)! Đang thử Rotate sang Key Dự Phòng...\n";
-    $total_keys = count(get_all_valid_keys());
-
-    for ($attempt = 1; $attempt < $total_keys; $attempt++) {
-        $new_key = rotate_gemini_key();
-        if (!$new_key || $new_key === $api_key) {
-            echo "- KHÔNG CÓ KEY NÀO DỰ PHÒNG HOẶC ĐỀU HẾT QUOTA!\n";
-            break;
-        }
+    $new_key = rotate_gemini_key();
+    if ($new_key && $new_key !== $api_key) {
         $api_key = $new_key;
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=" . $api_key;
         curl_setopt($ch, CURLOPT_URL, $url);
         echo "- THỬ LẠI VỚI KEY: " . substr($new_key, 0, 10) . "...........\n";
         $response = curl_exec($ch);
@@ -62,8 +56,9 @@ if ($http_code === 429) {
 
         if ($http_code !== 429) {
             echo "- KẾT NỐI KEY MỚI THÀNH CÔNG!\n";
-            break;
         }
+    } else {
+        echo "- KHÔNG CÓ KEY NÀO DỰ PHÒNG HOẶC ĐỀU HẾT QUOTA!\n";
     }
 }
 
