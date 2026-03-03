@@ -252,10 +252,17 @@ PROMPT;
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
         curl_close($ch);
+
+        if ($curl_error) {
+            error_log("AI cURL Error: " . $curl_error);
+            break;
+        }
 
         // Xử lý Rate Limit (429) Của Gemini API
         if ($http_code === 429) {
+            error_log("AI Gemini Rate Limit (429) encountered.");
             $errData = json_decode($response, true);
             $retrySeconds = 60;
             if (isset($errData['error']['details'])) {
@@ -276,8 +283,14 @@ PROMPT;
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 $response = curl_exec($ch);
+                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
             }
+        }
+
+        if ($http_code !== 200) {
+            error_log("AI Gemini API Error (HTTP $http_code): " . $response);
+            break;
         }
 
         $result = json_decode($response, true);
@@ -288,8 +301,8 @@ PROMPT;
             log_key_usage(get_active_key_index(), $tokens_used, 'client');
         }
 
-        if (error_get_last() || !isset($result['candidates'][0]['content'])) {
-            error_log("Gemini Error: " . print_r($result, true));
+        if (!isset($result['candidates'][0]['content'])) {
+            error_log("AI Gemini Unexpected Response Format: " . $response);
             break; // Trả về text mặc định do lỗi
         }
 
