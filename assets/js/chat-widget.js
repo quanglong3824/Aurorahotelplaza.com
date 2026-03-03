@@ -434,7 +434,7 @@ const ChatWidget = {
     renderBubble(msg) {
         const isUser   = msg.sender_type === 'customer';
         const isSystem = msg.sender_type === 'system';
-        const isBot    = msg.sender_type === 'bot';
+        const isBot    = msg.sender_type === 'bot' || msg.sender_role === 'bot';
 
         if (isSystem) {
             return `<div class="cw-system-msg" data-msg-id="${msg.message_id}">${this.esc(msg.message)}</div>`;
@@ -451,24 +451,28 @@ const ChatWidget = {
             init = 'NV';
         }
 
-        // Parse booking UI if it's a bot message
+        // --- 1. Escape basic HTML first to prevent XSS ---
         let contentHtml = this.esc(msg.message);
         let extraUiHtml = '';
         
-        // --- Parse Markdown Images ---
-        // Converts ![alt text](url) into an actual <img> tag
+        // --- 2. Parse Markdown-style images ---
+        // Since we escaped the original message, we need to match the escaped brackets/parens if any,
+        // but wait, this.esc() only escapes &, <, >, ", \n.
+        // So Markdown ![alt](url) is still ![alt](url) but potentially with &amp; etc inside.
+        
         const imgRegex = /!\[([^\]]+)\]\(([^)]+)\)/g;
         contentHtml = contentHtml.replace(imgRegex, (match, alt, url) => {
             return `
-                <div style="margin-top:8px; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0;">
+                <div class="cw-msg-image-container" style="margin-top:8px; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0;">
                     <img src="${url}" alt="${alt}" style="width:100%; height:auto; display:block; object-fit:cover; max-height:200px;">
                     <div style="font-size:10px; color:#64748b; background:#f8fafc; padding:4px 8px; text-align:center;">${alt}</div>
                 </div>
             `;
         });
         
+        // --- 3. AI Specific UI Components ---
         if (isBot) {
-            // Check for success tag first
+            // Success booking button
             const successRegex = /\[BOOK_NOW_BTN_SUCCESS:\s*booking_code=([^,\]]+),\s*booking_id=([^\]]+)\]/i;
             const successMatch = contentHtml.match(successRegex);
             
@@ -476,89 +480,74 @@ const ChatWidget = {
                 const booking_code = successMatch[1].trim();
                 const booking_id = successMatch[2].trim();
                 contentHtml = contentHtml.replace(successMatch[0], '').trim();
-                extraUiHtml = `
-                    <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
-                        <div style="text-align:center; padding:10px 0;">
-                            <div style="color:#16a34a; font-weight:bold; margin-bottom:8px; font-size:14px;">✅ ĐẶT PHÒNG THÀNH CÔNG</div>
-                            <div style="font-size:16px; font-weight:bold; color:#ca8a04; margin-bottom:12px; letter-spacing:1px;">Mã: ${booking_code}</div>
-                            <a href="/profile/view-qrcode.php?id=${booking_id}" target="_blank" 
-                               style="display:inline-block; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
-                               MỞ XEM QR CODE
-                            </a>
-                        </div>
+                extraUiHtml += `
+                    <div class="cw-ai-card success" style="margin-top:12px; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; text-align:center;">
+                        <div style="color:#16a34a; font-weight:bold; margin-bottom:8px; font-size:14px;">✅ ĐẶT PHÒNG THÀNH CÔNG</div>
+                        <div style="font-size:16px; font-weight:bold; color:#ca8a04; margin-bottom:12px; letter-spacing:1px;">Mã: ${booking_code}</div>
+                        <a href="/profile/view-qrcode.php?id=${booking_id}" target="_blank" 
+                           class="cw-btn-primary" style="display:inline-block; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                           MỞ XEM QR CODE
+                        </a>
                     </div>
                 `;
-            } else {
-                // Not success, check for confirm tag
-                const bookRegex = /\[BOOK_NOW_BTN:\s*slug=([^,\]]+),\s*name=([^,\]]+),\s*cin=([^,\]]+),\s*cout=([^\]]+)\]/i;
-                const match = contentHtml.match(bookRegex);
-                
-                if (match) {
-                    const slug = match[1].trim();
-                    const name = match[2].trim();
-                    const cin = match[3].trim();
-                    const cout = match[4].trim();
-                    
-                    contentHtml = contentHtml.replace(match[0], '').trim();
-                    
-                    extraUiHtml += `
-                        <div style="margin-top:12px; padding:12px; background:#fefce8; border:1px solid #fef08a; border-radius:10px;">
-                            <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px; display:flex; align-items:center; gap:4px;">
-                               🎫 Xác nhận Đặt phòng Tự động
-                            </div>
-                            <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại phòng:</b> ${name}</div>
-                            <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày ở:</b> ${cin} - ${cout}</div>
-                            <button onclick="ChatWidget.confirmAiBooking('${slug}', '${cin}', '${cout}', ${msg.message_id}, this)" 
-                               style="display:block; width:100%; border:none; cursor:pointer; text-align:center; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; font-family:inherit; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3); transition:all 0.2s;">
-                               XÁC NHẬN & NHẬN MÃ QR
-                            </button>
-                            <div style="font-size:10px; color:#c2410c; text-align:center; margin-top:8px; font-style:italic;">Hệ thống sẽ chuyển hướng để bạn lưu lại mã đặt phòng. Vui lòng đưa mã này tại Lễ tân khi Check-in!</div>
-                        </div>
-                    `;
-                }
+            }
 
-                // Parse VIEW QR button
-                const qrRegex = /\[VIEW_QR_BTN:\s*code=([^,\]]+),\s*id=([^\]]+)\]/i;
-                const qrMatch = contentHtml.match(qrRegex);
-                if (qrMatch) {
-                    const qrcode = qrMatch[1].trim();
-                    const qrid = qrMatch[2].trim();
-                    contentHtml = contentHtml.replace(qrMatch[0], '').trim();
-                    extraUiHtml += `
-                        <div style="margin-top:8px; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px;">
-                            <div style="text-align:center; padding:5px 0;">
-                                <div style="color:#16a34a; font-weight:bold; margin-bottom:4px; font-size:13px;">✅ TÌM THẤY ĐƠN ĐẶT PHÒNG</div>
-                                <div style="font-size:14px; font-weight:bold; color:#ca8a04; margin-bottom:10px;">Mã: ${qrcode}</div>
-                                <a href="/profile/view-qrcode.php?id=${qrid}" target="_blank" 
-                                   style="display:inline-block; width:100%; text-align:center; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; padding:10px 0; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
-                                   <span style="display:flex; align-items:center; justify-content:center; gap:6px;">
-                                        <span class="material-symbols-outlined" style="font-size:16px;">qr_code_2</span> MỞ XEM QR CODE
-                                   </span>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                }
+            // Confirm booking button
+            const bookRegex = /\[BOOK_NOW_BTN:\s*slug=([^,\]]+),\s*name=([^,\]]+),\s*cin=([^,\]]+),\s*cout=([^\]]+)\]/i;
+            const match = contentHtml.match(bookRegex);
+            if (match) {
+                const slug = match[1].trim();
+                const name = match[2].trim();
+                const cin = match[3].trim();
+                const cout = match[4].trim();
+                contentHtml = contentHtml.replace(match[0], '').trim();
+                extraUiHtml += `
+                    <div class="cw-ai-card confirm" style="margin-top:12px; padding:12px; background:#fffbeb; border:1px solid #fef08a; border-radius:10px;">
+                        <div style="font-weight:bold; color:#854d0e; margin-bottom:8px; font-size:13px;">🎫 Xác nhận Đặt phòng</div>
+                        <div style="font-size:12px; color:#a16207; margin-bottom:4px;"><b>Loại:</b> ${name}</div>
+                        <div style="font-size:12px; color:#a16207; margin-bottom:12px;"><b>Ngày:</b> ${cin} - ${cout}</div>
+                        <button onclick="ChatWidget.confirmAiBooking('${slug}', '${cin}', '${cout}', ${msg.message_id}, this)" 
+                           style="display:block; width:100%; border:none; cursor:pointer; padding:10px; background:linear-gradient(135deg, #eab308, #ca8a04); color:#fff; border-radius:6px; font-weight:bold; font-size:12px; box-shadow:0 2px 5px rgba(234, 179, 8, 0.3);">
+                           XÁC NHẬN ĐẶT PHÒNG
+                        </button>
+                    </div>
+                `;
+            }
 
-                // Parse Link Buttons
-                const linkRegex = /\[LINK_BTN:\s*name=([^,\]]+),\s*url=([^\]]+)\]/gi;
-                let linkMatch;
-                let linkHtml = '';
-                while ((linkMatch = linkRegex.exec(contentHtml)) !== null) {
-                    const btnName = linkMatch[1].trim();
-                    const btnUrl = linkMatch[2].trim();
-                    linkHtml += `
-                        <a href="${btnUrl}" target="_blank" 
-                           style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; margin-top:8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; color:#3b82f6; text-decoration:none; font-size:13px; font-weight:600; transition:all 0.2s;">
-                           <span>${btnName}</span>
-                           <span class="material-symbols-outlined" style="font-size:16px; color:#94a3b8;">arrow_forward_ios</span>
+            // View QR button
+            const qrRegex = /\[VIEW_QR_BTN:\s*code=([^,\]]+),\s*id=([^\]]+)\]/i;
+            const qrMatch = contentHtml.match(qrRegex);
+            if (qrMatch) {
+                const qrcode = qrMatch[1].trim();
+                const qrid = qrMatch[2].trim();
+                contentHtml = contentHtml.replace(qrMatch[0], '').trim();
+                extraUiHtml += `
+                    <div class="cw-ai-card qr" style="margin-top:8px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; text-align:center;">
+                        <div style="color:#64748b; font-size:11px; margin-bottom:4px;">MÃ ĐẶT PHÒNG</div>
+                        <div style="font-size:16px; font-weight:bold; color:#1e293b; margin-bottom:10px;">${qrcode}</div>
+                        <a href="/profile/view-qrcode.php?id=${qrid}" target="_blank" 
+                           style="display:block; background:#3b82f6; color:#fff; padding:10px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold;">
+                           XEM MÃ QR CHECK-IN
                         </a>
-                    `;
-                }
-                if (linkHtml !== '') {
-                    extraUiHtml += `<div style="margin-top:10px;">${linkHtml}</div>`;
-                    contentHtml = contentHtml.replace(linkRegex, '').trim();
-                }
+                    </div>
+                `;
+            }
+
+            // Link buttons (multi-match)
+            const linkRegex = /\[LINK_BTN:\s*name=([^,\]]+),\s*url=([^\]]+)\]/gi;
+            let linkMatch;
+            let links = '';
+            while ((linkMatch = linkRegex.exec(contentHtml)) !== null) {
+                links += `
+                    <a href="${linkMatch[2].trim()}" target="_blank" 
+                       style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; margin-top:6px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; color:#2563eb; text-decoration:none; font-size:12px; font-weight:600;">
+                       <span>${linkMatch[1].trim()}</span>
+                       <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+                    </a>`;
+            }
+            if (links) {
+                extraUiHtml += `<div class="cw-link-btns" style="margin-top:10px;">${links}</div>`;
+                contentHtml = contentHtml.replace(linkRegex, '').trim();
             }
         }
 
@@ -576,9 +565,9 @@ const ChatWidget = {
 
         return `
             <div class="cw-bubble-row staff" data-msg-id="${msg.message_id}">
-                <div class="cw-staff-avatar-micro" ${isBot ? 'style="font-size:12px; font-weight:bold; color:#fff; background:linear-gradient(135deg, #4f46e5, #3b82f6);"' : ''}>${init}</div>
+                <div class="cw-staff-avatar-micro" ${isBot ? 'style="background:linear-gradient(135deg, #4f46e5, #3b82f6); color:#fff;"' : ''}>${init}</div>
                 <div>
-                    ${isBot ? '<div style="font-size:11px; color:#4f46e5; font-weight:bold; margin-bottom:2px">Aurora AI</div>' : ''}
+                    ${isBot ? '<div style="font-size:10px; color:#4f46e5; font-weight:bold; margin-bottom:2px; margin-left:4px;">Aurora AI</div>' : ''}
                     <div class="cw-bubble">${contentHtml}${extraUiHtml}</div>
                     <div class="cw-bubble-time">${time}</div>
                 </div>

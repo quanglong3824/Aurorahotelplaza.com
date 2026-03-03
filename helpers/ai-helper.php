@@ -46,11 +46,9 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             error_log("AI history load error: " . $e->getMessage());
         }
     }
-        // Đã được thay thế hoàn toàn bằng DB schema truyền trong System Prompt để AI tự gọi function `run_sql` giúp TỐI ƯU TOKEN tối đa.
-    }
 
     // 2. System Prompt - Tối ưu cho tốc độ & tiết kiệm token
-    $system_prompt = "
+    $system_prompt = <<<PROMPT
 Bạn là Aurora - Trợ lý ảo AI của Khách sạn Aurora Hotel Plaza.
 Nữ. Thân thiện. Chuyên nghiệp.
 
@@ -102,7 +100,8 @@ A: "Dạ tìm thấy booking:
 
 [LỊCH SỬ CHAT]
 {$history_context}
-    ";
+PROMPT;
+
 
     $contents = [
         ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
@@ -244,7 +243,7 @@ A: "Dạ tìm thấy booking:
         ];
         $json_data = json_encode($data);
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -270,7 +269,7 @@ A: "Dạ tìm thấy booking:
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
