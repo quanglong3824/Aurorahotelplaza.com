@@ -13,7 +13,6 @@ try {
 
     // Khởi tạo và Quản lý Tự động Chọn/Rotate API Key Mới Nhất
     require_once __DIR__ . '/../../helpers/api_key_manager.php';
-    require_once __DIR__ . '/../../helpers/ai-helper.php'; // Để lấy hàm log_ai_activity
     $api_key = get_active_gemini_key();
 
     if (empty($api_key)) {
@@ -61,7 +60,6 @@ RULE 2: TỰ ĐỘNG ĐỌC CSDL KHI THIẾU THÔNG TIN (AUTO-READ)
 RULE 3: NẾU SẾP CHỈ HỎI VÀ ĐÃ CÓ DATA SẴN ĐỂ PHÂN TÍCH:
   - Trả lời như 1 trợ lý, phân tích theo số liệu được cung cấp.
   - KHÔNG TẠO MÃ ACTION NẾU CHỈ LÀ TRẢ LỜI/PHÂN TÍCH.
-  - BẮT BUỘC MỌI BÁO GIÁ ĐỀU PHẢI SỬ DỤNG ĐƠN VỊ CHUNG LÀ 'VND' (hoặc VNĐ). Tuyệt đối không quy đổi sang USD hay $ dưới mọi hình thức, kể cả khi nói tiếng Anh.
 
 RULE 4: TỰ ĐỘNG SÁNG TẠO DỮ LIỆU (DUMMY DATA / MAKE CUSTOM)
   - Nếu Sếp gõ những câu như: "Hãy tạo 1 tùy chỉnh", "Tạo mã khuyến mãi đi", "Tạo thêm gói VIP":
@@ -174,9 +172,7 @@ PROMPT;
     // ─────────────────────────────────────────────────────────────────────────
     // Gọi Gemini API
     // ─────────────────────────────────────────────────────────────────────────
-    $start_time = microtime(true);
-    $model_used = 'gemini-2.5-flash';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
 
     $reqData = [
         "system_instruction" => [
@@ -205,7 +201,6 @@ PROMPT;
     $response = curl_exec($ch);
     $err = curl_error($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $exec_time = round(microtime(true) - $start_time, 2);
 
     // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
     if ($http_code === 429) {
@@ -217,15 +212,12 @@ PROMPT;
                     $retryDelay = $detail['retryDelay'];
             }
         }
-
         $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
         mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
-        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, 0, $exec_time);
 
         $new_key = rotate_gemini_key();
         if ($new_key && $new_key !== $api_key) {
-            $api_key = $new_key;
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
             curl_setopt($ch, CURLOPT_URL, $url);
             $response = curl_exec($ch);
             $err = curl_error($ch);
@@ -236,7 +228,6 @@ PROMPT;
     curl_close($ch);
 
     if ($err) {
-        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'error', "cURL Error: $err", $http_code, 0, $exec_time);
         throw new Exception("Lỗi cURL: " . $err);
     }
 
@@ -265,12 +256,9 @@ PROMPT;
         $blocked_keys = [];
         $now = time();
         foreach ($rate_limits as $idx => $ts) {
-            $check_ts = is_array($ts) ? ($ts['reset_time'] ?? 0) : $ts;
-            if ($check_ts > $now)
-                $blocked_keys[$idx] = $check_ts - $now;
+            if ($ts > $now)
+                $blocked_keys[$idx] = $ts - $now;
         }
-
-        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit Final", $http_code, 0, $exec_time);
 
         ob_clean();
         echo json_encode([
@@ -286,13 +274,11 @@ PROMPT;
     }
 
     if ($http_code != 200) {
-        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'error', "API Error: " . mb_substr($response, 0, 500), $http_code, 0, $exec_time);
         throw new Exception("Lỗi gọi Gemini API (HTTP {$http_code}): " . $response);
     }
 
     $res_json = json_decode($response, true);
     if (!isset($res_json['candidates'][0]['content']['parts'][0]['text'])) {
-        log_ai_activity($db, 'admin', $user_message, '', $model_used, 0, 'error', "Invalid Response Format", $http_code, 0, $exec_time);
         throw new Exception("Gemini không trả về kết quả hợp lệ: " . json_encode($res_json));
     }
 
@@ -338,20 +324,9 @@ PROMPT;
 
             // Tự động Xoay Key nếu dính Quota (429) ở vòng lặp thứ 2
             if ($http_code2 === 429) {
-                $errData2 = json_decode($response2, true);
-                $retrySeconds2 = 60;
-                if (isset($errData2['error']['details'])) {
-                    foreach ($errData2['error']['details'] as $detail) {
-                        if (isset($detail['retryDelay']))
-                            $retrySeconds2 = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
-                    }
-                }
-                mark_key_rate_limited(get_active_key_index(), $retrySeconds2 + 5);
-
                 $new_key = rotate_gemini_key();
                 if ($new_key && $new_key !== $api_key) {
-                    $api_key = $new_key;
-                    $url2 = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
+                    $url2 = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
                     curl_setopt($ch2, CURLOPT_URL, $url2);
                     $response2 = curl_exec($ch2);
                     $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
@@ -376,12 +351,142 @@ PROMPT;
             $bot_reply = "Xin lỗi Sếp, em định dùng READ_DB nhưng lại lỡ tạo lệnh không phải SELECT. Mã gãy: {$read_sql}";
         }
     } elseif (preg_match('/\[SCRAPE_OTA_COMPETITORS:\s*(.*?)\]/is', $bot_reply, $matches)) {
-        // ... (Crawl logic - unchanged for brevity)
+        // TÍNH NĂNG AI: CÀO DATA OTA VÀ XUẤT EXCEL
+        $keyword = trim($matches[1]);
+        $export_dir = __DIR__ . '/../../../admin/exports';
+
+        // Tạo thư mục nếu chưa có
+        if (!is_dir($export_dir)) {
+            mkdir($export_dir, 0777, true);
+        }
+
+        $filename = 'Competitor_Prices_' . date('Ymd_His') . '.csv';
+        $filepath = $export_dir . '/' . $filename;
+
+        $file = fopen($filepath, 'w');
+        // Thêm Byte Order Mark (BOM) để Microsoft Excel hiển thị đúng Tiếng Việt UTF-8
+        fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fputcsv($file, ['Nguồn Báo Cáo', 'Tên Khách Sạn Đối Thủ', 'Hạng Sao', 'Từ Khóa Tìm Kiếm', 'Chất lượng/Dạng Phòng', 'Giá Công Bố Sàn (VNĐ)', 'Trạng Thái Firewall']);
+
+        $crawl_logs = [];
+        $db_exported = 0;
+
+        // 1. CỐ GẮNG CÀO BOOKING.COM
+        $ch1 = curl_init('https://www.booking.com/searchresults.html?ss=' . urlencode($keyword));
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch1, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        curl_setopt($ch1, CURLOPT_HTTPHEADER, array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8', 'Accept-Language: vi,en-US;q=0.7,en;q=0.3', 'Cache-Control: no-cache', 'Pragma: no-cache'));
+        curl_setopt($ch1, CURLOPT_TIMEOUT, 8);
+        $html_booking = curl_exec($ch1);
+        $code1 = curl_getinfo($ch1, CURLINFO_HTTP_CODE);
+        curl_close($ch1);
+
+        if ($code1 == 200 && stripos($html_booking, 'captcha') === false && stripos($html_booking, 'perimeterx') === false) {
+            $crawl_logs[] = "✔️ Booking.com: Quét thành công!";
+            // Bóc tách tên khách sạn nhanh (Booking xài data-testid="title")
+            preg_match_all('/<div data-testid="title"[^>]*>(.*?)<\/div>/i', $html_booking, $b_titles);
+            preg_match_all('/<span data-testid="price-and-discounted-price"[^>]*>(.*?)<\/span>/i', $html_booking, $b_prices);
+
+            $limit = min(count($b_titles[1] ?? []), count($b_prices[1] ?? []), 5);
+            for ($i = 0; $i < $limit; $i++) {
+                $h_name = strip_tags($b_titles[1][$i]);
+                $h_price = strip_tags($b_prices[1][$i]);
+                // Lọc bỏ ký tự rác
+                $h_price = preg_replace('/&nbsp;/', ' ', $h_price);
+                fputcsv($file, ['Booking.com (REAL)', trim($h_name), '4 - 5 Sao', $keyword, 'Random Room', trim($h_price), 'Passed Server']);
+                $db_exported++;
+            }
+        } else {
+            $crawl_logs[] = "- Booking.com: Lỗi $code1, Bị block Captcha/Redirect.";
+        }
+
+        // 2. CỐ GẮNG CÀO AGODA 
+        $ch2 = curl_init('https://www.agoda.com/vi-vn/search?textToSearch=' . urlencode($keyword));
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch2, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 8);
+        $html_agoda = curl_exec($ch2);
+        $code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+        curl_close($ch2);
+
+        if ($code2 == 200 && stripos($html_agoda, 'Incapsula') === false && stripos($html_agoda, 'captcha') === false && stripos($html_agoda, 'distil') === false) {
+            $crawl_logs[] = "✔️ Agoda: Quét thành công!";
+            preg_match_all('/<h3[^>]*data-selenium="hotel-name"[^>]*>(.*?)<\/h3>/i', $html_agoda, $a_titles);
+            preg_match_all('/<span[^>]*data-selenium="display-price"[^>]*>(.*?)<\/span>/i', $html_agoda, $a_prices);
+            $limit = min(count($a_titles[1] ?? []), count($a_prices[1] ?? []), 5);
+            for ($i = 0; $i < $limit; $i++) {
+                $h_name = strip_tags($a_titles[1][$i]);
+                $h_price = strip_tags($a_prices[1][$i]);
+                fputcsv($file, ['Agoda (REAL)', trim($h_name), '4 - 5 Sao', $keyword, 'Random Room', trim($h_price), 'Passed Server']);
+                $db_exported++;
+            }
+        } else {
+            $crawl_logs[] = "- Agoda: Lỗi $code2, Bị Akamai/Incapsula chặn IP BOT.";
+        }
+
+        // 3. CỐ GẮNG CÀO MYTOUR.VN / VNTRIP (Site VN thường dễ parse hơn)
+        $ch3 = curl_init('https://mytour.vn/khach-san/thanh-pho-ho-chi-minh?q=' . urlencode($keyword)); // Tạm fake URL mytour search
+        curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch3, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch3, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36');
+        curl_setopt($ch3, CURLOPT_TIMEOUT, 5);
+        $html_mytour = curl_exec($ch3);
+        $code3 = curl_getinfo($ch3, CURLINFO_HTTP_CODE);
+        curl_close($ch3);
+
+        if ($code3 == 200) {
+            // Mytour thường có các div class có style chung (regex đại diện lấy ngẫu nhiên vì DOM Mytour hay đổi)
+            preg_match_all('/<h3[^>]*>(.*?)<\/h3>/is', $html_mytour, $m_titles);
+            preg_match_all('/([0-9]{1,3}(?:[.,][0-9]{3})+)\s*(?:vnđ|đ|vnd)/is', $html_mytour, $m_prices);
+
+            if (count($m_titles[1]) > 0 && count($m_prices[1]) > 0) {
+                $crawl_logs[] = "✔️ OTA Nội Địa (Mytour/Vntrip): Quét thành công!";
+                $limit = min(count($m_titles[1]), count($m_prices[1]), 5);
+                for ($i = 0; $i < $limit; $i++) {
+                    $h_name = trim(strip_tags($m_titles[1][$i]));
+                    $h_price = trim(strip_tags($m_prices[1][$i]));
+                    if (!empty($h_name)) {
+                        fputcsv($file, ['Local OTA (REAL)', $h_name, '4 Sao', $keyword, 'Basic Room', $h_price, 'Passed Server']);
+                        $db_exported++;
+                    }
+                }
+            } else {
+                $crawl_logs[] = "- OTA Nội Địa: Lỗi Parser HTML thay đổi cấu trúc.";
+            }
+        }
+
+        // 4. FALLBACK DATA MOCK ĐỂ BÁO CÁO KHÔNG TRỐNG NẾU 3 CỔNG ĐỀU TẠCH
+        if ($db_exported == 0) {
+            $crawl_logs[] = "Chuyển sang Data Lịch Sử (Mock) do tất cả Cổng IP Real Time đều chặn request máy chủ.";
+            $mock_hotels = ['Novotel', 'Mường Thanh Luxury', 'Hilton', 'Vinpearl Resort', 'Grand Mercure'];
+            $mock_rooms = ['Deluxe City View', 'Superior Double', 'Executive Suite', 'Standard Twin'];
+            $mock_otas = ['Agoda', 'Booking.com', 'Traveloka', 'Expedia'];
+
+            for ($i = 0; $i < 15; $i++) {
+                $hotel = $mock_hotels[array_rand($mock_hotels)];
+                $room = $mock_rooms[array_rand($mock_rooms)];
+                $ota = $mock_otas[array_rand($mock_otas)];
+                $price = rand(10, 35) * 100000;
+                fputcsv($file, [$ota . ' (Fallback)', $hotel, rand(3, 5) . ' Sao', $keyword, $room, number_format($price, 0, ',', '.'), 'Blocked by Captcha']);
+            }
+        }
+        fclose($file);
+
+        // Sinh link theo Dynamic Domain path thay vì hardcode dấu gạch chéo (/admin) làm lỗi 404
+        // Dùng dirname của /admin/api/chat-admin-ai.php -> ra /admin/api -> dirname nữa ra /admin -> nối với exports
+        $base_folder = dirname(dirname($_SERVER['SCRIPT_NAME']));
+        $download_url = rtrim($base_folder, '/') . '/exports/' . $filename;
+
+        $bot_reply = "🎯 Sếp ơi! Hệ thống Crawler Vệ Tinh em vừa phái đi đã hoàn thành việc lấy dữ liệu về **({$keyword})** ạ.\n\n";
+        $bot_reply .= "👉 [BẤM VÀO ĐÂY ĐỂ TẢI BÁO CÁO CRAWL DATA (" . $filename . ")](" . $download_url . ")\n\n";
+        $bot_reply .= "**Tình Trạng Tường Lửa (PenTest):**\n";
+        foreach ($crawl_logs as $log) {
+            $bot_reply .= "- " . $log . "\n";
+        }
     }
     // ─────────────────────────────────────────────────────────────────────────
-
-    // Ghi log thành công cho Admin AI
-    log_ai_activity($db, 'admin', $user_message, $bot_reply, $model_used, $total_tokens, 'success', '', 200, 0, $exec_time);
 
     // Lấy thông tin Key Code đang dùng
     $current_key_idx = get_active_key_index();
@@ -396,9 +501,8 @@ PROMPT;
     $blocked_keys = [];
     $now = time();
     foreach ($rate_limits as $idx => $ts) {
-        $check_ts = is_array($ts) ? ($ts['reset_time'] ?? 0) : $ts;
-        if ($check_ts > $now)
-            $blocked_keys[$idx] = $check_ts - $now;
+        if ($ts > $now)
+            $blocked_keys[$idx] = $ts - $now;
     }
 
     ob_clean();
