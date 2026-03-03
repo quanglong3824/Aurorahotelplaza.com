@@ -1,12 +1,11 @@
 /* Aurora Hotel Plaza - Main Stylesheet */
-/* Optimized for Performance & iOS Compatibility */
 
 /* Global Scale - Zoom toàn bộ website */
 html {
     zoom: 85%;
 }
 
-/* Smooth scroll với respect user preferences */
+/* Smooth scroll chỉ cho users who haven't disabled it */
 @media (prefers-reduced-motion: no-preference) {
     html {
         scroll-behavior: smooth;
@@ -14,13 +13,12 @@ html {
 }
 
 /* ============================================
-   MOBILE & iOS OPTIMIZATIONS
+   MOBILE: Chống zoom và giữ scale cố định
    ============================================ */
 @media (max-width: 768px) {
     html {
         touch-action: manipulation;
         -ms-touch-action: manipulation;
-        -webkit-overflow-scrolling: touch;
     }
 
     body {
@@ -30,8 +28,6 @@ html {
         -moz-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
         text-size-adjust: 100%;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
     }
 
     /* Chống zoom khi double-tap */
@@ -44,24 +40,6 @@ html {
     select,
     textarea {
         font-size: 16px !important;
-    }
-    
-    /* iOS Safari viewport fix */
-    .h-screen {
-        height: -webkit-fill-available;
-        height: 100vh;
-    }
-}
-
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
-    html {
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    body {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -76,41 +54,17 @@ html {
 }
 
 /* GPU-accelerated properties only */
-.gpu-accelerate,
-[class*="transition"],
-[class*="animate-"],
-.modal,
-.overlay,
-.dialog {
+.gpu-accelerate {
     will-change: transform, opacity;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
 }
 
-/* Smooth scrolling containers */
-.scroll-smooth {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-}
-
-/* Prevent iOS rubber band scrolling */
-.overscroll-none {
-    overscroll-behavior: none;
-    -webkit-overscroll-behavior: none;
-}
-
-/* Sticky header iOS fix */
-.sticky,
-[class*="sticky"] {
-    position: -webkit-sticky;
-    position: sticky;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-}
+/* Alternative method using transform (uncomment if zoom doesn't work) */
+/* body {
+    transform: scale(0.85);
+    transform-origin: top left;
+    width: 117.65%;
+} */
 
 /* CSS Variables */
 :root {
