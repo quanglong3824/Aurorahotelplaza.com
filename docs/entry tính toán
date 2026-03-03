@@ -1,27 +1,23 @@
-User chọn 3 người lớn
-      2          ↓
-      3    Label "Trẻ em" tối + disable
-      4    Trẻ em = 0
-      5          ↓
-      6    Ẩn section "Khách thêm"
-      7          ↓
-      8    Tự động tính:
-      9    - Phụ thu: 400k/đêm (người lớn 3)        
-     10    - Giường phụ: 650k/đêm (locked)
-     11          ↓
-     12    Tổng = Giá phòng + 400k + 650k × số đêm  
+# HƯỚNG DẪN LOGIC TÍNH TOÁN PHỤ THU & GIƯỜNG PHỤ
 
-      1 User chọn 2 người lớn + 1 trẻ em
-      2          ↓
-      3    Label "Trẻ em" sáng + enable
-      4    Trẻ em = 1
-      5          ↓
-      6    Hiện section "Khách thêm"
-      7    Hiện list với 1 entry
-      8          ↓
-      9    User click nút chiều cao:
-     10    - Dưới 1m → Miễn phí
-     11    - 1m-1m3 → 200k/đêm
-     12    - Trên 1m3 → 400k/đêm + warning giường phụ
-     13          ↓
-     14    Tổng = Giá phòng + phụ thu trẻ em + giường phụ (nếu có)
+## 1. Trường hợp User chọn 3 người lớn:
+- Label "Trẻ em" sẽ bị làm tối và vô hiệu hóa (disabled).
+- Số lượng trẻ em bị ép về 0.
+- Ẩn hoàn toàn section "Khách thêm" bên dưới.
+- Tự động áp dụng các khoản tính thêm:
++ Phụ thu người thứ 3: 400,000 VNĐ / đêm (locked).
++ Bắt buộc 1 giường phụ: 650,000 VNĐ / đêm (locked).
+- Công thức Final:
+=> Tổng tiền = Tiền phòng + [(Phụ thu 400k + Giường phụ 650k) × số đêm]
+
+## 2. Trường hợp User chọn 1-2 người lớn + 1 trẻ em:
+- Label "Trẻ em" sáng lên và cho phép điều chỉnh (enabled).
+- Khi chọn số lượng Trẻ em = 1:
+- Hiện section "Khách thêm".
+- Hiện danh sách với 1 entry để chọn chiều cao.
+- User tiến hành click chọn nút mức chiều cao cho trẻ:
++ Dưới 1m → Miễn phí.
++ Từ 1m đến 1m3 → Phụ thu 200,000 VNĐ / đêm.
++ Trên 1m3 → Phụ thu 400,000 VNĐ / đêm + Hiện cảnh báo khuyên dùng giường phụ.
+- Công thức Final:
+=> Tổng tiền = Tiền phòng + [(Phụ thu trẻ em + Tiền giường phụ nếu có) × số đêm]
