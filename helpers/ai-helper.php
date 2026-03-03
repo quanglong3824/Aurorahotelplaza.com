@@ -6,12 +6,26 @@
  * QUY TẮC: Không cung cấp auth, không tiết lộ giá, đọc thông tin chính xác
  */
 
+// Hàm ghi log chi tiết cho hệ thống AI (Success/Error/Usage)
+function log_ai_activity($db, $type, $prompt, $reply, $model, $tokens, $status, $error = '', $code = 200, $conv_id = 0, $exec_time = 0)
+{
+    try {
+        $stmt = $db->prepare("INSERT INTO ai_logs (ai_type, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code, execution_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$type, $conv_id, mb_substr($prompt, 0, 1000), mb_substr($reply, 0, 3000), $model, (int) $tokens, $status, $error, (int) $code, $exec_time]);
+    } catch (Exception $e) {
+        error_log("Failed to write AI log: " . $e->getMessage());
+    }
+}
+
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
     require_once __DIR__ . '/api_key_manager.php';
     $api_key = get_active_gemini_key();
+    $start_time = microtime(true);
+    $model_used = 'gemini-2.0-flash';
 
     if (empty($api_key)) {
+        log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', 'Missing API Key', 0, $conv_id);
         return "Xin lỗi, hệ thống chưa được cấu hình khóa API để Trợ lý ảo hoạt động.";
     }
 
@@ -46,11 +60,9 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
             error_log("AI history load error: " . $e->getMessage());
         }
     }
-        // Đã được thay thế hoàn toàn bằng DB schema truyền trong System Prompt để AI tự gọi function `run_sql` giúp TỐI ƯU TOKEN tối đa.
-    }
 
     // 2. System Prompt - Tối ưu cho tốc độ & tiết kiệm token
-    $system_prompt = "
+    $system_prompt = <<<PROMPT
 Bạn là Aurora - Trợ lý ảo AI của Khách sạn Aurora Hotel Plaza.
 Nữ. Thân thiện. Chuyên nghiệp.
 
@@ -102,10 +114,11 @@ A: "Dạ tìm thấy booking:
 
 [LỊCH SỬ CHAT]
 {$history_context}
-    ";
+PROMPT;
+
 
     $contents = [
-        ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nUser: " . $user_message]]]
+        ["role" => "user", "parts" => [["text" => $user_message]]]
     ];
 
     // Định nghĩa các tools (functions) mà AI có thể gọi
@@ -232,6 +245,9 @@ A: "Dạ tìm thấy booking:
 
     for ($i = 0; $i < $max_iterations; $i++) {
         $data = [
+            "system_instruction" => [
+                "parts" => [["text" => $system_prompt]]
+            ],
             "contents" => $contents,
             "tools" => $tools,
             "generationConfig" => [
@@ -244,7 +260,7 @@ A: "Dạ tìm thấy booking:
         ];
         $json_data = json_encode($data);
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -253,10 +269,20 @@ A: "Dạ tìm thấy booking:
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
         curl_close($ch);
+
+        $exec_time = round(microtime(true) - $start_time, 2);
+
+        if ($curl_error) {
+            error_log("AI cURL Error: " . $curl_error);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', "cURL Error: $curl_error", $http_code, $conv_id, $exec_time);
+            break;
+        }
 
         // Xử lý Rate Limit (429) Của Gemini API
         if ($http_code === 429) {
+            error_log("AI Gemini Rate Limit (429) encountered.");
             $errData = json_decode($response, true);
             $retrySeconds = 60;
             if (isset($errData['error']['details'])) {
@@ -266,19 +292,28 @@ A: "Dạ tìm thấy booking:
                 }
             }
             mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, $conv_id, $exec_time);
+
             $new_key = rotate_gemini_key();
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 $response = curl_exec($ch);
+                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
             }
+        }
+
+        if ($http_code !== 200) {
+            error_log("AI Gemini API Error (HTTP $http_code): " . $response);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', "API Error: " . mb_substr($response, 0, 500), $http_code, $conv_id, $exec_time);
+            break;
         }
 
         $result = json_decode($response, true);
@@ -289,8 +324,9 @@ A: "Dạ tìm thấy booking:
             log_key_usage(get_active_key_index(), $tokens_used, 'client');
         }
 
-        if (error_get_last() || !isset($result['candidates'][0]['content'])) {
-            error_log("Gemini Error: " . print_r($result, true));
+        if (!isset($result['candidates'][0]['content'])) {
+            error_log("AI Gemini Unexpected Response Format: " . $response);
+            log_ai_activity($db, 'client', $user_message, '', $model_used, $tokens_used, 'error', "Unexpected Response Format", $http_code, $conv_id, $exec_time);
             break; // Trả về text mặc định do lỗi
         }
 
@@ -322,7 +358,7 @@ A: "Dạ tìm thấy booking:
             // Xử lý từng function
             if ($function_name === 'run_sql' && isset($function_args['sql'])) {
                 $sql = $function_args['sql'];
-                
+
                 // Bảo mật: Chỉ cho phép SELECT, SHOW, DESCRIBE (đọc dữ liệu)
                 // KHÔNG cho phép INSERT, UPDATE, DELETE, DROP, TRUNCATE từ client
                 if (preg_match('/^\s*(INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|CREATE|REPLACE)/i', $sql)) {
@@ -360,7 +396,7 @@ A: "Dạ tìm thấy booking:
                     ");
                     $stmt->execute(['room_type' => "%{$room_type}%"]);
                     $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    
+
                     // Lấy amenities cho mỗi phòng
                     foreach ($rooms as &$room) {
                         $stmtA = $db->prepare("
@@ -373,7 +409,7 @@ A: "Dạ tìm thấy booking:
                         $stmtA->execute(['slug' => $room['slug']]);
                         $room['amenities'] = $stmtA->fetchAll(PDO::FETCH_COLUMN);
                     }
-                    
+
                     $response_data = ["result" => $rooms];
                 } catch (Exception $e) {
                     $response_data = ["error" => $e->getMessage()];
@@ -383,7 +419,7 @@ A: "Dạ tìm thấy booking:
                 // Kiểm tra phòng trống theo ngày
                 $check_in = $function_args['check_in'] ?? null;
                 $check_out = $function_args['check_out'] ?? null;
-                
+
                 if (!$check_in || !$check_out) {
                     $response_data = ["error" => "Vui lòng cung cấp ngày check-in và check-out"];
                 } else {
@@ -408,14 +444,14 @@ A: "Dạ tìm thấy booking:
                 // Tra cứu booking
                 $phone = $function_args['phone'] ?? null;
                 $booking_code = $function_args['booking_code'] ?? null;
-                
+
                 if (!$phone && !$booking_code) {
                     $response_data = ["error" => "Vui lòng cung cấp số điện thoại HOẶC mã booking"];
                 } else {
                     try {
                         $conditions = []; // Khởi tạo array
                         $params = [];
-                        
+
                         if ($phone) {
                             $conditions[] = "guest_phone = :phone";
                             $params['phone'] = $phone;
@@ -424,7 +460,7 @@ A: "Dạ tìm thấy booking:
                             $conditions[] = "booking_code = :code";
                             $params['code'] = $booking_code;
                         }
-                        
+
                         // Nếu không có conditions (hiếm), fallback
                         if (empty($conditions)) {
                             $response_data = ["error" => "Vui lòng cung cấp thông tin tra cứu"];
@@ -441,7 +477,7 @@ A: "Dạ tìm thấy booking:
                             ");
                             $stmt->execute($params);
                             $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            
+
                             if (empty($bookings)) {
                                 $response_data = ["result" => [], "note" => "Không tìm thấy booking nào"];
                             } else {
@@ -501,7 +537,7 @@ A: "Dạ tìm thấy booking:
                 try {
                     $conditions = [];
                     $params = [];
-                    
+
                     if ($category !== 'all') {
                         $conditions[] = "category = :category";
                         $params['category'] = $category;
@@ -510,9 +546,9 @@ A: "Dạ tìm thấy booking:
                         $conditions[] = "question LIKE :question";
                         $params['question'] = "%{$question}%";
                     }
-                    
+
                     $where = !empty($conditions) ? 'WHERE ' . implode(' AND ', $conditions) : '';
-                    
+
                     $stmt = $db->prepare("
                         SELECT question, answer, category 
                         FROM faqs 
@@ -552,6 +588,7 @@ A: "Dạ tìm thấy booking:
             // Không nhận diện FunctionCall nữa -> AI đã trả về phản hồi cuối
             if (!empty($text_response)) {
                 $final_response = $text_response;
+                log_ai_activity($db, 'client', $user_message, $final_response, $model_used, $tokens_used, 'success', '', 200, $conv_id, $exec_time);
             }
             break;
         }

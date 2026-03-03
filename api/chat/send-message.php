@@ -159,7 +159,13 @@ try {
             require_once '../../helpers/ai-helper.php';
 
             // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được và lịch sử ($conv_id)
-            $ai_reply = generate_ai_reply($message, $db, $conv_id);
+            try {
+                $ai_reply = generate_ai_reply($message, $db, $conv_id);
+                error_log("AI Reply generated: " . (string)$ai_reply);
+            } catch (Exception $e) {
+                error_log("AI Reply generation failed: " . $e->getMessage());
+                $ai_reply = null;
+            }
 
             if ($ai_reply) {
                 // Nhét câu phản hồi của AIBot vào DB

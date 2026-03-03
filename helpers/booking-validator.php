@@ -278,7 +278,7 @@ function autoCancelUnpaidBooking($booking_id) {
  * @return array ['allowed' => bool, 'message' => string, 'retry_after' => int]
  */
 function checkRateLimit($identifier, $max_requests = 5, $time_window = 60) {
-    $rate_limit_file = __DIR__ . '/../config/rate_limits.json';
+    $rate_limit_file = __DIR__ . '/../config/booking_rate_limits.json';
     
     // Load existing limits
     $limits = [];
