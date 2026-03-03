@@ -20,22 +20,38 @@ if (isset($_SESSION['user_id'])) {
 
 // ========== ANTI-SPAM: Server-side validation ==========
 // Check if user has pending bookings BEFORE allowing them to book
-$booking_spam_check = null;
 $spam_check_passed = true;
+$booking_block_message = '';
+$booking_block_bookings = [];
+
+// Get guest info from session OR POST (for form submissions)
+$guest_email = $_SESSION['guest_email'] ?? $_POST['guest_email'] ?? null;
+$guest_phone = $_SESSION['guest_phone'] ?? $_POST['guest_phone'] ?? null;
 
 if (isset($_SESSION['user_id'])) {
     // User đã đăng ký: check theo user_id
     $booking_spam_check = checkBookingSpam($_SESSION['user_id'], null, null);
-} elseif (isset($_SESSION['guest_email'])) {
-    // Guest: check theo email
-    $booking_spam_check = checkBookingSpam(null, $_SESSION['guest_email'], $_SESSION['guest_phone'] ?? null);
+    
+    if (!$booking_spam_check['allowed']) {
+        $spam_check_passed = false;
+        $booking_block_message = $booking_spam_check['message'];
+        $booking_block_bookings = $booking_spam_check['pending_bookings'];
+    }
+} elseif ($guest_email || $guest_phone) {
+    // Guest: check theo email/phone
+    $booking_spam_check = checkBookingSpam(null, $guest_email, $guest_phone);
+    
+    if (!$booking_spam_check['allowed']) {
+        $spam_check_passed = false;
+        $booking_block_message = $booking_spam_check['message'];
+        $booking_block_bookings = $booking_spam_check['pending_bookings'];
+    }
 }
 
-if ($booking_spam_check && !$booking_spam_check['allowed']) {
-    $spam_check_passed = false;
-    // Lưu error message để hiển thị
-    $_SESSION['booking_block_message'] = $booking_spam_check['message'];
-    $_SESSION['booking_block_bookings'] = $booking_spam_check['pending_bookings'];
+// Only set session if blocked (to show modal)
+if (!$spam_check_passed) {
+    $_SESSION['booking_block_message'] = $booking_block_message;
+    $_SESSION['booking_block_bookings'] = $booking_block_bookings;
 }
 // ========== END ANTI-SPAM ==========
 
@@ -133,56 +149,68 @@ foreach ($room_types as $room) {
         <?php include '../includes/header.php'; ?>
 
         <!-- ANTI-SPAM: Show block modal if user has pending bookings -->
-        <?php if (!$spam_check_passed && isset($_SESSION['booking_block_message'])): ?>
-        <div id="bookingBlockModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm" role="dialog" aria-modal="true">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-600 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700 sticky top-0 rounded-t-2xl">
+        <?php if (!$spam_check_passed && !empty($booking_block_message)): ?>
+        <div id="bookingBlockModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);" role="dialog" aria-modal="true">
+            <div class="relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 rounded-3xl shadow-2xl w-full max-w-lg border border-white/10 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()" style="box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+                <!-- Glass effect header -->
+                <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-red-600/80 to-red-700/80 sticky top-0 rounded-t-3xl backdrop-blur-md" style="backdrop-filter:blur(10px);">
                     <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                        <span class="material-symbols-outlined">block</span>
+                        <span class="material-symbols-outlined text-red-300">block</span>
                         Không thể đặt phòng
                     </h3>
+                    <div class="text-white/60 text-xs bg-white/10 px-2 py-1 rounded-lg backdrop-blur-sm">
+                        Anti-Spam Protection
+                    </div>
                 </div>
+                
                 <div class="p-6">
-                    <div class="mb-4">
-                        <p class="text-gray-700 dark:text-gray-300 mb-4 text-base">
-                            <?php echo htmlspecialchars($_SESSION['booking_block_message']); ?>
+                    <!-- Warning Icon -->
+                    <div class="text-center mb-4">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500/30 mb-3 backdrop-blur-sm">
+                            <span class="material-symbols-outlined text-3xl text-red-400">warning</span>
+                        </div>
+                        <p class="text-gray-200 text-base leading-relaxed">
+                            <?php echo htmlspecialchars($booking_block_message); ?>
                         </p>
                     </div>
                     
-                    <?php if (isset($_SESSION['booking_block_bookings']) && !empty($_SESSION['booking_block_bookings'])): ?>
+                    <?php if (!empty($booking_block_bookings)): ?>
                     <div class="mb-4">
-                        <h4 class="font-semibold text-red-600 mb-2 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">list</span>
-                            Đặt phòng chưa hoàn tất (<?php echo count($_SESSION['booking_block_bookings']); ?>):
+                        <h4 class="font-semibold text-red-400 mb-3 flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-base">list</span>
+                            Đặt phòng chưa hoàn tất (<?php echo count($booking_block_bookings); ?>):
                         </h4>
-                        <div class="space-y-2 max-h-48 overflow-y-auto">
-                            <?php foreach ($_SESSION['booking_block_bookings'] as $booking): ?>
-                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                        <div class="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-red-500/30 scrollbar-track-transparent">
+                            <?php foreach ($booking_block_bookings as $booking): ?>
+                            <div class="bg-white/5 hover:bg-white/10 rounded-xl p-3 border border-white/10 transition-all duration-200 backdrop-blur-sm">
                                 <div class="flex justify-between items-start mb-2">
-                                    <span class="font-semibold text-sm text-blue-600 dark:text-blue-400">
-                                        Mã: <?php echo htmlspecialchars($booking['booking_code']); ?>
+                                    <span class="font-semibold text-sm text-blue-300">
+                                        <span class="material-symbols-outlined text-xs align-middle mr-1">confirmation_number</span>
+                                        <?php echo htmlspecialchars($booking['booking_code']); ?>
                                     </span>
                                     <?php
-                                    $status_class = 'bg-gray-100 text-gray-800';
-                                    $status_label = $booking['status'];
-                                    if ($booking['status'] === 'pending') {
-                                        $status_class = 'bg-yellow-100 text-yellow-800';
-                                        $status_label = 'Chờ xác nhận';
-                                    } elseif ($booking['status'] === 'confirmed') {
-                                        $status_class = 'bg-blue-100 text-blue-800';
-                                        $status_label = 'Đã xác nhận';
-                                    } elseif ($booking['status'] === 'checked_in') {
-                                        $status_class = 'bg-green-100 text-green-800';
-                                        $status_label = 'Đang ở';
-                                    }
+                                    $status_config = [
+                                        'pending' => ['class' => 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30', 'label' => 'Chờ xác nhận'],
+                                        'confirmed' => ['class' => 'bg-blue-500/20 text-blue-300 border-blue-500/30', 'label' => 'Đã xác nhận'],
+                                        'checked_in' => ['class' => 'bg-green-500/20 text-green-300 border-green-500/30', 'label' => 'Đang ở']
+                                    ];
+                                    $config = $status_config[$booking['status']] ?? ['class' => 'bg-gray-500/20 text-gray-300 border-gray-500/30', 'label' => $booking['status']];
                                     ?>
-                                    <span class="text-xs px-2 py-1 rounded <?php echo $status_class; ?>">
-                                        <?php echo $status_label; ?>
+                                    <span class="text-xs px-2 py-1 rounded-lg border <?php echo $config['class']; ?> backdrop-blur-sm font-medium">
+                                        <?php echo $config['label']; ?>
                                     </span>
                                 </div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-                                    <div>📅 <?php echo htmlspecialchars($booking['check_in_date']); ?> → <?php echo htmlspecialchars($booking['check_out_date']); ?></div>
-                                    <div>💰 <?php echo number_format($booking['total_amount']); ?> VNĐ</div>
+                                <div class="text-xs text-gray-400 space-y-1.5 pl-6">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-xs text-amber-400">calendar_today</span>
+                                        <span><?php echo htmlspecialchars($booking['check_in_date']); ?></span>
+                                        <span class="text-gray-600">→</span>
+                                        <span><?php echo htmlspecialchars($booking['check_out_date']); ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-xs text-green-400">payments</span>
+                                        <span><?php echo number_format($booking['total_amount']); ?> VNĐ</span>
+                                    </div>
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -190,20 +218,36 @@ foreach ($room_types as $room) {
                     </div>
                     <?php endif; ?>
                     
-                    <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <h5 class="font-semibold text-blue-800 dark:text-blue-300 mb-2 text-sm">Bạn cần làm gì?</h5>
-                        <ul class="text-sm text-blue-700 dark:text-blue-400 space-y-1 list-disc list-inside">
-                            <li>Hoàn tất thanh toán cho đặt phòng cũ</li>
-                            <li>Chờ đến ngày trả phòng và trả phòng</li>
-                            <li>Liên hệ lễ tân: <strong>(0251) 391.8888</strong> để được hỗ trợ</li>
+                    <!-- Help Box - Liquid Glass -->
+                    <div class="mt-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 backdrop-blur-sm">
+                        <h5 class="font-semibold text-blue-300 mb-2 text-sm flex items-center gap-2">
+                            <span class="material-symbols-outlined text-base">help_outline</span>
+                            Bạn cần làm gì?
+                        </h5>
+                        <ul class="text-sm text-gray-300 space-y-1.5 list-none pl-2">
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
+                                <span>Hoàn tất thanh toán cho đặt phòng cũ</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
+                                <span>Chờ đến ngày trả phòng và trả phòng</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
+                                <span>Liên hệ lễ tân: <strong class="text-amber-300">(0251) 391.8888</strong></span>
+                            </li>
                         </ul>
                     </div>
                 </div>
-                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-gray-800 rounded-b-2xl">
-                    <a href="../index.php" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                
+                <!-- Footer Actions -->
+                <div class="px-6 py-4 border-t border-white/10 flex flex-col sm:flex-row justify-end gap-3 sticky bottom-0 bg-slate-900/90 backdrop-blur-md rounded-b-3xl">
+                    <a href="../index.php" class="px-5 py-2.5 text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 text-sm font-medium text-center backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-sm align-middle mr-1">home</span>
                         Về trang chủ
                     </a>
-                    <a href="../profile/bookings.php" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2">
+                    <a href="../profile/bookings.php" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl transition-all duration-200 text-sm font-medium inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 backdrop-blur-sm border border-blue-400/20">
                         <span class="material-symbols-outlined text-sm">list</span>
                         Xem đặt phòng của tôi
                     </a>
@@ -215,14 +259,6 @@ foreach ($room_types as $room) {
         unset($_SESSION['booking_block_message']);
         unset($_SESSION['booking_block_bookings']);
         ?>
-        <script>
-        // Prevent closing block modal
-        document.getElementById('bookingBlockModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                e.stopPropagation();
-            }
-        });
-        </script>
         <?php endif; ?>
         <!-- END ANTI-SPAM BLOCK MODAL -->
 

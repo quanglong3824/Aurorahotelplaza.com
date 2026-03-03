@@ -19,6 +19,12 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
     try {
         $db = getDB();
         
+        // Debug logging
+        error_log("=== BOOKING SPAM CHECK ===");
+        error_log("User ID: " . ($user_id ?? 'null'));
+        error_log("Guest Email: " . ($guest_email ?? 'null'));
+        error_log("Guest Phone: " . ($guest_phone ?? 'null'));
+        
         // Các trạng thái booking CHƯA HOÀN TẤT (không được đặt tiếp)
         $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
         
@@ -30,11 +36,21 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
             // User đã đăng ký: check theo user_id
             $where_conditions[] = "user_id = ?";
             $params[] = $user_id;
-        } else {
+            error_log("Checking user_id: $user_id");
+        } elseif ($guest_email || $guest_phone) {
             // Guest: check theo email hoặc phone
             $where_conditions[] = "(guest_email = ? OR guest_phone = ?)";
             $params[] = $guest_email;
             $params[] = $guest_phone;
+            error_log("Checking guest_email: $guest_email, guest_phone: $guest_phone");
+        } else {
+            // No identifier provided
+            error_log("No user_id, email, or phone provided - allowing booking");
+            return [
+                'allowed' => true,
+                'message' => '',
+                'pending_bookings' => []
+            ];
         }
         
         // Only check bookings that are NOT completed/cancelled
@@ -47,6 +63,9 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         
         $where_sql = implode(' AND ', $where_conditions);
         
+        error_log("SQL WHERE: $where_sql");
+        error_log("SQL Params: " . implode(', ', $params));
+        
         $stmt = $db->prepare("
             SELECT booking_id, booking_code, status, payment_status, check_in_date, check_out_date, 
                    total_amount, guest_name, guest_email, guest_phone, created_at,
@@ -57,6 +76,11 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         ");
         $stmt->execute($params);
         $pending_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        error_log("Found " . count($pending_bookings) . " pending bookings");
+        foreach ($pending_bookings as $pb) {
+            error_log("Booking: {$pb['booking_code']} - Status: {$pb['status']} - Payment: {$pb['payment_status']} - Minutes: {$pb['minutes_since_creation']}");
+        }
         
         // If no pending bookings, allow new booking
         if (empty($pending_bookings)) {
