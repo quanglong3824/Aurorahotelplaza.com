@@ -1401,11 +1401,54 @@ document.addEventListener('change', function (e) {
 });
 
 // Navigate to next step
-function nextStep(step) {
+async function nextStep(step) {
     // Validate current step
     if (!validateStep(currentStep)) {
         return;
     }
+
+    // ========== ANTI-SPAM: Check before step 3 ==========
+    if (step === 3 && !isInquiryMode) {
+        // Show loading
+        const continueBtn = event?.target;
+        const originalText = continueBtn?.innerHTML;
+        if (continueBtn) {
+            continueBtn.disabled = true;
+            continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang kiểm tra...';
+        }
+
+        try {
+            const validationResponse = await fetch('./api/validate-booking.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    check_in_date: document.getElementById('check_in_date')?.value,
+                    check_out_date: document.getElementById('check_out_date')?.value
+                })
+            });
+            
+            const validation = await validationResponse.json();
+            
+            if (!validation.allowed) {
+                // Show conflict modal and stop navigation
+                showBookingConflictModal(validation);
+                if (continueBtn) {
+                    continueBtn.disabled = false;
+                    continueBtn.innerHTML = originalText;
+                }
+                return; // Stop - don't go to step 3
+            }
+        } catch (error) {
+            console.error('Pre-validation error:', error);
+            // Continue if validation API fails (don't block legitimate users)
+        } finally {
+            if (continueBtn) {
+                continueBtn.disabled = false;
+                continueBtn.innerHTML = originalText;
+            }
+        }
+    }
+    // ========== END ANTI-SPAM ==========
 
     // Hide current step
     document.getElementById('step' + currentStep).classList.remove('active');
@@ -1805,18 +1848,26 @@ async function handleSubmit(e) {
 
     // ========== PRE-SUBMIT VALIDATION (Anti-spam) ==========
     // Check if user has existing bookings before submitting
+    let validation;
     try {
-        const validationResponse = await fetch('./api/validate-booking.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                check_in_date: data.check_in_date,
-                check_out_date: data.check_out_date
-            })
-        });
-        
-        const validation = await validationResponse.json();
-        
+        const validationResponse = await Promise.race([
+            fetch('./api/validate-booking.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    check_in_date: data.check_in_date,
+                    check_out_date: data.check_out_date
+                })
+            }),
+            // Timeout after 5 seconds
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Validation timeout')), 5000)
+            )
+        ]);
+
+        const validationData = await validationResponse.json();
+        validation = validationData;
+
         if (!validation.allowed) {
             // Show error modal with existing bookings
             showBookingConflictModal(validation);
@@ -1826,7 +1877,8 @@ async function handleSubmit(e) {
         }
     } catch (error) {
         console.error('Pre-validation error:', error);
-        // Continue with booking if validation API fails (don't block legitimate users)
+        // Continue with booking if validation API fails or times out (don't block legitimate users)
+        showToast('Không thể kiểm tra đặt phòng. Tiếp tục xử lý...', 'info');
     }
     // ========== END PRE-SUBMIT VALIDATION ==========
 
@@ -1887,17 +1939,22 @@ async function handleSubmit(e) {
 
 // Show Booking Conflict Modal (Anti-spam)
 function showBookingConflictModal(result) {
+    // Close any existing modal first
+    closeBookingConflictModal();
+    
     const modal = document.createElement('div');
     modal.id = 'bookingConflictModal';
-    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70';
+    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
     modal.innerHTML = `
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-500/30">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-500/30 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700 sticky top-0 rounded-t-2xl">
                 <h3 class="font-bold text-lg text-white flex items-center gap-2">
                     <span class="material-symbols-outlined">warning</span>
                     Không thể đặt phòng
                 </h3>
-                <button onclick="closeBookingConflictModal()" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
+                <button onclick="closeBookingConflictModal()" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-colors" aria-label="Đóng">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -1906,27 +1963,32 @@ function showBookingConflictModal(result) {
                     <p class="text-gray-700 dark:text-gray-300 mb-4">${result.message || 'Bạn đang có đặt phòng chưa hoàn tất.'}</p>
                 </div>
                 
-                ${result.existing_bookings && result.existing_bookings.length > 0 ? `
+                ${result.pending_bookings && result.pending_bookings.length > 0 ? `
                     <div class="mb-4">
                         <h4 class="font-semibold text-red-600 mb-2 flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">list</span>
-                            Đặt phòng hiện có:
+                            Đặt phòng chưa hoàn tất (${result.pending_bookings.length}):
                         </h4>
-                        <div class="space-y-2 max-h-60 overflow-y-auto">
-                            ${result.existing_bookings.map(booking => `
+                        <div class="space-y-2 max-h-48 overflow-y-auto">
+                            ${result.pending_bookings.map(booking => `
                                 <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                                     <div class="flex justify-between items-start mb-2">
                                         <span class="font-semibold text-sm text-blue-600 dark:text-blue-400">Mã: ${booking.booking_code}</span>
                                         <span class="text-xs px-2 py-1 rounded ${
                                             booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                                             booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 
+                                            booking.status === 'checked_in' ? 'bg-green-100 text-green-800' :
                                             'bg-gray-100 text-gray-800'
-                                        }">${booking.status === 'pending' ? 'Chờ xác nhận' : booking.status === 'confirmed' ? 'Đã xác nhận' : booking.status}</span>
+                                        }">${
+                                            booking.status === 'pending' ? 'Chờ xác nhận' : 
+                                            booking.status === 'confirmed' ? 'Đã xác nhận' : 
+                                            booking.status === 'checked_in' ? 'Đang ở' :
+                                            booking.status
+                                        }</span>
                                     </div>
                                     <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                                         <div>📅 ${booking.check_in_date} → ${booking.check_out_date}</div>
                                         <div>💰 ${parseInt(booking.total_amount).toLocaleString()} VNĐ</div>
-                                        <div>⏰ Đặt cách đây ${booking.minutes_since_creation} phút</div>
                                     </div>
                                 </div>
                             `).join('')}
@@ -1938,7 +2000,7 @@ function showBookingConflictModal(result) {
                     <div class="mb-4">
                         <h4 class="font-semibold text-orange-600 mb-2 flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">event_busy</span>
-                            Trùng lịch sử đặt:
+                            Trùng lịch sử đặt (${result.overlapping_bookings.length}):
                         </h4>
                         <div class="space-y-2">
                             ${result.overlapping_bookings.map(booking => `
@@ -1963,11 +2025,12 @@ function showBookingConflictModal(result) {
                     </ul>
                 </div>
             </div>
-            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-gray-800 rounded-b-2xl">
                 <button onclick="closeBookingConflictModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                     Đóng
                 </button>
-                <a href="../profile/bookings.php" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="../profile/bookings.php" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">list</span>
                     Xem đặt phòng của tôi
                 </a>
             </div>
@@ -1976,11 +2039,34 @@ function showBookingConflictModal(result) {
     
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden'; // Prevent scrolling
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeBookingConflictModal();
+        }
+    });
+    
+    // Handle ESC key
+    const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+            closeBookingConflictModal();
+        }
+    };
+    document.addEventListener('keydown', handleEsc);
+    
+    // Store cleanup function
+    modal.cleanup = () => {
+        document.removeEventListener('keydown', handleEsc);
+    };
 }
 
 function closeBookingConflictModal() {
     const modal = document.getElementById('bookingConflictModal');
     if (modal) {
+        if (modal.cleanup) {
+            modal.cleanup();
+        }
         modal.remove();
         document.body.style.overflow = '';
     }

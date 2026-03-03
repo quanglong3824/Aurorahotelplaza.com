@@ -2,6 +2,7 @@
 /**
  * Booking Validation API
  * Kiểm tra chống spam trước khi submit booking
+ * SIẾT CHẶT: Check user đã đăng ký và guest (email)
  */
 
 session_start();
@@ -33,9 +34,8 @@ $user_id = $_SESSION['user_id'] ?? null;
 $guest_email = $input_data['guest_email'] ?? $_SESSION['guest_email'] ?? null;
 $guest_phone = $input_data['guest_phone'] ?? $_SESSION['guest_phone'] ?? null;
 
-// If no email/phone provided, try to get from session or skip
+// If no email/phone provided and not logged in, skip validation
 if (!$guest_email && !$guest_phone && !$user_id) {
-    // Can't validate without user info, allow booking
     echo json_encode(['allowed' => true, 'message' => '']);
     exit;
 }
@@ -54,14 +54,16 @@ if (!$rate_limit['allowed']) {
     exit;
 }
 
-// 2. Check for existing unpaid/pending bookings
+// 2. Check for pending/incomplete bookings (SIẾT CHẶT)
+// User đã đăng ký: check theo user_id
+// Guest: check theo email/phone
 $spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
 
 if (!$spam_check['allowed']) {
     echo json_encode([
         'allowed' => false,
         'message' => $spam_check['message'],
-        'existing_bookings' => $spam_check['existing_bookings'],
+        'pending_bookings' => $spam_check['pending_bookings'],
         'type' => 'spam'
     ]);
     exit;

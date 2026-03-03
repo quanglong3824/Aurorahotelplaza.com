@@ -5,46 +5,45 @@
  */
 
 /**
- * Kiểm tra xem user có đang có booking chưa thanh toán/chờ xác nhận không
- * Nếu có -> Không cho đặt tiếp (trừ khi booking cũ đã expired)
+ * Kiểm tra xem user có đang có booking chưa hoàn tất không
+ * SIẾT CHẶT: Chỉ cho đặt tiếp khi TẤT CẢ booking cũ đã:
+ * - checked_out (đã trả phòng)
+ * - cancelled (đã hủy)
  * 
  * @param int|null $user_id User ID (nếu đăng nhập)
  * @param string $guest_email Email khách (nếu không đăng nhập)
  * @param string $guest_phone SĐT khách
- * @return array ['allowed' => bool, 'message' => string, 'existing_bookings' => array]
+ * @return array ['allowed' => bool, 'message' => string, 'pending_bookings' => array]
  */
 function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = null) {
     try {
         $db = getDB();
         
-        // Các trạng thái booking chưa hoàn tất
-        $pending_statuses = ['pending', 'confirmed']; // Chưa check-in
+        // Các trạng thái booking CHƯA HOÀN TẤT (không được đặt tiếp)
+        $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
         
         $where_conditions = [];
         $params = [];
         
         // Build WHERE clause based on available info
         if ($user_id) {
-            $where_conditions[] = "(user_id = ? OR guest_email = ? OR guest_phone = ?)";
+            // User đã đăng ký: check theo user_id
+            $where_conditions[] = "user_id = ?";
             $params[] = $user_id;
-            $params[] = $guest_email;
-            $params[] = $guest_phone;
         } else {
+            // Guest: check theo email hoặc phone
             $where_conditions[] = "(guest_email = ? OR guest_phone = ?)";
             $params[] = $guest_email;
             $params[] = $guest_phone;
         }
         
-        // Only check bookings that are not cancelled/completed
-        $placeholders = implode(',', array_fill(0, count($pending_statuses), '?'));
+        // Only check bookings that are NOT completed/cancelled
+        $placeholders = implode(',', array_fill(0, count($blocked_statuses), '?'));
         $where_conditions[] = "status IN ($placeholders)";
-        $params = array_merge($params, $pending_statuses);
+        $params = array_merge($params, $blocked_statuses);
         
-        // Only check future bookings (check_in_date >= today)
-        $where_conditions[] = "check_in_date >= CURDATE()";
-        
-        // Exclude bookings that are too old (created more than 30 minutes ago for unpaid)
-        $where_conditions[] = "(payment_status != 'unpaid' OR created_at >= DATE_SUB(NOW(), INTERVAL 30 MINUTE))";
+        // Only check future bookings or current active ones
+        $where_conditions[] = "(check_in_date >= CURDATE() OR status IN ('pending', 'confirmed', 'checked_in'))";
         
         $where_sql = implode(' AND ', $where_conditions);
         
@@ -57,55 +56,70 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
             ORDER BY created_at DESC
         ");
         $stmt->execute($params);
-        $existing_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pending_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // If no existing bookings, allow new booking
-        if (empty($existing_bookings)) {
+        // If no pending bookings, allow new booking
+        if (empty($pending_bookings)) {
             return [
                 'allowed' => true,
                 'message' => '',
-                'existing_bookings' => []
+                'pending_bookings' => []
             ];
         }
         
-        // Check if any booking is too recent (spam detection)
-        $recent_threshold_minutes = 5; // 5 phút
-        foreach ($existing_bookings as $booking) {
-            if ($booking['minutes_since_creation'] < $recent_threshold_minutes) {
+        // ========== AUTO-CANCEL: Cancel unpaid bookings after 30 minutes ==========
+        $has_active_bookings = false;
+        $bookings_to_cancel = [];
+        
+        foreach ($pending_bookings as $booking) {
+            // Auto-cancel unpaid bookings older than 30 minutes
+            if ($booking['payment_status'] === 'unpaid' && $booking['minutes_since_creation'] > 30) {
+                $bookings_to_cancel[] = $booking['booking_id'];
+            } else {
+                $has_active_bookings = true;
+            }
+        }
+        
+        // Perform auto-cancellation
+        if (!empty($bookings_to_cancel)) {
+            foreach ($bookings_to_cancel as $booking_id) {
+                autoCancelUnpaidBooking($booking_id);
+            }
+            
+            // Refresh the list after auto-cancel
+            $stmt->execute($params);
+            $pending_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // If all bookings were cancelled, allow new booking
+            if (empty($pending_bookings)) {
                 return [
-                    'allowed' => false,
-                    'message' => 'Bạn vừa đặt phòng cách đây chưa đầy 5 phút. Vui lòng chờ xác nhận hoặc hủy đặt phòng cũ trước khi đặt mới.',
-                    'existing_bookings' => $existing_bookings
+                    'allowed' => true,
+                    'message' => '',
+                    'pending_bookings' => []
                 ];
             }
         }
+        // ========== END AUTO-CANCEL ==========
         
-        // Check for unpaid bookings older than 30 minutes
-        foreach ($existing_bookings as $booking) {
-            if ($booking['payment_status'] === 'unpaid' && $booking['minutes_since_creation'] > 30) {
-                // Auto-cancel old unpaid booking
-                autoCancelUnpaidBooking($booking['booking_id']);
-            }
-        }
+        // Block completely - user has incomplete bookings
+        $count = count($pending_bookings);
+        $status_labels = [
+            'pending' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'checked_in' => 'Đang ở'
+        ];
         
-        // Refresh list after auto-cancel
-        $stmt->execute($params);
-        $existing_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // If still have bookings after cleanup, block new booking
-        if (!empty($existing_bookings)) {
-            $count = count($existing_bookings);
-            return [
-                'allowed' => false,
-                'message' => "Bạn đang có $count đặt phòng chưa hoàn tất (chờ xác nhận hoặc chưa thanh toán). Vui lòng hoàn tất thanh toán hoặc liên hệ lễ tân để hủy đặt phòng cũ trước khi đặt mới.",
-                'existing_bookings' => $existing_bookings
-            ];
+        $booking_details = [];
+        foreach ($pending_bookings as $booking) {
+            $status_label = $status_labels[$booking['status']] ?? $booking['status'];
+            $booking_details[] = "Mã {$booking['booking_code']} ($status_label)";
         }
         
         return [
-            'allowed' => true,
-            'message' => '',
-            'existing_bookings' => []
+            'allowed' => false,
+            'message' => "Bạn đang có $count đặt phòng chưa hoàn tất: " . implode(', ', $booking_details) . 
+                         ". Vui lòng hoàn tất thanh toán và trả phòng trước khi đặt phòng mới.",
+            'pending_bookings' => $pending_bookings
         ];
         
     } catch (Exception $e) {
@@ -114,7 +128,7 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         return [
             'allowed' => true,
             'message' => '',
-            'existing_bookings' => []
+            'pending_bookings' => []
         ];
     }
 }
