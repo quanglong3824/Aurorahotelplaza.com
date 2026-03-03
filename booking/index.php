@@ -358,11 +358,11 @@ foreach ($room_types as $room) {
                                         </div>
                                         <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-center">
                                             <div class="text-yellow-400 font-bold text-sm mb-1">1m - 1m3</div>
-                                            <div class="text-xs text-gray-300">200.000đ/đêm</div>
+                                            <div class="text-xs text-gray-300">200.000 VNĐ/đêm</div>
                                         </div>
                                         <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 text-center">
                                             <div class="text-orange-400 font-bold text-sm mb-1">Trên 1m3</div>
-                                            <div class="text-xs text-gray-300">400.000đ/đêm</div>
+                                            <div class="text-xs text-gray-300">400.000 VNĐ/đêm</div>
                                         </div>
                                     </div>
 
