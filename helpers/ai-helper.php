@@ -22,7 +22,7 @@ function generate_ai_reply($user_message, $db, $conv_id = 0)
     require_once __DIR__ . '/api_key_manager.php';
     $api_key = get_active_gemini_key();
     $start_time = microtime(true);
-    $model_used = 'gemini-1.5-flash';
+    $model_used = 'gemini-2.0-flash';
 
     if (empty($api_key)) {
         log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'error', 'Missing API Key', 0, $conv_id);
@@ -260,7 +260,7 @@ PROMPT;
         ];
         $json_data = json_encode($data);
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -298,7 +298,7 @@ PROMPT;
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
