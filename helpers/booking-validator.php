@@ -9,6 +9,7 @@
  * SIẾT CHẶT: Chỉ cho đặt tiếp khi TẤT CẢ booking cũ đã:
  * - checked_out (đã trả phòng)
  * - cancelled (đã hủy)
+ * - confirmed (đã xác nhận) - MỚI: Cho phép đặt tiếp sau khi xác nhận
  * 
  * @param int|null $user_id User ID (nếu đăng nhập)
  * @param string $guest_email Email khách (nếu không đăng nhập)
@@ -26,7 +27,8 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         error_log("Guest Phone: " . ($guest_phone ?? 'null'));
         
         // Các trạng thái booking CHƯA HOÀN TẤT (không được đặt tiếp)
-        $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
+        // MỚI: 'confirmed' đã cho phép đặt tiếp (không cần đợi checkout)
+        $blocked_statuses = ['pending', 'checked_in'];
         
         $where_conditions = [];
         $params = [];
@@ -53,13 +55,13 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
             ];
         }
         
-        // Only check bookings that are NOT completed/cancelled
+        // Only check bookings that are NOT completed/cancelled/confirmed
         $placeholders = implode(',', array_fill(0, count($blocked_statuses), '?'));
         $where_conditions[] = "status IN ($placeholders)";
         $params = array_merge($params, $blocked_statuses);
         
         // Only check future bookings or current active ones
-        $where_conditions[] = "(check_in_date >= CURDATE() OR status IN ('pending', 'confirmed', 'checked_in'))";
+        $where_conditions[] = "(check_in_date >= CURDATE() OR status IN ('pending', 'checked_in'))";
         
         $where_sql = implode(' AND ', $where_conditions);
         
@@ -129,7 +131,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         $count = count($pending_bookings);
         $status_labels = [
             'pending' => 'Chờ xác nhận',
-            'confirmed' => 'Đã xác nhận',
             'checked_in' => 'Đang ở'
         ];
         
