@@ -285,29 +285,56 @@ PROMPT;
             error_log("AI Gemini Rate Limit (429) encountered.");
             $errData = json_decode($response, true);
             $retrySeconds = 60;
-            if (isset($errData['error']['details'])) {
+
+            if (isset($errData['error']['message']) && stripos($errData['error']['message'], 'per day') !== false) {
+                $retrySeconds = 86400; // Block for 24 hours if Daily Quota is exceeded
+            } elseif (isset($errData['error']['details'])) {
                 foreach ($errData['error']['details'] as $detail) {
                     if (isset($detail['retryDelay']))
                         $retrySeconds = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
                 }
             }
-            mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
-            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, $conv_id, $exec_time);
 
-            $new_key = rotate_gemini_key();
-            if ($new_key && $new_key !== $api_key) {
-                // Đổi Key Mới Và Gọi lại
+            // Lặp lại nhiều key cho đến khi tìm được key thành công
+            $total_keys = count(get_all_valid_keys());
+            for ($attempt = 1; $attempt < $total_keys; $attempt++) {
+                mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
+
+                $new_key = rotate_gemini_key();
+                if (!$new_key || $new_key === $api_key) {
+                    break;
+                }
+
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $api_key;
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                $response = curl_exec($ch);
-                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_used}:generateContent?key=" . $api_key;
+                $ch_retry = curl_init($url);
+                curl_setopt($ch_retry, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                curl_setopt($ch_retry, CURLOPT_POSTFIELDS, $json_data);
+                curl_setopt($ch_retry, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch_retry, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch_retry);
+                $http_code = curl_getinfo($ch_retry, CURLINFO_HTTP_CODE);
+                curl_close($ch_retry);
+
+                if ($http_code !== 429) {
+                    break; // Thành công hoặc lỗi khác -> Thoát retry loop
+                }
+
+                // Nếu tiếp tục 429 cho key mới, phân tích retrySeconds của key mới
+                $errData = json_decode($response, true);
+                $retrySeconds = 60;
+                if (isset($errData['error']['message']) && stripos($errData['error']['message'], 'per day') !== false) {
+                    $retrySeconds = 86400;
+                } elseif (isset($errData['error']['details'])) {
+                    foreach ($errData['error']['details'] as $detail) {
+                        if (isset($detail['retryDelay']))
+                            $retrySeconds = (int) filter_var($detail['retryDelay'], FILTER_SANITIZE_NUMBER_INT) ?: 60;
+                    }
+                }
             }
+
+            // Ghi log lỗi rate limit
+            log_ai_activity($db, 'client', $user_message, '', $model_used, 0, 'rate_limit', "Rate Limit 429", $http_code, $conv_id, $exec_time);
         }
 
         if ($http_code !== 200) {
