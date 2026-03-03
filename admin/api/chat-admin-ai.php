@@ -176,7 +176,7 @@ PROMPT;
     // ─────────────────────────────────────────────────────────────────────────
     $start_time = microtime(true);
     $model_used = 'gemini-1.5-flash';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+    $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $api_key;
 
     $reqData = [
         "system_instruction" => [
@@ -223,7 +223,7 @@ PROMPT;
 
         $new_key = rotate_gemini_key();
         if ($new_key && $new_key !== $api_key) {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $new_key;
+            $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $new_key;
             curl_setopt($ch, CURLOPT_URL, $url);
             $response = curl_exec($ch);
             $err = curl_error($ch);
@@ -338,7 +338,7 @@ PROMPT;
             if ($http_code2 === 429) {
                 $new_key = rotate_gemini_key();
                 if ($new_key && $new_key !== $api_key) {
-                    $url2 = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $new_key;
+                    $url2 = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $new_key;
                     curl_setopt($ch2, CURLOPT_URL, $url2);
                     $response2 = curl_exec($ch2);
                     $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);

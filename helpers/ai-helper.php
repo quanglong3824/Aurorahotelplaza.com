@@ -256,7 +256,7 @@ PROMPT;
         ];
         $json_data = json_encode($data);
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+        $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $api_key;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
@@ -294,7 +294,7 @@ PROMPT;
             if ($new_key && $new_key !== $api_key) {
                 // Đổi Key Mới Và Gọi lại
                 $api_key = $new_key;
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+                $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $api_key;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
