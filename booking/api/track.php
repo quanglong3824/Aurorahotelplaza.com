@@ -80,5 +80,5 @@ try {
     }
 } catch (Exception $e) {
     error_log("Tracking Error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Đã xảy ra lỗi hệ thống.']);
+    echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
 }

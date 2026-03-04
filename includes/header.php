@@ -544,7 +544,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         } catch (err) {
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
-            showTrackError('Đã xảy ra lỗi, vui lòng thử lại sau.');
+            showTrackError('Đã xảy ra lỗi hệ thống: ' + err.message);
         }
     }
 
