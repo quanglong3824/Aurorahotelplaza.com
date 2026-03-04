@@ -245,10 +245,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                             <span class="material-symbols-outlined">stars</span>
                             <?php _e('nav.loyalty'); ?>
                         </a>
+                        <!-- Tạm ẩn menu Room Map
                         <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
                             <span class="material-symbols-outlined">map</span>
                             <?php _e('nav.room_map'); ?>
                         </a>
+                        -->
                         <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                             <div class="user-menu-divider"></div>
                             <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
@@ -1267,7 +1269,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     <h4>Hỗ trợ khách hàng</h4>
                     <p>Liên hệ hotline <strong>0251 3918 888</strong> hoặc email
                         <strong>info@aurorahotelplaza.com</strong> để được hỗ trợ 24/7. Bạn cũng có thể sử dụng chat AI
-                        ở góc dưới phải màn hình.</p>
+                        ở góc dưới phải màn hình.
+                    </p>
                     <span class="help-roadmap-badge">
                         <span class="material-symbols-outlined" style="font-size: 14px;">phone</span>
                         <span>24/7 Support</span>
