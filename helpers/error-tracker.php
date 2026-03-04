@@ -3,7 +3,7 @@
  * Aurora Hotel Plaza - AI Error Tracker
  * ======================================
  * Hệ thống bắt lỗi toàn bộ web và phân tích bằng AI
- * Gửi thông báo về Messenger qua Facebook API
+ * Gửi thông báo qua Telegram Bot
  */
 
 if (!defined('DB_NAME')) {
@@ -15,8 +15,8 @@ class AuroraErrorTracker
     private static $initialized = false;
     private static $db = null;
     private static $errorQueue = [];
-    private static $messengerPSID = null;   // Page-Scoped User ID nhận alert
-    private static $pageAccessToken = null; // Facebook Page Access Token
+    private static $telegramBotToken = null; // Telegram Bot Token
+    private static $telegramChatId = null; // Telegram Chat ID nhận alert
 
     /**
      * Khởi tạo Error Tracker - gọi sớm nhất có thể
@@ -26,8 +26,8 @@ class AuroraErrorTracker
         if (self::$initialized)
             return;
 
-        // Load cấu hình Messenger
-        self::loadMessengerConfig();
+        // Load cấu hình Telegram
+        self::loadTelegramConfig();
 
         // ─── PHP Error Handlers ───────────────────────────────────────
         set_error_handler([self::class, 'handlePhpError']);
@@ -43,36 +43,31 @@ class AuroraErrorTracker
     }
 
     /**
-     * Load cấu hình Messenger từ DB hoặc config
+     * Load cấu hình Telegram từ DB hoặc constants
      */
-    private static function loadMessengerConfig()
+    private static function loadTelegramConfig()
     {
-        // Lấy từ constants nếu đã được định nghĩa
-        if (defined('FB_MESSENGER_PSID')) {
-            self::$messengerPSID = FB_MESSENGER_PSID;
+        if (defined('TELEGRAM_BOT_TOKEN')) {
+            self::$telegramBotToken = TELEGRAM_BOT_TOKEN;
         }
-        if (defined('FB_PAGE_ACCESS_TOKEN')) {
-            self::$pageAccessToken = FB_PAGE_ACCESS_TOKEN;
+        if (defined('TELEGRAM_CHAT_ID')) {
+            self::$telegramChatId = TELEGRAM_CHAT_ID;
         }
 
-        // Cố gắng lấy từ DB nếu có
         try {
             $db = self::getDb();
             if ($db) {
-                $stmt = $db->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('fb_messenger_psid', 'fb_page_access_token') LIMIT 2");
+                $stmt = $db->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('telegram_bot_token', 'telegram_chat_id') LIMIT 2");
                 $stmt->execute();
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($rows as $row) {
-                    if ($row['setting_key'] === 'fb_messenger_psid') {
-                        self::$messengerPSID = $row['setting_value'];
-                    }
-                    if ($row['setting_key'] === 'fb_page_access_token') {
-                        self::$pageAccessToken = $row['setting_value'];
-                    }
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                    if ($row['setting_key'] === 'telegram_bot_token')
+                        self::$telegramBotToken = $row['setting_value'];
+                    if ($row['setting_key'] === 'telegram_chat_id')
+                        self::$telegramChatId = $row['setting_value'];
                 }
             }
         } catch (\Throwable $e) {
-            // Không thể lấy từ DB, dùng giá trị mặc định
+            // silent
         }
     }
 
@@ -284,7 +279,7 @@ class AuroraErrorTracker
             ]);
             $errorId = (int) $db->lastInsertId();
 
-            // Gửi phân tích AI và Messenger trong background (non-blocking)
+            // Gửi phân tích AI và Telegram trong background (non-blocking)
             if (in_array($severity, ['critical', 'error']) && $errorId) {
                 self::triggerAiAnalysis($errorId, $errorData);
             }
@@ -299,7 +294,7 @@ class AuroraErrorTracker
     }
 
     /**
-     * Kích hoạt AI phân tích lỗi và gửi Messenger
+     * Kích hoạt AI phân tích lỗi và gửi Telegram
      */
     private static function triggerAiAnalysis(int $errorId, array $errorData)
     {
@@ -365,8 +360,8 @@ PROMPT;
                             ->execute([$response, $errorId]);
                     }
 
-                    // Gửi Messenger
-                    self::sendMessengerAlert($errorId, $errorData, $response);
+                    // Gửi Telegram
+                    self::sendTelegramAlert($errorId, $errorData, $response);
                     return;
                 }
             }
@@ -407,16 +402,15 @@ PROMPT;
     }
 
     /**
-     * Gửi thông báo qua Facebook Messenger
+     * Gửi thông báo qua Telegram Bot
      */
-    private static function sendMessengerAlert(int $errorId, array $errorData, string $aiAnalysis)
+    private static function sendTelegramAlert(int $errorId, array $errorData, string $aiAnalysis)
     {
-        $psid = self::$messengerPSID;
-        $token = self::$pageAccessToken;
+        $token = self::$telegramBotToken;
+        $chatId = self::$telegramChatId;
 
-        if (empty($psid) || empty($token)) {
-            // Log để nhắc cấu hình
-            error_log('[ErrorTracker] Messenger PSID or Token not configured. Error #' . $errorId . ' not sent.');
+        if (empty($token) || empty($chatId)) {
+            error_log('[ErrorTracker] Telegram Bot Token or Chat ID not configured. Error #' . $errorId . ' not sent.');
             return false;
         }
 
@@ -425,35 +419,33 @@ PROMPT;
         $message = substr($errorData['message'] ?? '', 0, 200);
         $url = $errorData['url'] ?? '';
         $time = date('d/m/Y H:i:s');
+        $adminUrl = (defined('BASE_URL') ? BASE_URL : '') . "/admin/ai-bug.php?id=$errorId";
 
-        $emoji = match ($errorData['severity'] ?? '') {
-            'critical' => '🚨',
-            'error' => '❌',
-            'warning' => '⚠️',
-            default => 'ℹ️',
-        };
+        // Rút gọn AI analysis (Telegram hỗ trợ Markdown)
+        $shortAnalysis = substr(strip_tags($aiAnalysis), 0, 600);
 
-        // Rút gọn AI analysis
-        $shortAnalysis = substr(strip_tags($aiAnalysis), 0, 400);
-
-        $text = "$emoji *AURORA BUG ALERT* $emoji\n\n"
-            . "🆔 Bug #$errorId\n"
-            . "📌 Loại: $type\n"
-            . "🔴 Mức độ: $severity\n"
-            . "⏰ Thời gian: $time\n"
-            . "🌐 URL: $url\n\n"
-            . "💬 Lỗi: $message\n\n"
-            . "🤖 AI Phân tích:\n$shortAnalysis\n\n"
-            . "👉 Xem chi tiết: " . (defined('BASE_URL') ? BASE_URL : '') . "/admin/ai-bug.php?id=$errorId";
+        // Telegram hỗ trợ MarkdownV2 hoặc HTML — dùng HTML cho dễ
+        $text = "<b>AURORA BUG ALERT</b>\n"
+            . "<b>[{$severity}]</b> #{$errorId}\n"
+            . "\n"
+            . "<b>Loại:</b> {$type}\n"
+            . "<b>Thời gian:</b> {$time}\n"
+            . "<b>URL:</b> {$url}\n"
+            . "\n"
+            . "<b>Lỗi:</b>\n<code>" . htmlspecialchars($message) . "</code>\n"
+            . "\n"
+            . "<b>AI Phân tích:</b>\n" . htmlspecialchars($shortAnalysis) . "\n"
+            . "\n"
+            . "<a href=\"$adminUrl\">Xem chi tiet tren Admin</a>";
 
         $payload = json_encode([
-            'recipient' => ['id' => $psid],
-            'message' => ['text' => $text],
-            'messaging_type' => 'MESSAGE_TAG',
-            'tag' => 'ACCOUNT_UPDATE',
+            'chat_id' => $chatId,
+            'text' => $text,
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => true,
         ]);
 
-        $ch = curl_init("https://graph.facebook.com/v19.0/me/messages?access_token=$token");
+        $ch = curl_init("https://api.telegram.org/bot{$token}/sendMessage");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
@@ -468,7 +460,6 @@ PROMPT;
 
         $success = ($httpCode === 200);
 
-        // Cập nhật trạng thái gửi
         try {
             $db = self::getDb();
             if ($db) {
@@ -583,7 +574,7 @@ PROMPT;
                     SUM(CASE WHEN severity = 'error' THEN 1 ELSE 0 END) as error,
                     SUM(CASE WHEN severity = 'warning' THEN 1 ELSE 0 END) as warning,
                     SUM(CASE WHEN ai_analyzed = 1 THEN 1 ELSE 0 END) as ai_analyzed,
-                    SUM(CASE WHEN messenger_sent = 1 THEN 1 ELSE 0 END) as messenger_sent,
+                    SUM(CASE WHEN messenger_sent = 1 THEN 1 ELSE 0 END) as telegram_sent,
                     SUM(CASE WHEN created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR) THEN 1 ELSE 0 END) as last_24h,
                     SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
                  FROM error_logs"

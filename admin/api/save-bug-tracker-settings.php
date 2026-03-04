@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
 require_once '../../config/database.php';
 $db = getDB();
 
-$fields = ['fb_messenger_psid', 'fb_page_access_token', 'bug_tracker_enabled', 'bug_tracker_min_severity'];
+$fields = ['telegram_bot_token', 'telegram_chat_id', 'bug_tracker_enabled', 'bug_tracker_min_severity'];
 
 foreach ($fields as $key) {
     if (!isset($_POST[$key]))
