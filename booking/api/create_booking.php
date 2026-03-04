@@ -78,7 +78,7 @@ $spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
 if (!$spam_check['allowed']) {
     // Log spam attempt
     error_log("Booking spam detected - User: " . ($user_id ?? $guest_email) . " - Message: " . $spam_check['message']);
-    
+
     echo json_encode([
         'success' => false,
         'message' => $spam_check['message'],
@@ -435,7 +435,8 @@ try {
         'booking_id' => $booking_id,
         'booking_code' => $booking_code,
         'booking_type' => $booking_type,
-        'total_amount' => $total_amount
+        'total_amount' => $total_amount,
+        'is_guest' => !isset($_SESSION['user_id'])
     ];
 
     // For inquiry bookings, return a success message (no payment processing)

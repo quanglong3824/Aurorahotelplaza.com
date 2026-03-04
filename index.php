@@ -349,7 +349,8 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>        <?php _e('common.currency'); ?>
+                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>
+                                            <?php _e('common.currency'); ?>
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 
@@ -431,7 +432,8 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>        <?php _e('common.currency'); ?>
+                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>
+                                            <?php _e('common.currency'); ?>
                                             <span class="price-unit">/<?php _e('common.night'); ?></span>
                                         </div>
 
@@ -901,7 +903,54 @@ try {
 
     <!--  JavaScript -->
     <script src="<?php echo assetVersion('js/main.js'); ?>" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'track_booking') {
+                // Clear URL to prevent re-opening on refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
 
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (typeof toggleTrackForm === 'function') {
+                        toggleTrackForm(true);
+
+                        // Show tooltip
+                        const trackInput = document.getElementById('trackInput');
+                        if (trackInput) {
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'absolute bg-accent text-white font-bold text-xs px-3 py-2 rounded shadow-lg pointer-events-none z-[100] animate-bounce';
+                            tooltip.innerHTML = 'Theo dõi đơn đặt phòng của bạn tại đây! <div class="w-3 h-3 bg-accent absolute -left-1.5 top-1/2 -translate-y-1/2 rotate-45 sm:left-1/2 sm:-translate-x-1/2 sm:-top-1.5 sm:-translate-y-0 text-transparent">.</div>';
+
+                            // Align appropriately
+                            tooltip.style.right = '100%';
+                            tooltip.style.marginRight = '10px';
+                            tooltip.style.top = '50%';
+                            tooltip.style.transform = 'translateY(-50%)';
+
+                            // Adjust for mobile screens
+                            if (window.innerWidth < 640) {
+                                tooltip.style.right = 'auto';
+                                tooltip.style.left = '50%';
+                                tooltip.style.marginRight = '0';
+                                tooltip.style.top = '100%';
+                                tooltip.style.transform = 'translateX(-50%)';
+                                tooltip.style.marginTop = '10px';
+                            }
+
+                            trackInput.parentNode.appendChild(tooltip);
+
+                            setTimeout(() => {
+                                tooltip.style.opacity = '0';
+                                tooltip.style.transition = 'opacity 0.5s ease';
+                                setTimeout(() => tooltip.remove(), 500);
+                            }, 5000);
+                        }
+                    }
+                }, 500);
+            }
+        });
+    </script>
 </body>
 
 </html>

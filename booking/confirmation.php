@@ -322,9 +322,15 @@ try {
                                     <span class="material-symbols-outlined">check_circle</span>
                                     <span><?php _e('booking_confirmation.confirm_btn'); ?></span>
                                 </button>
-                                <a href="../profile/bookings.php" class="btn-secondary text-center">
-                                    <?php _e('booking_confirmation.back'); ?>
-                                </a>
+                                <?php if (!isset($_SESSION['user_id'])): ?>
+                                    <a href="../index.php?action=track_booking" class="btn-secondary text-center justify-center">
+                                        Xem danh sách
+                                    </a>
+                                <?php else: ?>
+                                    <a href="../profile/bookings.php" class="btn-secondary text-center justify-center">
+                                        <?php _e('booking_confirmation.back'); ?>
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         <?php else: ?>
                             <div class="bg-green-500/15 border border-green-500/30 rounded-lg p-4 mb-4">
@@ -333,9 +339,15 @@ try {
                                     <span><?php _e('booking_confirmation.success_message'); ?></span>
                                 </p>
                             </div>
-                            <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
-                                <?php _e('booking_confirmation.view_bookings'); ?>
-                            </a>
+                            <?php if (!isset($_SESSION['user_id'])): ?>
+                                <a href="../index.php?action=track_booking" class="btn-primary w-full justify-center">
+                                    Xem danh sách
+                                </a>
+                            <?php else: ?>
+                                <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
+                                    Lịch sử đặt phòng
+                                </a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
@@ -393,9 +405,15 @@ try {
                                     <span><?php echo addslashes(__('booking_confirmation.confirmed_mail_sent')); ?></span>
                                 </p>
                             </div>
-                            <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
-                                <?php echo addslashes(__('booking_confirmation.view_my_bookings')); ?>
+                            <?php if (!isset($_SESSION['user_id'])): ?>
+                            <a href="../index.php?action=track_booking" class="btn-primary w-full justify-center">
+                                Xem danh sách
                             </a>
+                            <?php else: ?>
+                            <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
+                                Lịch sử đặt phòng
+                            </a>
+                            <?php endif; ?>
                         `;
                             }, 1500);
                         } else {

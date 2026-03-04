@@ -1912,7 +1912,11 @@ async function handleSubmit(e) {
                 if (data.payment_method === 'vnpay' && result.payment_url) {
                     window.location.href = result.payment_url;
                 } else {
-                    window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                    if (result.is_guest) {
+                        window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                    } else {
+                        window.location.href = '../profile/bookings.php';
+                    }
                 }
             }
         } else {
