@@ -534,9 +534,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             confirmed: <?php echo json_encode(__('tracking.status_confirmed')); ?>,
             checked_in: <?php echo json_encode(__('tracking.status_checked_in')); ?>,
             checked_out: <?php echo json_encode(__('tracking.status_checked_out')); ?>,
-                cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
-                    no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
-                        pending: <?php echo json_encode(__('tracking.status_pending')); ?>
+            cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
+            no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
+            pending: <?php echo json_encode(__('tracking.status_pending')); ?>
         }
     };
 
@@ -759,11 +759,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     }
 
     .tracking-modal-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        position: fixed;
+        inset: 0;
         background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(4px);
     }
