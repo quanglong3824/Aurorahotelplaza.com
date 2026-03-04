@@ -133,7 +133,7 @@ class ContactEmailTemplates
             
             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 45px 35px; text-align: center;">
                 <p style="margin: 0 0 10px; font-size: 20px; color: #d4af37; font-weight: 700;">Aurora Hotel Plaza</p>
-                <p style="margin: 0 0 20px; font-size: 13px; color: #94a3b8; line-height: 1.7;">Số 253, Phạm Văn Thuận, KP2<br>Phường Tam Hiệp, Tỉnh Đồng Nai</p>
+                <p style="margin: 0 0 20px; font-size: 13px; color: #94a3b8; line-height: 1.7;">253, Phạm Văn Thuận, KP2<br>Phường Tam Hiệp, Tỉnh Đồng Nai</p>
                 <div style="margin: 20px 0; padding: 15px 0; border-top: 1px solid rgba(148, 163, 184, 0.2); border-bottom: 1px solid rgba(148, 163, 184, 0.2);">
                     <a href="tel:+842513918888" style="color: #d4af37; text-decoration: none; font-size: 14px;">(+84-251) 391 8888</a>
                     <span style="color: #475569; margin: 0 15px;">•</span>

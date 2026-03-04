@@ -239,7 +239,7 @@ $page_title = __('privacy.title');
                                         <div class="space-y-3">
                                             <p class="flex items-center gap-3">
                                                 <span class="material-symbols-outlined text-accent">location_on</span>
-                                                Số 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, TP. Biên Hòa, Đồng Nai
+                                                253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai
                                             </p>
                                             <p class="flex items-center gap-3">
                                                 <span class="material-symbols-outlined text-accent">phone</span>

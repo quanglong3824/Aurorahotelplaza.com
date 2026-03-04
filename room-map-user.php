@@ -239,7 +239,7 @@ $total_rooms = array_sum($stats);
                 <div class="mt-4 flex flex-wrap gap-4 text-sm">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-accent">location_on</span>
-                        <span>253 Phạm Văn Thuận, Tam Hiệp, Biên Hòa, Đồng Nai</span>
+                        <span>253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-accent">phone</span>

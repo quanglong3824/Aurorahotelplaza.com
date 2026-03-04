@@ -493,7 +493,7 @@ return [
         'learn_more' => 'Learn More',
         'our_story' => 'Our Story',
         'story_title' => 'The Premier Luxury Hotel in Dong Nai',
-        'story_p1' => 'Aurora Hotel Plaza is located at the prime address of 253 Pham Van Thuan, Tam Hiep Ward, Bien Hoa City, Dong Nai Province. With modern and luxurious design, we are proud to offer our guests a 4-star hospitality experience.',
+        'story_p1' => 'Aurora Hotel Plaza is located at the prime address of 253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province. With modern and luxurious design, we are proud to offer our guests a 4-star hospitality experience.',
         'story_p2' => 'Built with the vision of becoming the leading destination for both tourists and business travelers, Aurora Hotel Plaza perfectly combines modern amenities with traditional Vietnamese beauty. Every detail in the hotel is meticulously crafted to bring maximum satisfaction to our guests.',
         'story_p3' => 'With a professional, dedicated staff and world-class amenities, we are committed to providing you with a memorable and complete vacation.',
         'rooms_apartments' => 'Rooms & Apartments',

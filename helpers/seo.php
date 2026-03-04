@@ -129,7 +129,7 @@ class SEO {
             'email' => 'info@aurorahotelplaza.com',
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => '123 Phạm Văn Thuận',
+                'streetAddress' => '253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai',
                 'addressLocality' => 'Biên Hòa',
                 'addressRegion' => 'Đồng Nai',
                 'postalCode' => '810000',
@@ -271,7 +271,7 @@ class SEO {
             'description' => 'Khách sạn 4 sao sang trọng tại Biên Hòa',
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => '123 Phạm Văn Thuận',
+                'streetAddress' => '253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai',
                 'addressLocality' => 'Biên Hòa',
                 'addressRegion' => 'Đồng Nai',
                 'postalCode' => '810000',
