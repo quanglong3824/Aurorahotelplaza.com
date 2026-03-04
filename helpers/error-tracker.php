@@ -306,14 +306,53 @@ class AuroraErrorTracker
     }
 
     /**
-     * Kích hoạt gửi Telegram ngay + AI phân tích
-     * KHÔNG dùng shutdown function — không đáng tin trên LiteSpeed/shared hosting
+     * Kích hoạt gửi Telegram và AI phân tích ngầm (Background Task)
+     * Dùng cURL timeout thấp để không làm chậm request chính của người dùng
      */
     private static function triggerAiAnalysis(int $errorId, array $errorData)
     {
-        // Gửi Telegram ngay lập tức (synchronous ~1-2 giây)
-        // Chấp nhận delay nhỏ — quan trọng hơn là admin nhận được alert
-        self::analyzeWithAiAndNotify($errorId, $errorData);
+        try {
+            // Lấy schema và host hiện tại để gọi URL nội bộ
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+            // Tìm root folder (trong TH code ném vô folder sub như /2025/ hoặc localhost/Github/...)
+            // BASE_URL nếu đã định nghĩa hoặc dùng fallback tự tính
+            if (defined('BASE_URL')) {
+                $baseUrl = rtrim(BASE_URL, '/');
+            } else {
+                // Tự đoán path từ /admin/api/ (chỉ nên dùng fallback nếu không có BASE_URL)
+                $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+                // Loại bỏ 'booking/api', 'admin/api', 'api' khỏi đuôi
+                $subfolder = preg_replace('#/(booking|admin)?\/?api/?$#', '', $scriptName);
+                $baseUrl = $protocol . '://' . $host . $subfolder;
+            }
+
+            $bgUrl = $baseUrl . '/admin/api/ai-bg-task.php';
+
+            $postData = http_build_query([
+                'secret' => md5('aurora_bg_secret_key'),
+                'error_id' => $errorId,
+                'error_data' => json_encode($errorData, JSON_UNESCAPED_UNICODE)
+            ]);
+
+            $ch = curl_init($bgUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $postData,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 1, // FIRE & FORGET (1 giây)
+                CURLOPT_NOSIGNAL => 1,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_SSL_VERIFYPEER => false
+            ]);
+
+            curl_exec($ch); // Không chờ kết quả
+            curl_close($ch);
+        } catch (\Throwable $e) {
+            // Fallback nếu cURL lỗi: chạy inline (sẽ làm chậm)
+            self::analyzeWithAiAndNotify($errorId, $errorData);
+        }
     }
 
     /**
