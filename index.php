@@ -47,7 +47,7 @@ $latest_posts = [];
 try {
     $db = getDB();
     $stmt = $db->prepare("
-        SELECT p.title, p.slug, p.excerpt, p.featured_image, p.published_at, u.full_name as author_name
+        SELECT p.title, p.title_en, p.slug, p.excerpt, p.excerpt_en, p.featured_image, p.published_at, u.full_name as author_name
         FROM blog_posts p
         LEFT JOIN users u ON p.author_id = u.user_id
         WHERE p.status = 'published'
@@ -65,7 +65,7 @@ $customer_reviews = [];
 try {
     $db = getDB();
     $stmt = $db->prepare("
-        SELECT r.*, u.full_name, rt.type_name
+        SELECT r.*, u.full_name, rt.type_name, rt.type_name_en
         FROM reviews r
         LEFT JOIN users u ON r.user_id = u.user_id
         LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
@@ -659,7 +659,7 @@ try {
                                         $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
                                         ?>
                                         <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
-                                            alt="<?php echo htmlspecialchars($post['title']); ?>" loading="lazy"
+                                            alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" loading="lazy"
                                             onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         <div class="absolute top-3 left-3 glass-badge text-xs">
@@ -681,10 +681,10 @@ try {
                                         </div>
                                         <h3
                                             class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
-                                            <?php echo htmlspecialchars($post['title']); ?>
+                                            <?php echo htmlspecialchars(_f($post, 'title')); ?>
                                         </h3>
                                         <p class="text-sm text-white/70 line-clamp-3 mb-4">
-                                            <?php echo htmlspecialchars($post['excerpt']); ?>
+                                            <?php echo htmlspecialchars(_f($post, 'excerpt')); ?>
                                         </p>
                                         <div
                                             class="mt-auto pt-4 border-t border-white/10 flex items-center text-accent text-sm font-semibold group-hover:translate-x-1 transition-transform">
@@ -950,7 +950,7 @@ try {
                             // Position the tooltip above the input
                             const rect = trackInput.getBoundingClientRect();
                             const isMobile = window.innerWidth < 640;
-                            
+
                             if (isMobile) {
                                 // Mobile: show below the input
                                 tooltip.style.left = '50%';

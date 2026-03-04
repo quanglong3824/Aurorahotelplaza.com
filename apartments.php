@@ -246,10 +246,10 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                             </div>
 
                                             <div class="apt-info">
-                                                <h3 class="apt-name"><?php echo htmlspecialchars($apt['type_name']); ?></h3>
+                                                <h3 class="apt-name"><?php echo htmlspecialchars(_f($apt, 'type_name')); ?></h3>
 
-                                                <?php if ($apt['short_description']): ?>
-                                                    <p class="apt-desc"><?php echo htmlspecialchars($apt['short_description']); ?></p>
+                                                <?php if ($short_desc = _f($apt, 'short_description')): ?>
+                                                    <p class="apt-desc"><?php echo htmlspecialchars($short_desc); ?></p>
                                                 <?php endif; ?>
 
                                                 <div class="specs-grid">

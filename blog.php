@@ -16,7 +16,7 @@ try {
     $db = getDB();
 
     // Core Query Parts
-    $select = "SELECT p.*, u.full_name as author_name, bc.category_name, bc.slug as category_slug,
+    $select = "SELECT p.*, u.full_name as author_name, bc.category_name, bc.category_name_en, bc.slug as category_slug,
                (SELECT COUNT(*) FROM blog_comments WHERE post_id = p.post_id AND status = 'approved') as comment_count";
     $from = "FROM blog_posts p 
              LEFT JOIN users u ON p.author_id = u.user_id 
@@ -45,7 +45,7 @@ try {
     $posts = $stmt->fetchAll();
 
     // Fetch Categories
-    $stmt = $db->query("SELECT category_name, slug FROM blog_categories ORDER BY sort_order ASC, category_name ASC");
+    $stmt = $db->query("SELECT category_name, category_name_en, slug FROM blog_categories ORDER BY sort_order ASC, category_name ASC");
     $categories = $stmt->fetchAll();
 
 } catch (Exception $e) {
@@ -112,7 +112,7 @@ try {
                             <?php foreach ($categories as $cat): ?>
                                 <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
                                     class="category-tag <?php echo $category_slug === $cat['slug'] ? 'active' : ''; ?>">
-                                    <?php echo htmlspecialchars($cat['category_name']); ?>
+                                    <?php echo htmlspecialchars(_f($cat, 'category_name')); ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>
@@ -134,7 +134,7 @@ try {
                                             </div>
                                             <?php if (!empty($post['category_name'])): ?>
                                                 <span class="blog-category-badge">
-                                                    <?php echo htmlspecialchars($post['category_name']); ?>
+                                                    <?php echo htmlspecialchars(_f($post, 'category_name')); ?>
                                                 </span>
                                             <?php endif; ?>
                                         </div>
@@ -157,10 +157,10 @@ try {
                                                 <?php endif; ?>
                                             </div>
 
-                                            <h3 class="blog-title"><?php echo htmlspecialchars($post['title']); ?></h3>
+                                            <h3 class="blog-title"><?php echo htmlspecialchars(_f($post, 'title')); ?></h3>
 
                                             <?php if ($post['excerpt']): ?>
-                                                <p class="blog-excerpt"><?php echo htmlspecialchars($post['excerpt']); ?></p>
+                                                <p class="blog-excerpt"><?php echo htmlspecialchars(_f($post, 'excerpt')); ?></p>
                                             <?php endif; ?>
 
                                             <span class="blog-read-more">

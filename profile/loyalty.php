@@ -16,7 +16,7 @@ try {
 
     // Get user loyalty information
     $stmt = $db->prepare("
-        SELECT ul.*, mt.tier_name, mt.tier_level, mt.discount_percentage, mt.benefits, mt.color_code, mt.min_points,
+        SELECT ul.*, mt.tier_name, mt.tier_name_en, mt.tier_level, mt.discount_percentage, mt.benefits, mt.benefits_en, mt.color_code, mt.min_points,
                (SELECT MIN(min_points) FROM membership_tiers WHERE min_points > ul.current_points) as next_tier_points
         FROM user_loyalty ul
         LEFT JOIN membership_tiers mt ON ul.tier_id = mt.tier_id
@@ -32,7 +32,7 @@ try {
 
         // Get the created record
         $stmt = $db->prepare("
-            SELECT ul.*, mt.tier_name, mt.tier_level, mt.discount_percentage, mt.benefits, mt.color_code, mt.min_points,
+            SELECT ul.*, mt.tier_name, mt.tier_name_en, mt.tier_level, mt.discount_percentage, mt.benefits, mt.benefits_en, mt.color_code, mt.min_points,
                    (SELECT MIN(min_points) FROM membership_tiers WHERE min_points > ul.current_points) as next_tier_points
             FROM user_loyalty ul
             LEFT JOIN membership_tiers mt ON ul.tier_id = mt.tier_id
@@ -53,7 +53,7 @@ try {
     $transactions = $stmt->fetchAll();
 
     // Get all membership tiers for progress display
-    $stmt = $db->prepare("SELECT * FROM membership_tiers ORDER BY tier_level");
+    $stmt = $db->prepare("SELECT *, tier_name_en, benefits_en FROM membership_tiers ORDER BY tier_level");
     $stmt->execute();
     $all_tiers = $stmt->fetchAll();
 
@@ -172,12 +172,12 @@ try {
                                             <div class="flex items-center gap-6 mb-6">
                                                 <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl shadow-lg ring-4 ring-white/10"
                                                     style="background: <?php echo $loyalty['color_code']; ?>">
-                                                    <?php echo strtoupper(substr($loyalty['tier_name'], 0, 1)); ?>
+                                                    <?php echo strtoupper(substr(_f($loyalty, 'tier_name'), 0, 1)); ?>
                                                 </div>
                                                 <div>
                                                     <h4 class="text-3xl font-bold mb-1"
                                                         style="color: <?php echo $loyalty['color_code']; ?>">
-                                                        <?php echo $loyalty['tier_name']; ?>
+                                                        <?php echo htmlspecialchars(_f($loyalty, 'tier_name')); ?>
                                                     </h4>
                                                     <p class="text-white/60">
                                                         <?php echo str_replace('{:percent}', $loyalty['discount_percentage'], __('profile_loyalty.discount_for_all')); ?>
@@ -193,7 +193,7 @@ try {
                                                         <?php _e('profile_loyalty.member_benefits'); ?>:
                                                     </h5>
                                                     <p class="text-sm text-white/70 leading-relaxed">
-                                                        <?php echo htmlspecialchars($loyalty['benefits']); ?>
+                                                        <?php echo htmlspecialchars(_f($loyalty, 'benefits')); ?>
                                                     </p>
                                                 </div>
                                             <?php endif; ?>
@@ -246,12 +246,12 @@ try {
                                                 class="flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 <?php echo ($loyalty['tier_id'] == $tier['tier_id']) ? 'border-accent bg-accent/10 shadow-lg shadow-accent/5' : 'border-white/5 bg-white/5 hover:bg-white/10'; ?>">
                                                 <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner"
                                                     style="background: <?php echo $tier['color_code']; ?>">
-                                                    <?php echo strtoupper(substr($tier['tier_name'], 0, 1)); ?>
+                                                    <?php echo strtoupper(substr(_f($tier, 'tier_name'), 0, 1)); ?>
                                                 </div>
                                                 <div class="flex-1">
                                                     <h4 class="font-bold text-lg"
                                                         style="color: <?php echo $tier['color_code']; ?>">
-                                                        <?php echo $tier['tier_name']; ?>
+                                                        <?php echo htmlspecialchars(_f($tier, 'tier_name')); ?>
                                                     </h4>
                                                     <p class="text-xs text-white/60 mt-1">
                                                         <?php echo str_replace('{:points}', '<span class="font-mono text-white/80">' . number_format($tier['min_points']) . '</span>', __('profile_loyalty.from_points')); ?>
