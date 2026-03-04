@@ -86,23 +86,47 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     data-fixed-transparent="<?php echo $is_fixed_transparent ? 'true' : 'false'; ?>">
 
     <!-- Mini Tracking Topbar -->
-    <div class="tracking-topbar w-full flex flex-col sm:flex-row items-center justify-between px-4 py-1.5 md:px-6 z-[60] bg-gray-900 text-xs shadow"
+    <div class="tracking-topbar w-full flex items-center justify-between px-4 py-1.5 md:px-6 z-[60] bg-gray-900 text-xs shadow relative overflow-hidden min-h-[40px] sm:min-h-0"
         id="trackingTopbar">
-        <div class="hidden sm:flex items-center gap-1.5 text-gray-400 font-medium">
-            <span class="material-symbols-outlined" style="font-size: 16px;">travel_explore</span>
-            <span><?php _e('tracking.title'); ?></span>
+
+        <!-- Left side / Mobile Default State -->
+        <div
+            class="flex items-center gap-1.5 text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-start">
+            <div class="flex items-center gap-1.5 overflow-hidden">
+                <span class="material-symbols-outlined shrink-0" style="font-size: 16px;">travel_explore</span>
+                <span class="truncate"><?php _e('tracking.title'); ?></span>
+            </div>
+            <!-- Mobile Open Form Button -->
+            <button type="button" onclick="toggleTrackForm(true)"
+                class="sm:hidden flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 px-2 py-1 rounded shrink-0 ml-2 transition-colors">
+                <span class="material-symbols-outlined" style="font-size: 14px;">search</span>
+                <?php _e('tracking.search_btn'); ?>
+            </button>
         </div>
-        <form id="topbarTrackForm" class="flex items-center gap-2 m-0 w-full sm:w-auto justify-end relative"
+
+        <!-- Form Container -->
+        <form id="topbarTrackForm"
+            class="absolute inset-0 px-4 bg-gray-900 flex items-center gap-2 m-0 w-full justify-end translate-x-full opacity-0 sm:relative sm:inset-auto sm:px-0 sm:bg-transparent sm:w-auto sm:translate-x-0 sm:opacity-100 transition-all duration-300 ease-out z-10"
             onsubmit="handleTrackBooking(event)">
+
+            <!-- Mobile Close Form Button -->
+            <button type="button" onclick="toggleTrackForm(false)"
+                class="sm:hidden flex items-center text-gray-400 hover:text-white shrink-0 mr-1 p-1">
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back_ios_new</span>
+            </button>
+
             <span id="trackErrorMsg" class="hidden text-red-400 font-medium text-[11px] whitespace-nowrap"><span
                     class="error-text">Lỗi</span></span>
+
             <input type="text" id="trackInput" placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>"
                 required
                 class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64 transition-all" />
+
             <button type="submit"
-                class="bg-[#d4af37] hover:bg-[#b5952f] text-gray-900 font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center gap-1">
+                class="bg-[#d4af37] hover:bg-[#b5952f] text-gray-900 font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center justify-center min-w-[36px] gap-1 shrink-0">
                 <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span>
-                <?php _e('tracking.search_btn'); ?>
+                <span class="sm:hidden material-symbols-outlined" style="font-size:18px;">search</span>
+                <span class="hidden sm:inline-block"><?php _e('tracking.search_btn'); ?></span>
             </button>
         </form>
     </div>
@@ -490,15 +514,30 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         errorSystem: <?php echo json_encode(__('tracking.error_system')); ?>,
         errorEmpty: <?php echo json_encode(__('tracking.error_empty')); ?>,
         errorNotFound: <?php echo json_encode(__('tracking.error_not_found')); ?>,
-            searching: <?php echo json_encode(__('tracking.searching')); ?>,
-                statusText: {
-        confirmed: <?php echo json_encode(__('tracking.status_confirmed')); ?>,
+        searching: <?php echo json_encode(__('tracking.searching')); ?>,
+        statusText: {
+            confirmed: <?php echo json_encode(__('tracking.status_confirmed')); ?>,
             checked_in: <?php echo json_encode(__('tracking.status_checked_in')); ?>,
-                cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
-                    no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
-                        pending: <?php echo json_encode(__('tracking.status_pending')); ?>
-    }
+            cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
+            no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
+            pending: <?php echo json_encode(__('tracking.status_pending')); ?>
+        }
     };
+
+    function toggleTrackForm(show) {
+        const form = document.getElementById('topbarTrackForm');
+        const input = document.getElementById('trackInput');
+
+        if (show) {
+            form.classList.remove('translate-x-full', 'opacity-0');
+            form.classList.add('translate-x-0', 'opacity-100');
+            setTimeout(() => input.focus(), 300);
+        } else {
+            form.classList.remove('translate-x-0', 'opacity-100');
+            form.classList.add('translate-x-full', 'opacity-0');
+            input.blur();
+        }
+    }
 
     function closeTrackingModal() {
         const modal = document.getElementById('trackingModal');
