@@ -25,7 +25,7 @@ try {
 
     // Search by booking code, email or phone
     $stmt = $conn->prepare("
-        SELECT id, booking_code, status, total_amount, created_at, check_in, check_out, 
+        SELECT booking_code, status, total_amount, created_at, check_in, check_out, 
                first_name, last_name, email, phone
         FROM bookings
         WHERE booking_code = ? OR email = ? OR phone = ?
