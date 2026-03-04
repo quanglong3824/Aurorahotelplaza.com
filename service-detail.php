@@ -155,129 +155,148 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                                     <h3 class="font-display text-2xl font-bold text-white mb-2">
                                         <?php echo htmlspecialchars(_f($pkg, 'package_name')); ?>
                                     </h3>
-                                    <div class="package-price-large">
-                                        <?php echo number_format($pkg['price'], 0, ',', '.'); ?>VND
-                                        <span class="text-sm font-sans font-normal text-white/60 ml-1">/
-                                            <?php echo htmlspecialchars($pkg['price_unit']); ?></span>
-                                    </div>
-
-                                    <?php if (!empty($features)): ?>
-                                        <div class="package-features">
-                                            <?php foreach ($features as $feature): ?>
-                                                <div class="feature-row">
-                                                    <span class="material-symbols-outlined text-sm">check_circle</span>
-                                                    <span class="text-white/80"><?php echo htmlspecialchars(trim($feature)); ?></span>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <a href="booking/index.php?service=<?php echo $service['slug']; ?>&package=<?php echo $pkg['slug']; ?>"
-                                        class="btn-glass-gold w-full justify-center text-center">
-                                        <?php _e('service_detail.book_now'); ?>
-                                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </section>
-            <?php endif; ?>
-
-            <!-- Amenities Section -->
-            <?php
-            $all_features = [];
-            foreach ($packages as $pkg) {
-                $features_str = _f($pkg, 'features');
-                if (!empty($features_str)) {
-                    foreach (explode(',', $features_str) as $feature) {
-                        $feature = trim($feature);
-                        if (!in_array($feature, $all_features))
-                            $all_features[] = $feature;
-                    }
-                }
-            }
-
-            $feature_icons = [
-                'Màn hình' => 'tv',
-                'LED' => 'tv',
-                'Âm thanh' => 'mic',
-                'WiFi' => 'wifi',
-                'Coffee' => 'coffee',
-                'Điều hòa' => 'ac_unit',
-                'Hỗ trợ' => 'support_agent',
-                'Projector' => 'videocam',
-                'Micro' => 'mic',
-                'Loa' => 'volume_up'
-            ];
-
-            if (!empty($all_features)):
-                ?>
-                <section class="py-16 relative z-10">
-                    <div class="max-w-7xl mx-auto px-4">
-                        <div class="text-center mb-12">
-                            <span
-                                class="text-[#d4af37] font-semibold text-sm uppercase tracking-wider"><?php _e('service_detail.amenities'); ?></span>
-                            <h2 class="font-display text-4xl font-bold mt-2 mb-4 text-white">
-                                <?php _e('service_detail.modern_equipment'); ?>
-                            </h2>
-                        </div>
-
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                            <?php foreach (array_slice($all_features, 0, 6) as $feature):
-                                $icon = 'check_circle';
-                                foreach ($feature_icons as $key => $ic) {
-                                    if (stripos($feature, $key) !== false) {
-                                        $icon = $ic;
-                                        break;
+                                    <?php
+                                    $unit = trim($pkg['price_unit']);
+                                    // Bỏ VND/ thừa để giao diện gọn gàng vì đã có VND phía trước
+                                    if (strpos($unit, 'VND/') === 0 || strpos($unit, 'VND/') === 0) {
+                                        $unit = substr($unit, 4);
+                                    } elseif ($unit === 'VND' || $unit === 'VND') {
+                                        $unit = '';
                                     }
-                                }
-                                ?>
-                                <div class="utility-card-glass group h-full justify-center">
-                                    <div class="utility-icon mb-0">
-                                        <span class="material-symbols-outlined text-2xl"><?php echo $icon; ?></span>
-                                    </div>
-                                    <h3 class="text-white font-medium text-center"><?php echo htmlspecialchars($feature); ?>
-                                    </h3>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </section>
-            <?php endif; ?>
 
-            <!-- CTA Section -->
+                                    $unit_map = [
+                                        'người' => 'person',
+                                        '4 giờ' => '4 hours',
+                                        '8 giờ' => '8 hours',
+                                        'ngày' => 'day',
+                                        'tháng' => 'month',
+                                    ];
+                                    $display_unit = (getLang() === 'en' && isset($unit_map[$unit])) ? $unit_map[$unit] : $unit;
+                                    ?>
+                                    <?php echo number_format($pkg['price'], 0, ',', '.'); ?> VND
+                                    <?php if ($display_unit): ?>
+                                        <span class="text-sm font-sans font-normal text-white/60 ml-1">/
+                                            <?php echo htmlspecialchars($display_unit); ?></span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <?php if (!empty($features)): ?>
+                                    <div class="package-features">
+                                        <?php foreach ($features as $feature): ?>
+                                            <div class="feature-row">
+                                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                                <span class="text-white/80"><?php echo htmlspecialchars(trim($feature)); ?></span>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <a href="booking/index.php?service=<?php echo $service['slug']; ?>&package=<?php echo $pkg['slug']; ?>"
+                                    class="btn-glass-gold w-full justify-center text-center">
+                                    <?php _e('service_detail.book_now'); ?>
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+        </div>
+        </section>
+    <?php endif; ?>
+
+    <!-- Amenities Section -->
+    <?php
+    $all_features = [];
+    foreach ($packages as $pkg) {
+        $features_str = _f($pkg, 'features');
+        if (!empty($features_str)) {
+            foreach (explode(',', $features_str) as $feature) {
+                $feature = trim($feature);
+                if (!in_array($feature, $all_features))
+                    $all_features[] = $feature;
+            }
+        }
+    }
+
+    $feature_icons = [
+        'Màn hình' => 'tv',
+        'LED' => 'tv',
+        'Âm thanh' => 'mic',
+        'WiFi' => 'wifi',
+        'Coffee' => 'coffee',
+        'Điều hòa' => 'ac_unit',
+        'Hỗ trợ' => 'support_agent',
+        'Projector' => 'videocam',
+        'Micro' => 'mic',
+        'Loa' => 'volume_up'
+    ];
+
+    if (!empty($all_features)):
+        ?>
+        <section class="py-16 relative z-10">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="glass-cta-box">
-                    <div class="glass-badge-pill mb-6 mx-auto">
-                        <span class="material-symbols-outlined text-sm">support_agent</span>
-                        <?php _e('service_detail.support_24_7'); ?>
-                    </div>
-                    <h2 class="font-display text-4xl font-bold text-white mb-4">
-                        <?php _e('service_detail.ready_to_book'); ?>
+                <div class="text-center mb-12">
+                    <span
+                        class="text-[#d4af37] font-semibold text-sm uppercase tracking-wider"><?php _e('service_detail.amenities'); ?></span>
+                    <h2 class="font-display text-4xl font-bold mt-2 mb-4 text-white">
+                        <?php _e('service_detail.modern_equipment'); ?>
                     </h2>
-                    <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                        <?php _e('service_detail.cta_desc'); ?>
-                    </p>
-                    <div class="flex flex-wrap gap-4 justify-center relative z-10">
-                        <a href="tel:+842513918888"
-                            class="px-8 py-4 bg-white text-[#d4af37] rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2">
-                            <span class="material-symbols-outlined">phone</span>
-                            (+84-251) 391.8888
-                        </a>
-                        <a href="contact.php"
-                            class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold hover:bg-white/20 transition-all flex items-center gap-2">
-                            <span class="material-symbols-outlined">mail</span>
-                            <?php _e('service_detail.send_request'); ?>
-                        </a>
-                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    <?php foreach (array_slice($all_features, 0, 6) as $feature):
+                        $icon = 'check_circle';
+                        foreach ($feature_icons as $key => $ic) {
+                            if (stripos($feature, $key) !== false) {
+                                $icon = $ic;
+                                break;
+                            }
+                        }
+                        ?>
+                        <div class="utility-card-glass group h-full justify-center">
+                            <div class="utility-icon mb-0">
+                                <span class="material-symbols-outlined text-2xl"><?php echo $icon; ?></span>
+                            </div>
+                            <h3 class="text-white font-medium text-center"><?php echo htmlspecialchars($feature); ?>
+                            </h3>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+        </section>
+    <?php endif; ?>
 
-            <div class="pb-20"></div>
-        </main>
+    <!-- CTA Section -->
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="glass-cta-box">
+            <div class="glass-badge-pill mb-6 mx-auto">
+                <span class="material-symbols-outlined text-sm">support_agent</span>
+                <?php _e('service_detail.support_24_7'); ?>
+            </div>
+            <h2 class="font-display text-4xl font-bold text-white mb-4">
+                <?php _e('service_detail.ready_to_book'); ?>
+            </h2>
+            <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+                <?php _e('service_detail.cta_desc'); ?>
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center relative z-10">
+                <a href="tel:+842513918888"
+                    class="px-8 py-4 bg-white text-[#d4af37] rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2">
+                    <span class="material-symbols-outlined">phone</span>
+                    (+84-251) 391.8888
+                </a>
+                <a href="contact.php"
+                    class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold hover:bg-white/20 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined">mail</span>
+                    <?php _e('service_detail.send_request'); ?>
+                </a>
+            </div>
+        </div>
+    </div>
 
-        <?php include 'includes/footer.php'; ?>
+    <div class="pb-20"></div>
+    </main>
+
+    <?php include 'includes/footer.php'; ?>
     </div>
 
     <script src="assets/js/glass-pages.js"></script>

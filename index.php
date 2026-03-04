@@ -365,7 +365,7 @@ try {
                                             </div>
                                             <div class="info-item">
                                                 <span class="material-symbols-outlined">bed</span>
-                                                <?php echo htmlspecialchars($room['bed_type']); ?>
+                                                <?php echo htmlspecialchars(_f($room, 'bed_type')); ?>
                                             </div>
                                             <div class="info-item">
                                                 <span class="material-symbols-outlined">person</span>
@@ -448,7 +448,7 @@ try {
                                             </div>
                                             <div class="info-item">
                                                 <span class="material-symbols-outlined">bed</span>
-                                                <?php echo htmlspecialchars($apartment['bed_type']); ?>
+                                                <?php echo htmlspecialchars(_f($apartment, 'bed_type')); ?>
                                             </div>
                                             <div class="info-item">
                                                 <span class="material-symbols-outlined">person</span>
