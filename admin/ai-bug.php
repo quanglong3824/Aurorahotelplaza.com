@@ -1,13 +1,18 @@
 <?php
 /**
  * Aurora Hotel Plaza - Admin: AI Bug Tracker
- * Trang quản lý lỗi được phát hiện tự động bởi AI
  */
+session_start();
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale', 'receptionist'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
+// $page_title phải set TRƯỚC require admin-header (admin-header dùng nó cho <title>)
 $page_title = 'AI Bug Tracker';
 $page_subtitle = 'Hệ thống phát hiện và phân tích lỗi toàn web bằng AI';
 
 require_once '../config/database.php';
-require_once '../helpers/error-tracker.php';
 require_once 'includes/admin-header.php';
 
 $db = getDB();
