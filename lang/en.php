@@ -282,7 +282,7 @@ return [
     // Homepage
     'home' => [
         'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Bien Hoa',
-        'reception_24_7' => 'Reception 24/7',
+        'reception_24_7' => 'Reception 24/24',
         'about_us' => 'About Us',
         'welcome_title' => 'Welcome to Aurora Hotel Plaza',
         'welcome_desc' => 'Located in the heart of Bien Hoa city, Aurora Hotel Plaza offers an unparalleled experience of luxury and tranquility. With over 10 years of experience in the hospitality industry, we are committed to providing 4-star service at the most reasonable prices.',
@@ -360,7 +360,7 @@ return [
         'phone_label' => 'Phone',
         'email_label' => 'Email',
         'working_hours_label' => 'Working Hours',
-        'working_hours_detail' => 'Reception: 24/7<br>Restaurant: 6:00 - 22:00<br>Check-in: 14:00 | Check-out: 12:00',
+        'working_hours_detail' => 'Reception: 24/24<br>Restaurant: 6:00 - 22:00<br>Check-in: 14:00 | Check-out: 12:00',
         'nearby_places' => 'Distance to Locations',
         'tan_son_nhat_airport' => 'Tan Son Nhat Airport',
         'long_thanh_airport' => 'Long Thanh Airport',
@@ -1270,7 +1270,7 @@ return [
         'gym' => 'Gym',
         'shuttle_service' => 'Shuttle Service',
         'contact_title' => 'Contact',
-        'reception_24_7' => 'Reception 24/7',
+        'reception_24_7' => 'Reception 24/24',
         'copyright' => '© {:year} Aurora Hotel Plaza. All rights reserved.',
         'privacy_policy' => 'Privacy Policy',
         'terms_of_service' => 'Terms of Service',

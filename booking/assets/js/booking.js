@@ -1734,15 +1734,14 @@ function updateSummary() {
     }
 }
 
-// Format date
+// Format date - mm/dd/yyyy format
 function formatDate(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN', {
-        weekday: 'short',
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        month: '2-digit',
+        day: '2-digit'
     });
 }
 
