@@ -128,10 +128,10 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                             <span class="material-symbols-outlined"><?php echo $service['icon']; ?></span>
                                         </div>
                                         <h3 class="font-bold text-lg text-white group-hover:text-[#d4af37] transition-colors">
-                                            <?php echo htmlspecialchars($service['service_name']); ?>
+                                            <?php echo htmlspecialchars(_f($service, 'service_name')); ?>
                                         </h3>
                                         <p class="text-xs text-white/60 line-clamp-2">
-                                            <?php echo htmlspecialchars($service['short_description']); ?>
+                                            <?php echo htmlspecialchars(_f($service, 'short_description')); ?>
                                         </p>
                                     </a>
                                 <?php endforeach; ?>
@@ -180,7 +180,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                                 <div class="packages-list-mini">
                                                     <?php foreach (array_slice($service['packages'], 0, 3) as $pkg): ?>
                                                         <div class="package-item-mini">
-                                                            <span><?php echo htmlspecialchars($pkg['package_name']); ?></span>
+                                                            <span><?php echo htmlspecialchars(_f($pkg, 'package_name')); ?></span>
                                                             <span
                                                                 class="package-price-mini"><?php echo number_format($pkg['price'], 0, ',', '.'); ?>VND</span>
                                                         </div>

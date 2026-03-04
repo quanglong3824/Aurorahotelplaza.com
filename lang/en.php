@@ -1648,4 +1648,22 @@ return [
         'status_cancelled' => 'Cancelled',
         'status_no_show' => 'No Show',
     ],
+
+    // Inquiry / Apartment contact
+    'inquiry' => [
+        'contact_btn' => 'Contact for Consultation',
+        'submit' => 'Send Inquiry',
+        'name' => 'Full Name',
+        'email' => 'Email',
+        'phone' => 'Phone Number',
+        'message' => 'Message',
+        'check_in' => 'Expected Check-in',
+        'duration' => 'Rental Duration',
+        'guests' => 'Number of Guests',
+        'success' => 'Inquiry sent successfully! We will contact you within 24 hours.',
+        'error' => 'An error occurred. Please try again.',
+        'required' => 'Please fill in all required fields.',
+        'title' => 'Send Inquiry',
+        'subtitle' => 'We will contact you as soon as possible',
+    ],
 ];
