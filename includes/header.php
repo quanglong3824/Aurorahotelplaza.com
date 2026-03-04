@@ -98,7 +98,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             </div>
             <!-- Mobile Open Form Button -->
             <button type="button" onclick="toggleTrackForm(true)"
-                class="sm:hidden flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 px-2 py-1 rounded shrink-0 ml-2 transition-colors">
+                class="sm:hidden flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white px-2 py-1 rounded shrink-0 ml-2 transition-colors">
                 <span class="material-symbols-outlined" style="font-size: 14px;">search</span>
                 <?php _e('tracking.search_btn'); ?>
             </button>
@@ -123,7 +123,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64 transition-all" />
 
             <button type="submit"
-                class="bg-[#d4af37] hover:bg-[#b5952f] text-gray-900 font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center justify-center min-w-[36px] gap-1 shrink-0">
+                class="bg-[#d4af37] hover:bg-[#b5952f] text-white font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center justify-center min-w-[36px] gap-1 shrink-0">
                 <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span>
                 <span class="sm:hidden material-symbols-outlined" style="font-size:18px;">search</span>
                 <span class="hidden sm:inline-block"><?php _e('tracking.search_btn'); ?></span>
