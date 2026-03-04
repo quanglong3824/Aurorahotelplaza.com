@@ -147,6 +147,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 href="<?php echo $base_path; ?>contact.php"><?php _e('nav.contact'); ?></a>
         </nav>
         <div class="flex items-center gap-2">
+            <!-- Track Booking Button -->
+            <button class="btn-track-booking" onclick="toggleTrackingSidebar()" aria-label="Tra cứu đặt phòng" title="Tra cứu đặt phòng">
+                <span class="material-symbols-outlined text-xl">travel_explore</span>
+                <span class="hidden md:inline font-medium text-sm ml-1 truncate">Tra cứu</span>
+            </button>
+
             <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
                 <span class="truncate"><?php _e('nav.book_now'); ?></span>
             </a>
@@ -437,6 +443,219 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         </div>
     </div>
 <?php endif; ?>
+
+<!-- Tracking Booking Sidebar -->
+<div id="trackingSidebar" class="tracking-sidebar">
+    <div class="tracking-sidebar-overlay" onclick="toggleTrackingSidebar()"></div>
+    <div class="tracking-sidebar-content">
+        <div class="tracking-sidebar-header">
+            <h3>Tra cứu đặt phòng</h3>
+            <button class="tracking-sidebar-close" onclick="toggleTrackingSidebar()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="tracking-sidebar-body">
+            <p class="text-sm text-gray-500 mb-4 dark:text-gray-400">Dành cho khách vãng lai. Vui lòng nhập thông tin để kiểm tra trạng thái phòng.</p>
+            <form id="formTrackBooking" onsubmit="handleTrackBooking(event)">
+                <div class="floating-booking-field mb-4" style="flex-direction: column; align-items: flex-start;">
+                    <label style="display: flex; gap: 8px; font-weight: 500; font-size: 0.875rem; color: #4b5563; margin-bottom: 8px;">
+                        <span class="material-symbols-outlined" style="font-size: 1.25rem;">search</span>
+                        Mã đặt phòng / Email / SĐT
+                    </label>
+                    <input type="text" id="trackInput" required placeholder="Nhập mã, email hoặc số điện thoại..." class="glass-input-solid w-full" style="width: 100%;">
+                </div>
+                <button type="submit" class="btn-glass-primary w-full py-3 rounded-lg flex items-center justify-center gap-2" style="width: 100%;">
+                    <span class="material-symbols-outlined">search</span>
+                    Tìm kiếm
+                </button>
+            </form>
+            <div id="trackResult" class="mt-6 hidden">
+                <!-- Result will be rendered here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleTrackingSidebar() {
+    const sidebar = document.getElementById('trackingSidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+        if(sidebar.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('trackInput').focus(), 300);
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+async function handleTrackBooking(e) {
+    e.preventDefault();
+    const input = document.getElementById('trackInput').value.trim();
+    if (!input) return;
+    
+    const resultDiv = document.getElementById('trackResult');
+    resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = '<div class="text-center py-4"><span class="material-symbols-outlined animate-spin" style="animation: spin 1s linear infinite;">refresh</span> <p class="mt-2 text-sm text-gray-600">Đang kiểm tra...</p></div>';
+    
+    try {
+        const res = await fetch('<?php echo $base_path; ?>booking/api/track.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ query: input })
+        });
+        const data = await res.json();
+        if (data.success) {
+            let statusColor = 'bg-gray-100 text-gray-800';
+            if(data.booking.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800';
+            if(data.booking.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800';
+            if(data.booking.status_raw === 'cancelled' || data.booking.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800';
+            if(data.booking.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800';
+
+            let html = '<div class="bg-gray-50/80 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200 dark:bg-gray-800/80 dark:border-gray-700">';
+            html += '<h4 class="font-bold text-lg text-primary-900 dark:text-primary-100 border-b pb-2 mb-3">Mã Đặt: ' + data.booking.booking_code + '</h4>';
+            html += '<div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">';
+            html += '<div class="flex justify-between items-center"><strong class="w-1/3">Trạng thái:</strong> <span class="badge ' + statusColor + ' px-2 py-1 flex-1 text-center rounded font-medium">' + data.booking.status + '</span></div>';
+            html += '<div class="flex"><strong class="w-1/3">Khách hàng:</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
+            html += '<div class="flex"><strong class="w-1/3">Nhận phòng:</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
+            html += '<div class="flex"><strong class="w-1/3">Trả phòng:</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
+            html += '<div class="flex"><strong class="w-1/3">SĐT:</strong> <span class="flex-1">' + data.booking.phone + '</span></div>';
+            html += '<div class="flex items-center pt-2 border-t mt-2"><strong class="w-1/3 text-lg">Tổng:</strong> <span class="flex-1 text-lg font-bold text-primary-600">' + new Intl.NumberFormat('vi-VN').format(data.booking.total_amount) + ' VNĐ</span></div>';
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+        } else {
+            resultDiv.innerHTML = '<div class="bg-red-50 text-red-600 p-3 rounded-lg flex items-start gap-2"><span class="material-symbols-outlined text-red-500">error</span><p class="text-sm font-medium">' + data.message + '</p></div>';
+        }
+    } catch(err) {
+        resultDiv.innerHTML = '<div class="bg-red-50 text-red-600 p-3 rounded-lg flex items-start gap-2"><span class="material-symbols-outlined text-red-500">error</span><p class="text-sm font-medium">Đã xảy ra lỗi, vui lòng thử lại sau.</p></div>';
+    }
+}
+</script>
+
+<style>
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.tracking-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    max-width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+}
+.tracking-sidebar.active {
+    right: 0;
+}
+.tracking-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.tracking-sidebar.active .tracking-sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+.tracking-sidebar-content {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+.dark .tracking-sidebar-content {
+    background: rgba(31, 41, 55, 0.95);
+}
+.tracking-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.dark .tracking-sidebar-header {
+    border-color: rgba(255,255,255,0.05);
+}
+.tracking-sidebar-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+.dark .tracking-sidebar-header h3 {
+    color: white;
+}
+.tracking-sidebar-close {
+    background: rgba(0,0,0,0.05);
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+    color: var(--text-dark);
+}
+.dark .tracking-sidebar-close {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+.tracking-sidebar-close:hover {
+    background: rgba(0,0,0,0.1);
+    transform: rotate(90deg);
+}
+.dark .tracking-sidebar-close:hover {
+    background: rgba(255,255,255,0.2);
+}
+.tracking-sidebar-body {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Button style */
+.btn-track-booking {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+}
+.btn-track-booking:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.header-solid .btn-track-booking, .header-scrolled .btn-track-booking {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.1);
+    color: var(--text-dark);
+}
+.header-solid .btn-track-booking:hover, .header-scrolled .btn-track-booking:hover {
+    background: rgba(0,0,0,0.1);
+}
+</style>
 
 <!-- Header Styles & Script -->
 <?php $asset_version = time(); // Update this when assets change ?>
