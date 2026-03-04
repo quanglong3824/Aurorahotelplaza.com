@@ -179,11 +179,19 @@ try {
                                 <span class="material-symbols-outlined">home</span>
                                 <?php _e('booking_confirmation.back_to_home'); ?>
                             </a>
-                            <a href="../profile/bookings.php" class="btn-primary text-center"
-                                style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
-                                <span class="material-symbols-outlined">list_alt</span>
-                                <?php _e('booking_confirmation.view_inquiry'); ?>
-                            </a>
+                            <?php if (!isset($_SESSION['user_id'])): ?>
+                                <a href="../index.php?action=track_booking" class="btn-primary text-center justify-center"
+                                    style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
+                                    <span class="material-symbols-outlined">list_alt</span>
+                                    Xem danh sách
+                                </a>
+                            <?php else: ?>
+                                <a href="../profile/bookings.php" class="btn-primary text-center justify-center"
+                                    style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
+                                    <span class="material-symbols-outlined">list_alt</span>
+                                    <?php _e('booking_confirmation.view_inquiry'); ?>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php else: ?>
@@ -345,7 +353,7 @@ try {
                                 </a>
                             <?php else: ?>
                                 <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
-                                    Lịch sử đặt phòng
+                                    <?php _e('booking_confirmation.view_bookings'); ?>
                                 </a>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -411,7 +419,7 @@ try {
                             </a>
                             <?php else: ?>
                             <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
-                                Lịch sử đặt phòng
+                                <?php echo addslashes(__('booking_confirmation.view_my_bookings')); ?>
                             </a>
                             <?php endif; ?>
                         `;
