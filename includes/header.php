@@ -118,9 +118,17 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <span id="trackErrorMsg" class="hidden text-red-400 font-medium text-[11px] whitespace-nowrap"><span
                     class="error-text">Lỗi</span></span>
 
-            <input type="text" id="trackInput" placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>"
-                required
-                class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64 transition-all" />
+            <div class="relative w-full sm:w-64">
+                <input type="text" id="trackInput"
+                    placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>" required
+                    class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full transition-all pr-8"
+                    oninput="document.getElementById('trackClearBtn').style.display = this.value ? 'flex' : 'none';" />
+                <button type="button" id="trackClearBtn" style="display: none;"
+                    onclick="document.getElementById('trackInput').value=''; this.style.display='none'; document.getElementById('trackInput').focus();"
+                    class="absolute inset-y-0 right-0 items-center justify-center w-8 text-gray-500 hover:text-gray-300">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+                </button>
+            </div>
 
             <button type="submit"
                 class="bg-[#d4af37] hover:bg-[#b5952f] text-white font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center justify-center min-w-[36px] gap-1 shrink-0">
