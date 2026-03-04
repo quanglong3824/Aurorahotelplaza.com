@@ -320,11 +320,17 @@ class AuroraErrorTracker
     }
 
     /**
-     * Gọi Gemini AI phân tích lỗi
+     * Gọi Gemini AI phân tích lỗi và gửi Telegram
+     * Telegram được gửi NGAY — không phụ thuộc Gemini thành công hay không
      */
     public static function analyzeWithAiAndNotify(int $errorId, array $errorData)
     {
         try {
+            // ── BƯỚC 1: Gửi Telegram NGAY với thông tin cơ bản ───────────────────
+            // Không chờ Gemini — đảm bảo admin luôn nhận được alert
+            self::sendTelegramAlert($errorId, $errorData, '(AI dang phan tich... vao Admin de xem ket qua)');
+
+            // ── BƯỚC 2: Gọi Gemini để phân tích sâu hơn ─────────────────────────
             require_once __DIR__ . '/../config/api_keys.php';
 
             $severity = $errorData['severity'] ?? 'error';
@@ -368,9 +374,7 @@ PROMPT;
                         $db->prepare("UPDATE error_logs SET ai_analysis = ?, ai_analyzed = 1 WHERE id = ?")
                             ->execute([$response, $errorId]);
                     }
-
-                    // Gửi Telegram
-                    self::sendTelegramAlert($errorId, $errorData, $response);
+                    // Gemini xong — KHÔNG gửi Telegram lần 2 để tránh spam
                     return;
                 }
             }
