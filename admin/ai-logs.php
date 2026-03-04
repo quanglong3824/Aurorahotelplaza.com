@@ -108,7 +108,7 @@ require_once 'includes/admin-header.php';
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="font-medium text-gray-900 dark:text-white"><?php echo date('H:i:s', strtotime($log['created_at'])); ?></div>
-                                    <div class="text-xs"><?php echo date('d/m/Y', strtotime($log['created_at'])); ?></div>
+                                    <div class="text-xs"><?php echo date('m/d/Y', strtotime($log['created_at'])); ?></div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php if ($log['ai_type'] == 'admin'): ?>

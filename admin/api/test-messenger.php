@@ -43,7 +43,7 @@ Vao Admin > AI Bug > Settings de nhap thong tin.</pre>';
     exit;
 }
 
-$time = date('d/m/Y H:i:s');
+$time = date('m/d/Y H:i:s');
 $payload = json_encode([
     'chat_id' => $chatId,
     'text' => "[TEST] Aurora Bug Tracker hoat dong binh thuong.\nThoi gian: $time",

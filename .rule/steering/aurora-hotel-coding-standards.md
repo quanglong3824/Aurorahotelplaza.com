@@ -325,7 +325,7 @@ echo json_encode([
 ## Vietnamese Language
 - Tất cả UI text hiển thị bằng tiếng Việt
 - Comments trong code có thể bằng tiếng Anh hoặc tiếng Việt
-- Date format: `d/m/Y` (e.g., 25/12/2025)
+- Date format: `m/d/Y` (e.g., 12/25/2025)
 - Currency format: `number_format($amount, 0, ',', '.')` + `đ` hoặc `VND`
 
 ## Security Best Practices

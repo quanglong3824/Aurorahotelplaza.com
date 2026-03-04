@@ -42,9 +42,9 @@ try {
     }
     
     // Format date
-    $contact['created_at'] = date('d/m/Y H:i', strtotime($contact['created_at']));
+    $contact['created_at'] = date('m/d/Y H:i', strtotime($contact['created_at']));
     if ($contact['updated_at']) {
-        $contact['updated_at'] = date('d/m/Y H:i', strtotime($contact['updated_at']));
+        $contact['updated_at'] = date('m/d/Y H:i', strtotime($contact['updated_at']));
     }
     
     echo json_encode(['success' => true, 'contact' => $contact]);

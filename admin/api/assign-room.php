@@ -168,7 +168,7 @@ try {
         'Đơn đặt phòng %s đã được phân phòng %s. Check-in: %s',
         $booking['booking_code'],
         $room['room_number'],
-        date('d/m/Y', strtotime($booking['check_in_date']))
+        date('m/d/Y', strtotime($booking['check_in_date']))
     );
     
     $stmt->execute([

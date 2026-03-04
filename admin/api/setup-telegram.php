@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token && $chatId) {
         if ($tokenOk && $chatIdOk) {
             $payload = json_encode([
                 'chat_id' => $saved['telegram_chat_id'],
-                'text' => '[SETUP OK] Aurora Bug Tracker da ket noi Telegram thanh cong! ' . date('d/m/Y H:i:s'),
+                'text' => '[SETUP OK] Aurora Bug Tracker da ket noi Telegram thanh cong! ' . date('m/d/Y H:i:s'),
                 'parse_mode' => 'HTML',
             ]);
             $ch = curl_init("https://api.telegram.org/bot{$saved['telegram_bot_token']}/sendMessage");

@@ -87,10 +87,10 @@ try {
     foreach ($bookings as $booking) {
         fputcsv($output, [
             $booking['booking_code'],
-            date('d/m/Y H:i', strtotime($booking['booking_date'])),
+            date('m/d/Y H:i', strtotime($booking['booking_date'])),
             $booking['room_type'],
-            date('d/m/Y', strtotime($booking['check_in_date'])),
-            date('d/m/Y', strtotime($booking['check_out_date'])),
+            date('m/d/Y', strtotime($booking['check_in_date'])),
+            date('m/d/Y', strtotime($booking['check_out_date'])),
             $booking['total_nights'],
             $booking['num_adults'],
             $booking['num_children'],

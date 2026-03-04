@@ -241,7 +241,7 @@ include 'includes/admin-header.php';
                                     <?php echo $config['label']; ?>
                                 </span>
                             </td>
-                            <td class="text-sm"><?php echo date('d/m/Y', strtotime($customer['created_at'])); ?></td>
+                            <td class="text-sm"><?php echo date('m/d/Y', strtotime($customer['created_at'])); ?></td>
                             <td>
                                 <div class="action-buttons">
                                     <a href="customer-detail.php?id=<?php echo $customer['user_id']; ?>" class="action-btn"

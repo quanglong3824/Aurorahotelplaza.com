@@ -173,8 +173,8 @@ include 'includes/admin-header.php';
                                 <div>
                                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Thời hạn</p>
                                     <p class="text-sm">
-                                        <?php echo date('d/m/Y', strtotime($promo['start_date'])); ?> -
-                                        <?php echo date('d/m/Y', strtotime($promo['end_date'])); ?>
+                                        <?php echo date('m/d/Y', strtotime($promo['start_date'])); ?> -
+                                        <?php echo date('m/d/Y', strtotime($promo['end_date'])); ?>
                                     </p>
                                 </div>
                             </div>

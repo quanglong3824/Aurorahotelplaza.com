@@ -330,7 +330,7 @@ include 'includes/admin-header.php';
                                 <p class="font-medium"><?php echo htmlspecialchars($activity['full_name'] ?? 'System'); ?></p>
                                 <p class="text-gray-500"><?php echo htmlspecialchars($activity['description']); ?></p>
                                 <p class="text-xs text-gray-400 mt-1">
-                                    <?php echo date('H:i - d/m/Y', strtotime($activity['created_at'])); ?></p>
+                                    <?php echo date('H:i - m/d/Y', strtotime($activity['created_at'])); ?></p>
                             </div>
                         </div>
                     <?php endforeach; ?>

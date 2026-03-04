@@ -467,7 +467,7 @@ PROMPT;
         $type = $errorData['type'] ?? 'unknown';
         $message = substr($errorData['message'] ?? '', 0, 200);
         $url = $errorData['url'] ?? '';
-        $time = date('d/m/Y H:i:s');
+        $time = date('m/d/Y H:i:s');
         $adminUrl = (defined('BASE_URL') ? BASE_URL : '') . "/admin/ai-bug.php?id=$errorId";
 
         // Rút gọn AI analysis (Telegram hỗ trợ Markdown)

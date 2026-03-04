@@ -263,7 +263,7 @@ include 'includes/admin-header.php';
                                 </div>
                             </td>
                             <td class="whitespace-nowrap">
-                                <?= date('d/m/Y', strtotime($inquiry['check_in_date'])) ?>
+                                <?= date('m/d/Y', strtotime($inquiry['check_in_date'])) ?>
                             </td>
                             <td>
                                 <span class="badge badge-secondary">
@@ -279,7 +279,7 @@ include 'includes/admin-header.php';
                                 </span>
                             </td>
                             <td class="whitespace-nowrap">
-                                <?= date('d/m/Y H:i', strtotime($inquiry['created_at'])) ?>
+                                <?= date('m/d/Y H:i', strtotime($inquiry['created_at'])) ?>
                             </td>
                             <td>
                                 <div class="action-buttons">

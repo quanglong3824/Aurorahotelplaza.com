@@ -286,7 +286,7 @@ try {
         ':message' => sprintf(
             'Đơn đặt phòng %s đã được tạo. Check-in: %s. Tổng tiền: %s VND',
             $booking_code,
-            date('d/m/Y', strtotime($check_in_date)),
+            date('m/d/Y', strtotime($check_in_date)),
             number_format($total_amount)
         ),
         ':link' => '/profile/bookings.php?id=' . $booking_id

@@ -211,7 +211,7 @@ include 'includes/admin-header.php';
                         </span>
                     </td>
                     <td class="whitespace-nowrap">
-                        <?= date('d/m/Y H:i', strtotime($contact['created_at'])) ?>
+                        <?= date('m/d/Y H:i', strtotime($contact['created_at'])) ?>
                     </td>
                     <td>
                         <div class="action-buttons">

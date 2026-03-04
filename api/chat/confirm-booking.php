@@ -35,15 +35,15 @@ try {
         }
     }
 
-    // Convert DD/MM/YYYY to YYYY-MM-DD if needed, assuming Gemini might output format like 15/05/2026
-    $dCheckIn = DateTime::createFromFormat('d/m/Y', $check_in);
+    // Convert MM/DD/YYYY to YYYY-MM-DD if needed, assuming Gemini might output format like 05/15/2026
+    $dCheckIn = DateTime::createFromFormat('m/d/Y', $check_in);
     if ($dCheckIn) {
         $check_in_date = $dCheckIn->format('Y-m-d');
     } else {
         $check_in_date = date('Y-m-d', strtotime(str_replace('/', '-', $check_in)));
     }
 
-    $dCheckOut = DateTime::createFromFormat('d/m/Y', $check_out);
+    $dCheckOut = DateTime::createFromFormat('m/d/Y', $check_out);
     if ($dCheckOut) {
         $check_out_date = $dCheckOut->format('Y-m-d');
     } else {

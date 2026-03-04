@@ -194,7 +194,7 @@ $payment_labels = [
                                         <span
                                             class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.booked_date'); ?></span>
                                         <p class="text-white font-mono">
-                                            <?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?>
+                                            <?php echo date('m/d/Y H:i', strtotime($booking['created_at'])); ?>
                                         </p>
                                     </div>
                                     <?php if ($booking['checked_in_at']): ?>
@@ -202,7 +202,7 @@ $payment_labels = [
                                             <span
                                                 class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.checked_in_date'); ?></span>
                                             <p class="text-white font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_in_at'])); ?>
+                                                <?php echo date('m/d/Y H:i', strtotime($booking['checked_in_at'])); ?>
                                             </p>
                                         </div>
                                     <?php endif; ?>
@@ -211,7 +211,7 @@ $payment_labels = [
                                             <span
                                                 class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.checked_out_date'); ?></span>
                                             <p class="text-white font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?>
+                                                <?php echo date('m/d/Y H:i', strtotime($booking['checked_out_at'])); ?>
                                             </p>
                                         </div>
                                     <?php endif; ?>
@@ -220,7 +220,7 @@ $payment_labels = [
                                             <span
                                                 class="block text-red-300/70 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.cancelled_date'); ?></span>
                                             <p class="text-red-300 font-mono">
-                                                <?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?>
+                                                <?php echo date('m/d/Y H:i', strtotime($booking['cancelled_at'])); ?>
                                             </p>
                                         </div>
                                     <?php endif; ?>
@@ -269,14 +269,14 @@ $payment_labels = [
                                                     <span
                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.check_in'); ?></span>
                                                     <p class="text-lg font-bold text-white">
-                                                        <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
+                                                        <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?>
                                                     </p>
                                                 </div>
                                                 <div>
                                                     <span
                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.check_out'); ?></span>
                                                     <p class="text-lg font-bold text-white">
-                                                        <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                                                        <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>
                                                     </p>
                                                 </div>
                                                 <div>
@@ -530,7 +530,7 @@ $payment_labels = [
                                                         <span
                                                             class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.paid_at'); ?></span>
                                                         <p class="text-white font-mono">
-                                                            <?php echo date('d/m/Y H:i', strtotime($booking['paid_at'])); ?>
+                                                            <?php echo date('m/d/Y H:i', strtotime($booking['paid_at'])); ?>
                                                         </p>
                                                     </div>
                                                 <?php endif; ?>
@@ -647,7 +647,7 @@ $payment_labels = [
                                                                     <?php echo $status_labels[$h_status]['label'] ?? $h_status; ?>
                                                                 </span>
                                                                 <span class="text-xs text-white/40 font-mono">
-                                                                    <?php echo date('d/m/Y H:i', strtotime($history['created_at'])); ?>
+                                                                    <?php echo date('m/d/Y H:i', strtotime($history['created_at'])); ?>
                                                                 </span>
                                                             </div>
                                                             <?php if ($history['changed_by_name']): ?>
@@ -919,12 +919,12 @@ $payment_labels = [
                     <div class="dates-grid">
                         <div class="date-box">
                             <div class="date-label">Check-in</div>
-                            <div class="date-val"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></div>
+                            <div class="date-val"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></div>
                             <div style="font-size: 12px; margin-top: 5px;">Từ/From 14:00</div>
                         </div>
                         <div class="date-box">
                             <div class="date-label">Check-out</div>
-                            <div class="date-val"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></div>
+                            <div class="date-val"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></div>
                             <div style="font-size: 12px; margin-top: 5px;">Trước/Before 12:00</div>
                         </div>
                     </div>

@@ -161,7 +161,7 @@ include 'includes/admin-header.php';
                                 <td class="font-bold" style="color: #d4af37;">
                                     <?php echo number_format($booking['total_price'], 0, ',', '.'); ?>VND
                                 </td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($booking['service_date'])); ?></td>
+                                <td><?php echo date('m/d/Y H:i', strtotime($booking['service_date'])); ?></td>
                                 <td>
                                     <?php
                                     $status_config = [

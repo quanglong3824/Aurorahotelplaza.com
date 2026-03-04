@@ -153,7 +153,7 @@ include 'includes/admin-header.php';
                                     <?php echo number_format($faq['views']); ?> lượt xem
                                 </span>
                                 <span>Thứ tự: <?php echo $faq['sort_order']; ?></span>
-                                <span>Cập nhật: <?php echo date('d/m/Y', strtotime($faq['updated_at'])); ?></span>
+                                <span>Cập nhật: <?php echo date('m/d/Y', strtotime($faq['updated_at'])); ?></span>
                             </div>
                         </div>
                         

@@ -389,9 +389,9 @@ $payment_labels = [
                                                                 <div class="flex items-center gap-2">
                                                                     <span
                                                                         class="material-symbols-outlined text-sm">calendar_month</span>
-                                                                    <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
+                                                                    <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?>
                                                                     -
-                                                                    <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                                                                    <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="material-symbols-outlined text-sm">group</span>
@@ -458,7 +458,7 @@ $payment_labels = [
                                                             </p>
                                                             <p class="text-xs text-white/40 italic">
                                                                 <?php _e('profile_bookings.booked_on'); ?>
-                                                                <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
+                                                                <?php echo date('m/d/Y', strtotime($booking['created_at'])); ?>
                                                             </p>
                                                         <?php else: ?>
                                                             <p class="text-2xl font-bold text-accent">
@@ -466,7 +466,7 @@ $payment_labels = [
                                                             </p>
                                                             <p class="text-xs text-white/40 italic">
                                                                 <?php _e('profile_bookings.booked_on'); ?>
-                                                                <?php echo date('d/m/Y', strtotime($booking['created_at'])); ?>
+                                                                <?php echo date('m/d/Y', strtotime($booking['created_at'])); ?>
                                                             </p>
                                                         <?php endif; ?>
                                                     </div>

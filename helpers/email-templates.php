@@ -13,7 +13,7 @@ class EmailTemplates {
      * Welcome email template
      */
     public static function getWelcomeTemplate($userName, $userEmail, $userId) {
-        $currentDate = date('d/m/Y H:i');
+        $currentDate = date('m/d/Y H:i');
         $hotelUrl = self::getBaseUrl();
         
         // Load CSS
@@ -157,7 +157,7 @@ HTML;
      * Temporary password email template
      */
     public static function getTemporaryPasswordTemplate($userName, $tempPassword) {
-        $currentDate = date('d/m/Y H:i');
+        $currentDate = date('m/d/Y H:i');
         $hotelUrl = self::getBaseUrl();
         
         // Load CSS with fallback
@@ -236,8 +236,8 @@ HTML;
      * For detailed template, use getBookingConfirmationEmailHTML in includes/email-templates/booking-confirmation.php
      */
     public static function getBookingConfirmationTemplate($bookingData) {
-        $checkIn = date('d/m/Y', strtotime($bookingData['check_in_date']));
-        $checkOut = date('d/m/Y', strtotime($bookingData['check_out_date']));
+        $checkIn = date('m/d/Y', strtotime($bookingData['check_in_date']));
+        $checkOut = date('m/d/Y', strtotime($bookingData['check_out_date']));
         $totalAmount = number_format($bookingData['total_amount']);
         $hotelUrl = self::getBaseUrl();
         

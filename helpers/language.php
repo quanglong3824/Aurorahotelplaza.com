@@ -169,7 +169,7 @@ function formatDate($date, $format = null, $lang = null) {
         return date('M d, Y', $timestamp);
     }
     
-    return date('d/m/Y', $timestamp);
+    return date('m/d/Y', $timestamp);
 }
 
 /**

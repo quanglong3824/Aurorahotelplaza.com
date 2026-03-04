@@ -510,7 +510,7 @@ try {
                                             <div class="flex items-center gap-4 text-sm text-white/60 mb-3">
                                                 <span class="flex items-center gap-1">
                                                     <span class="material-symbols-outlined text-base">calendar_today</span>
-                                                    <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                                                    <?php echo date('m/d/Y', strtotime($post['published_at'])); ?>
                                                 </span>
                                                 <?php if ($post['author_name']): ?>
                                                     <span class="flex items-center gap-1">

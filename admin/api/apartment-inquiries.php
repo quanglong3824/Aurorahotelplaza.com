@@ -42,8 +42,8 @@ try {
             }
 
             // Format dates for display
-            $inquiry['check_in_date'] = date('d/m/Y', strtotime($inquiry['check_in_date']));
-            $inquiry['created_at'] = date('d/m/Y H:i', strtotime($inquiry['created_at']));
+            $inquiry['check_in_date'] = date('m/d/Y', strtotime($inquiry['check_in_date']));
+            $inquiry['created_at'] = date('m/d/Y H:i', strtotime($inquiry['created_at']));
 
             echo json_encode(['success' => true, 'inquiry' => $inquiry]);
             break;

@@ -277,7 +277,7 @@ function getContactStatusBadge($status)
                                                 <?php _e('profile_page.dob'); ?>
                                             </p>
                                             <p class="text-lg">
-                                                <?php echo $user['date_of_birth'] ? date('d/m/Y', strtotime($user['date_of_birth'])) : __('profile_page.not_updated'); ?>
+                                                <?php echo $user['date_of_birth'] ? date('m/d/Y', strtotime($user['date_of_birth'])) : __('profile_page.not_updated'); ?>
                                             </p>
                                         </div>
                                         <div class="group">
@@ -285,7 +285,7 @@ function getContactStatusBadge($status)
                                                 <?php _e('profile_page.joined'); ?>
                                             </p>
                                             <p class="text-lg">
-                                                <?php echo date('d/m/Y', strtotime($user['created_at'])); ?>
+                                                <?php echo date('m/d/Y', strtotime($user['created_at'])); ?>
                                             </p>
                                         </div>
                                     </div>
@@ -357,8 +357,8 @@ function getContactStatusBadge($status)
                                                             <span class="flex items-center gap-1">
                                                                 <span
                                                                     class="material-symbols-outlined text-sm">calendar_month</span>
-                                                                <?php echo date('d/m/Y', strtotime($b['check_in_date'])); ?> -
-                                                                <?php echo date('d/m/Y', strtotime($b['check_out_date'])); ?>
+                                                                <?php echo date('m/d/Y', strtotime($b['check_in_date'])); ?> -
+                                                                <?php echo date('m/d/Y', strtotime($b['check_out_date'])); ?>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -413,7 +413,7 @@ function getContactStatusBadge($status)
                                                             <?php echo htmlspecialchars($p['description']); ?>
                                                         </p>
                                                         <p class="text-xs text-white/50">
-                                                            <?php echo date('d/m/Y H:i', strtotime($p['created_at'])); ?>
+                                                            <?php echo date('m/d/Y H:i', strtotime($p['created_at'])); ?>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -468,7 +468,7 @@ function getContactStatusBadge($status)
                                                 </p>
                                                 <p class="text-xs text-white/40 flex items-center gap-1">
                                                     <span class="material-symbols-outlined text-xs">schedule</span>
-                                                    <?php echo date('d/m/Y H:i', strtotime($c['created_at'])); ?>
+                                                    <?php echo date('m/d/Y H:i', strtotime($c['created_at'])); ?>
                                                 </p>
                                             </div>
                                         <?php endforeach; ?>

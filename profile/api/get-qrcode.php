@@ -55,8 +55,8 @@ try {
     if ($booking['room_number']) {
         $qr_data .= "Room No: {$booking['room_number']}\n";
     }
-    $qr_data .= "Check-in: " . date('d/m/Y', strtotime($booking['check_in_date'])) . "\n";
-    $qr_data .= "Check-out: " . date('d/m/Y', strtotime($booking['check_out_date'])) . "\n";
+    $qr_data .= "Check-in: " . date('m/d/Y', strtotime($booking['check_in_date'])) . "\n";
+    $qr_data .= "Check-out: " . date('m/d/Y', strtotime($booking['check_out_date'])) . "\n";
     $qr_data .= "Amount: " . number_format($booking['total_amount']) . " VND\n";
     $qr_data .= "Status: {$booking['status']}";
     

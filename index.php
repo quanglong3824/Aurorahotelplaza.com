@@ -672,7 +672,7 @@ try {
                                             <span class="flex items-center gap-1">
                                                 <span
                                                     class="material-symbols-outlined text-accent text-sm">calendar_today</span>
-                                                <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                                                <?php echo date('m/d/Y', strtotime($post['published_at'])); ?>
                                             </span>
                                             <span class="flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-accent text-sm">person</span>

@@ -128,7 +128,7 @@ try {
                             <div class="flex justify-between items-center py-2 border-b border-purple-500/20">
                                 <span class="text-white/70"><?php _e('booking_confirmation.est_checkin'); ?>:</span>
                                 <span
-                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
+                                    class="font-semibold"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-purple-500/20">
                                 <span class="text-white/70"><?php _e('booking_confirmation.rent_duration'); ?>:</span>
@@ -211,12 +211,12 @@ try {
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_in'); ?>:</span>
                                 <span
-                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></span>
+                                    class="font-semibold"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.check_out'); ?>:</span>
                                 <span
-                                    class="font-semibold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></span>
+                                    class="font-semibold"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></span>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.num_nights'); ?>:</span>

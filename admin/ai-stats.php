@@ -65,7 +65,7 @@ $max_daily_tokens = $total_keys * $budget_tokens_per_key;
 $current_active_key_idx = get_active_key_index();
 
 $percent_tokens = $max_daily_tokens > 0 ? min(100, round(($total_tokens / $max_daily_tokens) * 100, 2)) : 0;
-$last_updated_time = file_exists($log_file) ? date('d/m/Y H:i:s', filemtime($log_file)) : 'Chưa có dữ liệu';
+$last_updated_time = file_exists($log_file) ? date('m/d/Y H:i:s', filemtime($log_file)) : 'Chưa có dữ liệu';
 $rate_limits = get_key_rate_limits();
 ?>
 

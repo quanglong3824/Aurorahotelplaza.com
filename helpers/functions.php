@@ -35,7 +35,7 @@ function formatCurrency($amount) {
 /**
  * Format date Vietnamese
  */
-function formatDate($date, $format = 'd/m/Y') {
+function formatDate($date, $format = 'm/d/Y') {
     return date($format, strtotime($date));
 }
 

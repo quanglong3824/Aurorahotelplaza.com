@@ -61,8 +61,8 @@ try {
         ':description' => sprintf(
             'Xóa giá đặc biệt: %s (%s - %s)',
             $pricing['type_name'],
-            date('d/m/Y', strtotime($pricing['start_date'])),
-            date('d/m/Y', strtotime($pricing['end_date']))
+            date('m/d/Y', strtotime($pricing['start_date'])),
+            date('m/d/Y', strtotime($pricing['end_date']))
         ),
         ':ip_address' => Security::getClientIP(),
         ':user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'

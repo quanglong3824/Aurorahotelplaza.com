@@ -351,7 +351,7 @@ include 'includes/admin-header.php';
                                             </div>
                                         </td>
                                         <td class="p-4 text-sm text-gray-500">
-                                            <?php echo date('d/m/Y H:i:s', $backup['date']); ?>
+                                            <?php echo date('m/d/Y H:i:s', $backup['date']); ?>
                                             <div class="text-xs text-gray-400"><?php echo date('l', $backup['date']); ?></div>
                                         </td>
                                         <td class="p-4 text-sm text-gray-500 font-mono">

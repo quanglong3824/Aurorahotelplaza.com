@@ -68,7 +68,7 @@ $page_title = 'Điều khoản sử dụng';
                                     sử dụng dịch vụ.
                                 </p>
                                 <p class="text-sm text-white/60 mt-4">
-                                    <strong>Cập nhật lần cuối:</strong> 01/12/2025
+                                    <strong>Cập nhật lần cuối:</strong> 12/01/2025
                                 </p>
                             </div>
 

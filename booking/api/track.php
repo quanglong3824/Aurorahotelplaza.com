@@ -72,10 +72,10 @@ try {
                 'customer_name' => $customer_name,
                 'email' => $row['guest_email'],
                 'phone' => $row['guest_phone'],
-                'check_in' => date('d/m/Y', strtotime($row['check_in_date'])),
-                'check_out' => date('d/m/Y', strtotime($row['check_out_date'])),
+                'check_in' => date('m/d/Y', strtotime($row['check_in_date'])),
+                'check_out' => date('m/d/Y', strtotime($row['check_out_date'])),
                 'total_amount' => $row['total_amount'],
-                'created_at' => date('d/m/Y H:i', strtotime($row['created_at']))
+                'created_at' => date('m/d/Y H:i', strtotime($row['created_at']))
             ];
         }
 

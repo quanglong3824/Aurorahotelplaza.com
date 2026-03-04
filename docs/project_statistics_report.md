@@ -1,6 +1,6 @@
 # BÁO CÁO THỐNG KÊ TÍNH NĂNG VÀ THỰC TRẠNG PHÁT TRIỂN DỰ ÁN AURORA HOTEL PLAZA
 
-**Ngày xuất báo cáo:** 02/03/2026  
+**Ngày xuất báo cáo:** 03/02/2026  
 **Phiên bản hiện tại:** v2.1.1
 
 ---

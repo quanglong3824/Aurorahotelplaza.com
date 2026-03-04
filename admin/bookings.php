@@ -289,8 +289,8 @@ include 'includes/admin-header.php';
                                     <span class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Chưa phân</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></td>
-                            <td><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></td>
+                            <td><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></td>
+                            <td><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></td>
                             <td class="text-center"><?php echo $booking['total_nights']; ?></td>
                             <td class="font-medium"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND</td>
                             <td>

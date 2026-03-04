@@ -295,7 +295,7 @@ try {
                                                                 <?php echo htmlspecialchars($transaction['description']); ?>
                                                             </p>
                                                             <p class="text-xs text-white/40 mt-1">
-                                                                <?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?>
+                                                                <?php echo date('m/d/Y H:i', strtotime($transaction['created_at'])); ?>
                                                             </p>
                                                         </div>
                                                     </div>

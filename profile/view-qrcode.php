@@ -267,14 +267,14 @@ try {
                                 <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl text-center">
                                     <p class="text-xs text-green-600 dark:text-green-400 mb-1">CHECK-IN</p>
                                     <p class="font-bold text-xl text-green-700 dark:text-green-300">
-                                        <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
+                                        <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?>
                                     </p>
                                     <p class="text-xs text-green-600 dark:text-green-400 mt-1">Sau 14:00</p>
                                 </div>
                                 <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl text-center">
                                     <p class="text-xs text-red-600 dark:text-red-400 mb-1">CHECK-OUT</p>
                                     <p class="font-bold text-xl text-red-700 dark:text-red-300">
-                                        <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                                        <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>
                                     </p>
                                     <p class="text-xs text-red-600 dark:text-red-400 mt-1">Trước 12:00</p>
                                 </div>
@@ -376,7 +376,7 @@ try {
                             <!-- Booking Time -->
                             <div
                                 class="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                <p>Đặt phòng lúc: <?php echo date('H:i d/m/Y', strtotime($booking['created_at'])); ?>
+                                <p>Đặt phòng lúc: <?php echo date('H:i m/d/Y', strtotime($booking['created_at'])); ?>
                                 </p>
                             </div>
                         </div>
@@ -442,7 +442,7 @@ try {
                         // Check-in info
                         ctx.fillStyle = '#888888';
                         ctx.font = '12px Arial';
-                        ctx.fillText('Check-in: <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?> | Check-out: <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>', canvas.width / 2, footerY + 55);
+                        ctx.fillText('Check-in: <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?> | Check-out: <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>', canvas.width / 2, footerY + 55);
 
                         // Download
                         const link = document.createElement('a');
@@ -721,12 +721,12 @@ try {
                     <div class="dates-grid">
                         <div class="date-box checkin">
                             <div class="date-label">Check-in</div>
-                            <div class="date-value"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></div>
+                            <div class="date-value"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></div>
                             <div class="date-time">Sau 14:00</div>
                         </div>
                         <div class="date-box checkout">
                             <div class="date-label">Check-out</div>
-                            <div class="date-value"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></div>
+                            <div class="date-value"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></div>
                             <div class="date-time">Trước 12:00</div>
                         </div>
                     </div>
@@ -762,7 +762,7 @@ try {
                     if (navigator.share) {
                         navigator.share({
                             title: 'QR Code - <?php echo $booking['booking_code']; ?>',
-                            text: 'Mã QR cho đặt phòng tại Aurora Hotel Plaza\\nCheck-in: <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>\\nCheck-out: <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>',
+                            text: 'Mã QR cho đặt phòng tại Aurora Hotel Plaza\\nCheck-in: <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?>\\nCheck-out: <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>',
                             url: window.location.href
                         }).catch(err => console.log('Error sharing:', err));
                     } else {

@@ -299,7 +299,7 @@ include 'includes/admin-header.php';
                                         
                                         <span class="flex items-center gap-1">
                                             <span class="material-symbols-outlined text-xs">schedule</span>
-                                            <?php echo date('d/m/Y H:i:s', strtotime($activity['created_at'])); ?>
+                                            <?php echo date('m/d/Y H:i:s', strtotime($activity['created_at'])); ?>
                                         </span>
                                         
                                         <span class="flex items-center gap-1">

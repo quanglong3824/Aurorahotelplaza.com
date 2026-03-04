@@ -244,7 +244,7 @@ include 'includes/admin-header.php';
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            <?php echo date('d/m/Y H:i', strtotime($refund['requested_at'])); ?>
+                            <?php echo date('m/d/Y H:i', strtotime($refund['requested_at'])); ?>
                         </td>
                         <td class="px-6 py-4">
                             <button onclick="viewRefund(<?php echo $refund['refund_id']; ?>)" 

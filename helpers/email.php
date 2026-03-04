@@ -70,9 +70,9 @@ class EmailHelper {
      * Get booking confirmation HTML template
      */
     private function getBookingConfirmationTemplate($booking) {
-        $check_in = date('d/m/Y', strtotime($booking['check_in_date']));
-        $check_out = date('d/m/Y', strtotime($booking['check_out_date']));
-        $booking_date = date('d/m/Y H:i', strtotime($booking['created_at']));
+        $check_in = date('m/d/Y', strtotime($booking['check_in_date']));
+        $check_out = date('m/d/Y', strtotime($booking['check_out_date']));
+        $booking_date = date('m/d/Y H:i', strtotime($booking['created_at']));
         
         return "
         <!DOCTYPE html>
@@ -193,9 +193,9 @@ class EmailHelper {
      * Get booking confirmation text template
      */
     private function getBookingConfirmationText($booking) {
-        $check_in = date('d/m/Y', strtotime($booking['check_in_date']));
-        $check_out = date('d/m/Y', strtotime($booking['check_out_date']));
-        $booking_date = date('d/m/Y H:i', strtotime($booking['created_at']));
+        $check_in = date('m/d/Y', strtotime($booking['check_in_date']));
+        $check_out = date('m/d/Y', strtotime($booking['check_out_date']));
+        $booking_date = date('m/d/Y H:i', strtotime($booking['created_at']));
         
         return "
 AURORA HOTEL PLAZA - XÁC NHẬN ĐẶT PHÒNG
@@ -281,7 +281,7 @@ Trân trọng,
      * Get payment confirmation templates
      */
     private function getPaymentConfirmationTemplate($booking, $payment) {
-        $payment_date = date('d/m/Y H:i', strtotime($payment['paid_at']));
+        $payment_date = date('m/d/Y H:i', strtotime($payment['paid_at']));
         
         $payment_content = "
         <div class='booking-info'>
@@ -320,7 +320,7 @@ Trân trọng,
      * Get payment confirmation text
      */
     private function getPaymentConfirmationText($booking, $payment) {
-        $payment_date = date('d/m/Y H:i', strtotime($payment['paid_at']));
+        $payment_date = date('m/d/Y H:i', strtotime($payment['paid_at']));
         
         $payment_text = "
             THÔNG TIN THANH TOÁN:

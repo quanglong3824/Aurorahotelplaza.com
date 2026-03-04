@@ -148,8 +148,8 @@ function sendBookingStatusUpdateEmail($booking, $old_status, $new_status) {
     
     $info = $status_messages[$new_status];
     $booking['total_amount_formatted'] = number_format($booking['total_amount'], 0, ',', '.');
-    $check_in = date('d/m/Y', strtotime($booking['check_in_date']));
-    $check_out = date('d/m/Y', strtotime($booking['check_out_date']));
+    $check_in = date('m/d/Y', strtotime($booking['check_in_date']));
+    $check_out = date('m/d/Y', strtotime($booking['check_out_date']));
     
     $qr_section = '';
     if ($new_status === 'confirmed') {

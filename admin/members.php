@@ -279,7 +279,7 @@ include 'includes/admin-header.php';
                                 </td>
                                 <td>
                                     <span class="text-sm text-gray-600">
-                                        <?php echo date('d/m/Y', strtotime($member['created_at'])); ?>
+                                        <?php echo date('m/d/Y', strtotime($member['created_at'])); ?>
                                     </span>
                                 </td>
                                 <td>

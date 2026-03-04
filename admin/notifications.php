@@ -346,7 +346,7 @@ function time_ago($datetime) {
     if ($diff < 86400) return floor($diff / 3600) . ' giờ trước';
     if ($diff < 604800) return floor($diff / 86400) . ' ngày trước';
     
-    return date('d/m/Y H:i', $time);
+    return date('m/d/Y H:i', $time);
 }
 ?>
 

@@ -115,8 +115,8 @@ try {
         '%s cho %s từ %s đến %s: %s VND',
         $message,
         $room_type['type_name'],
-        date('d/m/Y', strtotime($start_date)),
-        date('d/m/Y', strtotime($end_date)),
+        date('m/d/Y', strtotime($start_date)),
+        date('m/d/Y', strtotime($end_date)),
         number_format($price)
     );
     

@@ -129,7 +129,7 @@ include 'includes/admin-header.php';
                                 </span>
                                 <span class="flex items-center gap-1">
                                     <span class="material-symbols-outlined text-sm">calendar_today</span>
-                                    <?php echo date('d/m/Y', strtotime($post['created_at'])); ?>
+                                    <?php echo date('m/d/Y', strtotime($post['created_at'])); ?>
                                 </span>
                                 <span class="flex items-center gap-1">
                                     <span class="material-symbols-outlined text-sm">comment</span>

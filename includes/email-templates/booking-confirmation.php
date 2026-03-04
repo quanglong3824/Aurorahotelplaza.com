@@ -11,8 +11,8 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
     $hotel_email = $hotel_info['email'] ?? 'info@aurorahotelplaza.com';
     $hotel_website = $hotel_info['website'] ?? 'https://aurorahotelplaza.com';
     
-    $check_in = date('d/m/Y', strtotime($booking['check_in_date']));
-    $check_out = date('d/m/Y', strtotime($booking['check_out_date']));
+    $check_in = date('m/d/Y', strtotime($booking['check_in_date']));
+    $check_out = date('m/d/Y', strtotime($booking['check_out_date']));
     
     // Load CSS
     $css = file_get_contents(__DIR__ . '/email-styles.css');
@@ -137,8 +137,8 @@ function getBookingConfirmationEmailText($booking, $hotel_info = []) {
     $hotel_phone = $hotel_info['phone'] ?? '(028) 1234 5678';
     $hotel_email = $hotel_info['email'] ?? 'info@aurorahotelplaza.com';
     
-    $check_in = date('d/m/Y', strtotime($booking['check_in_date']));
-    $check_out = date('d/m/Y', strtotime($booking['check_out_date']));
+    $check_in = date('m/d/Y', strtotime($booking['check_in_date']));
+    $check_out = date('m/d/Y', strtotime($booking['check_out_date']));
     
     $text = <<<TEXT
 {$hotel_name}

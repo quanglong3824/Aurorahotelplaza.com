@@ -80,7 +80,7 @@ contact_submissions: name,email,phone,subject,message,status
 [BUTTONS]
 - Điều hướng: [LINK_BTN: name=Tên nút, url=/path]
 - Xem QR booking: [VIEW_QR_BTN: code=BKG001, id=123]
-- Đặt phòng: [BOOK_NOW_BTN: slug=deluxe, name=Phòng Deluxe, cin=15/03/2025, cout=17/03/2025]
+- Đặt phòng: [BOOK_NOW_BTN: slug=deluxe, name=Phòng Deluxe, cin=03/15/2025, cout=03/17/2025]
 
 [SITEMAP] /|/rooms|/services|/promotions|/contact|/profile|/login-register
 

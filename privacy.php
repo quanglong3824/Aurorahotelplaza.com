@@ -72,7 +72,7 @@ $page_title = __('privacy.title');
                                     <?php _e('privacy.intro'); ?>
                                 </p>
                                 <p class="text-sm text-white/60 mt-4">
-                                    <strong><?php _e('privacy.last_updated'); ?>:</strong> 01/12/2025
+                                    <strong><?php _e('privacy.last_updated'); ?>:</strong> 12/01/2025
                                 </p>
                             </div>
 

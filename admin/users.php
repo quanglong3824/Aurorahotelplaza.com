@@ -204,7 +204,7 @@ include 'includes/admin-header.php';
                             </td>
                             <td class="text-center"><?php echo $user['actions_count']; ?></td>
                             <td class="text-sm">
-                                <?php echo $user['last_login'] ? date('d/m/Y H:i', strtotime($user['last_login'])) : 'Chưa đăng nhập'; ?>
+                                <?php echo $user['last_login'] ? date('m/d/Y H:i', strtotime($user['last_login'])) : 'Chưa đăng nhập'; ?>
                             </td>
                             <td>
                                 <div class="action-buttons">

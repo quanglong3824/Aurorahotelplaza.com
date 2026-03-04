@@ -598,7 +598,7 @@ function getContactStatusBadge($status)
                                                                 <?php _e('profile_full.check_in'); ?>
                                                             </div>
                                                             <div class="font-semibold text-white">
-                                                                <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?>
+                                                                <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?>
                                                             </div>
                                                         </div>
                                                         <div>
@@ -606,7 +606,7 @@ function getContactStatusBadge($status)
                                                                 <?php _e('profile_full.check_out'); ?>
                                                             </div>
                                                             <div class="font-semibold text-white">
-                                                                <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                                                                <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>
                                                             </div>
                                                         </div>
                                                         <div>
@@ -649,7 +649,7 @@ function getContactStatusBadge($status)
                                                         <?php foreach ($points_history as $trans): ?>
                                                             <tr class="hover:bg-white/5 transition-colors">
                                                                 <td class="px-6 py-4 text-slate-300 whitespace-nowrap">
-                                                                    <?php echo date('d/m/Y H:i', strtotime($trans['created_at'])); ?>
+                                                                    <?php echo date('m/d/Y H:i', strtotime($trans['created_at'])); ?>
                                                                 </td>
                                                                 <td class="px-6 py-4 text-white font-medium">
                                                                     <div class="flex items-center gap-2">
@@ -708,7 +708,7 @@ function getContactStatusBadge($status)
                                                                 class="badge badge-success"><?php echo $payment['status']; ?></span>
                                                         </div>
                                                         <div class="text-xs text-slate-500">
-                                                            <?php echo date('d/m/Y', strtotime($payment['created_at'])); ?>
+                                                            <?php echo date('m/d/Y', strtotime($payment['created_at'])); ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -768,7 +768,7 @@ function getContactStatusBadge($status)
                                                     <div class="flex justify-between items-center pt-2 border-t border-white/5">
                                                         <span class="text-xs text-slate-500 flex items-center gap-1">
                                                             <span class="material-symbols-outlined text-xs">schedule</span>
-                                                            <?php echo date('d/m/Y H:i', strtotime($contact['created_at'])); ?>
+                                                            <?php echo date('m/d/Y H:i', strtotime($contact['created_at'])); ?>
                                                         </span>
                                                         <button onclick="viewContactDetail(<?php echo $contact['id']; ?>)"
                                                             class="text-accent text-sm hover:text-white transition-colors flex items-center gap-1 font-medium">

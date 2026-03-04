@@ -187,8 +187,8 @@ include 'includes/admin-header.php';
                                 <p class="font-semibold">
                                     <?php echo htmlspecialchars($booking['room_number'] ?? $booking['type_name']); ?></p>
                                 <p class="text-sm text-gray-500">
-                                    <?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?> -
-                                    <?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?>
+                                    <?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?> -
+                                    <?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?>
                                 </p>
                             </div>
                             <div class="text-right">
@@ -245,11 +245,11 @@ include 'includes/admin-header.php';
                 <?php endif; ?>
 
                 <div class="text-sm text-gray-600 space-y-2">
-                    <p><strong>Ngày đăng ký:</strong> <?php echo date('d/m/Y', strtotime($customer['created_at'])); ?>
+                    <p><strong>Ngày đăng ký:</strong> <?php echo date('m/d/Y', strtotime($customer['created_at'])); ?>
                     </p>
                     <?php if ($customer['last_login']): ?>
                         <p><strong>Đăng nhập cuối:</strong>
-                            <?php echo date('d/m/Y H:i', strtotime($customer['last_login'])); ?></p>
+                            <?php echo date('m/d/Y H:i', strtotime($customer['last_login'])); ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -276,7 +276,7 @@ include 'includes/admin-header.php';
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
                                     <?php echo htmlspecialchars(mb_substr($review['comment'], 0, 100)); ?>...</p>
                             <?php endif; ?>
-                            <p class="text-xs text-gray-500 mt-2"><?php echo date('d/m/Y', strtotime($review['created_at'])); ?>
+                            <p class="text-xs text-gray-500 mt-2"><?php echo date('m/d/Y', strtotime($review['created_at'])); ?>
                             </p>
                         </div>
                     <?php endforeach; ?>

@@ -139,8 +139,8 @@ include 'includes/admin-header.php';
                         <div class="flex-1">
                             <p class="font-semibold"><?php echo htmlspecialchars($pricing['type_name']); ?></p>
                             <p class="text-sm text-gray-500">
-                                <?php echo date('d/m/Y', strtotime($pricing['start_date'])); ?> -
-                                <?php echo date('d/m/Y', strtotime($pricing['end_date'])); ?>
+                                <?php echo date('m/d/Y', strtotime($pricing['start_date'])); ?> -
+                                <?php echo date('m/d/Y', strtotime($pricing['end_date'])); ?>
                             </p>
                         </div>
                         <div class="text-right">

@@ -1261,7 +1261,7 @@ function calculateEndDate() {
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + months);
 
-    // Format as dd/mm/yyyy for display
+    // Format as mm/dd/yyyy for display
     const day = String(endDate.getDate()).padStart(2, '0');
     const month = String(endDate.getMonth() + 1).padStart(2, '0');
     const year = endDate.getFullYear();

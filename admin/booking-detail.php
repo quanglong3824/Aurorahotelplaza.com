@@ -200,19 +200,19 @@ include 'includes/admin-header.php';
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-in</p>
-                        <p class="font-medium"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
+                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></p>
                         <?php if ($booking['checked_in_at']): ?>
                             <p class="text-sm text-green-600">
-                                Đã check-in: <?php echo date('d/m/Y H:i', strtotime($booking['checked_in_at'])); ?>
+                                Đã check-in: <?php echo date('m/d/Y H:i', strtotime($booking['checked_in_at'])); ?>
                             </p>
                         <?php endif; ?>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-out</p>
-                        <p class="font-medium"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
+                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></p>
                         <?php if ($booking['checked_out_at']): ?>
                             <p class="text-sm text-green-600">
-                                Đã check-out: <?php echo date('d/m/Y H:i', strtotime($booking['checked_out_at'])); ?>
+                                Đã check-out: <?php echo date('m/d/Y H:i', strtotime($booking['checked_out_at'])); ?>
                             </p>
                         <?php endif; ?>
                     </div>
@@ -235,7 +235,7 @@ include 'includes/admin-header.php';
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Ngày đặt</p>
-                        <p class="font-medium"><?php echo date('d/m/Y H:i', strtotime($booking['created_at'])); ?></p>
+                        <p class="font-medium"><?php echo date('m/d/Y H:i', strtotime($booking['created_at'])); ?></p>
                     </div>
                 </div>
 
@@ -355,7 +355,7 @@ include 'includes/admin-header.php';
                             <?php echo nl2br(htmlspecialchars($booking['cancellation_reason'])); ?>
                         </p>
                         <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
-                            Hủy lúc: <?php echo date('d/m/Y H:i', strtotime($booking['cancelled_at'])); ?>
+                            Hủy lúc: <?php echo date('m/d/Y H:i', strtotime($booking['cancelled_at'])); ?>
                         </p>
                     </div>
                 <?php endif; ?>
@@ -509,7 +509,7 @@ include 'includes/admin-header.php';
                                             ];
                                             echo $methods[$payment['payment_method']] ?? $payment['payment_method'];
                                             ?>
-                                            - <?php echo date('d/m/Y H:i', strtotime($payment['created_at'])); ?>
+                                            - <?php echo date('m/d/Y H:i', strtotime($payment['created_at'])); ?>
                                         </p>
                                         <?php if ($payment['notes']): ?>
                                             <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
@@ -596,7 +596,7 @@ include 'includes/admin-header.php';
                                 </p>
                                 <p class="text-text-secondary-light dark:text-text-secondary-dark text-xs">
                                     <?php echo $item['changed_by_name'] ? htmlspecialchars($item['changed_by_name']) : 'System'; ?>
-                                    - <?php echo date('d/m/Y H:i', strtotime($item['created_at'])); ?>
+                                    - <?php echo date('m/d/Y H:i', strtotime($item['created_at'])); ?>
                                 </p>
                                 <?php if ($item['notes']): ?>
                                     <p class="text-xs mt-1"><?php echo htmlspecialchars($item['notes']); ?></p>

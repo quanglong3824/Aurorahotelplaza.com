@@ -10,7 +10,7 @@ class BookingHelper {
      * Parse smart booking code
      * Chuyển đổi mã ngắn thành mã đầy đủ
      * 
-     * VD: 6C320B -> BK202511196C320B (nếu hôm nay là 19/11/2025)
+     * VD: 6C320B -> BK202511196C320B (nếu hôm nay là 11/19/2025)
      * VD: BK202511196C320B -> BK202511196C320B (giữ nguyên nếu đã đầy đủ)
      * 
      * @param string $input Mã booking người dùng nhập

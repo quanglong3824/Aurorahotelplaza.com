@@ -143,7 +143,7 @@ try {
                                             <div class="blog-meta">
                                                 <div class="blog-meta-item">
                                                     <span class="material-symbols-outlined">calendar_month</span>
-                                                    <span><?php echo date('d/m/Y', strtotime($post['published_at'])); ?></span>
+                                                    <span><?php echo date('m/d/Y', strtotime($post['published_at'])); ?></span>
                                                 </div>
                                                 <div class="blog-meta-item">
                                                     <span class="material-symbols-outlined">person</span>

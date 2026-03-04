@@ -239,7 +239,7 @@ include 'includes/admin-header.php';
                 <div class="space-y-2">
                     <?php foreach ($daily_revenue as $day): ?>
                         <div class="flex items-center gap-3">
-                            <span class="text-sm w-24"><?php echo date('d/m/Y', strtotime($day['date'])); ?></span>
+                            <span class="text-sm w-24"><?php echo date('m/d/Y', strtotime($day['date'])); ?></span>
                             <div
                                 class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
                                 <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"

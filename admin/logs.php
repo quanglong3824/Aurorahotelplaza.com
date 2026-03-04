@@ -235,7 +235,7 @@ include 'includes/admin-header.php';
                     <?php foreach ($logs as $log): ?>
                         <tr>
                             <td class="text-sm whitespace-nowrap">
-                                <?php echo date('d/m/Y H:i:s', strtotime($log['created_at'])); ?>
+                                <?php echo date('m/d/Y H:i:s', strtotime($log['created_at'])); ?>
                             </td>
                             <td>
                                 <?php if ($log['full_name']): ?>

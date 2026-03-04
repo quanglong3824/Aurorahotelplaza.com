@@ -225,7 +225,7 @@ include 'includes/admin-header.php';
                             </td>
                             <td>
                                 <?php if ($room['last_cleaned']): ?>
-                                    <span class="text-sm"><?php echo date('d/m/Y H:i', strtotime($room['last_cleaned'])); ?></span>
+                                    <span class="text-sm"><?php echo date('m/d/Y H:i', strtotime($room['last_cleaned'])); ?></span>
                                 <?php else: ?>
                                     <span class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Chưa dọn</span>
                                 <?php endif; ?>

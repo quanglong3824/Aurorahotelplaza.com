@@ -217,7 +217,7 @@ include 'includes/admin-header.php';
                                 <?php endif; ?>
                                 
                                 <div class="flex items-center gap-4 text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                    <span><?php echo date('d/m/Y H:i', strtotime($review['created_at'])); ?></span>
+                                    <span><?php echo date('m/d/Y H:i', strtotime($review['created_at'])); ?></span>
                                     <?php if ($review['helpful_count'] > 0): ?>
                                         <span><?php echo $review['helpful_count']; ?> người thấy hữu ích</span>
                                     <?php endif; ?>

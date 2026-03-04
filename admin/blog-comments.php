@@ -95,7 +95,7 @@ include 'includes/admin-header.php';
                                 <div class="flex flex-wrap items-center gap-3 mb-2">
                                     <span class="font-semibold text-gray-900 dark:text-white"><?php echo htmlspecialchars($c['author_name']); ?></span>
                                     <span class="text-xs text-gray-500 dark:text-gray-400"><?php echo htmlspecialchars($c['author_email']); ?></span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?php echo date('d/m/Y H:i', strtotime($c['created_at'])); ?></span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400"><?php echo date('m/d/Y H:i', strtotime($c['created_at'])); ?></span>
                                 </div>
 
                                 <div class="text-sm text-gray-700 dark:text-gray-300 mb-3 whitespace-pre-line"><?php echo htmlspecialchars($c['content']); ?></div>

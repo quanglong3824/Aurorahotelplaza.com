@@ -459,8 +459,8 @@ $msg = $_GET['msg'] ?? '';
                         </h4>
                         <?php
                         $metaItems = [
-                            ['icon' => 'calendar_today', 'label' => 'Thời gian', 'value' => date('H:i:s d/m/Y', strtotime($detailRow['created_at']))],
-                            ['icon' => 'visibility', 'label' => 'Lần cuối thấy', 'value' => $detailRow['last_seen_at'] ? date('H:i d/m/Y', strtotime($detailRow['last_seen_at'])) : '—'],
+                            ['icon' => 'calendar_today', 'label' => 'Thời gian', 'value' => date('H:i:s m/d/Y', strtotime($detailRow['created_at']))],
+                            ['icon' => 'visibility', 'label' => 'Lần cuối thấy', 'value' => $detailRow['last_seen_at'] ? date('H:i m/d/Y', strtotime($detailRow['last_seen_at'])) : '—'],
                             ['icon' => 'repeat', 'label' => 'Số lần xảy ra', 'value' => number_format($detailRow['occurrence_count'])],
                             ['icon' => 'language', 'label' => 'URL', 'value' => $detailRow['page_url'] ? '<span class="break-all text-xs">' . htmlspecialchars($detailRow['page_url']) . '</span>' : '—'],
                             ['icon' => 'person', 'label' => 'User ID', 'value' => $detailRow['user_id'] ?: 'Khách'],

@@ -379,7 +379,7 @@ Dành cho mobile hoặc người muốn xem lịch sử chat đầy đủ:
 │                                       │
 │  [Lịch sử tin nhắn - full scroll]    │
 │                                       │
-│  ─── Hôm nay, 25/02/2026 ───         │
+│  ─── Hôm nay, 02/25/2026 ───         │
 │                                       │
 │  ┌──────────────────────┐             │
 │  │ Chào anh! Em có thể │             │

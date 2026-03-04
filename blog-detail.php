@@ -168,7 +168,7 @@ try {
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-sm">calendar_today</span>
-                                <span><?php echo date('d/m/Y', strtotime($post['published_at'])); ?></span>
+                                <span><?php echo date('m/d/Y', strtotime($post['published_at'])); ?></span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
@@ -616,7 +616,7 @@ try {
                                                             <span
                                                                 class="font-semibold text-white"><?php echo htmlspecialchars($comment['user_name']); ?></span>
                                                             <span class="text-sm text-white/50">
-                                                                <?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?>
+                                                                <?php echo date('m/d/Y H:i', strtotime($comment['created_at'])); ?>
                                                             </span>
                                                         </div>
                                                         <p class="text-white/80">
