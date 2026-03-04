@@ -11,10 +11,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
 require_once '../../config/database.php';
 
 $db = getDB();
-$stmt = $db->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('telegram_bot_token','telegram_chat_id')");
+// Lấy giá trị mới nhất KHÔNG rỗng — tránh đọc nhầm row rỗng khi có duplicate key
+$stmt = $db->query("SELECT setting_key, setting_value FROM system_settings 
+    WHERE setting_key IN ('telegram_bot_token','telegram_chat_id')
+      AND setting_value IS NOT NULL AND setting_value != ''
+    ORDER BY setting_id DESC");
 $settings = [];
 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $settings[$row['setting_key']] = $row['setting_value'];
+    if (!isset($settings[$row['setting_key']])) { // chỉ lấy mới nhất
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
 }
 
 $token = trim($settings['telegram_bot_token'] ?? '');

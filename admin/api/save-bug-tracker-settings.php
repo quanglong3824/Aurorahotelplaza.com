@@ -25,35 +25,22 @@ foreach ($fields as $key) {
         continue;
     $value = trim($_POST[$key]);
 
-    // Nếu field trống (người dùng không nhập lại), bỏ qua — giữ nguyên giá trị cũ
-    // Ngoại trừ bug_tracker_enabled và min_severity luôn cập nhật
-    if ($value === '' && !in_array($key, ['bug_tracker_enabled', 'bug_tracker_min_severity'])) {
+    // Bỏ qua token/chat_id rỗng (giữ nguyên giá trị cũ)
+    if ($value === '' && in_array($key, ['telegram_bot_token', 'telegram_chat_id'])) {
         continue;
     }
 
     try {
-        // Kiểm tra key đã tồn tại chưa
-        $checkStmt = $db->prepare("SELECT setting_id FROM system_settings WHERE setting_key = ?");
-        $checkStmt->execute([$key]);
-        $existing = $checkStmt->fetch();
+        // Xóa TẤT CẢ rows của key này (kể cả duplicate rỗng) rồi insert mới
+        // Đây là cách duy nhất đảm bảo không có duplicate gây đọc nhầm
+        $db->prepare("DELETE FROM system_settings WHERE setting_key = ?")
+            ->execute([$key]);
 
-        if ($existing) {
-            // UPDATE — chỉ dùng các cột chắc chắn tồn tại
-            $db->prepare("UPDATE system_settings SET setting_value = ? WHERE setting_key = ?")
-                ->execute([$value, $key]);
-        } else {
-            // INSERT — dùng các cột chắc chắn tồn tại
-            $db->prepare("INSERT INTO system_settings (setting_key, setting_value, setting_type, description) VALUES (?, ?, 'string', ?)")
-                ->execute([$key, $value, $key]);
-        }
+        $db->prepare("INSERT INTO system_settings (setting_key, setting_value, setting_type, description) VALUES (?, ?, 'string', ?)")
+            ->execute([$key, $value, $key]);
+
     } catch (\Throwable $e) {
-        // Fallback: INSERT IGNORE nếu cột nào đó thiếu
-        try {
-            $db->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?")
-                ->execute([$key, $value, $value]);
-        } catch (\Throwable $e2) {
-            error_log('[BugTracker] Save setting failed for ' . $key . ': ' . $e2->getMessage());
-        }
+        error_log('[BugTracker] Save setting failed for ' . $key . ': ' . $e->getMessage());
     }
 }
 

@@ -57,13 +57,22 @@ class AuroraErrorTracker
         try {
             $db = self::getDb();
             if ($db) {
-                $stmt = $db->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('telegram_bot_token', 'telegram_chat_id') LIMIT 2");
+                // Lấy giá trị mới nhất KHÔNG rỗng cho mỗi key (tránh đọc nhầm row rỗng)
+                $stmt = $db->prepare(
+                    "SELECT setting_key, setting_value FROM system_settings 
+                     WHERE setting_key IN ('telegram_bot_token', 'telegram_chat_id')
+                       AND setting_value IS NOT NULL AND setting_value != ''
+                     ORDER BY setting_id DESC"
+                );
                 $stmt->execute();
                 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    if ($row['setting_key'] === 'telegram_bot_token')
+                    // Chỉ set lần đầu (DESC = mới nhất trước)
+                    if ($row['setting_key'] === 'telegram_bot_token' && empty(self::$telegramBotToken)) {
                         self::$telegramBotToken = $row['setting_value'];
-                    if ($row['setting_key'] === 'telegram_chat_id')
+                    }
+                    if ($row['setting_key'] === 'telegram_chat_id' && empty(self::$telegramChatId)) {
                         self::$telegramChatId = $row['setting_value'];
+                    }
                 }
             }
         } catch (\Throwable $e) {

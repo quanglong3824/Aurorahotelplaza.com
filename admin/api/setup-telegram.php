@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token && $chatId) {
             'telegram_chat_id' => trim($chatId),
         ];
         foreach ($pairs as $key => $val) {
-            $db->prepare("
-                INSERT INTO system_settings (setting_key, setting_value, setting_type, description)
-                VALUES (?, ?, 'string', ?)
-                ON DUPLICATE KEY UPDATE setting_value = ?
-            ")->execute([$key, $val, $key, $val]);
+            // Xóa TẤT CẢ rows cũ (kể cả row rỗng) rồi insert mới → không còn duplicate
+            $db->prepare("DELETE FROM system_settings WHERE setting_key = ?")
+                ->execute([$key]);
+            $db->prepare("INSERT INTO system_settings (setting_key, setting_value, setting_type, description) VALUES (?, ?, 'string', ?)")
+                ->execute([$key, $val, $key]);
         }
 
         // Verify lại
