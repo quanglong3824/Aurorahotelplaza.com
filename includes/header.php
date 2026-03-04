@@ -289,6 +289,11 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     </a>
                 </div>
             </div>
+
+            <!-- Help Button - Onboarding Guide -->
+            <button class="help-btn" id="helpBtn" onclick="toggleHelpModal()" title="<?php _e('common.help'); ?>">
+                <span class="material-symbols-outlined">help</span>
+            </button>
         </div>
     </div>
 </header>
@@ -866,6 +871,239 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     .dark .tracking-modal-body::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.15);
     }
+
+    /* Help Button Styles */
+    .help-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .help-btn:hover {
+        transform: scale(1.1) rotate(15deg);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        animation: pulse-help 2s infinite;
+    }
+
+    .help-btn .material-symbols-outlined {
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    @keyframes pulse-help {
+        0%, 100% {
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        50% {
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.6);
+        }
+    }
+
+    /* Help Modal */
+    .help-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .help-modal.active {
+        display: flex;
+    }
+
+    .help-modal-content {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 20px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+    }
+
+    .dark .help-modal-content {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    .help-modal-header {
+        padding: 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px 20px 0 0;
+        color: white;
+    }
+
+    .dark .help-modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .help-modal-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .help-modal-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .help-modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    .help-modal-body {
+        padding: 24px;
+    }
+
+    .help-roadmap-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        margin-bottom: 16px;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .dark .help-roadmap-item {
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    .help-roadmap-item:hover {
+        transform: translateX(8px);
+        background: rgba(102, 126, 234, 0.1);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .dark .help-roadmap-item:hover {
+        background: rgba(102, 126, 234, 0.15);
+    }
+
+    .help-roadmap-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .help-roadmap-icon .material-symbols-outlined {
+        font-size: 28px;
+    }
+
+    .help-roadmap-content {
+        flex: 1;
+    }
+
+    .help-roadmap-content h4 {
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .dark .help-roadmap-content h4 {
+        color: #f9fafb;
+    }
+
+    .help-roadmap-content p {
+        margin: 0 0 12px 0;
+        font-size: 0.9rem;
+        color: #6b7280;
+        line-height: 1.6;
+    }
+
+    .dark .help-roadmap-content p {
+        color: #9ca3af;
+    }
+
+    .help-roadmap-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .help-tip {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .help-tip .material-symbols-outlined {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .help-tip p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <!-- Header Styles & Script -->
@@ -888,4 +1126,118 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             }
         } catch (e) { }
     })();
+
+    // Help Modal Functions
+    function toggleHelpModal(show) {
+        const modal = document.getElementById('helpModal');
+        if (!modal) return;
+        
+        if (show === true) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        } else if (show === false) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        } else {
+            modal.classList.toggle('active');
+            document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : '';
+        }
+    }
+
+    // Close help modal on outside click
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('helpModal');
+        if (modal && e.target === modal) {
+            toggleHelpModal(false);
+        }
+    });
+
+    // Close help modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            toggleHelpModal(false);
+        }
+    });
 </script>
+
+<!-- Help Modal -->
+<div id="helpModal" class="help-modal">
+    <div class="help-modal-content">
+        <div class="help-modal-header">
+            <h3>
+                <span class="material-symbols-outlined">help</span>
+                <span>Hướng dẫn sử dụng</span>
+            </h3>
+            <button class="help-modal-close" onclick="toggleHelpModal(false)">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="help-modal-body">
+            <!-- Roadmap Item 1: Track Booking -->
+            <div class="help-roadmap-item">
+                <div class="help-roadmap-icon">
+                    <span class="material-symbols-outlined">search</span>
+                </div>
+                <div class="help-roadmap-content">
+                    <h4>Theo dõi đơn đặt phòng</h4>
+                    <p>Nhập mã đặt phòng (ví dụ: <strong>BK20260304ABC123</strong>) hoặc số điện thoại/email vào ô tìm kiếm ở góc trên phải để tra cứu tình trạng đơn đặt phòng của bạn.</p>
+                    <span class="help-roadmap-badge">
+                        <span class="material-symbols-outlined" style="font-size: 14px;">info</span>
+                        <span>Khách vãng lai & Đã đăng nhập</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Roadmap Item 2: View Booking History -->
+            <div class="help-roadmap-item">
+                <div class="help-roadmap-icon">
+                    <span class="material-symbols-outlined">hotel</span>
+                </div>
+                <div class="help-roadmap-content">
+                    <h4>Xem lịch sử đặt phòng</h4>
+                    <p>Đăng nhập tài khoản để xem toàn bộ lịch sử đặt phòng trong mục <strong>"Tài khoản" > "Lịch sử đặt phòng"</strong>. Tại đây bạn có thể xem chi tiết, hủy đơn hoặc yêu cầu hỗ trợ.</p>
+                    <span class="help-roadmap-badge">
+                        <span class="material-symbols-outlined" style="font-size: 14px;">person</span>
+                        <span>Chỉ dành cho thành viên</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Roadmap Item 3: Make a Booking -->
+            <div class="help-roadmap-item">
+                <div class="help-roadmap-icon">
+                    <span class="material-symbols-outlined">booking</span>
+                </div>
+                <div class="help-roadmap-content">
+                    <h4>Đặt phòng ngay</h4>
+                    <p>Nhấn nút <strong>"Đặt phòng"</strong> màu vàng kim ở góc trên phải để bắt đầu quy trình đặt phòng. Chọn loại phòng, ngày nhận/trả phòng và điền thông tin khách.</p>
+                    <span class="help-roadmap-badge">
+                        <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
+                        <span>Xác nhận ngay lập tức</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Roadmap Item 4: Contact Support -->
+            <div class="help-roadmap-item">
+                <div class="help-roadmap-icon">
+                    <span class="material-symbols-outlined">support_agent</span>
+                </div>
+                <div class="help-roadmap-content">
+                    <h4>Hỗ trợ khách hàng</h4>
+                    <p>Liên hệ hotline <strong>0251 3918 888</strong> hoặc email <strong>info@aurorahotelplaza.com</strong> để được hỗ trợ 24/7. Bạn cũng có thể sử dụng chat AI ở góc dưới phải màn hình.</p>
+                    <span class="help-roadmap-badge">
+                        <span class="material-symbols-outlined" style="font-size: 14px;">phone</span>
+                        <span>24/7 Support</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Help Tip -->
+            <div class="help-tip">
+                <span class="material-symbols-outlined">lightbulb</span>
+                <p><strong>Mẹo:</strong> Bạn có thể tra cứu đơn đặt phòng mà không cần đăng nhập. Tuy nhiên, việc đăng ký tài khoản giúp bạn dễ dàng quản lý và theo dõi lịch sử đặt phòng mọi lúc mọi nơi!</p>
+            </div>
+        </div>
+    </div>
+</div>

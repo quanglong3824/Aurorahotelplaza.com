@@ -915,36 +915,93 @@ try {
                     if (typeof toggleTrackForm === 'function') {
                         toggleTrackForm(true);
 
-                        // Show tooltip
+                        // Show enhanced tooltip with higher z-index
                         const trackInput = document.getElementById('trackInput');
                         if (trackInput) {
                             const tooltip = document.createElement('div');
-                            tooltip.className = 'absolute bg-accent text-white font-bold text-xs px-3 py-2 rounded shadow-lg pointer-events-none z-[100] animate-bounce';
-                            tooltip.innerHTML = 'Theo dõi đơn đặt phòng của bạn tại đây! <div class="w-3 h-3 bg-accent absolute -left-1.5 top-1/2 -translate-y-1/2 rotate-45 sm:left-1/2 sm:-translate-x-1/2 sm:-top-1.5 sm:-translate-y-0 text-transparent">.</div>';
+                            tooltip.className = 'help-tooltip-highlight';
+                            tooltip.innerHTML = `
+                                <div class="tooltip-content">
+                                    <span class="tooltip-icon">🔍</span>
+                                    <span class="tooltip-text"><strong>Theo dõi đơn đặt phòng</strong><br>Nhập mã đặt phòng, SĐT hoặc email của bạn vào đây!</span>
+                                </div>
+                                <div class="tooltip-arrow"></div>
+                            `;
 
-                            // Align appropriately
-                            tooltip.style.right = '100%';
-                            tooltip.style.marginRight = '10px';
-                            tooltip.style.top = '50%';
-                            tooltip.style.transform = 'translateY(-50%)';
+                            // Style the tooltip
+                            tooltip.style.cssText = `
+                                position: fixed;
+                                z-index: 100000;
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                padding: 16px 20px;
+                                border-radius: 12px;
+                                box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 1.5;
+                                pointer-events: none;
+                                animation: tooltipPulse 2s ease-in-out infinite;
+                                max-width: 320px;
+                            `;
 
-                            // Adjust for mobile screens
-                            if (window.innerWidth < 640) {
-                                tooltip.style.right = 'auto';
+                            // Position the tooltip above the input
+                            const rect = trackInput.getBoundingClientRect();
+                            const isMobile = window.innerWidth < 640;
+                            
+                            if (isMobile) {
+                                // Mobile: show below the input
                                 tooltip.style.left = '50%';
-                                tooltip.style.marginRight = '0';
-                                tooltip.style.top = '100%';
+                                tooltip.style.top = (rect.bottom + 15) + 'px';
                                 tooltip.style.transform = 'translateX(-50%)';
                                 tooltip.style.marginTop = '10px';
+                            } else {
+                                // Desktop: show above and to the left
+                                tooltip.style.right = '100%';
+                                tooltip.style.top = '50%';
+                                tooltip.style.transform = 'translateY(-50%)';
+                                tooltip.style.marginRight = '20px';
                             }
 
                             trackInput.parentNode.appendChild(tooltip);
 
+                            // Add animation keyframes
+                            const style = document.createElement('style');
+                            style.textContent = `
+                                @keyframes tooltipPulse {
+                                    0%, 100% {
+                                        transform: ${isMobile ? 'translateX(-50%) scale(1)' : 'translateY(-50%) scale(1)'};
+                                        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+                                    }
+                                    50% {
+                                        transform: ${isMobile ? 'translateX(-50%) scale(1.05)' : 'translateY(-50%) scale(1.05)'};
+                                        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+                                    }
+                                }
+                                .tooltip-content {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 12px;
+                                }
+                                .tooltip-icon {
+                                    font-size: 24px;
+                                    flex-shrink: 0;
+                                }
+                                .tooltip-text strong {
+                                    display: block;
+                                    margin-bottom: 4px;
+                                    font-size: 15px;
+                                }
+                            `;
+                            document.head.appendChild(style);
+
+                            // Remove tooltip after 8 seconds
                             setTimeout(() => {
                                 tooltip.style.opacity = '0';
-                                tooltip.style.transition = 'opacity 0.5s ease';
+                                tooltip.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                                tooltip.style.transform = isMobile ? 'translateX(-50%) translateY(-10px)' : 'translateY(-50%) translateX(10px)';
                                 setTimeout(() => tooltip.remove(), 500);
-                            }, 5000);
+                            }, 8000);
                         }
                     }
                 }, 500);
