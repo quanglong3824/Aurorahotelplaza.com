@@ -46,9 +46,7 @@ ALTER TABLE `pricing_policies`
     ADD COLUMN IF NOT EXISTS `policy_name_en` varchar(255) DEFAULT NULL AFTER `policy_name`,
     ADD COLUMN IF NOT EXISTS `description_en` text         DEFAULT NULL AFTER `description`;
 
--- amenities (nếu có)
-ALTER TABLE `amenities`
-    ADD COLUMN IF NOT EXISTS `name_en` varchar(100) DEFAULT NULL AFTER `name`;
+-- amenities: bảng này đã có name_en sẵn từ data gốc, không cần ALTER
 
 
 -- ============================================================
