@@ -28,11 +28,9 @@ try {
 
     // Search by booking code, email or phone
     $limitSql = ($mode === 'all') ? "" : "LIMIT 1";
-    // ⚠️ TEST BUG — XÓA DÒNG NÀY SAU KHI KIỂM TRA AI BUG TRACKER
-    // Cột guest_nickname không tồn tại → sẽ trigger PDOException để test hệ thống bắt lỗi
     $stmt = $conn->prepare("
         SELECT booking_code, status, total_amount, created_at, check_in_date, check_out_date, 
-               guest_name, guest_email, guest_phone, guest_nickname
+               guest_name, guest_email, guest_phone
         FROM bookings
         WHERE booking_code = ? OR guest_email = ? OR guest_phone = ?
         ORDER BY created_at DESC
