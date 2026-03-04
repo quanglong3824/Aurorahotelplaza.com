@@ -27,6 +27,9 @@ if (!defined('BASE_URL')) {
 require_once __DIR__ . '/../helpers/language.php';
 $current_lang = initLanguage();
 
+// Load DB bilingual helper (db_text, db_echo, db_html)
+require_once __DIR__ . '/../helpers/lang-db.php';
+
 // Load session helper và kiểm tra user còn tồn tại
 require_once __DIR__ . '/../helpers/session-helper.php';
 
@@ -888,7 +891,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
         position: relative;
         overflow: hidden;
-        order: 3; /* Position after lang switcher */
+        order: 3;
+        /* Position after lang switcher */
     }
 
     .help-btn:hover {
@@ -910,8 +914,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             -webkit-backdrop-filter: blur(10px) saturate(120%);
             border: 1px solid rgba(212, 175, 55, 0.3);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            order: 10; /* Move to far right on mobile */
-            margin-left: auto; /* Push to right */
+            order: 10;
+            /* Move to far right on mobile */
+            margin-left: auto;
+            /* Push to right */
         }
 
         .help-btn:hover {
@@ -1129,6 +1135,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             opacity: 0;
             transform: translateY(30px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -1161,7 +1168,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     function toggleHelpModal(show) {
         const modal = document.getElementById('helpModal');
         if (!modal) return;
-        
+
         if (show === true) {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1175,7 +1182,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     }
 
     // Close help modal on outside click
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const modal = document.getElementById('helpModal');
         if (modal && e.target === modal) {
             toggleHelpModal(false);
@@ -1183,7 +1190,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     });
 
     // Close help modal on Escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             toggleHelpModal(false);
         }
@@ -1210,7 +1217,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
                 <div class="help-roadmap-content">
                     <h4>Theo dõi đơn đặt phòng</h4>
-                    <p>Nhập mã đặt phòng (ví dụ: <strong>BK20260304ABC123</strong>) hoặc số điện thoại/email vào ô tìm kiếm ở góc trên phải để tra cứu tình trạng đơn đặt phòng của bạn.</p>
+                    <p>Nhập mã đặt phòng (ví dụ: <strong>BK20260304ABC123</strong>) hoặc số điện thoại/email vào ô tìm
+                        kiếm ở góc trên phải để tra cứu tình trạng đơn đặt phòng của bạn.</p>
                     <span class="help-roadmap-badge">
                         <span class="material-symbols-outlined" style="font-size: 14px;">info</span>
                         <span>Khách vãng lai & Đã đăng nhập</span>
@@ -1225,7 +1233,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
                 <div class="help-roadmap-content">
                     <h4>Xem lịch sử đặt phòng</h4>
-                    <p>Đăng nhập tài khoản để xem toàn bộ lịch sử đặt phòng trong mục <strong>"Tài khoản" > "Lịch sử đặt phòng"</strong>. Tại đây bạn có thể xem chi tiết, hủy đơn hoặc yêu cầu hỗ trợ.</p>
+                    <p>Đăng nhập tài khoản để xem toàn bộ lịch sử đặt phòng trong mục <strong>"Tài khoản" > "Lịch sử đặt
+                            phòng"</strong>. Tại đây bạn có thể xem chi tiết, hủy đơn hoặc yêu cầu hỗ trợ.</p>
                     <span class="help-roadmap-badge">
                         <span class="material-symbols-outlined" style="font-size: 14px;">person</span>
                         <span>Chỉ dành cho thành viên</span>
@@ -1240,7 +1249,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
                 <div class="help-roadmap-content">
                     <h4>Đặt phòng ngay</h4>
-                    <p>Nhấn nút <strong>"Đặt phòng"</strong> màu vàng kim ở góc trên phải để bắt đầu quy trình đặt phòng. Chọn loại phòng, ngày nhận/trả phòng và điền thông tin khách.</p>
+                    <p>Nhấn nút <strong>"Đặt phòng"</strong> màu vàng kim ở góc trên phải để bắt đầu quy trình đặt
+                        phòng. Chọn loại phòng, ngày nhận/trả phòng và điền thông tin khách.</p>
                     <span class="help-roadmap-badge">
                         <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
                         <span>Xác nhận ngay lập tức</span>
@@ -1255,7 +1265,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
                 <div class="help-roadmap-content">
                     <h4>Hỗ trợ khách hàng</h4>
-                    <p>Liên hệ hotline <strong>0251 3918 888</strong> hoặc email <strong>info@aurorahotelplaza.com</strong> để được hỗ trợ 24/7. Bạn cũng có thể sử dụng chat AI ở góc dưới phải màn hình.</p>
+                    <p>Liên hệ hotline <strong>0251 3918 888</strong> hoặc email
+                        <strong>info@aurorahotelplaza.com</strong> để được hỗ trợ 24/7. Bạn cũng có thể sử dụng chat AI
+                        ở góc dưới phải màn hình.</p>
                     <span class="help-roadmap-badge">
                         <span class="material-symbols-outlined" style="font-size: 14px;">phone</span>
                         <span>24/7 Support</span>
@@ -1266,7 +1278,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <!-- Help Tip -->
             <div class="help-tip">
                 <span class="material-symbols-outlined">lightbulb</span>
-                <p><strong>Mẹo:</strong> Bạn có thể tra cứu đơn đặt phòng mà không cần đăng nhập. Tuy nhiên, việc đăng ký tài khoản giúp bạn dễ dàng quản lý và theo dõi lịch sử đặt phòng mọi lúc mọi nơi!</p>
+                <p><strong>Mẹo:</strong> Bạn có thể tra cứu đơn đặt phòng mà không cần đăng nhập. Tuy nhiên, việc đăng
+                    ký tài khoản giúp bạn dễ dàng quản lý và theo dõi lịch sử đặt phòng mọi lúc mọi nơi!</p>
             </div>
         </div>
     </div>
