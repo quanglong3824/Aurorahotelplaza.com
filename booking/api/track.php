@@ -25,10 +25,10 @@ try {
 
     // Search by booking code, email or phone
     $stmt = $conn->prepare("
-        SELECT booking_code, status, total_amount, created_at, check_in, check_out, 
-               first_name, last_name, email, phone
+        SELECT booking_code, status, total_amount, created_at, check_in_date, check_out_date, 
+               guest_name, guest_email, guest_phone
         FROM bookings
-        WHERE booking_code = ? OR email = ? OR phone = ?
+        WHERE booking_code = ? OR guest_email = ? OR guest_phone = ?
         ORDER BY created_at DESC
         LIMIT 1
     ");
@@ -36,7 +36,7 @@ try {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
-        $customer_name = trim($row['last_name'] . ' ' . $row['first_name']);
+        $customer_name = trim($row['guest_name']);
 
         $status_text = $row['status'];
         switch ($row['status']) {
@@ -67,10 +67,10 @@ try {
                 'status' => $status_text,
                 'status_raw' => $row['status'],
                 'customer_name' => $customer_name,
-                'email' => $row['email'],
-                'phone' => $row['phone'],
-                'check_in' => date('d/m/Y', strtotime($row['check_in'])),
-                'check_out' => date('d/m/Y', strtotime($row['check_out'])),
+                'email' => $row['guest_email'],
+                'phone' => $row['guest_phone'],
+                'check_in' => date('d/m/Y', strtotime($row['check_in_date'])),
+                'check_out' => date('d/m/Y', strtotime($row['check_out_date'])),
                 'total_amount' => $row['total_amount'],
                 'created_at' => date('d/m/Y H:i', strtotime($row['created_at']))
             ]
