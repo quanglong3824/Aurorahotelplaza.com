@@ -141,7 +141,8 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <?php foreach ($packages as $pkg):
-                                $features = !empty($pkg['features']) ? explode(',', $pkg['features']) : [];
+                                $features_str = _f($pkg, 'features');
+                                $features = !empty($features_str) ? explode(',', $features_str) : [];
                                 ?>
                                 <div class="package-detail-card <?php echo $pkg['is_featured'] ? 'featured' : ''; ?>">
                                     <?php if ($pkg['is_featured']): ?>
@@ -187,8 +188,9 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
             <?php
             $all_features = [];
             foreach ($packages as $pkg) {
-                if (!empty($pkg['features'])) {
-                    foreach (explode(',', $pkg['features']) as $feature) {
+                $features_str = _f($pkg, 'features');
+                if (!empty($features_str)) {
+                    foreach (explode(',', $features_str) as $feature) {
                         $feature = trim($feature);
                         if (!in_array($feature, $all_features))
                             $all_features[] = $feature;

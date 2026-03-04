@@ -118,7 +118,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
 
                                 <div class="apt-grid">
                                     <?php foreach ($new_apartments as $apt):
-                                        $amenities = !empty($apt['amenities']) ? array_slice(explode(',', $apt['amenities']), 0, 4) : [];
+                                        $amenities_str = _f($apt, 'amenities');
+                                        $amenities = !empty($amenities_str) ? array_slice(explode(',', $amenities_str), 0, 4) : [];
                                         $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                         ?>
                                         <div class="apt-card-glass">
@@ -161,10 +162,10 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                         </div>
                                                     <?php endif; ?>
 
-                                                    <?php if ($apt['bed_type']): ?>
+                                                    <?php if ($bed_type = _f($apt, 'bed_type')): ?>
                                                         <div class="spec-item">
                                                             <span class="material-symbols-outlined">bed</span>
-                                                            <?php echo htmlspecialchars($apt['bed_type']); ?>
+                                                            <?php echo htmlspecialchars($bed_type); ?>
                                                         </div>
                                                     <?php endif; ?>
 
@@ -217,7 +218,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
 
                                 <div class="apt-grid">
                                     <?php foreach ($old_apartments as $apt):
-                                        $amenities = !empty($apt['amenities']) ? array_slice(explode(',', $apt['amenities']), 0, 4) : [];
+                                        $amenities_str = _f($apt, 'amenities');
+                                        $amenities = !empty($amenities_str) ? array_slice(explode(',', $amenities_str), 0, 4) : [];
                                         $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                         ?>
                                         <div class="apt-card-glass">
@@ -260,10 +262,10 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                         </div>
                                                     <?php endif; ?>
 
-                                                    <?php if ($apt['bed_type']): ?>
+                                                    <?php if ($bed_type = _f($apt, 'bed_type')): ?>
                                                         <div class="spec-item">
                                                             <span class="material-symbols-outlined">bed</span>
-                                                            <?php echo htmlspecialchars($apt['bed_type']); ?>
+                                                            <?php echo htmlspecialchars($bed_type); ?>
                                                         </div>
                                                     <?php endif; ?>
 
