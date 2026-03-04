@@ -764,9 +764,9 @@ $msg = $_GET['msg'] ?? '';
                             Telegram Bot Token
                             <span class="text-xs text-gray-400 font-normal ml-1">(lấy từ @BotFather)</span>
                         </label>
-                        <input type="password" name="telegram_bot_token"
+                        <input type="text" name="telegram_bot_token"
                             value="<?php echo htmlspecialchars($settingsValues['telegram_bot_token'] ?? ''); ?>"
-                            placeholder="1234567890:AAF..."
+                            placeholder="1234567890:AAF..." autocomplete="off"
                             class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
                     </div>
                     <div>
