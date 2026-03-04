@@ -106,7 +106,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Form Container -->
         <form id="topbarTrackForm"
-            class="absolute inset-0 px-4 bg-gray-900 flex items-center gap-2 m-0 w-full justify-end translate-x-full opacity-0 sm:relative sm:inset-auto sm:px-0 sm:bg-transparent sm:w-auto sm:translate-x-0 sm:opacity-100 transition-all duration-300 ease-out z-10"
+            class="absolute inset-0 px-4 bg-gray-900 flex items-center gap-2 m-0 w-full justify-end opacity-0 pointer-events-none sm:relative sm:inset-auto sm:px-0 sm:bg-transparent sm:w-auto sm:opacity-100 sm:pointer-events-auto transition-all duration-300 ease-in-out z-10"
             onsubmit="handleTrackBooking(event)">
 
             <!-- Mobile Close Form Button -->
@@ -529,12 +529,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         const input = document.getElementById('trackInput');
 
         if (show) {
-            form.classList.remove('translate-x-full', 'opacity-0');
-            form.classList.add('translate-x-0', 'opacity-100');
+            form.classList.remove('opacity-0', 'pointer-events-none');
+            form.classList.add('opacity-100', 'pointer-events-auto');
             setTimeout(() => input.focus(), 300);
         } else {
-            form.classList.remove('translate-x-0', 'opacity-100');
-            form.classList.add('translate-x-full', 'opacity-0');
+            form.classList.remove('opacity-100', 'pointer-events-auto');
+            form.classList.add('opacity-0', 'pointer-events-none');
             input.blur();
         }
     }
