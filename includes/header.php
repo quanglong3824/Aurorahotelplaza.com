@@ -462,7 +462,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                         <span class="material-symbols-outlined" style="font-size: 1.25rem;">search</span>
                         Mã đặt phòng / Email / SĐT
                     </label>
-                    <input type="text" id="trackInput" required placeholder="Nhập mã, email hoặc số điện thoại..." class="glass-input-solid w-full" style="width: 100%;">
+                    <input type="text" id="trackInput" required placeholder="Nhập mã, email hoặc số điện thoại..." class="glass-input-solid border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-500" style="width: 100%; color: #1f2937; background-color: rgba(255,255,255,0.7);">
                 </div>
                 <button type="submit" class="btn-glass-primary w-full py-3 rounded-lg flex items-center justify-center gap-2" style="width: 100%;">
                     <span class="material-symbols-outlined">search</span>

@@ -18,20 +18,24 @@ if (empty($query)) {
 }
 
 try {
+    $conn = getDB();
+    if (!$conn) {
+        throw new Exception("Lỗi kết nối cơ sở dữ liệu");
+    }
+
     // Search by booking code, email or phone
     $stmt = $conn->prepare("
-        SELECT b.id, b.booking_code, b.status, b.total_amount, b.created_at, b.check_in, b.check_out, 
-               b.first_name, b.last_name, b.email, b.phone
-        FROM bookings b
-        WHERE b.booking_code = ? OR b.email = ? OR b.phone = ?
-        ORDER BY b.created_at DESC
+        SELECT id, booking_code, status, total_amount, created_at, check_in, check_out, 
+               first_name, last_name, email, phone
+        FROM bookings
+        WHERE booking_code = ? OR email = ? OR phone = ?
+        ORDER BY created_at DESC
         LIMIT 1
     ");
-    $stmt->bind_param("sss", $query, $query, $query);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$query, $query, $query]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row = $result->fetch_assoc()) {
+    if ($row) {
         $customer_name = trim($row['last_name'] . ' ' . $row['first_name']);
 
         $status_text = $row['status'];
