@@ -84,6 +84,27 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     data-has-hero="<?php echo $has_hero ? 'true' : 'false'; ?>"
     data-force-scrolled="<?php echo $is_solid_page ? 'true' : 'false'; ?>"
     data-fixed-transparent="<?php echo $is_fixed_transparent ? 'true' : 'false'; ?>">
+
+    <!-- Mini Tracking Topbar -->
+    <div class="tracking-topbar w-full flex flex-col sm:flex-row items-center justify-between px-4 py-1.5 md:px-6 z-[60] bg-gray-900 text-xs shadow"
+        id="trackingTopbar">
+        <div class="hidden sm:flex items-center gap-1.5 text-gray-400 font-medium">
+            <span class="material-symbols-outlined" style="font-size: 16px;">travel_explore</span>
+            <span>Tra cứu dành cho khách vãng lai:</span>
+        </div>
+        <form id="topbarTrackForm" class="flex items-center gap-2 m-0 w-full sm:w-auto justify-end relative"
+            onsubmit="handleTrackBooking(event)">
+            <span id="trackErrorMsg" class="hidden text-red-400 font-medium text-[11px] whitespace-nowrap"><span
+                    class="error-text">Lỗi</span></span>
+            <input type="text" id="trackInput" placeholder="Nhập mã, email hoặc SĐT..." required
+                class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64 transition-all" />
+            <button type="submit"
+                class="bg-[#d4af37] hover:bg-[#b5952f] text-gray-900 font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center gap-1">
+                <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span> Tìm
+            </button>
+        </form>
+    </div>
+
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
             <a href="<?php echo $base_path; ?>index.php">
@@ -147,12 +168,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 href="<?php echo $base_path; ?>contact.php"><?php _e('nav.contact'); ?></a>
         </nav>
         <div class="flex items-center gap-2">
-            <!-- Track Booking Button -->
-            <button class="btn-track-booking" onclick="toggleTrackingSidebar()" aria-label="Tra cứu đặt phòng" title="Tra cứu đặt phòng">
-                <span class="material-symbols-outlined text-xl">travel_explore</span>
-                <span class="hidden md:inline font-medium text-sm ml-1 truncate">Tra cứu</span>
-            </button>
-
             <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
                 <span class="truncate"><?php _e('nav.book_now'); ?></span>
             </a>
@@ -444,217 +459,240 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     </div>
 <?php endif; ?>
 
-<!-- Tracking Booking Sidebar -->
-<div id="trackingSidebar" class="tracking-sidebar">
-    <div class="tracking-sidebar-overlay" onclick="toggleTrackingSidebar()"></div>
-    <div class="tracking-sidebar-content">
-        <div class="tracking-sidebar-header">
-            <h3>Tra cứu đặt phòng</h3>
-            <button class="tracking-sidebar-close" onclick="toggleTrackingSidebar()">
-                <span class="material-symbols-outlined">close</span>
-            </button>
+<!-- Tracking Booking Modal -->
+<div id="trackingModal" class="tracking-modal">
+    <div class="tracking-modal-overlay" onclick="closeTrackingModal()"></div>
+    <div class="tracking-modal-content">
+        <button class="tracking-modal-close" onclick="closeTrackingModal()">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="tracking-modal-header">
+            <h3><span class="material-symbols-outlined text-primary-500">travel_explore</span> Kết quả tra cứu</h3>
         </div>
-        <div class="tracking-sidebar-body">
-            <p class="text-sm text-gray-500 mb-4 dark:text-gray-400">Dành cho khách vãng lai. Vui lòng nhập thông tin để kiểm tra trạng thái phòng.</p>
-            <form id="formTrackBooking" onsubmit="handleTrackBooking(event)">
-                <div class="floating-booking-field mb-4" style="flex-direction: column; align-items: flex-start;">
-                    <label style="display: flex; gap: 8px; font-weight: 500; font-size: 0.875rem; color: #4b5563; margin-bottom: 8px;">
-                        <span class="material-symbols-outlined" style="font-size: 1.25rem;">search</span>
-                        Mã đặt phòng / Email / SĐT
-                    </label>
-                    <input type="text" id="trackInput" required placeholder="Nhập mã, email hoặc số điện thoại..." class="glass-input-solid border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary-500" style="width: 100%; color: #1f2937; background-color: rgba(255,255,255,0.7);">
-                </div>
-                <button type="submit" class="btn-glass-primary w-full py-3 rounded-lg flex items-center justify-center gap-2" style="width: 100%;">
-                    <span class="material-symbols-outlined">search</span>
-                    Tìm kiếm
-                </button>
-            </form>
-            <div id="trackResult" class="mt-6 hidden">
-                <!-- Result will be rendered here -->
-            </div>
+        <div id="trackResultContent" class="tracking-modal-body">
+            <!-- Data will be populated here -->
         </div>
     </div>
 </div>
 
 <script>
-function toggleTrackingSidebar() {
-    const sidebar = document.getElementById('trackingSidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('active');
-        if(sidebar.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => document.getElementById('trackInput').focus(), 300);
-        } else {
-            document.body.style.overflow = '';
+    function closeTrackingModal() {
+        const modal = document.getElementById('trackingModal');
+        if (modal) {
+            modal.classList.remove('active');
         }
     }
-}
 
-async function handleTrackBooking(e) {
-    e.preventDefault();
-    const input = document.getElementById('trackInput').value.trim();
-    if (!input) return;
-    
-    const resultDiv = document.getElementById('trackResult');
-    resultDiv.classList.remove('hidden');
-    resultDiv.innerHTML = '<div class="text-center py-4"><span class="material-symbols-outlined animate-spin" style="animation: spin 1s linear infinite;">refresh</span> <p class="mt-2 text-sm text-gray-600">Đang kiểm tra...</p></div>';
-    
-    try {
-        const res = await fetch('<?php echo $base_path; ?>booking/api/track.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ query: input })
-        });
-        const data = await res.json();
-        if (data.success) {
-            let statusColor = 'bg-gray-100 text-gray-800';
-            if(data.booking.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800';
-            if(data.booking.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800';
-            if(data.booking.status_raw === 'cancelled' || data.booking.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800';
-            if(data.booking.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800';
-
-            let html = '<div class="bg-gray-50/80 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200 dark:bg-gray-800/80 dark:border-gray-700">';
-            html += '<h4 class="font-bold text-lg text-primary-900 dark:text-primary-100 border-b pb-2 mb-3">Mã Đặt: ' + data.booking.booking_code + '</h4>';
-            html += '<div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">';
-            html += '<div class="flex justify-between items-center"><strong class="w-1/3">Trạng thái:</strong> <span class="badge ' + statusColor + ' px-2 py-1 flex-1 text-center rounded font-medium">' + data.booking.status + '</span></div>';
-            html += '<div class="flex"><strong class="w-1/3">Khách hàng:</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
-            html += '<div class="flex"><strong class="w-1/3">Nhận phòng:</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
-            html += '<div class="flex"><strong class="w-1/3">Trả phòng:</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
-            html += '<div class="flex"><strong class="w-1/3">SĐT:</strong> <span class="flex-1">' + data.booking.phone + '</span></div>';
-            html += '<div class="flex items-center pt-2 border-t mt-2"><strong class="w-1/3 text-lg">Tổng:</strong> <span class="flex-1 text-lg font-bold text-primary-600">' + new Intl.NumberFormat('vi-VN').format(data.booking.total_amount) + ' VNĐ</span></div>';
-            html += '</div></div>';
-            resultDiv.innerHTML = html;
-        } else {
-            resultDiv.innerHTML = '<div class="bg-red-50 text-red-600 p-3 rounded-lg flex items-start gap-2"><span class="material-symbols-outlined text-red-500">error</span><p class="text-sm font-medium">' + data.message + '</p></div>';
+    function openTrackingModal(htmlContent) {
+        const modal = document.getElementById('trackingModal');
+        if (modal) {
+            document.getElementById('trackResultContent').innerHTML = htmlContent;
+            modal.classList.add('active');
         }
-    } catch(err) {
-        resultDiv.innerHTML = '<div class="bg-red-50 text-red-600 p-3 rounded-lg flex items-start gap-2"><span class="material-symbols-outlined text-red-500">error</span><p class="text-sm font-medium">Đã xảy ra lỗi, vui lòng thử lại sau.</p></div>';
     }
-}
+
+    async function handleTrackBooking(e) {
+        e.preventDefault();
+        const input = document.getElementById('trackInput').value.trim();
+        if (!input) return;
+
+        const submitBtn = document.getElementById('topbarTrackForm').querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin hidden sm:inline-block" style="font-size:16px;">refresh</span> Tìm...';
+        submitBtn.disabled = true;
+
+        // reset error
+        document.getElementById('trackErrorMsg').classList.add('hidden');
+
+        try {
+            const res = await fetch('<?php echo $base_path; ?>booking/api/track.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: input })
+            });
+            const data = await res.json();
+
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+
+            if (data.success) {
+                let statusColor = 'bg-gray-100 text-gray-800';
+                if (data.booking.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200';
+                if (data.booking.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200';
+                if (data.booking.status_raw === 'cancelled' || data.booking.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200';
+                if (data.booking.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200';
+
+                let html = '<div class="space-y-4">';
+                html += '<div class="bg-gray-50/80 dark:bg-gray-800/80 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">';
+                html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">Mã Đặt: ' + data.booking.booking_code + '</h4>';
+                html += '<div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">';
+                html += '<div class="flex justify-between items-center"><strong class="w-1/3">Trạng thái:</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + data.booking.status + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">Khách hàng:</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">Nhận phòng:</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">Trả phòng:</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">SĐT:</strong> <span class="flex-1">' + data.booking.phone + '</span></div>';
+                html += '</div></div>';
+                html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-4">';
+                html += '<strong class="text-gray-800 dark:text-gray-200">Tổng cộng:</strong>';
+                html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(data.booking.total_amount) + ' VNĐ</span>';
+                html += '</div></div>';
+
+                openTrackingModal(html);
+            } else {
+                showTrackError(data.message);
+            }
+        } catch (err) {
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            showTrackError('Đã xảy ra lỗi, vui lòng thử lại sau.');
+        }
+    }
+
+    function showTrackError(message) {
+        const errObj = document.getElementById('trackErrorMsg');
+        errObj.querySelector('.error-text').innerText = message;
+        errObj.classList.remove('hidden');
+        // auto hide after 5s
+        setTimeout(() => {
+            errObj.classList.add('hidden');
+        }, 5000);
+    }
 </script>
 
 <style>
-@keyframes spin { 100% { transform: rotate(360deg); } }
-.tracking-sidebar {
-    position: fixed;
-    top: 0;
-    right: -400px;
-    width: 400px;
-    max-width: 100vw;
-    height: 100vh;
-    z-index: 100000;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-}
-.tracking-sidebar.active {
-    right: 0;
-}
-.tracking-sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    z-index: -1;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-.tracking-sidebar.active .tracking-sidebar-overlay {
-    opacity: 1;
-    pointer-events: auto;
-}
-.tracking-sidebar-content {
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-}
-.dark .tracking-sidebar-content {
-    background: rgba(31, 41, 55, 0.95);
-}
-.tracking-sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-.dark .tracking-sidebar-header {
-    border-color: rgba(255,255,255,0.05);
-}
-.tracking-sidebar-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-.dark .tracking-sidebar-header h3 {
-    color: white;
-}
-.tracking-sidebar-close {
-    background: rgba(0,0,0,0.05);
-    border: none;
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, transform 0.2s;
-    color: var(--text-dark);
-}
-.dark .tracking-sidebar-close {
-    background: rgba(255,255,255,0.1);
-    color: white;
-}
-.tracking-sidebar-close:hover {
-    background: rgba(0,0,0,0.1);
-    transform: rotate(90deg);
-}
-.dark .tracking-sidebar-close:hover {
-    background: rgba(255,255,255,0.2);
-}
-.tracking-sidebar-body {
-    padding: 24px;
-    flex: 1;
-    overflow-y: auto;
-}
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 
-/* Button style */
-.btn-track-booking {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.1);
-    color: white;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-    backdrop-filter: blur(10px);
-}
-.btn-track-booking:hover {
-    background: rgba(255,255,255,0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+    /* Topbar Styles (Header Tracking Mini Bar) */
+    .tracking-topbar {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-.header-solid .btn-track-booking, .header-scrolled .btn-track-booking {
-    background: rgba(0,0,0,0.05);
-    border-color: rgba(0,0,0,0.1);
-    color: var(--text-dark);
-}
-.header-solid .btn-track-booking:hover, .header-scrolled .btn-track-booking:hover {
-    background: rgba(0,0,0,0.1);
-}
+    .header-transparent .tracking-topbar {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+    }
+
+    .header-solid .tracking-topbar,
+    .header-scrolled .tracking-topbar {
+        background: rgba(17, 24, 39, 1);
+    }
+
+    /* Modal Styles */
+    .tracking-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 100000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .tracking-modal.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .tracking-modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+
+    .tracking-modal-content {
+        background: white;
+        width: 90%;
+        max-width: 450px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 10;
+        transform: translateY(-50px);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .dark .tracking-modal-content {
+        background: var(--bg-dark);
+    }
+
+    .tracking-modal.active .tracking-modal-content {
+        transform: translateY(0);
+    }
+
+    .tracking-modal-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        z-index: 20;
+    }
+
+    .dark .tracking-modal-close {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .tracking-modal-close:hover {
+        background: rgba(0, 0, 0, 0.1);
+        transform: rotate(90deg);
+    }
+
+    .dark .tracking-modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .tracking-modal-header {
+        padding: 24px 24px 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .tracking-modal-header {
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .tracking-modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dark .tracking-modal-header h3 {
+        color: white;
+    }
+
+    .tracking-modal-body {
+        padding: 24px;
+    }
 </style>
 
 <!-- Header Styles & Script -->
