@@ -52,7 +52,7 @@ try {
     if ($force_refund && $custom_refund_amount !== null) {
         $refund_info['refund_amount'] = floatval($custom_refund_amount);
         $refund_info['refund_percentage'] = ($refund_info['refund_amount'] / $booking['total_amount']) * 100;
-        $refund_info['policy_message'] = 'Admin quyết định hoàn tiền: ' . number_format($custom_refund_amount) . ' VNĐ';
+        $refund_info['policy_message'] = 'Admin quyết định hoàn tiền: ' . number_format($custom_refund_amount) . ' VND';
     }
     
     // Process cancellation
@@ -144,7 +144,7 @@ try {
         ];
         
         if ($refund_info['refund_amount'] > 0) {
-            $response['message'] .= '. Số tiền hoàn lại: ' . number_format($refund_info['refund_amount']) . ' VNĐ';
+            $response['message'] .= '. Số tiền hoàn lại: ' . number_format($refund_info['refund_amount']) . ' VND';
             $response['refund_id'] = $refund_id;
         } else {
             $response['message'] .= '. Không có tiền hoàn lại.';

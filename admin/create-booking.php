@@ -110,7 +110,7 @@ include 'includes/admin-header.php';
                                         data-price="<?php echo $type['base_price']; ?>"
                                         data-name="<?php echo htmlspecialchars($type['type_name']); ?>">
                                         <?php echo htmlspecialchars($type['type_name']); ?> -
-                                        <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VNĐ/VNĐêm
+                                        <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VND/ đêm
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -167,14 +167,14 @@ include 'includes/admin-header.php';
                                         <?php echo htmlspecialchars($promo['promotion_name']); ?> -
                                         <?php echo $promo['discount_type'] === 'percentage' ?
                                             $promo['discount_value'] . '%' :
-                                            number_format($promo['discount_value']) . 'VNĐ'; ?>
+                                            number_format($promo['discount_value']) . 'VND'; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Giảm giá thêm (VNĐ)</label>
+                            <label class="form-label">Giảm giá thêm (VND)</label>
                             <input type="number" name="extra_discount" id="extra_discount" class="form-input" min="0"
                                 value="0" onchange="calculateTotal()">
                         </div>
@@ -188,15 +188,15 @@ include 'includes/admin-header.php';
                         </div>
                         <div class="flex justify-between text-sm">
                             <span>Giá phòng:</span>
-                            <span id="display_room_price" class="font-semibold">0đ</span>
+                            <span id="display_room_price" class="font-semibold">0 VND</span>
                         </div>
                         <div class="flex justify-between text-sm text-green-600">
                             <span>Giảm giá:</span>
-                            <span id="display_discount" class="font-semibold">0đ</span>
+                            <span id="display_discount" class="font-semibold">0 VND</span>
                         </div>
                         <div class="flex justify-between text-lg font-bold pt-2 border-t">
                             <span>Tổng cộng:</span>
-                            <span id="display_total" style="color: #d4af37;">0đ</span>
+                            <span id="display_total" style="color: #d4af37;">0 VND</span>
                         </div>
                     </div>
 
@@ -345,7 +345,7 @@ include 'includes/admin-header.php';
     }
 
     function formatMoney(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + 'VNĐ';
+        return new Intl.NumberFormat('vi-VN').format(amount) + 'VND';
     }
 
     function createBooking(e) {

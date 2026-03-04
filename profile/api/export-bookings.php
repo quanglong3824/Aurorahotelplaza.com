@@ -49,7 +49,7 @@ try {
         'Số đêm',
         'Số người lớn',
         'Số trẻ em',
-        'Tổng tiền (VNĐ)',
+        'Tổng tiền (VND)',
         'Trạng thái',
         'Trạng thái thanh toán',
         'Phương thức thanh toán',

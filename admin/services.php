@@ -211,14 +211,14 @@ include 'includes/admin-header.php';
                         <div>
                             <span class="text-text-secondary-light dark:text-text-secondary-dark">Doanh thu:</span>
                             <span
-                                class="font-medium text-green-600"><?php echo number_format($service['total_revenue'] ?? 0, 0, ',', '.'); ?>VNĐ</span>
+                                class="font-medium text-green-600"><?php echo number_format($service['total_revenue'] ?? 0, 0, ',', '.'); ?>VND</span>
                         </div>
                     </div>
 
                     <!-- Price -->
                     <div class="mb-3 pt-3 border-t border-border-light dark:border-border-dark">
                         <p class="text-xl font-bold text-accent">
-                            <?php echo number_format($service['price'], 0, ',', '.'); ?>VNĐ
+                            <?php echo number_format($service['price'], 0, ',', '.'); ?>VND
                             <?php if ($service['unit']): ?>
                                 <span
                                     class="text-sm font-normal text-text-secondary-light dark:text-text-secondary-dark">/<?php echo htmlspecialchars($service['unit']); ?></span>
@@ -280,7 +280,7 @@ include 'includes/admin-header.php';
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Giá (VNĐ) *</label>
+                        <label class="form-label">Giá (VND) *</label>
                         <input type="number" id="price" name="price" class="form-input" min="0" step="1000" required>
                     </div>
 

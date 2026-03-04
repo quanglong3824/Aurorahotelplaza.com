@@ -147,7 +147,7 @@ class EmailHelper {
                     </div>
                     
                     <div class='total'>
-                        Tổng tiền: " . number_format($booking['total_amount']) . " VNĐ
+                        Tổng tiền: " . number_format($booking['total_amount']) . " VND
                     </div>
                     
                     <p><strong>Thông tin liên hệ:</strong></p>
@@ -213,7 +213,7 @@ THÔNG TIN ĐẶT PHÒNG:
 - Số khách: {$booking['num_adults']} người
 - Ngày đặt: {$booking_date}
 
-TỔNG TIỀN: " . number_format($booking['total_amount']) . " VNĐ
+TỔNG TIỀN: " . number_format($booking['total_amount']) . " VND
 
 THÔNG TIN LIÊN HỆ:
 - Họ tên: {$booking['guest_name']}
@@ -304,7 +304,7 @@ Trân trọng,
             
             <div class='info-row'>
                 <span class='label'>Số tiền:</span>
-                <span class='value'><strong>" . number_format($payment['amount']) . " VNĐ</strong></span>
+                <span class='value'><strong>" . number_format($payment['amount']) . " VND</strong></span>
             </div>
         </div>
         ";
@@ -327,7 +327,7 @@ Trân trọng,
             - Phương thức: " . ucfirst($payment['payment_method']) . "
             - Mã giao dịch: {$payment['transaction_id']}
             - Thời gian: {$payment_date}
-            - Số tiền: " . number_format($payment['amount']) . " VNĐ";
+            - Số tiền: " . number_format($payment['amount']) . " VND";
         
         return str_replace(
             ['XÁC NHẬN ĐẶT PHÒNG', 'Cảm ơn bạn đã chọn Aurora Hotel Plaza. Chúng tôi xác nhận đã nhận được đặt phòng của bạn:', 'THÔNG TIN ĐẶT PHÒNG:'],

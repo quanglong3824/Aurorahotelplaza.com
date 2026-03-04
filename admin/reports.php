@@ -168,7 +168,7 @@ include 'includes/admin-header.php';
             <span class="material-symbols-outlined text-green-600">trending_up</span>
         </div>
         <p class="text-3xl font-bold text-green-600">
-            <?php echo number_format($revenue_stats['total_revenue'], 0, ',', '.'); ?>VNĐ
+            <?php echo number_format($revenue_stats['total_revenue'], 0, ',', '.'); ?>VND
         </p>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
             Từ <?php echo $revenue_stats['total_bookings']; ?> đơn đặt phòng (bookings)
@@ -182,7 +182,7 @@ include 'includes/admin-header.php';
             <span class="material-symbols-outlined text-blue-600">receipt_long</span>
         </div>
         <p class="text-3xl font-bold text-blue-600">
-            <?php echo number_format($revenue_stats['avg_booking_value'], 0, ',', '.'); ?>VNĐ
+            <?php echo number_format($revenue_stats['avg_booking_value'], 0, ',', '.'); ?>VND
         </p>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
             Trung bình mỗi đơn (Average per booking)
@@ -244,7 +244,7 @@ include 'includes/admin-header.php';
                                 class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
                                 <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
                                     style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
-                                    <?php echo number_format($day['revenue'], 0, ',', '.'); ?>VNĐ
+                                    <?php echo number_format($day['revenue'], 0, ',', '.'); ?>VND
                                 </div>
                             </div>
                             <span class="text-sm w-16 text-right"><?php echo $day['bookings']; ?> đơn (bookings)</span>
@@ -336,9 +336,9 @@ include 'includes/admin-header.php';
                         <tr>
                             <td class="font-medium"><?php echo htmlspecialchars($room['type_name']); ?></td>
                             <td><?php echo $room['bookings']; ?></td>
-                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VNĐ</td>
+                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VND</td>
                             <td><?php echo number_format($room['avg_nights'], 1); ?> đêm (nights)</td>
-                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VNĐ</td>
+                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VND</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -378,7 +378,7 @@ include 'includes/admin-header.php';
                             <td><?php echo htmlspecialchars($customer['email']); ?></td>
                             <td><?php echo $customer['total_bookings']; ?></td>
                             <td class="font-medium text-green-600">
-                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VNĐ
+                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VND
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -411,7 +411,7 @@ include 'includes/admin-header.php';
                         </p>
                         <p class="text-xl font-bold"><?php echo $method['count']; ?> giao dịch (transactions)</p>
                         <p class="text-sm text-green-600 mt-1">
-                            <?php echo number_format($method['total_amount'], 0, ',', '.'); ?>VNĐ
+                            <?php echo number_format($method['total_amount'], 0, ',', '.'); ?>VND
                         </p>
                     </div>
                 <?php endforeach; ?>

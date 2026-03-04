@@ -106,10 +106,10 @@ try {
             $feePerNight = 0;           // Dưới 1m: Miễn phí
             $category_guest = 'child_under_1m';
         } elseif ($height >= 1.0 && $height < 1.3) {
-            $feePerNight = 200000;      // 1m - 1m3: 200,000đ/đêm
+            $feePerNight = 200000;      // 1m - 1m3: 200,000 VND/đêm
             $category_guest = 'child_1m_1m3';
         } else {
-            $feePerNight = 400000;      // Trên 1m3: 400,000đ/đêm
+            $feePerNight = 400000;      // Trên 1m3: 400,000 VND/đêm
             $category_guest = 'adult';
         }
 

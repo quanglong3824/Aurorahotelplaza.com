@@ -221,7 +221,7 @@ function calculateBookingTotal($params)
         'service_fee' => $serviceFee,
         'tax_included' => $taxIncluded,
         'total_amount' => $totalAmount,
-        'currency' => 'VNĐ'
+        'currency' => 'VND'
     ];
 }
 
@@ -235,7 +235,7 @@ function calculateBookingTotal($params)
 function formatCurrency($amount, $includeSymbol = true)
 {
     $formatted = number_format($amount, 0, ',', '.');
-    return $includeSymbol ? $formatted . ' VNĐ' : $formatted;
+    return $includeSymbol ? $formatted . ' VND' : $formatted;
 }
 
 /**

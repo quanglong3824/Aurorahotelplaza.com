@@ -90,7 +90,7 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
                 
                 <div class="total-amount-box">
                     <div class="total-label">Tổng chi phí</div>
-                    <div class="total-amount">{$booking['total_amount_formatted']} VNĐ</div>
+                    <div class="total-amount">{$booking['total_amount_formatted']} VND</div>
                 </div>
                 
                 <div class="alert-box">
@@ -163,7 +163,7 @@ THÔNG TIN KHÁCH HÀNG:
 - Email: {$booking['guest_email']}
 - Điện thoại: {$booking['guest_phone']}
 
-TỔNG CHI PHÍ: {$booking['total_amount_formatted']} VNĐ
+TỔNG CHI PHÍ: {$booking['total_amount_formatted']} VND
 
 LƯU Ý QUAN TRỌNG:
 - Đặt phòng của quý khách đang ở trạng thái "Chờ xác nhận"

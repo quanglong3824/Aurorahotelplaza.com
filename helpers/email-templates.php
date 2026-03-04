@@ -66,7 +66,7 @@ class EmailTemplates {
                 <div class="alert-box">
                     <div class="alert-box-title">Quyền lợi thành viên</div>
                     <ul>
-                        <li>Tích điểm với mỗi lần đặt phòng (1 điểm = 10,000 VNĐ)</li>
+                        <li>Tích điểm với mỗi lần đặt phòng (1 điểm = 10,000 VND)</li>
                         <li>Ưu đãi đặc biệt dành riêng cho thành viên</li>
                         <li>Nâng hạng thành viên VIP khi đạt đủ điểm</li>
                         <li>Nhận thông báo về các chương trình khuyến mãi</li>
@@ -290,7 +290,7 @@ HTML;
                 
                 <div class="total-amount-box">
                     <div class="total-label">Tổng chi phí</div>
-                    <div class="total-amount">{$totalAmount} VNĐ</div>
+                    <div class="total-amount">{$totalAmount} VND</div>
                 </div>
                 
                 <div class="button-wrapper">

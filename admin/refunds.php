@@ -121,7 +121,7 @@ include 'includes/admin-header.php';
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Chờ duyệt</p>
                     <p class="text-2xl font-bold"><?php echo $stats['pending_count']; ?></p>
-                    <p class="text-xs text-gray-500 mt-1"><?php echo number_format($stats['pending_amount']); ?> VNĐ</p>
+                    <p class="text-xs text-gray-500 mt-1"><?php echo number_format($stats['pending_amount']); ?> VND</p>
                 </div>
                 <div class="p-3 bg-yellow-100 rounded-lg">
                     <span class="material-symbols-outlined text-yellow-600">pending</span>
@@ -146,7 +146,7 @@ include 'includes/admin-header.php';
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Hoàn thành</p>
                     <p class="text-2xl font-bold"><?php echo $stats['completed_count']; ?></p>
-                    <p class="text-xs text-gray-500 mt-1"><?php echo number_format($stats['completed_amount']); ?> VNĐ</p>
+                    <p class="text-xs text-gray-500 mt-1"><?php echo number_format($stats['completed_amount']); ?> VND</p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-lg">
                     <span class="material-symbols-outlined text-green-600">task_alt</span>
@@ -234,8 +234,8 @@ include 'includes/admin-header.php';
                         </td>
                         <td class="px-6 py-4">
                             <div>
-                                <p class="font-bold text-green-600"><?php echo number_format($refund['refund_amount']); ?> VNĐ</p>
-                                <p class="text-xs text-gray-500"><?php echo $refund['refund_percentage']; ?>% của <?php echo number_format($refund['booking_amount']); ?> VNĐ</p>
+                                <p class="font-bold text-green-600"><?php echo number_format($refund['refund_amount']); ?> VND</p>
+                                <p class="text-xs text-gray-500"><?php echo $refund['refund_percentage']; ?>% của <?php echo number_format($refund['booking_amount']); ?> VND</p>
                             </div>
                         </td>
                         <td class="px-6 py-4">

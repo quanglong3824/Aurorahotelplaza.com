@@ -29,7 +29,7 @@ function validatePhone($phone) {
  * Format currency VND
  */
 function formatCurrency($amount) {
-    return number_format($amount, 0, ',', '.') . ' VNĐ';
+    return number_format($amount, 0, ',', '.') . ' VND';
 }
 
 /**

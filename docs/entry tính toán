@@ -5,8 +5,8 @@
 - Số lượng trẻ em bị ép về 0.
 - Ẩn hoàn toàn section "Khách thêm" bên dưới.
 - Tự động áp dụng các khoản tính thêm:
-+ Phụ thu người thứ 3: 400,000 VNĐ / đêm (locked).
-+ Bắt buộc 1 giường phụ: 650,000 VNĐ / đêm (locked).
++ Phụ thu người thứ 3: 400,000 VND / đêm (locked).
++ Bắt buộc 1 giường phụ: 650,000 VND / đêm (locked).
 - Công thức Final:
 => Tổng tiền = Tiền phòng + [(Phụ thu 400k + Giường phụ 650k) × số đêm]
 
@@ -17,7 +17,7 @@
 - Hiện danh sách với 1 entry để chọn chiều cao.
 - User tiến hành click chọn nút mức chiều cao cho trẻ:
 + Dưới 1m → Miễn phí.
-+ Từ 1m đến 1m3 → Phụ thu 200,000 VNĐ / đêm.
-+ Trên 1m3 → Phụ thu 400,000 VNĐ / đêm + Hiện cảnh báo khuyên dùng giường phụ.
++ Từ 1m đến 1m3 → Phụ thu 200,000 VND / đêm.
++ Trên 1m3 → Phụ thu 400,000 VND / đêm + Hiện cảnh báo khuyên dùng giường phụ.
 - Công thức Final:
 => Tổng tiền = Tiền phòng + [(Phụ thu trẻ em + Tiền giường phụ nếu có) × số đêm]

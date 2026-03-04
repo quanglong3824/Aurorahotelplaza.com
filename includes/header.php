@@ -655,7 +655,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     html += '</div></div>';
                     html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 pb-1">';
                     html += '<strong class="text-gray-800 dark:text-gray-200">' + trackingLang.total + ':</strong>';
-                    html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(bookingItem.total_amount) + ' VNĐ</span>';
+                    html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(bookingItem.total_amount) + ' VND</span>';
                     html += '</div></div>';
                     html += '<hr class="my-3 border-gray-200 dark:border-gray-700">';
                 });

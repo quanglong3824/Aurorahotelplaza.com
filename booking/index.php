@@ -207,7 +207,7 @@ foreach ($room_types as $room) {
                                                 </div>
                                                 <div class="flex items-center gap-1.5">
                                                     <span class="material-symbols-outlined text-xs text-green-400">payments</span>
-                                                    <span><?php echo number_format($booking['total_amount']); ?> VNĐ</span>
+                                                    <span><?php echo number_format($booking['total_amount']); ?> VND</span>
                                                 </div>
                                             </div>
                                         </div>

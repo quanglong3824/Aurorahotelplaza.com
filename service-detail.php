@@ -154,7 +154,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                         <?php echo htmlspecialchars($pkg['package_name']); ?>
                                     </h3>
                                     <div class="package-price-large">
-                                        <?php echo number_format($pkg['price'], 0, ',', '.'); ?>VNĐ
+                                        <?php echo number_format($pkg['price'], 0, ',', '.'); ?>VND
                                         <span class="text-sm font-sans font-normal text-white/60 ml-1">/
                                             <?php echo htmlspecialchars($pkg['price_unit']); ?></span>
                                     </div>

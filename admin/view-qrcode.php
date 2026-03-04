@@ -257,30 +257,30 @@ include 'includes/admin-header.php';
                         ?>
                         <div class="flex justify-between">
                             <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm (Room Price/Night)</span>
-                            <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>VNĐ</span>
+                            <span><?php echo number_format($room_per_night_admin, 0, ',', '.'); ?>VND</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-500 dark:text-gray-400">Tiền phòng (<?php echo $nights; ?> đêm ×
                                 <?php echo $booking['num_rooms']; ?> phòng)</span>
-                            <span><?php echo number_format($room_total_admin, 0, ',', '.'); ?>VNĐ</span>
+                            <span><?php echo number_format($room_total_admin, 0, ',', '.'); ?>VND</span>
                         </div>
                         <?php if ($booking['discount_amount'] > 0): ?>
                             <div class="flex justify-between text-green-600">
                                 <span>Giảm giá (Discount)</span>
-                                <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>VNĐ</span>
+                                <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>VND</span>
                             </div>
                         <?php endif; ?>
                         <?php if ($booking['service_fee'] > 0): ?>
                             <div class="flex justify-between">
                                 <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ (Service Fee)</span>
-                                <span><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>VNĐ</span>
+                                <span><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>VND</span>
                             </div>
                         <?php endif; ?>
                         <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                             <div class="flex justify-between items-center">
                                 <span class="font-semibold">Tổng cộng (Total)</span>
                                 <span class="font-bold text-2xl" style="color: #d4af37;">
-                                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ
+                                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND
                                 </span>
                             </div>
                         </div>
@@ -595,7 +595,7 @@ include 'includes/admin-header.php';
                     
                     <div class="total-amount">
                         <div class="total-label"><?php echo $nights; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng</div>
-                        <div class="total-value"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ</div>
+                        <div class="total-value"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND</div>
                     </div>
                 </div>
             </div>

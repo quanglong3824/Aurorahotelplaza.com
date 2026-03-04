@@ -244,7 +244,7 @@ include 'includes/admin-header.php';
                     <div class="mb-3 pt-3 border-t border-border-light dark:border-border-dark">
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Giá từ</p>
                         <p class="text-xl font-bold text-accent">
-                            <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VNĐ
+                            <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VND
                             <span
                                 class="text-sm font-normal text-text-secondary-light dark:text-text-secondary-dark">/đêm</span>
                         </p>

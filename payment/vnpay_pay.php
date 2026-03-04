@@ -68,7 +68,7 @@ $room_type = isset($_GET['room_type']) ? htmlspecialchars($_GET['room_type']) : 
                         <p class="amount-label">Số tiền thanh toán</p>
                         <p class="amount-value">
                             <span id="amountDisplay"><?php echo number_format($amount, 0, ',', '.'); ?></span>
-                            <span class="amount-currency">VNĐ</span>
+                            <span class="amount-currency">VND</span>
                         </p>
                         <?php if ($booking_code): ?>
                         <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">

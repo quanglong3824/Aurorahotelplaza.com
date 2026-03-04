@@ -351,7 +351,7 @@ try {
                                                 class="text-white/60 text-sm"><?php _e('profile_loyalty.total_spent'); ?></span>
                                             <span
                                                 class="font-bold text-accent"><?php echo number_format($booking_stats['total_spent']); ?>
-                                                VNĐ</span>
+                                                VND</span>
                                         </div>
                                     </div>
                                 </div>

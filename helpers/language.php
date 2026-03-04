@@ -151,7 +151,7 @@ function formatMoney($amount, $lang = null) {
         return '$' . number_format($usd, 0);
     }
 
-    return number_format($amount, 0, ',', '.') . ' VNĐ';
+    return number_format($amount, 0, ',', '.') . ' VND';
 }
 
 /**

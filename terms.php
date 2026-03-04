@@ -64,7 +64,7 @@ $page_title = 'Điều khoản sử dụng';
                                     Chào mừng quý khách đến với Aurora Hotel Plaza. Bằng việc sử dụng website và dịch vụ
                                     của chúng tôi,
                                     quý khách đồng ý tuân thủ các điều khoản và điều kiện được nêu dưới đây. Vui lòng
-                                    đọc kỹ trước khi
+                                   đọc kỹ trước khi
                                     sử dụng dịch vụ.
                                 </p>
                                 <p class="text-sm text-white/60 mt-4">
@@ -215,7 +215,7 @@ $page_title = 'Điều khoản sử dụng';
                                                 Không được phép
                                             </h5>
                                             <ul class="text-sm space-y-2">
-                                                <li>✗ Hút thuốc trong phòng (phạt 500.000đ)</li>
+                                                <li>✗ Hút thuốc trong phòng (phạt 500.000 VND)</li>
                                                 <li>✗ Mang vật nuôi (trừ phòng cho phép)</li>
                                                 <li>✗ Gây ồn ào sau 22:00</li>
                                                 <li>✗ Mang chất cấm, vũ khí</li>
@@ -225,7 +225,7 @@ $page_title = 'Điều khoản sử dụng';
 
                                     <h4 class="text-accent">5.1. Giờ yên tĩnh</h4>
                                     <p>Từ 22:00 đến 07:00 hàng ngày. Quý khách vui lòng giữ yên lặng để không ảnh hưởng
-                                        đến khách khác.</p>
+                                       đến khách khác.</p>
 
                                     <h4 class="text-accent">5.2. Tài sản</h4>
                                     <ul>
@@ -274,10 +274,10 @@ $page_title = 'Điều khoản sử dụng';
                                 <div class="policy-section-content text-white/80">
                                     <p>
                                         Aurora Hotel Plaza có quyền thay đổi các điều khoản này bất cứ lúc nào. Các thay
-                                        đổi sẽ có
+                                       đổi sẽ có
                                         hiệu lực ngay khi được đăng tải trên website. Việc tiếp tục sử dụng dịch vụ sau
                                         khi có thay đổi
-                                        đồng nghĩa với việc quý khách chấp nhận các điều khoản mới.
+                                       đồng nghĩa với việc quý khách chấp nhận các điều khoản mới.
                                     </p>
 
                                     <div class="glass-card-solid p-6 mt-6">

@@ -63,7 +63,7 @@ include 'includes/admin-header.php';
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Giá cơ bản (VNĐ) *</label>
+                    <label class="form-label">Giá cơ bản (VND) *</label>
                     <input type="number" name="base_price" class="form-input" 
                            value="<?php echo $room_type['base_price'] ?? ''; ?>" 
                            min="0" step="1000" required>

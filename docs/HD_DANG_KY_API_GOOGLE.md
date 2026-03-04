@@ -15,7 +15,7 @@
    - Quốc gia: Chọn **Vietnam**.
    - Điền thông tin Doanh nghiệp/Cá nhân (Tên, địa chỉ, mã bưu điện 700000 nếu ở HCM).
    - Nhập thông tin **Thẻ Visa hoặc MasterCard**.
-   *Lưu ý: Google sẽ trừ thử khoảng 1 USD (25.000 VNĐ) để xác minh thẻ và sẽ lập tức **hoàn trả lại** ngay sau 5 phút.*
+   *Lưu ý: Google sẽ trừ thử khoảng 1 USD (25.000 VND) để xác minh thẻ và sẽ lập tức **hoàn trả lại** ngay sau 5 phút.*
 
 ## BƯỚC 3: BẬT THANH TOÁN CHO DỰ ÁN AI CỦA BẠN
 1. Sau khi Add thẻ thành công, bạn quay lại màn hình **[Google AI Studio - API Keys](https://aistudio.google.com/app/apikey)**.

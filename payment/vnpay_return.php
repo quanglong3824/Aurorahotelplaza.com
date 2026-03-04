@@ -141,7 +141,7 @@ if (!$isValidSignature) {
                     <p class="amount-label">Số tiền thanh toán</p>
                     <p class="amount-value">
                         <span><?php echo number_format($amount, 0, ',', '.'); ?></span>
-                        <span class="amount-currency">VNĐ</span>
+                        <span class="amount-currency">VND</span>
                     </p>
                 </div>
 

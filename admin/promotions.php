@@ -155,7 +155,7 @@ include 'includes/admin-header.php';
                                         <?php if ($promo['discount_type'] === 'percentage'): ?>
                                             <?php echo $promo['discount_value']; ?>%
                                         <?php else: ?>
-                                            <?php echo number_format($promo['discount_value'], 0, ',', '.'); ?>VNĐ
+                                            <?php echo number_format($promo['discount_value'], 0, ',', '.'); ?>VND
                                         <?php endif; ?>
                                     </p>
                                 </div>
@@ -188,13 +188,13 @@ include 'includes/admin-header.php';
                             <div class="flex flex-wrap gap-2 text-sm">
                                 <?php if ($promo['min_booking_amount']): ?>
                                     <span class="badge badge-info">
-                                        Đơn tối thiểu: <?php echo number_format($promo['min_booking_amount'], 0, ',', '.'); ?>VNĐ
+                                        Đơn tối thiểu: <?php echo number_format($promo['min_booking_amount'], 0, ',', '.'); ?>VND
                                     </span>
                                 <?php endif; ?>
 
                                 <?php if ($promo['max_discount']): ?>
                                     <span class="badge badge-warning">
-                                        Giảm tối đa: <?php echo number_format($promo['max_discount'], 0, ',', '.'); ?>VNĐ
+                                        Giảm tối đa: <?php echo number_format($promo['max_discount'], 0, ',', '.'); ?>VND
                                     </span>
                                 <?php endif; ?>
 
@@ -261,7 +261,7 @@ include 'includes/admin-header.php';
                         <select id="discount_type" name="discount_type" class="form-select" required
                             onchange="updateDiscountLabel()">
                             <option value="percentage">Phần trăm (%)</option>
-                            <option value="fixed_amount">Số tiền cố định (VNĐ)</option>
+                            <option value="fixed_amount">Số tiền cố định (VND)</option>
                         </select>
                     </div>
 
@@ -272,13 +272,13 @@ include 'includes/admin-header.php';
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Đơn tối thiểu (VNĐ)</label>
+                        <label class="form-label">Đơn tối thiểu (VND)</label>
                         <input type="number" id="min_booking_amount" name="min_booking_amount" class="form-input"
                             min="0" step="1000">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Giảm tối đa (VNĐ)</label>
+                        <label class="form-label">Giảm tối đa (VND)</label>
                         <input type="number" id="max_discount" name="max_discount" class="form-input" min="0"
                             step="1000">
                     </div>
@@ -348,7 +348,7 @@ include 'includes/admin-header.php';
             input.max = '100';
             input.step = '0.01';
         } else {
-            label.textContent = 'Giá trị giảm (VNĐ) *';
+            label.textContent = 'Giá trị giảm (VND) *';
             input.removeAttribute('max');
             input.step = '1000';
         }

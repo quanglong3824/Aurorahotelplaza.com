@@ -8,11 +8,11 @@ let suggestionDismissed = false; // Track if user dismissed suggestion
 let extraBedLocked = false; // Track if extra bed is locked (for 3 adults case)
 
 // ========== PRICING CONSTANTS (must match backend) ==========
-const EXTRA_BED_PRICE = 650000; // 650,000 VNĐ/đêm
+const EXTRA_BED_PRICE = 650000; // 650,000 VND/đêm
 const EXTRA_GUEST_FEES = {
     under1m: 0,       // Dưới 1m: Miễn phí (bao gồm ăn sáng)
-    '1m_1m3': 200000, // 1m - 1m3: 200,000 VNĐ/đêm (bao gồm ăn sáng)
-    over1m3: 400000   // Trên 1m3: 400,000 VNĐ/đêm (bao gồm ăn sáng)
+    '1m_1m3': 200000, // 1m - 1m3: 200,000 VND/đêm (bao gồm ăn sáng)
+    over1m3: 400000   // Trên 1m3: 400,000 VND/đêm (bao gồm ăn sáng)
 };
 
 // ========== ROOM CONFIGURATION ==========
@@ -40,8 +40,8 @@ const ROOM_CONFIG = {
  *    - Nếu height >= 1.3m: PHẢI chọn giường phụ
  * 4. Phụ thu trẻ em theo chiều cao:
  *    - Dưới 1m: Miễn phí
- *    - 1m - 1.3m: 200,000 VNĐ/đêm
- *    - Trên 1.3m: 400,000 VNĐ/đêm
+ *    - 1m - 1.3m: 200,000 VND/đêm
+ *    - Trên 1.3m: 400,000 VND/đêm
  */
 function checkAndShowSuggestion() {
     if (isInquiryMode || suggestionDismissed) return;
@@ -652,7 +652,7 @@ function handleChildrenChange() {
     if (needsExtraBed && extraBedsInput && !extraBedsInput.disabled && parseInt(extraBedsInput.value) === 0) {
         if (bedWarning) {
             bedWarning.classList.remove('hidden');
-            bedWarning.innerHTML = '<span class="material-symbols-outlined text-sm text-amber-400">warning</span> Trẻ em cao từ 1.3m nên sử dụng giường phụ (650,000 VNĐ/đêm)';
+            bedWarning.innerHTML = '<span class="material-symbols-outlined text-sm text-amber-400">warning</span> Trẻ em cao từ 1.3m nên sử dụng giường phụ (650,000 VND/đêm)';
         }
     } else {
         if(bedWarning) bedWarning.classList.add('hidden');
@@ -753,7 +753,7 @@ function renderExtraGuests() {
                 <div class="text-sm text-gray-400">
                     <span class="material-symbols-outlined text-xs align-middle">calculate</span>
                     Phụ thu: <span class="font-bold ${guest.type === 'under1m' ? 'text-green-400' : guest.type === '1m_1m3' ? 'text-yellow-400' : 'text-orange-400'}">
-                        ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000 VNĐ' : '400.000 VNĐ'}
+                        ${guest.type === 'under1m' ? 'Miễn phí' : guest.type === '1m_1m3' ? '200.000 VND' : '400.000 VND'}
                     </span>
                 </div>
                 ${!guest.isLocked ? `
@@ -801,7 +801,7 @@ function setExtraGuestHeight(id, height, type) {
                 const bedWarning = document.getElementById('extra_bed_warning');
                 if (bedWarning) {
                     bedWarning.classList.remove('hidden');
-                    bedWarning.innerHTML = '<span class="material-symbols-outlined text-sm text-amber-400">warning</span> Trẻ em cao từ 1.3m nên sử dụng giường phụ (650,000 VNĐ/đêm)';
+                    bedWarning.innerHTML = '<span class="material-symbols-outlined text-sm text-amber-400">warning</span> Trẻ em cao từ 1.3m nên sử dụng giường phụ (650,000 VND/đêm)';
                 }
             }
         }
@@ -1127,9 +1127,9 @@ function calculateTotal() {
     let extraGuestFee = 0;
     const has3Adults = numAdults >= 3;
     
-    // Nếu có 3 người lớn: tính phụ thu cho người thứ 3 (400,000 VNĐ/đêm - như over1m3)
+    // Nếu có 3 người lớn: tính phụ thu cho người thứ 3 (400,000 VND/đêm - như over1m3)
     if (has3Adults) {
-        extraGuestFee += EXTRA_GUEST_FEES.over1m3; // 400,000 VNĐ/đêm cho người lớn thứ 3
+        extraGuestFee += EXTRA_GUEST_FEES.over1m3; // 400,000 VND/đêm cho người lớn thứ 3
     }
     
     // Tính phụ thu trẻ em (nếu có)
@@ -1991,7 +1991,7 @@ function showBookingConflictModal(result) {
                                     </div>
                                     <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                                         <div>📅 ${booking.check_in_date} → ${booking.check_out_date}</div>
-                                        <div>💰 ${parseInt(booking.total_amount).toLocaleString()} VNĐ</div>
+                                        <div>💰 ${parseInt(booking.total_amount).toLocaleString()} VND</div>
                                     </div>
                                 </div>
                             `).join('')}

@@ -274,7 +274,7 @@ include 'includes/admin-header.php';
                                 </td>
                                 <td>
                                     <span class="font-semibold" style="color: #d4af37;">
-                                        <?php echo number_format($member['total_spent'] ?? 0, 0, ',', '.'); ?>VNĐ
+                                        <?php echo number_format($member['total_spent'] ?? 0, 0, ',', '.'); ?>VND
                                     </span>
                                 </td>
                                 <td>

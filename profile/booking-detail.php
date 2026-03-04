@@ -441,14 +441,14 @@ $payment_labels = [
                                                         class="text-xs text-white/40">(<?php echo $total_nights_display; ?>
                                                         <?php _e('profile_bookings.nights'); ?>)</span></span>
                                                 <span class="font-mono"><?php echo number_format($room_total); ?>
-                                                    đ</span>
+                                                   đ</span>
                                             </div>
 
                                             <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
                                                 <div class="flex justify-between items-center text-sm text-blue-300">
                                                     <span>Phụ thu khách thêm</span>
                                                     <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>VNĐ</span>
+                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>VND</span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -457,7 +457,7 @@ $payment_labels = [
                                                     <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?>
                                                         giường)</span>
                                                     <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>VNĐ</span>
+                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>VND</span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -466,7 +466,7 @@ $payment_labels = [
                                                     <span><?php _e('booking_detail.service_charges'); ?></span>
                                                     <span
                                                         class="font-mono"><?php echo number_format($booking['service_fee']); ?>
-                                                        đ</span>
+                                                       đ</span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -475,7 +475,7 @@ $payment_labels = [
                                                     <span><?php _e('booking_detail.discount'); ?></span>
                                                     <span
                                                         class="font-mono">-<?php echo number_format($booking['discount_amount']); ?>
-                                                        đ</span>
+                                                       đ</span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -492,7 +492,7 @@ $payment_labels = [
                                                     <span><?php _e('booking_detail.total'); ?></span>
                                                     <span
                                                         class="text-accent font-mono"><?php echo number_format($booking['total_amount']); ?>
-                                                        VNĐ</span>
+                                                        VND</span>
                                                 </div>
                                             </div>
                                         </div>

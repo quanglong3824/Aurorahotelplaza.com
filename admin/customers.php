@@ -226,7 +226,7 @@ include 'includes/admin-header.php';
                                 </div>
                             </td>
                             <td class="text-center font-medium"><?php echo $customer['total_bookings']; ?></td>
-                            <td class="font-medium"><?php echo number_format($customer['total_spent'] ?? 0, 0, ',', '.'); ?>VNĐ
+                            <td class="font-medium"><?php echo number_format($customer['total_spent'] ?? 0, 0, ',', '.'); ?>VND
                             </td>
                             <td>
                                 <?php

@@ -218,7 +218,7 @@ try {
                     </div>
                     <div class="flex justify-between">
                         <span>Số tiền:</span>
-                        <span class="font-bold text-accent"><?php echo number_format($vnp_Amount / 100); ?> VNĐ</span>
+                        <span class="font-bold text-accent"><?php echo number_format($vnp_Amount / 100); ?> VND</span>
                     </div>
                 </div>
             </div>

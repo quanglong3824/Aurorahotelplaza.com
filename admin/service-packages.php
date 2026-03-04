@@ -185,7 +185,7 @@ include 'includes/admin-header.php';
 
                         <div class="mb-4">
                             <span class="text-3xl font-bold text-accent">
-                                <?php echo number_format($package['price'], 0, ',', '.'); ?>VNĐ
+                                <?php echo number_format($package['price'], 0, ',', '.'); ?>VND
                             </span>
                             <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                 /<?php echo htmlspecialchars($package['price_unit']); ?>
@@ -331,7 +331,7 @@ include 'includes/admin-header.php';
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Giá (VNĐ) *</label>
+                        <label class="form-label">Giá (VND) *</label>
                         <input type="number" id="price" name="price" class="form-input" min="0" step="1000" required>
                     </div>
 

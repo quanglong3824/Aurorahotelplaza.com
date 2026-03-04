@@ -105,7 +105,7 @@ try {
                             <div class="price-section">
                                 <div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div>
                                 <div><span
-                                        class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>VNĐ</span><span
+                                        class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>VND</span><span
                                         class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
                                 <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">
                                     <?php _e('apartment_detail.discount_30_7days'); ?></p>

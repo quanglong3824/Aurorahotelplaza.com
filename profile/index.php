@@ -209,7 +209,7 @@ function getContactStatusBadge($status)
                                     <?php _e('profile_page.spent'); ?>
                                 </p>
                                 <p class="text-xl font-bold text-white">
-                                    <?php echo number_format($stats['spent'] ?? 0); ?>VNĐ
+                                    <?php echo number_format($stats['spent'] ?? 0); ?>VND
                                 </p>
                             </div>
                         </div>
@@ -366,7 +366,7 @@ function getContactStatusBadge($status)
                                                         <?php echo getStatusBadge($b['status']); ?>
                                                         <div class="text-right">
                                                             <p class="text-accent font-bold text-lg">
-                                                                <?php echo number_format($b['total_amount']); ?>VNĐ
+                                                                <?php echo number_format($b['total_amount']); ?>VND
                                                             </p>
                                                             <p class="text-xs text-white/40"><?php echo $b['payment_status']; ?>
                                                             </p>

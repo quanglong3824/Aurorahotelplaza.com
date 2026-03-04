@@ -83,7 +83,7 @@ include 'includes/admin-header.php';
                                     </span>
                                 </td>
                                 <td class="font-bold" style="color: #d4af37;">
-                                    <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VNĐ
+                                    <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VND
                                 </td>
                                 <td><?php echo $type['max_occupancy']; ?> người</td>
                                 <td>
@@ -145,7 +145,7 @@ include 'includes/admin-header.php';
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-lg" style="color: #d4af37;">
-                                <?php echo number_format($pricing['price'], 0, ',', '.'); ?>VNĐ
+                                <?php echo number_format($pricing['price'], 0, ',', '.'); ?>VND
                             </p>
                             <p class="text-xs text-gray-500">
                                 <?php
@@ -208,7 +208,7 @@ include 'includes/admin-header.php';
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Giá đặc biệt (VNĐ) *</label>
+                    <label class="form-label">Giá đặc biệt (VND) *</label>
                     <input type="number" name="price" class="form-input" min="0" step="1000" required>
                 </div>
 

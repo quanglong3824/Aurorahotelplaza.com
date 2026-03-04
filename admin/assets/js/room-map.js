@@ -66,7 +66,7 @@ function displayRoomDetail(room, currentBooking, history) {
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white dark:bg-slate-800 rounded-lg p-4">
                         <div class="text-sm text-gray-600 mb-1">Giá cơ bản</div>
-                        <div class="text-xl font-bold" style="color: #d4af37;">${parseInt(room.base_price).toLocaleString()} VNĐ</div>
+                        <div class="text-xl font-bold" style="color: #d4af37;">${parseInt(room.base_price).toLocaleString()} VND</div>
                     </div>
                     <div class="bg-white dark:bg-slate-800 rounded-lg p-4">
                         <div class="text-sm text-gray-600 mb-1">Sức chứa</div>
@@ -106,7 +106,7 @@ function displayRoomDetail(room, currentBooking, history) {
                             </div>
                             <div>
                                 <span class="text-gray-600">Tổng tiền:</span>
-                                <p class="font-semibold" style="color: #d4af37;">${parseInt(currentBooking.total_amount).toLocaleString()} VNĐ</p>
+                                <p class="font-semibold" style="color: #d4af37;">${parseInt(currentBooking.total_amount).toLocaleString()} VND</p>
                             </div>
                         </div>
                     </div>
@@ -134,7 +134,7 @@ function displayRoomDetail(room, currentBooking, history) {
                                         </p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-semibold" style="color: #d4af37;">${parseInt(booking.total_amount).toLocaleString()} VNĐ</p>
+                                        <p class="font-semibold" style="color: #d4af37;">${parseInt(booking.total_amount).toLocaleString()} VND</p>
                                         <span class="badge badge-${booking.status === 'completed' ? 'success' : 'secondary'} text-xs">
                                             ${booking.status === 'completed' ? 'Hoàn thành' : booking.status}
                                         </span>
@@ -225,7 +225,7 @@ async function changeRoomType(roomId, roomNumber) {
                         <div class="text-sm text-gray-500">${isRoom ? 'Phòng' : 'Căn hộ'} • ${type.max_occupancy || 2} người</div>
                     </div>
                     <div class="text-right flex-shrink-0">
-                        <div class="font-bold text-[#d4af37]">${parseInt(type.base_price).toLocaleString()} VNĐ</div>
+                        <div class="font-bold text-[#d4af37]">${parseInt(type.base_price).toLocaleString()} VND</div>
                         <div class="text-xs text-gray-500">/đêm</div>
                     </div>
                 </button>

@@ -96,7 +96,7 @@ PROMPT;
 
     $room_context = "\n--- THÔNG TIN CÁC HẠNG PHÒNG THỰC TẾ (Dùng room_type_id này khi thực thi lệnh) ---\n";
     foreach ($room_types as $rt) {
-        $room_context .= "- Mã ID: {$rt['room_type_id']} | Tên: {$rt['name']} | Giá gốc đang cài: {$rt['base_price']} VNĐ\n";
+        $room_context .= "- Mã ID: {$rt['room_type_id']} | Tên: {$rt['name']} | Giá gốc đang cài: {$rt['base_price']} VND\n";
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -134,12 +134,12 @@ PROMPT;
     $bi_context .= "+ KHO PHÒNG: Tổng cộng {$total_rooms} phòng vật lý. Đang có khách ở: {$occupied_rooms} phòng, Trống sẵn sàng: {$available_rooms} phòng.\n";
     $bi_context .= "+ DỮ LIỆU KHÁCH HÀNG: Tổng có {$total_users} tài khoản khách hàng trên hệ thống.\n";
     $bi_context .= "+ TỔNG QUAN ĐẶT PHÒNG: Tổng hệ thống đã ghi nhận {$total_bookings} đơn đặt phòng. Trong đó Đang chờ Duyệt/Thanh toán: {$pending_bookings} đơn, Đã chốt/Hoàn thành: {$confirmed_bookings} đơn.\n";
-    $bi_context .= "+ DOANH THU ƯỚC TÍNH (Từ Đơn Confirmed/Completed): " . number_format($total_revenue, 0, ',', '.') . " VNĐ.\n";
+    $bi_context .= "+ DOANH THU ƯỚC TÍNH (Từ Đơn Confirmed/Completed): " . number_format($total_revenue, 0, ',', '.') . " VND.\n";
 
     $bi_context .= "\n--- DANH SÁCH 10 LƯỢT ĐẶT PHÒNG (BOOKINGS) GẦN ĐÂY NHẤT ĐỂ PHÂN TÍCH XU HƯỚNG ---\n";
     if ($recent_bookings) {
         foreach ($recent_bookings as $b) {
-            $bi_context .= "- Mã Đơn #{$b['booking_id']}: Khách {$b['full_name']} | Check-in: {$b['check_in_date']} -> Check-out: {$b['check_out_date']} | Giá trị: " . number_format($b['total_amount'], 0, ',', '.') . " VNĐ | Trạng thái: {$b['status']}\n";
+            $bi_context .= "- Mã Đơn #{$b['booking_id']}: Khách {$b['full_name']} | Check-in: {$b['check_in_date']} -> Check-out: {$b['check_out_date']} | Giá trị: " . number_format($b['total_amount'], 0, ',', '.') . " VND | Trạng thái: {$b['status']}\n";
         }
     } else {
         $bi_context .= "- Khách sạn chưa có đơn đặt phòng nào mới.\n";
@@ -367,7 +367,7 @@ PROMPT;
         $file = fopen($filepath, 'w');
         // Thêm Byte Order Mark (BOM) để Microsoft Excel hiển thị đúng Tiếng Việt UTF-8
         fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        fputcsv($file, ['Nguồn Báo Cáo', 'Tên Khách Sạn Đối Thủ', 'Hạng Sao', 'Từ Khóa Tìm Kiếm', 'Chất lượng/Dạng Phòng', 'Giá Công Bố Sàn (VNĐ)', 'Trạng Thái Firewall']);
+        fputcsv($file, ['Nguồn Báo Cáo', 'Tên Khách Sạn Đối Thủ', 'Hạng Sao', 'Từ Khóa Tìm Kiếm', 'Chất lượng/Dạng Phòng', 'Giá Công Bố Sàn (VND)', 'Trạng Thái Firewall']);
 
         $crawl_logs = [];
         $db_exported = 0;
@@ -440,7 +440,7 @@ PROMPT;
         if ($code3 == 200) {
             // Mytour thường có các div class có style chung (regex đại diện lấy ngẫu nhiên vì DOM Mytour hay đổi)
             preg_match_all('/<h3[^>]*>(.*?)<\/h3>/is', $html_mytour, $m_titles);
-            preg_match_all('/([0-9]{1,3}(?:[.,][0-9]{3})+)\s*(?:vnđ|đ|vnd)/is', $html_mytour, $m_prices);
+            preg_match_all('/([0-9]{1,3}(?:[.,][0-9]{3})+)\s*(?:VND|đ|vnd)/is', $html_mytour, $m_prices);
 
             if (count($m_titles[1]) > 0 && count($m_prices[1]) > 0) {
                 $crawl_logs[] = "✔️ OTA Nội Địa (Mytour/Vntrip): Quét thành công!";

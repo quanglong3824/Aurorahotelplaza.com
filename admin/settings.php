@@ -174,14 +174,14 @@ include 'includes/admin-header.php';
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Phí check-out muộn (VNĐ)</label>
+                    <label class="form-label">Phí check-out muộn (VND)</label>
                     <input type="number" name="settings[late_checkout_fee]" 
                            value="<?php echo htmlspecialchars($settings['late_checkout_fee']); ?>" 
                            class="form-input" min="0" required>
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Phí check-in sớm (VNĐ)</label>
+                    <label class="form-label">Phí check-in sớm (VND)</label>
                     <input type="number" name="settings[early_checkin_fee]" 
                            value="<?php echo htmlspecialchars($settings['early_checkin_fee']); ?>" 
                            class="form-input" min="0" required>
@@ -248,12 +248,12 @@ include 'includes/admin-header.php';
         <div class="card-body">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
-                    <label class="form-label">Tích điểm (VNĐ/điểm)</label>
+                    <label class="form-label">Tích điểm (VND/điểm)</label>
                     <input type="number" name="settings[points_per_vnd]" 
                            value="<?php echo htmlspecialchars($settings['points_per_vnd']); ?>" 
                            class="form-input" min="1" required>
                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
-                        Mỗi <?php echo number_format($settings['points_per_vnd']); ?>VNĐ = 1 điểm
+                        Mỗi <?php echo number_format($settings['points_per_vnd']); ?>VND = 1 điểm
                     </p>
                 </div>
                 

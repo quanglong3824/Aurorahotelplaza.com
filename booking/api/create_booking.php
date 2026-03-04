@@ -203,9 +203,9 @@ try {
         if ($height < 1.0) {
             $fee_per_night = 0;           // Dưới 1m: Miễn phí
         } elseif ($height >= 1.0 && $height < 1.3) {
-            $fee_per_night = 200000;      // 1m - 1m3: 200,000đ/đêm
+            $fee_per_night = 200000;      // 1m - 1m3: 200,000 VND/đêm
         } else {
-            $fee_per_night = 400000;      // Trên 1m3: 400,000đ/đêm
+            $fee_per_night = 400000;      // Trên 1m3: 400,000 VND/đêm
         }
 
         // Multiply by number of nights
@@ -215,7 +215,7 @@ try {
     // Recalculate extra bed fee on backend
     $backend_extra_bed_fee = 0;
     if ($category === 'room' && $extra_beds > 0) {
-        $extra_bed_price_per_night = 650000; // 650,000đ/đêm
+        $extra_bed_price_per_night = 650000; // 650,000 VND/đêm
         $backend_extra_bed_fee = $extra_beds * $extra_bed_price_per_night * $num_nights;
     }
 

@@ -220,7 +220,7 @@ HTML;
                 <p style="margin: 5px 0;"><strong>{$check_in_label}:</strong> {$check_in}</p>
                 <p style="margin: 5px 0;"><strong>{$check_out_label}:</strong> {$check_out}</p>
                 <p style="margin: 5px 0;"><strong>{$nights_label}:</strong> {$booking['total_nights']} {$night_unit}</p>
-                <p style="margin: 5px 0;"><strong>{$total_label}:</strong> {$booking['total_amount_formatted']} VNĐ</p>
+                <p style="margin: 5px 0;"><strong>{$total_label}:</strong> {$booking['total_amount_formatted']} VND</p>
             </div>
             
             {$qr_section}

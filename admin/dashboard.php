@@ -107,7 +107,7 @@ include 'includes/admin-header.php';
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-400 font-medium mb-1">Doanh thu hôm nay</p>
             <p class="text-3xl font-bold mb-2" style="color: #d4af37;">
-                <?php echo number_format($stats['revenue_today'], 0, ',', '.'); ?>VNĐ</p>
+                <?php echo number_format($stats['revenue_today'], 0, ',', '.'); ?>VND</p>
             <p class="text-xs text-gray-500">Từ <?php echo $stats['bookings_today']; ?> đơn đặt phòng</p>
         </div>
     </div>
@@ -207,7 +207,7 @@ include 'includes/admin-header.php';
                             </div>
                             <div class="text-right">
                                 <p class="font-bold text-lg" style="color: #d4af37;">
-                                    <?php echo number_format($room['revenue'], 0, ',', '.'); ?>VNĐ</p>
+                                    <?php echo number_format($room['revenue'], 0, ',', '.'); ?>VND</p>
                             </div>
                         </div>
                     <?php endforeach; ?>

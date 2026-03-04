@@ -148,12 +148,12 @@ include 'includes/admin-header.php';
                     <div class="p-4 bg-green-50 rounded-xl border-2 border-green-200">
                         <p class="text-sm text-gray-600 mb-1">Tổng chi tiêu</p>
                         <p class="text-2xl font-bold text-green-600">
-                            <?php echo number_format($booking_stats['total_spent'], 0, ',', '.'); ?>VNĐ</p>
+                            <?php echo number_format($booking_stats['total_spent'], 0, ',', '.'); ?>VND</p>
                     </div>
                     <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-200">
                         <p class="text-sm text-gray-600 mb-1">TB/Đơn</p>
                         <p class="text-2xl font-bold text-purple-600">
-                            <?php echo number_format($booking_stats['avg_booking_value'], 0, ',', '.'); ?>VNĐ</p>
+                            <?php echo number_format($booking_stats['avg_booking_value'], 0, ',', '.'); ?>VND</p>
                     </div>
                 </div>
             </div>
@@ -204,7 +204,7 @@ include 'includes/admin-header.php';
                                 ?>
                                 <span class="badge <?php echo $config['class']; ?> mb-2"><?php echo $config['label']; ?></span>
                                 <p class="font-bold" style="color: #d4af37;">
-                                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VNĐ</p>
+                                    <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND</p>
                             </div>
                             <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>"
                                 class="btn btn-sm btn-secondary">
