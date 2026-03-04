@@ -872,7 +872,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         background: rgba(255, 255, 255, 0.15);
     }
 
-    /* Help Button Styles */
+    /* Help Button Styles - Match website gold theme */
     .help-btn {
         display: flex;
         align-items: center;
@@ -880,20 +880,20 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
+        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         color: white;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
         position: relative;
         overflow: hidden;
     }
 
     .help-btn:hover {
-        transform: scale(1.1) rotate(15deg);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
-        animation: pulse-help 2s infinite;
+        transform: scale(1.08);
+        box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
+        border-color: rgba(255, 255, 255, 0.4);
     }
 
     .help-btn .material-symbols-outlined {
@@ -901,24 +901,16 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         font-weight: 600;
     }
 
-    @keyframes pulse-help {
-        0%, 100% {
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-        50% {
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.6);
-        }
-    }
-
-    /* Help Modal */
+    /* Help Modal - Liquid Glass Style */
     .help-modal {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         z-index: 10000;
         display: none;
         align-items: center;
@@ -932,33 +924,27 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     }
 
     .help-modal-content {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        background: rgba(30, 41, 59, 0.95);
+        backdrop-filter: blur(16px) saturate(120%);
+        -webkit-backdrop-filter: blur(16px) saturate(120%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
         max-width: 600px;
         width: 100%;
         max-height: 85vh;
         overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.3s ease;
-    }
-
-    .dark .help-modal-content {
-        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .help-modal-header {
         padding: 24px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 148, 31, 0.08) 100%);
         border-radius: 20px 20px 0 0;
-        color: white;
-    }
-
-    .dark .help-modal-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .help-modal-header h3 {
@@ -968,11 +954,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         display: flex;
         align-items: center;
         gap: 12px;
+        color: #d4af37;
     }
 
     .help-modal-close {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         color: white;
         width: 36px;
         height: 36px;
@@ -985,8 +972,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     }
 
     .help-modal-close:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(212, 175, 55, 0.2);
+        border-color: rgba(212, 175, 55, 0.4);
         transform: rotate(90deg);
+        color: #d4af37;
     }
 
     .help-modal-body {
@@ -996,38 +985,33 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     .help-roadmap-item {
         display: flex;
         gap: 16px;
-        padding: 16px;
+        padding: 20px;
         margin-bottom: 16px;
-        background: rgba(102, 126, 234, 0.05);
-        border-radius: 12px;
-        border-left: 4px solid #667eea;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 3px solid #d4af37;
         transition: all 0.3s ease;
-    }
-
-    .dark .help-roadmap-item {
-        background: rgba(102, 126, 234, 0.1);
     }
 
     .help-roadmap-item:hover {
         transform: translateX(8px);
-        background: rgba(102, 126, 234, 0.1);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-    }
-
-    .dark .help-roadmap-item:hover {
-        background: rgba(102, 126, 234, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(212, 175, 55, 0.3);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15);
     }
 
     .help-roadmap-icon {
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
     }
 
     .help-roadmap-icon .material-symbols-outlined {
@@ -1042,39 +1026,41 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         margin: 0 0 8px 0;
         font-size: 1.1rem;
         font-weight: 600;
-        color: #1f2937;
-    }
-
-    .dark .help-roadmap-content h4 {
-        color: #f9fafb;
+        color: #f3f4f6;
     }
 
     .help-roadmap-content p {
         margin: 0 0 12px 0;
         font-size: 0.9rem;
-        color: #6b7280;
+        color: #9ca3af;
         line-height: 1.6;
     }
 
-    .dark .help-roadmap-content p {
-        color: #9ca3af;
+    .help-roadmap-content p strong {
+        color: #d4af37;
     }
 
     .help-roadmap-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 4px 12px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        gap: 6px;
+        padding: 6px 12px;
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        color: #d4af37;
         border-radius: 20px;
         font-size: 0.75rem;
         font-weight: 600;
     }
 
+    .help-roadmap-badge .material-symbols-outlined {
+        font-size: 14px;
+    }
+
     .help-tip {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: white;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 148, 31, 0.08) 100%);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        color: #f3f4f6;
         padding: 16px;
         border-radius: 12px;
         margin-top: 20px;
@@ -1086,12 +1072,37 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     .help-tip .material-symbols-outlined {
         font-size: 24px;
         flex-shrink: 0;
+        color: #d4af37;
     }
 
     .help-tip p {
         margin: 0;
         font-size: 0.9rem;
         line-height: 1.6;
+        color: #d1d5db;
+    }
+
+    .help-tip p strong {
+        color: #d4af37;
+    }
+
+    /* Scrollbar styling */
+    .help-modal-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .help-modal-content::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 3px;
+    }
+
+    .help-modal-content::-webkit-scrollbar-thumb {
+        background: rgba(212, 175, 55, 0.3);
+        border-radius: 3px;
+    }
+
+    .help-modal-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(212, 175, 55, 0.5);
     }
 
     @keyframes slideUp {

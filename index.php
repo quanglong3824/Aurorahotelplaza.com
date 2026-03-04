@@ -915,7 +915,7 @@ try {
                     if (typeof toggleTrackForm === 'function') {
                         toggleTrackForm(true);
 
-                        // Show enhanced tooltip with higher z-index
+                        // Show enhanced tooltip with higher z-index - Gold theme
                         const trackInput = document.getElementById('trackInput');
                         if (trackInput) {
                             const tooltip = document.createElement('div');
@@ -925,18 +925,20 @@ try {
                                     <span class="tooltip-icon">🔍</span>
                                     <span class="tooltip-text"><strong>Theo dõi đơn đặt phòng</strong><br>Nhập mã đặt phòng, SĐT hoặc email của bạn vào đây!</span>
                                 </div>
-                                <div class="tooltip-arrow"></div>
                             `;
 
-                            // Style the tooltip
+                            // Style the tooltip - Gold theme matching website
                             tooltip.style.cssText = `
                                 position: fixed;
                                 z-index: 100000;
-                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                background: rgba(30, 41, 59, 0.95);
+                                backdrop-filter: blur(16px) saturate(120%);
+                                -webkit-backdrop-filter: blur(16px) saturate(120%);
                                 color: white;
                                 padding: 16px 20px;
                                 border-radius: 12px;
-                                box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+                                border: 1px solid rgba(212, 175, 55, 0.3);
+                                box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
                                 font-size: 14px;
                                 font-weight: 500;
                                 line-height: 1.5;
@@ -971,11 +973,13 @@ try {
                                 @keyframes tooltipPulse {
                                     0%, 100% {
                                         transform: ${isMobile ? 'translateX(-50%) scale(1)' : 'translateY(-50%) scale(1)'};
-                                        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+                                        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+                                        border-color: rgba(212, 175, 55, 0.3);
                                     }
                                     50% {
                                         transform: ${isMobile ? 'translateX(-50%) scale(1.05)' : 'translateY(-50%) scale(1.05)'};
-                                        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+                                        box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
+                                        border-color: rgba(212, 175, 55, 0.5);
                                     }
                                 }
                                 .tooltip-content {
@@ -991,6 +995,7 @@ try {
                                     display: block;
                                     margin-bottom: 4px;
                                     font-size: 15px;
+                                    color: #d4af37;
                                 }
                             `;
                             document.head.appendChild(style);
