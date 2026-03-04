@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = json_decode(file_get_contents('php://input'), true);
 $query = isset($input['query']) ? trim($input['query']) : '';
+$mode = isset($input['mode']) ? $input['mode'] : 'latest'; // 'latest' or 'all'
 
 if (empty($query)) {
     echo json_encode(['success' => false, 'error_code' => 'empty']);
@@ -24,45 +25,45 @@ try {
     }
 
     // Search by booking code, email or phone
+    $limitSql = ($mode === 'all') ? "" : "LIMIT 1";
     $stmt = $conn->prepare("
         SELECT booking_code, status, total_amount, created_at, check_in_date, check_out_date, 
                guest_name, guest_email, guest_phone
         FROM bookings
         WHERE booking_code = ? OR guest_email = ? OR guest_phone = ?
         ORDER BY created_at DESC
-        LIMIT 1
+        $limitSql
     ");
     $stmt->execute([$query, $query, $query]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        $customer_name = trim($row['guest_name']);
+    if (count($rows) > 0) {
+        $bookings = [];
+        foreach ($rows as $row) {
+            $customer_name = trim($row['guest_name']);
+            $status_text = $row['status'];
+            switch ($row['status']) {
+                case 'pending':
+                    $status_text = 'Chờ xác nhận';
+                    break;
+                case 'confirmed':
+                    $status_text = 'Đã xác nhận';
+                    break;
+                case 'checked_in':
+                    $status_text = 'Đang ở';
+                    break;
+                case 'checked_out':
+                    $status_text = 'Đã trả phòng';
+                    break;
+                case 'cancelled':
+                    $status_text = 'Đã hủy';
+                    break;
+                case 'no_show':
+                    $status_text = 'Không đến';
+                    break;
+            }
 
-        $status_text = $row['status'];
-        switch ($row['status']) {
-            case 'pending':
-                $status_text = 'Chờ xác nhận';
-                break;
-            case 'confirmed':
-                $status_text = 'Đã xác nhận';
-                break;
-            case 'checked_in':
-                $status_text = 'Đang ở';
-                break;
-            case 'checked_out':
-                $status_text = 'Đã trả phòng';
-                break;
-            case 'cancelled':
-                $status_text = 'Đã hủy';
-                break;
-            case 'no_show':
-                $status_text = 'Không đến';
-                break;
-        }
-
-        echo json_encode([
-            'success' => true,
-            'booking' => [
+            $bookings[] = [
                 'booking_code' => $row['booking_code'],
                 'status' => $status_text,
                 'status_raw' => $row['status'],
@@ -73,7 +74,12 @@ try {
                 'check_out' => date('d/m/Y', strtotime($row['check_out_date'])),
                 'total_amount' => $row['total_amount'],
                 'created_at' => date('d/m/Y H:i', strtotime($row['created_at']))
-            ]
+            ];
+        }
+
+        echo json_encode([
+            'success' => true,
+            'bookings' => $bookings
         ]);
     } else {
         echo json_encode(['success' => false, 'error_code' => 'not_found']);

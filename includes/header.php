@@ -96,12 +96,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 <span class="material-symbols-outlined shrink-0" style="font-size: 16px;">travel_explore</span>
                 <span class="truncate"><?php _e('tracking.title'); ?></span>
             </div>
-            <!-- Mobile Open Form Button -->
             <button type="button" onclick="toggleTrackForm(true)"
                 class="sm:hidden flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white px-2 py-1 rounded shrink-0 ml-2 transition-colors">
                 <span class="material-symbols-outlined" style="font-size: 14px;">search</span>
                 <?php _e('tracking.search_btn'); ?>
             </button>
+            <input type="hidden" id="trackMode" value="latest" />
         </div>
 
         <!-- Form Container -->
@@ -121,12 +121,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <div class="relative w-full sm:w-64">
                 <input type="text" id="trackInput"
                     placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>" required
-                    class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full transition-all pr-8"
+                    class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none w-full transition-all pr-8 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#1f2937] [&:-webkit-autofill]:text-gray-100"
                     oninput="document.getElementById('trackClearBtn').style.display = this.value ? 'flex' : 'none';" />
                 <button type="button" id="trackClearBtn" style="display: none;"
                     onclick="document.getElementById('trackInput').value=''; this.style.display='none'; document.getElementById('trackInput').focus();"
-                    class="absolute inset-y-0 right-0 items-center justify-center w-8 text-gray-500 hover:text-gray-300">
-                    <span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+                    class="absolute inset-y-0 right-0 flex items-center justify-center w-8 text-white hover:text-gray-300 z-10 bg-transparent">
+                    <span class="material-symbols-outlined" style="font-size: 14px; font-weight: bold;">close</span>
                 </button>
             </div>
 
@@ -500,9 +500,16 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <button class="tracking-modal-close" onclick="closeTrackingModal()">
             <span class="material-symbols-outlined">close</span>
         </button>
-        <div class="tracking-modal-header">
+        <div class="tracking-modal-header"
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;">
             <h3><span class="material-symbols-outlined text-primary-500">travel_explore</span>
                 <?php _e('tracking.result_title'); ?></h3>
+            <div class="track-mode-toggle flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1" style="font-size: 0.75rem;">
+                <button onclick="changeTrackMode('latest')" id="btnTrackLatest"
+                    class="px-3 py-1 rounded-md font-medium bg-white text-gray-900 shadow-sm transition-all"><?php _e('tracking.latest_only'); ?></button>
+                <button onclick="changeTrackMode('all')" id="btnTrackAll"
+                    class="px-3 py-1 rounded-md font-medium text-gray-500 hover:text-gray-700 transition-all"><?php _e('tracking.all_history'); ?></button>
+            </div>
         </div>
         <div id="trackResultContent" class="tracking-modal-body">
             <!-- Data will be populated here -->
@@ -562,9 +569,32 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         }
     }
 
+    function changeTrackMode(mode) {
+        document.getElementById('trackMode').value = mode;
+
+        // Update active button styling
+        const btnLatest = document.getElementById('btnTrackLatest');
+        const btnAll = document.getElementById('btnTrackAll');
+
+        if (mode === 'latest') {
+            btnLatest.className = "px-3 py-1 rounded-md font-medium bg-white text-gray-900 shadow-sm transition-all";
+            btnAll.className = "px-3 py-1 rounded-md font-medium text-gray-500 hover:text-gray-700 transition-all";
+        } else {
+            btnAll.className = "px-3 py-1 rounded-md font-medium bg-white text-gray-900 shadow-sm transition-all";
+            btnLatest.className = "px-3 py-1 rounded-md font-medium text-gray-500 hover:text-gray-700 transition-all";
+        }
+
+        // Retrigger search if there's content
+        if (document.getElementById('trackInput').value.trim() !== '') {
+            // fake an event
+            handleTrackBooking(new Event('submit'));
+        }
+    }
+
     async function handleTrackBooking(e) {
         e.preventDefault();
         const input = document.getElementById('trackInput').value.trim();
+        const mode = document.getElementById('trackMode').value;
         if (!input) {
             showTrackError(trackingLang.errorEmpty);
             return;
@@ -582,36 +612,42 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             const res = await fetch('<?php echo $base_path; ?>booking/api/track.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: input })
+                body: JSON.stringify({ query: input, mode: mode })
             });
             const data = await res.json();
 
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
 
-            if (data.success) {
-                let statusColor = 'bg-gray-100 text-gray-800';
-                if (data.booking.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200';
-                if (data.booking.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200';
-                if (data.booking.status_raw === 'cancelled' || data.booking.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200';
-                if (data.booking.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200';
-
-                let statusLabel = trackingLang.statusText[data.booking.status_raw] || data.booking.status_raw;
-
+            if (data.success && data.bookings && data.bookings.length > 0) {
                 let html = '<div class="space-y-4">';
-                html += '<div class="bg-gray-50/80 dark:bg-gray-800/80 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">';
-                html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">' + trackingLang.bookingCode + ': ' + data.booking.booking_code + '</h4>';
-                html += '<div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">';
-                html += '<div class="flex justify-between items-center"><strong class="w-1/3">' + trackingLang.status + ':</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + statusLabel + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.customer + ':</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkIn + ':</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkOut + ':</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.phone + ':</strong> <span class="flex-1">' + (data.booking.phone || '') + '</span></div>';
-                html += '</div></div>';
-                html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-4">';
-                html += '<strong class="text-gray-800 dark:text-gray-200">' + trackingLang.total + ':</strong>';
-                html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(data.booking.total_amount) + ' VNĐ</span>';
-                html += '</div></div>';
+
+                data.bookings.forEach((bookingItem) => {
+                    let statusColor = 'bg-gray-100 text-gray-800';
+                    if (bookingItem.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200';
+                    if (bookingItem.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200';
+                    if (bookingItem.status_raw === 'cancelled' || bookingItem.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200';
+                    if (bookingItem.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200';
+
+                    let statusLabel = trackingLang.statusText[bookingItem.status_raw] || bookingItem.status_raw;
+
+                    html += '<div class="bg-gray-50/80 dark:bg-gray-800/80 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">';
+                    html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">' + trackingLang.bookingCode + ': ' + bookingItem.booking_code + '</h4>';
+                    html += '<div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">';
+                    html += '<div class="flex justify-between items-center"><strong class="w-1/3">' + trackingLang.status + ':</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + statusLabel + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.customer + ':</strong> <span class="flex-1">' + bookingItem.customer_name + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkIn + ':</strong> <span class="flex-1">' + bookingItem.check_in + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkOut + ':</strong> <span class="flex-1">' + bookingItem.check_out + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.phone + ':</strong> <span class="flex-1">' + (bookingItem.phone || '') + '</span></div>';
+                    html += '</div></div>';
+                    html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 pb-1">';
+                    html += '<strong class="text-gray-800 dark:text-gray-200">' + trackingLang.total + ':</strong>';
+                    html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(bookingItem.total_amount) + ' VNĐ</span>';
+                    html += '</div></div>';
+                    html += '<hr class="my-3 border-gray-200 dark:border-gray-700">';
+                });
+
+                html += '</div>';
 
                 openTrackingModal(html);
             } else {

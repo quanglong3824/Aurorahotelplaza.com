@@ -1637,6 +1637,8 @@ return [
         'error_empty' => 'Please enter booking code, email or phone.',
         'error_not_found' => 'Booking not found.',
         'error_system' => 'System error: ',
+        'latest_only' => 'Latest',
+        'all_history' => 'All',
 
         // Statuses
         'status_pending' => 'Pending',

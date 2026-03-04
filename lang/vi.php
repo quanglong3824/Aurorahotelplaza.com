@@ -1700,7 +1700,7 @@ return [
 
     // Tracking
     'tracking' => [
-        'title' => 'Tra cứu dành cho khách:',
+        'title' => 'Tra cứu dành cho khách vãng lai:',
         'placeholder' => 'Nhập mã, email hoặc SĐT...',
         'search_btn' => 'Tìm',
         'searching' => 'Tìm...',
@@ -1715,6 +1715,8 @@ return [
         'error_empty' => 'Vui lòng nhập thông tin tìm kiếm',
         'error_not_found' => 'Không tìm thấy thông tin đặt phòng phù hợp.',
         'error_system' => 'Đã xảy ra lỗi hệ thống: ',
+        'latest_only' => 'Gần nhất',
+        'all_history' => 'Tất cả',
 
         // Statuses
         'status_pending' => 'Chờ xác nhận',
