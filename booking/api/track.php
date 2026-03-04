@@ -13,7 +13,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 $query = isset($input['query']) ? trim($input['query']) : '';
 
 if (empty($query)) {
-    echo json_encode(['success' => false, 'message' => 'Vui lòng nhập thông tin tìm kiếm.']);
+    echo json_encode(['success' => false, 'error_code' => 'empty']);
     exit;
 }
 
@@ -76,9 +76,9 @@ try {
             ]
         ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Không tìm thấy thông tin đặt phòng phù hợp.']);
+        echo json_encode(['success' => false, 'error_code' => 'not_found']);
     }
 } catch (Exception $e) {
     error_log("Tracking Error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'error_code' => 'system', 'message' => $e->getMessage()]);
 }

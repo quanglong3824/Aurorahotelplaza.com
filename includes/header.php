@@ -90,17 +90,19 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         id="trackingTopbar">
         <div class="hidden sm:flex items-center gap-1.5 text-gray-400 font-medium">
             <span class="material-symbols-outlined" style="font-size: 16px;">travel_explore</span>
-            <span>Tra cứu dành cho khách vãng lai:</span>
+            <span><?php _e('tracking.title'); ?></span>
         </div>
         <form id="topbarTrackForm" class="flex items-center gap-2 m-0 w-full sm:w-auto justify-end relative"
             onsubmit="handleTrackBooking(event)">
             <span id="trackErrorMsg" class="hidden text-red-400 font-medium text-[11px] whitespace-nowrap"><span
                     class="error-text">Lỗi</span></span>
-            <input type="text" id="trackInput" placeholder="Nhập mã, email hoặc SĐT..." required
+            <input type="text" id="trackInput" placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>"
+                required
                 class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64 transition-all" />
             <button type="submit"
                 class="bg-[#d4af37] hover:bg-[#b5952f] text-gray-900 font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center gap-1">
-                <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span> Tìm
+                <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span>
+                <?php _e('tracking.search_btn'); ?>
             </button>
         </form>
     </div>
@@ -467,7 +469,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <span class="material-symbols-outlined">close</span>
         </button>
         <div class="tracking-modal-header">
-            <h3><span class="material-symbols-outlined text-primary-500">travel_explore</span> Kết quả tra cứu</h3>
+            <h3><span class="material-symbols-outlined text-primary-500">travel_explore</span>
+                <?php _e('tracking.result_title'); ?></h3>
         </div>
         <div id="trackResultContent" class="tracking-modal-body">
             <!-- Data will be populated here -->
@@ -476,6 +479,27 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 </div>
 
 <script>
+    const trackingLang = {
+        bookingCode: <?php echo json_encode(__('tracking.booking_code')); ?>,
+        status: <?php echo json_encode(__('tracking.status')); ?>,
+        customer: <?php echo json_encode(__('tracking.customer')); ?>,
+        checkIn: <?php echo json_encode(__('tracking.check_in')); ?>,
+        checkOut: <?php echo json_encode(__('tracking.check_out')); ?>,
+        phone: <?php echo json_encode(__('tracking.phone')); ?>,
+        total: <?php echo json_encode(__('tracking.total')); ?>,
+        errorSystem: <?php echo json_encode(__('tracking.error_system')); ?>,
+        errorEmpty: <?php echo json_encode(__('tracking.error_empty')); ?>,
+        errorNotFound: <?php echo json_encode(__('tracking.error_not_found')); ?>,
+            searching: <?php echo json_encode(__('tracking.searching')); ?>,
+                statusText: {
+        confirmed: <?php echo json_encode(__('tracking.status_confirmed')); ?>,
+            checked_in: <?php echo json_encode(__('tracking.status_checked_in')); ?>,
+                cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
+                    no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
+                        pending: <?php echo json_encode(__('tracking.status_pending')); ?>
+    }
+    };
+
     function closeTrackingModal() {
         const modal = document.getElementById('trackingModal');
         if (modal) {
@@ -494,11 +518,14 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     async function handleTrackBooking(e) {
         e.preventDefault();
         const input = document.getElementById('trackInput').value.trim();
-        if (!input) return;
+        if (!input) {
+            showTrackError(trackingLang.errorEmpty);
+            return;
+        }
 
         const submitBtn = document.getElementById('topbarTrackForm').querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin hidden sm:inline-block" style="font-size:16px;">refresh</span> Tìm...';
+        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin hidden sm:inline-block" style="font-size:16px;">refresh</span> ' + trackingLang.searching;
         submitBtn.disabled = true;
 
         // reset error
@@ -522,29 +549,37 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 if (data.booking.status_raw === 'cancelled' || data.booking.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200';
                 if (data.booking.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200';
 
+                let statusLabel = trackingLang.statusText[data.booking.status_raw] || data.booking.status_raw;
+
                 let html = '<div class="space-y-4">';
                 html += '<div class="bg-gray-50/80 dark:bg-gray-800/80 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">';
-                html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">Mã Đặt: ' + data.booking.booking_code + '</h4>';
+                html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">' + trackingLang.bookingCode + ': ' + data.booking.booking_code + '</h4>';
                 html += '<div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">';
-                html += '<div class="flex justify-between items-center"><strong class="w-1/3">Trạng thái:</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + data.booking.status + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">Khách hàng:</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">Nhận phòng:</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">Trả phòng:</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
-                html += '<div class="flex"><strong class="w-1/3">SĐT:</strong> <span class="flex-1">' + data.booking.phone + '</span></div>';
+                html += '<div class="flex justify-between items-center"><strong class="w-1/3">' + trackingLang.status + ':</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + statusLabel + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.customer + ':</strong> <span class="flex-1">' + data.booking.customer_name + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkIn + ':</strong> <span class="flex-1">' + data.booking.check_in + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkOut + ':</strong> <span class="flex-1">' + data.booking.check_out + '</span></div>';
+                html += '<div class="flex"><strong class="w-1/3">' + trackingLang.phone + ':</strong> <span class="flex-1">' + (data.booking.phone || '') + '</span></div>';
                 html += '</div></div>';
                 html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-4">';
-                html += '<strong class="text-gray-800 dark:text-gray-200">Tổng cộng:</strong>';
+                html += '<strong class="text-gray-800 dark:text-gray-200">' + trackingLang.total + ':</strong>';
                 html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(data.booking.total_amount) + ' VNĐ</span>';
                 html += '</div></div>';
 
                 openTrackingModal(html);
             } else {
-                showTrackError(data.message);
+                let errorMsg = trackingLang.errorSystem;
+                if (data.error_code === 'empty') errorMsg = trackingLang.errorEmpty;
+                else if (data.error_code === 'not_found') errorMsg = trackingLang.errorNotFound;
+                else if (data.error_code === 'system') errorMsg = trackingLang.errorSystem + (data.message || '');
+                else errorMsg = data.message || trackingLang.errorSystem;
+
+                showTrackError(errorMsg);
             }
         } catch (err) {
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
-            showTrackError('Đã xảy ra lỗi hệ thống: ' + err.message);
+            showTrackError(trackingLang.errorSystem + err.message);
         }
     }
 

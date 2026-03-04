@@ -209,6 +209,10 @@ return [
         'agree_terms_alert' => 'Vui lòng đồng ý với điều khoản và điều kiện',
         'guest_promo_lock' => 'Khách vãng lai không thể sử dụng mã giảm giá. Vui lòng',
         'guest_promo_lock_end' => 'để hưởng ưu đãi.',
+        'active_booking_pay' => 'Hoàn tất thanh toán cho đặt phòng cũ',
+        'active_booking_checkout' => 'Chờ đến ngày trả phòng và trả phòng',
+        'active_booking_contact' => 'Liên hệ lễ tân: ',
+        'extra_bed_note' => 'Lưu ý: Tối đa 2 giường phụ/phòng. Không áp dụng cho căn hộ.',
     ],
 
     // Booking status
@@ -1692,5 +1696,32 @@ return [
         // Notes
         'note_apartment' => 'Căn hộ - Liên hệ để được tư vấn',
         'note_no_online_booking' => 'Căn hộ không hỗ trợ đặt trực tuyến. Vui lòng liên hệ để được tư vấn chi tiết.',
+    ],
+
+    // Tracking
+    'tracking' => [
+        'title' => 'Tra cứu dành cho khách:',
+        'placeholder' => 'Nhập mã, email hoặc SĐT...',
+        'search_btn' => 'Tìm',
+        'searching' => 'Tìm...',
+        'result_title' => 'Kết quả tra cứu',
+        'booking_code' => 'Mã Đặt',
+        'status' => 'Trạng thái',
+        'customer' => 'Khách hàng',
+        'check_in' => 'Nhận phòng',
+        'check_out' => 'Trả phòng',
+        'phone' => 'SĐT',
+        'total' => 'Tổng cộng',
+        'error_empty' => 'Vui lòng nhập thông tin tìm kiếm',
+        'error_not_found' => 'Không tìm thấy thông tin đặt phòng phù hợp.',
+        'error_system' => 'Đã xảy ra lỗi hệ thống: ',
+
+        // Statuses
+        'status_pending' => 'Chờ xác nhận',
+        'status_confirmed' => 'Đã xác nhận',
+        'status_checked_in' => 'Đang ở',
+        'status_checked_out' => 'Đã trả phòng',
+        'status_cancelled' => 'Đã hủy',
+        'status_no_show' => 'Không đến',
     ],
 ];

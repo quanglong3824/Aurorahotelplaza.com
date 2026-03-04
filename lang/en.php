@@ -1614,5 +1614,36 @@ return [
         'agree_terms_alert' => 'Please agree to the terms and conditions',
         'guest_promo_lock' => 'Guest bookings cannot use promo codes. Please',
         'guest_promo_lock_end' => 'to receive offers.',
+        'active_booking_pay' => 'Complete payment for existing booking',
+        'active_booking_checkout' => 'Wait until checkout date and check out',
+        'active_booking_contact' => 'Contact reception: ',
+        'extra_bed_note' => 'Note: Max 2 extra beds/room. Not applicable for apartments.',
+    ],
+
+    // Tracking
+    'tracking' => [
+        'title' => 'Tracking for walk-in guests:',
+        'placeholder' => 'Code, email or phone...',
+        'search_btn' => 'Track',
+        'searching' => 'Wait...',
+        'result_title' => 'Tracking Result',
+        'booking_code' => 'Code',
+        'status' => 'Status',
+        'customer' => 'Customer',
+        'check_in' => 'Check-in',
+        'check_out' => 'Check-out',
+        'phone' => 'Phone',
+        'total' => 'Total',
+        'error_empty' => 'Please enter booking code, email or phone.',
+        'error_not_found' => 'Booking not found.',
+        'error_system' => 'System error: ',
+
+        // Statuses
+        'status_pending' => 'Pending',
+        'status_confirmed' => 'Confirmed',
+        'status_checked_in' => 'Checked In',
+        'status_checked_out' => 'Checked Out',
+        'status_cancelled' => 'Cancelled',
+        'status_no_show' => 'No Show',
     ],
 ];
