@@ -121,7 +121,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <div class="relative w-full sm:w-64">
                 <input type="text" id="trackInput"
                     placeholder="<?php echo htmlspecialchars(__('tracking.placeholder')); ?>" required
-                    class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none w-full transition-all pr-8 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#1f2937] [&:-webkit-autofill]:text-gray-100"
+                    class="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md placeholder-gray-500 focus:outline-none w-full transition-all pr-8"
+                    style="color: #f3f4f6 !important; -webkit-text-fill-color: #f3f4f6 !important; background-color: #1f2937 !important;"
                     oninput="document.getElementById('trackClearBtn').style.display = this.value ? 'flex' : 'none';" />
                 <button type="button" id="trackClearBtn" style="display: none;"
                     onclick="document.getElementById('trackInput').value=''; this.style.display='none'; document.getElementById('trackInput').focus();"
@@ -740,14 +741,12 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     /* Modal Styles */
     .tracking-modal {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        inset: 0;
         z-index: 100000;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 1rem;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s ease;
