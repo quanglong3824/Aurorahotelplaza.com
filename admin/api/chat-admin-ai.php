@@ -165,6 +165,7 @@ PROMPT;
     $schema_context .= "- `reviews`: review_id, room_type_id, rating, comment.\n";
     $schema_context .= "- `activity_logs`: log_id, user_id, action, description, created_at.\n";
     $schema_context .= "- `chat_messages`: sender_type, message, created_at.\n";
+    $schema_context .= "- `contact_submissions`: id, submission_id, name, email, phone, subject, message, status.\n";
     $schema_context .= "(GỢI Ý: Nếu Sếp yêu cầu thông tin cột / bảng nào CHƯA CÓ ở trên, HÃY MẠNH DẠN dùng `[READ_DB: SHOW TABLES]` hoặc `[READ_DB: DESCRIBE ten_bang]` để tự chạy ngầm đọc trước nhé!).\n";
 
     $full_prompt = $system_prompt . $room_context . $bi_context . $schema_context;
