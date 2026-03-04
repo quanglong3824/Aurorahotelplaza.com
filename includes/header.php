@@ -269,6 +269,11 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </a>
             <?php endif; ?>
 
+            <!-- Help Button - Onboarding Guide (Desktop: After user menu, Mobile: Order via CSS) -->
+            <button class="help-btn" id="helpBtn" onclick="toggleHelpModal()" title="<?php _e('common.help'); ?>">
+                <span class="material-symbols-outlined">help</span>
+            </button>
+
             <!-- Language Switcher - Liquid Glass -->
             <div class="relative lang-switcher-wrapper">
                 <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
@@ -289,11 +294,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     </a>
                 </div>
             </div>
-
-            <!-- Help Button - Onboarding Guide -->
-            <button class="help-btn" id="helpBtn" onclick="toggleHelpModal()" title="<?php _e('common.help'); ?>">
-                <span class="material-symbols-outlined">help</span>
-            </button>
         </div>
     </div>
 </header>
@@ -888,6 +888,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
         position: relative;
         overflow: hidden;
+        order: 3; /* Position after lang switcher */
     }
 
     .help-btn:hover {
@@ -899,6 +900,24 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     .help-btn .material-symbols-outlined {
         font-size: 22px;
         font-weight: 600;
+    }
+
+    /* Mobile: Liquid glass style for help button - positioned on right */
+    @media (max-width: 768px) {
+        .help-btn {
+            background: rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px) saturate(120%);
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            order: 10; /* Move to far right on mobile */
+            margin-left: auto; /* Push to right */
+        }
+
+        .help-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
     }
 
     /* Help Modal - Liquid Glass Style */
@@ -1217,7 +1236,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <!-- Roadmap Item 3: Make a Booking -->
             <div class="help-roadmap-item">
                 <div class="help-roadmap-icon">
-                    <span class="material-symbols-outlined">booking</span>
+                    <span class="material-symbols-outlined">bedroom_parent</span>
                 </div>
                 <div class="help-roadmap-content">
                     <h4>Đặt phòng ngay</h4>
