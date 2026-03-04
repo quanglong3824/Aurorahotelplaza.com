@@ -250,7 +250,7 @@ class AuroraErrorTracker
 
             // Kiểm tra có tồn tại trong DB chưa (trong 1 giờ)
             $checkStmt = $db->prepare(
-                "SELECT id, occurrence_count FROM error_logs 
+                "SELECT id, occurrence_count, messenger_sent FROM error_logs 
                  WHERE fingerprint = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
                  ORDER BY created_at DESC LIMIT 1"
             );
@@ -259,10 +259,13 @@ class AuroraErrorTracker
 
             if ($existing) {
                 // Tăng occurrence_count
-                $updateStmt = $db->prepare(
-                    "UPDATE error_logs SET occurrence_count = occurrence_count + 1, last_seen_at = NOW() WHERE id = ?"
-                );
-                $updateStmt->execute([$existing['id']]);
+                $db->prepare("UPDATE error_logs SET occurrence_count = occurrence_count + 1, last_seen_at = NOW() WHERE id = ?")
+                    ->execute([$existing['id']]);
+
+                // Nếu chưa gửi Telegram lần nào → gửi ngay
+                if (empty($existing['messenger_sent']) && in_array($severity, ['critical', 'error'])) {
+                    self::triggerAiAnalysis((int) $existing['id'], $errorData);
+                }
                 return $existing['id'];
             }
 
@@ -288,7 +291,7 @@ class AuroraErrorTracker
             ]);
             $errorId = (int) $db->lastInsertId();
 
-            // Gửi phân tích AI và Telegram trong background (non-blocking)
+            // Gửi Telegram và phân tích AI ngay
             if (in_array($severity, ['critical', 'error']) && $errorId) {
                 self::triggerAiAnalysis($errorId, $errorData);
             }
@@ -296,27 +299,21 @@ class AuroraErrorTracker
             return $errorId;
 
         } catch (\Throwable $e) {
-            // Không làm crash app vì lỗi tracker
             error_log('[ErrorTracker] Failed to save error: ' . $e->getMessage());
             return null;
         }
+
     }
 
     /**
-     * Kích hoạt AI phân tích lỗi và gửi Telegram
+     * Kích hoạt gửi Telegram ngay + AI phân tích
+     * KHÔNG dùng shutdown function — không đáng tin trên LiteSpeed/shared hosting
      */
     private static function triggerAiAnalysis(int $errorId, array $errorData)
     {
-        // Dùng output buffering + ignore_user_abort để chạy background
-        if (function_exists('fastcgi_finish_request')) {
-            // Đã có response, chạy sau khi gửi response cho browser
-            register_shutdown_function(function () use ($errorId, $errorData) {
-                self::analyzeWithAiAndNotify($errorId, $errorData);
-            });
-        } else {
-            // Chạy ngay (có thể làm chậm response một chút)
-            self::analyzeWithAiAndNotify($errorId, $errorData);
-        }
+        // Gửi Telegram ngay lập tức (synchronous ~1-2 giây)
+        // Chấp nhận delay nhỏ — quan trọng hơn là admin nhận được alert
+        self::analyzeWithAiAndNotify($errorId, $errorData);
     }
 
     /**
