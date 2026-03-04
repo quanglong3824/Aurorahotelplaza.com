@@ -2,6 +2,8 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../../config/environment.php';
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../helpers/error-tracker.php';
+AuroraErrorTracker::init();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -26,9 +28,11 @@ try {
 
     // Search by booking code, email or phone
     $limitSql = ($mode === 'all') ? "" : "LIMIT 1";
+    // ⚠️ TEST BUG — XÓA DÒNG NÀY SAU KHI KIỂM TRA AI BUG TRACKER
+    // Cột guest_nickname không tồn tại → sẽ trigger PDOException để test hệ thống bắt lỗi
     $stmt = $conn->prepare("
         SELECT booking_code, status, total_amount, created_at, check_in_date, check_out_date, 
-               guest_name, guest_email, guest_phone
+               guest_name, guest_email, guest_phone, guest_nickname
         FROM bookings
         WHERE booking_code = ? OR guest_email = ? OR guest_phone = ?
         ORDER BY created_at DESC
@@ -77,14 +81,19 @@ try {
             ];
         }
 
-        echo json_encode([
-            'success' => true,
-            'bookings' => $bookings
-        ]);
+        echo json_encode(['success' => true, 'bookings' => $bookings]);
     } else {
         echo json_encode(['success' => false, 'error_code' => 'not_found']);
     }
 } catch (Exception $e) {
+    // Ghi lỗi vào AI Bug Tracker và gửi Telegram
+    if (class_exists('AuroraErrorTracker')) {
+        AuroraErrorTracker::captureDbError(
+            $e->getMessage(),
+            "SELECT ... guest_nickname FROM bookings WHERE ...",
+            ['query_input' => substr($query ?? '', 0, 50)]
+        );
+    }
     error_log("Tracking Error: " . $e->getMessage());
     echo json_encode(['success' => false, 'error_code' => 'system', 'message' => $e->getMessage()]);
 }
