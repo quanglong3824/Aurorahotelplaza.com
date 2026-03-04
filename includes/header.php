@@ -533,9 +533,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         statusText: {
             confirmed: <?php echo json_encode(__('tracking.status_confirmed')); ?>,
             checked_in: <?php echo json_encode(__('tracking.status_checked_in')); ?>,
-            cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
-            no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
-            pending: <?php echo json_encode(__('tracking.status_pending')); ?>
+            checked_out: <?php echo json_encode(__('tracking.status_checked_out')); ?>,
+                cancelled: <?php echo json_encode(__('tracking.status_cancelled')); ?>,
+                    no_show: <?php echo json_encode(__('tracking.status_no_show')); ?>,
+                        pending: <?php echo json_encode(__('tracking.status_pending')); ?>
         }
     };
 
@@ -771,6 +772,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         background: white;
         width: 90%;
         max-width: 450px;
+        max-height: 85vh;
         border-radius: 16px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         position: relative;
@@ -847,6 +849,22 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
     .tracking-modal-body {
         padding: 24px;
+        overflow-y: auto;
+        flex: 1;
+        max-height: calc(85vh - 90px);
+    }
+
+    .tracking-modal-body::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .tracking-modal-body::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+    }
+
+    .dark .tracking-modal-body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
     }
 </style>
 
