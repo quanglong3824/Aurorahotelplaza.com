@@ -119,7 +119,8 @@ try {
                             </div>
                         <?php else: ?>
                             <?php foreach ($room_types as $room):
-                                $amenities = !empty($room['amenities']) ? explode(',', $room['amenities']) : [];
+                                $amenities_str = _f($room, 'amenities');
+                                $amenities = !empty($amenities_str) ? explode(',', $amenities_str) : [];
                                 $amenities = array_slice($amenities, 0, 4);
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
@@ -168,10 +169,10 @@ try {
                                                 </div>
                                             <?php endif; ?>
 
-                                            <?php if ($room['bed_type']): ?>
+                                            <?php if ($bed_type = _f($room, 'bed_type')): ?>
                                                 <div class="spec-item">
                                                     <span class="material-symbols-outlined">bed</span>
-                                                    <?php echo htmlspecialchars($room['bed_type']); ?>
+                                                    <?php echo htmlspecialchars($bed_type); ?>
                                                 </div>
                                             <?php endif; ?>
 

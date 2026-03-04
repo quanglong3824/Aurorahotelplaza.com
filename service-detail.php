@@ -29,7 +29,7 @@ try {
     exit;
 }
 
-$page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
+$page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>">
@@ -38,7 +38,8 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php echo htmlspecialchars($page_title); ?></title>
-    <meta name="description" content="<?php echo htmlspecialchars(substr($service['description'], 0, 160)); ?>">
+    <meta name="description"
+        content="<?php echo htmlspecialchars(substr(_f($service, 'description') ?? '', 0, 160)); ?>">
     <script src="assets/js/tailwindcss-cdn.js"></script>
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <script src="assets/js/tailwind-config.js"></script>
@@ -65,11 +66,11 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                             </div>
 
                             <h1 class="hero-title-glass" style="font-size: 3rem; text-align: left;">
-                                <?php echo htmlspecialchars($service['service_name']); ?>
+                                <?php echo htmlspecialchars(_f($service, 'service_name')); ?>
                             </h1>
 
                             <p class="text-white/85 text-lg leading-relaxed mb-8">
-                                <?php echo htmlspecialchars($service['description']); ?>
+                                <?php echo htmlspecialchars(_f($service, 'description') ?? ''); ?>
                             </p>
 
                             <div class="flex flex-wrap gap-4">
@@ -151,7 +152,7 @@ $page_title = $service['service_name'] . ' - Aurora Hotel Plaza';
                                     <?php endif; ?>
 
                                     <h3 class="font-display text-2xl font-bold text-white mb-2">
-                                        <?php echo htmlspecialchars($pkg['package_name']); ?>
+                                        <?php echo htmlspecialchars(_f($pkg, 'package_name')); ?>
                                     </h3>
                                     <div class="package-price-large">
                                         <?php echo number_format($pkg['price'], 0, ',', '.'); ?>VND
