@@ -177,8 +177,9 @@ if ($tableOk) {
         $totalRows = (int) $totalStmt->fetchColumn();
         $totalPages = max(1, ceil($totalRows / $limit));
 
-        $listStmt = $db->prepare("SELECT * FROM error_logs $whereSql ORDER BY created_at DESC LIMIT ? OFFSET ?");
-        $listStmt->execute(array_merge($params, [$limit, $offset]));
+        // Nhúng LIMIT/OFFSET trực tiếp (int đã cast) — tránh PDO binding bug trên MariaDB
+        $listStmt = $db->prepare("SELECT * FROM error_logs $whereSql ORDER BY created_at DESC LIMIT {$limit} OFFSET {$offset}");
+        $listStmt->execute($params);
         $errors = $listStmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stats = AuroraErrorTracker::getStats();
