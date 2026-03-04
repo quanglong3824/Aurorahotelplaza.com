@@ -119,7 +119,7 @@ if ($mode === 'global') {
                         + LEAST(c.unread_staff * 5, 50)
                     ) AS priority_score
                 FROM chat_conversations c
-                JOIN  users u  ON c.customer_id = u.user_id
+                LEFT JOIN users u  ON c.customer_id = u.user_id
                 LEFT JOIN bookings b  ON c.booking_id  = b.booking_id
                 LEFT JOIN users su ON c.staff_id    = su.user_id
                 WHERE c.updated_at >= :last_check
