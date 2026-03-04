@@ -1,0 +1,596 @@
+<?php
+/**
+ * Aurora Hotel Plaza - AI Error Tracker
+ * ======================================
+ * Hệ thống bắt lỗi toàn bộ web và phân tích bằng AI
+ * Gửi thông báo về Messenger qua Facebook API
+ */
+
+if (!defined('DB_NAME')) {
+    require_once __DIR__ . '/../config/database.php';
+}
+
+class AuroraErrorTracker
+{
+    private static $initialized = false;
+    private static $db = null;
+    private static $errorQueue = [];
+    private static $messengerPSID = null;   // Page-Scoped User ID nhận alert
+    private static $pageAccessToken = null; // Facebook Page Access Token
+
+    /**
+     * Khởi tạo Error Tracker - gọi sớm nhất có thể
+     */
+    public static function init()
+    {
+        if (self::$initialized)
+            return;
+
+        // Load cấu hình Messenger
+        self::loadMessengerConfig();
+
+        // ─── PHP Error Handlers ───────────────────────────────────────
+        set_error_handler([self::class, 'handlePhpError']);
+        set_exception_handler([self::class, 'handleException']);
+        register_shutdown_function([self::class, 'handleFatalError']);
+
+        // ─── Bật error reporting đầy đủ nhưng không hiển thị ra màn hình ─
+        error_reporting(E_ALL);
+        ini_set('display_errors', 0);
+        ini_set('log_errors', 1);
+
+        self::$initialized = true;
+    }
+
+    /**
+     * Load cấu hình Messenger từ DB hoặc config
+     */
+    private static function loadMessengerConfig()
+    {
+        // Lấy từ constants nếu đã được định nghĩa
+        if (defined('FB_MESSENGER_PSID')) {
+            self::$messengerPSID = FB_MESSENGER_PSID;
+        }
+        if (defined('FB_PAGE_ACCESS_TOKEN')) {
+            self::$pageAccessToken = FB_PAGE_ACCESS_TOKEN;
+        }
+
+        // Cố gắng lấy từ DB nếu có
+        try {
+            $db = self::getDb();
+            if ($db) {
+                $stmt = $db->prepare("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('fb_messenger_psid', 'fb_page_access_token') LIMIT 2");
+                $stmt->execute();
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($rows as $row) {
+                    if ($row['setting_key'] === 'fb_messenger_psid') {
+                        self::$messengerPSID = $row['setting_value'];
+                    }
+                    if ($row['setting_key'] === 'fb_page_access_token') {
+                        self::$pageAccessToken = $row['setting_value'];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Không thể lấy từ DB, dùng giá trị mặc định
+        }
+    }
+
+    /**
+     * Lấy DB connection (lazy init)
+     */
+    private static function getDb()
+    {
+        if (self::$db === null) {
+            try {
+                self::$db = getDB();
+            } catch (\Throwable $e) {
+                self::$db = false;
+            }
+        }
+        return self::$db;
+    }
+
+    /**
+     * Xử lý PHP errors (E_WARNING, E_NOTICE, etc.)
+     */
+    public static function handlePhpError($errno, $errstr, $errfile, $errline)
+    {
+        // Bỏ qua lỗi bị tắt bởi @
+        if (!(error_reporting() & $errno)) {
+            return false;
+        }
+
+        $severity = self::getSeverityFromErrno($errno);
+        $message = "$errstr in $errfile on line $errline";
+
+        self::captureError([
+            'type' => 'php_error',
+            'severity' => $severity,
+            'message' => $message,
+            'file' => $errfile,
+            'line' => $errline,
+            'url' => self::getCurrentUrl(),
+            'context' => ['errno' => $errno],
+        ]);
+
+        // Trả về false để PHP vẫn xử lý lỗi bình thường
+        return false;
+    }
+
+    /**
+     * Xử lý Uncaught Exceptions
+     */
+    public static function handleException(\Throwable $e)
+    {
+        self::captureError([
+            'type' => 'php_exception',
+            'severity' => 'critical',
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'url' => self::getCurrentUrl(),
+            'context' => [
+                'exception_class' => get_class($e),
+                'trace' => array_slice($e->getTrace(), 0, 5), // 5 frames đầu
+            ],
+        ]);
+    }
+
+    /**
+     * Xử lý Fatal Errors (parse error, out of memory, etc.)
+     */
+    public static function handleFatalError()
+    {
+        $error = error_get_last();
+        if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR, E_CORE_ERROR, E_RECOVERABLE_ERROR])) {
+            self::captureError([
+                'type' => 'php_fatal',
+                'severity' => 'critical',
+                'message' => $error['message'],
+                'file' => $error['file'],
+                'line' => $error['line'],
+                'url' => self::getCurrentUrl(),
+                'context' => ['error_type' => $error['type']],
+            ]);
+        }
+    }
+
+    /**
+     * Bắt lỗi JavaScript từ frontend (qua API)
+     */
+    public static function captureJsError(array $data)
+    {
+        return self::captureError([
+            'type' => 'js_error',
+            'severity' => $data['severity'] ?? 'error',
+            'message' => $data['message'] ?? 'Unknown JS Error',
+            'file' => $data['file'] ?? 'unknown',
+            'line' => $data['line'] ?? 0,
+            'url' => $data['url'] ?? self::getCurrentUrl(),
+            'context' => [
+                'col' => $data['col'] ?? 0,
+                'stack' => $data['stack'] ?? '',
+                'browser' => $data['browser'] ?? '',
+                'user_agent' => $data['user_agent'] ?? '',
+                'session_id' => $data['session_id'] ?? '',
+                'user_id' => $data['user_id'] ?? null,
+            ],
+        ]);
+    }
+
+    /**
+     * Bắt lỗi database query
+     */
+    public static function captureDbError($message, $query = '', $params = [])
+    {
+        return self::captureError([
+            'type' => 'db_error',
+            'severity' => 'error',
+            'message' => $message,
+            'file' => '',
+            'line' => 0,
+            'url' => self::getCurrentUrl(),
+            'context' => [
+                'query' => substr($query, 0, 500),
+                'params' => $params,
+            ],
+        ]);
+    }
+
+    /**
+     * Lưu lỗi thủ công từ code
+     */
+    public static function capture($type, $message, $context = [])
+    {
+        return self::captureError([
+            'type' => $type,
+            'severity' => 'warning',
+            'message' => $message,
+            'file' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['file'] ?? '',
+            'line' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['line'] ?? 0,
+            'url' => self::getCurrentUrl(),
+            'context' => $context,
+        ]);
+    }
+
+    /**
+     * Core: Lưu lỗi vào DB và gửi Messenger nếu cần
+     */
+    private static function captureError(array $errorData)
+    {
+        // Lọc lỗi không quan trọng
+        if (self::shouldIgnore($errorData))
+            return null;
+
+        // Chuẩn bị dữ liệu
+        $pageUrl = $errorData['url'] ?? '';
+        $errorType = $errorData['type'] ?? 'unknown';
+        $severity = $errorData['severity'] ?? 'error';
+        $message = substr($errorData['message'] ?? '', 0, 2000);
+        $file = $errorData['file'] ?? '';
+        $line = (int) ($errorData['line'] ?? 0);
+        $context = $errorData['context'] ?? [];
+        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $sessionId = session_id() ?: '';
+        $userId = $_SESSION['user_id'] ?? null;
+
+        // Fingerprint để kiểm tra lỗi trùng
+        $fingerprint = md5($errorType . $message . $file . $line);
+
+        try {
+            $db = self::getDb();
+            if (!$db)
+                return null;
+
+            // Kiểm tra có tồn tại trong DB chưa (trong 1 giờ)
+            $checkStmt = $db->prepare(
+                "SELECT id, occurrence_count FROM error_logs 
+                 WHERE fingerprint = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                 ORDER BY created_at DESC LIMIT 1"
+            );
+            $checkStmt->execute([$fingerprint]);
+            $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existing) {
+                // Tăng occurrence_count
+                $updateStmt = $db->prepare(
+                    "UPDATE error_logs SET occurrence_count = occurrence_count + 1, last_seen_at = NOW() WHERE id = ?"
+                );
+                $updateStmt->execute([$existing['id']]);
+                return $existing['id'];
+            }
+
+            // Insert mới
+            $stmt = $db->prepare(
+                "INSERT INTO error_logs 
+                 (error_type, severity, message, file_path, line_number, page_url, ip_address, user_agent, session_id, user_id, context_data, fingerprint, occurrence_count, ai_analyzed, messenger_sent, created_at, last_seen_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 0, 0, NOW(), NOW())"
+            );
+            $stmt->execute([
+                $errorType,
+                $severity,
+                $message,
+                $file,
+                $line,
+                $pageUrl,
+                $ipAddress,
+                $userAgent,
+                $sessionId,
+                $userId,
+                json_encode($context, JSON_UNESCAPED_UNICODE),
+                $fingerprint,
+            ]);
+            $errorId = (int) $db->lastInsertId();
+
+            // Gửi phân tích AI và Messenger trong background (non-blocking)
+            if (in_array($severity, ['critical', 'error']) && $errorId) {
+                self::triggerAiAnalysis($errorId, $errorData);
+            }
+
+            return $errorId;
+
+        } catch (\Throwable $e) {
+            // Không làm crash app vì lỗi tracker
+            error_log('[ErrorTracker] Failed to save error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Kích hoạt AI phân tích lỗi và gửi Messenger
+     */
+    private static function triggerAiAnalysis(int $errorId, array $errorData)
+    {
+        // Dùng output buffering + ignore_user_abort để chạy background
+        if (function_exists('fastcgi_finish_request')) {
+            // Đã có response, chạy sau khi gửi response cho browser
+            register_shutdown_function(function () use ($errorId, $errorData) {
+                self::analyzeWithAiAndNotify($errorId, $errorData);
+            });
+        } else {
+            // Chạy ngay (có thể làm chậm response một chút)
+            self::analyzeWithAiAndNotify($errorId, $errorData);
+        }
+    }
+
+    /**
+     * Gọi Gemini AI phân tích lỗi
+     */
+    public static function analyzeWithAiAndNotify(int $errorId, array $errorData)
+    {
+        try {
+            require_once __DIR__ . '/../config/api_keys.php';
+
+            $severity = $errorData['severity'] ?? 'error';
+            $message = $errorData['message'] ?? '';
+            $type = $errorData['type'] ?? 'unknown';
+            $file = $errorData['file'] ?? '';
+            $line = $errorData['line'] ?? 0;
+            $url = $errorData['url'] ?? '';
+            $context = json_encode($errorData['context'] ?? [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+            $prompt = <<<PROMPT
+Bạn là AI chuyên gia phân tích lỗi web cho hệ thống Aurora Hotel Plaza.
+
+THÔNG TIN LỖI:
+- Loại: $type
+- Mức độ: $severity
+- Thông điệp: $message
+- File: $file (dòng $line)
+- URL: $url
+- Context: $context
+
+Hãy phân tích ngắn gọn (tối đa 300 từ):
+1. **Nguyên nhân**: Lỗi này do đâu?
+2. **Tác động**: Ảnh hưởng gì đến người dùng/hệ thống?
+3. **Giải pháp**: Cách khắc phục nhanh nhất?
+4. **Mức ưu tiên**: Cần sửa ngay hay có thể đợi?
+
+Trả lời súc tích, chuyên nghiệp bằng tiếng Việt.
+PROMPT;
+
+            $apiKeys = $GEMINI_API_KEYS ?? [];
+            foreach ($apiKeys as $key) {
+                if (empty(trim($key)))
+                    continue;
+
+                $response = self::callGeminiApi($key, $prompt);
+                if ($response) {
+                    // Lưu AI analysis vào DB
+                    $db = self::getDb();
+                    if ($db) {
+                        $db->prepare("UPDATE error_logs SET ai_analysis = ?, ai_analyzed = 1 WHERE id = ?")
+                            ->execute([$response, $errorId]);
+                    }
+
+                    // Gửi Messenger
+                    self::sendMessengerAlert($errorId, $errorData, $response);
+                    return;
+                }
+            }
+        } catch (\Throwable $e) {
+            error_log('[ErrorTracker] AI analysis failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Gọi Gemini API
+     */
+    private static function callGeminiApi(string $apiKey, string $prompt): ?string
+    {
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey";
+        $body = json_encode([
+            'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
+            'generationConfig' => ['temperature' => 0.3, 'maxOutputTokens' => 512],
+        ]);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $body,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode === 200 && $result) {
+            $data = json_decode($result, true);
+            return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+        }
+        return null;
+    }
+
+    /**
+     * Gửi thông báo qua Facebook Messenger
+     */
+    private static function sendMessengerAlert(int $errorId, array $errorData, string $aiAnalysis)
+    {
+        $psid = self::$messengerPSID;
+        $token = self::$pageAccessToken;
+
+        if (empty($psid) || empty($token)) {
+            // Log để nhắc cấu hình
+            error_log('[ErrorTracker] Messenger PSID or Token not configured. Error #' . $errorId . ' not sent.');
+            return false;
+        }
+
+        $severity = strtoupper($errorData['severity'] ?? 'ERROR');
+        $type = $errorData['type'] ?? 'unknown';
+        $message = substr($errorData['message'] ?? '', 0, 200);
+        $url = $errorData['url'] ?? '';
+        $time = date('d/m/Y H:i:s');
+
+        $emoji = match ($errorData['severity'] ?? '') {
+            'critical' => '🚨',
+            'error' => '❌',
+            'warning' => '⚠️',
+            default => 'ℹ️',
+        };
+
+        // Rút gọn AI analysis
+        $shortAnalysis = substr(strip_tags($aiAnalysis), 0, 400);
+
+        $text = "$emoji *AURORA BUG ALERT* $emoji\n\n"
+            . "🆔 Bug #$errorId\n"
+            . "📌 Loại: $type\n"
+            . "🔴 Mức độ: $severity\n"
+            . "⏰ Thời gian: $time\n"
+            . "🌐 URL: $url\n\n"
+            . "💬 Lỗi: $message\n\n"
+            . "🤖 AI Phân tích:\n$shortAnalysis\n\n"
+            . "👉 Xem chi tiết: " . (defined('BASE_URL') ? BASE_URL : '') . "/admin/ai-bug.php?id=$errorId";
+
+        $payload = json_encode([
+            'recipient' => ['id' => $psid],
+            'message' => ['text' => $text],
+            'messaging_type' => 'MESSAGE_TAG',
+            'tag' => 'ACCOUNT_UPDATE',
+        ]);
+
+        $ch = curl_init("https://graph.facebook.com/v19.0/me/messages?access_token=$token");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $success = ($httpCode === 200);
+
+        // Cập nhật trạng thái gửi
+        try {
+            $db = self::getDb();
+            if ($db) {
+                $db->prepare("UPDATE error_logs SET messenger_sent = ?, messenger_sent_at = NOW() WHERE id = ?")
+                    ->execute([$success ? 1 : 0, $errorId]);
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return $success;
+    }
+
+    /**
+     * Lọc bỏ các lỗi không đáng để track
+     */
+    private static function shouldIgnore(array $errorData): bool
+    {
+        $message = $errorData['message'] ?? '';
+        $file = $errorData['file'] ?? '';
+
+        // Bỏ qua lỗi từ thư viện bên ngoài không quan trọng
+        $ignorePatterns = [
+            'Undefined variable: _token',
+            'headers already sent',
+            'Cannot modify header information',
+            '/vendor/',
+            'node_modules',
+            'Deprecated:',
+        ];
+
+        foreach ($ignorePatterns as $pattern) {
+            if (stripos($message, $pattern) !== false || stripos($file, $pattern) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Lấy URL hiện tại
+     */
+    private static function getCurrentUrl(): string
+    {
+        if (PHP_SAPI === 'cli')
+            return 'CLI';
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        return "$protocol://$host$uri";
+    }
+
+    /**
+     * Map errno sang severity string
+     */
+    private static function getSeverityFromErrno(int $errno): string
+    {
+        return match ($errno) {
+            E_ERROR, E_PARSE, E_COMPILE_ERROR, E_CORE_ERROR => 'critical',
+            E_WARNING, E_RECOVERABLE_ERROR => 'error',
+            E_NOTICE, E_DEPRECATED => 'warning',
+            default => 'info',
+        };
+    }
+
+    /**
+     * API: Lấy danh sách lỗi mới nhất
+     */
+    public static function getRecentErrors(int $limit = 50, string $severity = '', string $type = ''): array
+    {
+        try {
+            $db = self::getDb();
+            if (!$db)
+                return [];
+
+            $where = [];
+            $params = [];
+
+            if ($severity) {
+                $where[] = 'severity = ?';
+                $params[] = $severity;
+            }
+            if ($type) {
+                $where[] = 'error_type = ?';
+                $params[] = $type;
+            }
+
+            $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+            $stmt = $db->prepare("SELECT * FROM error_logs $whereSql ORDER BY created_at DESC LIMIT ?");
+            $params[] = $limit;
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * API: Thống kê lỗi
+     */
+    public static function getStats(): array
+    {
+        try {
+            $db = self::getDb();
+            if (!$db)
+                return [];
+
+            $stmt = $db->query(
+                "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN severity = 'critical' THEN 1 ELSE 0 END) as critical,
+                    SUM(CASE WHEN severity = 'error' THEN 1 ELSE 0 END) as error,
+                    SUM(CASE WHEN severity = 'warning' THEN 1 ELSE 0 END) as warning,
+                    SUM(CASE WHEN ai_analyzed = 1 THEN 1 ELSE 0 END) as ai_analyzed,
+                    SUM(CASE WHEN messenger_sent = 1 THEN 1 ELSE 0 END) as messenger_sent,
+                    SUM(CASE WHEN created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR) THEN 1 ELSE 0 END) as last_24h,
+                    SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+                 FROM error_logs"
+            );
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+}

@@ -4,6 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// ─── AI Error Tracker ─────────────────────────────────────────────────────────
+require_once __DIR__ . '/../helpers/error-tracker.php';
+AuroraErrorTracker::init();
+
 // Prevent browser caching of pages with user data
 if (isset($_SESSION['user_id'])) {
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

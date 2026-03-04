@@ -208,7 +208,8 @@ if (!function_exists('__')) {
                     <span class="material-symbols-outlined text-[#d4af37] text-2xl">info</span>
                 </div>
                 <p class="text-gray-700 dark:text-gray-300" id="footerPopupContent">
-                    <?php _e('footer.content_coming_soon'); ?></p>
+                    <?php _e('footer.content_coming_soon'); ?>
+                </p>
             </div>
             <button onclick="closeFooterPopup()" class="w-full btn btn-primary"><?php _e('common.close'); ?></button>
         </div>
@@ -361,3 +362,14 @@ if (!function_exists('__')) {
         </div>
     </div>
 </div>
+
+<!-- ── Aurora AI Error Tracker (JS) ──────────────── -->
+<?php if (!defined('DISABLE_ERROR_TRACKER')): ?>
+    <script>
+        // Khai báo siteBase nếu chưa được admin-header set
+        if (typeof window.siteBase === 'undefined') {
+            window.siteBase = '<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') : ''; ?>';
+        }
+    </script>
+    <script src="<?php echo $base_path; ?>assets/js/error-tracker.js" defer></script>
+<?php endif; ?>

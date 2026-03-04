@@ -9,6 +9,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Load session helper
 require_once __DIR__ . '/../../helpers/session-helper.php';
 
+// ─── AI Error Tracker ──────────────────────────────────────────────────────
+require_once __DIR__ . '/../../helpers/error-tracker.php';
+AuroraErrorTracker::init();
+
 // Load environment (cho BASE_URL + window.siteBase)
 if (!defined('BASE_URL')) {
     require_once __DIR__ . '/../../config/environment.php';
@@ -265,7 +269,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'role' => 'admin',
                         'items' => [
                             ['page' => 'ai-assistant', 'icon' => 'generating_tokens', 'label' => 'Trợ Lý Admin AI'],
-                            ['page' => 'ai-stats', 'icon' => 'query_stats', 'label' => 'Thống Kê API AI']
+                            ['page' => 'ai-stats', 'icon' => 'query_stats', 'label' => 'Thống Kê API AI'],
+                            ['page' => 'ai-bug', 'icon' => 'bug_report', 'label' => 'AI Bug Tracker', 'badge' => 'aiBugBadge'],
                         ]
                     ],
                     [
@@ -678,5 +683,29 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                             new Blob([JSON.stringify({ action: 'offline' })], { type: 'application/json' })
                         );
                     });
+                })();
+            </script>
+
+            <!-- AI Bug Badge: tự động cập nhật số lỗi chưa xử lý -->
+            <script>
+                (function () {
+                    function refreshAiBugBadge() {
+                        fetch(window.siteBase + '/admin/api/get-bug-count.php')
+                            .then(r => r.json())
+                            .then(data => {
+                                const badges = document.querySelectorAll('#aiBugBadge');
+                                badges.forEach(b => {
+                                    if (data.count > 0) {
+                                        b.textContent = data.count > 99 ? '99+' : data.count;
+                                        b.classList.remove('hidden');
+                                    } else {
+                                        b.classList.add('hidden');
+                                    }
+                                });
+                            })
+                            .catch(() => { });
+                    }
+                    document.addEventListener('DOMContentLoaded', refreshAiBugBadge);
+                    setInterval(refreshAiBugBadge, 60000);
                 })();
             </script>
