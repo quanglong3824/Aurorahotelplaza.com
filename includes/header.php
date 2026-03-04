@@ -584,19 +584,22 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             btnLatest.className = "px-3 py-1 rounded-md font-medium text-gray-500 hover:text-gray-700 transition-all";
         }
 
-        // Retrigger search if there's content
+        // Retrigger search without submitting form
         if (document.getElementById('trackInput').value.trim() !== '') {
-            // fake an event
-            handleTrackBooking(new Event('submit'));
+            performTrackSearch();
         }
     }
 
     async function handleTrackBooking(e) {
         e.preventDefault();
+        await performTrackSearch();
+    }
+
+    async function performTrackSearch() {
         const input = document.getElementById('trackInput').value.trim();
         const mode = document.getElementById('trackMode').value;
         if (!input) {
-            showTrackError(trackingLang.errorEmpty);
+            shakeTrackInput();
             return;
         }
 
@@ -605,7 +608,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin hidden sm:inline-block" style="font-size:16px;">refresh</span> ' + trackingLang.searching;
         submitBtn.disabled = true;
 
-        // reset error
         document.getElementById('trackErrorMsg').classList.add('hidden');
 
         try {
@@ -648,16 +650,14 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 });
 
                 html += '</div>';
-
                 openTrackingModal(html);
             } else {
-                let errorMsg = trackingLang.errorSystem;
-                if (data.error_code === 'empty') errorMsg = trackingLang.errorEmpty;
-                else if (data.error_code === 'not_found') errorMsg = trackingLang.errorNotFound;
-                else if (data.error_code === 'system') errorMsg = trackingLang.errorSystem + (data.message || '');
-                else errorMsg = data.message || trackingLang.errorSystem;
-
-                showTrackError(errorMsg);
+                // Not found or error → shake input and quick toast
+                shakeTrackInput();
+                if (data.error_code === 'system') {
+                    showTrackError(trackingLang.errorSystem + (data.message || ''));
+                }
+                // not_found / empty: just shake, no long text blocking the topbar
             }
         } catch (err) {
             submitBtn.innerHTML = originalBtnText;
@@ -670,10 +670,13 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         const errObj = document.getElementById('trackErrorMsg');
         errObj.querySelector('.error-text').innerText = message;
         errObj.classList.remove('hidden');
-        // auto hide after 5s
-        setTimeout(() => {
-            errObj.classList.add('hidden');
-        }, 5000);
+        setTimeout(() => errObj.classList.add('hidden'), 2500);
+    }
+
+    function shakeTrackInput() {
+        const inputWrap = document.getElementById('trackInput').closest('.relative') || document.getElementById('trackInput');
+        inputWrap.classList.add('track-shake');
+        setTimeout(() => inputWrap.classList.remove('track-shake'), 600);
     }
 </script>
 
@@ -682,6 +685,40 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         100% {
             transform: rotate(360deg);
         }
+    }
+
+    @keyframes track-shake-kf {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        15% {
+            transform: translateX(-6px);
+        }
+
+        35% {
+            transform: translateX(6px);
+        }
+
+        55% {
+            transform: translateX(-4px);
+        }
+
+        75% {
+            transform: translateX(4px);
+        }
+    }
+
+    .track-shake {
+        animation: track-shake-kf 0.5s ease-in-out;
+        border-color: #ef4444 !important;
+        outline-color: #ef4444 !important;
+    }
+
+    .track-shake input {
+        border-color: #ef4444 !important;
     }
 
     /* Topbar Styles (Header Tracking Mini Bar) */
