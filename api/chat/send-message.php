@@ -175,43 +175,47 @@ try {
         // Admin đang xem cuộc trò chuyện (assigned) hoặc đang online.
         // Chỉ dừng AI thả khi Admin đóng phòng chat (closed).
         if ($conv['status'] !== 'closed') {
-            // Require helper module AI mà ta vừa tạo
-            require_once '../../helpers/ai-helper.php';
-
-            // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được và lịch sử ($conv_id)
             try {
+                // Require helper module AI mà ta vừa tạo
+                require_once '../../helpers/ai-helper.php';
+
+                // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được và lịch sử ($conv_id)
                 $ai_reply = generate_ai_reply($message, $db, $conv_id);
-                error_log("AI Reply generated: " . (string)$ai_reply);
+                
+                if ($ai_reply && !str_starts_with($ai_reply, 'Xin lỗi')) {
+                    // Chỉ dùng AI reply nếu không có lỗi
+                    error_log("AI Reply generated: " . substr((string)$ai_reply, 0, 200));
+                    
+                    // Nhét câu phản hồi của AIBot vào DB
+                    $db->prepare("
+                        INSERT INTO chat_messages
+                            (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
+                        VALUES
+                            (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
+                    ")->execute([
+                                ':cid' => $conv_id,
+                                ':msg' => $ai_reply
+                            ]);
+
+                    // Cập nhật lại conversation: Có tin nhắn mới từ Bot (Cho customer thấy số đỏ)
+                    $db->prepare("
+                        UPDATE chat_conversations
+                        SET unread_customer = unread_customer + 1,
+                            unread_staff = 0,
+                            last_message_at = NOW(),
+                            last_message_preview = :preview,
+                            updated_at = NOW()
+                        WHERE conversation_id = :cid
+                    ")->execute([
+                                ':preview' => mb_substr($ai_reply, 0, 100),
+                                ':cid' => $conv_id
+                            ]);
+                } else {
+                    error_log("AI Reply skipped (error or empty): " . (string)$ai_reply);
+                }
             } catch (Exception $e) {
                 error_log("AI Reply generation failed: " . $e->getMessage());
-                $ai_reply = null;
-            }
-
-            if ($ai_reply) {
-                // Nhét câu phản hồi của AIBot vào DB
-                $db->prepare("
-                    INSERT INTO chat_messages
-                        (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
-                    VALUES
-                        (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
-                ")->execute([
-                            ':cid' => $conv_id,
-                            ':msg' => $ai_reply
-                        ]);
-
-                // Cập nhật lại conversation: Có tin nhắn mới từ Bot (Cho customer thấy số đỏ)
-                $db->prepare("
-                    UPDATE chat_conversations
-                    SET unread_customer = unread_customer + 1,
-                        unread_staff = 0,
-                        last_message_at = NOW(),
-                        last_message_preview = :preview,
-                        updated_at = NOW()
-                    WHERE conversation_id = :cid
-                ")->execute([
-                            ':preview' => mb_substr($ai_reply, 0, 100),
-                            ':cid' => $conv_id
-                        ]);
+                // Không làm gián đoạn flow nếu AI lỗi
             }
         }
     } else {
