@@ -386,7 +386,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const header = document.getElementById('main-header');
             const main = document.getElementById('authMain');
             if (header && main) {
-                main.style.paddingTop = (header.offsetHeight + 10) + 'px';
+                main.style.paddingTop = header.offsetHeight + 'px';
             }
         }
         adjustAuthPadding();

@@ -66,7 +66,6 @@ body.auth-reset > div {
 
 /* ===== Main Container ===== */
 main {
-    padding-top: 13rem !important;
     padding-bottom: 4rem !important;
     min-height: 100vh;
     display: flex !important;
@@ -78,8 +77,8 @@ main {
 .auth-container {
     max-width: 28rem;
     width: 100%;
-    margin-top: auto !important;
-    margin-bottom: auto !important;
+    margin-top: 2.5rem !important;
+    margin-bottom: 2.5rem !important;
     animation: fadeInUp 0.6s ease;
 }
 
@@ -756,12 +755,6 @@ main {
 
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
-    main {
-        padding-top: 10rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-
   .auth-container {
     max-width: 100%;
   }
@@ -797,10 +790,6 @@ main {
 }
 
 @media (max-width: 480px) {
-    main {
-        padding-top: 9rem !important;
-    }
-
   .auth-title {
     font-size: 1.75rem;
   }
