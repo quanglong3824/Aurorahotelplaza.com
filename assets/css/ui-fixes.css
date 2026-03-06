@@ -1,30 +1,49 @@
 /* Aurora Hotel Plaza - UI Fixes & Contrast Improvements */
 
-/* 1. Header & Contrast Improvements */
+/* 1. Header & Independent Layer Improvements */
 #main-header {
+    position: relative; /* Chiếm chỗ riêng, không đè lên body */
+    width: 100%;
+    z-index: 1000;
+    background: #0f172a; /* Màu nền tối mặc định để tách biệt */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, backdrop-filter 0.3s ease;
     will-change: transform;
 }
 
-#main-header.header-transparent {
-    background: rgba(0, 0, 0, 0.45); /* Tăng độ tối nền */
+/* Khi cuộn trang, biến thành Fixed để giữ Menu */
+#main-header.header-scrolled {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(15, 23, 42, 0.98);
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
-}
-
-#main-header.header-scrolled {
-    background: rgba(15, 23, 42, 0.98); /* Tối hơn khi cuộn */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Smart Header States */
+/* Smart Header States (Giữ nguyên logic ẩn hiện) */
 #main-header.header-hidden {
-    transform: translateY(-100%); /* Fade lên trên */
+    transform: translateY(-100%);
     pointer-events: none;
 }
 
 #main-header.header-visible {
-    transform: translateY(0); /* Hiện lại */
+    transform: translateY(0);
+}
+
+/* Fix Hero/Body để không bị hẫng khi Header chuyển sang Fixed */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Bỏ margin-top âm nếu có ở Hero banner */
+.hero-slider, .page-hero {
+    margin-top: 0 !important;
 }
 
 /* 2. Fix "Xem tất cả phòng/căn hộ" contrast */
