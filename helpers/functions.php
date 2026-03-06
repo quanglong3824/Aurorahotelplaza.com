@@ -38,10 +38,17 @@ function formatCurrency($amount) {
 }
 
 /**
- * Format date (Thống nhất mm/dd/yyyy cho toàn hệ thống bao gồm Bill)
+ * Format date (Tự động theo ngôn ngữ hệ thống)
  */
-function formatDate($date, $format = 'm/d/Y') {
+function formatDate($date, $format = null) {
     if (empty($date)) return '';
+    
+    // Nếu không truyền format, tự động chọn theo ngôn ngữ
+    if ($format === null) {
+        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'vi';
+        $format = ($lang === 'vi') ? 'd/m/Y' : 'm/d/Y';
+    }
+    
     return date($format, strtotime($date));
 }
 
