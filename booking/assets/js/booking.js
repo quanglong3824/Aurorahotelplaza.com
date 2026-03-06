@@ -438,13 +438,20 @@ function updateShortStayAvailability() {
 function adjustValue(fieldId, delta) {
     const input = document.getElementById(fieldId);
     if (!input) return;
+    
+    console.log('adjustValue: fieldId=' + fieldId + ', delta=' + delta + ', currentValue=' + input.value);
 
     // Ngăn điều chỉnh nếu đang bị khóa
-    if (input.disabled) return;
+    if (input.disabled) {
+        console.log('adjustValue: Input bị disabled');
+        return;
+    }
 
     let value = parseInt(input.value) || 0;
     let min = parseInt(input.min) || 0;
     let max = parseInt(input.max) || 99;
+    
+    console.log('adjustValue: min=' + min + ', max=' + max);
 
     value += delta;
 
@@ -452,6 +459,7 @@ function adjustValue(fieldId, delta) {
     if (value > max) value = max;
 
     input.value = value;
+    console.log('adjustValue: newValue=' + input.value);
 
     // Update total guests hidden field
     if (fieldId === 'num_adults' || fieldId === 'num_children') {
