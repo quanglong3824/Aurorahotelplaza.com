@@ -29,30 +29,36 @@ try {
     $db = getDB();
     if (!$db) throw new Exception('DB error');
 
-    // Tạo conversation mới
+    // Tạo conversation mới - luôn phải có customer_id hoặc guest_id
     $stmt = $db->prepare("
-        INSERT INTO chat_conversations 
+        INSERT INTO chat_conversations
             (customer_id, guest_id, subject, status, source, created_at)
-        VALUES 
+        VALUES
             (:customer_id, :guest_id, :subject, 'open', 'widget', NOW())
     ");
-    
+
     $subject = $user_name . ' - Chat mới từ widget';
+    
+    // Nếu không có guest_id, tạo một ID tạm
+    if (!$guest_id) {
+        $guest_id = 'guest_' . md5(uniqid() . time());
+    }
+    
     $stmt->execute([
         ':customer_id' => $user_id,
         ':guest_id' => $guest_id,
         ':subject' => $subject
     ]);
-    
+
     $conversation_id = $db->lastInsertId();
 
     // Tạo message welcome từ AI
     $welcomeMsg = "Xin chào! Tôi là trợ lý ảo của Aurora Hotel Plaza. Tôi có thể giúp gì cho bạn về đặt phòng, dịch vụ hoặc thông tin khách sạn?";
-    
+
     $msgStmt = $db->prepare("
-        INSERT INTO chat_messages 
+        INSERT INTO chat_messages
             (conversation_id, sender_id, sender_type, content, created_at)
-        VALUES 
+        VALUES
             (:conv_id, NULL, 'ai', :content, NOW())
     ");
     $msgStmt->execute([
@@ -69,5 +75,5 @@ try {
 } catch (Exception $e) {
     error_log('create-conversation error: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Lỗi server']);
+    echo json_encode(['success' => false, 'message' => 'Lỗi server: ' . $e->getMessage()]);
 }
