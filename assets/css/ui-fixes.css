@@ -66,6 +66,17 @@
     transform: translateY(0);
 }
 
+/* GIẢI PHÁP: Đẩy Hero xuống để không bị đè bởi Header/Booking Bar */
+main.flex.h-full.grow.flex-col {
+    padding-top: 80px !important; /* Dịch chuyển nhẹ bằng chiều cao header */
+}
+
+@media (max-width: 768px) {
+    main.flex.h-full.grow.flex-col {
+        padding-top: 70px !important; /* Mobile header mỏng hơn */
+    }
+}
+
 /* Khôi phục Hero/Body như cũ */
 body {
     display: block;
