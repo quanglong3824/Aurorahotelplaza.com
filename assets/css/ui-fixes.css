@@ -33,20 +33,34 @@
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* GIẢI PHÁP: Giúp chữ trắng đọc được trên nền trắng - Bỏ chỉ vàng */
-#main-header .nav-link, 
-#main-header .btn-login,
-#main-header .material-symbols-outlined,
-#main-header span,
-#main-header a {
+/* GIẢI PHÁP: Giúp chữ trắng đọc được trên nền trắng - Chỉ áp dụng cho thanh Menu chính */
+#main-header > .mx-auto .nav-link, 
+#main-header > .mx-auto .btn-login,
+#main-header > .mx-auto .material-symbols-outlined,
+#main-header > .mx-auto span,
+#main-header > .mx-auto a:not(.submenu-item):not(.user-menu-item):not(.lang-option) {
     color: #ffffff !important;
-    /* Chỉ dùng đổ bóng đen mờ để tương phản, không dùng màu vàng */
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
-    transition: all 0.3s ease;
+}
+
+/* Đảm bảo Menu xổ xuống (Submenu, Lang, User) có màu riêng để dễ đọc */
+.submenu, .user-menu, .lang-menu {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+.submenu-item, .user-menu-item, .lang-option, .user-menu-header div {
+    color: #1e293b !important; /* Chữ tối màu trên nền trắng xổ xuống */
+    text-shadow: none !important; /* Bỏ đổ bóng trong menu xổ xuống */
+}
+
+.submenu-item:hover, .user-menu-item:hover, .lang-option:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+    color: #d4af37 !important;
 }
 
 #main-header .nav-link:hover {
-    text-shadow: none !important; /* Bỏ chỉ vàng khi hover */
+    text-shadow: none !important;
     color: #ffffff !important;
     opacity: 0.8;
 }
