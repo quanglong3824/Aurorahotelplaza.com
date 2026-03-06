@@ -773,19 +773,20 @@ function renderExtraGuests() {
         </div>
     `).join('');
 
-    // Add "Add more" button only if not at max
-    const numAdults = parseInt(document.getElementById('num_adults')?.value) || 1;
-    const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;
-    const totalGuests = numAdults + numChildren;
+    // KHÔNG CHÈN THÊM NÚT "THÊM TRẺ EM" VÀO ĐÂY ĐỂ TRÁNH LỖI THÊM VÔ HẠN
     
-    if (totalGuests < ROOM_CONFIG.maxOccupancy) {
-        list.innerHTML += `
-            <button type="button" onclick="addExtraGuest()"
-                class="w-full p-3 border border-dashed border-blue-500/50 rounded-lg text-blue-400 text-sm flex items-center justify-center gap-2 hover:bg-blue-500/10 transition-colors">
-                <span class="material-symbols-outlined text-sm">add_circle</span>
-                Thêm trẻ em
-            </button>
-        `;
+    // Cập nhật trạng thái nút Thêm chính (Bên ngoài danh sách)
+    const addBtn = document.getElementById('toggle_extra_guests_btn');
+    if (addBtn) {
+        if (activeGuests.length >= 2) {
+            addBtn.disabled = true;
+            addBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            addBtn.innerHTML = '<span class="material-symbols-outlined text-sm">block</span> Đã đạt tối đa 2 trẻ em';
+        } else {
+            addBtn.disabled = false;
+            addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            addBtn.innerHTML = `<span class="material-symbols-outlined text-sm">add_circle</span> Thêm trẻ em (${activeGuests.length}/2)`;
+        }
     }
 
     updateExtraGuestsData();
