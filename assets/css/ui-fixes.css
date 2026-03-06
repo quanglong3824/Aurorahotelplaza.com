@@ -172,24 +172,3 @@ input[type="checkbox"] {
 .map-container-mobile {
     aspect-ratio: 3 / 4 !important;
 }
-
-/* 10. Tutorial Flat Button (Liquid Style) */
-.help-btn-flat {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    color: #d4af37;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.help-btn-flat:hover {
-    background: rgba(212, 175, 55, 0.15);
-    border-color: #d4af37;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-}

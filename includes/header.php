@@ -63,22 +63,20 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
 
 // Detect if current page has hero banner
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
-// Detect if current page has hero banner
-$current_page = basename($_SERVER['PHP_SELF'], '.php');
-$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog', 'confirmation']; // Added confirmation
-$has_hero = in_array($current_page, $pages_with_hero) || in_array($current_dir, ['room-details', 'apartment-details', 'booking']); // Added booking
+$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog', 'confirmation'];
+$has_hero = in_array($current_page, $pages_with_hero) || in_array($current_dir, ['room-details', 'apartment-details', 'booking']);
 
-// Pages without hero need solid header with dark logo on white background
-$pages_solid_header = []; // Removed confirmation
+// Pages without hero need solid header
+$pages_solid_header = [];
 $is_solid_page = in_array($current_page, $pages_solid_header);
 $header_class = $has_hero ? 'header-transparent' : 'header-solid';
 
-// Force scrolled state for solid pages (profile, etc.)
+// Force scrolled state for solid pages
 $force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 
-// Pages with fixed transparent header (always transparent, always white logo)
-$pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation']; // Added confirmation
-$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking']); // Added booking
+// Pages with fixed transparent header
+$pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
+$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking']);
 ?>
 <!-- Scroll Progress Bar -->
 <div id="scroll-progress"
@@ -161,7 +159,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             <a class="text-base font-medium nav-link"
                 href="<?php echo $base_path; ?>index.php"><?php _e('nav.home'); ?></a>
 
-            <!-- Phòng & Căn hộ with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>rooms.php">
                     <?php _e('nav.rooms'); ?>
@@ -176,7 +173,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
             </div>
 
-            <!-- Dịch vụ with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>services.php">
                     <?php _e('nav.services'); ?>
@@ -194,7 +190,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 </div>
             </div>
 
-            <!-- Khám phá with Submenu -->
             <div class="submenu-wrapper">
                 <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>explore.php">
                     <?php _e('nav.explore'); ?>
@@ -215,7 +210,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             </a>
 
             <?php if ($is_logged_in): ?>
-                <!-- User Menu -->
                 <div class="relative user-menu-wrapper">
                     <button class="user-menu-btn">
                         <span class="material-symbols-outlined text-xl">account_circle</span>
@@ -245,12 +239,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                             <span class="material-symbols-outlined">stars</span>
                             <?php _e('nav.loyalty'); ?>
                         </a>
-                        <!-- Tạm ẩn menu Room Map
-                        <a href="<?php echo $base_path; ?>room-map-user.php" class="user-menu-item">
-                            <span class="material-symbols-outlined">map</span>
-                            <?php _e('nav.room_map'); ?>
-                        </a>
-                        -->
                         <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                             <div class="user-menu-divider"></div>
                             <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
@@ -267,17 +255,11 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     </div>
                 </div>
             <?php else: ?>
-                <!-- Login/Register Buttons -->
                 <a href="<?php echo $base_path; ?>auth/login.php" class="auth-btn">
                     <span class="material-symbols-outlined text-xl">login</span>
                     <span class="hidden md:inline"><?php _e('nav.login'); ?></span>
                 </a>
             <?php endif; ?>
-
-            <!-- Help Button - Onboarding Guide (Desktop: After user menu, Mobile: Order via CSS) -->
-            <button class="help-btn" id="helpBtn" onclick="toggleHelpModal()" title="<?php _e('common.help'); ?>">
-                <span class="material-symbols-outlined">help</span>
-            </button>
 
             <!-- Language Switcher - Liquid Glass -->
             <div class="relative lang-switcher-wrapper">
@@ -876,277 +858,10 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     .dark .tracking-modal-body::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.15);
     }
-
-    /* Help Button Styles - Match website gold theme */
-    .help-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
-        position: relative;
-        overflow: hidden;
-        order: 3;
-        /* Position after lang switcher */
-    }
-
-    .help-btn:hover {
-        transform: scale(1.08);
-        box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .help-btn .material-symbols-outlined {
-        font-size: 22px;
-        font-weight: 600;
-    }
-
-    /* Mobile: Liquid glass style for help button - positioned on right */
-    @media (max-width: 768px) {
-        .help-btn {
-            background: rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(10px) saturate(120%);
-            -webkit-backdrop-filter: blur(10px) saturate(120%);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            order: 10;
-            /* Move to far right on mobile */
-            margin-left: auto;
-            /* Push to right */
-        }
-
-        .help-btn:hover {
-            background: rgba(212, 175, 55, 0.25);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-        }
-    }
-
-    /* Help Modal - Liquid Glass Style */
-    .help-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 10000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        animation: fadeIn 0.3s ease;
-    }
-
-    .help-modal.active {
-        display: flex;
-    }
-
-    .help-modal-content {
-        background: rgba(30, 41, 59, 0.95);
-        backdrop-filter: blur(16px) saturate(120%);
-        -webkit-backdrop-filter: blur(16px) saturate(120%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        max-width: 600px;
-        width: 100%;
-        max-height: 85vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .help-modal-header {
-        padding: 24px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 148, 31, 0.08) 100%);
-        border-radius: 20px 20px 0 0;
-    }
-
-    .help-modal-header h3 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #d4af37;
-    }
-
-    .help-modal-close {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: white;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .help-modal-close:hover {
-        background: rgba(212, 175, 55, 0.2);
-        border-color: rgba(212, 175, 55, 0.4);
-        transform: rotate(90deg);
-        color: #d4af37;
-    }
-
-    .help-modal-body {
-        padding: 24px;
-    }
-
-    .help-roadmap-item {
-        display: flex;
-        gap: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-left: 3px solid #d4af37;
-        transition: all 0.3s ease;
-    }
-
-    .help-roadmap-item:hover {
-        transform: translateX(8px);
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(212, 175, 55, 0.3);
-        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15);
-    }
-
-    .help-roadmap-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-    }
-
-    .help-roadmap-icon .material-symbols-outlined {
-        font-size: 28px;
-    }
-
-    .help-roadmap-content {
-        flex: 1;
-    }
-
-    .help-roadmap-content h4 {
-        margin: 0 0 8px 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #f3f4f6;
-    }
-
-    .help-roadmap-content p {
-        margin: 0 0 12px 0;
-        font-size: 0.9rem;
-        color: #9ca3af;
-        line-height: 1.6;
-    }
-
-    .help-roadmap-content p strong {
-        color: #d4af37;
-    }
-
-    .help-roadmap-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: rgba(212, 175, 55, 0.15);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        color: #d4af37;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-
-    .help-roadmap-badge .material-symbols-outlined {
-        font-size: 14px;
-    }
-
-    .help-tip {
-        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 148, 31, 0.08) 100%);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        color: #f3f4f6;
-        padding: 16px;
-        border-radius: 12px;
-        margin-top: 20px;
-        display: flex;
-        gap: 12px;
-        align-items: start;
-    }
-
-    .help-tip .material-symbols-outlined {
-        font-size: 24px;
-        flex-shrink: 0;
-        color: #d4af37;
-    }
-
-    .help-tip p {
-        margin: 0;
-        font-size: 0.9rem;
-        line-height: 1.6;
-        color: #d1d5db;
-    }
-
-    .help-tip p strong {
-        color: #d4af37;
-    }
-
-    /* Scrollbar styling */
-    .help-modal-content::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .help-modal-content::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.02);
-        border-radius: 3px;
-    }
-
-    .help-modal-content::-webkit-scrollbar-thumb {
-        background: rgba(212, 175, 55, 0.3);
-        border-radius: 3px;
-    }
-
-    .help-modal-content::-webkit-scrollbar-thumb:hover {
-        background: rgba(212, 175, 55, 0.5);
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
 </style>
 
 <!-- Header Styles & Script -->
-<?php $asset_version = time(); // Update this when assets change ?>
+<?php $asset_version = time(); ?>
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
@@ -1166,125 +881,4 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             }
         } catch (e) { }
     })();
-
-    // Help Modal Functions
-    function toggleHelpModal(show) {
-        const modal = document.getElementById('helpModal');
-        if (!modal) return;
-
-        if (show === true) {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        } else if (show === false) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        } else {
-            modal.classList.toggle('active');
-            document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : '';
-        }
-    }
-
-    // Close help modal on outside click
-    document.addEventListener('click', function (e) {
-        const modal = document.getElementById('helpModal');
-        if (modal && e.target === modal) {
-            toggleHelpModal(false);
-        }
-    });
-
-    // Close help modal on Escape key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            toggleHelpModal(false);
-        }
-    });
 </script>
-
-<!-- Help Modal -->
-<div id="helpModal" class="help-modal">
-    <div class="help-modal-content">
-        <div class="help-modal-header">
-            <h3>
-                <span class="material-symbols-outlined">help</span>
-                <span>Hướng dẫn sử dụng</span>
-            </h3>
-            <button class="help-modal-close" onclick="toggleHelpModal(false)">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div class="help-modal-body">
-            <!-- Roadmap Item 1: Track Booking -->
-            <div class="help-roadmap-item">
-                <div class="help-roadmap-icon">
-                    <span class="material-symbols-outlined">search</span>
-                </div>
-                <div class="help-roadmap-content">
-                    <h4>Theo dõi đơn đặt phòng</h4>
-                    <p>Nhập mã đặt phòng (ví dụ: <strong>BK20260304ABC123</strong>) hoặc số điện thoại/email vào ô tìm
-                        kiếm ở góc trên phải để tra cứu tình trạng đơn đặt phòng của bạn.</p>
-                    <span class="help-roadmap-badge">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">info</span>
-                        <span>Khách vãng lai & Đã đăng nhập</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Roadmap Item 2: View Booking History -->
-            <div class="help-roadmap-item">
-                <div class="help-roadmap-icon">
-                    <span class="material-symbols-outlined">hotel</span>
-                </div>
-                <div class="help-roadmap-content">
-                    <h4>Xem lịch sử đặt phòng</h4>
-                    <p>Đăng nhập tài khoản để xem toàn bộ lịch sử đặt phòng trong mục <strong>"Tài khoản" > "Lịch sử đặt
-                            phòng"</strong>. Tại đây bạn có thể xem chi tiết, hủy đơn hoặc yêu cầu hỗ trợ.</p>
-                    <span class="help-roadmap-badge">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">person</span>
-                        <span>Chỉ dành cho thành viên</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Roadmap Item 3: Make a Booking -->
-            <div class="help-roadmap-item">
-                <div class="help-roadmap-icon">
-                    <span class="material-symbols-outlined">bedroom_parent</span>
-                </div>
-                <div class="help-roadmap-content">
-                    <h4>Đặt phòng ngay</h4>
-                    <p>Nhấn nút <strong>"Đặt phòng"</strong> màu vàng kim ở góc trên phải để bắt đầu quy trình đặt
-                        phòng. Chọn loại phòng, ngày nhận/trả phòng và điền thông tin khách.</p>
-                    <span class="help-roadmap-badge">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
-                        <span>Xác nhận ngay lập tức</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Roadmap Item 4: Contact Support -->
-            <div class="help-roadmap-item">
-                <div class="help-roadmap-icon">
-                    <span class="material-symbols-outlined">support_agent</span>
-                </div>
-                <div class="help-roadmap-content">
-                    <h4>Hỗ trợ khách hàng</h4>
-                    <p>Liên hệ hotline <strong>0251 3918 888</strong> hoặc email
-                        <strong>info@aurorahotelplaza.com</strong> để được hỗ trợ 24/7. Bạn cũng có thể sử dụng chat AI
-                        ở góc dưới phải màn hình.
-                    </p>
-                    <span class="help-roadmap-badge">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">phone</span>
-                        <span>24/7 Support</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Help Tip -->
-            <div class="help-tip">
-                <span class="material-symbols-outlined">lightbulb</span>
-                <p><strong>Mẹo:</strong> Bạn có thể tra cứu đơn đặt phòng mà không cần đăng nhập. Tuy nhiên, việc đăng
-                    ký tài khoản giúp bạn dễ dàng quản lý và theo dõi lịch sử đặt phòng mọi lúc mọi nơi!</p>
-            </div>
-        </div>
-    </div>
-</div>
