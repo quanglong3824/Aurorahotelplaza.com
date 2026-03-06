@@ -215,20 +215,79 @@ body {
     }
 }
 
-/* 5. Fix "Giường phụ" Overflow in Booking */
+/* 5. Fix "Giường phụ" & Quantity Selectors in Booking */
 .booking-extra-bed-card, 
-.booking-form-card {
+.booking-form-card,
+#extra_bed_section,
+#extra_guests_section {
     max-width: 100%;
     overflow-x: hidden;
 }
 
+/* Trau chuốt bộ tăng giảm số lượng (Quantity Selectors) */
+.form-group .flex.items-center.gap-2 {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Nút + - nhỏ gọn và sang trọng hơn */
+.form-group button[onclick*="adjustValue"],
+#extra_bed_section button[onclick*="adjustValue"] {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 10px !important;
+    background: rgba(212, 175, 55, 0.1) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    color: #d4af37 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.form-group button[onclick*="adjustValue"]:hover,
+#extra_bed_section button[onclick*="adjustValue"]:hover {
+    background: rgba(212, 175, 55, 0.25) !important;
+    transform: scale(1.05);
+}
+
+.form-group button[onclick*="adjustValue"] .material-symbols-outlined,
+#extra_bed_section button[onclick*="adjustValue"] .material-symbols-outlined {
+    font-size: 18px !important;
+}
+
+/* Ô nhập số lượng mỏng nhẹ */
+.form-group input[readonly],
+#extra_bed_section input[readonly] {
+    background: transparent !important;
+    border: none !important;
+    width: 36px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+
 @media (max-width: 640px) {
+    #extra_bed_section .flex.items-center.justify-between {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    #extra_bed_section .flex.items-center.gap-3:last-child {
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .booking-step-container {
         padding-left: 10px !important;
         padding-right: 10px !important;
-    }
-    .glass-card {
-        padding: 1rem !important;
     }
 }
 
