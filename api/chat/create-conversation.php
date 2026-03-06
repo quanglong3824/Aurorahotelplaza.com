@@ -27,7 +27,8 @@ if ($input && isset($input['guest_id'])) {
 
 try {
     $db = getDB();
-    if (!$db) throw new Exception('DB error');
+    if (!$db)
+        throw new Exception('DB error');
 
     // Tạo conversation mới - luôn phải có customer_id hoặc guest_id
     $stmt = $db->prepare("
@@ -38,12 +39,12 @@ try {
     ");
 
     $subject = $user_name . ' - Chat mới từ widget';
-    
+
     // Nếu không có guest_id, tạo một ID tạm
     if (!$guest_id) {
         $guest_id = 'guest_' . md5(uniqid() . time());
     }
-    
+
     $stmt->execute([
         ':customer_id' => $user_id,
         ':guest_id' => $guest_id,
@@ -57,9 +58,9 @@ try {
 
     $msgStmt = $db->prepare("
         INSERT INTO chat_messages
-            (conversation_id, sender_id, sender_type, content, created_at)
+            (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
         VALUES
-            (:conv_id, NULL, 'ai', :content, NOW())
+            (:conv_id, 0, 'bot', :content, 'text', 0, 0, NOW())
     ");
     $msgStmt->execute([
         ':conv_id' => $conversation_id,

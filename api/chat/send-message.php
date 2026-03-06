@@ -118,30 +118,21 @@ try {
     // ── 2. Insert tin nhắn ───────────────────────────────────────────────────
     $insertMsg = $db->prepare("
         INSERT INTO chat_messages
-            (conversation_id, sender_id, sender_type, message,
+            (conversation_id, sender_id, guest_id, sender_type, message,
              message_type, is_internal, is_read, created_at)
         VALUES
-            (:cid, :uid, :stype, :msg, :mtype, :internal, 0, NOW())
+            (:cid, :uid, :gid, :stype, :msg, :mtype, :internal, 0, NOW())
     ");
     $insertMsg->execute([
         ':cid' => $conv_id,
-        ':uid' => $user_id,
+        ':uid' => $user_id ?: 0,
+        ':gid' => ($sender_type === 'customer' && !$user_id) ? $guest_id : null,
         ':stype' => $sender_type,
         ':msg' => $message,
         ':mtype' => $msg_type,
         ':internal' => $is_internal ? 1 : 0,
     ]);
     $msg_id = (int) $db->lastInsertId();
-
-    // Lưu guest_id vào message nếu là guest
-    if ($guest_id && $sender_type === 'customer') {
-        $updateGuestMsg = $db->prepare("
-            UPDATE chat_messages 
-            SET guest_id = :guest_id 
-            WHERE message_id = :mid
-        ");
-        $updateGuestMsg->execute([':guest_id' => $guest_id, ':mid' => $msg_id]);
-    }
 
     // ── 3. Cập nhật conversation (atomic counter) ────────────────────────────
     // Ghi chú nội bộ không cập nhật unread cho customer
@@ -181,11 +172,11 @@ try {
 
                 // Lấy câu trả lời từ Lễ tân AI dựa vào kiến thức học được và lịch sử ($conv_id)
                 $ai_reply = generate_ai_reply($message, $db, $conv_id);
-                
+
                 if ($ai_reply && !str_starts_with($ai_reply, 'Xin lỗi')) {
                     // Chỉ dùng AI reply nếu không có lỗi
-                    error_log("AI Reply generated: " . substr((string)$ai_reply, 0, 200));
-                    
+                    error_log("AI Reply generated: " . substr((string) $ai_reply, 0, 200));
+
                     // Nhét câu phản hồi của AIBot vào DB
                     $db->prepare("
                         INSERT INTO chat_messages
@@ -211,7 +202,7 @@ try {
                                 ':cid' => $conv_id
                             ]);
                 } else {
-                    error_log("AI Reply skipped (error or empty): " . (string)$ai_reply);
+                    error_log("AI Reply skipped (error or empty): " . (string) $ai_reply);
                 }
             } catch (Exception $e) {
                 error_log("AI Reply generation failed: " . $e->getMessage());

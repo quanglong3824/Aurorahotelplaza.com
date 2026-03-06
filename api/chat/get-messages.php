@@ -14,7 +14,8 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     exit;
 }
 
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $is_staff = in_array($user_role, ['admin', 'receptionist', 'sale']);
 
@@ -37,8 +38,13 @@ try {
         $auth = $db->prepare("SELECT conversation_id FROM chat_conversations WHERE conversation_id = ?");
         $auth->execute([$conv_id]);
     } else {
-        $auth = $db->prepare("SELECT conversation_id FROM chat_conversations WHERE conversation_id = ? AND customer_id = ?");
-        $auth->execute([$conv_id, $user_id]);
+        if ($user_id) {
+            $auth = $db->prepare("SELECT conversation_id FROM chat_conversations WHERE conversation_id = ? AND customer_id = ?");
+            $auth->execute([$conv_id, $user_id]);
+        } else {
+            $auth = $db->prepare("SELECT conversation_id FROM chat_conversations WHERE conversation_id = ? AND guest_id = ?");
+            $auth->execute([$conv_id, $guest_id]);
+        }
     }
     if (!$auth->fetch()) {
         http_response_code(403);
@@ -83,7 +89,7 @@ try {
         $db->prepare("UPDATE chat_messages SET is_read = 1, read_at = NOW() WHERE conversation_id = ? AND sender_type = 'customer' AND is_read = 0")->execute([$conv_id]);
     } else {
         $db->prepare("UPDATE chat_conversations SET unread_customer = 0 WHERE conversation_id = ?")->execute([$conv_id]);
-        $db->prepare("UPDATE chat_messages SET is_read = 1, read_at = NOW() WHERE conversation_id = ? AND sender_type = 'staff' AND is_read = 0")->execute([$conv_id]);
+        $db->prepare("UPDATE chat_messages SET is_read = 1, read_at = NOW() WHERE conversation_id = ? AND sender_type IN ('staff', 'bot') AND is_read = 0")->execute([$conv_id]);
     }
 
     // Có thêm tin cũ hơn không?

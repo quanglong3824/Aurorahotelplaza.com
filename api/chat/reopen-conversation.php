@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
 $conv_id = (int) ($input['conversation_id'] ?? 0);
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 
 if (!$conv_id) {
     echo json_encode(['success' => false, 'message' => 'Thiếu conversation_id']);
@@ -26,13 +27,23 @@ if (!$conv_id) {
 
 try {
     $db = getDB();
-    $stmt = $db->prepare("
-        UPDATE chat_conversations 
-        SET status = IF(staff_id IS NULL, 'open', 'assigned'),
-            updated_at = NOW() 
-        WHERE conversation_id = :cid AND customer_id = :uid AND status = 'closed'
-    ");
-    $stmt->execute([':cid' => $conv_id, ':uid' => $user_id]);
+    if ($user_id) {
+        $stmt = $db->prepare("
+            UPDATE chat_conversations 
+            SET status = IF(staff_id IS NULL, 'open', 'assigned'),
+                updated_at = NOW() 
+            WHERE conversation_id = :cid AND customer_id = :uid AND status = 'closed'
+        ");
+        $stmt->execute([':cid' => $conv_id, ':uid' => $user_id]);
+    } else {
+        $stmt = $db->prepare("
+            UPDATE chat_conversations 
+            SET status = IF(staff_id IS NULL, 'open', 'assigned'),
+                updated_at = NOW() 
+            WHERE conversation_id = :cid AND guest_id = :gid AND status = 'closed'
+        ");
+        $stmt->execute([':cid' => $conv_id, ':gid' => $guest_id]);
+    }
 
     // Check if it was updated
     if ($stmt->rowCount() > 0) {

@@ -19,7 +19,7 @@ $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
 $conv_id = (int) ($input['conversation_id'] ?? 0);
 $is_typing = (bool) ($input['is_typing'] ?? false);
 
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $user_type = in_array($user_role, ['admin', 'receptionist', 'sale']) ? 'staff' : 'customer';
 

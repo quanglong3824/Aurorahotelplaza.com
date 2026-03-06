@@ -43,7 +43,8 @@ ini_set('zlib.output_compression', false);
 set_time_limit(90);
 
 // ── Config ───────────────────────────────────────────────────────────────────
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $is_staff = in_array($user_role, ['admin', 'receptionist', 'sale']);
 
@@ -187,11 +188,19 @@ if ($mode === 'conv') {
             ");
             $authCheck->execute([':cid' => $conv_id]);
         } else {
-            $authCheck = $db->prepare("
-                SELECT conversation_id FROM chat_conversations
-                WHERE conversation_id = :cid AND customer_id = :uid
-            ");
-            $authCheck->execute([':cid' => $conv_id, ':uid' => $user_id]);
+            if ($user_id) {
+                $authCheck = $db->prepare("
+                    SELECT conversation_id FROM chat_conversations
+                    WHERE conversation_id = :cid AND customer_id = :uid
+                ");
+                $authCheck->execute([':cid' => $conv_id, ':uid' => $user_id]);
+            } else {
+                $authCheck = $db->prepare("
+                    SELECT conversation_id FROM chat_conversations
+                    WHERE conversation_id = :cid AND guest_id = :gid
+                ");
+                $authCheck->execute([':cid' => $conv_id, ':gid' => $guest_id]);
+            }
         }
 
         if (!$authCheck->fetch()) {
@@ -272,7 +281,7 @@ if ($mode === 'conv') {
             $typingStmt->execute([
                 ':cid' => $conv_id,
                 ':utype' => $typing_type,
-                ':uid' => $user_id,
+                ':uid' => $user_id ?: 0,
             ]);
             $typing = $typingStmt->fetchAll();
 
