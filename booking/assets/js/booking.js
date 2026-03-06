@@ -622,17 +622,21 @@ function handleChildrenChange() {
 
     const numAdults = parseInt(numAdultsInput.value) || 1;
     let numChildren = parseInt(numChildrenInput.value) || 0;
+    
+    console.log('handleChildrenChange: numAdults=' + numAdults + ', numChildren=' + numChildren);
 
     // Ép giới hạn: (Max = Tổng số người - Người lớn)
     // Cho phép 2 người lớn + 2 trẻ em (tổng 4)
     if (numAdults === 2 && numChildren > 2) {
         numChildren = 2;
         numChildrenInput.value = 2;
+        console.log('handleChildrenChange: Giới hạn numChildren về 2 do numAdults=2');
     }
 
     if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
         numChildren = ROOM_CONFIG.maxOccupancy - numAdults;
         numChildrenInput.value = numChildren;
+        console.log('handleChildrenChange: Giới hạn numChildren về ' + numChildren + ' do maxOccupancy');
     }
 
     // Lọc lại mảng nếu có người lớn bị lỗi kẹt trong extraGuests (đề phòng)
