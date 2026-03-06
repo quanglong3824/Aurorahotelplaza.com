@@ -1,29 +1,34 @@
 /* Aurora Hotel Plaza - UI Fixes & Contrast Improvements */
 
-/* 1. Header & Independent Layer Improvements */
+/* 1. Header & Liquid Overlay Improvements */
 #main-header {
-    position: relative; /* Chiếm chỗ riêng, không đè lên body */
+    position: fixed; /* Quay lại trạng thái đè lên nội dung */
+    top: 0;
+    left: 0;
     width: 100%;
     z-index: 1000;
-    background: #0f172a; /* Màu nền tối mặc định để tách biệt */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, backdrop-filter 0.3s ease;
     will-change: transform;
 }
 
-/* Khi cuộn trang, biến thành Fixed để giữ Menu */
-#main-header.header-scrolled {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(15, 23, 42, 0.98);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+#main-header.header-transparent {
+    background: rgba(0, 0, 0, 0.3); /* Trong suốt nhẹ */
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Smart Header States (Giữ nguyên logic ẩn hiện) */
+#main-header.header-scrolled {
+    background: rgba(15, 23, 42, 0.9); /* Tối hơn khi cuộn nhưng vẫn giữ xuyên thấu */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Smart Header States (Giữ nguyên logic ẩn hiện thông minh) */
 #main-header.header-hidden {
-    transform: translateY(-100%);
+    transform: translateY(-105%);
     pointer-events: none;
 }
 
@@ -31,19 +36,13 @@
     transform: translateY(0);
 }
 
-/* Fix Hero/Body để không bị hẫng khi Header chuyển sang Fixed */
+/* Khôi phục Hero/Body như cũ */
 body {
-    display: flex;
-    flex-direction: column;
+    display: block;
 }
 
-main {
-    flex: 1;
-}
-
-/* Bỏ margin-top âm nếu có ở Hero banner */
 .hero-slider, .page-hero {
-    margin-top: 0 !important;
+    margin-top: 0;
 }
 
 /* 2. Fix "Xem tất cả phòng/căn hộ" contrast */
