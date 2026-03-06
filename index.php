@@ -134,10 +134,11 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="<?php echo getLang(); ?>">
+<html class="light" lang="<?php echo getLang(); ?>" translate="no">
 
 <head>
     <meta charset="utf-8" />
+    <meta name="google" content="notranslate" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('home.meta_title'); ?></title>
 
