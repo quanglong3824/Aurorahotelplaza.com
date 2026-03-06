@@ -149,10 +149,10 @@ foreach ($room_types as $room) {
                         style="backdrop-filter:blur(10px);">
                         <h3 class="font-bold text-lg text-white flex items-center gap-2">
                             <span class="material-symbols-outlined text-red-300">block</span>
-                            Không thể đặt phòng
+                            <?php _e('booking_page.block_title'); ?>
                         </h3>
                         <div class="text-white/60 text-xs bg-white/10 px-2 py-1 rounded-lg backdrop-blur-sm">
-                            Anti-Spam Protection
+                            <?php _e('booking_page.anti_spam_title'); ?>
                         </div>
                     </div>
 
@@ -172,7 +172,7 @@ foreach ($room_types as $room) {
                             <div class="mb-4">
                                 <h4 class="font-semibold text-red-400 mb-3 flex items-center gap-2 text-sm">
                                     <span class="material-symbols-outlined text-base">list</span>
-                                    Đặt phòng chưa hoàn tất (<?php echo count($booking_block_bookings); ?>):
+                                    <?php _e('booking_page.pending_bookings_title'); ?> (<?php echo count($booking_block_bookings); ?>):
                                 </h4>
                                 <div
                                     class="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-red-500/30 scrollbar-track-transparent">
@@ -187,9 +187,9 @@ foreach ($room_types as $room) {
                                                 </span>
                                                 <?php
                                                 $status_config = [
-                                                    'pending' => ['class' => 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30', 'label' => 'Chờ xác nhận'],
-                                                    'confirmed' => ['class' => 'bg-blue-500/20 text-blue-300 border-blue-500/30', 'label' => 'Đã xác nhận'],
-                                                    'checked_in' => ['class' => 'bg-green-500/20 text-green-300 border-green-500/30', 'label' => 'Đang ở']
+                                                    'pending' => ['class' => 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30', 'label' => __('booking_status.pending')],
+                                                    'confirmed' => ['class' => 'bg-blue-500/20 text-blue-300 border-blue-500/30', 'label' => __('booking_status.confirmed')],
+                                                    'checked_in' => ['class' => 'bg-green-500/20 text-green-300 border-green-500/30', 'label' => __('booking_status.checked_in')]
                                                 ];
                                                 $config = $status_config[$booking['status']] ?? ['class' => 'bg-gray-500/20 text-gray-300 border-gray-500/30', 'label' => $booking['status']];
                                                 ?>
@@ -221,7 +221,7 @@ foreach ($room_types as $room) {
                         <div class="mt-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 backdrop-blur-sm">
                             <h5 class="font-semibold text-blue-300 mb-2 text-sm flex items-center gap-2">
                                 <span class="material-symbols-outlined text-base">help_outline</span>
-                                Bạn cần làm gì?
+                                <?php _e('booking_page.block_help_title'); ?>
                             </h5>
                             <ul class="text-sm text-gray-300 space-y-1.5 list-none pl-2">
                                 <li class="flex items-start gap-2">
@@ -247,12 +247,12 @@ foreach ($room_types as $room) {
                         <a href="../index.php"
                             class="px-5 py-2.5 text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 text-sm font-medium text-center backdrop-blur-sm">
                             <span class="material-symbols-outlined text-sm align-middle mr-1">home</span>
-                            Về trang chủ
+                            <?php _e('booking_page.home_link'); ?>
                         </a>
                         <a href="../profile/bookings.php"
                             class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl transition-all duration-200 text-sm font-medium inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 backdrop-blur-sm border border-blue-400/20">
                             <span class="material-symbols-outlined text-sm">list</span>
-                            Xem đặt phòng của tôi
+                            <?php _e('booking_page.view_my_bookings'); ?>
                         </a>
                     </div>
                 </div>
@@ -415,7 +415,7 @@ foreach ($room_types as $room) {
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Tối đa 3 người lớn</p>
+                                        <p class="text-xs text-gray-500 mt-1"><?php _e('booking_page.max_adults_text'); ?></p>
                                     </div>
 
                                     <!-- Number of Children -->
@@ -433,7 +433,7 @@ foreach ($room_types as $room) {
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Tối đa 2 trẻ em (tổng tối đa 4 người)</p>
+                                        <p class="text-xs text-gray-500 mt-1"><?php _e('booking_page.max_children_text'); ?></p>
                                     </div>
 
                                         <!-- Check-in Date -->
@@ -486,8 +486,7 @@ foreach ($room_types as $room) {
                                                 <h3 class="text-lg font-semibold text-white">
                                                     <?php _e('booking_form.extra_guest'); ?>
                                                 </h3>
-                                                <p class="text-sm text-gray-400 mt-1">Khai báo chiều cao trẻ em để tính
-                                                    phụ thu chính xác</p>
+                                                <p class="text-sm text-gray-400 mt-1"><?php _e('booking_page.child_height_note'); ?></p>
                                             </div>
                                         </div>
                                         <button type="button" id="toggle_extra_guests_btn"
@@ -541,8 +540,7 @@ foreach ($room_types as $room) {
                                                 <h3 class="text-lg font-semibold text-white">
                                                     <?php _e('booking_form.extra_bed'); ?>
                                                 </h3>
-                                                <p class="text-sm text-gray-400 mt-1">Thêm giường phụ cho phòng (chỉ áp
-                                                    dụng cho phòng thường)</p>
+                                                <p class="text-sm text-gray-400 mt-1"><?php _e('booking_page.extra_bed_for_room'); ?></p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
@@ -969,7 +967,7 @@ foreach ($room_types as $room) {
                                                 <span><?php _e('booking_form.note_price_estimate'); ?></span>
                                             </p>
                                             <p class="text-xs text-red-500 dark:text-red-400 mt-2 font-medium italic">
-                                                * Đây là giá tham khảo sẽ có biến động khi khách tới check in phòng với lễ tân
+                                                * <?php _e('booking_page.price_estimate_note_final'); ?>
                                             </p>
                                         </div>
                                     </div>

@@ -833,6 +833,21 @@ return [
         'confirm_booking' => 'Xác nhận đặt phòng',
         'rooms_available' => 'phòng trống',
         'out_of_stock' => 'Hết phòng',
+        // Anti-spam block modal
+        'block_title' => 'Không thể đặt phòng',
+        'anti_spam_title' => 'Bảo vệ Anti-Spam',
+        'pending_bookings_title' => 'Đặt phòng chưa hoàn tất',
+        'block_help_title' => 'Bạn cần làm gì?',
+        'block_help_pay' => 'Hoàn tất thanh toán cho đặt phòng cũ',
+        'block_help_checkout' => 'Chờ đến ngày trả phòng và trả phòng',
+        'block_help_contact' => 'Liên hệ lễ tân:',
+        'home_link' => 'Về trang chủ',
+        'view_my_bookings' => 'Xem đặt phòng của tôi',
+        'max_adults_text' => 'Tối đa 3 người lớn',
+        'max_children_text' => 'Tối đa 2 trẻ em (tổng tối đa 4 người)',
+        'child_height_note' => 'Khai báo chiều cao trẻ em để tính phụ thu chính xác',
+        'extra_bed_for_room' => 'Thêm giường phụ cho phòng (chỉ áp dụng cho phòng thường)',
+        'price_estimate_note_final' => 'Đây là giá tham khảo sẽ có biến động khi khách tới check in phòng với lễ tân',
     ],
 
     // Room detail page

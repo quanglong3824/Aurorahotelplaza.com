@@ -726,6 +726,21 @@ return [
         'confirm_booking' => 'Confirm Booking',
         'rooms_available' => 'rooms available',
         'out_of_stock' => 'Sold out',
+        // Anti-spam block modal
+        'block_title' => 'Cannot Book',
+        'anti_spam_title' => 'Anti-Spam Protection',
+        'pending_bookings_title' => 'Pending Bookings',
+        'block_help_title' => 'What do you need to do?',
+        'block_help_pay' => 'Complete payment for existing booking',
+        'block_help_checkout' => 'Wait until checkout date and check out',
+        'block_help_contact' => 'Contact reception:',
+        'home_link' => 'Back to Home',
+        'view_my_bookings' => 'View My Bookings',
+        'max_adults_text' => 'Max 3 adults',
+        'max_children_text' => 'Max 2 children (max 4 people total)',
+        'child_height_note' => 'Enter child height for accurate surcharge',
+        'extra_bed_for_room' => 'Add extra bed for room (only for regular rooms)',
+        'price_estimate_note_final' => 'This is an estimated price which may vary when guest checks in at reception',
     ],
 
     // Room detail page
