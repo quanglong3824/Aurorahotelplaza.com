@@ -27,21 +27,19 @@ const ChatWidget = {
 
     // ── Init ──────────────────────────────────────────────────────────────
     init() {
-        // Chỉ init nếu user đã đăng nhập (PHP render data-logged-in)
+        // Init nếu có button chat
         const btn = document.getElementById('cwBtn');
         if (!btn) return;
 
         this.bindEvents();
-        
+
         // Kiểm tra nhân viên online ngay lập tức
         this.checkStaffOnline();
         // Kiểm tra lại mỗi 30 giây
         this._staffCheckInterval = setInterval(() => this.checkStaffOnline(), 30000);
 
-        // Nếu đã đăng nhập, load conversations ngay
-        if (btn.dataset.loggedIn === '1') {
-            this.checkExistingConversation();
-        }
+        // Luôn load conversations (cả guest và logged in)
+        this.checkExistingConversation();
     },
 
     // ── Toggle panel ──────────────────────────────────────────────────────
@@ -78,22 +76,68 @@ const ChatWidget = {
         fetch(this._url('api/chat/get-conversations.php'))
             .then(r => r.json())
             .then(data => {
-                if (data.success && data.data?.length > 0) {
-                    const conv = data.data[0]; // Conv mới nhất
-                    this.convId = conv.conversation_id;
+                if (data.success) {
+                    if (data.data?.length > 0) {
+                        const conv = data.data[0]; // Conv mới nhất
+                        this.convId = conv.conversation_id;
 
-                    // Update UI if closed
-                    this.updateConvStatus(conv.status);
+                        // Update UI if closed
+                        this.updateConvStatus(conv.status);
 
-                    // Cập nhật unread badge
-                    const unread = parseInt(conv.unread_customer) || 0;
-                    if (unread > 0) this.setUnread(unread);
+                        // Cập nhật unread badge
+                        const unread = parseInt(conv.unread_customer) || 0;
+                        if (unread > 0) this.setUnread(unread);
 
-            // Load messages nếu panel đang mở
-                    if (this.isOpen) this.loadMessages();
+                        // Load messages nếu panel đang mở
+                        if (this.isOpen) this.loadMessages();
+                    } else {
+                        // Không có conversation - tạo mới nếu panel đang mở
+                        if (this.isOpen) {
+                            this.createConversation();
+                        }
+                    }
                 }
             })
             .catch(() => {});
+    },
+
+    // ── Tạo conversation mới cho guest ─────────────────────────────────────
+    createConversation() {
+        if (this.convId) return; // Đã có conv
+
+        // Lấy guest_id từ cookie hoặc session
+        const guestId = this.getGuestId();
+
+        fetch(this._url('api/chat/create-conversation.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                guest_id: guestId
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success && data.conversation_id) {
+                this.convId = data.conversation_id;
+                // Load messages sau khi tạo conv
+                this.loadMessages();
+            }
+        })
+        .catch(() => {});
+    },
+
+    // ── Lấy guest_id từ cookie ────────────────────────────────────────────
+    getGuestId() {
+        const name = 'chat_guest_id=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return null;
     },
 
     updateConvStatus(status) {

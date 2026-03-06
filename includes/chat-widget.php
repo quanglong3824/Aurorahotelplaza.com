@@ -10,8 +10,8 @@
  * - PHP: file này (chỉ HTML/PHP logic)
  *
  * Hiển thị:
- *   - Nếu đã đăng nhập → widget đầy đủ với chat realtime
- *   - Nếu chưa đăng nhập → panel mời đăng nhập
+ *   - Khách vãng lai: Chat như khách với AI trợ lý
+ *   - Khách đã đăng nhập: Chat đầy đủ với staff
  *   - Không render gì nếu đang ở trang /admin/
  */
 
@@ -20,10 +20,29 @@ $current_path = $_SERVER['PHP_SELF'] ?? '';
 if (strpos($current_path, '/admin/') !== false)
     return;
 
-// Kiểm tra session trước khi cho phép chat
+// Luôn start session để quản lý guest chat
 session_start();
-$is_logged = isset($_SESSION['user_id']) || isset($_SESSION['chat_guest_id']);
-$user_name = $_SESSION['user_name'] ?? __('chat.guest');
+
+// Tạo guest_id nếu chưa có (cho phép khách vãng lai chat)
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
+    // Tạo guest ID duy nhất từ IP + timestamp
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $timestamp = time();
+    $_SESSION['chat_guest_id'] = 'guest_' . md5($ip . $timestamp);
+    $_SESSION['guest_created_at'] = $timestamp;
+    
+    // Đặt cookie để duy trì guest session qua các lần truy cập
+    if (!isset($_COOKIE['chat_guest_id'])) {
+        setcookie('chat_guest_id', $_SESSION['chat_guest_id'], time() + (30 * 24 * 60 * 60), '/', '', false, true);
+    }
+}
+
+// Xác định trạng thái chat
+$is_logged = isset($_SESSION['user_id']);
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
+$user_name = $is_logged 
+    ? ($_SESSION['user_name'] ?? __('chat.guest')) 
+    : ('Khách ' . substr($_SESSION['chat_guest_id'], -6));
 $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 
 // base_path đã được set ở footer.php
@@ -89,67 +108,10 @@ $cw_base = rtrim(BASE_URL, '/');
 
     <?php if ($is_logged): ?>
         <!-- ── ĐÃ ĐĂNG NHẬP: Chat area ──────────────────────── -->
-
-        <!-- Messages container -->
-        <div id="cwMessages" style="flex:1;overflow-y:auto;">
-            <!-- Render bởi ChatWidget.renderMessages() -->
-            <div data-empty style="text-align:center;padding:32px 16px;color:#94a3b8">
-                <div style="font-size:36px;margin-bottom:8px"></div>
-                <p style="font-size:13px;line-height:1.6">
-                    <?php _e('chat.welcome', ['name' => '<strong>' . htmlspecialchars($user_name ?: __('chat.guest')) . '</strong>']); ?><br>
-                    <?php _e('chat.ready_to_help'); ?>
-                </p>
-            </div>
-        </div>
-
-        <!-- Typing indicator -->
-        <div id="cwTyping"></div>
-
-        <!-- New message toast -->
-        <div id="cwNewMsgToast" class="cw-new-msg-toast">
-            <?php _e('chat.new_message'); ?>
-        </div>
-
-        <!-- Offline bar -->
-        <div id="cwOfflineBar">
-            <span class="material-symbols-outlined" style="font-size:14px">wifi_off</span>
-            <?php _e('chat.offline_msg'); ?>
-        </div>
-
-        <!-- Input area -->
-        <div id="cwInputArea">
-            <div id="cwInputRow">
-                <textarea id="cwInput" rows="1" placeholder="<?php _e('chat.placeholder'); ?>"
-                    aria-label="<?php _e('chat.placeholder'); ?>"></textarea>
-                <button id="cwSendBtn" aria-label="<?php _e('chat.send'); ?>">
-                    <span class="material-symbols-outlined" style="font-size:18px">send</span>
-                </button>
-            </div>
-            <div id="cwInputHint"><?php _e('chat.hint'); ?></div>
-        </div>
-
+        <?php include __DIR__ . '/chat-widget-logged-in.php'; ?>
     <?php else: ?>
-        <!-- ── CHƯA ĐĂNG NHẬP: mời đăng nhập ───────────────── -->
-        <div id="cwLoginPrompt">
-            <div style="width:56px;height:56px;border-radius:50%;
-                        background:linear-gradient(135deg,#d4af37,#b8941f);
-                        display:flex;align-items:center;justify-content:center;">
-                <span class="material-symbols-outlined" style="font-size:28px;color:#fff">chat</span>
-            </div>
-            <p>
-                <?php _e('chat.login_prompt'); ?>
-            </p>
-            <a href="<?php echo $bp; ?>auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
-                class="cw-login-btn">
-                <span class="material-symbols-outlined" style="font-size:18px">login</span>
-                <?php _e('chat.login_to_chat'); ?>
-            </a>
-            <a href="tel:+842513918888" style="display:flex;align-items:center;gap:6px;font-size:13px;
-                      color:#d4af37;text-decoration:none;font-weight:600;margin-top:4px">
-                <span class="material-symbols-outlined" style="font-size:16px">call</span>
-                <?php _e('chat.call_hotline'); ?> (+84-251) 391.8888
-            </a>
-        </div>
+        <!-- ── KHÁCH VÃNG LAI: Chat area với AI ─────────────── -->
+        <?php include __DIR__ . '/chat-widget-guest.php'; ?>
     <?php endif; ?>
 
 </div><!-- /cwPanel -->

@@ -18,13 +18,14 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     exit;
 }
 
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 $user_role = $_SESSION['user_role'] ?? 'customer';
 $is_staff = in_array($user_role, ['admin', 'receptionist', 'sale']);
 
-// Customer chỉ xem conv của chính mình → redirect sang endpoint khác
+// Customer chỉ xem conv của chính mình
 if (!$is_staff) {
-    // Trả về conv của customer này thôi
+    // Trả về conv của customer này thôi (cả user_id và guest_id)
     try {
         $db = getDB();
         $stmt = $db->prepare("
@@ -37,11 +38,11 @@ if (!$is_staff) {
             FROM chat_conversations c
             LEFT JOIN bookings b ON c.booking_id = b.booking_id
             LEFT JOIN users su   ON c.staff_id   = su.user_id
-            WHERE c.customer_id = :uid
+            WHERE (c.customer_id = :uid OR c.guest_id = :guest_id)
             ORDER BY c.last_message_at DESC
             LIMIT 20
         ");
-        $stmt->execute([':uid' => $user_id]);
+        $stmt->execute([':uid' => $user_id, ':guest_id' => $guest_id]);
         $convs = $stmt->fetchAll();
         echo json_encode(['success' => true, 'data' => $convs, 'total' => count($convs)]);
     } catch (Exception $e) {

@@ -1,164 +1,73 @@
 <?php
 /**
- * API: Tạo conversation chat mới
+ * API: Tạo conversation mới cho guest
  * POST /api/chat/create-conversation.php
- *
- * Body (JSON): { "subject": "...", "booking_id": null, "source": "website" }
- * Response: { "success": true, "conversation_id": 5 }
  */
 
 session_start();
 header('Content-Type: application/json; charset=utf-8');
-
 require_once '../../config/database.php';
 
-// Hỗ trợ khách vãng lai
+// Kiểm tra session
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
-    $_SESSION['chat_guest_id'] = -mt_rand(100000, 9999999);
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 
-// Parse input
-$input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
-$subject = trim($input['subject'] ?? 'Hỗ trợ khách hàng');
-$booking_id = isset($input['booking_id']) ? (int) $input['booking_id'] : null;
-$source = in_array($input['source'] ?? '', ['website', 'booking', 'profile'])
-    ? $input['source']
-    : 'website';
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
+$user_name = $_SESSION['user_name'] ?? 'Khách vãng lai';
 
-$customer_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+// Nhận guest_id từ request body nếu có
+$input = json_decode(file_get_contents('php://input'), true);
+if ($input && isset($input['guest_id'])) {
+    $guest_id = $input['guest_id'];
+}
 
 try {
     $db = getDB();
-    if (!$db)
-        throw new Exception('Không thể kết nối database');
+    if (!$db) throw new Exception('DB error');
 
-    // ── 1. Kiểm tra đã có conv OPEN/ASSIGNED của user chưa ──────────────────
-    // Không tạo trùng nếu đã có conv đang mở (trừ khi gắn booking_id khác nhau)
-    $checkSql = "
-        SELECT conversation_id FROM chat_conversations
-        WHERE customer_id = :cid
-          AND status != 'closed'
-    ";
-    $params = [':cid' => $customer_id];
-
-    if ($booking_id) {
-        $checkSql .= " AND booking_id = :bid";
-        $params[':bid'] = $booking_id;
-    } else {
-        $checkSql .= " AND booking_id IS NULL";
-    }
-    $checkSql .= " LIMIT 1";
-
-    $existing = $db->prepare($checkSql);
-    $existing->execute($params);
-    $found = $existing->fetch();
-
-    if ($found) {
-        // Trả về conv đã có, không tạo mới
-        echo json_encode([
-            'success' => true,
-            'conversation_id' => (int) $found['conversation_id'],
-            'is_existing' => true
-        ]);
-        exit;
-    }
-
-    // ── 2. Tạo conversation mới ──────────────────────────────────────────────
+    // Tạo conversation mới
     $stmt = $db->prepare("
-        INSERT INTO chat_conversations
-            (customer_id, booking_id, subject, status, source, unread_staff,
-             unread_customer, created_at, updated_at)
-        VALUES
-            (:cid, :bid, :subject, 'open', :source, 0, 0, NOW(), NOW())
+        INSERT INTO chat_conversations 
+            (customer_id, guest_id, subject, status, source, created_at)
+        VALUES 
+            (:customer_id, :guest_id, :subject, 'open', 'widget', NOW())
     ");
+    
+    $subject = $user_name . ' - Chat mới từ widget';
     $stmt->execute([
-        ':cid' => $customer_id,
-        ':bid' => $booking_id,
-        ':subject' => mb_substr($subject, 0, 255),
-        ':source' => $source,
+        ':customer_id' => $user_id,
+        ':guest_id' => $guest_id,
+        ':subject' => $subject
     ]);
-    $conv_id = (int) $db->lastInsertId();
+    
+    $conversation_id = $db->lastInsertId();
 
-    // ── 3. Auto-assign staff (ít việc nhất đang online) ─────────────────────
-    $staffStmt = $db->prepare("
-        SELECT u.user_id,
-               COUNT(c.conversation_id) AS load
-        FROM users u
-        LEFT JOIN chat_conversations c
-               ON c.staff_id = u.user_id AND c.status = 'assigned'
-        WHERE u.user_role IN ('receptionist', 'sale')
-          AND u.status = 'active'
-          AND u.last_login >= NOW() - INTERVAL 30 MINUTE
-        GROUP BY u.user_id
-        HAVING load < 15
-        ORDER BY load ASC
-        LIMIT 1
+    // Tạo message welcome từ AI
+    $welcomeMsg = "Xin chào! Tôi là trợ lý ảo của Aurora Hotel Plaza. Tôi có thể giúp gì cho bạn về đặt phòng, dịch vụ hoặc thông tin khách sạn?";
+    
+    $msgStmt = $db->prepare("
+        INSERT INTO chat_messages 
+            (conversation_id, sender_id, sender_type, content, created_at)
+        VALUES 
+            (:conv_id, NULL, 'ai', :content, NOW())
     ");
-    $staffStmt->execute();
-    $staff = $staffStmt->fetch();
-
-    if ($staff) {
-        $db->prepare("
-            UPDATE chat_conversations
-            SET staff_id = :sid, status = 'assigned', updated_at = NOW()
-            WHERE conversation_id = :cid
-        ")->execute([':sid' => $staff['user_id'], ':cid' => $conv_id]);
-    }
-
-    // ── 4. Gửi tin chào tự động nếu được bật ────────────────────────────────
-    $setting = $db->query("
-        SELECT setting_value FROM chat_settings
-        WHERE setting_key = 'auto_reply_enabled' LIMIT 1
-    ")->fetchColumn();
-
-    if ($setting === '1') {
-        $autoMsg = $db->query("
-            SELECT setting_value FROM chat_settings
-            WHERE setting_key = 'auto_reply_message' LIMIT 1
-        ")->fetchColumn();
-
-        if ($autoMsg) {
-            $db->prepare("
-                INSERT INTO chat_messages
-                    (conversation_id, sender_id, sender_type, message,
-                     message_type, is_internal, is_read, created_at)
-                VALUES
-                    (:cid, 0, 'system', :msg, 'text', 0, 0, NOW())
-            ")->execute([
-                        ':cid' => $conv_id,
-                        ':msg' => $autoMsg
-                    ]);
-
-            // Cập nhật preview conversation
-            $db->prepare("
-                UPDATE chat_conversations
-                SET last_message_at      = NOW(),
-                    last_message_preview = :preview,
-                    unread_customer      = 1,
-                    updated_at           = NOW()
-                WHERE conversation_id = :cid
-            ")->execute([
-                        ':preview' => mb_substr($autoMsg, 0, 100),
-                        ':cid' => $conv_id
-                    ]);
-        }
-    }
+    $msgStmt->execute([
+        ':conv_id' => $conversation_id,
+        ':content' => $welcomeMsg
+    ]);
 
     echo json_encode([
         'success' => true,
-        'conversation_id' => $conv_id,
-        'is_existing' => false,
-        'staff_assigned' => $staff ? true : false
-    ]);
+        'conversation_id' => $conversation_id,
+        'message' => 'Conversation created successfully'
+    ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
-    error_log('Chat create-conversation error: ' . $e->getMessage());
+    error_log('create-conversation error: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Lỗi server, vui lòng thử lại']);
+    echo json_encode(['success' => false, 'message' => 'Lỗi server']);
 }
