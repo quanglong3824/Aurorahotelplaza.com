@@ -38,18 +38,39 @@ function formatCurrency($amount) {
 }
 
 /**
- * Format date (Tự động theo ngôn ngữ hệ thống)
+ * Format date (Tự động theo Vùng thiết bị & Ngôn ngữ Web)
  */
 function formatDate($date, $format = null) {
     if (empty($date)) return '';
+    $timestamp = strtotime($date);
     
-    // Nếu không truyền format, tự động chọn theo ngôn ngữ
-    if ($format === null) {
-        $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'vi';
-        $format = ($lang === 'vi') ? 'd/m/Y' : 'm/d/Y';
+    // 1. Nếu có format cụ thể (ví dụ 'Y-m-d'), ưu tiên dùng luôn
+    if ($format !== null) {
+        return date($format, $timestamp);
+    }
+
+    // 2. Lấy ngôn ngữ đang chọn trên Web
+    $web_lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : null;
+    
+    // 3. Lấy ngôn ngữ/vùng của trình duyệt (Thiết bị)
+    $browser_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'vi', 0, 2);
+    
+    // Quyết định định dạng: 
+    // Nếu khách đã chọn ngôn ngữ Web, ưu tiên định dạng của ngôn ngữ đó.
+    // Nếu chưa chọn, dùng định dạng của thiết bị (Browser).
+    $final_lang = $web_lang ?: $browser_lang;
+
+    if ($final_lang === 'en') {
+        // Kiểm tra vùng cụ thể nếu là EN (Mỹ dùng m/d/Y, còn lại đa số dùng d/m/Y)
+        $full_locale = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en-US';
+        if (strpos($full_locale, 'en-US') !== false) {
+            return date('m/d/Y', $timestamp);
+        }
+        return date('d/m/Y', $timestamp);
     }
     
-    return date($format, strtotime($date));
+    // Mặc định cho Tiếng Việt và các vùng khác dùng dd/mm/yyyy
+    return date('d/m/Y', $timestamp);
 }
 
 /**
