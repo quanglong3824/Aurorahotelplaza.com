@@ -71,12 +71,20 @@ try {
     // ── 1. Kiểm tra quyền truy cập conversation ─────────────────────────────
     if ($sender_type === 'customer') {
         // Customer chỉ được gửi vào conv của mình (cả user_id và guest_id)
-        $check = $db->prepare("
-            SELECT conversation_id, status FROM chat_conversations
-            WHERE conversation_id = :cid 
-            AND (customer_id = :uid OR guest_id = :guest_id)
-        ");
-        $check->execute([':cid' => $conv_id, ':uid' => $user_id, ':guest_id' => $guest_id]);
+        // Nếu customer_id là null, chỉ check guest_id
+        if ($user_id) {
+            $check = $db->prepare("
+                SELECT conversation_id, status FROM chat_conversations
+                WHERE conversation_id = :cid AND customer_id = :uid
+            ");
+            $check->execute([':cid' => $conv_id, ':uid' => $user_id]);
+        } else {
+            $check = $db->prepare("
+                SELECT conversation_id, status FROM chat_conversations
+                WHERE conversation_id = :cid AND guest_id = :guest_id
+            ");
+            $check->execute([':cid' => $conv_id, ':guest_id' => $guest_id]);
+        }
     } else {
         // Staff xem tất cả
         $check = $db->prepare("
