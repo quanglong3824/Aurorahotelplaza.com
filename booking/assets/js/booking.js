@@ -664,9 +664,9 @@ function handleChildrenChange() {
 
 // Add extra guest entry
 function addExtraGuest() {
-    // LIMIT TO MAX 2 (As requested by tester)
-    const extraGuestsCount = document.querySelectorAll('.extra-guest-entry').length;
-    if (extraGuestsCount >= 2) {
+    // LIMIT TO MAX 2 (Strictly enforced as requested)
+    const activeGuests = extraGuests.filter(g => !g.isAdult);
+    if (activeGuests.length >= 2) {
         showToast('Tối đa chỉ được thêm 2 khách phụ thu', 'error');
         return;
     }
@@ -676,7 +676,7 @@ function addExtraGuest() {
     const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;
     
     if (numAdults + numChildren >= ROOM_CONFIG.maxOccupancy) {
-        showToast('Không thể thêm khách vượt quá sức chứa phòng (tối đa 3 người)', 'error');
+        showToast('Không thể thêm khách vượt quá sức chứa phòng', 'error');
         return;
     }
     

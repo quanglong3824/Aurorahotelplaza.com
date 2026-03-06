@@ -216,6 +216,33 @@ body {
 }
 
 /* 5. Fix "Giường phụ" & Quantity Selectors in Booking */
+.extra-guest-entry {
+    background: rgba(30, 41, 59, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+.extra-guest-entry:hover {
+    border-color: rgba(212, 175, 55, 0.3) !important;
+    background: rgba(30, 41, 59, 0.6) !important;
+}
+
+.height-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-width: 1px !important;
+}
+
+.height-btn.active {
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-color: #d4af37 !important;
+    color: #d4af37 !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1) !important;
+}
+
 .booking-extra-bed-card, 
 .booking-form-card,
 #extra_bed_section,
