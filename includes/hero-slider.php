@@ -46,7 +46,7 @@
                         <?php _e('hero.check_in'); ?>
                     </label>
                     <input class="glass-input-solid h-12" id="checkin" name="check_in" type="date"
-                        min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" />
+                        min="<?php echo date('Y-m-d'); ?>" max="2030-12-31" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkout">
@@ -54,7 +54,7 @@
                         <?php _e('hero.check_out'); ?>
                     </label>
                     <input class="glass-input-solid h-12" id="checkout" name="check_out" type="date"
-                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="2030-12-31"
                         value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
                 </div>
                 <div class="flex flex-col text-left">

@@ -443,7 +443,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                         <span class="material-symbols-outlined">calendar_today</span>
                         <?php _e('hero.check_in'); ?>
                     </label>
-                    <input type="date" id="floating-checkin" name="check_in" min="<?php echo date('Y-m-d'); ?>"
+                    <input type="date" id="floating-checkin" name="check_in" min="<?php echo date('Y-m-d'); ?>" max="2030-12-31"
                         value="<?php echo date('Y-m-d'); ?>" class="glass-input-solid">
                 </div>
                 <div class="floating-booking-field">
@@ -452,7 +452,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                         <?php _e('hero.check_out'); ?>
                     </label>
                     <input type="date" id="floating-checkout" name="check_out"
-                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>"
+                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="2030-12-31"
                         value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" class="glass-input-solid">
                 </div>
                 <div class="floating-booking-row">
