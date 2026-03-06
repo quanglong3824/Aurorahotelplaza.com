@@ -39,31 +39,48 @@
 #main-header .material-symbols-outlined,
 #main-header span,
 #main-header a {
-    font-weight: 600 !important; /* Đảm bảo chữ Bold như cũ */
+    font-weight: 600 !important;
     color: #ffffff !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* KHI HOVER VÀO HEADER: Toàn bộ chữ chuyển sang màu vàng đặc trưng để nổi bật trên nền trắng */
+#main-header:hover .nav-link,
+#main-header:hover .material-symbols-outlined,
+#main-header:hover span,
+#main-header:hover a:not(.submenu-item):not(.user-menu-item):not(.lang-option) {
+    color: #d4af37 !important;
+    text-shadow: none !important; /* Bỏ đổ bóng khi đã có màu đặc trưng */
 }
 
 /* Đảm bảo Menu xổ xuống (Submenu, Lang, User) đồng màu và trong suốt nhẹ */
 .submenu, .user-menu, .lang-menu {
-    background: rgba(15, 23, 42, 0.9) !important; /* Nền tối để chữ trắng nổi lên */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 8px 0 !important;
 }
 
 .submenu-item, .user-menu-item, .lang-option, .user-menu-header div {
-    color: #ffffff !important; /* Chữ trắng đồng bộ với menu chính */
+    color: #ffffff !important;
     text-shadow: none !important;
+    border-left: 3px solid transparent; /* Chuẩn bị border bên trái */
+    transition: all 0.2s ease;
 }
 
+/* Khi hover vào từng item trong menu xổ xuống: Chỉ đổi nền và border */
 .submenu-item:hover, .user-menu-item:hover, .lang-option:hover {
-    background: rgba(212, 175, 55, 0.2) !important;
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-left: 3px solid #d4af37 !important; /* Up border vàng */
     color: #d4af37 !important;
 }
 
+/* Trạng thái Hover chung cho các Link chính (nếu không vào submenu) */
 #main-header .nav-link:hover {
-    color: #d4af37 !important;
-    text-shadow: none !important;
+    opacity: 1;
 }
 
 /* Ẩn hoàn toàn các border bottom nếu có */
