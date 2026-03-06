@@ -1,18 +1,25 @@
 // Smart Header Scroll Effect
-// Handles transparent header on hero pages and solid header on other pages
+// Handles transparent header, solid header, and smart show/hide on scroll direction
 
 (function () {
     const header = document.getElementById('main-header');
     const logo = document.getElementById('header-logo');
+    if (!header || !logo) return;
+
     const hasHero = header.dataset.hasHero === 'true';
     const forceScrolled = header.dataset.forceScrolled === 'true';
     const fixedTransparent = header.dataset.fixedTransparent === 'true';
 
-    // State tracking to prevent redundant DOM updates
-    let lastState = null; // 'transparent', 'solid'
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    let lastState = null;
 
     function updateHeader() {
-        // Fixed Transparent: Always transparent with white logo (e.g. Blog page)
+        const currentScrollY = window.scrollY;
+        const scrollDelta = currentScrollY - lastScrollY;
+        const scrolled = currentScrollY > 50;
+
+        // 1. Handle Background & Logo State (Transparent vs Scrolled)
         if (fixedTransparent) {
             if (lastState !== 'fixed-transparent') {
                 header.classList.remove('header-solid', 'header-scrolled');
@@ -20,27 +27,16 @@
                 logo.src = logo.dataset.logoDark;
                 lastState = 'fixed-transparent';
             }
-            return;
-        }
-
-        const scrolled = window.scrollY > 50;
-
-        // Pages with force-scrolled (profile, etc.): Always keep scrolled state
-        if (forceScrolled) {
+        } else if (forceScrolled) {
             if (lastState !== 'force-scrolled') {
                 header.classList.remove('header-transparent');
                 header.classList.add('header-solid', 'header-scrolled');
                 logo.src = logo.dataset.logoWhite;
                 lastState = 'force-scrolled';
             }
-            return;
-        }
-
-        if (hasHero) {
-            // Pages with hero banner
+        } else if (hasHero) {
             if (scrolled) {
                 if (lastState !== 'scrolled') {
-                    // Scrolled: Solid white background, dark text, white logo
                     header.classList.remove('header-transparent');
                     header.classList.add('header-solid', 'header-scrolled');
                     logo.src = logo.dataset.logoWhite;
@@ -48,7 +44,6 @@
                 }
             } else {
                 if (lastState !== 'top') {
-                    // Top: Transparent background, white text, dark logo
                     header.classList.remove('header-solid', 'header-scrolled');
                     header.classList.add('header-transparent');
                     logo.src = logo.dataset.logoDark;
@@ -56,7 +51,6 @@
                 }
             }
         } else {
-            // Pages without hero banner: Always solid with white logo
             if (lastState !== 'solid-default') {
                 header.classList.remove('header-transparent');
                 header.classList.add('header-solid', 'header-scrolled');
@@ -64,13 +58,29 @@
                 lastState = 'solid-default';
             }
         }
+
+        // 2. Handle Smart Show/Hide (Directional Scroll)
+        // Only trigger hide effect after scrolling down a certain distance (e.g. 200px)
+        if (currentScrollY < 100) {
+            // Always show at the top
+            header.classList.remove('header-hidden');
+            header.classList.add('header-visible');
+        } else if (scrollDelta > 10) {
+            // Scrolling Down - Hide Header
+            header.classList.remove('header-visible');
+            header.classList.add('header-hidden');
+        } else if (scrollDelta < -15) {
+            // Scrolling Up - Show Header
+            header.classList.remove('header-hidden');
+            header.classList.add('header-visible');
+        }
+
+        lastScrollY = currentScrollY;
     }
 
     // Initial check
     updateHeader();
 
-    // Listen to scroll
-    let ticking = false;
     window.addEventListener('scroll', function () {
         if (!ticking) {
             window.requestAnimationFrame(function () {
@@ -79,9 +89,8 @@
             });
             ticking = true;
         }
-    }, { passive: true }); // Optimization: Use passive listener
+    }, { passive: true });
 
-    // Handle window resize
     window.addEventListener('resize', updateHeader, { passive: true });
 })();
 
@@ -134,10 +143,13 @@ document.addEventListener('DOMContentLoaded', function () {
     langOptions.forEach(function (option) {
         option.addEventListener('click', function (e) {
             e.preventDefault();
-            const lang = this.href.split('lang=')[1];
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', lang);
-            window.location.href = url.toString();
+            const urlParts = this.href.split('lang=');
+            if (urlParts.length > 1) {
+                const lang = urlParts[1];
+                const url = new URL(window.location.href);
+                url.searchParams.set('lang', lang);
+                window.location.href = url.toString();
+            }
         });
     });
 });

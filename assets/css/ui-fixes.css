@@ -1,6 +1,11 @@
 /* Aurora Hotel Plaza - UI Fixes & Contrast Improvements */
 
 /* 1. Header & Contrast Improvements */
+#main-header {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, backdrop-filter 0.3s ease;
+    will-change: transform;
+}
+
 #main-header.header-transparent {
     background: rgba(0, 0, 0, 0.45); /* Tăng độ tối nền */
     backdrop-filter: blur(12px) saturate(150%);
@@ -10,6 +15,16 @@
 #main-header.header-scrolled {
     background: rgba(15, 23, 42, 0.98); /* Tối hơn khi cuộn */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Smart Header States */
+#main-header.header-hidden {
+    transform: translateY(-100%); /* Fade lên trên */
+    pointer-events: none;
+}
+
+#main-header.header-visible {
+    transform: translateY(0); /* Hiện lại */
 }
 
 /* 2. Fix "Xem tất cả phòng/căn hộ" contrast */
