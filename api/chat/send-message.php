@@ -38,7 +38,8 @@ $msg_type = in_array($input['message_type'] ?? '', ['text', 'image', 'file', 'sy
     : 'text';
 $is_internal = (bool) ($input['is_internal'] ?? false);
 
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 $user_role = $_SESSION['user_role'] ?? 'customer';
 
 // Validate
@@ -69,12 +70,13 @@ try {
 
     // ── 1. Kiểm tra quyền truy cập conversation ─────────────────────────────
     if ($sender_type === 'customer') {
-        // Customer chỉ được gửi vào conv của mình
+        // Customer chỉ được gửi vào conv của mình (cả user_id và guest_id)
         $check = $db->prepare("
             SELECT conversation_id, status FROM chat_conversations
-            WHERE conversation_id = :cid AND customer_id = :uid
+            WHERE conversation_id = :cid 
+            AND (customer_id = :uid OR guest_id = :guest_id)
         ");
-        $check->execute([':cid' => $conv_id, ':uid' => $user_id]);
+        $check->execute([':cid' => $conv_id, ':uid' => $user_id, ':guest_id' => $guest_id]);
     } else {
         // Staff xem tất cả
         $check = $db->prepare("
@@ -122,6 +124,16 @@ try {
         ':internal' => $is_internal ? 1 : 0,
     ]);
     $msg_id = (int) $db->lastInsertId();
+
+    // Lưu guest_id vào message nếu là guest
+    if ($guest_id && $sender_type === 'customer') {
+        $updateGuestMsg = $db->prepare("
+            UPDATE chat_messages 
+            SET guest_id = :guest_id 
+            WHERE message_id = :mid
+        ");
+        $updateGuestMsg->execute([':guest_id' => $guest_id, ':mid' => $msg_id]);
+    }
 
     // ── 3. Cập nhật conversation (atomic counter) ────────────────────────────
     // Ghi chú nội bộ không cập nhật unread cho customer
