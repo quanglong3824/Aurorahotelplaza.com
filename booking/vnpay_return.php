@@ -172,8 +172,9 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php echo $payment_success ? 'Thanh toán thành công' : 'Thanh toán thất bại'; ?> - Aurora Hotel Plaza</title>

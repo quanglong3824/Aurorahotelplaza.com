@@ -7,8 +7,9 @@ $booking_code = isset($_GET['booking_code']) ? htmlspecialchars($_GET['booking_c
 $room_type = isset($_GET['room_type']) ? htmlspecialchars($_GET['room_type']) : '';
 ?>
 <!DOCTYPE html>
-<html lang="vi">
+<html translate="no" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

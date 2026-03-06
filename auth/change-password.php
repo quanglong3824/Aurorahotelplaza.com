@@ -83,8 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>Đổi mật khẩu bắt buộc - Aurora Hotel Plaza</title>

@@ -7,9 +7,10 @@ initLanguage();
 $page_title = __('privacy.title');
 ?>
 <!DOCTYPE html>
-<html class="light" lang="<?php echo getLang(); ?>">
+<html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php echo $page_title; ?> - Aurora Hotel Plaza</title>

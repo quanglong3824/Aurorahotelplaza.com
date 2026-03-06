@@ -82,8 +82,9 @@ if (empty($token)) {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>Đặt lại mật khẩu - Aurora Hotel Plaza</title>

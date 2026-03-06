@@ -36,9 +36,10 @@ if (time() - $last_verify > 300) {
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 
 <head>
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title><?php echo $page_title ?? 'Quản trị'; ?> - Aurora Hotel Plaza</title>

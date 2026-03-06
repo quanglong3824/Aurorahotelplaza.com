@@ -105,9 +105,10 @@ foreach ($room_types as $room) {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="<?php echo getLang(); ?>">
+<html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('booking_page.title'); ?></title>

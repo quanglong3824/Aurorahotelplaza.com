@@ -26,7 +26,8 @@ register_shutdown_function(function () {
         error_log("Fatal error: {$error['message']} in {$error['file']} on line {$error['line']}");
         // If buffer is empty, output something
         if (ob_get_length() === 0) {
-            echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Lỗi</title></head><body>';
+            echo '<!DOCTYPE html><html translate="no"><head>
+    <meta name="google" content="notranslate" /><meta charset="utf-8"><title>Lỗi</title></head><body>';
             echo '<h1>Có lỗi xảy ra</h1><p>Vui lòng thử lại sau hoặc liên hệ hỗ trợ.</p>';
             echo '<a href="javascript:history.back()">Quay lại</a></body></html>';
         }

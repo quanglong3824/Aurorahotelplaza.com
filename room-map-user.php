@@ -63,8 +63,9 @@ try {
 $total_rooms = array_sum($stats);
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php echo $page_title; ?> - Aurora Hotel Plaza</title>

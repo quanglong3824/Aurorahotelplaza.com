@@ -1,0 +1,86 @@
+🟢 Giai đoạn 1: Fix Giao diện (UI/UX) cơ bản & CSS (Rủi ro thấp, làm nhanh)
+  Chủ yếu sửa CSS (Tailwind) và thẻ HTML, không đụng đến logic PHP sâu.
+   1. Lỗi Header & Nền: Thanh header menu tệp màu nền chữ; "Xem tất cả phòng/căn hộ" không rõ chữ; Chi tiết căn hộ nền tệp header.
+    - Thanh header ( đổi màu nền nhẹ, tăng độ tương phản hoặc tăng nhẹ độ nhám về màu đen)
+    - Xem tất cả căn hộ đổi chữu thành màu trắng
+    - Chi tiết căn hộ áp dụng giải pháp chung với header nền 
+   2. Giao diện Mobile (Responsive):
+      - 2 nút < > slider không chuyển ảnh được.
+        - fix nhẹ hoạt động là được
+      - Header ép logo (cần thu nhỏ booking/login).
+        - bỏ nút tutorial thay vào đó là flat button nổi ( tệp style với menu chính [style liquid])
+      - Menu dropdown chỉ click được icon, chưa click được toàn vùng.
+        - mở rộng có thể click vào chữ thay vì mỗi icon
+      - Chỗ thêm giường phụ tràn layout.
+        kiểm tra Responsive toàn trang booking và tối ưu giao diện cho mobile, đang bị quá to và quá tràn ở các thẻ chứa form và một số form cuối pha đặt
+      - Form Search Rooms (chọn người lớn/trẻ em) màu chữ trùng nền (không thấy lựa chọn).
+        - fix nhẹ style, áp dụng một số bo góc và liquid
+   3. Form & Layout:
+      - Dấu tích phần Đăng ký bị lệch ra ngoài.
+        - canh giữa lại thành phần 
+      - Nút "Trở về" ở trang Xem QR bị chìm dưới header.
+        - kiểm tra và đưa lên index cao, đảm bảo đúng thứ tự ( dev chưa test chưa biết vị trí )
+      - Form "Kiểm tra nhanh đơn đặt phòng": Lỗi nút X bị lệch, chữ và nền trắng trùng nhau (ở các trang phụ và trang booking), lỗi hiển thị lịch sử nhập.
+        - fix nhẹ UI 
+   4. Hình ảnh & Bản đồ: Lỗi không hiện ảnh bản đồ trên PC; Bản đồ trên Mobile hiển thị sai tỷ lệ 16x9 (thực tế khung 3x4).
+        - Thêm 1 bản đồ vào footer, và chỉnh lại form cho đúng
+   5. Text nhỏ: Sửa lỗi hiển thị 2.000.000VND//night (dư một dấu /) trong trang chi tiết phòng.
+        - này sửa cơ bản, kiểm tra song song csdl mẫu có trong code 
+
+
+  🟡 Giai đoạn 2: Đa ngôn ngữ (i18n) & Định dạng (Rủi ro trung bình)
+  Sửa file `lang/en.php` hoặc thay đổi cách gọi hàm `_e()`. Cần sinh file `.sql` nếu dữ liệu nằm trong DB.
+   1. Lỗi hiện tiếng Việt khi đang chọn tiếng Anh (EN):
+      - Thông báo lỗi password trang Đăng nhập.
+        - kiểm tra xem đã có key chưa
+      - Khai báo khách và thêm giường phụ (Booking).
+        - một số chưa có key 
+      - Chi tiết đặt phòng (Loại hình, loại giá, "chat với nhân viên", lịch sử "Bởi: username").
+        - chưa có key en
+      - Giao diện Xem QR (Thông tin KH, Thông tin phòng).
+        - chưa có key en
+   2. Định dạng hiển thị:
+      - Chỗ chọn phòng dùng đ, trong khi tổng tiền dùng VND -> Thống nhất thành VND. 
+        - Thống nhất thành VND và các chữ như "đầy đủ thì thành VNDầy VNDủ" phối hợp với csdl mẫu để sinh sql ngoài để excute prod
+      - Xuất bill PDF hiển thị m/d/y nhưng bên ngoài hiển thị d/m/y -> Thống nhất định dạng. 
+        - Thống nhất toàn bộ về mm/dd/yyyy( chuẩn quốc tế), phối hợp với csdl để chỉnh sửa toàn bộ
+      - Form Chọn ngày: Giới hạn năm 4 số (yyyy) thay vì nhập vô hạn. 
+        - giới hạn 12 31 và tới năm 2030 (admin có thể cấu hình mở tới năm bao nhiêu, ví dụ admin chỉnh giới hạn tới 2040 thì max lịch tới 2040)
+      - Sau khi đổi ngôn ngữ bằng Option trong trang booking, màu chữ bị tệp với nền.
+       -    xổ dọc đổi ngôn ngữ trong trang booking bị thành màu trắg
+   3. Tính năng thiếu: Chưa có bản EN cho phần "Hướng dẫn sử dụng".
+    - chưa có key
+
+
+  🟠 Giai đoạn 3: Tính năng & Logic (Rủi ro cao hơn)
+  Can thiệp vào logic Javascript (AJAX) hoặc PHP xử lý.
+   1. Validation Booking: Input Số điện thoại và Email chưa bắt kiểm tra định dạng -> Cần thêm validation JS và PHP trước khi cho phép đi   
+      tiếp.
+      -  value chuẩn định dạng mail , sđt, full chuẩn requied định dạng, (không chèn chữ với số trong input only number)
+   2. Lỗi đơ trang Booking: Giới hạn lượt booking báo "Vui lòng thử lại sau 5'!" nhưng làm đơ UI luôn, phải F5 mới thao tác được -> Cần sửa 
+      logic AJAX/JS xử lý sau khi hiện thông báo lỗi.
+      -  xử lý đồng bộ và ajax hoặc các giải pháp ổn hơn
+   3. Cải thiện luồng (Đề xuất): Tính năng "Tìm phòng nhanh" cần chuyển hướng hoặc render ra danh sách các phòng phù hợp với ảnh để khách dễ      chọn hơn.
+    - cần phối hợp với csdl để tạo màn hình mới đưa khách tới gợi ý và cho khách chọn > tới loại phòng đó
+
+  🔴 Giai đoạn 4: Chatbot AI ( tạm chưa nâng cấp )
+  Liên quan đến Prompt, API Key hoặc Token Limit của AI.
+   1. AI thi thoảng bị cắt cụt câu: "Chào quý khách, tôi là Aurora... Để tôi".
+   2. AI không list ra phòng: "có các loại phòng sau:" nhưng sau đó trống không.
+   3. Khách đồng ý đặt phòng nhưng AI lại báo bận hoặc không xuất mã QR đặt phòng như kịch bản.
+
+   Phát sinh từ tester
+
+    các trang phòng và liên quan tới phòng đang bị thay thế chữ đ bằng VND ( đã nêu trên )
+    lỗi căn đều button line và các phần tử ở thẻ phòng 
+    các trang dịch vụ cũng bị dính lỗi chữ đ mô tả thành VND "VNDủ thay vì đầy đủ"
+    trang galley chưa có phân trang ổn và chưa tô sáng nút trang nào để cho khách biết 
+    tất cả trang nào còn là địa chỉ Biên Hòa thì bỏ 
+    địa chỉ chung chính thức số 253 Phạm Văn Thuận, Khu phố 2, Phường Tam Hiệp, Đồng Nai
+    tất cả đều thống nhất về dạng ngày tháng năm như sau ( mm/dd/yyyy) đã nêu trên
+    lỗi dịch vụ tiệc cưới đang ở free ( phối hợp với csdl mẫu để có .sql)
+    booking 
+        + mục thêm người chỉ tối đa 2 hoặc 1, giường tối đa 2 hoặc 1,
+        _ thêm vào note cho khách hàng biết đây là giá tham khảo sẽ có biến động khi khách tới check in phòng với lễ tân
+    
+    

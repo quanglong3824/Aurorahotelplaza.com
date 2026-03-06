@@ -17,9 +17,10 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html class="light" lang="<?php echo getLang(); ?>">
+<html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <title><?php _e('apartment_detail.indochine_family_title'); ?></title>
     <script src="../assets/js/tailwindcss-cdn.js"></script>

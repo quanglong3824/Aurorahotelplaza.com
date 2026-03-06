@@ -10,8 +10,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_name = $_SESSION['user_name'] ?? 'User';
 ?>
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html translate="no" class="light" lang="vi">
 <head>
+    <meta name="google" content="notranslate" />
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>Đăng xuất - Aurora Hotel Plaza</title>
