@@ -75,6 +75,7 @@ return [
         'currency' => 'VND',
         'guest_add' => 'extra guest',
         'processing' => 'Processing...',
+        'help' => 'Help',
     ],
 
     // Booking
@@ -111,7 +112,7 @@ return [
     'booking_status' => [
         'pending' => 'Pending',
         'confirmed' => 'Confirmed',
-        'checked_in' => 'Checked In',
+        'checked_in' => 'In House',
         'checked_out' => 'Checked Out',
         'cancelled' => 'Cancelled',
         'no_show' => 'No Show',
@@ -192,6 +193,7 @@ return [
         'login' => 'Login',
         'register' => 'Register',
         'logout' => 'Logout',
+        'login_required' => 'Please login to perform this action',
         'email' => 'Email',
         'password' => 'Password',
         'remember_me' => 'Remember me',
@@ -281,6 +283,7 @@ return [
 
     // Homepage
     'home' => [
+        'read_more' => 'Read more',
         'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Bien Hoa',
         'reception_24_7' => 'Reception 24/24',
         'about_us' => 'About Us',
@@ -335,9 +338,9 @@ return [
         'why_choose_us' => 'Why Choose Us',
         'why_choose_title' => 'Why Choose Aurora Hotel Plaza',
         'why_choose_desc' => 'With our commitment to providing the best experience, Aurora Hotel Plaza is the top choice for your vacation and business trips.',
-        'address' => '253 Pham Van Thuan, Bien Hoa',
+        'address' => '253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province',
         'prime_location' => 'Prime Location',
-        'prime_location_desc' => 'Located at 253 Pham Van Thuan - central Bien Hoa, near tourist attractions, shopping centers and industrial zones.',
+        'prime_location_desc' => 'Located at 253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province - central Bien Hoa, near tourist attractions, shopping centers and industrial zones.',
         'professional_service' => 'Professional Service',
         'professional_service_desc' => 'Well-trained, friendly and dedicated staff serving 24/7.',
         'reasonable_price' => 'Reasonable Price',
@@ -356,7 +359,7 @@ return [
         'come_to_aurora' => 'Come to Aurora Hotel Plaza',
         'location_desc' => 'Located in a central position, easy access to important destinations in the area.',
         'address_label' => 'Address',
-        'address_full' => '253 Pham Van Thuan, KP2<br>Tam Hiep Ward, Bien Hoa City<br>Dong Nai Province',
+        'address_full' => '253, Pham Van Thuan, KP2<br>Tam Hiep Ward, Bien Hoa City<br>Dong Nai Province',
         'phone_label' => 'Phone',
         'email_label' => 'Email',
         'working_hours_label' => 'Working Hours',
@@ -731,16 +734,16 @@ return [
         'deluxe_title' => 'Deluxe Room - Aurora Hotel Plaza',
         'deluxe_name' => 'Deluxe Room',
         'deluxe_subtitle' => 'Luxurious space with modern amenities',
-        'deluxe_desc' => 'The 35m² Deluxe Room features modern design with premium King size bed and beautiful city views. Room is equipped with full amenities including flat screen TV, minibar, safe and private bathroom with massage shower. Perfect choice for couples or business travelers.',
+        'deluxe_desc' => 'The 35m² Deluxe Room features modern design with premium King size bed and beautiful city views. Room is equipped with full amenities including flat screen TV, minibar, safe and private bathroom with vòi sen massage. Perfect choice for couples or business travelers.',
         'premium_deluxe_title' => 'Premium Deluxe Room - Aurora Hotel Plaza',
         'premium_deluxe_name' => 'Premium Deluxe Room',
         'premium_deluxe_subtitle' => 'More luxurious space with beautiful views and upgraded amenities',
-        'premium_deluxe_desc' => 'The 45m² Premium Deluxe Room features premium design with special King size bed and beautiful city views from high floor. Room is equipped with upgraded amenities including 50" flat screen TV, premium minibar, electronic safe and luxurious bathroom with bathtub and massage shower. Perfect choice for guests with high quality requirements.',
+        'premium_deluxe_desc' => 'The 45m² Premium Deluxe Room features premium design with special King size bed and beautiful city views from high floor. Room is equipped with upgraded amenities including 50" flat screen TV, premium minibar, electronic safe and luxurious bathroom with bathtub and vòi sen massage. Perfect choice for guests with high quality requirements.',
         'premium_deluxe_badge' => 'Premium',
         'premium_twin_title' => 'Premium Twin Room - Aurora Hotel Plaza',
         'premium_twin_name' => 'Premium Twin Room',
         'premium_twin_subtitle' => 'Two premium single beds, ideal for friends or colleagues',
-        'premium_twin_desc' => 'The 42m² Premium Twin Room features modern design with 2 premium single beds and beautiful city views. Room is equipped with full amenities including 50" flat screen TV, minibar, safe and private bathroom with massage shower. Perfect choice for friends, colleagues or families with children.',
+        'premium_twin_desc' => 'The 42m² Premium Twin Room features modern design with 2 premium single beds and beautiful city views. Room is equipped with full amenities including 50" flat screen TV, minibar, safe and private bathroom with vòi sen massage. Perfect choice for friends, colleagues or families with children.',
         'premium_twin_badge' => 'Flexible',
         'vip_suite_title' => 'VIP Suite - Aurora Hotel Plaza',
         'vip_suite_name' => 'VIP Suite',
@@ -769,7 +772,7 @@ return [
         'amenity_safe' => 'In-room safe',
         'amenity_desk' => 'Work desk',
         'amenity_bathroom' => 'Private bathroom',
-        'amenity_shower' => 'Massage shower',
+        'amenity_shower' => 'Vòi sen massage',
         'amenity_hairdryer' => 'Hair dryer',
         'amenity_toiletries' => 'Toiletries',
         'amenity_slippers' => 'Slippers',
@@ -1556,6 +1559,7 @@ return [
         'num_children_age' => 'Children (under 12 years old)',
         'extra_charge_suggestion' => 'Surcharge Suggestion',
         'extra_guest' => 'Extra Guests (surcharge)',
+        'extra_guest_subtitle' => 'Enter child height for accurate surcharge',
         'add_guest' => 'Add Guest',
         'extra_guest_note' => '* Extra guest fee is per night, includes buffet breakfast',
         'extra_bed' => 'Extra Bed',
@@ -1643,7 +1647,7 @@ return [
         // Statuses
         'status_pending' => 'Pending',
         'status_confirmed' => 'Confirmed',
-        'status_checked_in' => 'Checked In',
+        'status_checked_in' => 'In House',
         'status_checked_out' => 'Checked Out',
         'status_cancelled' => 'Cancelled',
         'status_no_show' => 'No Show',
@@ -1651,19 +1655,72 @@ return [
 
     // Inquiry / Apartment contact
     'inquiry' => [
-        'contact_btn' => 'Contact for Consultation',
-        'submit' => 'Send Inquiry',
-        'name' => 'Full Name',
+        'message_desc' => 'Message content',
+        'not_inquiry_type' => 'This is not an inquiry type',
+        // Form
+        'title' => 'Apartment Inquiry',
+        'subtitle' => 'Leave your information to receive detailed apartment consultation',
+        'apartment_name' => 'Interested Apartment',
+        'your_info' => 'Your Information',
+        'full_name' => 'Full Name',
         'email' => 'Email',
         'phone' => 'Phone Number',
-        'message' => 'Message',
-        'check_in' => 'Expected Check-in',
-        'duration' => 'Rental Duration',
-        'guests' => 'Number of Guests',
-        'success' => 'Inquiry sent successfully! We will contact you within 24 hours.',
-        'error' => 'An error occurred. Please try again.',
-        'required' => 'Please fill in all required fields.',
-        'title' => 'Send Inquiry',
-        'subtitle' => 'We will contact you as soon as possible',
+        'preferred_dates' => 'Preferred Dates',
+        'check_in' => 'Desired Check-in Date',
+        'check_out' => 'Desired Check-out Date',
+        'duration_type' => 'Rental Mode',
+        'short_term' => 'Short-term (under 1 month)',
+        'long_term' => 'Long-term (1-6 months)',
+        'monthly' => 'By Month',
+        'yearly' => 'By Year',
+        'num_adults' => 'Adults',
+        'num_children' => 'Children',
+        'message' => 'Message / Specific Requests',
+        'message_placeholder' => 'E.g.: I am interested in renting an apartment long-term from Jan 2025...',
+        'submit' => 'Send Inquiry',
+        'submitting' => 'Sending...',
+
+        // Buttons
+        'contact_btn' => 'Contact for Consultation',
+        'contact_now' => 'Contact Now',
+        'request_consultation' => 'Request Consultation',
+
+        // Messages
+        'success_message' => 'Your inquiry has been sent! We will contact you within 24 hours.',
+        'success_title' => 'Inquiry Sent Successfully!',
+        'success_desc' => 'Thank you for your interest in apartments at Aurora Hotel Plaza. Our team will contact you shortly.',
+        'inquiry_code' => 'Inquiry Code',
+        'create_failed' => 'An error occurred while sending. Please try again.',
+
+        // Validation
+        'field_required' => 'Please fill in information',
+        'invalid_email' => 'Invalid email',
+        'invalid_phone' => 'Invalid phone number',
+        'apartment_not_found' => 'Apartment not found',
+
+        // Status
+        'status_new' => 'New',
+        'status_contacted' => 'Contacted',
+        'status_in_progress' => 'In Progress',
+        'status_converted' => 'Converted',
+        'status_cancelled' => 'Cancelled',
+        'status_closed' => 'Closed',
+
+        // Priority
+        'priority_low' => 'Low',
+        'priority_normal' => 'Normal',
+        'priority_high' => 'High',
+        'priority_urgent' => 'Urgent',
+
+        // Admin
+        'inquiries_list' => 'Inquiry List',
+        'inquiry_detail' => 'Inquiry Detail',
+        'assign_staff' => 'Assign Staff',
+        'add_notes' => 'Add Notes',
+        'convert_to_booking' => 'Convert to Booking',
+
+        // Notes
+        'note_apartment' => 'Apartment - Contact for consultation',
+        'note_no_online_booking' => 'Apartments do not support online booking. Please contact for consultation.',
     ],
 ];

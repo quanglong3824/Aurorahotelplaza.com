@@ -1150,6 +1150,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 <link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
 <link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/ui-fixes.css'); ?>?v=<?php echo $asset_version; ?>">
 <script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 <script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 

@@ -664,6 +664,13 @@ function handleChildrenChange() {
 
 // Add extra guest entry
 function addExtraGuest() {
+    // LIMIT TO MAX 2 (As requested by tester)
+    const extraGuestsCount = document.querySelectorAll('.extra-guest-entry').length;
+    if (extraGuestsCount >= 2) {
+        showToast('Tối đa chỉ được thêm 2 khách phụ thu', 'error');
+        return;
+    }
+
     // Check if at max occupancy
     const numAdults = parseInt(document.getElementById('num_adults')?.value) || 1;
     const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;

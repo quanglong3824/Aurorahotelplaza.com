@@ -433,18 +433,18 @@ foreach ($room_types as $room) {
                                         </div>
                                     </div>
 
-                                    <!-- Check-in Date -->
+                                        <!-- Check-in Date -->
                                     <div class="form-group">
                                         <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
                                         <input type="date" name="check_in_date" id="check_in_date" class="form-input"
-                                            value="<?php echo $prefilled_check_in; ?>" required>
+                                            value="<?php echo $prefilled_check_in; ?>" min="<?php echo date('Y-m-d'); ?>" max="2030-12-31" required>
                                     </div>
 
                                     <!-- Check-out Date -->
                                     <div class="form-group" id="checkout_group">
                                         <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
                                         <input type="date" name="check_out_date" id="check_out_date" class="form-input"
-                                            value="<?php echo $prefilled_check_out; ?>" required>
+                                            value="<?php echo $prefilled_check_out; ?>" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="2030-12-31" required>
                                     </div>
                                 </div>
 
@@ -964,6 +964,9 @@ foreach ($room_types as $room) {
                                                 class="text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1">
                                                 <span class="material-symbols-outlined text-sm mt-0.5">info</span>
                                                 <span><?php _e('booking_form.note_price_estimate'); ?></span>
+                                            </p>
+                                            <p class="text-xs text-red-500 dark:text-red-400 mt-2 font-medium italic">
+                                                * Đây là giá tham khảo sẽ có biến động khi khách tới check in phòng với lễ tân
                                             </p>
                                         </div>
                                     </div>

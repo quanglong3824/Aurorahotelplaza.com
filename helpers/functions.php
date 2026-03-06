@@ -14,28 +14,34 @@ function sanitize($data) {
  * Validate email
  */
 function validateEmail($email) {
-    return filter_var($email, FILTER_VALIDATE_EMAIL);
+    if (empty($email)) return false;
+    // Strict Regex for email
+    return preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email);
 }
 
 /**
  * Validate phone (Vietnamese format)
  */
 function validatePhone($phone) {
+    if (empty($phone)) return false;
     $phone = preg_replace('/\s+/', '', $phone);
-    return preg_match('/^(0|\+84)[0-9]{9,10}$/', $phone);
+    // Vietnamese phone format: 10 digits starting with 0, or +84
+    return preg_match('/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/', $phone);
 }
 
 /**
  * Format currency VND
  */
 function formatCurrency($amount) {
+    // Thống nhất dùng VND (không dùng đ)
     return number_format($amount, 0, ',', '.') . ' VND';
 }
 
 /**
- * Format date Vietnamese
+ * Format date (Thống nhất mm/dd/yyyy cho toàn hệ thống bao gồm Bill)
  */
 function formatDate($date, $format = 'm/d/Y') {
+    if (empty($date)) return '';
     return date($format, strtotime($date));
 }
 
