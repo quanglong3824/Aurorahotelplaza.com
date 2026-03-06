@@ -511,20 +511,20 @@ function handleAdultsChange() {
     const numChildrenInput = document.getElementById('num_children');
     const extraBedsInput = document.getElementById('extra_beds');
     const toggleExtraGuestsBtn = document.getElementById('toggle_extra_guests_btn');
-    
+
     // Nút +/- của trẻ em
     const btnMinusChild = numChildrenInput?.parentElement?.querySelector('button:first-child');
     const btnPlusChild = numChildrenInput?.parentElement?.querySelector('button:last-child');
-    
+
     // Nút +/- của giường phụ
     const btnMinusBed = extraBedsInput?.parentElement?.querySelector('button:first-child');
     const btnPlusBed = extraBedsInput?.parentElement?.querySelector('button:last-child');
-    
+
     if (!numAdultsInput || !numChildrenInput) return;
-    
+
     const numAdults = parseInt(numAdultsInput.value) || 1;
     let numChildren = parseInt(numChildrenInput.value) || 0;
-    
+
     // Case 1: 3 người lớn
     if (numAdults >= 3) {
         // Tắt khả năng thêm trẻ em hoàn toàn
@@ -532,12 +532,12 @@ function handleAdultsChange() {
         numChildrenInput.disabled = true;
         if (btnMinusChild) btnMinusChild.classList.add('opacity-50', 'cursor-not-allowed');
         if (btnPlusChild) btnPlusChild.classList.add('opacity-50', 'cursor-not-allowed');
-        
+
         numChildren = 0;
-        
+
         // Auto-add 1 extra guest ẩn cho Backend tính tiền 400k (không hiện trên UI extra guests)
         extraGuests = [{ id: 999, height: 1.7, type: 'over1m3', isAdult: true, isLocked: true }];
-        
+
         // Auto-add 1 extra bed (bắt buộc)
         if (extraBedsInput) {
             extraBedsInput.value = 1;
@@ -546,12 +546,12 @@ function handleAdultsChange() {
             if (btnMinusBed) btnMinusBed.classList.add('opacity-50', 'cursor-not-allowed');
             if (btnPlusBed) btnPlusBed.classList.add('opacity-50', 'cursor-not-allowed');
         }
-        
-        // Ẩn UI Khách thêm 
+
+        // Ẩn UI Khách thêm
         const extraGuestsSection = document.getElementById('extra_guests_section');
         if (extraGuestsSection) extraGuestsSection.classList.add('hidden');
         if (toggleExtraGuestsBtn) toggleExtraGuestsBtn.classList.add('hidden');
-        
+
     } else {
         // Case 2: 1-2 người lớn -> Cho phép thêm trẻ em
         numChildrenInput.disabled = false;
@@ -563,13 +563,11 @@ function handleAdultsChange() {
         if (extraBedsInput) {
             extraBedsInput.disabled = false;
             
-            // Nếu có 2 người lớn + 2 trẻ em thì giữ 1 giường phụ
+            // Nếu có 2 người lớn + 2 trẻ em thì giữ 1 giường phụ (bắt buộc)
             if (numAdults === 2 && numChildren === 2) {
-                if (extraBedsInput.value == 0) {
-                    extraBedsInput.value = 1;
-                    extraBedLocked = true; // Khóa lại vì là bắt buộc
-                }
-            } 
+                extraBedsInput.value = 1;
+                extraBedLocked = true; // Khóa lại vì là bắt buộc
+            }
             // Nếu giảm xuống 1 người lớn thì chưa chắc cần giường phụ, thiết lập về 0 nếu chưa muốn
             else if (numAdults < 2 && extraBedsInput.value == 1 && numChildren == 0) {
                 extraBedsInput.value = 0;
@@ -578,21 +576,21 @@ function handleAdultsChange() {
             if (btnMinusBed) btnMinusBed.classList.remove('opacity-50', 'cursor-not-allowed');
             if (btnPlusBed) btnPlusBed.classList.remove('opacity-50', 'cursor-not-allowed');
         }
-        
+
         // Khôi phục UI Khách thêm
         const extraGuestsSection = document.getElementById('extra_guests_section');
         if (extraGuestsSection) extraGuestsSection.classList.remove('hidden');
         if (toggleExtraGuestsBtn) toggleExtraGuestsBtn.classList.remove('hidden');
-        
+
         // Filter bỏ đi người lớn thứ 3 đang bị khóa trong list
         extraGuests = extraGuests.filter(g => !g.isAdult);
-        
-        // Nếu số lượng khách vượt quá maxOccupancy (ví dụ 3) 
+
+        // Nếu số lượng khách vượt quá maxOccupancy (ví dụ 4)
         if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
             numChildren = ROOM_CONFIG.maxOccupancy - numAdults;
             numChildrenInput.value = numChildren;
         }
-        
+
         // Tái đồng bộ dữ liệu extraGuests (thêm form nếu có trẻ nhỏ, ẩn form nếu chưa có)
         if (numChildren > 0 && extraGuests.length === 0) {
             for (let i = 0; i < numChildren; i++) {
@@ -608,7 +606,7 @@ function handleAdultsChange() {
             document.getElementById('extra_guests_list')?.classList.add('hidden');
         }
     }
-    
+
     renderExtraGuests();
     // calculateTotal(); sẽ được gọi sau handleAdultsChange ở nơi gọi nó
 }
@@ -626,9 +624,10 @@ function handleChildrenChange() {
     let numChildren = parseInt(numChildrenInput.value) || 0;
 
     // Ép giới hạn: (Max = Tổng số người - Người lớn)
-    if (numAdults >= 2 && numChildren > 1) {
-        numChildren = 1;
-        numChildrenInput.value = 1;
+    // Cho phép 2 người lớn + 2 trẻ em (tổng 4)
+    if (numAdults === 2 && numChildren > 2) {
+        numChildren = 2;
+        numChildrenInput.value = 2;
     }
 
     if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
