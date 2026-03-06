@@ -16,11 +16,14 @@ const EXTRA_GUEST_FEES = {
 };
 
 // ========== ROOM CONFIGURATION ==========
-// 4 loại phòng: Deluxe, Double Deluxe, Aurora Studio, Twin
+// CẤU HÌNH MỚI (2026):
+// - Tối đa 3 người lớn
+// - Tối đa 2 trẻ em
+// - Tổng tối đa 4 người (3 lớn + 1 nhỏ HOẶC 2 lớn + 2 nhỏ)
 const ROOM_CONFIG = {
     maxAdults: 3,
-    maxChildren: 1,
-    maxOccupancy: 3, // 3 người lớn HOẶC 2 lớn + 1 nhỏ
+    maxChildren: 2,
+    maxOccupancy: 4, // 3 lớn + 1 nhỏ HOẶC 2 lớn + 2 nhỏ
     extraBedFor3Adults: 1 // Bắt buộc 1 giường phụ khi có 3 người lớn
 };
 

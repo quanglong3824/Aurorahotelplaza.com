@@ -408,13 +408,14 @@ foreach ($room_types as $room) {
                                                 <span class="material-symbols-outlined">remove</span>
                                             </button>
                                             <input type="number" name="num_adults" id="num_adults"
-                                                class="form-input text-center w-20" min="1" max="10" value="2" required
+                                                class="form-input text-center w-20" min="1" max="3" value="2" required
                                                 readonly>
                                             <button type="button" onclick="adjustValue('num_adults', 1)"
                                                 class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
                                         </div>
+                                        <p class="text-xs text-gray-500 mt-1">Tối đa 3 người lớn</p>
                                     </div>
 
                                     <!-- Number of Children -->
@@ -426,12 +427,13 @@ foreach ($room_types as $room) {
                                                 <span class="material-symbols-outlined">remove</span>
                                             </button>
                                             <input type="number" name="num_children" id="num_children"
-                                                class="form-input text-center w-20" min="0" max="5" value="0" readonly>
+                                                class="form-input text-center w-20" min="0" max="2" value="0" readonly>
                                             <button type="button" onclick="adjustValue('num_children', 1)"
                                                 class="w-10 h-10 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
                                         </div>
+                                        <p class="text-xs text-gray-500 mt-1">Tối đa 2 trẻ em (tổng tối đa 4 người)</p>
                                     </div>
 
                                         <!-- Check-in Date -->
