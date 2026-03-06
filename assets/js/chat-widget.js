@@ -558,21 +558,68 @@ const ChatWidget = {
                 `;
             }
 
-            // View QR button
+            // View QR button — hiển thị ảnh QR INLINE trong chat
             const qrRegex = /\[VIEW_QR_BTN:\s*code=([^,\]]+),\s*id=([^\]]+)\]/i;
             const qrMatch = contentHtml.match(qrRegex);
             if (qrMatch) {
                 const qrcode = qrMatch[1].trim();
-                const qrid = qrMatch[2].trim();
-                contentHtml = contentHtml.replace(qrMatch[0], '').trim();
+                const qrid   = qrMatch[2].trim();
+                const qrSrc  = this._url(`api/chat/get-booking-qr.php?code=${encodeURIComponent(qrcode)}`);
+                const dlUrl  = this._url(`profile/api/download-qrcode.php?code=${encodeURIComponent(qrcode)}`);
+                const viewUrl= this._url(`profile/view-qrcode.php?id=${qrid}`);
+                contentHtml  = contentHtml.replace(qrMatch[0], '').trim();
                 extraUiHtml += `
-                    <div class="cw-ai-card qr" style="margin-top:8px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; text-align:center;">
-                        <div style="color:#64748b; font-size:11px; margin-bottom:4px;">MÃ ĐẶT PHÒNG</div>
-                        <div style="font-size:16px; font-weight:bold; color:#1e293b; margin-bottom:10px;">${qrcode}</div>
-                        <a href="/profile/view-qrcode.php?id=${qrid}" target="_blank" 
-                           style="display:block; background:#3b82f6; color:#fff; padding:10px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold;">
-                           XEM MÃ QR CHECK-IN
-                        </a>
+                    <div class="cw-ai-card qr-inline" style="
+                        margin-top:10px; padding:14px 12px; 
+                        background:linear-gradient(135deg,#eff6ff,#f0fdf4); 
+                        border:1.5px solid #bfdbfe; border-radius:12px; text-align:center;
+                    ">
+                        <div style="font-size:11px; font-weight:700; color:#1e40af; letter-spacing:.05em; margin-bottom:6px;">
+                            🎫 MÃ ĐẶT PHÒNG
+                        </div>
+                        <div style="font-size:18px; font-weight:900; color:#1e293b; letter-spacing:.08em; margin-bottom:10px;">
+                            ${qrcode}
+                        </div>
+
+                        <!-- Ảnh QR thật, tải từ server -->
+                        <div style="display:inline-block; background:#fff; padding:8px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.12); margin-bottom:10px;">
+                            <img 
+                                src="${qrSrc}" 
+                                alt="QR ${qrcode}" 
+                                width="160" height="160"
+                                style="display:block; border-radius:6px;"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+                            />
+                            <div style="display:none;width:160px;height:160px;line-height:160px;font-size:11px;color:#94a3b8;">Không tải được QR</div>
+                        </div>
+
+                        <!-- Nút Tải & Xem -->
+                        <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px;">
+                            <a href="${dlUrl}" download="QR-${qrcode}.png"
+                               style="flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+                                      background:#2563eb; color:#fff; padding:9px 6px; border-radius:8px;
+                                      text-decoration:none; font-size:11px; font-weight:700; box-shadow:0 2px 5px rgba(37,99,235,.3);">
+                               <span class="material-symbols-outlined" style="font-size:14px;">download</span>
+                               Tải QR về máy
+                            </a>
+                            <a href="${viewUrl}" target="_blank"
+                               style="flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+                                      background:#f1f5f9; color:#334155; padding:9px 6px; border-radius:8px;
+                                      text-decoration:none; font-size:11px; font-weight:600; border:1px solid #e2e8f0;">
+                               <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+                               Xem trang QR
+                            </a>
+                        </div>
+
+                        <!-- Cảnh báo lưu QR -->
+                        <div style="
+                            background:#fefce8; border:1px solid #fde047; border-radius:8px; 
+                            padding:8px 10px; font-size:10.5px; color:#854d0e; text-align:left; line-height:1.5;
+                        ">
+                            ⚠️ <b>Lưu ý:</b> Tin nhắn trong chat có thể bị mất sau khi thoát.
+                            Vui lòng <b>tải QR về máy</b> hoặc chụp ảnh màn hình để sử dụng khi check-in. 
+                            Quý khách cũng có thể xem lại QR trong mục <b>Lịch sử đặt phòng</b> sau khi đăng nhập.
+                        </div>
                     </div>
                 `;
             }

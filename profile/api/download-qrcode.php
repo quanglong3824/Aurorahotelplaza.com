@@ -15,8 +15,17 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
-    $booking_id = $_GET['booking_id'] ?? 0;
-    $booking_code = $_GET['code'] ?? '';
+    $booking_id = intval($_GET['booking_id'] ?? 0);
+    $booking_code = trim($_GET['code'] ?? '');
+
+    // Nếu truy cập bằng booking_code (từ chat widget, không cần đăng nhập)
+    // Nếu truy cập bằng booking_id, cần xác thực session
+    $is_public_code = !empty($booking_code) && !$booking_id;
+
+    if (!$is_public_code && !isset($_SESSION['user_id'])) {
+        http_response_code(401);
+        die('Unauthorized');
+    }
 
     if (!$booking_id && !$booking_code) {
         throw new Exception('Booking ID or code is required');
@@ -52,12 +61,13 @@ try {
         throw new Exception('Booking not found');
     }
 
-    // Check permission
-    $is_staff = in_array($_SESSION['user_role'], ['admin', 'receptionist', 'sale']);
-    $is_owner = $booking['user_id'] == $_SESSION['user_id'];
-
-    if (!$is_staff && !$is_owner) {
-        throw new Exception('Unauthorized access');
+    // Check permission (chỉ áp dụng cho truy cập bằng booking_id có session)
+    if (!$is_public_code && isset($_SESSION['user_id'])) {
+        $is_staff = in_array($_SESSION['user_role'] ?? '', ['admin', 'receptionist', 'sale']);
+        $is_owner = $booking['user_id'] == $_SESSION['user_id'];
+        if (!$is_staff && !$is_owner) {
+            throw new Exception('Unauthorized access');
+        }
     }
 
     // Generate QR code data - Format dễ đọc
