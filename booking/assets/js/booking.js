@@ -557,15 +557,24 @@ function handleAdultsChange() {
         numChildrenInput.disabled = false;
         if (btnMinusChild) btnMinusChild.classList.remove('opacity-50', 'cursor-not-allowed');
         if (btnPlusChild) btnPlusChild.classList.remove('opacity-50', 'cursor-not-allowed');
-        
+
         // Release Khóa của Giường phụ
         extraBedLocked = false;
         if (extraBedsInput) {
             extraBedsInput.disabled = false;
+            
+            // Nếu có 2 người lớn + 2 trẻ em thì giữ 1 giường phụ
+            if (numAdults === 2 && numChildren === 2) {
+                if (extraBedsInput.value == 0) {
+                    extraBedsInput.value = 1;
+                    extraBedLocked = true; // Khóa lại vì là bắt buộc
+                }
+            } 
             // Nếu giảm xuống 1 người lớn thì chưa chắc cần giường phụ, thiết lập về 0 nếu chưa muốn
-            if (numAdults < 2 && extraBedsInput.value == 1 && numChildren == 0) {
+            else if (numAdults < 2 && extraBedsInput.value == 1 && numChildren == 0) {
                 extraBedsInput.value = 0;
             }
+            
             if (btnMinusBed) btnMinusBed.classList.remove('opacity-50', 'cursor-not-allowed');
             if (btnPlusBed) btnPlusBed.classList.remove('opacity-50', 'cursor-not-allowed');
         }
@@ -610,23 +619,23 @@ function handleChildrenChange() {
     const numChildrenInput = document.getElementById('num_children');
     const extraBedsInput = document.getElementById('extra_beds');
     const toggleExtraGuestsBtn = document.getElementById('toggle_extra_guests_btn');
-    
+
     if (!numChildrenInput || !numAdultsInput) return;
-    
+
     const numAdults = parseInt(numAdultsInput.value) || 1;
     let numChildren = parseInt(numChildrenInput.value) || 0;
-    
+
     // Ép giới hạn: (Max = Tổng số người - Người lớn)
     if (numAdults >= 2 && numChildren > 1) {
         numChildren = 1;
         numChildrenInput.value = 1;
     }
-    
+
     if (numAdults + numChildren > ROOM_CONFIG.maxOccupancy) {
         numChildren = ROOM_CONFIG.maxOccupancy - numAdults;
         numChildrenInput.value = numChildren;
     }
-    
+
     // Lọc lại mảng nếu có người lớn bị lỗi kẹt trong extraGuests (đề phòng)
     extraGuests = extraGuests.filter(g => !g.isAdult);
 
@@ -640,7 +649,7 @@ function handleChildrenChange() {
         } else if (extraGuests.length > numChildren) {
              extraGuests = extraGuests.slice(0, numChildren);
         }
-        
+
         document.getElementById('extra_guests_list')?.classList.remove('hidden');
         if(toggleExtraGuestsBtn) toggleExtraGuestsBtn.innerHTML = '<span class="material-symbols-outlined text-sm">remove_circle</span> Ẩn';
     } else {
@@ -648,7 +657,18 @@ function handleChildrenChange() {
         document.getElementById('extra_guests_list')?.classList.add('hidden');
         if(toggleExtraGuestsBtn) toggleExtraGuestsBtn.innerHTML = '<span class="material-symbols-outlined text-sm">add_circle</span> Thêm khách';
     }
-    
+
+    // ========== YÊU CẦU GIƯỜNG PHỤ KHI CÓ 2 NGƯỜI LỚN + 2 TRẺ EM ==========
+    // Nếu có 2 người lớn + 2 trẻ em thì tự động thêm 1 giường phụ
+    if (numAdults === 2 && numChildren === 2 && extraBedsInput) {
+        const currentBeds = parseInt(extraBedsInput.value) || 0;
+        if (currentBeds === 0) {
+            extraBedsInput.value = 1;
+            extraBedLocked = true; // Khóa không cho thay đổi
+            showToast('Đã tự động thêm 1 giường phụ cho 2 trẻ em', 'info');
+        }
+    }
+
     // Gợi ý giường phụ nếu có em bé nhưng vẫn chưa đủ 3 người lớn
     const needsExtraBed = extraGuests.some(g => g.height >= 1.3 && !g.isAdult);
     const bedWarning = document.getElementById('extra_bed_warning');
@@ -660,7 +680,7 @@ function handleChildrenChange() {
     } else {
         if(bedWarning) bedWarning.classList.add('hidden');
     }
-    
+
     renderExtraGuests();
     // calculateTotal(); sẽ được gọi sau ở ngoài
 }
