@@ -82,7 +82,7 @@ try {
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('profile_loyalty.title'); ?></title>
-    <script src="../assets/js/tailwindcss-cdn.js"></script>
+    <script src="../assets/css/tailwind-output.css"></script>
     <link href="../assets/css/fonts.css" rel="stylesheet" />
 
     <script src="../assets/js/tailwind-config.js"></script>

@@ -20,7 +20,9 @@ $current_path = $_SERVER['PHP_SELF'] ?? '';
 if (strpos($current_path, '/admin/') !== false)
     return;
 
-$is_logged = true; // Cho phép everyone chat
+// Kiểm tra session trước khi cho phép chat
+session_start();
+$is_logged = isset($_SESSION['user_id']) || isset($_SESSION['chat_guest_id']);
 $user_name = $_SESSION['user_name'] ?? __('chat.guest');
 $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 

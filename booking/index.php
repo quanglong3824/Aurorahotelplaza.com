@@ -113,15 +113,12 @@ foreach ($room_types as $room) {
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('booking_page.title'); ?></title>
 
-    <!-- Tailwind CSS -->
-    <script src="../assets/js/tailwindcss-cdn.js"></script>
+    <!-- Tailwind CSS (Local Build) -->
+    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="../assets/css/fonts.css" rel="stylesheet" />
 
     <!-- Google Fonts -->
     <link href="../assets/css/fonts.css" rel="stylesheet" />
-
-    <!-- Tailwind Configuration -->
-    <script src="../assets/js/tailwind-config.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">

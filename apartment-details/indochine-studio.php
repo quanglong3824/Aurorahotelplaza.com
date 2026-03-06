@@ -25,7 +25,7 @@ try {
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('apartment_detail.indochine_studio_title'); ?></title>
-    <script src="../assets/js/tailwindcss-cdn.js"></script>
+    <script src="../assets/css/tailwind-output.css"></script>
     <link href="../assets/css/fonts.css" rel="stylesheet" />
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">

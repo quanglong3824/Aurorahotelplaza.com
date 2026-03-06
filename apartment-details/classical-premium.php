@@ -23,7 +23,7 @@ try {
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <title><?php _e('apartment_detail.classical_premium_title'); ?></title>
-    <script src="../assets/js/tailwindcss-cdn.js"></script>
+    <script src="../assets/css/tailwind-output.css"></script>
     <link href="../assets/css/fonts.css" rel="stylesheet" />
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
