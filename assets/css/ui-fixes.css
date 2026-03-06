@@ -105,7 +105,71 @@ body {
     margin-top: 0;
 }
 
-/* 2. Fix "Xem tất cả phòng/căn hộ" contrast */
+/* 2. REFINED QUICK BOOKING FORM (Hero Slider) */
+.glass-booking-form {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    padding: 24px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+}
+
+.glass-input-solid {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 0 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+}
+
+.glass-input-solid:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15) !important;
+    outline: none !important;
+}
+
+.glass-select {
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    background-size: 16px !important;
+    padding-right: 40px !important;
+}
+
+/* Fix Mobile Layout & Input Cutting */
+@media (max-width: 768px) {
+    .glass-booking-form {
+        padding: 20px !important;
+        margin: 0 10px !important;
+        border-radius: 20px !important;
+    }
+
+    .glass-booking-form form {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; /* Chia 2 cột cho ngày */
+        gap: 12px !important;
+    }
+
+    /* Các ô chọn người và nút tìm kiếm chiếm 100% chiều rộng */
+    .glass-booking-form .flex-col:nth-child(n+3),
+    .glass-booking-form button {
+        grid-column: span 2 !important;
+    }
+
+    .glass-input-solid {
+        height: 50px !important;
+        font-size: 14px !important;
+    }
+}
+
+/* 3. Fix "Xem tất cả phòng/căn hộ" contrast */
 .btn-view-all {
     color: #ffffff !important;
     background: rgba(212, 175, 55, 0.2);
