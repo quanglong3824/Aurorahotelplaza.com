@@ -443,8 +443,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                         <span class="material-symbols-outlined">calendar_today</span>
                         <?php _e('hero.check_in'); ?>
                     </label>
-                    <input type="date" id="floating-checkin" name="check_in" min="<?php echo date('Y-m-d'); ?>" max="2030-12-31"
-                        value="<?php echo date('Y-m-d'); ?>" class="glass-input-solid">
+                    <input type="date" id="floating-checkin" name="check_in" min="<?php echo date('Y-m-d'); ?>"
+                        max="2030-12-31" value="<?php echo date('Y-m-d'); ?>" class="glass-input-solid">
                 </div>
                 <div class="floating-booking-field">
                     <label for="floating-checkout">
@@ -676,6 +676,18 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         inputWrap.classList.add('track-shake');
         setTimeout(() => inputWrap.classList.remove('track-shake'), 600);
     }
+
+    // Measure Header height dynamically for exact padding
+    function syncHeaderHeight() {
+        const headerObj = document.getElementById('main-header');
+        if (headerObj) {
+            document.documentElement.style.setProperty('--header-height', headerObj.offsetHeight + 'px');
+        }
+    }
+    window.addEventListener('load', syncHeaderHeight);
+    window.addEventListener('resize', syncHeaderHeight);
+    document.addEventListener('DOMContentLoaded', syncHeaderHeight);
+    syncHeaderHeight(); // init
 </script>
 
 <style>

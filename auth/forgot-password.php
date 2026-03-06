@@ -219,8 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php include '../includes/header.php'; ?>
 
-        <main id="authMain" class="flex h-full grow flex-col items-center justify-start pb-24 px-4 min-h-screen"
-            style="padding-top: 180px;">
+        <main class="flex h-full grow flex-col items-center justify-start pb-24 px-4 min-h-screen">
             <div class="auth-container">
                 <!-- Header -->
                 <div class="text-center mb-10">
@@ -339,17 +338,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="<?php echo asset('js/main.js'); ?>?v=<?php echo time(); ?>"></script>
     <script src="<?php echo BASE_URL; ?>/auth/assets/js/auth.js?v=<?php echo time(); ?>"></script>
-    <script>
-        function adjustAuthPadding() {
-            const header = document.getElementById('main-header');
-            const main = document.getElementById('authMain');
-            if (header && main) {
-                main.style.paddingTop = header.offsetHeight + 'px';
-            }
-        }
-        adjustAuthPadding();
-        window.addEventListener('resize', adjustAuthPadding);
-    </script>
 </body>
 
 </html>
