@@ -66,14 +66,14 @@
     transform: translateY(0);
 }
 
-/* GIẢI PHÁP: Đẩy Hero xuống để không bị đè bởi Header/Booking Bar */
+/* GIẢI PHÁP: Đẩy Hero xuống nhẹ để không bị đè quá nhiều bởi Header/Booking Bar */
 main.flex.h-full.grow.flex-col {
-    padding-top: 80px !important; /* Dịch chuyển nhẹ bằng chiều cao header */
+    padding-top: 40px !important; /* Giảm xuống còn 40px để cân đối */
 }
 
 @media (max-width: 768px) {
     main.flex.h-full.grow.flex-col {
-        padding-top: 70px !important; /* Mobile header mỏng hơn */
+        padding-top: 30px !important; /* Mobile giảm xuống 30px */
     }
 }
 
