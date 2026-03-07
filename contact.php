@@ -56,9 +56,8 @@ if ($is_logged_in) {
     </style>
     
     <!-- Tailwind CSS -->
-    <script src="assets/css/tailwind-output.css"></script>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet"/>
-    <script src="assets/js/tailwind-config.js"></script>
     
     <!-- Main stylesheets with versioning -->
     <?php $css_version = '1.0.7'; ?>

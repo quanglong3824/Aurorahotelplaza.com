@@ -41,9 +41,8 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
     <title><?php echo htmlspecialchars($page_title); ?></title>
     <meta name="description"
         content="<?php echo htmlspecialchars(substr(_f($service, 'description') ?? '', 0, 160)); ?>">
-    <script src="assets/css/tailwind-output.css"></script>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
-    <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/pages-glass.css">
 </head>

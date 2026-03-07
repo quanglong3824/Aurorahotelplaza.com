@@ -151,7 +151,6 @@ try {
     <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Tailwind Configuration -->
-    <script src="<?php echo assetVersion('js/tailwind-config.js'); ?>"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">

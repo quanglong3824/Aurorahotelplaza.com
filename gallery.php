@@ -98,9 +98,8 @@ $category_names = [
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('gallery_page.title'); ?></title>
     <meta name="description" content="<?php _e('gallery_page.page_subtitle', ['count' => $total_images]); ?>">
-    <script src="assets/css/tailwind-output.css"></script>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
-    <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 

@@ -65,8 +65,7 @@ try {
     <title><?php _e('blog_page.title'); ?></title>
 
     <!-- Scripts & Styles -->
-    <script src="assets/css/tailwind-output.css"></script>
-    <script src="assets/js/tailwind-config.js"></script>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />

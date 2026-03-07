@@ -183,9 +183,8 @@ function getContactStatusBadge($status)
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('profile_full.title'); ?> - <?php echo htmlspecialchars($user['full_name']); ?></title>
 
-    <script src="assets/css/tailwind-output.css"></script>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
-    <script src="assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">

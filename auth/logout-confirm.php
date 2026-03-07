@@ -16,9 +16,8 @@ $user_name = $_SESSION['user_name'] ?? 'User';
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>Đăng xuất - Aurora Hotel Plaza</title>
-<script src="../assets/css/tailwind-output.css"></script>
+<link href="../assets/css/tailwind-output.css" rel="stylesheet" />
 <link href="../assets/css/fonts.css" rel="stylesheet"/>
-<script src="../assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="../assets/css/liquid-glass.css">
 <link rel="stylesheet" href="./assets/css/auth.css">

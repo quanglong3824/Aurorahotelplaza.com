@@ -23,9 +23,8 @@ try {
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <title><?php _e('apartment_detail.indochine_family_title'); ?></title>
-    <script src="../assets/css/tailwind-output.css"></script>
+    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="../assets/css/fonts.css" rel="stylesheet" />
-    <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
     <link rel="stylesheet" href="../assets/css/room-detail.css">
