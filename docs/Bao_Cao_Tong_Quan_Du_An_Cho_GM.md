@@ -6,6 +6,20 @@
 
 ---
 
+## MỤC LỤC
+
+1. [TỔNG QUAN VỀ HỆ THỐNG](#1-tổng-quan-về-hệ-thống)
+2. [CHỨC NĂNG DÀNH CHO KHÁCH HÀNG (CỔNG ĐẶT PHÒNG)](#2-chức-năng-dành-cho-khách-hàng-cổng-đặt-phòng)
+3. [CHỨC NĂNG QUẢN TRỊ KHÁCH SẠN (DÀNH CHO NHÂN SỰ)](#3-chức-năng-quản-trị-khách-sạn-dành-cho-nhân-sự)
+   - [A. Nghiệp vụ Lễ Tân & Bán Hàng (Sales & Reception)](#a-nghiệp-vụ-lễ-tân--bán-hàng-sales--reception)
+   - [B. Chăm Sóc Khách Hàng & Marketing (CRM / Chat Center)](#b-chăm-sóc-khách-hàng--marketing-crm--chat-center)
+   - [C. Quản Trị Sản Phẩm & Chính Sách](#c-quản-trị-sản-phẩm--chính-sách)
+   - [D. Hệ Thống Lõi & Phân Quyền Giám Đốc](#d-hệ-thống-lõi--phân-quyền-giám-đốc)
+4. [ƯU ĐIỂM VÀ ĐIỂM NHẤN HIỆN CÓ CỦA HỆ THỐNG](#4-ưu-điểm-và-điểm-nhấn-hiện-có-của-hệ-thống)
+5. [KẾT LUẬN](#5-kết-luận)
+
+---
+
 ## 1. TỔNG QUAN VỀ HỆ THỐNG
 
 Dự án **Aurora Hotel Plaza** không chỉ là một trang web đặt phòng khách sạn thông thường (OTA), mà còn được tích hợp sâu một hệ thống quản lý nội bộ toàn diện dành cho nhân sự khách sạn (PMS - Property Management System).
@@ -70,4 +84,6 @@ Phân hệ quản trị giống như bộ não điều hành mọi hoạt độn
 
 ---
 
-**Kết Luận:** Aurora Hotel Plaza hiện tại là một giải pháp công nghệ toàn diện và ổn định, sẵn sàng hoạt động thương mại. Nó giúp giảm tải chi phí vận hành nhân sự và mang lại trải nghiệm chuyên nghiệp trong mắt khách hàng, tối ưu hóa lợi nhuận kinh doanh.
+## 5. KẾT LUẬN
+
+Aurora Hotel Plaza hiện tại là một giải pháp công nghệ toàn diện và ổn định, sẵn sàng hoạt động thương mại. Nó giúp giảm tải chi phí vận hành nhân sự và mang lại trải nghiệm chuyên nghiệp trong mắt khách hàng, tối ưu hóa lợi nhuận kinh doanh.
