@@ -17,7 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
 $conv_id = (int) ($input['conversation_id'] ?? 0);
-$user_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : (int) $_SESSION['chat_guest_id'];
+$is_logged = isset($_SESSION['user_id']);
+$user_id = $is_logged ? (int) $_SESSION['user_id'] : null;
+$guest_id = $_SESSION['chat_guest_id'] ?? null;
 
 if (!$conv_id) {
     echo json_encode(['success' => false, 'message' => 'Missing conversation_id']);
@@ -30,12 +32,23 @@ try {
         throw new Exception("Database connection failed");
 
     // Check if conversation belongs to user
-    $stmt = $db->prepare("SELECT user_id FROM chat_conversations WHERE conversation_id = ?");
+    $stmt = $db->prepare("SELECT customer_id, guest_id FROM chat_conversations WHERE conversation_id = ?");
     $stmt->execute([$conv_id]);
     $conv = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$conv || $conv['user_id'] != $user_id) {
-        throw new Exception("Conversation not found or access denied");
+    if (!$conv) {
+        throw new Exception("Conversation not found");
+    }
+
+    $is_owner = false;
+    if ($is_logged && $conv['customer_id'] == $user_id) {
+        $is_owner = true;
+    } elseif (!$is_logged && $conv['guest_id'] === $guest_id) {
+        $is_owner = true;
+    }
+
+    if (!$is_owner) {
+        throw new Exception("Access denied");
     }
 
     // Delete all messages to reset the AI context
