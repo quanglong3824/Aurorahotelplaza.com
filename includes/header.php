@@ -292,7 +292,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     <div class="floating-menu-items">
         <!-- Trang chủ -->
         <div class="floating-menu-item">
-            <span class="floating-menu-label"><?php _e('nav.home'); ?></span>
+            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.home'); ?></a>
             <a href="<?php echo $base_path; ?>index.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.home'); ?>">
                 <span class="material-symbols-outlined">home</span>
@@ -301,7 +302,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Phòng & Căn hộ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <span class="floating-menu-label"><?php _e('nav.rooms'); ?></span>
+            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.rooms'); ?></a>
             <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">hotel</span>
@@ -321,7 +323,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Dịch vụ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <span class="floating-menu-label"><?php _e('nav.services'); ?></span>
+            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.services'); ?></a>
             <a href="<?php echo $base_path; ?>services.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">room_service</span>
@@ -351,7 +354,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Khám phá - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <span class="floating-menu-label"><?php _e('nav.explore'); ?></span>
+            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.explore'); ?></a>
             <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">explore</span>
@@ -374,7 +378,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Liên hệ -->
         <div class="floating-menu-item">
-            <span class="floating-menu-label"><?php _e('nav.contact'); ?></span>
+            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.contact'); ?></a>
             <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.contact'); ?>">
                 <span class="material-symbols-outlined">call</span>
@@ -383,7 +388,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Đặt phòng -->
         <div class="floating-menu-item">
-            <span class="floating-menu-label"><?php _e('nav.book_now'); ?></span>
+            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-label"
+                style="text-decoration: none;"><?php _e('nav.book_now'); ?></a>
             <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.book_now'); ?>">
                 <span class="material-symbols-outlined">calendar_month</span>
@@ -393,7 +399,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <?php if ($is_logged_in): ?>
             <!-- Tài khoản -->
             <div class="floating-menu-item">
-                <span class="floating-menu-label"><?php _e('nav.profile'); ?></span>
+                <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-label"
+                    style="text-decoration: none;"><?php _e('nav.profile'); ?></a>
                 <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-btn"
                     aria-label="<?php _e('nav.profile'); ?>">
                     <span class="material-symbols-outlined">account_circle</span>
@@ -402,7 +409,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <?php else: ?>
             <!-- Đăng nhập -->
             <div class="floating-menu-item">
-                <span class="floating-menu-label"><?php _e('nav.login'); ?></span>
+                <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-label"
+                    style="text-decoration: none;"><?php _e('nav.login'); ?></a>
                 <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-btn"
                     aria-label="<?php _e('nav.login'); ?>">
                     <span class="material-symbols-outlined">login</span>
