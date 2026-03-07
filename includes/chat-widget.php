@@ -30,7 +30,7 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     $timestamp = time();
     $_SESSION['chat_guest_id'] = 'guest_' . md5($ip . $timestamp);
     $_SESSION['guest_created_at'] = $timestamp;
-    
+
     // Đặt cookie để duy trì guest session qua các lần truy cập
     if (!isset($_COOKIE['chat_guest_id'])) {
         setcookie('chat_guest_id', $_SESSION['chat_guest_id'], time() + (30 * 24 * 60 * 60), '/', '', false, true);
@@ -40,8 +40,8 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
 // Xác định trạng thái chat
 $is_logged = isset($_SESSION['user_id']);
 $guest_id = $_SESSION['chat_guest_id'] ?? null;
-$user_name = $is_logged 
-    ? ($_SESSION['user_name'] ?? __('chat.guest')) 
+$user_name = $is_logged
+    ? ($_SESSION['user_name'] ?? __('chat.guest'))
     : ('Khách ' . substr($_SESSION['chat_guest_id'], -6));
 $user_init = mb_strtoupper(mb_substr($user_name, 0, 1)) ?: '?';
 
@@ -96,11 +96,8 @@ $cw_base = rtrim(BASE_URL, '/');
             </div>
         </div>
         <button id="cwResetAiBtn" class="cw-close-btn" aria-label="<?php _e('chat.refresh_ai'); ?>"
-            title="<?php _e('chat.clear_history'); ?>" style="margin-right:4px;">
+            title="<?php _e('chat.clear_history'); ?>">
             <span class="material-symbols-outlined" style="font-size:18px">refresh</span>
-        </button>
-        <button id="cwCloseBtn" class="cw-close-btn" aria-label="<?php _e('chat.close_chat'); ?>">
-            <span class="material-symbols-outlined" style="font-size:18px">close</span>
         </button>
     </div>
 
