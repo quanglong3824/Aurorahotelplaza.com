@@ -194,26 +194,8 @@ body {
     font-size: 40px !important;
 }
 
-/* 4. Mobile Menu - Clickable Full Width */
-@media (max-width: 768px) {
-    .floating-menu-item {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-    
-    .floating-menu-btn {
-        width: 100% !important;
-        justify-content: flex-end !important;
-        padding-right: 15px !important;
-        border-radius: 12px !important;
-    }
-
-    .floating-menu-label {
-        pointer-events: none; /* Chữ đi kèm nút click luôn */
-    }
-}
+/* 4. Mobile Menu - Remove Clickable Full Width Override */
+/* (Deleted) */
 
 /* 5. Fix "Giường phụ" & Quantity Selectors in Booking */
 .extra-guest-entry {
