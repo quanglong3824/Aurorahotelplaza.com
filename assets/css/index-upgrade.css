@@ -993,3 +993,78 @@ section#apartments .glass-card-solid img[src=""]::after {
   transform: translate(-50%, -50%);
   font-size: 3rem;
 }
+
+/* ============================================
+   FOOTER FIX - Ensure footer is visible on index
+   ============================================ */
+/* Force footer to be visible with dark background */
+footer,
+footer	main footer {
+  background: #1f2937 !important;
+  /* Slate-800 - consistent with site dark theme */
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+footer a {
+  color: rgba(255, 255, 255, 0.7) !important;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #d4af37 !important;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+footer .text-white,
+footer .text-white\/80,
+footer .text-white\/70,
+footer .text-white\/60,
+footer .text-text-primary-dark,
+footer .text-text-secondary-dark {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+footer h4 {
+  color: white !important;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+footer .border-t {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Footer glass effect */
+footer .glass-footer-wrapper {
+  background: linear-gradient(135deg, rgba(31, 41, 59, 0.95), rgba(17, 24, 39, 0.98));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Dark mode support */
+.dark footer,
+.dark footer.main footer {
+  background: #0f172a !important;
+  /* Slate-900 for dark mode */
+}
+
+/* Ensure footer has proper z-index */
+footer {
+  position: relative;
+  z-index: 10;
+}
+
+/* Footer bottom bar */
+footer .mt-12.pt-8.border-t {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+footer .text-sm.text-white\/60 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Map container in footer - ensure it's visible */
+footer .aspect-w-16.aspect-w-9 {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
