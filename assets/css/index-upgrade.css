@@ -1147,3 +1147,59 @@ footer .btn-glass-secondary:hover {
   background: #b8941f !important;
   color: white !important;
 }
+
+/* FINAL OVERRIDE - Strongest selectors to ensure mobile footer visibility */
+body footer,
+body > footer,
+div footer,
+#main footer,
+main footer,
+body div footer,
+body main footer,
+html body footer {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+  background-image: none !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  display: block !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body footer *,
+body > footer *,
+div footer *,
+#main footer *,
+main footer *,
+body div footer *,
+body main footer *,
+html body footer * {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+  background-image: none !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  fill: rgba(255, 255, 255, 0.85) !important;
+  stroke: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Media query with highest specificity for mobile */
+@media (max-width: 768px) {
+  body footer,
+  body > footer,
+  div footer,
+  #main footer,
+  main footer,
+  body div footer,
+  body main footer,
+  html body footer {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    min-height: auto !important;
+    height: auto !important;
+    display: block !important;
+    width: 100% !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
