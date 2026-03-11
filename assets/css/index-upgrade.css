@@ -997,22 +997,31 @@ section#apartments .glass-card-solid img[src=""]::after {
 /* ============================================
    FOOTER FIX - Ensure footer is visible on index
    ============================================ */
-/* Force footer to be visible with dark background */
+/* Force footer to be visible with dark background - Mobile & Desktop */
 footer,
-footer	main footer {
+footer * {
+  background-color: #1f2937 !important;
   background: #1f2937 !important;
   /* Slate-800 - consistent with site dark theme */
   color: rgba(255, 255, 255, 0.85) !important;
 }
 
+footer {
+  position: relative !important;
+  z-index: 10 !important;
+  display: block !important;
+}
+
 footer a {
   color: rgba(255, 255, 255, 0.7) !important;
   transition: color 0.3s ease;
+  text-decoration: none !important;
 }
 
 footer a:hover {
   color: #d4af37 !important;
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+  text-decoration: underline !important;
 }
 
 footer .text-white,
@@ -1020,18 +1029,60 @@ footer .text-white\/80,
 footer .text-white\/70,
 footer .text-white\/60,
 footer .text-text-primary-dark,
-footer .text-text-secondary-dark {
+footer .text-text-secondary-dark,
+footer p,
+footer span,
+footer div,
+footer li,
+footer ul,
+footer ol,
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer h5,
+footer h6 {
   color: rgba(255, 255, 255, 0.85) !important;
+  fill: rgba(255, 255, 255, 0.85) !important;
 }
 
-footer h4 {
+footer h4,
+footer h3,
+footer h2,
+footer h1 {
   color: white !important;
-  font-weight: 700;
-  letter-spacing: 0.025em;
+  font-weight: 700 !important;
+  letter-spacing: 0.025em !important;
 }
 
 footer .border-t {
   border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Mobile responsive footer - ensure visibility */
+@media (max-width: 768px) {
+  footer {
+    background: #1f2937 !important;
+    position: relative !important;
+    z-index: 10 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    display: block !important;
+  }
+  
+  footer * {
+    background-color: #1f2937 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+  
+  footer .grid {
+    display: grid !important;
+    gap: 1.5rem !important;
+  }
+  
+  footer h4 {
+    color: white !important;
+  }
 }
 
 /* Footer glass effect */
@@ -1043,15 +1094,15 @@ footer .glass-footer-wrapper {
 
 /* Dark mode support */
 .dark footer,
-.dark footer.main footer {
+.dark footer * {
   background: #0f172a !important;
   /* Slate-900 for dark mode */
 }
 
 /* Ensure footer has proper z-index */
 footer {
-  position: relative;
-  z-index: 10;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 /* Footer bottom bar */
@@ -1065,6 +1116,34 @@ footer .text-sm.text-white\/60 {
 
 /* Map container in footer - ensure it's visible */
 footer .aspect-w-16.aspect-w-9 {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* SVG icons in footer - ensure white color */
+footer svg {
+  color: rgba(255, 255, 255, 0.7) !important;
+  fill: rgba(255, 255, 255, 0.7) !important;
+}
+
+footer .glass-social-btn:hover svg {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Button/link colors in footer */
+footer .btn-primary,
+footer .btn-secondary,
+footer .btn-glass-primary,
+footer .btn-glass-secondary {
+  background: #d4af37 !important;
+  color: white !important;
+}
+
+footer .btn-primary:hover,
+footer .btn-secondary:hover,
+footer .btn-glass-primary:hover,
+footer .btn-glass-secondary:hover {
+  background: #b8941f !important;
+  color: white !important;
 }
