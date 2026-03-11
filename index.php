@@ -252,13 +252,13 @@ try {
 
     <!-- Tailwind Configuration -->
 
-    <!-- Custom CSS - Load asynchronously after critical content -->
-    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>" media="print" onload="this.media='all'">
+    <!-- Custom CSS - Essential styles loaded synchronously -->
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
     
     <!-- Preload Hero Images -->
     <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">

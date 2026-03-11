@@ -8,6 +8,8 @@ module.exports = {
     extend: {
       colors: {
         accent: '#d4af37', // Gold color
+        'surface-light': '#f9fafb',
+        'surface-dark': '#1f2937',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

@@ -92,6 +92,30 @@ html {
     --text-secondary-dark: #9ca3af;
 }
 
+/* Custom Surface Background Classes - Fix for missing tailwind classes */
+.bg-surface-light {
+    background-color: var(--surface-light) !important;
+}
+
+.bg-surface-dark {
+    background-color: var(--surface-dark) !important;
+}
+
+.dark .bg-surface-dark {
+    background-color: #111827 !important;
+}
+
+/* Mobile Footer Fix */
+@media (max-width: 768px) {
+    footer.bg-surface-dark {
+        background-color: #1f2937 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 100px;
+    }
+}
+
 /* Material Icons Configuration */
 .material-symbols-outlined {
     font-variation-settings:
