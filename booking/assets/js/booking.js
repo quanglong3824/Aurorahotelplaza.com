@@ -1618,7 +1618,14 @@ function validateStep(step) {
                 }
 
                 if (checkout <= todayStr) {
-                    alert(translations.booking_form.checkout_future);
+                    alert(translations.booking_form.checkout_future || 'Ngày trả phòng phải ở tương lai.');
+                    return false;
+                }
+
+                const diffTime = new Date(checkout).getTime() - new Date(checkin).getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 30) {
+                    alert('Số đêm lưu trú tối đa là 30 đêm theo cấu hình hệ thống, vui lòng chọn lại ngày trả phòng!');
                     return false;
                 }
             }
