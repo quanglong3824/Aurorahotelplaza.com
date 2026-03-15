@@ -161,17 +161,6 @@ function formatMoney($amount, $lang = null) {
 }
 
 /**
- * Format ngày theo ngôn ngữ
- */
-    
-    if ($lang === 'en') {
-        return date('M d, Y', $timestamp);
-    }
-    
-    return date('m/d/Y', $timestamp);
-}
-
-/**
  * Tạo URL với ngôn ngữ
  */
 function langUrl($url, $lang = null) {
