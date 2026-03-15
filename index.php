@@ -298,15 +298,15 @@ try {
                                 <div>
                                     <h3 class="text-2xl font-bold"><?php _e('home.special_offer'); ?></h3>
                                     <p class="text-white/90">
-                                        <?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_percent'))]); ?>
+                                        <?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_value'))]); ?>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-3">
                                 <?php foreach ($active_promotions as $promo): ?>
                                     <div class="glass-promo-code">
-                                        <span><?php echo htmlspecialchars($promo['code']); ?></span>
-                                        <span class="text-sm opacity-80">-<?php echo $promo['discount_percent']; ?>%</span>
+                                        <span><?php echo htmlspecialchars($promo['promotion_code']); ?></span>
+                                        <span class="text-sm opacity-80">-<?php echo (int)$promo['discount_value']; ?>%</span>
                                     </div>
                                 <?php endforeach; ?>
                             </div>

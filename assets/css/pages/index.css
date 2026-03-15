@@ -93,3 +93,43 @@ body { margin: 0; font-family: 'Be Vietnam Pro', Inter, system-ui, -apple-system
 .aspect-w-16 { position: relative; padding-bottom: calc(100% / (16 / 9)); }
 .aspect-w-16\.aspect-h-9 { position: relative; padding-bottom: calc(100% / (16 / 9)); height: 0; }
 .aspect-w-4\.aspect-h-3 { position: relative; padding-bottom: calc(100% / (4 / 3)); height: 0; }
+
+/* --- Promotions Banner (Liquid Glass) --- */
+.glass-promo-banner {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 148, 31, 0.95) 100%);
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-promo-code {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.btn-glass-secondary {
+    background: white;
+    color: #d4af37 !important;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
