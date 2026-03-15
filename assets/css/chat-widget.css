@@ -385,6 +385,26 @@
   gap: 2px;
   scroll-behavior: smooth;
 }
+
+.cw-empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: #94a3b8;
+}
+
+.cw-empty-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.cw-empty-text {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.cw-flex-1 { flex: 1; }
+.cw-overflow-y-auto { overflow-y: auto; }
+
 /* Scrollbar đẹp */
 #cwMessages::-webkit-scrollbar {
   width: 4px;

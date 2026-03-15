@@ -1,0 +1,300 @@
+<!-- Date Range Filter -->
+<div class="card mb-6">
+    <div class="card-body">
+        <form method="GET" class="flex flex-wrap items-center gap-4">
+            <div class="form-group mb-0">
+                <label class="form-label">Từ ngày (From Date)</label>
+                <input type="date" name="date_from" value="<?php echo $date_from; ?>" class="form-input" required>
+            </div>
+
+            <div class="form-group mb-0">
+                <label class="form-label">Đến ngày (To Date)</label>
+                <input type="date" name="date_to" value="<?php echo $date_to; ?>" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-6">
+                <span class="material-symbols-outlined text-sm">search</span>
+                Xem báo cáo (View Report)
+            </button>
+
+            <a href="?date_from=<?php echo date('Y-m-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>"
+                class="btn btn-secondary mt-6">
+                Tháng này (This Month)
+            </a>
+
+            <a href="?date_from=<?php echo date('Y-01-01'); ?>&date_to=<?php echo date('Y-m-d'); ?>"
+                class="btn btn-secondary mt-6">
+                Năm nay (This Year)
+            </a>
+        </form>
+    </div>
+</div>
+
+<!-- Overview Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổng doanh thu (Total Revenue)
+            </p>
+            <span class="material-symbols-outlined text-green-600">trending_up</span>
+        </div>
+        <p class="text-3xl font-bold text-green-600">
+            <?php echo number_format($revenue_stats['total_revenue'], 0, ',', '.'); ?>VND
+        </p>
+        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+            Từ <?php echo $revenue_stats['total_bookings']; ?> đơn đặt phòng (bookings)
+        </p>
+    </div>
+
+    <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Giá trị TB/đơn (Avg
+                Value/Booking)</p>
+            <span class="material-symbols-outlined text-blue-600">receipt_long</span>
+        </div>
+        <p class="text-3xl font-bold text-blue-600">
+            <?php echo number_format($revenue_stats['avg_booking_value'], 0, ',', '.'); ?>VND
+        </p>
+        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+            Trung bình mỗi đơn (Average per booking)
+        </p>
+    </div>
+
+    <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tỷ lệ lấp đầy (Occupancy Rate)
+            </p>
+            <span class="material-symbols-outlined text-purple-600">hotel</span>
+        </div>
+        <p class="text-3xl font-bold text-purple-600">
+            <?php echo number_format($occupancy_rate, 1); ?>%
+        </p>
+        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+            <?php echo $occupancy['occupied_rooms']; ?>/<?php echo $occupancy['total_rooms']; ?> phòng (rooms)
+        </p>
+    </div>
+
+    <div class="stat-card">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Đơn bị hủy (Cancelled)</p>
+            <span class="material-symbols-outlined text-red-600">cancel</span>
+        </div>
+        <p class="text-3xl font-bold text-red-600">
+            <?php echo $revenue_stats['cancelled_bookings']; ?>
+        </p>
+        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+            <?php
+            $cancel_rate = $revenue_stats['total_bookings'] > 0 ?
+                ($revenue_stats['cancelled_bookings'] / $revenue_stats['total_bookings']) * 100 : 0;
+            echo number_format($cancel_rate, 1);
+            ?>% tổng đơn (of total)
+        </p>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Daily Revenue Chart -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="font-semibold">Doanh thu theo ngày (Daily Revenue)</h3>
+        </div>
+        <div class="card-body">
+            <?php if (empty($daily_revenue)): ?>
+                <div class="empty-state py-8">
+                    <span class="empty-state-icon material-symbols-outlined">show_chart</span>
+                    <p class="empty-state-description">Không có dữ liệu trong khoảng thời gian này (No data in this period)
+                    </p>
+                </div>
+            <?php else: ?>
+                <div class="space-y-2">
+                    <?php foreach ($daily_revenue as $day): ?>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm w-24"><?php echo date('m/d/Y', strtotime($day['date'])); ?></span>
+                            <div
+                                class="flex-1 bg-background-light dark:bg-background-dark rounded-full h-8 relative overflow-hidden">
+                                <div class="bg-accent h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
+                                    style="width: <?php echo min(100, ($day['revenue'] / max(array_column($daily_revenue, 'revenue'))) * 100); ?>%">
+                                    <?php echo number_format($day['revenue'], 0, ',', '.'); ?>VND
+                                </div>
+                            </div>
+                            <span class="text-sm w-16 text-right"><?php echo $day['bookings']; ?> đơn (bookings)</span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Status Distribution -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="font-semibold">Phân bố trạng thái đơn (Status Distribution)</h3>
+        </div>
+        <div class="card-body">
+            <?php if (empty($status_distribution)): ?>
+                <div class="empty-state py-8">
+                    <span class="empty-state-icon material-symbols-outlined">pie_chart</span>
+                    <p class="empty-state-description">Không có dữ liệu (No data)</p>
+                </div>
+            <?php else: ?>
+                <div class="space-y-3">
+                    <?php
+                    $total_status = array_sum(array_column($status_distribution, 'count'));
+                    $status_labels = [
+                        'pending' => 'Chờ xác nhận (Pending)',
+                        'confirmed' => 'Đã xác nhận (Confirmed)',
+                        'checked_in' => 'Đã nhận phòng (Checked In)',
+                        'checked_out' => 'Đã trả phòng (Checked Out)',
+                        'cancelled' => 'Đã hủy (Cancelled)',
+                        'no_show' => 'Không đến (No Show)'
+                    ];
+                    $status_colors = [
+                        'pending' => 'bg-yellow-500',
+                        'confirmed' => 'bg-blue-500',
+                        'checked_in' => 'bg-green-500',
+                        'checked_out' => 'bg-gray-500',
+                        'cancelled' => 'bg-red-500',
+                        'no_show' => 'bg-orange-500'
+                    ];
+                    foreach ($status_distribution as $status):
+                        $percentage = ($status['count'] / $total_status) * 100;
+                        ?>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span
+                                    class="text-sm"><?php echo $status_labels[$status['status']] ?? $status['status']; ?></span>
+                                <span class="text-sm font-medium"><?php echo $status['count']; ?>
+                                    (<?php echo number_format($percentage, 1); ?>%)</span>
+                            </div>
+                            <div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2">
+                                <div class="<?php echo $status_colors[$status['status']] ?? 'bg-gray-500'; ?> h-2 rounded-full"
+                                    style="width: <?php echo $percentage; ?>%"></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Room Performance -->
+<div class="card mb-6">
+    <div class="card-header">
+        <h3 class="font-semibold">Hiệu suất theo loại phòng (Room Type Performance)</h3>
+    </div>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Loại phòng (Room Type)</th>
+                    <th>Số đơn (Bookings)</th>
+                    <th>Doanh thu (Revenue)</th>
+                    <th>Số đêm TB (Avg Nights)</th>
+                    <th>Doanh thu TB/đơn (Avg Revenue/Booking)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($room_performance)): ?>
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
+                            Không có dữ liệu (No data)
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($room_performance as $room): ?>
+                        <tr>
+                            <td class="font-medium"><?php echo htmlspecialchars($room['type_name']); ?></td>
+                            <td><?php echo $room['bookings']; ?></td>
+                            <td class="font-medium"><?php echo number_format($room['revenue'], 0, ',', '.'); ?>VND</td>
+                            <td><?php echo number_format($room['avg_nights'], 1); ?> đêm (nights)</td>
+                            <td><?php echo number_format($room['revenue'] / $room['bookings'], 0, ',', '.'); ?>VND</td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Top Customers -->
+<div class="card mb-6">
+    <div class="card-header">
+        <h3 class="font-semibold">Top 10 khách hàng (Top 10 Customers)</h3>
+    </div>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Khách hàng (Customer)</th>
+                    <th>Email</th>
+                    <th>Số đơn (Bookings)</th>
+                    <th>Tổng chi tiêu (Total Spent)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($top_customers)): ?>
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
+                            Không có dữ liệu (No data)
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($top_customers as $index => $customer): ?>
+                        <tr>
+                            <td class="font-bold"><?php echo $index + 1; ?></td>
+                            <td class="font-medium"><?php echo htmlspecialchars($customer['full_name']); ?></td>
+                            <td><?php echo htmlspecialchars($customer['email']); ?></td>
+                            <td><?php echo $customer['total_bookings']; ?></td>
+                            <td class="font-medium text-green-600">
+                                <?php echo number_format($customer['total_spent'], 0, ',', '.'); ?>VND
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Payment Methods -->
+<?php if (!empty($payment_methods)): ?>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="font-semibold">Phương thức thanh toán (Payment Methods)</h3>
+        </div>
+        <div class="card-body">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <?php
+                $method_labels = [
+                    // 'vnpay' => 'VNPay',
+                    'cash' => 'Tiền mặt (Cash)',
+                    'bank_transfer' => 'Chuyển khoản (Bank Transfer)',
+                    'credit_card' => 'Thẻ tín dụng (Credit Card)'
+                ];
+                foreach ($payment_methods as $method):
+                    ?>
+                    <div class="stat-card">
+                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
+                            <?php echo $method_labels[$method['payment_method']] ?? $method['payment_method']; ?>
+                        </p>
+                        <p class="text-xl font-bold"><?php echo $method['count']; ?> giao dịch (transactions)</p>
+                        <p class="text-sm text-green-600 mt-1">
+                            <?php echo number_format($method['total_amount'], 0, ',', '.'); ?>VND
+                        </p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Export Button -->
+<div class="flex justify-end mt-6 no-print">
+    <button onclick="window.print()" class="btn btn-primary">
+        <span class="material-symbols-outlined text-sm">print</span>
+        In báo cáo (Print)
+    </button>
+</div>

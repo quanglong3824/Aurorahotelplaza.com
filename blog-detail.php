@@ -1,106 +1,23 @@
-KJHYTDRAWE4564
 <?php
 session_start();
 require_once 'config/database.php';
 require_once 'helpers/language.php';
+require_once 'controllers/FrontBlogDetailController.php';
+
 initLanguage();
 
-$slug = $_GET['slug'] ?? '';
-$success = '';
-$error = '';
+$controller = new FrontBlogDetailController();
+$data = $controller->getData();
 
-if (empty($slug)) {
+if (!$data) {
     header('Location: blog.php');
     exit;
 }
 
-try {
-    $db = getDB();
+extract($data);
+// $post, $comments, $related_posts, $success, $error are now available
 
-    // Get post
-    $stmt = $db->prepare("
-        SELECT p.*, u.full_name as author_name, u.avatar, bc.category_name, bc.category_name_en, bc.slug as category_slug
-        FROM blog_posts p
-        LEFT JOIN users u ON p.author_id = u.user_id
-        LEFT JOIN blog_categories bc ON p.category_id = bc.category_id
-        WHERE p.slug = ? AND p.status = 'published'
-    ");
-    $stmt->execute([$slug]);
-    $post = $stmt->fetch();
-
-    if (!$post) {
-        header('Location: blog.php');
-        exit;
-    }
-
-    // Update views
-    $stmt = $db->prepare("UPDATE blog_posts SET views = views + 1 WHERE post_id = ?");
-    $stmt->execute([$post['post_id']]);
-
-    // Get blog_comments
-    $stmt = $db->prepare("
-        SELECT c.*, u.full_name as user_name, u.avatar
-        FROM blog_comments c
-        LEFT JOIN users u ON c.user_id = u.user_id
-        WHERE c.post_id = ? AND c.status = 'approved'
-        ORDER BY c.created_at DESC
-    ");
-    $stmt->execute([$post['post_id']]);
-    $blog_comments = $stmt->fetchAll();
-
-    // Get related posts
-    $stmt = $db->prepare("
-        SELECT * FROM blog_posts
-        WHERE status = 'published' AND post_id != ? AND category_id = ?
-        ORDER BY published_at DESC
-        LIMIT 3
-    ");
-    $stmt->execute([$post['post_id'], $post['category_id']]);
-    $related_posts = $stmt->fetchAll();
-
-    // Fix image path - convert ../uploads/ to uploads/
-    if (!empty($post['featured_image']) && strpos($post['featured_image'], '../uploads/') === 0) {
-        $post['featured_image'] = str_replace('../uploads/', 'uploads/', $post['featured_image']);
-    }
-    if (!empty($post['gallery_images'])) {
-        $gallery = json_decode($post['gallery_images'], true);
-        if (is_array($gallery)) {
-            $post['gallery_images'] = json_encode(array_map(function ($img) {
-                return strpos($img, '../uploads/') === 0 ? str_replace('../uploads/', 'uploads/', $img) : $img;
-            }, $gallery));
-        }
-    }
-
-    // Handle comment submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
-        if (!isset($_SESSION['user_id'])) {
-            $error = __('blog_page.login_required');
-        } elseif (isset($post['allow_comments']) && (int) $post['allow_comments'] === 0) {
-            $error = __('blog_page.comments_disabled');
-        } else {
-            $content = trim($_POST['content'] ?? '');
-
-            if (empty($content)) {
-                $error = __('blog_page.comment_empty');
-            } else {
-                $author_name = $_SESSION['user_name'] ?? 'User';
-                $author_email = $_SESSION['user_email'] ?? '';
-                $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? ($_SERVER['REMOTE_ADDR'] ?? null);
-
-                $stmt = $db->prepare("
-                    INSERT INTO blog_comments (post_id, user_id, author_name, author_email, content, status, ip_address)
-                    VALUES (?, ?, ?, ?, ?, 'pending', ?)
-                ");
-                $stmt->execute([$post['post_id'], $_SESSION['user_id'], $author_name, $author_email, $content, $ip_address]);
-                $success = __('blog_page.comment_pending');
-            }
-        }
-    }
-
-} catch (Exception $e) {
-    header('Location: blog.php');
-    exit;
-}
+$blog_comments = $comments; // For compatibility with existing variable name in view
 ?>
 <!DOCTYPE html>
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">

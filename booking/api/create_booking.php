@@ -1,540 +1,85 @@
 <?php
-session_start();
+/**
+ * Aurora Hotel Plaza - Create Booking API
+ * Refactored to OOP N+ & Removed VNPAY
+ */
+
 header('Content-Type: application/json');
+session_start();
 
 require_once '../../config/database.php';
-require_once '../../helpers/logger.php';
-require_once '../../helpers/booking-validator.php'; // Anti-spam & overlap detection
+require_once '../../config/load_env.php';
+require_once '../../helpers/functions.php';
+require_once '../../helpers/booking-validator.php';
+require_once '../../helpers/language.php';
 
-// Get POST data
-$input_data = $_POST;
+// Load Core OOP Classes
+require_once '../../src/Core/DTOs/GuestDTO.php';
+require_once '../../src/Core/Repositories/RoomRepository.php';
+require_once '../../src/Core/Repositories/BookingRepository.php';
+require_once '../../src/Core/Services/PricingService.php';
+require_once '../../src/Core/Services/BookingService.php';
 
-// Handle JSON input
-$content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-if (stripos($content_type, 'application/json') !== false) {
-    $input_json = file_get_contents('php://input');
-    $input_data = json_decode($input_json, true) ?? [];
-}
+use Aurora\Core\Repositories\RoomRepository;
+use Aurora\Core\Repositories\BookingRepository;
+use Aurora\Core\Services\PricingService;
+use Aurora\Core\Services\BookingService;
 
-$room_type_id = $input_data['room_type_id'] ?? null;
-$check_in_date = $input_data['check_in_date'] ?? null;
-$check_out_date = $input_data['check_out_date'] ?? null;
-$num_guests = $input_data['num_guests'] ?? 1;
-$num_adults = intval($input_data['num_adults'] ?? $num_guests);
-$num_children = intval($input_data['num_children'] ?? 0);
-$guest_name = trim($input_data['guest_name'] ?? '');
-$guest_email = trim($input_data['guest_email'] ?? '');
-$guest_phone = trim($input_data['guest_phone'] ?? '');
-$special_requests = $input_data['special_requests'] ?? '';
-$payment_method = $input_data['payment_method'] ?? 'cash';
+initLanguage();
 
-// Booking type: 'standard', 'short_stay', or 'inquiry'
-$booking_type_input = $input_data['booking_type'] ?? 'standard';
-$is_inquiry_mode = $booking_type_input === 'inquiry';
-$is_short_stay = $booking_type_input === 'short_stay';
-
-// Apartment Inquiry specific fields
-$inquiry_message = $input_data['message'] ?? $input_data['inquiry_message'] ?? '';
-$duration_type = $input_data['duration_type'] ?? 'short_term';
-
-// Extra guests and beds
-$extra_beds = intval($input_data['extra_beds'] ?? 0);
-$extra_guest_fee = floatval($input_data['extra_guest_fee'] ?? 0);
-$extra_bed_fee = floatval($input_data['extra_bed_fee'] ?? 0);
-$extra_guests_data = $input_data['extra_guests_data'] ?? '[]';
-
-// Get calculated values from frontend
-$calculated_total = floatval($input_data['calculated_total'] ?? 0);
-$calculated_nights = intval($input_data['calculated_nights'] ?? 0);
-$frontend_room_price = floatval($input_data['room_price'] ?? 0);
-$price_type_used = $input_data['price_type_used'] ?? 'double';
-
-// Validate required fields
-if (!$room_type_id || !$check_in_date || !$check_out_date || !$guest_name || !$guest_email || !$guest_phone) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Vui lòng điền đầy đủ thông tin bắt buộc'
-    ]);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     exit;
 }
-
-if (!filter_var($guest_email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Định dạng email không hợp lệ'
-    ]);
-    exit;
-}
-
-if (!preg_match('/^[0-9]{9,15}$/', preg_replace('/[^0-9]/', '', $guest_phone))) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Định dạng số điện thoại không hợp lệ'
-    ]);
-    exit;
-}
-
-// ========== ANTI-SPAM & OVERLAP DETECTION ==========
-$user_id = $_SESSION['user_id'] ?? null;
-$rate_limit_id = getRateLimitIdentifier();
-
-// 1. Check rate limiting (chống spam requests)
-$rate_limit = checkRateLimit($rate_limit_id, $max_requests = 5, $time_window = 60); // 5 requests/phút
-if (!$rate_limit['allowed']) {
-    echo json_encode([
-        'success' => false,
-        'message' => $rate_limit['message'],
-        'retry_after' => $rate_limit['retry_after']
-    ]);
-    exit;
-}
-
-// 2. Check for existing unpaid/pending bookings (chống spam đặt phòng)
-$spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
-if (!$spam_check['allowed']) {
-    // Log spam attempt
-    error_log("Booking spam detected - User: " . ($user_id ?? $guest_email) . " - Message: " . $spam_check['message']);
-
-    echo json_encode([
-        'success' => false,
-        'message' => $spam_check['message'],
-        'existing_bookings' => $spam_check['existing_bookings']
-    ]);
-    exit;
-}
-
-// 3. Check for overlapping bookings (chồng chéo ngày)
-$overlap_check = checkBookingOverlap($user_id, $guest_email, $guest_phone, $check_in_date, $check_out_date);
-if (!$overlap_check['allowed']) {
-    echo json_encode([
-        'success' => false,
-        'message' => $overlap_check['message'],
-        'overlapping_bookings' => $overlap_check['overlapping_bookings']
-    ]);
-    exit;
-}
-// ========== END ANTI-SPAM ==========
 
 try {
     $db = getDB();
+    
+    // Initialize OOP Services
+    $roomRepo = new RoomRepository($db);
+    $bookingRepo = new BookingRepository($db);
+    $pricingService = new PricingService();
+    $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
 
-    // Get room type details
-    $stmt = $db->prepare("SELECT * FROM room_types WHERE room_type_id = ? AND status = 'active'");
-    $stmt->execute([$room_type_id]);
-    $room_type = $stmt->fetch();
-
-    if (!$room_type) {
-        throw new Exception('Loại phòng không tồn tại');
-    }
-
-    // Calculate nights and total
-    $checkin = new DateTime($check_in_date);
-    $checkout = new DateTime($check_out_date);
-    $today = new DateTime(date('Y-m-d'));
-
-    if ($checkin < $today) {
-        throw new Exception('Ngày nhận phòng không thể nằm trong quá khứ');
-    }
-
-    if ($checkin >= $checkout && !$is_short_stay) {
-        throw new Exception('Ngày trả phòng phải sau ngày nhận phòng');
-    }
-
-    $interval = $checkin->diff($checkout);
-    $num_nights = $interval->days;
-
-    if ($num_nights > 30) {
-        throw new Exception('Số đêm lưu trú tối đa là 30 đêm, nếu ở lâu hơn xin vui lòng liên hệ trực tiếp lễ tân khách sạn');
-    }
-
-    // For short stay, we count as 1 night but use short stay price
-    if ($is_short_stay) {
-        $num_nights = 1;
-    } elseif ($num_nights < 1) {
-        throw new Exception('Số đêm phải lớn hơn 0');
-    }
-
-    // Validate calculated values from frontend
-    if ($calculated_nights !== $num_nights && !$is_short_stay) {
-        error_log("Nights mismatch: frontend=$calculated_nights, backend=$num_nights");
-    }
-
-    // Determine room price based on number of guests, booking type, and category
-    $category = $room_type['category'] ?? 'room';
-
-    // Check for short stay first
-    if ($is_short_stay && $category === 'room') {
-        if (!empty($room_type['price_short_stay'])) {
-            $room_price = (float) $room_type['price_short_stay'];
-            $price_type_used = 'short_stay';
-        } else {
-            throw new Exception('Loại phòng này không hỗ trợ nghỉ ngắn hạn');
-        }
-    } elseif ($category === 'room') {
-        // Hotel Room: use single/double pricing
-        if ($num_adults == 1 && !empty($room_type['price_single_occupancy'])) {
-            $room_price = (float) $room_type['price_single_occupancy'];
-            $price_type_used = 'single';
-        } else {
-            $room_price = !empty($room_type['price_double_occupancy'])
-                ? (float) $room_type['price_double_occupancy']
-                : (float) $room_type['base_price'];
-            $price_type_used = 'double';
-        }
-    } else {
-        // Apartment: use daily/weekly pricing
-        if ($num_nights >= 7) {
-            // Weekly rate
-            if ($num_adults == 1 && !empty($room_type['price_avg_weekly_single'])) {
-                $room_price = (float) $room_type['price_avg_weekly_single'];
-                $price_type_used = 'weekly';
-            } elseif (!empty($room_type['price_avg_weekly_double'])) {
-                $room_price = (float) $room_type['price_avg_weekly_double'];
-                $price_type_used = 'weekly';
-            } else {
-                $room_price = (float) $room_type['base_price'];
-                $price_type_used = 'daily';
-            }
-        } else {
-            // Daily rate
-            if ($num_adults == 1 && !empty($room_type['price_daily_single'])) {
-                $room_price = (float) $room_type['price_daily_single'];
-                $price_type_used = 'daily';
-            } elseif (!empty($room_type['price_daily_double'])) {
-                $room_price = (float) $room_type['price_daily_double'];
-                $price_type_used = 'daily';
-            } else {
-                $room_price = (float) $room_type['base_price'];
-                $price_type_used = 'daily';
-            }
-        }
-    }
-
-    // Validate frontend price matches backend (with tolerance)
-    if (abs($frontend_room_price - $room_price) > 1000) {
-        error_log("Price mismatch: frontend=$frontend_room_price, backend=$room_price (type=$price_type_used)");
-    }
-
-    // Calculate room subtotal
-    $room_subtotal = $room_price * $num_nights;
-
-    // ========== RECALCULATE EXTRA FEES ON BACKEND (for security) ==========
-    require_once '../../helpers/pricing_calculator.php';
-
-    // Parse extra guests data from frontend
-    $extra_guests_array = json_decode($extra_guests_data, true) ?? [];
-
-    // Recalculate extra guest fee on backend
-    $backend_extra_guest_fee = 0;
-    foreach ($extra_guests_array as $guest) {
-        $height = floatval($guest['height'] ?? 1.5);
-
-        // Determine fee based on height
-        if ($height < 1.0) {
-            $fee_per_night = 0;           // Dưới 1m: Miễn phí
-        } elseif ($height >= 1.0 && $height < 1.3) {
-            $fee_per_night = 200000;      // 1m - 1m3: 200,000 VND/đêm
-        } else {
-            $fee_per_night = 400000;      // Trên 1m3: 400,000 VND/đêm
-        }
-
-        // Multiply by number of nights
-        $backend_extra_guest_fee += $fee_per_night * $num_nights;
-    }
-
-    // Recalculate extra bed fee on backend
-    $backend_extra_bed_fee = 0;
-    if ($category === 'room' && $extra_beds > 0) {
-        $extra_bed_price_per_night = 650000; // 650,000 VND/đêm
-        $backend_extra_bed_fee = $extra_beds * $extra_bed_price_per_night * $num_nights;
-    }
-
-    // Log if there's a mismatch between frontend and backend calculations
-    if (abs($extra_guest_fee - $backend_extra_guest_fee) > 1000) {
-        error_log("Extra guest fee mismatch: frontend=$extra_guest_fee, backend=$backend_extra_guest_fee");
-    }
-    if (abs($extra_bed_fee - $backend_extra_bed_fee) > 1000) {
-        error_log("Extra bed fee mismatch: frontend=$extra_bed_fee, backend=$backend_extra_bed_fee");
-    }
-
-    // ========== SIMPLE PRICING CALCULATION ==========
-    // Formula: total_amount = room_subtotal + extra_guest_fee + extra_bed_fee + service_fee - discount
-    $service_fee = 0; // No service fee for now
-    $discount_amount = 0; // No discount for now
-    $total_amount = $room_subtotal + $backend_extra_guest_fee + $backend_extra_bed_fee + $service_fee - $discount_amount;
-
-    // Debug log
-    error_log("=== PRICING BREAKDOWN ===");
-    error_log("room_price (per night): $room_price");
-    error_log("num_nights: $num_nights");
-    error_log("room_subtotal: $room_subtotal");
-    error_log("backend_extra_guest_fee: $backend_extra_guest_fee");
-    error_log("backend_extra_bed_fee: $backend_extra_bed_fee");
-    error_log("service_fee: $service_fee");
-    error_log("discount_amount: $discount_amount");
-    error_log("total_amount: $total_amount");
-    error_log("========================");
-
-    if (abs($calculated_total - $total_amount) > 1000) {
-        error_log("Total mismatch: frontend=$calculated_total, backend=$total_amount");
-    }
-
-    // Generate booking code
-    $booking_prefix = isset($_SESSION['user_id']) ? 'BK' : 'BKG';
-    $booking_code = $booking_prefix . date('Ymd') . strtoupper(substr(uniqid(), -6));
-
-    // Get user_id if logged in
-    $user_id = $_SESSION['user_id'] ?? null;
-
-    // If not logged in, create guest account or use guest user
-    if (!$user_id) {
-        // Check if email exists
-        $stmt = $db->prepare("SELECT user_id FROM users WHERE email = ?");
-        $stmt->execute([$guest_email]);
-        $existing_user = $stmt->fetch();
-
-        if ($existing_user) {
-            $user_id = $existing_user['user_id'];
-        } else {
-            // Create guest user
-            $password_hash = password_hash(uniqid(), PASSWORD_DEFAULT);
-
-            $stmt = $db->prepare("
-                INSERT INTO users (email, password_hash, full_name, phone, user_role, status, email_verified) 
-                VALUES (?, ?, ?, ?, 'guest', 'active', 0)
-            ");
-            $stmt->execute([$guest_email, $password_hash, $guest_name, $guest_phone]);
-            $user_id = $db->lastInsertId();
-        }
-    }
-
-    // Check if this is an inquiry-type booking (apartments)
-    // Determine booking type based on room_type settings
-    $booking_type = $room_type['booking_type'] ?? 'instant';
-    if ($booking_type === 'inquiry' || $is_inquiry_mode) {
-        $booking_type = 'inquiry';
-    }
-
-    // For inquiry bookings (apartments), skip room availability check
-    $room_id = null;
-    if ($booking_type === 'instant') {
-        // Check room availability only for instant bookings
-        $stmt = $db->prepare("
-            SELECT r.room_id 
-            FROM rooms r
-            WHERE r.room_type_id = ? 
-            AND r.status = 'available'
-            AND r.room_id NOT IN (
-                SELECT room_id 
-                FROM bookings 
-                WHERE room_id IS NOT NULL
-                AND status NOT IN ('cancelled', 'checked_out')
-                AND (
-                    (check_in_date <= ? AND check_out_date > ?)
-                    OR (check_in_date < ? AND check_out_date >= ?)
-                    OR (check_in_date >= ? AND check_out_date <= ?)
-                )
-            )
-            LIMIT 1
-        ");
-        $stmt->execute([
-            $room_type_id,
-            $check_in_date,
-            $check_in_date,
-            $check_out_date,
-            $check_out_date,
-            $check_in_date,
-            $check_out_date
-        ]);
-        $available_room = $stmt->fetch();
-        $room_id = $available_room['room_id'] ?? null;
-    }
-
-    // Determine initial status based on booking type
-    $initial_status = $booking_type === 'inquiry' ? 'pending' : 'pending';
-
-    // Determine occupancy type based on number of adults
-    $occupancy_type = 'double';
-    if ($num_adults == 1) {
-        $occupancy_type = 'single';
-    } elseif ($num_adults > 2 || $num_children > 0) {
-        $occupancy_type = 'family';
-    }
-
-    // Create booking with simplified pricing structure
-    $stmt = $db->prepare("
-        INSERT INTO bookings (
-            booking_code, booking_type, user_id, room_id, room_type_id,
-            check_in_date, check_out_date, num_adults, num_children, num_rooms, total_nights,
-            room_price, service_fee, discount_amount,
-            extra_guest_fee, extra_bed_fee, extra_beds, total_amount,
-            guest_name, guest_email, guest_phone, special_requests,
-            inquiry_message, duration_type,
-            occupancy_type, price_type_used,
-            status, payment_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
-    ");
-
-    // For inquiry bookings, payment status is N/A
-    $payment_status = $booking_type === 'inquiry' ? 'unpaid' : 'unpaid';
-
-    $stmt->execute([
-        $booking_code,
-        $booking_type,
-        $user_id,
-        $room_id,
-        $room_type_id,
-        $check_in_date,
-        $check_out_date,
-        $num_adults,
-        $num_children,
-        1,
-        $num_nights,
-        $room_subtotal,  // room_price = total room price (per_night * nights)
-        $service_fee,
-        $discount_amount,
-        $backend_extra_guest_fee,
-        $backend_extra_bed_fee,
-        $extra_beds,
-        $total_amount,
-        $guest_name,
-        $guest_email,
-        $guest_phone,
-        $special_requests,
-        $inquiry_message,
-        $duration_type,
-        $occupancy_type,
-        $price_type_used,
-        $payment_status
-    ]);
-
-    $booking_id = $db->lastInsertId();
-
-    // Update room status if assigned (only for instant bookings)
-    if ($room_id && $booking_type === 'instant') {
-        $stmt = $db->prepare("UPDATE rooms SET status = 'occupied' WHERE room_id = ?");
-        $stmt->execute([$room_id]);
-    }
-
-    // Store booking info in session
-    $_SESSION['pending_booking_id'] = $booking_id;
-    $_SESSION['pending_booking_code'] = $booking_code;
-
-    // Send booking confirmation email (don't block booking if email fails)
-    $emailSent = false;
-    try {
-        require_once '../../helpers/mailer.php';
-
-        // Get complete booking data for email
-        $stmt = $db->prepare("
-            SELECT b.*, rt.type_name, rt.category 
-            FROM bookings b 
-            LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id 
-            WHERE b.booking_id = ?
-        ");
-        $stmt->execute([$booking_id]);
-        $booking_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($booking_data) {
-            // Ensure required fields are set for email template
-            $booking_data['num_nights'] = $num_nights; // For old template compatibility
-            $booking_data['total_nights'] = $num_nights; // For new template
-            $booking_data['num_adults'] = $num_guests;
-            $booking_data['room_type_name'] = $booking_data['type_name']; // Alias for template
-
-            // Send email using Mailer class
-            $mailer = getMailer();
-            $emailSent = $mailer->sendBookingConfirmation($guest_email, $booking_data);
-
-            if ($emailSent) {
-                error_log("Booking confirmation email sent successfully to: $guest_email for booking: $booking_code");
-            } else {
-                error_log("Failed to send booking confirmation email to: $guest_email for booking: $booking_code");
-            }
-        } else {
-            error_log("Could not fetch booking data for email: $booking_code");
-        }
-    } catch (Exception $emailError) {
-        error_log("Email sending error for booking $booking_code: " . $emailError->getMessage());
-        // Don't fail the booking if email fails
-    }
-
-    // Prepare response
-    $response = [
-        'success' => true,
-        'booking_id' => $booking_id,
-        'booking_code' => $booking_code,
-        'booking_type' => $booking_type,
-        'total_amount' => $total_amount,
-        'is_guest' => !isset($_SESSION['user_id'])
+    // Prepare Request Data
+    $requestData = [
+        'room_type_id' => (int)($_POST['room_type_id'] ?? 0),
+        'check_in' => sanitize($_POST['check_in'] ?? ''),
+        'check_out' => sanitize($_POST['check_out'] ?? ''),
+        'num_adults' => (int)($_POST['adults'] ?? 2),
+        'num_nights' => (int)($_POST['num_nights'] ?? 1),
+        'extra_beds' => (int)($_POST['extra_beds'] ?? 0),
+        'stay_type' => sanitize($_POST['stay_type'] ?? 'standard'),
+        'guest_name' => sanitize($_POST['guest_name'] ?? ''),
+        'guest_phone' => sanitize($_POST['guest_phone'] ?? ''),
+        'guest_email' => sanitize($_POST['guest_email'] ?? ''),
+        'special_requests' => sanitize($_POST['special_requests'] ?? ''),
+        'user_id' => $_SESSION['user_id'] ?? null,
+        'extra_guests' => [] // Will be populated below
     ];
 
-    // For inquiry bookings, return a success message (no payment processing)
-    if ($booking_type === 'inquiry') {
-        $response['message'] = 'Yêu cầu tư vấn của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.';
-        echo json_encode($response);
-        exit;
+    // Parse extra guests from JSON if provided
+    if (isset($_POST['extra_guests_data'])) {
+        $extraGuestsJson = json_decode($_POST['extra_guests_data'], true);
+        if (is_array($extraGuestsJson)) {
+            $requestData['extra_guests'] = $extraGuestsJson;
+        }
     }
 
-    // If VNPay payment, create payment URL
-    if ($payment_method === 'vnpay') {
-        require_once '../../payment/config.php';
+    // Execute Booking Process
+    $result = $bookingService->createBooking($requestData);
 
-        $vnp_TxnRef = $booking_code;
-        $vnp_Amount = $total_amount;
-        $vnp_Locale = 'vn';
-        $vnp_BankCode = '';
-        $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-
-        $inputData = array(
-            "vnp_Version" => "2.1.0",
-            "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $vnp_Amount * 100,
-            "vnp_Command" => "pay",
-            "vnp_CreateDate" => date('YmdHis'),
-            "vnp_CurrCode" => "VND",
-            "vnp_IpAddr" => $vnp_IpAddr,
-            "vnp_Locale" => $vnp_Locale,
-            "vnp_OrderInfo" => "Thanh toan dat phong " . $vnp_TxnRef,
-            "vnp_OrderType" => "billpayment",
-            "vnp_ReturnUrl" => str_replace('/payment/', '/booking/', $vnp_Returnurl),
-            "vnp_TxnRef" => $vnp_TxnRef,
-            "vnp_ExpireDate" => $expire
-        );
-
-        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
-            $inputData['vnp_BankCode'] = $vnp_BankCode;
-        }
-
-        ksort($inputData);
-        $query = "";
-        $i = 0;
-        $hashdata = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashdata .= urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
-            $query .= urlencode($key) . "=" . urlencode($value) . '&';
-        }
-
-        $vnp_Url_full = $vnp_Url . "?" . $query;
-        if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
-            $vnp_Url_full .= 'vnp_SecureHash=' . $vnpSecureHash;
-        }
-
-        $response['payment_url'] = $vnp_Url_full;
-    }
-
-    echo json_encode($response);
+    echo json_encode([
+        'success' => true,
+        'message' => __('booking_success.message'),
+        'booking_code' => $result['booking_code'] ?? '',
+        'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
+    ]);
 
 } catch (Exception $e) {
+    error_log("Booking API Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
 }
-?>
