@@ -5,6 +5,8 @@
  * Hỗ trợ kết nối song song: Local (XAMPP) và Host (Production)
  */
 
+require_once __DIR__ . '/load_env.php';
+
 // Tự động phát hiện môi trường
 $isLocal = true;
 if (isset($_SERVER['SERVER_NAME'])) {
@@ -17,16 +19,16 @@ if (isset($_SERVER['SERVER_NAME'])) {
 }
 
 // Cấu hình Local (XAMPP)
-define('DB_LOCAL_NAME', 'auroraho_aurorahotelplaza.com');
-define('DB_LOCAL_USER', 'root');
-define('DB_LOCAL_PASSWORD', '');
-define('DB_LOCAL_HOST', '127.0.0.1:3306');
+define('DB_LOCAL_NAME', env('DB_LOCAL_NAME', 'auroraho_aurorahotelplaza.com'));
+define('DB_LOCAL_USER', env('DB_LOCAL_USER', 'root'));
+define('DB_LOCAL_PASSWORD', env('DB_LOCAL_PASSWORD', ''));
+define('DB_LOCAL_HOST', env('DB_LOCAL_HOST', '127.0.0.1:3306'));
 
 // Cấu hình Host/Production
-define('DB_HOST_NAME', 'auroraho_aurorahotelplaza.com');
-define('DB_HOST_USER', 'auroraho_longdev');
-define('DB_HOST_PASSWORD', '@longdev3824');
-define('DB_HOST_HOST', 'localhost:3306');
+define('DB_HOST_NAME', env('DB_HOST_NAME', 'auroraho_aurorahotelplaza.com'));
+define('DB_HOST_USER', env('DB_HOST_USER', 'auroraho_longdev'));
+define('DB_HOST_PASSWORD', env('DB_HOST_PASSWORD', '')); // Gọi qua env
+define('DB_HOST_HOST', env('DB_HOST_HOST', 'localhost:3306'));
 
 // Chọn cấu hình dựa trên môi trường
 if ($isLocal) {
