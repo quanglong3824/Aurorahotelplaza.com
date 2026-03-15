@@ -73,6 +73,11 @@ try {
     if ($checkOut <= $checkIn) {
         throw new Exception('Ngày trả phòng phải sau ngày nhận phòng');
     }
+
+    $nights_diff = $checkIn->diff($checkOut)->days;
+    if ($nights_diff > 30) {
+        throw new Exception('Số đêm lưu trú tối đa là 30 đêm theo quy định hệ thống.');
+    }
     
     $db->beginTransaction();
     

@@ -114,8 +114,22 @@ try {
     // Calculate nights and total
     $checkin = new DateTime($check_in_date);
     $checkout = new DateTime($check_out_date);
+    $today = new DateTime(date('Y-m-d'));
+
+    if ($checkin < $today) {
+        throw new Exception('Ngày nhận phòng không thể nằm trong quá khứ');
+    }
+
+    if ($checkin >= $checkout && !$is_short_stay) {
+        throw new Exception('Ngày trả phòng phải sau ngày nhận phòng');
+    }
+
     $interval = $checkin->diff($checkout);
     $num_nights = $interval->days;
+
+    if ($num_nights > 30) {
+        throw new Exception('Số đêm lưu trú tối đa là 30 đêm, nếu ở lâu hơn xin vui lòng liên hệ trực tiếp lễ tân khách sạn');
+    }
 
     // For short stay, we count as 1 night but use short stay price
     if ($is_short_stay) {
