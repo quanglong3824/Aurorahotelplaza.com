@@ -5,29 +5,39 @@
 
 if (!function_exists('loadEnvVariables')) {
     function loadEnvVariables() {
-        // Cấu trúc thư mục tìm kiếm .env (Ưu tiên từ bên NGOÀI public_html trở vào trong)
-        // Việc này ngăn chặn triệt để lộ lọt nếu tool scan thư mục public
-        $paths = [
-            // 1. Thư mục config nằm NGOÀI public_html (Ví dụ: /home/username/config/.env)
-            dirname(__DIR__, 2) . '/config/.env',
+        $paths = [];
+        $current_dir = __DIR__;
+        
+        // Quét ngược từ thư mục hiện tại lên tới thư mục gốc (tối đa 6 cấp)
+        for ($i = 0; $i < 6; $i++) {
+            $paths[] = $current_dir . '/config/.env';
+            $paths[] = $current_dir . '/.env';
             
-            // 2. Nằm trực tiếp ở root của Server User (Ví dụ: /home/username/.env)
-            dirname(__DIR__, 2) . '/.env',
-            
-            // 3. Dựa theo DOCUMENT ROOT (cách an toàn tuyệt đối nếu có phân cấp đặc biệt)
-            dirname($_SERVER['DOCUMENT_ROOT'] ?? '') . '/config/.env',
-            dirname($_SERVER['DOCUMENT_ROOT'] ?? '') . '/.env',
-            
-            // 4. Dành cho môi trường Local XAMPP như hiện tại
-            dirname(__DIR__) . '/.env'
-        ];
+            $parent = dirname($current_dir);
+            if ($parent === $current_dir || $parent === '/' || $parent === '\\') {
+                break;
+            }
+            $current_dir = $parent;
+        }
 
+        // Bổ sung quét dự phòng ở ngoài Document Root của Webserver (tuyệt đối an toàn)
+        if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+            $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
+            $paths[] = dirname($doc_root) . '/config/.env';
+            $paths[] = dirname($doc_root) . '/.env';
+        }
+
+        $paths = array_unique($paths);
+        
         $env_loaded = false;
         foreach ($paths as $path) {
             if ($path && file_exists($path)) {
                 $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                if ($lines === false) continue;
+                
                 foreach ($lines as $line) {
-                    if (strpos(trim($line), '#') === 0) continue;
+                    $line = trim($line);
+                    if (empty($line) || strpos($line, '#') === 0) continue;
                     
                     if (strpos($line, '=') !== false) {
                         list($name, $value) = explode('=', $line, 2);
@@ -36,31 +46,33 @@ if (!function_exists('loadEnvVariables')) {
                         
                         if (!isset($_ENV[$name])) {
                             $_ENV[$name] = $value;
-                            putenv(sprintf('%s=%s', $name, $value));
+                            // Kiểm tra function_exists để tránh LỖI 500 TRẮNG TRANG trên các Hosting cấm hàm putenv
+                            if (function_exists('putenv')) {
+                                @putenv(sprintf('%s=%s', $name, $value));
+                            }
                         }
                     }
                 }
                 $env_loaded = true;
-                break; // Dừng lại ở file .env ĐẦU TIÊN mà nó tìm thấy ở cấp độ bảo mật cao nhất
+                break; // Chỉ dừng lại khi load thành công file .env đầu tiên tìm thấy
             }
         }
     }
-    
+
     // Tự động load ngay khi được require_once
     loadEnvVariables();
 }
 
 if (!function_exists('env')) {
     /**
-     * Helper function equivalent to getenv() with default value
-     * Supports boolean casting for 'true', 'false', 'null', 'empty'
+     * Tham số hỗ trợ lấy giá trị biến môi trường bảo mật
      */
     function env($key, $default = null) {
         $val = null;
         if (isset($_ENV[$key])) {
             $val = $_ENV[$key];
-        } else {
-            $val = getenv($key);
+        } elseif (function_exists('getenv')) {
+            $val = @getenv($key);
         }
 
         if ($val === false || $val === null) {
