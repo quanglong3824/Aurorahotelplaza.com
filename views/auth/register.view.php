@@ -79,6 +79,7 @@
                     <?php endif; ?>
 
                     <form method="POST" action="" id="registerForm">
+                        <?php echo Security::getCSRFInput(); ?>
                         <div class="form-fields">
                             <!-- Full Name -->
                             <div class="form-group">

@@ -115,6 +115,7 @@
                 <div class="flex items-center gap-2">
                     <?php if ($detailRow['status'] === 'open' || $detailRow['status'] === 'in_progress'): ?>
                         <form method="POST" class="inline">
+                            <?php echo Security::getCSRFInput(); ?>
                             <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                             <input type="hidden" name="action" value="resolve">
                             <button type="submit"
@@ -124,6 +125,7 @@
                             </button>
                         </form>
                         <form method="POST" class="inline">
+                            <?php echo Security::getCSRFInput(); ?>
                             <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                             <input type="hidden" name="action" value="ignore">
                             <button type="submit"
@@ -134,6 +136,7 @@
                         </form>
                     <?php else: ?>
                         <form method="POST" class="inline">
+                            <?php echo Security::getCSRFInput(); ?>
                             <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                             <input type="hidden" name="action" value="reopen">
                             <button type="submit"
@@ -144,6 +147,7 @@
                         </form>
                     <?php endif; ?>
                     <form method="POST" class="inline">
+                        <?php echo Security::getCSRFInput(); ?>
                         <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                         <input type="hidden" name="action" value="reanalyze">
                         <button type="submit"
@@ -242,6 +246,7 @@
                             <span class="font-bold text-sm text-gray-700 dark:text-gray-300">Ghi chú của Admin</span>
                         </div>
                         <form method="POST">
+                            <?php echo Security::getCSRFInput(); ?>
                             <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                             <input type="hidden" name="action" value="save_notes">
                             <textarea name="notes" rows="3" placeholder="Thêm ghi chú, bước khắc phục..."
@@ -294,6 +299,7 @@
                     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
                         <h4 class="font-bold text-red-700 text-xs uppercase tracking-wide mb-3">Hành động nguy hiểm</h4>
                         <form method="POST" onsubmit="return confirm('Xác nhận xóa lỗi này?')">
+                            <?php echo Security::getCSRFInput(); ?>
                             <input type="hidden" name="error_id" value="<?php echo $detailRow['id']; ?>">
                             <input type="hidden" name="action" value="delete">
                             <button type="submit"
@@ -371,6 +377,7 @@
                         <?php echo number_format($totalRows); ?>
                     </strong> lỗi</p>
                 <form method="POST" onsubmit="return confirm('Xóa toàn bộ lỗi đã giải quyết/bỏ qua?')">
+                    <?php echo Security::getCSRFInput(); ?>
                     <input type="hidden" name="action" value="clear_resolved">
                     <button type="submit"
                         class="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-colors font-medium">
@@ -552,6 +559,7 @@
         </button>
         <div id="settingsBody" class="mt-4 hidden">
             <form method="POST" action="api/save-bug-tracker-settings.php" class="space-y-4">
+                <?php echo Security::getCSRFInput(); ?>
                 <?php
                 $settingsValues = [];
                 try {

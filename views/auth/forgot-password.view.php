@@ -63,6 +63,7 @@
 
                     <?php if (!$success): ?>
                         <form method="POST" action="" id="forgotForm">
+                            <?php echo Security::getCSRFInput(); ?>
                             <div class="form-fields">
                                 <!-- Email -->
                                 <div class="form-group">

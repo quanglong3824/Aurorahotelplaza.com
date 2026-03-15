@@ -53,6 +53,7 @@
                     <?php endif; ?>
 
                     <form method="POST" action="" id="loginForm">
+                        <?php echo Security::getCSRFInput(); ?>
                         <div class="form-fields">
                             <!-- Email -->
                             <div class="form-group">

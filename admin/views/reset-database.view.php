@@ -40,6 +40,7 @@
         </div>
         <div class="card-body">
             <form method="POST" onsubmit="return confirmReset()">
+                <?php echo Security::getCSRFInput(); ?>
                 <div class="space-y-6">
                     <!-- Mode Selection -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

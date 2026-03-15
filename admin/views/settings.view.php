@@ -13,6 +13,7 @@
 <?php endif; ?>
 
 <form method="POST" class="space-y-6">
+    <?php echo Security::getCSRFInput(); ?>
     <!-- General Settings -->
     <div class="card">
         <div class="card-header">

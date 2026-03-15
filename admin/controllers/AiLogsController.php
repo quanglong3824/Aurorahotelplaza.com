@@ -29,8 +29,13 @@ function getAiLogsData() {
     $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
 
     // Lấy dữ liệu
-    $stmt = $db->prepare("SELECT * FROM ai_logs $where_sql ORDER BY created_at DESC LIMIT $limit OFFSET $offset");
-    $stmt->execute($params);
+    $stmt = $db->prepare("SELECT * FROM ai_logs $where_sql ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+    foreach ($params as $i => $param) {
+        $stmt->bindValue($i + 1, $param);
+    }
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    $stmt->execute();
     $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Tổng số để phân trang

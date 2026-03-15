@@ -7,6 +7,7 @@
     </div>
 
     <form action="api/save-room.php" method="POST" class="card">
+        <?php echo Security::getCSRFInput(); ?>
         <div class="card-header">
             <h3 class="font-semibold text-lg"><?php echo $is_edit ? 'Sửa' : 'Thêm'; ?> phòng</h3>
         </div>

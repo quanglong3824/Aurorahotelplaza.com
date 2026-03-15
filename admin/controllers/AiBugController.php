@@ -61,6 +61,9 @@ function getAiBugData() {
 
     // ─── Xử lý actions ────────────────────────────────────────────────────────────
     if ($tableOk && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
+            die('CSRF validation failed.');
+        }
         $action = $_POST['action'] ?? '';
         $errorId = (int) ($_POST['error_id'] ?? 0);
         try {
@@ -168,9 +171,14 @@ function getAiBugData() {
             $totalRows = (int) $totalStmt->fetchColumn();
             $totalPages = max(1, ceil($totalRows / $limit));
 
-            // Nhúng LIMIT/OFFSET trực tiếp (int đã cast) — tránh PDO binding bug trên MariaDB
-            $listStmt = $db->prepare("SELECT * FROM error_logs $whereSql ORDER BY created_at DESC LIMIT {$limit} OFFSET {$offset}");
-            $listStmt->execute($params);
+            // Sử dụng bindValue cho LIMIT/OFFSET để bảo mật
+            $listStmt = $db->prepare("SELECT * FROM error_logs $whereSql ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+            foreach ($params as $i => $param) {
+                $listStmt->bindValue($i + 1, $param);
+            }
+            $listStmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $listStmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $listStmt->execute();
             $errors = $listStmt->fetchAll(PDO::FETCH_ASSOC);
 
             $stats = AuroraErrorTracker::getStats();

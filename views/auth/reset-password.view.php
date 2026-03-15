@@ -51,6 +51,7 @@
             <?php elseif ($valid_token): ?>
             
             <form method="POST" action="">
+                <?php echo Security::getCSRFInput(); ?>
                 <div class="space-y-4">
                     <!-- New Password -->
                     <div class="form-group">

@@ -55,6 +55,7 @@
 
             <?php if (!$success): ?>
             <form method="POST" action="">
+                <?php echo Security::getCSRFInput(); ?>
                 <div class="space-y-4">
                     <!-- Current Password -->
                     <div class="form-group">

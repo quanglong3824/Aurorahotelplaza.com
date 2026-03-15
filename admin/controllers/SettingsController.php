@@ -8,6 +8,9 @@ class SettingsController {
 
         // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
+                die('CSRF validation failed.');
+            }
             try {
                 $db = getDB();
                 

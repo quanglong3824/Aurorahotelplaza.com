@@ -13,6 +13,9 @@ $success = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
+        die('CSRF validation failed.');
+    }
     require_once '../config/database.php';
     
     $current_password = $_POST['current_password'] ?? '';

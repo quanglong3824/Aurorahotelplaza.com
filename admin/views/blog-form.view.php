@@ -40,6 +40,7 @@
 <?php unset($_SESSION['success_message']); endif; ?>
 
 <form action="api/save-post.php" method="POST" class="max-w-4xl pb-10">
+    <?php echo Security::getCSRFInput(); ?>
     <input type="hidden" name="post_id" value="<?php echo $post['post_id'] ?? ''; ?>">
     
     <div class="card mb-6 shadow-sm">

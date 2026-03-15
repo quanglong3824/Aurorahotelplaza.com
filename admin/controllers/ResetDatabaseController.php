@@ -9,6 +9,9 @@ function handleResetDatabase() {
     $error = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_reset'])) {
+        if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
+            die('CSRF validation failed.');
+        }
         $confirmation = $_POST['confirmation'] ?? '';
         $reset_mode = $_POST['reset_mode'] ?? 'transactions_only';
 

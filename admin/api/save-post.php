@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/environment.php';
 require_once '../../config/database.php';
 require_once '../../helpers/functions.php';
 
@@ -43,6 +44,10 @@ if (!isset($_SESSION['user_id'])) {
 
 if (!in_array($_SESSION['user_role'] ?? '', ['admin', 'sale', 'receptionist'])) {
     jsonResponse(['success' => false, 'message' => 'Bạn không có quyền thực hiện chức năng này.']);
+}
+
+if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
+    jsonResponse(['success' => false, 'message' => 'CSRF validation failed.']);
 }
 
 // Lấy dữ liệu từ POST
