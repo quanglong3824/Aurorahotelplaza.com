@@ -58,6 +58,22 @@ if (!$room_type_id || !$check_in_date || !$check_out_date || !$guest_name || !$g
     exit;
 }
 
+if (!filter_var($guest_email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Định dạng email không hợp lệ'
+    ]);
+    exit;
+}
+
+if (!preg_match('/^[0-9]{9,15}$/', preg_replace('/[^0-9]/', '', $guest_phone))) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Định dạng số điện thoại không hợp lệ'
+    ]);
+    exit;
+}
+
 // ========== ANTI-SPAM & OVERLAP DETECTION ==========
 $user_id = $_SESSION['user_id'] ?? null;
 $rate_limit_id = getRateLimitIdentifier();
