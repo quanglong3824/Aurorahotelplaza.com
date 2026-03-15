@@ -101,18 +101,14 @@ class FrontSharedController {
         ];
     }
 
-    public static function getChatWidgetData($base_path = '') {
-        // Prevent widget in admin
-        $current_path = $_SERVER['PHP_SELF'] ?? '';
-        if (strpos($current_path, '/admin/') !== false) {
-            return ['show_widget' => false];
-        }
-
+    /**
+     * Khởi tạo Chat Guest (Phải gọi trước khi có output)
+     */
+    public static function initChatGuest() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // Guest logic
         if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
             $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
             $timestamp = time();
@@ -122,6 +118,14 @@ class FrontSharedController {
             if (!isset($_COOKIE['chat_guest_id'])) {
                 setcookie('chat_guest_id', $_SESSION['chat_guest_id'], time() + (30 * 24 * 60 * 60), '/', '', false, true);
             }
+        }
+    }
+
+    public static function getChatWidgetData($base_path = '') {
+        // Prevent widget in admin
+        $current_path = $_SERVER['PHP_SELF'] ?? '';
+        if (strpos($current_path, '/admin/') !== false) {
+            return ['show_widget' => false];
         }
 
         $is_logged = isset($_SESSION['user_id']);

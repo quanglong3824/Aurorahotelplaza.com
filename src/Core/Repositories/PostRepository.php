@@ -26,8 +26,8 @@ class PostRepository {
         $params = [];
 
         if ($categorySlug) {
-            $where .= " AND bc.slug = ?";
-            $params[] = $categorySlug;
+            $where .= " AND bc.slug = :category_slug";
+            $params[':category_slug'] = $categorySlug;
         }
 
         $order = "ORDER BY p.published_at DESC, p.post_id DESC";
@@ -39,7 +39,7 @@ class PostRepository {
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         foreach ($params as $key => $value) {
-            $stmt->bindValue($key + 1, $value);
+            $stmt->bindValue($key, $value);
         }
         
         $stmt->execute();

@@ -88,7 +88,7 @@ try {
         WHERE status = 'active' 
         AND start_date <= CURDATE() 
         AND end_date >= CURDATE()
-        ORDER BY discount_percent DESC
+        ORDER BY discount_value DESC
         LIMIT 3
     ");
     $stmt->execute();
@@ -103,7 +103,7 @@ try {
     $db = getDB();
     $stmt = $db->prepare("
         SELECT * FROM services 
-        WHERE status = 'active'
+        WHERE is_available = 1
         ORDER BY sort_order ASC
         LIMIT 6
     ");

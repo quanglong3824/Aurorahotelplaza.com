@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . '/../src/Core/Repositories/PostRepository.php';
+require_once __DIR__ . '/../src/Core/Services/BlogService.php';
+
 use Aurora\Core\Repositories\PostRepository;
 use Aurora\Core\Services\BlogService;
 
