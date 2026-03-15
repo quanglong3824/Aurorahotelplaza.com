@@ -5,28 +5,43 @@
 
 if (!function_exists('loadEnvVariables')) {
     function loadEnvVariables() {
-        $path = dirname(__DIR__) . '/.env';
-        if (!file_exists($path)) {
-            return;
-        }
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            // Bỏ qua comments
-            if (strpos(trim($line), '#') === 0) {
-                continue;
-            }
-            // Parse name=value
-            if (strpos($line, '=') !== false) {
-                list($name, $value) = explode('=', $line, 2);
-                $name = trim($name);
-                // Bỏ đi quotes (" hoặc ') ở 2 đầu nếu có
-                $value = trim($value, " \t\n\r\0\x0B\"'");
-                
-                // Chỉ thiết lập khi chưa tồn tại
-                if (!isset($_ENV[$name])) {
-                    $_ENV[$name] = $value;
-                    putenv(sprintf('%s=%s', $name, $value));
+        // Cấu trúc thư mục tìm kiếm .env (Ưu tiên từ bên NGOÀI public_html trở vào trong)
+        // Việc này ngăn chặn triệt để lộ lọt nếu tool scan thư mục public
+        $paths = [
+            // 1. Thư mục config nằm NGOÀI public_html (Ví dụ: /home/username/config/.env)
+            dirname(__DIR__, 2) . '/config/.env',
+            
+            // 2. Nằm trực tiếp ở root của Server User (Ví dụ: /home/username/.env)
+            dirname(__DIR__, 2) . '/.env',
+            
+            // 3. Dựa theo DOCUMENT ROOT (cách an toàn tuyệt đối nếu có phân cấp đặc biệt)
+            dirname($_SERVER['DOCUMENT_ROOT'] ?? '') . '/config/.env',
+            dirname($_SERVER['DOCUMENT_ROOT'] ?? '') . '/.env',
+            
+            // 4. Dành cho môi trường Local XAMPP như hiện tại
+            dirname(__DIR__) . '/.env'
+        ];
+
+        $env_loaded = false;
+        foreach ($paths as $path) {
+            if ($path && file_exists($path)) {
+                $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    if (strpos(trim($line), '#') === 0) continue;
+                    
+                    if (strpos($line, '=') !== false) {
+                        list($name, $value) = explode('=', $line, 2);
+                        $name = trim($name);
+                        $value = trim($value, " \t\n\r\0\x0B\"'");
+                        
+                        if (!isset($_ENV[$name])) {
+                            $_ENV[$name] = $value;
+                            putenv(sprintf('%s=%s', $name, $value));
+                        }
+                    }
                 }
+                $env_loaded = true;
+                break; // Dừng lại ở file .env ĐẦU TIÊN mà nó tìm thấy ở cấp độ bảo mật cao nhất
             }
         }
     }
