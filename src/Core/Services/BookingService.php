@@ -31,33 +31,33 @@ class BookingService {
 
         // VÁ LỖI: Chặn đặt phòng quá xa (7759 ngày) hoặc ngày quá khứ
         if ($checkIn < $today->setTime(0,0,0)) {
-            throw new Exception("Ngày nhận phòng không thể ở quá khứ.");
+            throw new Exception(__("booking.err_past_date"));
         }
         if ($totalDays <= 0) {
-            throw new Exception("Ngày trả phòng phải sau ngày nhận phòng ít nhất 1 ngày.");
+            throw new Exception(__("booking.err_checkout_before_checkin"));
         }
         if ($totalDays > 365) {
-            throw new Exception("Hệ thống không hỗ trợ đặt phòng trực tuyến quá 1 năm (365 ngày). Vui lòng liên hệ hotline.");
+            throw new Exception(__("booking.err_max_stay"));
         }
 
         // VÁ LỖI: Kiểm tra số lượng khách
         if ($requestData['num_adults'] <= 0) {
-            throw new Exception("Số lượng người lớn không hợp lệ.");
+            throw new Exception(__("booking.err_invalid_adults"));
         }
         if ($requestData['num_adults'] > 20) {
-            throw new Exception("Số lượng khách quá lớn cho một đơn đặt phòng đơn lẻ.");
+            throw new Exception(__("booking.err_max_guests"));
         }
 
         $roomTypeId = $requestData['room_type_id'] ?? 0;
         $roomType = $this->roomRepo->findRoomTypeById($roomTypeId);
         
         if (!$roomType) {
-            throw new Exception("Loại phòng không tồn tại.");
+            throw new Exception(__("booking.err_room_not_found"));
         }
 
         // 2. Kiểm tra phòng trống
         if (!$this->roomRepo->checkAvailability($roomTypeId, $requestData['check_in'], $requestData['check_out'])) {
-            throw new Exception("Loại phòng này đã hết trong thời gian bạn chọn.");
+            throw new Exception(__("booking.err_no_availability"));
         }
 
         // 3. Chuẩn bị DTO cho khách thêm
