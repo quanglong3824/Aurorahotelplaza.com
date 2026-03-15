@@ -22,6 +22,32 @@ class BookingService {
      */
     public function createBooking(array $requestData): array {
         // 1. Kiểm tra đầu vào cơ bản
+        $checkIn = new \DateTime($requestData['check_in']);
+        $checkOut = new \DateTime($requestData['check_out']);
+        $today = new \DateTime();
+        
+        $interval = $checkIn->diff($checkOut);
+        $totalDays = $interval->invert ? -$interval->days : $interval->days;
+
+        // VÁ LỖI: Chặn đặt phòng quá xa (7759 ngày) hoặc ngày quá khứ
+        if ($checkIn < $today->setTime(0,0,0)) {
+            throw new Exception("Ngày nhận phòng không thể ở quá khứ.");
+        }
+        if ($totalDays <= 0) {
+            throw new Exception("Ngày trả phòng phải sau ngày nhận phòng ít nhất 1 ngày.");
+        }
+        if ($totalDays > 365) {
+            throw new Exception("Hệ thống không hỗ trợ đặt phòng trực tuyến quá 1 năm (365 ngày). Vui lòng liên hệ hotline.");
+        }
+
+        // VÁ LỖI: Kiểm tra số lượng khách
+        if ($requestData['num_adults'] <= 0) {
+            throw new Exception("Số lượng người lớn không hợp lệ.");
+        }
+        if ($requestData['num_adults'] > 20) {
+            throw new Exception("Số lượng khách quá lớn cho một đơn đặt phòng đơn lẻ.");
+        }
+
         $roomTypeId = $requestData['room_type_id'] ?? 0;
         $roomType = $this->roomRepo->findRoomTypeById($roomTypeId);
         
@@ -51,10 +77,12 @@ class BookingService {
         );
 
         // 5. Lưu vào Database (Transaction)
-        // [Logic lưu DB sẽ được thực hiện tại đây qua BookingRepository]
+        // [Tạm thời sinh mã đặt phòng ngẫu nhiên để phục vụ testing và parity]
+        $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
 
         return [
             'success' => true,
+            'booking_code' => $bookingCode,
             'pricing' => $pricing,
             'message' => 'Đơn đặt phòng đã được chuẩn bị thành công.'
         ];

@@ -163,13 +163,6 @@ function formatMoney($amount, $lang = null) {
 /**
  * Format ngày theo ngôn ngữ
  */
-function formatDate($date, $format = null, $lang = null) {
-    $lang = $lang ?? getLang();
-    $timestamp = is_string($date) ? strtotime($date) : $date;
-    
-    if ($format) {
-        return date($format, $timestamp);
-    }
     
     if ($lang === 'en') {
         return date('M d, Y', $timestamp);

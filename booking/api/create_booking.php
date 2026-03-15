@@ -7,18 +7,18 @@
 header('Content-Type: application/json');
 session_start();
 
-require_once '../../config/database.php';
-require_once '../../config/load_env.php';
-require_once '../../helpers/functions.php';
-require_once '../../helpers/booking-validator.php';
-require_once '../../helpers/language.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/load_env.php';
+require_once __DIR__ . '/../../helpers/functions.php';
+require_once __DIR__ . '/../../helpers/booking-validator.php';
+require_once __DIR__ . '/../../helpers/language.php';
 
 // Load Core OOP Classes
-require_once '../../src/Core/DTOs/GuestDTO.php';
-require_once '../../src/Core/Repositories/RoomRepository.php';
-require_once '../../src/Core/Repositories/BookingRepository.php';
-require_once '../../src/Core/Services/PricingService.php';
-require_once '../../src/Core/Services/BookingService.php';
+require_once __DIR__ . '/../../src/Core/DTOs/GuestDTO.php';
+require_once __DIR__ . '/../../src/Core/Repositories/RoomRepository.php';
+require_once __DIR__ . '/../../src/Core/Repositories/BookingRepository.php';
+require_once __DIR__ . '/../../src/Core/Services/PricingService.php';
+require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
 
 use Aurora\Core\Repositories\RoomRepository;
 use Aurora\Core\Repositories\BookingRepository;
