@@ -25,25 +25,33 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = formData.get('message').trim();
         
         if (!name || !email || !phone || !message) {
-            showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
+            alert('Vui lòng điền đầy đủ thông tin bắt buộc.');
             setLoading(false);
             return;
         }
         
         if (!isValidEmail(email)) {
-            showToast('Email không hợp lệ', 'error');
+            alert('Định dạng Email không hợp lệ.');
             setLoading(false);
             return;
         }
         
-        if (!isValidPhone(phone)) {
-            showToast('Số điện thoại không hợp lệ', 'error');
+        const cleanedPhone = phone.replace(/[^0-9]/g, '');
+        if (cleanedPhone.length < 9 || cleanedPhone.length > 15) {
+            alert('Số điện thoại không hợp lệ (yêu cầu từ 9 đến 15 chữ số).');
             setLoading(false);
             return;
         }
         
         if (message.length < 10) {
-            showToast('Nội dung tin nhắn quá ngắn (tối thiểu 10 ký tự)', 'error');
+            alert('Nội dung tin nhắn quá ngắn (tối thiểu 10 ký tự).');
+            setLoading(false);
+            return;
+        }
+
+        // Chống nhập mã HTML/JS (Script injection)
+        if (/<[\s\S]*>/i.test(message) || /script|javascript|onerror|onload/i.test(message)) {
+            alert('Lỗi bảo mật: Không được phép nhập thẻ mã lệnh (code) vào form!');
             setLoading(false);
             return;
         }
