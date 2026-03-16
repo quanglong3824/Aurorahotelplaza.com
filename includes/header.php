@@ -56,7 +56,43 @@ $current_dir = basename(dirname($_SERVER['PHP_SELF']));
 $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin'];
 $base_path = in_array($current_dir, $subdirs) ? '../' : '';
 
-// For SEO Friendly URLs, we use absolute paths from root
+// ─── Auto-compute header variables if not set by calling page ─────────────────
+// Prevents "Undefined variable" warnings when pages include header.php directly
+// without going through FrontSharedController::getHeaderData()
+if (!isset($header_class) || !isset($has_hero) || !isset($is_solid_page) || !isset($is_fixed_transparent) || !isset($force_scrolled)) {
+    $current_page = basename($_SERVER['PHP_SELF'], '.php');
+
+    $pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore',
+        'wedding', 'conference', 'restaurant', 'office', 'contact',
+        'login', 'register', 'forgot-password', 'reset-password',
+        'blog', 'confirmation'];
+    $has_hero = $has_hero ?? (
+        in_array($current_page, $pages_with_hero) ||
+        in_array($current_dir, ['room-details', 'apartment-details', 'booking'])
+    );
+
+    $pages_solid_header = [];
+    $is_solid_page = $is_solid_page ?? in_array($current_page, $pages_solid_header);
+
+    $header_class = $header_class ?? ($has_hero ? 'header-transparent' : 'header-solid');
+    $force_scrolled = $force_scrolled ?? ($is_solid_page ? 'header-scrolled' : '');
+
+    $pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password',
+        'services', 'service-detail', 'about', 'contact',
+        'cancellation-policy', 'privacy', 'terms',
+        'rooms', 'apartments', 'explore', 'index',
+        'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
+    $is_fixed_transparent = $is_fixed_transparent ?? (
+        in_array($current_page, $pages_fixed_transparent) ||
+        in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking'])
+    );
+}
+
+// User info defaults (if not set by calling page)
+$is_logged_in = $is_logged_in ?? isset($_SESSION['user_id']);
+$user_name    = $user_name    ?? ($_SESSION['user_name'] ?? 'User');
+$user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
+// ─────────────────────────────────────────────────────────────────────────────
 ?>
 <!-- Scroll Progress Bar -->
 <div id="scroll-progress"
