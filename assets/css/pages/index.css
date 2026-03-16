@@ -3,7 +3,7 @@
  * Extracted from index.php
  */
 
-body { margin: 0; font-family: 'Be Vietnam Pro', Inter, system-ui, -apple-system, sans-serif; }
+body { margin: 0; font-family: 'Be Vietnam Pro', Inter, system-ui, -apple-system, sans-serif; background-color: #030712; color: #fff; }
 .min-h-screen { min-height: 100vh; }
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -13,10 +13,11 @@ body { margin: 0; font-family: 'Be Vietnam Pro', Inter, system-ui, -apple-system
 .font-body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
 .font-display { font-family: 'Montserrat', 'Be Vietnam Pro', sans-serif; }
 .text-accent { color: #d4af37; }
-.bg-background-light { background-color: #ffffff; }
-.dark .bg-background-dark { background-color: #111827; }
-.text-text-primary-light { color: #1f2937; }
+.bg-background-light { background-color: #030712; }
+.dark .bg-background-dark { background-color: #030712; }
+.text-text-primary-light { color: #f3f4f6; }
 .dark .text-text-primary-dark { color: #f3f4f6; }
+.bg-gray-950 { background-color: #030712; }
 .text-text-secondary-light { color: #6b7280; }
 .dark .text-text-secondary-dark { color: #9ca3af; }
 .px-4 { padding-left: 1rem; padding-right: 1rem; }

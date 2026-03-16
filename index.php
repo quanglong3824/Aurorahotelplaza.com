@@ -200,11 +200,11 @@ if ($stats === null) {
     <?php echo deferCSS(assetVersion('css/index-upgrade.css')); ?>
     <?php echo deferCSS(assetVersion('css/featured-apartments-glass.css')); ?>
     
-    <!-- Preload Hero Images -->
-    <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">
+    <!-- Preload First Hero Image (actual first slide) -->
+    <link rel="preload" as="image" href="assets/img/classical-family-apartment/classical-family-apartment6.jpg">
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<body class="bg-gray-950 font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
 
         <?php include 'includes/header.php'; ?>
