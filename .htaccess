@@ -1,59 +1,60 @@
 # ============================================
-# Aurora Hotel Plaza - Apache Configuration
-# Performance + URL Rewrites + Security
+# Aurora Hotel Plaza - Optimized Configuration
+# Compatible with subdirectories like /2025/
 # ============================================
 
-# Enable Rewrite Engine
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Không dùng RewriteBase để máy chủ tự nhận diện đường dẫn
+    
+    # ── 1. SEO Friendly URLs (Mapping) ──────────
+    
+    # Ánh xạ các link đẹp về file gốc
+    RewriteRule ^trang-chu$ index.php [L,QSA]
+    RewriteRule ^phong-nghi$ rooms.php [L,QSA]
+    RewriteRule ^can-ho$ apartments.php [L,QSA]
+    RewriteRule ^tin-tuc$ blog.php [L,QSA]
+    RewriteRule ^dich-vu$ services.php [L,QSA]
+    RewriteRule ^gioi-thieu$ about.php [L,QSA]
+    RewriteRule ^lien-he$ contact.php [L,QSA]
+    RewriteRule ^kham-pha$ explore.php [L,QSA]
+    RewriteRule ^thu-vien-anh$ gallery.php [L,QSA]
 
-# ── SEO Friendly URLs ──────────────────────────
+    # Ánh xạ chi tiết (Phòng, Căn hộ, Blog, Dịch vụ)
+    # Ví dụ: phong-nghi/deluxe -> room-detail.php?slug=deluxe
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^phong-nghi/([^/]+)$ room-detail.php?slug=$1 [L,QSA]
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^can-ho/([^/]+)$ apartment-detail.php?slug=$1 [L,QSA]
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^tin-tuc/([^/]+)$ blog-detail.php?slug=$1 [L,QSA]
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^dich-vu/([^/]+)$ service-detail.php?slug=$1 [L,QSA]
 
-# 1. Trang chủ
-RewriteRule ^trang-chu$ index.php [L,QSA]
+    # ── 2. Xử lý đuôi .php ──────────────────────
+    
+    # Nếu truy cập trực tiếp file .php thì ẩn đuôi đi (SEO)
+    # Dùng cách đơn giản nhất để tránh lỗi 500
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+(.*?)\.php[\s?] [NC]
+    RewriteRule ^ %1 [R=301,L]
 
-# 2. Phòng nghỉ
-RewriteRule ^phong-nghi$ rooms.php [L,QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^phong-nghi/([^/]+)$ room-detail.php?slug=$1 [L,QSA]
+    # Nếu người dùng gõ link không có .php, tự động kiểm tra và chạy file .php tương ứng
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L]
 
-# 3. Căn hộ
-RewriteRule ^can-ho$ apartments.php [L,QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^can-ho/([^/]+)$ apartment-detail.php?slug=$1 [L,QSA]
+</IfModule>
 
-# 4. Tin tức
-RewriteRule ^tin-tuc$ blog.php [L,QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^tin-tuc/([^/]+)$ blog-detail.php?slug=$1 [L,QSA]
-
-# 5. Dịch vụ
-RewriteRule ^dich-vu$ services.php [L,QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^dich-vu/([^/]+)$ service-detail.php?slug=$1 [L,QSA]
-
-# 6. Các trang tĩnh
-RewriteRule ^gioi-thieu$ about.php [L,QSA]
-RewriteRule ^lien-he$ contact.php [L,QSA]
-RewriteRule ^kham-pha$ explore.php [L,QSA]
-RewriteRule ^thu-vien-anh$ gallery.php [L,QSA]
-
-# 7. Ẩn đuôi .php (Chống lặp link thư mục con)
-RewriteCond %{IS_SUBREQ} false
-RewriteCond %{ENV:REDIRECT_STATUS} ^$
-RewriteCond %{REQUEST_FILENAME} \.php [NC]
-RewriteRule ^(.*)\.php$ $1 [R=301,L,NC]
-
-# 8. Nếu file không tồn tại, tự động thử thêm .php (Internal Rewrite)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.*)$ $1.php [L]
-
-# ── Browser Caching ──────────────────────────
+# ── 3. Browser Caching ──────────────────────────
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
@@ -65,8 +66,9 @@ RewriteRule ^(.*)$ $1.php [L]
     ExpiresByType application/javascript "access plus 1 month"
 </IfModule>
 
-# ── Security ──────────────────────────────────
-Options -Indexes
+# ── 4. Security ──────────────────────────────────
+# Một số server cấm lệnh Options -Indexes gây lỗi 500, nên tôi tạm ẩn đi
+# Options -Indexes
 <FilesMatch "^(\.env|\.git|composer\.(json|lock)|package\.json)$">
     Require all denied
 </FilesMatch>
