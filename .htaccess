@@ -5,6 +5,52 @@
 
 # Enable Rewrite Engine
 RewriteEngine On
+RewriteBase /
+
+# ── SEO Friendly URLs ──────────────────────────
+# 1. Trang chủ
+RewriteRule ^trang-chu$ index.php [L,QSA]
+
+# 2. Phòng nghỉ (Danh sách & Chi tiết)
+RewriteRule ^phong-nghi$ rooms.php [L,QSA]
+# Ánh xạ /phong-nghi/ten-phong -> room-detail.php?slug=ten-phong
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^phong-nghi/([^/]+)$ room-detail.php?slug=$1 [L,QSA]
+
+# 3. Căn hộ (Danh sách & Chi tiết)
+RewriteRule ^can-ho$ apartments.php [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^can-ho/([^/]+)$ apartment-detail.php?slug=$1 [L,QSA]
+
+# 4. Tin tức (Danh sách & Chi tiết)
+RewriteRule ^tin-tuc$ blog.php [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^tin-tuc/([^/]+)$ blog-detail.php?slug=$1 [L,QSA]
+
+# 5. Dịch vụ (Danh sách & Chi tiết)
+RewriteRule ^dich-vu$ services.php [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^dich-vu/([^/]+)$ service-detail.php?slug=$1 [L,QSA]
+
+# 6. Các trang tĩnh khác
+RewriteRule ^gioi-thieu$ about.php [L,QSA]
+RewriteRule ^lien-he$ contact.php [L,QSA]
+RewriteRule ^kham-pha$ explore.php [L,QSA]
+RewriteRule ^thu-vien-anh$ gallery.php [L,QSA]
+
+# 7. Ẩn đuôi .php khi người dùng truy cập trực tiếp (R=301 để SEO)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# 8. Nếu file không tồn tại, tự động thử thêm .php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
 
 # ── Pretty URL Rewrites ──────────────────────
 # gallery/7 → gallery.php?page=7

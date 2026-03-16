@@ -78,7 +78,7 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                                     <?php _e('service_detail.view_packages'); ?>
                                     <span class="material-symbols-outlined">arrow_downward</span>
                                 </a>
-                                <a href="contact.php"
+                                <a href="<?php echo prettyUrl('contact.php'); ?>"
                                     class="px-6 py-3 rounded-xl border border-white/20 hover:bg-white/10 text-white transition-all flex items-center gap-2">
                                     <span class="material-symbols-outlined">phone</span>
                                     <?php _e('service_detail.contact_consult'); ?>
@@ -266,7 +266,7 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                             <span class="material-symbols-outlined">phone</span>
                             (+84-251) 391.8888
                         </a>
-                        <a href="contact.php"
+                        <a href="<?php echo prettyUrl('contact.php'); ?>"
                             class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold hover:bg-white/20 transition-all flex items-center gap-2">
                             <span class="material-symbols-outlined">mail</span>
                             <?php _e('service_detail.send_request'); ?>

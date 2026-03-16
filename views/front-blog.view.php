@@ -60,11 +60,11 @@
                     <!-- Category Filters -->
                     <?php if (!empty($categories)): ?>
                         <div class="blog-categories">
-                            <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
+                            <a href="<?php echo prettyUrl('blog.php'); ?>" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
                                 <?php _e('blog_page.all'); ?>
                             </a>
                             <?php foreach ($categories as $cat): ?>
-                                <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
+                                <a href="<?php echo prettyUrl('blog.php'); ?>?category=<?php echo urlencode($cat['slug']); ?>"
                                     class="category-tag <?php echo $category_slug === $cat['slug'] ? 'active' : ''; ?>">
                                     <?php echo htmlspecialchars(_f($cat, 'category_name')); ?>
                                 </a>
@@ -79,7 +79,7 @@
                                 $featured_img = imgUrl($post['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
                                 ?>
                                 <article class="h-full">
-                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
+                                    <a href="<?php echo prettyUrl('blog-detail.php', $post['slug']); ?>"
                                         class="blog-glass-card group block h-full">
 
                                         <div class="blog-card-image-wrapper">

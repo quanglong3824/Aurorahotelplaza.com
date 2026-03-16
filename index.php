@@ -343,7 +343,7 @@ if ($stats === null) {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <a href="booking/index.php" class="btn-glass-secondary">
+                            <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-secondary">
                                 <?php _e('home.book_now'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
                             </a>
@@ -374,7 +374,7 @@ if ($stats === null) {
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
+                                <a href="<?php echo prettyUrl('room-detail.php', '<?php echo htmlspecialchars($room['slug']); ?>'); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -426,7 +426,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center pt-8">
-                        <a href="rooms.php"
+                        <a href="<?php echo prettyUrl('rooms.php'); ?>"
                             class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_rooms'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -457,7 +457,7 @@ if ($stats === null) {
                             <?php foreach ($featured_apartments as $apartment):
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg');
                                 ?>
-                                <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
+                                <a href="<?php echo prettyUrl('apartment-detail.php', '<?php echo htmlspecialchars($apartment['slug']); ?>'); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -509,7 +509,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center pt-8">
-                        <a href="apartments.php"
+                        <a href="<?php echo prettyUrl('apartments.php'); ?>"
                             class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_apartments'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -536,7 +536,7 @@ if ($stats === null) {
                     <!-- Main Services Grid - Liquid Glass -->
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
-                        <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
+                        <a href="<?php echo prettyUrl('service-detail.php', 'wedding-service'); ?>" class="glass-service-card group">
                             <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
                                 alt="<?php _e('home.wedding_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -551,7 +551,7 @@ if ($stats === null) {
                         </a>
 
                         <!-- Conference Service -->
-                        <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
+                        <a href="<?php echo prettyUrl('service-detail.php', 'conference-service'); ?>" class="glass-service-card group">
                             <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
                                 alt="<?php _e('home.conference_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -566,7 +566,7 @@ if ($stats === null) {
                         </a>
 
                         <!-- Restaurant Service -->
-                        <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
+                        <a href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>" class="glass-service-card group">
                             <img src="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"
                                 alt="<?php _e('home.restaurant_aurora'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -610,7 +610,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center">
-                        <a href="services.php" class="btn-glass-primary">
+                        <a href="<?php echo prettyUrl('services.php'); ?>" class="btn-glass-primary">
                             <?php _e('home.view_all_services'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -694,7 +694,7 @@ if ($stats === null) {
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
-                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
+                                <a href="<?php echo prettyUrl('blog-detail.php', '<?php echo urlencode($post['slug']); ?>'); ?>"
                                     class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full">
                                     <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                         <?php
@@ -744,7 +744,7 @@ if ($stats === null) {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="blog.php"
+                        <a href="<?php echo prettyUrl('blog.php'); ?>"
                             class="inline-flex items-center gap-2 px-6 py-3 btn-glass-gold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_posts'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -906,7 +906,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex flex-col gap-4 sm:flex-row sm:justify-center mt-4">
-                        <a href="booking/index.php"
+                        <a href="<?php echo url('booking/index.php'); ?>"
                             class="btn-glass-gold px-8 py-4 text-lg shadow-xl shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-1">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('home.book_now_cta'); ?>

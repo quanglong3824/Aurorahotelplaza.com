@@ -74,7 +74,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                         <?php _e('services_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center mb-8">
-                        <a href="contact.php" class="btn-glass-gold" style="width: auto; margin-top:0;">
+                        <a href="<?php echo prettyUrl('contact.php'); ?>" class="btn-glass-gold" style="width: auto; margin-top:0;">
                             <span class="material-symbols-outlined">mail</span>
                             <?php _e('services_page.contact_now'); ?>
                         </a>
@@ -122,7 +122,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
 
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 <?php foreach ($utility_services as $service): ?>
-                                    <a href="service-detail.php?slug=<?php echo $service['slug']; ?>"
+                                    <a href="<?php echo prettyUrl('service-detail.php', '<?php echo $service['slug']; ?>'); ?>"
                                         class="utility-card-glass group">
                                         <div class="utility-icon">
                                             <span class="material-symbols-outlined"><?php echo $service['icon']; ?></span>
@@ -193,7 +193,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                                 </div>
                                             <?php endif; ?>
 
-                                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>"
+                                            <a href="<?php echo prettyUrl('service-detail.php', '<?php echo $service['slug']; ?>'); ?>"
                                                 class="btn-glass-gold">
                                                 <?php _e('services_page.view_details'); ?>
                                                 <span class="material-symbols-outlined"
@@ -215,7 +215,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                             <?php _e('services_page.contact_desc'); ?>
                         </p>
                         <div class="flex flex-wrap gap-4 justify-center relative z-10">
-                            <a href="contact.php"
+                            <a href="<?php echo prettyUrl('contact.php'); ?>"
                                 class="px-8 py-4 bg-white text-[#d4af37] rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg flex items-center gap-2">
                                 <span class="material-symbols-outlined">mail</span>
                                 <?php _e('services_page.contact_now'); ?>

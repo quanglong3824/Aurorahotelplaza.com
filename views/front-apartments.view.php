@@ -51,7 +51,7 @@
                         <?php _e('apartments_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>
@@ -173,13 +173,13 @@
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="<?php echo url('booking/index.php'); ?>?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
+                                                    <a href="<?php echo prettyUrl('apartment-detail.php', $apt['slug']); ?>" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>
@@ -273,13 +273,13 @@
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="<?php echo url('booking/index.php'); ?>?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
+                                                    <a href="<?php echo prettyUrl('apartment-detail.php', $apt['slug']); ?>" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>
@@ -309,7 +309,7 @@
                         <?php _e('apartments_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>

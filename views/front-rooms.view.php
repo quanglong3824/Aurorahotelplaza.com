@@ -180,12 +180,12 @@
 
                                         <!-- Actions -->
                                         <div class="room-actions">
-                                            <a href="booking/index.php?room_type=<?php echo $room['slug']; ?>" class="btn-book">
+                                            <a href="<?php echo url('booking/index.php'); ?>?room_type=<?php echo $room['slug']; ?>" class="btn-book">
                                                 <span class="material-symbols-outlined"
                                                     style="font-size: 18px;">calendar_month</span>
                                                 <?php _e('rooms_page.book'); ?>
                                             </a>
-                                            <a href="room-details/<?php echo $room['slug']; ?>.php" class="btn-detail">
+                                            <a href="<?php echo prettyUrl('room-detail.php', $room['slug']); ?>" class="btn-detail">
                                                 <?php _e('rooms_page.view_details'); ?>
                                                 <span class="material-symbols-outlined">arrow_forward</span>
                                             </a>

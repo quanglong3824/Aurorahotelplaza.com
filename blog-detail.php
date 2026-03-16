@@ -62,9 +62,9 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
 
                     <!-- Breadcrumb -->
                     <nav class="mb-8 flex items-center gap-2 text-sm">
-                        <a href="index.php" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
+                        <a href="<?php echo prettyUrl('index.php'); ?>" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
                         <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
-                        <a href="blog.php" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
+                        <a href="<?php echo prettyUrl('blog.php'); ?>" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
                         <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
                         <span class="text-white/70">
                             <?php echo htmlspecialchars(_f($post, 'title')); ?>
@@ -580,7 +580,7 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <?php foreach ($related_posts as $related): ?>
                                 <article class="blog-card bg-white/5 border border-white/10">
-                                    <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>"
+                                    <a href="<?php echo prettyUrl('blog-detail.php', '<?php echo urlencode($related['slug']); ?>'); ?>"
                                         class="block h-full">
                                         <div class="blog-card-image"
                                             style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
