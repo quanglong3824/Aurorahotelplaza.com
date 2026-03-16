@@ -5,6 +5,8 @@
 
 # Enable Rewrite Engine
 RewriteEngine On
+
+# Tự động nhận diện thư mục con (Nếu có)
 RewriteBase /
 
 # ── SEO Friendly URLs ──────────────────────────
@@ -42,8 +44,9 @@ RewriteRule ^lien-he$ contact.php [L,QSA]
 RewriteRule ^kham-pha$ explore.php [L,QSA]
 RewriteRule ^thu-vien-anh$ gallery.php [L,QSA]
 
-# 7. Ẩn đuôi .php khi người dùng truy cập trực tiếp (R=301 để SEO)
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/([^.]+)\.php [NC]
+# 7. Ẩn đuôi .php khi người dùng truy cập trực tiếp (Sửa lỗi lặp thư mục con)
+# Chỉ thực hiện nếu yêu cầu kết thúc bằng .php
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+(.*?)\.php[\s?] [NC]
 RewriteRule ^ %1 [R=301,L]
 
 # 8. Nếu file không tồn tại, tự động thử thêm .php
