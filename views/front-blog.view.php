@@ -2,19 +2,30 @@
 <html translate="no" class="dark" lang="<?php echo getLang(); ?>">
 
 <head>
+    <?php
+    require_once __DIR__ . '/../helpers/seo.php';
+    require_once __DIR__ . '/../config/performance.php';
+    echo SEO::generateMetaTags([
+        'title' => __('blog_page.title'),
+        'description' => __('blog_page.page_subtitle'),
+    ]);
+    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-    <title><?php _e('blog_page.title'); ?></title>
+
+    <!-- DNS Prefetch & Preconnect -->
+    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
+    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
 
     <!-- Scripts & Styles -->
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="assets/css/blog-glass.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog-glass.css'); ?>">
     <style>
         .page-header-blog,
         .blog-content-wrapper {

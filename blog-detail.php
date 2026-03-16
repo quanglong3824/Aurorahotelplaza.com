@@ -23,17 +23,32 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
+    <?php
+    require_once 'helpers/seo.php';
+    require_once 'config/performance.php';
+    echo SEO::generateMetaTags([
+        'title' => htmlspecialchars(_f($post, 'title')) . ' - Aurora Hotel Plaza',
+        'description' => htmlspecialchars(_f($post, 'excerpt') ?? ''),
+        'image' => $post['featured_image'] ?? '',
+        'type' => 'article'
+    ]);
+    echo SEO::generateBlogStructuredData($post);
+    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-    <title><?php echo htmlspecialchars(_f($post, 'title')); ?> - Aurora Hotel Plaza</title>
-    <meta name="description" content="<?php echo htmlspecialchars(_f($post, 'excerpt') ?? ''); ?>">
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="assets/css/blog.css">
-    <link rel="stylesheet" href="assets/css/blog-detail.css">
+
+    <!-- DNS Prefetch & Preconnect -->
+    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
+    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
+
+    <!-- Assets -->
+    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog-detail.css'); ?>">
 </head>
 
 <body class="glass-page blog-detail-wrapper font-body text-white">

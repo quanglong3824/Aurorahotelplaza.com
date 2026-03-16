@@ -295,6 +295,41 @@ class SEO {
     }
     
     /**
+     * Generate Structured Data for Blog Post
+     * @param array $post
+     * @return string
+     */
+    public static function generateBlogStructuredData($post) {
+        $data = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'headline' => $post['title'],
+            'description' => $post['excerpt'] ?? '',
+            'image' => self::$site_url . ($post['featured_image'] ?? self::$default_image),
+            'author' => [
+                '@type' => 'Person',
+                'name' => $post['author_name'] ?? 'Admin'
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => 'Aurora Hotel Plaza',
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => self::$site_url . '/assets/img/logo.png'
+                ]
+            ],
+            'datePublished' => $post['published_at'],
+            'dateModified' => $post['updated_at'] ?? $post['published_at'],
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => self::getCurrentURL()
+            ]
+        ];
+        
+        return '<script type="application/ld+json">' . "\n" . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n" . '</script>' . "\n";
+    }
+    
+    /**
      * Get Current URL
      * @return string
      */

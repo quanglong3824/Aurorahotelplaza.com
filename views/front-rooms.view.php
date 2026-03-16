@@ -2,16 +2,29 @@
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
+    <?php
+    require_once __DIR__ . '/../helpers/seo.php';
+    require_once __DIR__ . '/../config/performance.php';
+    echo SEO::generateMetaTags([
+        'title' => __('rooms_page.title'),
+        'description' => __('rooms_page.page_subtitle'),
+    ]);
+    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-    <title><?php _e('rooms_page.title'); ?></title>
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/rooms.css'); ?>">
+
+    <!-- DNS Prefetch & Preconnect -->
+    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
+    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
+
+    <!-- Assets -->
+    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/rooms.css'); ?>">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>');

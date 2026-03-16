@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 <head>
+    <?php
+    require_once __DIR__ . '/../helpers/seo.php';
+    require_once __DIR__ . '/../config/performance.php';
+    echo SEO::generateMetaTags([
+        'title' => __('contact_page.title'),
+        'description' => __('contact_page.page_subtitle'),
+    ]);
+    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title><?php _e('contact_page.title'); ?></title>
     
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.google.com" crossorigin>
+    <!-- DNS Prefetch & Preconnect -->
+    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
+    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
+    <?php echo preconnect('https://www.google.com', true); ?>
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="assets/css/fonts.css" as="style">
-    <link rel="preload" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>" as="image">
+    <?php echo preloadResource(assetVersion('assets/css/fonts.css'), 'style'); ?>
+    <?php echo preloadResource(imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'), 'image'); ?>
     
     <!-- Critical CSS inline for faster FCP -->
     <style>
@@ -24,14 +31,11 @@
         .page-hero-glass{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;padding:180px 20px 80px}
     </style>
     
-    <!-- Tailwind CSS -->
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet"/>
-    
-    <!-- Main stylesheets with versioning -->
-    <?php $css_version = '1.0.7'; ?>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $css_version; ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo $css_version; ?>">
+    <!-- Assets -->
+    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet"/>
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/pages-glass.css'); ?>">
 </head>
 
 <body class="glass-page font-body text-white">

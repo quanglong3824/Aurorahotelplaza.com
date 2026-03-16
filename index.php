@@ -8,164 +8,197 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/performance.php';
 require_once __DIR__ . '/helpers/image-helper.php';
 require_once __DIR__ . '/helpers/language.php';
+require_once __DIR__ . '/helpers/seo.php';
 initLanguage();
 
 // Fetch featured rooms from database
-$featured_rooms = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT * FROM room_types 
-        WHERE status = 'active' AND category = 'room'
-        ORDER BY sort_order ASC
-        LIMIT 3
-    ");
-    $stmt->execute();
-    $featured_rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page error: " . $e->getMessage());
+$featured_rooms = QueryCache::get('featured_rooms_' . getLang());
+if ($featured_rooms === null) {
+    $featured_rooms = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT * FROM room_types 
+            WHERE status = 'active' AND category = 'room'
+            ORDER BY sort_order ASC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $featured_rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('featured_rooms_' . getLang(), $featured_rooms);
+    } catch (Exception $e) {
+        error_log("Index page error: " . $e->getMessage());
+    }
 }
 
 // Fetch featured apartments from database
-$featured_apartments = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT * FROM room_types 
-        WHERE status = 'active' AND category = 'apartment'
-        ORDER BY sort_order ASC
-        LIMIT 3
-    ");
-    $stmt->execute();
-    $featured_apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page (apartments) error: " . $e->getMessage());
+$featured_apartments = QueryCache::get('featured_apartments_' . getLang());
+if ($featured_apartments === null) {
+    $featured_apartments = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT * FROM room_types 
+            WHERE status = 'active' AND category = 'apartment'
+            ORDER BY sort_order ASC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $featured_apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('featured_apartments_' . getLang(), $featured_apartments);
+    } catch (Exception $e) {
+        error_log("Index page (apartments) error: " . $e->getMessage());
+    }
 }
 
 // Fetch latest blog posts
-$latest_posts = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT p.title, p.title_en, p.slug, p.excerpt, p.excerpt_en, p.featured_image, p.published_at, u.full_name as author_name
-        FROM blog_posts p
-        LEFT JOIN users u ON p.author_id = u.user_id
-        WHERE p.status = 'published'
-        ORDER BY p.published_at DESC
-        LIMIT 3
-    ");
-    $stmt->execute();
-    $latest_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page (blog) error: " . $e->getMessage());
+$latest_posts = QueryCache::get('latest_posts_' . getLang());
+if ($latest_posts === null) {
+    $latest_posts = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT p.title, p.title_en, p.slug, p.excerpt, p.excerpt_en, p.featured_image, p.published_at, u.full_name as author_name
+            FROM blog_posts p
+            LEFT JOIN users u ON p.author_id = u.user_id
+            WHERE p.status = 'published'
+            ORDER BY p.published_at DESC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $latest_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('latest_posts_' . getLang(), $latest_posts);
+    } catch (Exception $e) {
+        error_log("Index page (blog) error: " . $e->getMessage());
+    }
 }
 
 // Fetch customer reviews
-$customer_reviews = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT r.*, u.full_name, rt.type_name, rt.type_name_en
-        FROM reviews r
-        LEFT JOIN users u ON r.user_id = u.user_id
-        LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
-        WHERE r.status = 'approved' AND r.rating >= 4
-        ORDER BY r.created_at DESC
-        LIMIT 6
-    ");
-    $stmt->execute();
-    $customer_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page (reviews) error: " . $e->getMessage());
+$customer_reviews = QueryCache::get('customer_reviews_' . getLang());
+if ($customer_reviews === null) {
+    $customer_reviews = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT r.*, u.full_name, rt.type_name, rt.type_name_en
+            FROM reviews r
+            LEFT JOIN users u ON r.user_id = u.user_id
+            LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
+            WHERE r.status = 'approved' AND r.rating >= 4
+            ORDER BY r.created_at DESC
+            LIMIT 6
+        ");
+        $stmt->execute();
+        $customer_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('customer_reviews_' . getLang(), $customer_reviews);
+    } catch (Exception $e) {
+        error_log("Index page (reviews) error: " . $e->getMessage());
+    }
 }
 
 // Fetch active promotions
-$active_promotions = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT * FROM promotions 
-        WHERE status = 'active' 
-        AND start_date <= CURDATE() 
-        AND end_date >= CURDATE()
-        ORDER BY discount_value DESC
-        LIMIT 3
-    ");
-    $stmt->execute();
-    $active_promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page (promotions) error: " . $e->getMessage());
+$active_promotions = QueryCache::get('active_promotions_' . getLang());
+if ($active_promotions === null) {
+    $active_promotions = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT * FROM promotions 
+            WHERE status = 'active' 
+            AND start_date <= CURDATE() 
+            AND end_date >= CURDATE()
+            ORDER BY discount_value DESC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $active_promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('active_promotions_' . getLang(), $active_promotions);
+    } catch (Exception $e) {
+        error_log("Index page (promotions) error: " . $e->getMessage());
+    }
 }
 
-// Fetch services
-$hotel_services = [];
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT * FROM services 
-        WHERE is_available = 1
-        ORDER BY sort_order ASC
-        LIMIT 6
-    ");
-    $stmt->execute();
-    $hotel_services = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    error_log("Index page (services) error: " . $e->getMessage());
+$hotel_services = QueryCache::get('hotel_services_' . getLang());
+if ($hotel_services === null) {
+    $hotel_services = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT * FROM services 
+            WHERE is_available = 1
+            ORDER BY sort_order ASC
+            LIMIT 6
+        ");
+        $stmt->execute();
+        $hotel_services = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        QueryCache::set('hotel_services_' . getLang(), $hotel_services);
+    } catch (Exception $e) {
+        error_log("Index page (services) error: " . $e->getMessage());
+    }
 }
 
 // Calculate statistics
-$stats = [
-    'total_rooms' => 150,
-    'happy_customers' => 5000,
-    'years_experience' => 10,
-    'awards' => 15
-];
-try {
-    $db = getDB();
-    // Count total rooms
-    $stmt = $db->query("SELECT COUNT(*) FROM rooms WHERE status != 'inactive'");
-    $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
+$stats = QueryCache::get('index_stats');
+if ($stats === null) {
+    $stats = [
+        'total_rooms' => 150,
+        'happy_customers' => 5000,
+        'years_experience' => 10,
+        'awards' => 15
+    ];
+    try {
+        $db = getDB();
+        // Count total rooms
+        $stmt = $db->query("SELECT COUNT(*) FROM rooms WHERE status != 'inactive'");
+        $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
 
-    // Count completed bookings
-    $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
-    $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
-} catch (Exception $e) {
-    error_log("Index page (stats) error: " . $e->getMessage());
+        // Count completed bookings
+        $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
+        $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
+        QueryCache::set('index_stats', $stats);
+    } catch (Exception $e) {
+        error_log("Index page (stats) error: " . $e->getMessage());
+    }
 }
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>" translate="no">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="google" content="notranslate" />
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-    <title><?php _e('home.meta_title'); ?></title>
+    <?php
+    echo SEO::generateMetaTags([
+        'title' => __('home.meta_title'),
+        'description' => __('home.meta_description'),
+        'keywords' => __('home.meta_keywords'),
+    ]);
+    echo SEO::generateHotelStructuredData();
+    ?>
 
     <!-- DNS Prefetch & Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
+    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
     
     <!-- Preload Critical Assets -->
-    <link rel="preload" href="<?php echo assetVersion('css/fonts.css'); ?>" as="style">
-    <link rel="preload" href="<?php echo assetVersion('css/style.css'); ?>" as="style">
+    <?php echo preloadResource(assetVersion('css/fonts.css'), 'style'); ?>
+    <?php echo preloadResource(assetVersion('css/style.css'), 'style'); ?>
+    <?php echo preloadResource(assetVersion('css/tailwind-output.css'), 'style'); ?>
     
-    <!-- Critical CSS (External) - First Paint Optimization -->
-    <link rel="stylesheet" href="<?php echo assetVersion('css/pages/index.css'); ?>">
+    <!-- Critical CSS (Inline) - First Paint Optimization -->
+    <?php echo inlineCSS('css/pages/index.css'); ?>
 
-    <!-- Tailwind CSS - Now loading via CDN -->
-    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>" defer></script>
+    <!-- Tailwind CSS - Local version -->
+    <link rel="stylesheet" href="<?php echo assetVersion('css/tailwind-output.css'); ?>">
     <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
-
-    <!-- Tailwind Configuration -->
 
     <!-- Custom CSS - Essential styles loaded synchronously -->
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
+    
+    <!-- Defer non-critical CSS -->
+    <?php echo deferCSS(assetVersion('css/pages-glass.css')); ?>
+    <?php echo deferCSS(assetVersion('css/responsive-index.css')); ?>
+    <?php echo deferCSS(assetVersion('css/index-upgrade.css')); ?>
+    <?php echo deferCSS(assetVersion('css/featured-apartments-glass.css')); ?>
     
     <!-- Preload Hero Images -->
     <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">
