@@ -10,7 +10,7 @@
                         <h1 class="text-3xl font-bold text-white"><?php _e('profile_page.edit_title'); ?></h1>
                         <p class="text-white/60"><?php _e('profile_page.edit_subtitle'); ?></p>
                     </div>
-                    <a href="<?php echo prettyUrl('index.php'); ?>" class="flex items-center gap-2 text-white/70 hover:text-accent transition-colors">
+                    <a href="index.php" class="flex items-center gap-2 text-white/70 hover:text-accent transition-colors">
                         <span class="material-symbols-outlined">arrow_back</span>
                         <?php _e('common.back'); ?>
                     </a>

@@ -400,8 +400,6 @@ return [
     'home' => [
         'read_more' => 'Đọc thêm',
         'meta_title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
-        'meta_description' => 'Chào mừng đến với Aurora Hotel Plaza - Khách sạn 4 sao sang trọng bậc nhất tại Biên Hòa, Đồng Nai. Cung cấp phòng nghỉ, căn hộ dịch vụ, nhà hàng và sảnh tiệc cưới chuyên nghiệp.',
-        'meta_keywords' => 'khách sạn biên hòa, aurora hotel plaza, đặt phòng khách sạn biên hòa, khách sạn 4 sao biên hòa, căn hộ dịch vụ biên hòa, tiệc cưới biên hòa',
         'reception_24_7' => 'Lễ tân 24/24',
         'about_us' => 'Về chúng tôi',
         'welcome_title' => 'Chào mừng đến với Aurora Hotel Plaza',

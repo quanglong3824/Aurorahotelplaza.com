@@ -23,32 +23,17 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
 <head>
-    <?php
-    require_once 'helpers/seo.php';
-    require_once 'config/performance.php';
-    echo SEO::generateMetaTags([
-        'title' => htmlspecialchars(_f($post, 'title')) . ' - Aurora Hotel Plaza',
-        'description' => htmlspecialchars(_f($post, 'excerpt') ?? ''),
-        'image' => $post['featured_image'] ?? '',
-        'type' => 'article'
-    ]);
-    echo SEO::generateBlogStructuredData($post);
-    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-
-    <!-- DNS Prefetch & Preconnect -->
-    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
-    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
-
-    <!-- Assets -->
-    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
-    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog-detail.css'); ?>">
+    <title><?php echo htmlspecialchars(_f($post, 'title')); ?> - Aurora Hotel Plaza</title>
+    <meta name="description" content="<?php echo htmlspecialchars(_f($post, 'excerpt') ?? ''); ?>">
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
+    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/liquid-glass.css">
+    <link rel="stylesheet" href="assets/css/blog.css">
+    <link rel="stylesheet" href="assets/css/blog-detail.css">
 </head>
 
 <body class="glass-page blog-detail-wrapper font-body text-white">
@@ -62,9 +47,9 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
 
                     <!-- Breadcrumb -->
                     <nav class="mb-8 flex items-center gap-2 text-sm">
-                        <a href="<?php echo prettyUrl('index.php'); ?>" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
+                        <a href="index.php" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
                         <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
-                        <a href="<?php echo prettyUrl('blog.php'); ?>" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
+                        <a href="blog.php" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
                         <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
                         <span class="text-white/70">
                             <?php echo htmlspecialchars(_f($post, 'title')); ?>
@@ -580,7 +565,7 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <?php foreach ($related_posts as $related): ?>
                                 <article class="blog-card bg-white/5 border border-white/10">
-                                    <a href="<?php echo prettyUrl('blog-detail.php', urlencode($related['slug'])); ?>"
+                                    <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>"
                                         class="block h-full">
                                         <div class="blog-card-image"
                                             style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">

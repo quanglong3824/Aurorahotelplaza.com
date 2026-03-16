@@ -61,7 +61,7 @@
 
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="<?php echo prettyUrl('rooms.php'); ?>" class="glass-quick-link group">
+                        <a href="rooms.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">hotel</span>
                             </div>
@@ -70,7 +70,7 @@
                         </a>
 
                         <!-- Căn hộ -->
-                        <a href="<?php echo prettyUrl('apartments.php'); ?>" class="glass-quick-link group">
+                        <a href="apartments.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">apartment</span>
                             </div>
@@ -79,7 +79,7 @@
                         </a>
 
                         <!-- Dịch vụ -->
-                        <a href="<?php echo prettyUrl('services.php'); ?>" class="glass-quick-link group">
+                        <a href="services.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">room_service</span>
                             </div>
@@ -88,7 +88,7 @@
                         </a>
 
                         <!-- Thư viện ảnh -->
-                        <a href="<?php echo prettyUrl('gallery.php'); ?>" class="glass-quick-link group">
+                        <a href="gallery.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">photo_library</span>
                             </div>
@@ -97,7 +97,7 @@
                         </a>
 
                         <!-- Blog -->
-                        <a href="<?php echo prettyUrl('blog.php'); ?>" class="glass-quick-link group">
+                        <a href="blog.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">article</span>
                             </div>
@@ -106,7 +106,7 @@
                         </a>
 
                         <!-- Liên hệ -->
-                        <a href="<?php echo prettyUrl('contact.php'); ?>" class="glass-quick-link group">
+                        <a href="contact.php" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">contact_support</span>
                             </div>
@@ -133,7 +133,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="<?php echo prettyUrl('rooms.php'); ?>" class="glass-category-card">
+                        <a href="rooms.php" class="glass-category-card">
                             <img src="<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.rooms'); ?>">
                             <div class="glass-category-overlay"></div>
@@ -147,7 +147,7 @@
                         </a>
 
                         <!-- Căn hộ -->
-                        <a href="<?php echo prettyUrl('apartments.php'); ?>" class="glass-category-card">
+                        <a href="apartments.php" class="glass-category-card">
                             <img src="<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.apartments'); ?>"
                                 onerror="this.src='<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-3.jpg'); ?>'">
@@ -210,7 +210,7 @@
                                 <p class="text-white/70"><?php _e('explore_page.featured_rooms_desc'); ?>
                                 </p>
                             </div>
-                            <a href="<?php echo prettyUrl('rooms.php'); ?>"
+                            <a href="rooms.php"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_rooms'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -221,7 +221,7 @@
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('room-detail.php', htmlspecialchars($room['slug'])); ?>" class="group">
+                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
@@ -275,7 +275,7 @@
                                     <?php _e('explore_page.apartments_section_desc'); ?>
                                 </p>
                             </div>
-                            <a href="<?php echo prettyUrl('apartments.php'); ?>"
+                            <a href="apartments.php"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_apartments'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -286,7 +286,7 @@
                             <?php foreach ($featured_apartments as $apt):
                                 $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('apartment-detail.php', htmlspecialchars($apt['slug'])); ?>" class="group">
+                                <a href="apartment-details/<?php echo htmlspecialchars($apt['slug']); ?>.php" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
@@ -343,7 +343,7 @@
                                     <?php _e('explore_page.services_section_desc'); ?>
                                 </p>
                             </div>
-                            <a href="<?php echo prettyUrl('services.php'); ?>"
+                            <a href="services.php"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_services'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -352,7 +352,7 @@
 
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                             <?php foreach ($featured_services as $service): ?>
-                                <a href="<?php echo prettyUrl('service-detail.php', htmlspecialchars($service['slug'])); ?>"
+                                <a href="service-detail.php?slug=<?php echo htmlspecialchars($service['slug']); ?>"
                                     class="group">
                                     <div class="glass-card p-6 text-center hover:-translate-y-2">
                                         <div
@@ -424,7 +424,7 @@
                                 <p class="text-white/70"><?php _e('explore_page.latest_posts_desc'); ?>
                                 </p>
                             </div>
-                            <a href="<?php echo prettyUrl('blog.php'); ?>"
+                            <a href="blog.php"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_posts'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -433,7 +433,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <?php foreach ($latest_posts as $post): ?>
-                                <a href="<?php echo prettyUrl('blog-detail.php', urlencode($post['slug'])); ?>" class="group">
+                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <?php if ($post['featured_image']): ?>
@@ -516,7 +516,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                        <a href="<?php echo prettyUrl('about.php'); ?>"
+                        <a href="about.php"
                             class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
                             <div
                                 class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -550,7 +550,7 @@
                             </div>
                         </a>
 
-                        <a href="<?php echo prettyUrl('gallery.php'); ?>"
+                        <a href="gallery.php"
                             class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
                             <div
                                 class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -568,7 +568,7 @@
                             </div>
                         </a>
 
-                        <a href="<?php echo prettyUrl('contact.php'); ?>"
+                        <a href="contact.php"
                             class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
                             <div
                                 class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">

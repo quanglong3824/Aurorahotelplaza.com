@@ -118,20 +118,6 @@ function imgUrl($path, $fallback = 'assets/img/hero-banner/aurora-hotel-bien-hoa
     // Remove leading slash if exists
     $path = ltrim($path, '/');
 
-    // WebP Detection Logic
-    // Check if a .webp version exists for the requested image
-    $webpPath = $path . '.webp';
-    $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $webpPath;
-    
-    // If we are in a subdirectory (like /Aurorahotelplaza.com/)
-    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-    $projRoot = $_SERVER['DOCUMENT_ROOT'] . rtrim($scriptDir, '/');
-    $absolutePathWithSubdir = $projRoot . '/' . $webpPath;
-
-    if (file_exists($absolutePath) || file_exists($absolutePathWithSubdir)) {
-        $path = $webpPath;
-    }
-
     // Check if path is already absolute URL
     if (strpos($path, 'http') === 0) {
         return $path;

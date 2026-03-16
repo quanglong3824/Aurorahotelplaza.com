@@ -2,30 +2,19 @@
 <html translate="no" class="dark" lang="<?php echo getLang(); ?>">
 
 <head>
-    <?php
-    require_once __DIR__ . '/../helpers/seo.php';
-    require_once __DIR__ . '/../config/performance.php';
-    echo SEO::generateMetaTags([
-        'title' => __('blog_page.title'),
-        'description' => __('blog_page.page_subtitle'),
-    ]);
-    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-
-    <!-- DNS Prefetch & Preconnect -->
-    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
-    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
+    <title><?php _e('blog_page.title'); ?></title>
 
     <!-- Scripts & Styles -->
-    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
-    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
+    <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/blog-glass.css'); ?>">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/liquid-glass.css">
+    <link rel="stylesheet" href="assets/css/blog-glass.css?v=<?php echo time(); ?>">
     <style>
         .page-header-blog,
         .blog-content-wrapper {
@@ -60,11 +49,11 @@
                     <!-- Category Filters -->
                     <?php if (!empty($categories)): ?>
                         <div class="blog-categories">
-                            <a href="<?php echo prettyUrl('blog.php'); ?>" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
+                            <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
                                 <?php _e('blog_page.all'); ?>
                             </a>
                             <?php foreach ($categories as $cat): ?>
-                                <a href="<?php echo prettyUrl('blog.php'); ?>?category=<?php echo urlencode($cat['slug']); ?>"
+                                <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
                                     class="category-tag <?php echo $category_slug === $cat['slug'] ? 'active' : ''; ?>">
                                     <?php echo htmlspecialchars(_f($cat, 'category_name')); ?>
                                 </a>
@@ -79,7 +68,7 @@
                                 $featured_img = imgUrl($post['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
                                 ?>
                                 <article class="h-full">
-                                    <a href="<?php echo prettyUrl('blog-detail.php', $post['slug']); ?>"
+                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
                                         class="blog-glass-card group block h-full">
 
                                         <div class="blog-card-image-wrapper">

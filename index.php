@@ -8,203 +8,170 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/performance.php';
 require_once __DIR__ . '/helpers/image-helper.php';
 require_once __DIR__ . '/helpers/language.php';
-require_once __DIR__ . '/helpers/seo.php';
 initLanguage();
 
 // Fetch featured rooms from database
-$featured_rooms = QueryCache::get('featured_rooms_' . getLang());
-if ($featured_rooms === null) {
-    $featured_rooms = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT * FROM room_types 
-            WHERE status = 'active' AND category = 'room'
-            ORDER BY sort_order ASC
-            LIMIT 3
-        ");
-        $stmt->execute();
-        $featured_rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('featured_rooms_' . getLang(), $featured_rooms);
-    } catch (Exception $e) {
-        error_log("Index page error: " . $e->getMessage());
-    }
+$featured_rooms = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT * FROM room_types 
+        WHERE status = 'active' AND category = 'room'
+        ORDER BY sort_order ASC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $featured_rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page error: " . $e->getMessage());
 }
 
 // Fetch featured apartments from database
-$featured_apartments = QueryCache::get('featured_apartments_' . getLang());
-if ($featured_apartments === null) {
-    $featured_apartments = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT * FROM room_types 
-            WHERE status = 'active' AND category = 'apartment'
-            ORDER BY sort_order ASC
-            LIMIT 3
-        ");
-        $stmt->execute();
-        $featured_apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('featured_apartments_' . getLang(), $featured_apartments);
-    } catch (Exception $e) {
-        error_log("Index page (apartments) error: " . $e->getMessage());
-    }
+$featured_apartments = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT * FROM room_types 
+        WHERE status = 'active' AND category = 'apartment'
+        ORDER BY sort_order ASC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $featured_apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (apartments) error: " . $e->getMessage());
 }
 
 // Fetch latest blog posts
-$latest_posts = QueryCache::get('latest_posts_' . getLang());
-if ($latest_posts === null) {
-    $latest_posts = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT p.title, p.title_en, p.slug, p.excerpt, p.excerpt_en, p.featured_image, p.published_at, u.full_name as author_name
-            FROM blog_posts p
-            LEFT JOIN users u ON p.author_id = u.user_id
-            WHERE p.status = 'published'
-            ORDER BY p.published_at DESC
-            LIMIT 3
-        ");
-        $stmt->execute();
-        $latest_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('latest_posts_' . getLang(), $latest_posts);
-    } catch (Exception $e) {
-        error_log("Index page (blog) error: " . $e->getMessage());
-    }
+$latest_posts = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT p.title, p.title_en, p.slug, p.excerpt, p.excerpt_en, p.featured_image, p.published_at, u.full_name as author_name
+        FROM blog_posts p
+        LEFT JOIN users u ON p.author_id = u.user_id
+        WHERE p.status = 'published'
+        ORDER BY p.published_at DESC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $latest_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (blog) error: " . $e->getMessage());
 }
 
 // Fetch customer reviews
-$customer_reviews = QueryCache::get('customer_reviews_' . getLang());
-if ($customer_reviews === null) {
-    $customer_reviews = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT r.*, u.full_name, rt.type_name, rt.type_name_en
-            FROM reviews r
-            LEFT JOIN users u ON r.user_id = u.user_id
-            LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
-            WHERE r.status = 'approved' AND r.rating >= 4
-            ORDER BY r.created_at DESC
-            LIMIT 6
-        ");
-        $stmt->execute();
-        $customer_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('customer_reviews_' . getLang(), $customer_reviews);
-    } catch (Exception $e) {
-        error_log("Index page (reviews) error: " . $e->getMessage());
-    }
+$customer_reviews = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT r.*, u.full_name, rt.type_name, rt.type_name_en
+        FROM reviews r
+        LEFT JOIN users u ON r.user_id = u.user_id
+        LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
+        WHERE r.status = 'approved' AND r.rating >= 4
+        ORDER BY r.created_at DESC
+        LIMIT 6
+    ");
+    $stmt->execute();
+    $customer_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (reviews) error: " . $e->getMessage());
 }
 
 // Fetch active promotions
-$active_promotions = QueryCache::get('active_promotions_' . getLang());
-if ($active_promotions === null) {
-    $active_promotions = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT * FROM promotions 
-            WHERE status = 'active' 
-            AND start_date <= CURDATE() 
-            AND end_date >= CURDATE()
-            ORDER BY discount_value DESC
-            LIMIT 3
-        ");
-        $stmt->execute();
-        $active_promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('active_promotions_' . getLang(), $active_promotions);
-    } catch (Exception $e) {
-        error_log("Index page (promotions) error: " . $e->getMessage());
-    }
+$active_promotions = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT * FROM promotions 
+        WHERE status = 'active' 
+        AND start_date <= CURDATE() 
+        AND end_date >= CURDATE()
+        ORDER BY discount_value DESC
+        LIMIT 3
+    ");
+    $stmt->execute();
+    $active_promotions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (promotions) error: " . $e->getMessage());
 }
 
-$hotel_services = QueryCache::get('hotel_services_' . getLang());
-if ($hotel_services === null) {
-    $hotel_services = [];
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("
-            SELECT * FROM services 
-            WHERE is_available = 1
-            ORDER BY sort_order ASC
-            LIMIT 6
-        ");
-        $stmt->execute();
-        $hotel_services = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        QueryCache::set('hotel_services_' . getLang(), $hotel_services);
-    } catch (Exception $e) {
-        error_log("Index page (services) error: " . $e->getMessage());
-    }
+// Fetch services
+$hotel_services = [];
+try {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT * FROM services 
+        WHERE is_available = 1
+        ORDER BY sort_order ASC
+        LIMIT 6
+    ");
+    $stmt->execute();
+    $hotel_services = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Index page (services) error: " . $e->getMessage());
 }
 
 // Calculate statistics
-$stats = QueryCache::get('index_stats');
-if ($stats === null) {
-    $stats = [
-        'total_rooms' => 150,
-        'happy_customers' => 5000,
-        'years_experience' => 10,
-        'awards' => 15
-    ];
-    try {
-        $db = getDB();
-        // Count total rooms
-        $stmt = $db->query("SELECT COUNT(*) FROM rooms WHERE status != 'inactive'");
-        $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
+$stats = [
+    'total_rooms' => 150,
+    'happy_customers' => 5000,
+    'years_experience' => 10,
+    'awards' => 15
+];
+try {
+    $db = getDB();
+    // Count total rooms
+    $stmt = $db->query("SELECT COUNT(*) FROM rooms WHERE status != 'inactive'");
+    $stats['total_rooms'] = $stmt->fetchColumn() ?: 150;
 
-        // Count completed bookings
-        $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
-        $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
-        QueryCache::set('index_stats', $stats);
-    } catch (Exception $e) {
-        error_log("Index page (stats) error: " . $e->getMessage());
-    }
+    // Count completed bookings
+    $stmt = $db->query("SELECT COUNT(DISTINCT user_id) FROM bookings WHERE status IN ('completed', 'checked_out')");
+    $stats['happy_customers'] = $stmt->fetchColumn() ?: 5000;
+} catch (Exception $e) {
+    error_log("Index page (stats) error: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
 <html class="light" lang="<?php echo getLang(); ?>" translate="no">
 
 <head>
-    <?php
-    echo SEO::generateMetaTags([
-        'title' => __('home.meta_title'),
-        'description' => __('home.meta_description'),
-        'keywords' => __('home.meta_keywords'),
-    ]);
-    echo SEO::generateHotelStructuredData();
-    ?>
+    <meta charset="utf-8" />
+    <meta name="google" content="notranslate" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title><?php _e('home.meta_title'); ?></title>
 
     <!-- DNS Prefetch & Preconnect -->
-    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
-    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Preload Critical Assets -->
-    <?php echo preloadResource(assetVersion('css/fonts.css'), 'style'); ?>
-    <?php echo preloadResource(assetVersion('css/style.css'), 'style'); ?>
-    <?php echo preloadResource(assetVersion('css/tailwind-output.css'), 'style'); ?>
+    <link rel="preload" href="<?php echo assetVersion('css/fonts.css'); ?>" as="style">
+    <link rel="preload" href="<?php echo assetVersion('css/style.css'); ?>" as="style">
     
-    <!-- Critical CSS (Inline) - First Paint Optimization -->
-    <?php echo inlineCSS('css/pages/index.css'); ?>
+    <!-- Critical CSS (External) - First Paint Optimization -->
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages/index.css'); ?>">
 
-    <!-- Tailwind CSS - Local version -->
-    <link rel="stylesheet" href="<?php echo assetVersion('css/tailwind-output.css'); ?>">
+    <!-- Tailwind CSS - Now loading via CDN -->
+    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>" defer></script>
     <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+
+    <!-- Tailwind Configuration -->
 
     <!-- Custom CSS - Essential styles loaded synchronously -->
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
     
-    <!-- Defer non-critical CSS -->
-    <?php echo deferCSS(assetVersion('css/pages-glass.css')); ?>
-    <?php echo deferCSS(assetVersion('css/responsive-index.css')); ?>
-    <?php echo deferCSS(assetVersion('css/index-upgrade.css')); ?>
-    <?php echo deferCSS(assetVersion('css/featured-apartments-glass.css')); ?>
-    
-    <!-- Preload First Hero Image (actual first slide) -->
-    <link rel="preload" as="image" href="assets/img/classical-family-apartment/classical-family-apartment6.jpg">
+    <!-- Preload Hero Images -->
+    <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">
 </head>
 
-<body class="bg-gray-950 font-body text-white">
+<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
     <div class="relative flex min-h-screen w-full flex-col">
 
         <?php include 'includes/header.php'; ?>
@@ -343,7 +310,7 @@ if ($stats === null) {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-secondary">
+                            <a href="booking/index.php" class="btn-glass-secondary">
                                 <?php _e('home.book_now'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
                             </a>
@@ -374,7 +341,7 @@ if ($stats === null) {
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('room-detail.php', htmlspecialchars($room['slug'])); ?>"
+                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -426,7 +393,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center pt-8">
-                        <a href="<?php echo prettyUrl('rooms.php'); ?>"
+                        <a href="rooms.php"
                             class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_rooms'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -457,7 +424,7 @@ if ($stats === null) {
                             <?php foreach ($featured_apartments as $apartment):
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('apartment-detail.php', htmlspecialchars($apartment['slug'])); ?>"
+                                <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -509,7 +476,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center pt-8">
-                        <a href="<?php echo prettyUrl('apartments.php'); ?>"
+                        <a href="apartments.php"
                             class="inline-flex items-center gap-2 px-8 py-4 btn-view-all rounded-xl font-bold">
                             <?php _e('home.view_all_apartments'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -536,7 +503,7 @@ if ($stats === null) {
                     <!-- Main Services Grid - Liquid Glass -->
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
-                        <a href="<?php echo prettyUrl('service-detail.php', 'wedding-service'); ?>" class="glass-service-card group">
+                        <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
                             <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
                                 alt="<?php _e('home.wedding_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -551,7 +518,7 @@ if ($stats === null) {
                         </a>
 
                         <!-- Conference Service -->
-                        <a href="<?php echo prettyUrl('service-detail.php', 'conference-service'); ?>" class="glass-service-card group">
+                        <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
                             <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
                                 alt="<?php _e('home.conference_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -566,7 +533,7 @@ if ($stats === null) {
                         </a>
 
                         <!-- Restaurant Service -->
-                        <a href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>" class="glass-service-card group">
+                        <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
                             <img src="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"
                                 alt="<?php _e('home.restaurant_aurora'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
@@ -610,7 +577,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex justify-center">
-                        <a href="<?php echo prettyUrl('services.php'); ?>" class="btn-glass-primary">
+                        <a href="services.php" class="btn-glass-primary">
                             <?php _e('home.view_all_services'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
@@ -694,7 +661,7 @@ if ($stats === null) {
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
-                                <a href="<?php echo prettyUrl('blog-detail.php', urlencode($post['slug'])); ?>"
+                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
                                     class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full">
                                     <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                         <?php
@@ -744,7 +711,7 @@ if ($stats === null) {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="<?php echo prettyUrl('blog.php'); ?>"
+                        <a href="blog.php"
                             class="inline-flex items-center gap-2 px-6 py-3 btn-glass-gold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_posts'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -906,7 +873,7 @@ if ($stats === null) {
                     </div>
 
                     <div class="flex flex-col gap-4 sm:flex-row sm:justify-center mt-4">
-                        <a href="<?php echo url('booking/index.php'); ?>"
+                        <a href="booking/index.php"
                             class="btn-glass-gold px-8 py-4 text-lg shadow-xl shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-1">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('home.book_now_cta'); ?>

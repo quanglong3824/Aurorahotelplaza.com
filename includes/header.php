@@ -51,48 +51,32 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Determine base path (used for assets mainly)
+// Determine base path based on current directory
 $current_dir = basename(dirname($_SERVER['PHP_SELF']));
 $subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin'];
 $base_path = in_array($current_dir, $subdirs) ? '../' : '';
 
-// ─── Auto-compute header variables if not set by calling page ─────────────────
-// Prevents "Undefined variable" warnings when pages include header.php directly
-// without going through FrontSharedController::getHeaderData()
-if (!isset($header_class) || !isset($has_hero) || !isset($is_solid_page) || !isset($is_fixed_transparent) || !isset($force_scrolled)) {
-    $current_page = basename($_SERVER['PHP_SELF'], '.php');
+// Check if user is logged in
+$is_logged_in = isset($_SESSION['user_id']);
+$user_name = $_SESSION['user_name'] ?? 'User';
+$user_role = $_SESSION['user_role'] ?? 'customer';
 
-    $pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore',
-        'wedding', 'conference', 'restaurant', 'office', 'contact',
-        'login', 'register', 'forgot-password', 'reset-password',
-        'blog', 'confirmation'];
-    $has_hero = $has_hero ?? (
-        in_array($current_page, $pages_with_hero) ||
-        in_array($current_dir, ['room-details', 'apartment-details', 'booking'])
-    );
+// Detect if current page has hero banner
+$current_page = basename($_SERVER['PHP_SELF'], '.php');
+$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog', 'confirmation'];
+$has_hero = in_array($current_page, $pages_with_hero) || in_array($current_dir, ['room-details', 'apartment-details', 'booking']);
 
-    $pages_solid_header = [];
-    $is_solid_page = $is_solid_page ?? in_array($current_page, $pages_solid_header);
+// Pages without hero need solid header
+$pages_solid_header = [];
+$is_solid_page = in_array($current_page, $pages_solid_header);
+$header_class = $has_hero ? 'header-transparent' : 'header-solid';
 
-    $header_class = $header_class ?? ($has_hero ? 'header-transparent' : 'header-solid');
-    $force_scrolled = $force_scrolled ?? ($is_solid_page ? 'header-scrolled' : '');
+// Force scrolled state for solid pages
+$force_scrolled = $is_solid_page ? 'header-scrolled' : '';
 
-    $pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password',
-        'services', 'service-detail', 'about', 'contact',
-        'cancellation-policy', 'privacy', 'terms',
-        'rooms', 'apartments', 'explore', 'index',
-        'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
-    $is_fixed_transparent = $is_fixed_transparent ?? (
-        in_array($current_page, $pages_fixed_transparent) ||
-        in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking'])
-    );
-}
-
-// User info defaults (if not set by calling page)
-$is_logged_in = $is_logged_in ?? isset($_SESSION['user_id']);
-$user_name    = $user_name    ?? ($_SESSION['user_name'] ?? 'User');
-$user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
-// ─────────────────────────────────────────────────────────────────────────────
+// Pages with fixed transparent header
+$pages_fixed_transparent = ['blog', 'blog-detail', 'login', 'register', 'forgot-password', 'services', 'service-detail', 'about', 'contact', 'cancellation-policy', 'privacy', 'terms', 'rooms', 'apartments', 'explore', 'index', 'bookings', 'loyalty', 'edit', 'booking-detail', 'confirmation'];
+$is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_array($current_dir, ['profile', 'room-details', 'apartment-details', 'booking']);
 ?>
 <!-- Scroll Progress Bar -->
 <div id="scroll-progress"
@@ -163,7 +147,7 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
-            <a href="<?php echo prettyUrl('index.php'); ?>">
+            <a href="<?php echo $base_path; ?>index.php">
                 <img id="header-logo"
                     src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>"
                     data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
@@ -173,16 +157,16 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
         </div>
         <nav class="hidden items-center gap-10 md:flex">
             <a class="text-base font-medium nav-link"
-                href="<?php echo prettyUrl('index.php'); ?>"><?php _e('nav.home'); ?></a>
+                href="<?php echo $base_path; ?>index.php"><?php _e('nav.home'); ?></a>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo prettyUrl('rooms.php'); ?>">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>rooms.php">
                     <?php _e('nav.rooms'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo prettyUrl('rooms.php'); ?>" class="submenu-item"><?php _e('nav.rooms_only'); ?></a>
-                    <a href="<?php echo prettyUrl('apartments.php'); ?>" class="submenu-item submenu-item-badge">
+                    <a href="<?php echo $base_path; ?>rooms.php" class="submenu-item"><?php _e('nav.rooms_only'); ?></a>
+                    <a href="<?php echo $base_path; ?>apartments.php" class="submenu-item submenu-item-badge">
                         <?php _e('nav.apartments'); ?>
                         <span class="badge-new"><?php _e('common.new'); ?></span>
                     </a>
@@ -190,38 +174,38 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
             </div>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo prettyUrl('services.php'); ?>">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>services.php">
                     <?php _e('nav.services'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo prettyUrl('service-detail.php', 'wedding-service'); ?>"
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service"
                         class="submenu-item"><?php _e('services_menu.wedding'); ?></a>
-                    <a href="<?php echo prettyUrl('service-detail.php', 'conference-service'); ?>"
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"
                         class="submenu-item"><?php _e('services_menu.conference'); ?></a>
-                    <a href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>"
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"
                         class="submenu-item"><?php _e('services_menu.restaurant'); ?></a>
-                    <a href="<?php echo prettyUrl('service-detail.php', 'office-rental'); ?>"
+                    <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental"
                         class="submenu-item"><?php _e('services_menu.office'); ?></a>
                 </div>
             </div>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo prettyUrl('explore.php'); ?>">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>explore.php">
                     <?php _e('nav.explore'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo prettyUrl('about.php'); ?>" class="submenu-item"><?php _e('nav.about'); ?></a>
-                    <a href="<?php echo prettyUrl('gallery.php'); ?>" class="submenu-item"><?php _e('nav.gallery'); ?></a>
-                    <a href="<?php echo prettyUrl('blog.php'); ?>" class="submenu-item"><?php _e('nav.blog'); ?></a>
+                    <a href="<?php echo $base_path; ?>about.php" class="submenu-item"><?php _e('nav.about'); ?></a>
+                    <a href="<?php echo $base_path; ?>gallery.php" class="submenu-item"><?php _e('nav.gallery'); ?></a>
+                    <a href="<?php echo $base_path; ?>blog.php" class="submenu-item"><?php _e('nav.blog'); ?></a>
                 </div>
             </div>
             <a class="text-base font-medium nav-link"
-                href="<?php echo prettyUrl('contact.php'); ?>"><?php _e('nav.contact'); ?></a>
+                href="<?php echo $base_path; ?>contact.php"><?php _e('nav.contact'); ?></a>
         </nav>
         <div class="flex items-center gap-2">
-            <a href="<?php echo url('booking/index.php'); ?>" class="btn-booking">
+            <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
                 <span class="truncate"><?php _e('nav.book_now'); ?></span>
             </a>
 
@@ -243,27 +227,27 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
                             </div>
                         </div>
                         <div class="user-menu-divider"></div>
-                        <a href="<?php echo url('profile/index.php'); ?>" class="user-menu-item">
+                        <a href="<?php echo $base_path; ?>profile/index.php" class="user-menu-item">
                             <span class="material-symbols-outlined">person</span>
                             <?php _e('nav.profile'); ?>
                         </a>
-                        <a href="<?php echo url('profile/bookings.php'); ?>" class="user-menu-item">
+                        <a href="<?php echo $base_path; ?>profile/bookings.php" class="user-menu-item">
                             <span class="material-symbols-outlined">hotel</span>
                             <?php _e('nav.my_bookings'); ?>
                         </a>
-                        <a href="<?php echo url('profile/loyalty.php'); ?>" class="user-menu-item">
+                        <a href="<?php echo $base_path; ?>profile/loyalty.php" class="user-menu-item">
                             <span class="material-symbols-outlined">stars</span>
                             <?php _e('nav.loyalty'); ?>
                         </a>
                         <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                             <div class="user-menu-divider"></div>
-                            <a href="<?php echo url('admin/index.php'); ?>" class="user-menu-item">
+                            <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <?php _e('nav.admin'); ?>
                             </a>
                         <?php endif; ?>
                         <div class="user-menu-divider"></div>
-                        <a href="<?php echo url('auth/logout.php'); ?>"
+                        <a href="<?php echo $base_path; ?>auth/logout.php"
                             class="user-menu-item text-red-600 dark:text-red-400">
                             <span class="material-symbols-outlined">logout</span>
                             <?php _e('nav.logout'); ?>
@@ -271,7 +255,7 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
                     </div>
                 </div>
             <?php else: ?>
-                <a href="<?php echo url('auth/login.php'); ?>" class="auth-btn">
+                <a href="<?php echo $base_path; ?>auth/login.php" class="auth-btn">
                     <span class="material-symbols-outlined text-xl">login</span>
                     <span class="hidden md:inline"><?php _e('nav.login'); ?></span>
                 </a>
@@ -308,9 +292,9 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
     <div class="floating-menu-items">
         <!-- Trang chủ -->
         <div class="floating-menu-item">
-            <a href="<?php echo prettyUrl('index.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.home'); ?></a>
-            <a href="<?php echo prettyUrl('index.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.home'); ?>">
                 <span class="material-symbols-outlined">home</span>
             </a>
@@ -318,18 +302,18 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
         <!-- Phòng & Căn hộ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo prettyUrl('rooms.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.rooms'); ?></a>
-            <a href="<?php echo prettyUrl('rooms.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">hotel</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo prettyUrl('rooms.php'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>rooms.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">bed</span>
                     <?php _e('nav.rooms_only'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('apartments.php'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>apartments.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">apartment</span>
                     <?php _e('nav.apartments'); ?>
                     <span class="floating-badge-new"><?php _e('common.new'); ?></span>
@@ -339,29 +323,29 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
         <!-- Dịch vụ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo prettyUrl('services.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.services'); ?></a>
-            <a href="<?php echo prettyUrl('services.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">room_service</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo prettyUrl('service-detail.php', 'wedding-service'); ?>"
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">celebration</span>
                     <?php _e('services_menu.wedding'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('service-detail.php', 'conference-service'); ?>"
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">groups</span>
                     <?php _e('services_menu.conference'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>"
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">restaurant</span>
                     <?php _e('services_menu.restaurant'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('service-detail.php', 'office-rental'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="floating-submenu-item">
                     <span class="material-symbols-outlined">business</span>
                     <?php _e('services_menu.office'); ?>
                 </a>
@@ -370,22 +354,22 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
         <!-- Khám phá - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo prettyUrl('explore.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.explore'); ?></a>
-            <a href="<?php echo prettyUrl('explore.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">explore</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo prettyUrl('about.php'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>about.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">info</span>
                     <?php _e('nav.about'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('gallery.php'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>gallery.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">photo_library</span>
                     <?php _e('nav.gallery'); ?>
                 </a>
-                <a href="<?php echo prettyUrl('blog.php'); ?>" class="floating-submenu-item">
+                <a href="<?php echo $base_path; ?>blog.php" class="floating-submenu-item">
                     <span class="material-symbols-outlined">article</span>
                     <?php _e('nav.blog'); ?>
                 </a>
@@ -394,9 +378,9 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
         <!-- Liên hệ -->
         <div class="floating-menu-item">
-            <a href="<?php echo prettyUrl('contact.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.contact'); ?></a>
-            <a href="<?php echo prettyUrl('contact.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.contact'); ?>">
                 <span class="material-symbols-outlined">call</span>
             </a>
@@ -404,9 +388,9 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 
         <!-- Đặt phòng -->
         <div class="floating-menu-item">
-            <a href="<?php echo url('booking/index.php'); ?>" class="floating-menu-label"
+            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.book_now'); ?></a>
-            <a href="<?php echo url('booking/index.php'); ?>" class="floating-menu-btn"
+            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-btn"
                 aria-label="<?php _e('nav.book_now'); ?>">
                 <span class="material-symbols-outlined">calendar_month</span>
             </a>
@@ -415,9 +399,9 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
         <?php if ($is_logged_in): ?>
             <!-- Tài khoản -->
             <div class="floating-menu-item">
-                <a href="<?php echo url('profile/index.php'); ?>" class="floating-menu-label"
+                <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-label"
                     style="text-decoration: none;"><?php _e('nav.profile'); ?></a>
-                <a href="<?php echo url('profile/index.php'); ?>" class="floating-menu-btn"
+                <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-btn"
                     aria-label="<?php _e('nav.profile'); ?>">
                     <span class="material-symbols-outlined">account_circle</span>
                 </a>
@@ -425,9 +409,9 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
         <?php else: ?>
             <!-- Đăng nhập -->
             <div class="floating-menu-item">
-                <a href="<?php echo url('auth/login.php'); ?>" class="floating-menu-label"
+                <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-label"
                     style="text-decoration: none;"><?php _e('nav.login'); ?></a>
-                <a href="<?php echo url('auth/login.php'); ?>" class="floating-menu-btn"
+                <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-btn"
                     aria-label="<?php _e('nav.login'); ?>">
                     <span class="material-symbols-outlined">login</span>
                 </a>
@@ -461,7 +445,7 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <form action="<?php echo url('booking/index.php'); ?>" method="GET" class="floating-booking-form-inner">
+            <form action="<?php echo $base_path; ?>booking/index.php" method="GET" class="floating-booking-form-inner">
                 <div class="floating-booking-field">
                     <label for="floating-checkin">
                         <span class="material-symbols-outlined">calendar_today</span>
@@ -897,12 +881,13 @@ $user_role    = $user_role    ?? ($_SESSION['user_role'] ?? 'customer');
 </style>
 
 <!-- Header Styles & Script -->
-<link rel="stylesheet" href="<?php echo assetVersion('css/header-styles.css'); ?>">
-<link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
-<link rel="stylesheet" href="<?php echo assetVersion('css/floating-menu.css'); ?>">
-<link rel="stylesheet" href="<?php echo assetVersion('css/ui-fixes.css'); ?>">
-<script src="<?php echo assetVersion('js/header-scroll.js'); ?>" defer></script>
-<script src="<?php echo assetVersion('js/floating-menu.js'); ?>" defer></script>
+<?php $asset_version = time(); ?>
+<link rel="stylesheet" href="<?php echo asset('css/header-styles.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/floating-menu.css'); ?>?v=<?php echo $asset_version; ?>">
+<link rel="stylesheet" href="<?php echo asset('css/ui-fixes.css'); ?>?v=<?php echo $asset_version; ?>">
+<script src="<?php echo asset('js/header-scroll.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
+<script src="<?php echo asset('js/floating-menu.js'); ?>?v=<?php echo $asset_version; ?>" defer></script>
 
 <script>
     (function () {

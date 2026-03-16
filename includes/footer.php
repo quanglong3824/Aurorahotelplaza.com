@@ -18,7 +18,7 @@ $base_path = $footerData['base_path'];
         <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
             <!-- Logo & Description -->
             <div class="lg:col-span-2">
-                <a href="<?php echo prettyUrl('index.php'); ?>">
+                <a href="<?php echo $base_path; ?>index.php">
                     <img src="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
                         alt="Aurora Hotel Plaza Logo" class="h-14 w-auto mb-6">
                 </a>
@@ -69,22 +69,22 @@ $base_path = $footerData['base_path'];
                 <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.quick_links'); ?></h4>
                 <ul class="space-y-3 text-sm">
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('about.php'); ?>"><?php _e('footer.about_us'); ?></a></li>
+                            href="<?php echo $base_path; ?>about.php"><?php _e('footer.about_us'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('rooms.php'); ?>"><?php _e('footer.rooms_suite'); ?></a></li>
+                            href="<?php echo $base_path; ?>rooms.php"><?php _e('footer.rooms_suite'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('services.php'); ?>"><?php _e('footer.services'); ?></a></li>
+                            href="<?php echo $base_path; ?>services.php"><?php _e('footer.services'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>"><?php _e('footer.restaurant'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"><?php _e('footer.restaurant'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('gallery.php'); ?>"><?php _e('footer.gallery'); ?></a></li>
+                            href="<?php echo $base_path; ?>gallery.php"><?php _e('footer.gallery'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors footer-link-popup" href="#"
                             data-title="<?php _e('footer.events'); ?>"
                             data-content="<?php _e('footer.events_coming_soon'); ?>"><?php _e('footer.events'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('contact.php'); ?>"><?php _e('footer.contact'); ?></a></li>
+                            href="<?php echo $base_path; ?>contact.php"><?php _e('footer.contact'); ?></a></li>
                 </ul>
             </div>
 
@@ -93,24 +93,24 @@ $base_path = $footerData['base_path'];
                 <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.services_title'); ?></h4>
                 <ul class="space-y-3 text-sm">
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo url('booking/index.php'); ?>"><?php _e('footer.online_booking'); ?></a></li>
+                            href="<?php echo $base_path; ?>booking/"><?php _e('footer.online_booking'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'aurora-restaurant'); ?>"><?php _e('footer.restaurant_bar'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"><?php _e('footer.restaurant_bar'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'conference-service'); ?>"><?php _e('footer.conference_events'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"><?php _e('footer.conference_events'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'therapeutic-massage'); ?>"><?php _e('footer.spa_massage'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=therapeutic-massage"><?php _e('footer.spa_massage'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'pool-gym'); ?>"><?php _e('footer.swimming_pool'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=pool-gym"><?php _e('footer.swimming_pool'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'pool-gym'); ?>"><?php _e('footer.gym'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=pool-gym"><?php _e('footer.gym'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo prettyUrl('service-detail.php', 'airport-transfer'); ?>"><?php _e('footer.shuttle_service'); ?></a>
+                            href="<?php echo $base_path; ?>service-detail.php?slug=airport-transfer"><?php _e('footer.shuttle_service'); ?></a>
                     </li>
                 </ul>
             </div>
@@ -170,11 +170,11 @@ $base_path = $footerData['base_path'];
                     <?php _e('footer.copyright', ['year' => $footerData['current_year']]); ?>
                 </p>
                 <div class="flex gap-6 text-sm">
-                    <a href="<?php echo prettyUrl('privacy.php'); ?>"
+                    <a href="<?php echo $base_path; ?>privacy.php"
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.privacy_policy'); ?></a>
-                    <a href="<?php echo prettyUrl('terms.php'); ?>"
+                    <a href="<?php echo $base_path; ?>terms.php"
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.terms_of_service'); ?></a>
-                    <a href="<?php echo prettyUrl('cancellation-policy.php'); ?>"
+                    <a href="<?php echo $base_path; ?>cancellation-policy.php"
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.cancellation_policy'); ?></a>
                 </div>
             </div>

@@ -506,7 +506,7 @@ function getContactStatusBadge($status)
                                         <span class="material-symbols-outlined text-accent">calendar_add_on</span>
                                         <span class="text-xs font-semibold">New Booking</span>
                                     </a>
-                                    <a href="<?php echo prettyUrl('contact.php'); ?>"
+                                    <a href="contact.php"
                                         class="p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition flex flex-col items-center justify-center text-center gap-2">
                                         <span class="material-symbols-outlined text-blue-400">support_agent</span>
                                         <span class="text-xs font-semibold">Support</span>
@@ -722,7 +722,7 @@ function getContactStatusBadge($status)
                                 <div id="tab-contacts" class="tab-content">
                                     <div class="flex justify-between items-center mb-6">
                                         <h3 class="text-lg font-bold text-white">Message History</h3>
-                                        <a href="<?php echo prettyUrl('contact.php'); ?>"
+                                        <a href="contact.php"
                                             class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition flex items-center gap-2">
                                             <span class="material-symbols-outlined text-sm">edit_square</span>
                                             New Message
@@ -915,7 +915,7 @@ function getContactStatusBadge($status)
                         
                         <div class="pt-6 border-t border-white/10 flex justify-end gap-3">
                             <button onclick="closeContactModal()" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-lg transition-colors text-sm font-medium">Close</button>
-                            <a href="<?php echo prettyUrl('contact.php'); ?>" class="px-5 py-2.5 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium">
+                            <a href="contact.php" class="px-5 py-2.5 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium">
                                 <span class="material-symbols-outlined text-sm">send</span>
                                 New Message
                             </a>

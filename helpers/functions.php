@@ -4,52 +4,6 @@
  */
 
 /**
- * Get base URL with path
- */
-function url($path = '') {
-    $base = (defined('BASE_URL')) ? BASE_URL : '';
-    $path = ltrim($path, '/');
-    return $base . '/' . $path;
-}
-
-/**
- * Generate SEO Friendly URL (Pretty URL)
- * Converted from system URLs to friendly ones defined in .htaccess
- * 
- * Examples:
- * prettyUrl('rooms.php') -> /phong-nghi
- * prettyUrl('room-detail.php', 'deluxe-room') -> /phong-nghi/deluxe-room
- * prettyUrl('blog.php') -> /tin-tuc
- */
-function prettyUrl($page, $slug = null) {
-    $map = [
-        'index.php' => 'trang-chu',
-        'rooms.php' => 'phong-nghi',
-        'apartments.php' => 'can-ho',
-        'blog.php' => 'tin-tuc',
-        'services.php' => 'dich-vu',
-        'about.php' => 'gioi-thieu',
-        'contact.php' => 'lien-he',
-        'explore.php' => 'kham-pha',
-        'gallery.php' => 'thu-vien-anh'
-    ];
-
-    $friendly = $map[$page] ?? str_replace('.php', '', $page);
-    
-    if ($slug) {
-        // Special cases for sub-paths
-        if ($page == 'room-detail.php') return url("phong-nghi/$slug");
-        if ($page == 'apartment-detail.php') return url("can-ho/$slug");
-        if ($page == 'blog-detail.php') return url("tin-tuc/$slug");
-        if ($page == 'service-detail.php') return url("dich-vu/$slug");
-        
-        return url("$friendly/$slug");
-    }
-
-    return url($friendly);
-}
-
-/**
  * Sanitize input
  */
 function sanitize($data) {

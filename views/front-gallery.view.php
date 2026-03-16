@@ -309,7 +309,7 @@
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('gallery_page.book_now'); ?>
                         </a>
-                        <a href="<?php echo prettyUrl('contact.php'); ?>" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
+                        <a href="contact.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                              bg-white/10 backdrop-blur-xl border border-white/30
                                              text-white font-bold text-lg
                                              hover:bg-white/20 transition-all duration-300

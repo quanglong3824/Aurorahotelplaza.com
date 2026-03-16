@@ -18,37 +18,6 @@ class SEO {
     private static $site_url = 'https://aurorahotelplaza.com';
     private static $default_image = '/assets/img/og-image.jpg';
     private static $twitter_handle = '@aurorahotelplaza';
-    private static $metadata = null;
-    
-    /**
-     * Load SEO metadata from JSON file
-     */
-    private static function loadMetadata() {
-        if (self::$metadata === null) {
-            $json_path = __DIR__ . '/../config/seo_metadata.json';
-            if (file_exists($json_path)) {
-                $json_content = file_get_contents($json_path);
-                self::$metadata = json_decode($json_content, true);
-            } else {
-                self::$metadata = [];
-            }
-        }
-    }
-
-    /**
-     * Get SEO metadata for current page
-     */
-    private static function getPageMetadata() {
-        self::loadMetadata();
-        $page = basename($_SERVER['PHP_SELF']);
-        $lang = (function_exists('getLang')) ? getLang() : 'vi';
-        
-        if (isset(self::$metadata[$page][$lang])) {
-            return self::$metadata[$page][$lang];
-        }
-        
-        return [];
-    }
     
     /**
      * Generate Meta Tags
@@ -56,16 +25,14 @@ class SEO {
      * @return string
      */
     public static function generateMetaTags($data = []) {
-        $page_meta = self::getPageMetadata();
-        
         $defaults = [
-            'title' => $page_meta['title'] ?? 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
-            'description' => $page_meta['description'] ?? 'Aurora Hotel Plaza - Khách sạn 4 sao sang trọng tại trung tâm Biên Hòa. Phòng đẹp, dịch vụ chuyên nghiệp, tiện nghi hiện đại.',
-            'keywords' => $page_meta['keywords'] ?? 'khách sạn biên hòa, aurora hotel plaza, khách sạn 4 sao, đặt phòng khách sạn, khách sạn đồng nai',
+            'title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
+            'description' => 'Aurora Hotel Plaza - Khách sạn 4 sao sang trọng tại trung tâm Biên Hòa. Phòng đẹp, dịch vụ chuyên nghiệp, tiện nghi hiện đại.',
+            'keywords' => 'khách sạn biên hòa, aurora hotel plaza, khách sạn 4 sao, đặt phòng khách sạn, khách sạn đồng nai',
             'image' => self::$default_image,
             'url' => self::getCurrentURL(),
             'type' => 'website',
-            'locale' => (function_exists('getLang') && getLang() == 'vi') ? 'vi_VN' : 'en_US',
+            'locale' => 'vi_VN',
             'author' => 'Aurora Hotel Plaza',
             'robots' => 'index, follow',
             'canonical' => self::getCurrentURL()
@@ -321,41 +288,6 @@ class SEO {
                 'https://www.facebook.com/aurorahotelplaza',
                 'https://www.instagram.com/aurorahotelplaza',
                 'https://www.youtube.com/aurorahotelplaza'
-            ]
-        ];
-        
-        return '<script type="application/ld+json">' . "\n" . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n" . '</script>' . "\n";
-    }
-    
-    /**
-     * Generate Structured Data for Blog Post
-     * @param array $post
-     * @return string
-     */
-    public static function generateBlogStructuredData($post) {
-        $data = [
-            '@context' => 'https://schema.org',
-            '@type' => 'BlogPosting',
-            'headline' => $post['title'],
-            'description' => $post['excerpt'] ?? '',
-            'image' => self::$site_url . ($post['featured_image'] ?? self::$default_image),
-            'author' => [
-                '@type' => 'Person',
-                'name' => $post['author_name'] ?? 'Admin'
-            ],
-            'publisher' => [
-                '@type' => 'Organization',
-                'name' => 'Aurora Hotel Plaza',
-                'logo' => [
-                    '@type' => 'ImageObject',
-                    'url' => self::$site_url . '/assets/img/logo.png'
-                ]
-            ],
-            'datePublished' => $post['published_at'],
-            'dateModified' => $post['updated_at'] ?? $post['published_at'],
-            'mainEntityOfPage' => [
-                '@type' => 'WebPage',
-                '@id' => self::getCurrentURL()
             ]
         ];
         

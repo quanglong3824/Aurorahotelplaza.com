@@ -293,8 +293,6 @@ return [
     'home' => [
         'read_more' => 'Read more',
         'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Bien Hoa',
-        'meta_description' => 'Welcome to Aurora Hotel Plaza - The premier 4-star luxury hotel in Bien Hoa, Dong Nai. Offering premium rooms, service apartments, restaurants, and professional wedding halls.',
-        'meta_keywords' => 'bien hoa hotel, aurora hotel plaza, book hotel bien hoa, 4 star hotel bien hoa, service apartment bien hoa, wedding bien hoa',
         'reception_24_7' => 'Reception 24/24',
         'about_us' => 'About Us',
         'welcome_title' => 'Welcome to Aurora Hotel Plaza',

@@ -2,29 +2,16 @@
 <html translate="no" class="light" lang="<?php echo $lang; ?>">
 
 <head>
-    <?php
-    require_once __DIR__ . '/../helpers/seo.php';
-    require_once __DIR__ . '/../config/performance.php';
-    echo SEO::generateMetaTags([
-        'title' => __('apartments_page.title'),
-        'description' => __('apartments_page.page_subtitle'),
-    ]);
-    ?>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-
-    <!-- DNS Prefetch & Preconnect -->
-    <?php echo preconnect('https://fonts.googleapis.com', true); ?>
-    <?php echo preconnect('https://fonts.gstatic.com', true); ?>
-
-    <!-- Assets -->
-    <link href="<?php echo assetVersion('assets/css/tailwind-output.css'); ?>" rel="stylesheet" />
-    <link href="<?php echo assetVersion('assets/css/fonts.css'); ?>" rel="stylesheet" />
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/style.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/pages-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo assetVersion('assets/css/apartments.css'); ?>">
+    <title><?php _e('apartments_page.title'); ?></title>
+    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
+    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/liquid-glass.css">
+    <link rel="stylesheet" href="assets/css/pages-glass.css">
+    <link rel="stylesheet" href="assets/css/apartments.css">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg'); ?>');
@@ -51,7 +38,7 @@
                         <?php _e('apartments_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-gold">
+                        <a href="booking/index.php" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>
@@ -173,13 +160,13 @@
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="<?php echo url('booking/index.php'); ?>?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="<?php echo prettyUrl('apartment-detail.php', $apt['slug']); ?>" class="btn-detail">
+                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>
@@ -273,13 +260,13 @@
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="<?php echo url('booking/index.php'); ?>?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="<?php echo prettyUrl('apartment-detail.php', $apt['slug']); ?>" class="btn-detail">
+                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>
@@ -309,7 +296,7 @@
                         <?php _e('apartments_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="<?php echo url('booking/index.php'); ?>" class="btn-glass-gold">
+                        <a href="booking/index.php" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>
