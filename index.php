@@ -374,7 +374,7 @@ if ($stats === null) {
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('room-detail.php', '<?php echo htmlspecialchars($room['slug']); ?>'); ?>"
+                                <a href="<?php echo prettyUrl('room-detail.php', htmlspecialchars($room['slug'])); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -457,7 +457,7 @@ if ($stats === null) {
                             <?php foreach ($featured_apartments as $apartment):
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('apartment-detail.php', '<?php echo htmlspecialchars($apartment['slug']); ?>'); ?>"
+                                <a href="<?php echo prettyUrl('apartment-detail.php', htmlspecialchars($apartment['slug'])); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -694,7 +694,7 @@ if ($stats === null) {
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
-                                <a href="<?php echo prettyUrl('blog-detail.php', '<?php echo urlencode($post['slug']); ?>'); ?>"
+                                <a href="<?php echo prettyUrl('blog-detail.php', urlencode($post['slug'])); ?>"
                                     class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full">
                                     <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                         <?php
