@@ -580,7 +580,7 @@ $blog_comments = $comments; // For compatibility with existing variable name in 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <?php foreach ($related_posts as $related): ?>
                                 <article class="blog-card bg-white/5 border border-white/10">
-                                    <a href="<?php echo prettyUrl('blog-detail.php', '<?php echo urlencode($related['slug']); ?>'); ?>"
+                                    <a href="<?php echo prettyUrl('blog-detail.php', urlencode($related['slug'])); ?>"
                                         class="block h-full">
                                         <div class="blog-card-image"
                                             style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">

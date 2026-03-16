@@ -221,7 +221,7 @@
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('room-detail.php', '<?php echo htmlspecialchars($room['slug']); ?>'); ?>" class="group">
+                                <a href="<?php echo prettyUrl('room-detail.php', htmlspecialchars($room['slug'])); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
@@ -286,7 +286,7 @@
                             <?php foreach ($featured_apartments as $apt):
                                 $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                 ?>
-                                <a href="<?php echo prettyUrl('apartment-detail.php', '<?php echo htmlspecialchars($apt['slug']); ?>'); ?>" class="group">
+                                <a href="<?php echo prettyUrl('apartment-detail.php', htmlspecialchars($apt['slug'])); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
@@ -352,7 +352,7 @@
 
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                             <?php foreach ($featured_services as $service): ?>
-                                <a href="<?php echo prettyUrl('service-detail.php', '<?php echo htmlspecialchars($service['slug']); ?>'); ?>"
+                                <a href="<?php echo prettyUrl('service-detail.php', htmlspecialchars($service['slug'])); ?>"
                                     class="group">
                                     <div class="glass-card p-6 text-center hover:-translate-y-2">
                                         <div
@@ -433,7 +433,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <?php foreach ($latest_posts as $post): ?>
-                                <a href="<?php echo prettyUrl('blog-detail.php', '<?php echo urlencode($post['slug']); ?>'); ?>" class="group">
+                                <a href="<?php echo prettyUrl('blog-detail.php', urlencode($post['slug'])); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <?php if ($post['featured_image']): ?>

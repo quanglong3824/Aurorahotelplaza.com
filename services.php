@@ -122,7 +122,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
 
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 <?php foreach ($utility_services as $service): ?>
-                                    <a href="<?php echo prettyUrl('service-detail.php', '<?php echo $service['slug']; ?>'); ?>"
+                                    <a href="<?php echo prettyUrl('service-detail.php', htmlspecialchars($service['slug'])); ?>"
                                         class="utility-card-glass group">
                                         <div class="utility-icon">
                                             <span class="material-symbols-outlined"><?php echo $service['icon']; ?></span>
@@ -193,7 +193,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                                 </div>
                                             <?php endif; ?>
 
-                                            <a href="<?php echo prettyUrl('service-detail.php', '<?php echo $service['slug']; ?>'); ?>"
+                                            <a href="<?php echo prettyUrl('service-detail.php', htmlspecialchars($service['slug'])); ?>"
                                                 class="btn-glass-gold">
                                                 <?php _e('services_page.view_details'); ?>
                                                 <span class="material-symbols-outlined"
