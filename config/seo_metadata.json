@@ -1,62 +1,62 @@
 {
     "index.php": {
         "vi": {
-            "title": "Aurora Hotel Plaza - Khách sạn 4 sao sang trọng tại Biên Hòa",
-            "description": "Chào mừng đến với Aurora Hotel Plaza - Khách sạn hàng đầu Biên Hòa với phòng nghỉ đẳng cấp, căn hộ dịch vụ và nhà hàng Á-Âu.",
-            "keywords": "khách sạn biên hòa, aurora hotel plaza, khách sạn 4 sao đồng nai, đặt phòng khách sạn biên hòa, căn hộ dịch vụ biên hòa"
+            "title": "Aurora Hotel Plaza - Khách sạn 4 sao sang trọng tại phường Tam Hiệp, tỉnh Đồng Nai",
+            "description": "Chào mừng đến với Aurora Hotel Plaza - Khách sạn hàng đầu phường Tam Hiệp, tỉnh Đồng Nai với phòng nghỉ đẳng cấp, căn hộ dịch vụ và nhà hàng Á-Âu.",
+            "keywords": "khách sạn phường Tam Hiệp tỉnh Đồng Nai, aurora hotel plaza, khách sạn 4 sao đồng nai, đặt phòng khách sạn phường Tam Hiệp tỉnh Đồng Nai, căn hộ dịch vụ phường Tam Hiệp tỉnh Đồng Nai"
         },
         "en": {
-            "title": "Aurora Hotel Plaza - Luxury 4-Star Hotel in Bien Hoa",
-            "description": "Welcome to Aurora Hotel Plaza - The premier hotel in Bien Hoa featuring luxury rooms, service apartments, and Asian-European dining.",
-            "keywords": "bien hoa hotel, aurora hotel plaza, 4 star hotel dong nai, book hotel bien hoa, service apartment bien hoa"
+            "title": "Aurora Hotel Plaza - Luxury 4-Star Hotel in Tam Hiep Ward, Dong Nai Province",
+            "description": "Welcome to Aurora Hotel Plaza - The premier hotel in Tam Hiep Ward, Dong Nai Province featuring luxury rooms, service apartments, and Asian-European dining.",
+            "keywords": "Tam Hiep Ward Dong Nai Province hotel, aurora hotel plaza, 4 star hotel dong nai, book hotel Tam Hiep Ward Dong Nai Province, service apartment Tam Hiep Ward Dong Nai Province"
         }
     },
     "rooms.php": {
         "vi": {
-            "title": "Phòng nghỉ sang trọng - Aurora Hotel Plaza Biên Hòa",
+            "title": "Phòng nghỉ sang trọng - Aurora Hotel Plaza phường Tam Hiệp, tỉnh Đồng Nai",
             "description": "Khám phá các loại phòng Deluxe, Suite sang trọng với đầy đủ tiện nghi tại Aurora Hotel Plaza. Đặt phòng ngay để nhận ưu đãi.",
-            "keywords": "phòng khách sạn biên hòa, deluxe room bien hoa, suite room bien hoa, đặt phòng giá rẻ biên hòa"
+            "keywords": "phòng khách sạn phường Tam Hiệp tỉnh Đồng Nai, deluxe room Tam Hiep Ward Dong Nai Province, suite room Tam Hiep Ward Dong Nai Province, đặt phòng giá rẻ phường Tam Hiệp tỉnh Đồng Nai"
         },
         "en": {
-            "title": "Luxury Rooms & Suites - Aurora Hotel Plaza Bien Hoa",
+            "title": "Luxury Rooms & Suites - Aurora Hotel Plaza Tam Hiep Ward, Dong Nai Province",
             "description": "Discover our luxury Deluxe and Suite rooms with full amenities at Aurora Hotel Plaza. Book now for the best rates.",
-            "keywords": "hotel rooms bien hoa, deluxe room bien hoa, suite room bien hoa, accommodation bien hoa"
+            "keywords": "hotel rooms Tam Hiep Ward Dong Nai Province, deluxe room Tam Hiep Ward Dong Nai Province, suite room Tam Hiep Ward Dong Nai Province, accommodation Tam Hiep Ward Dong Nai Province"
         }
     },
     "apartments.php": {
         "vi": {
-            "title": "Căn hộ dịch vụ cao cấp tại Biên Hòa - Aurora Hotel",
-            "description": "Căn hộ dịch vụ hiện đại, đầy đủ tiện nghi như ở nhà cho thuê ngắn hạn và dài hạn tại trung tâm Biên Hòa.",
-            "keywords": "căn hộ dịch vụ biên hòa, thuê căn hộ biên hòa, apartment for rent bien hoa, căn hộ aurora"
+            "title": "Căn hộ dịch vụ cao cấp tại phường Tam Hiệp, tỉnh Đồng Nai - Aurora Hotel",
+            "description": "Căn hộ dịch vụ hiện đại, đầy đủ tiện nghi như ở nhà cho thuê ngắn hạn và dài hạn tại trung tâm phường Tam Hiệp, tỉnh Đồng Nai.",
+            "keywords": "căn hộ dịch vụ phường Tam Hiệp tỉnh Đồng Nai, thuê căn hộ phường Tam Hiệp tỉnh Đồng Nai, apartment for rent Tam Hiep Ward Dong Nai Province, căn hộ aurora"
         },
         "en": {
-            "title": "Premium Service Apartments in Bien Hoa - Aurora Hotel",
-            "description": "Modern service apartments with full home-like amenities for short-term and long-term stays in central Bien Hoa.",
-            "keywords": "service apartment bien hoa, apartment for rent bien hoa, aurora apartment"
+            "title": "Premium Service Apartments in Tam Hiep Ward, Dong Nai Province - Aurora Hotel",
+            "description": "Modern service apartments with full home-like amenities for short-term and long-term stays in central Tam Hiep Ward, Dong Nai Province.",
+            "keywords": "service apartment Tam Hiep Ward Dong Nai Province, apartment for rent Tam Hiep Ward Dong Nai Province, aurora apartment"
         }
     },
     "blog.php": {
         "vi": {
             "title": "Tin tức & Sự kiện - Aurora Hotel Plaza",
-            "description": "Cập nhật những tin tức mới nhất, cẩm nang du lịch và các sự kiện đặc biệt tại Aurora Hotel Plaza Biên Hòa.",
-            "keywords": "tin tức khách sạn, du lịch biên hòa, sự kiện aurora hotel, cẩm nang du lịch đồng nai"
+            "description": "Cập nhật những tin tức mới nhất, cẩm nang du lịch và các sự kiện đặc biệt tại Aurora Hotel Plaza phường Tam Hiệp, tỉnh Đồng Nai.",
+            "keywords": "tin tức khách sạn, du lịch phường Tam Hiệp tỉnh Đồng Nai, sự kiện aurora hotel, cẩm nang du lịch đồng nai"
         },
         "en": {
             "title": "News & Events - Aurora Hotel Plaza",
-            "description": "Stay updated with the latest news, travel guides, and special events at Aurora Hotel Plaza Bien Hoa.",
-            "keywords": "hotel news, bien hoa travel, aurora hotel events, dong nai travel guide"
+            "description": "Stay updated with the latest news, travel guides, and special events at Aurora Hotel Plaza Tam Hiep Ward, Dong Nai Province.",
+            "keywords": "hotel news, Tam Hiep Ward Dong Nai Province travel, aurora hotel events, dong nai travel guide"
         }
     },
     "contact.php": {
         "vi": {
             "title": "Liên hệ với Aurora Hotel Plaza - Hỗ trợ 24/7",
             "description": "Bạn cần hỗ trợ? Liên hệ ngay với chúng tôi qua hotline hoặc email để được tư vấn về phòng và dịch vụ.",
-            "keywords": "liên hệ khách sạn aurora, hotline aurora hotel, địa chỉ khách sạn aurora biên hòa"
+            "keywords": "liên hệ khách sạn aurora, hotline aurora hotel, địa chỉ khách sạn aurora phường Tam Hiệp tỉnh Đồng Nai"
         },
         "en": {
             "title": "Contact Aurora Hotel Plaza - 24/7 Support",
             "description": "Need assistance? Contact us now via hotline or email for room bookings and service inquiries.",
-            "keywords": "contact aurora hotel, aurora hotel hotline, aurora hotel bien hoa address"
+            "keywords": "contact aurora hotel, aurora hotel hotline, aurora hotel Tam Hiep Ward Dong Nai Province address"
         }
     }
 }

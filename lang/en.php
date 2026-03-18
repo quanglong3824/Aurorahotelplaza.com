@@ -292,11 +292,11 @@ return [
     // Homepage
     'home' => [
         'read_more' => 'Read more',
-        'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Bien Hoa',
+        'meta_title' => 'Aurora Hotel Plaza - Luxury Hotel in Tam Hiep Ward, Dong Nai Province',
         'reception_24_7' => 'Reception 24/24',
         'about_us' => 'About Us',
         'welcome_title' => 'Welcome to Aurora Hotel Plaza',
-        'welcome_desc' => 'Located in the heart of Bien Hoa city, Aurora Hotel Plaza offers an unparalleled experience of luxury and tranquility. With over 10 years of experience in the hospitality industry, we are committed to providing 4-star service at the most reasonable prices.',
+        'welcome_desc' => 'Located in the heart of Tam Hiep Ward, Dong Nai Province, Aurora Hotel Plaza offers an unparalleled experience of luxury and tranquility. With over 10 years of experience in the hospitality industry, we are committed to providing 4-star service at the most reasonable prices.',
         'rooms_apartments' => 'Rooms & Apartments',
         'happy_customers' => 'Happy Customers',
         'years_experience' => 'Years of Experience',
@@ -348,7 +348,7 @@ return [
         'why_choose_desc' => 'With our commitment to providing the best experience, Aurora Hotel Plaza is the top choice for your vacation and business trips.',
         'address' => '253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province',
         'prime_location' => 'Prime Location',
-        'prime_location_desc' => 'Located at 253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province - central Bien Hoa, near tourist attractions, shopping centers and industrial zones.',
+        'prime_location_desc' => 'Located at 253, Pham Van Thuan, KP2, Tam Hiep Ward, Dong Nai Province - central Tam Hiep Ward, Dong Nai Province, near tourist attractions, shopping centers and industrial zones.',
         'professional_service' => 'Professional Service',
         'professional_service_desc' => 'Well-trained, friendly and dedicated staff serving 24/7.',
         'reasonable_price' => 'Reasonable Price',
@@ -367,7 +367,7 @@ return [
         'come_to_aurora' => 'Come to Aurora Hotel Plaza',
         'location_desc' => 'Located in a central position, easy access to important destinations in the area.',
         'address_label' => 'Address',
-        'address_full' => '253, Pham Van Thuan, KP2<br>Tam Hiep Ward, Bien Hoa City<br>Dong Nai Province',
+        'address_full' => '253, Pham Van Thuan, KP2<br>Tam Hiep Ward, Dong Nai Province',
         'phone_label' => 'Phone',
         'email_label' => 'Email',
         'working_hours_label' => 'Working Hours',
@@ -499,7 +499,7 @@ return [
         'title' => 'About Us - Aurora Hotel Plaza',
         'about_us' => 'About Us',
         'page_title' => 'About Aurora Hotel Plaza',
-        'page_subtitle' => 'Where luxury meets comfort, creating a premium hospitality experience in the heart of Bien Hoa',
+        'page_subtitle' => 'Where luxury meets comfort, creating a premium hospitality experience in the heart of Tam Hiep Ward, Dong Nai Province',
         'book_now' => 'Book Now',
         'learn_more' => 'Learn More',
         'our_story' => 'Our Story',
@@ -519,7 +519,7 @@ return [
         'dedicated_service' => 'Dedicated Service',
         'dedicated_service_desc' => 'Professional, enthusiastic staff serving 24/7 with friendly smiles',
         'prime_location' => 'Prime Location',
-        'prime_location_desc' => 'Located in the center of Bien Hoa, convenient access to important destinations',
+        'prime_location_desc' => 'Located in the center of Tam Hiep Ward, Dong Nai Province, convenient access to important destinations',
         'diverse_cuisine' => 'Diverse Cuisine',
         'diverse_cuisine_desc' => 'Restaurant serving Asian-European dishes with experienced chefs',
         'modern_amenities' => 'Modern Amenities',
@@ -583,7 +583,7 @@ return [
     'explore_page' => [
         'title' => 'Explore - Aurora Hotel Plaza',
         'badge' => 'Explore Aurora Hotel Plaza',
-        'hero_title' => 'Experience <span class="text-accent">luxury</span><br>in the heart of Bien Hoa',
+        'hero_title' => 'Experience <span class="text-accent">luxury</span><br>in the heart of Tam Hiep Ward, Dong Nai Province',
         'hero_desc' => 'Discover luxurious spaces, 4-star services and wonderful experiences awaiting you at Aurora Hotel Plaza',
         'book_now' => 'Book Now',
         'explore_more' => 'Explore More',
@@ -1277,7 +1277,7 @@ return [
     // Footer
     'footer' => [
         'about' => 'About Us',
-        'description' => 'Aurora Hotel Plaza - Luxury hotel in the heart of Bien Hoa, Dong Nai. We deliver premium hospitality experiences with perfect service and modern amenities.',
+        'description' => 'Aurora Hotel Plaza - Luxury hotel in the heart of Tam Hiep Ward, Dong Nai Province. We deliver premium hospitality experiences with perfect service and modern amenities.',
         'follow_us' => 'Follow Us',
         'quick_links' => 'Quick Links',
         'about_us' => 'About Us',
@@ -1315,8 +1315,8 @@ return [
 
     // Hero slider
     'hero' => [
-        'badge' => '4-star hotel in Bien Hoa',
-        'subtitle' => 'Experience luxury with perfect service in the heart of Bien Hoa City, Dong Nai',
+        'badge' => '4-star hotel in Tam Hiep Ward, Dong Nai Province',
+        'subtitle' => 'Experience luxury with perfect service in the heart of Tam Hiep Ward, Dong Nai Province',
         'check_in' => 'Check-in Date',
         'check_out' => 'Check-out Date',
         'adults' => 'Adults',

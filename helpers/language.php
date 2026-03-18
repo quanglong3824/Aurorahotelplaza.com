@@ -30,8 +30,8 @@ function initLanguage() {
         if (isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], SUPPORTED_LANGS)) {
             $_SESSION['lang'] = $_COOKIE['lang'];
         } else {
-            // Detect từ browser
-            $_SESSION['lang'] = detectBrowserLanguage();
+            // Force default to EN
+            $_SESSION['lang'] = DEFAULT_LANG;
         }
     }
     
