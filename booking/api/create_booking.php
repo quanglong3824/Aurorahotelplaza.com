@@ -41,26 +41,29 @@ try {
     $pricingService = new PricingService();
     $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
 
+    // Get data from JSON body if POST is empty
+    $inputData = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+
     // Prepare Request Data
     $requestData = [
-        'room_type_id' => (int)($_POST['room_type_id'] ?? 0),
-        'check_in' => sanitize($_POST['check_in'] ?? ''),
-        'check_out' => sanitize($_POST['check_out'] ?? ''),
-        'num_adults' => (int)($_POST['adults'] ?? 2),
-        'num_nights' => (int)($_POST['num_nights'] ?? 1),
-        'extra_beds' => (int)($_POST['extra_beds'] ?? 0),
-        'stay_type' => sanitize($_POST['stay_type'] ?? 'standard'),
-        'guest_name' => sanitize($_POST['guest_name'] ?? ''),
-        'guest_phone' => sanitize($_POST['guest_phone'] ?? ''),
-        'guest_email' => sanitize($_POST['guest_email'] ?? ''),
-        'special_requests' => sanitize($_POST['special_requests'] ?? ''),
+        'room_type_id' => (int)($inputData['room_type_id'] ?? 0),
+        'check_in' => sanitize($inputData['check_in_date'] ?? $inputData['check_in'] ?? ''),
+        'check_out' => sanitize($inputData['check_out_date'] ?? $inputData['check_out'] ?? ''),
+        'num_adults' => (int)($inputData['num_adults'] ?? $inputData['adults'] ?? 2),
+        'num_nights' => (int)($inputData['num_nights'] ?? 1),
+        'extra_beds' => (int)($inputData['extra_beds'] ?? 0),
+        'stay_type' => sanitize($inputData['duration_type'] ?? $inputData['stay_type'] ?? 'standard'),
+        'guest_name' => sanitize($inputData['guest_name'] ?? $inputData['name'] ?? ''),
+        'guest_phone' => sanitize($inputData['guest_phone'] ?? $inputData['phone'] ?? ''),
+        'guest_email' => sanitize($inputData['guest_email'] ?? $inputData['email'] ?? ''),
+        'special_requests' => sanitize($inputData['special_requests'] ?? $inputData['message'] ?? ''),
         'user_id' => $_SESSION['user_id'] ?? null,
-        'extra_guests' => [] // Will be populated below
+        'extra_guests' => []
     ];
 
     // Parse extra guests from JSON if provided
-    if (isset($_POST['extra_guests_data'])) {
-        $extraGuestsJson = json_decode($_POST['extra_guests_data'], true);
+    if (isset($inputData['extra_guests_data'])) {
+        $extraGuestsJson = is_array($inputData['extra_guests_data']) ? $inputData['extra_guests_data'] : json_decode($inputData['extra_guests_data'], true);
         if (is_array($extraGuestsJson)) {
             $requestData['extra_guests'] = $extraGuestsJson;
         }

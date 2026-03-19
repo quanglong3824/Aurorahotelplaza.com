@@ -10,10 +10,12 @@ use Exception;
  */
 class BookingService {
     private RoomRepository $roomRepo;
+    private BookingRepository $bookingRepo;
     private PricingService $pricingService;
 
-    public function __construct(RoomRepository $roomRepo, PricingService $pricingService) {
+    public function __construct(RoomRepository $roomRepo, BookingRepository $bookingRepo, PricingService $pricingService) {
         $this->roomRepo = $roomRepo;
+        $this->bookingRepo = $bookingRepo;
         $this->pricingService = $pricingService;
     }
 
@@ -77,11 +79,31 @@ class BookingService {
         );
 
         // 5. Lưu vào Database (Transaction)
-        // [Tạm thời sinh mã đặt phòng ngẫu nhiên để phục vụ testing và parity]
         $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
+        
+        $bookingId = $this->bookingRepo->create([
+            'booking_code' => $bookingCode,
+            'user_id' => $requestData['user_id'],
+            'room_type_id' => $roomTypeId,
+            'check_in_date' => $requestData['check_in'],
+            'check_out_date' => $requestData['check_out'],
+            'total_amount' => $pricing['total_amount'],
+            'guest_name' => $requestData['guest_name'],
+            'guest_phone' => $requestData['guest_phone'],
+            'guest_email' => $requestData['guest_email'],
+            'special_requests' => $requestData['special_requests'],
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+            'payment_method' => 'cash'
+        ]);
+
+        if (!$bookingId) {
+            throw new Exception("Lỗi không thể tạo bản ghi đặt phòng trong database.");
+        }
 
         return [
             'success' => true,
+            'booking_id' => $bookingId,
             'booking_code' => $bookingCode,
             'pricing' => $pricing,
             'message' => 'Đơn đặt phòng đã được chuẩn bị thành công.'
