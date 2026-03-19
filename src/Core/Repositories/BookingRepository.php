@@ -21,12 +21,12 @@ class BookingRepository {
             INSERT INTO bookings (
                 booking_code, user_id, room_id, room_type_id, 
                 check_in_date, check_out_date, total_amount, 
-                status, payment_status, payment_method, 
+                status, payment_status, 
                 guest_name, guest_phone, guest_email, special_requests
             ) VALUES (
                 :booking_code, :user_id, :room_id, :room_type_id, 
                 :check_in_date, :check_out_date, :total_amount, 
-                :status, :payment_status, :payment_method, 
+                :status, :payment_status, 
                 :guest_name, :guest_phone, :guest_email, :special_requests
             )
         ");
@@ -41,7 +41,6 @@ class BookingRepository {
             ':total_amount' => $data['total_amount'],
             ':status' => $data['status'] ?? 'pending',
             ':payment_status' => $data['payment_status'] ?? 'unpaid',
-            ':payment_method' => $data['payment_method'] ?? 'cash',
             ':guest_name' => $data['guest_name'],
             ':guest_phone' => $data['guest_phone'],
             ':guest_email' => $data['guest_email'],
