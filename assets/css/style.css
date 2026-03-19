@@ -1868,12 +1868,16 @@ section.py-16 {
 }
 
 .status-badge {
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 9999px;
-    font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.025em;
+    font-weight: 600;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .btn-details {

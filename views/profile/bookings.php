@@ -2,19 +2,19 @@
 // views/profile/bookings.php
 
 $status_labels = [
-    'pending' => ['label' => __('booking_status.pending'), 'color' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'],
-    'confirmed' => ['label' => __('booking_status.confirmed'), 'color' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'],
-    'checked_in' => ['label' => __('booking_status.checked_in'), 'color' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'],
-    'checked_out' => ['label' => __('booking_status.checked_out'), 'color' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'],
-    'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
-    'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
+    'pending' => ['label' => __('booking_status.pending'), 'color' => 'bg-amber-500/10 text-amber-500 border border-amber-500/20'],
+    'confirmed' => ['label' => __('booking_status.confirmed'), 'color' => 'bg-blue-500/10 text-blue-400 border border-blue-500/20'],
+    'checked_in' => ['label' => __('booking_status.checked_in'), 'color' => 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'],
+    'checked_out' => ['label' => __('booking_status.checked_out'), 'color' => 'bg-slate-500/10 text-slate-400 border border-slate-500/20'],
+    'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-rose-500/10 text-rose-400 border border-rose-500/20'],
+    'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-rose-500/10 text-rose-400 border border-rose-500/20']
 ];
 
 $payment_labels = [
-    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-red-100 text-red-800'],
-    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-yellow-100 text-yellow-800'],
-    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-green-100 text-green-800'],
-    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-gray-100 text-gray-800']
+    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-rose-500/10 text-rose-400 border border-rose-500/20'],
+    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-amber-500/10 text-amber-500 border border-amber-500/20'],
+    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'],
+    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-slate-500/10 text-slate-400 border border-slate-500/20']
 ];
 ?>
 <main class="flex h-full grow flex-col">
@@ -98,53 +98,73 @@ $payment_labels = [
                 <?php else: ?>
                     <div class="space-y-4">
                         <?php foreach($bookings as $booking): ?>
-                            <div class="glass-card overflow-hidden hover:bg-white/5 transition-all group">
-                                <div class="flex flex-col md:flex-row">
-                                    <div class="w-full md:w-48 h-48 md:h-auto overflow-hidden">
+                            <div class="glass-card overflow-hidden group mb-6">
+                                <div class="flex flex-col lg:flex-row min-h-[200px]">
+                                    <!-- Room Image -->
+                                    <div class="w-full lg:w-64 relative overflow-hidden">
                                         <img src="../<?php echo $booking['thumbnail'] ?: 'assets/img/room-placeholder.jpg'; ?>" 
                                              alt="<?php echo htmlspecialchars($booking['type_name']); ?>"
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                        <div class="absolute top-4 left-4">
+                                            <span class="booking-code-tag shadow-lg">#<?php echo $booking['booking_code']; ?></span>
+                                        </div>
                                     </div>
-                                    <div class="flex-1 p-6 flex flex-col md:flex-row justify-between gap-6">
-                                        <div class="space-y-3">
-                                            <div class="flex items-center gap-3">
-                                                <span class="booking-code-tag">#<?php echo $booking['booking_code']; ?></span>
-                                                <h3 class="text-xl font-bold text-white group-hover:text-accent transition-colors">
+
+                                    <!-- Content Info -->
+                                    <div class="flex-1 p-6 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex justify-between items-start mb-4">
+                                                <h3 class="text-2xl font-bold text-white group-hover:text-accent transition-colors">
                                                     <?php echo htmlspecialchars($booking['type_name']); ?>
                                                 </h3>
+                                                <div class="flex gap-2">
+                                                    <span class="status-badge <?php echo $status_labels[$booking['status']]['color'] ?? 'bg-gray-100'; ?>">
+                                                        <?php echo $status_labels[$booking['status']]['label'] ?? $booking['status']; ?>
+                                                    </span>
+                                                    <span class="status-badge <?php echo $payment_labels[$booking['payment_status']]['color'] ?? 'bg-gray-100'; ?>">
+                                                        <?php echo $payment_labels[$booking['payment_status']]['label'] ?? $booking['payment_status']; ?>
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-white/60">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-lg">calendar_today</span>
-                                                    <span><?php _e('common.check_in'); ?>: <b><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></b></span>
+
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <!-- Dates -->
+                                                <div class="space-y-2">
+                                                    <div class="flex items-center gap-3 text-white/50">
+                                                        <span class="material-symbols-outlined text-xl">calendar_month</span>
+                                                        <div class="text-sm">
+                                                            <p class="uppercase text-[10px] tracking-widest"><?php _e('common.check_in'); ?></p>
+                                                            <p class="text-white font-bold"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-lg">logout</span>
-                                                    <span><?php _e('common.check_out'); ?>: <b><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></b></span>
+                                                <div class="space-y-2">
+                                                    <div class="flex items-center gap-3 text-white/50">
+                                                        <span class="material-symbols-outlined text-xl">logout</span>
+                                                        <div class="text-sm">
+                                                            <p class="uppercase text-[10px] tracking-widest"><?php _e('common.check_out'); ?></p>
+                                                            <p class="text-white font-bold"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-lg">person</span>
-                                                    <span><?php echo htmlspecialchars($booking['guest_name']); ?></span>
-                                                </div>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-lg">payments</span>
-                                                    <span><?php echo number_format($booking['total_amount']); ?> VND</span>
+                                                <!-- Guest & Price -->
+                                                <div class="space-y-2">
+                                                    <div class="flex items-center gap-3 text-white/50">
+                                                        <span class="material-symbols-outlined text-xl">account_circle</span>
+                                                        <div class="text-sm">
+                                                            <p class="uppercase text-[10px] tracking-widest"><?php echo htmlspecialchars($booking['guest_name']); ?></p>
+                                                            <p class="text-accent font-black text-lg"><?php echo number_format($booking['total_amount']); ?> <span class="text-xs">VND</span></p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex flex-row md:flex-col justify-between items-end md:items-end gap-4">
-                                            <div class="flex flex-col items-end gap-2">
-                                                <span class="status-badge <?php echo $status_labels[$booking['status']]['color'] ?? 'bg-gray-100'; ?>">
-                                                    <?php echo $status_labels[$booking['status']]['label'] ?? $booking['status']; ?>
-                                                </span>
-                                                <span class="status-badge <?php echo $payment_labels[$booking['payment_status']]['color'] ?? 'bg-gray-100'; ?>">
-                                                    <?php echo $payment_labels[$booking['payment_status']]['label'] ?? $booking['payment_status']; ?>
-                                                </span>
-                                            </div>
+
+                                        <div class="mt-6 flex justify-end border-t border-white/5 pt-4">
                                             <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
-                                               class="btn-details flex items-center gap-2">
-                                                <?php _e('common.details'); ?>
-                                                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                                               class="btn-details group/btn flex items-center gap-2 px-8 py-2.5">
+                                                <span><?php _e('common.details'); ?></span>
+                                                <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
                                             </a>
                                         </div>
                                     </div>
