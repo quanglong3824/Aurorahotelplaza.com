@@ -12,11 +12,6 @@
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/explore.css'); ?>">
-    <style>
-        body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>');
-        }
-    </style>
 </head>
 
 <body class="glass-page font-body text-white">

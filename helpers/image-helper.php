@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../config/environment.php';
 /**
  * Image Helper Functions
  * Xử lý đường dẫn ảnh từ database

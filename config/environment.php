@@ -7,9 +7,7 @@
 // Lấy base URL - Production with subdirectory support
 function getBaseUrl() {
     // Production - Tự động phát hiện protocol và host
-    $protocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1 || $_SERVER['HTTPS'] === '1')) || 
-                (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
-                (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https' : 'http';
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
     // Lấy root path của project (loại bỏ các thư mục con như admin, auth, etc.)
@@ -17,7 +15,7 @@ function getBaseUrl() {
     $scriptDir = dirname($scriptName);
     
     // Danh sách các subdirectories cần loại bỏ để tìm root
-    $subdirs = ['views', 'admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details', 'api'];
+    $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details', 'api'];
     $pattern = '#/(' . implode('|', $subdirs) . ').*#';
     $rootPath = preg_replace($pattern, '', $scriptDir);
     

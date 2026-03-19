@@ -21,7 +21,7 @@
             <section class="relative min-h-[600px] flex items-center justify-center overflow-hidden">
                 <!-- Background Image -->
                 <div class="absolute inset-0">
-                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>"
+                    <img src="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>"
                         alt="Aurora Hotel" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
                 </div>
