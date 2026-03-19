@@ -1,19 +1,18 @@
 <?php
-/**
- * includes/footer.php
- * Refactored to follow MVC pattern.
- * Logic moved to FrontSharedController.
- */
-require_once __DIR__ . '/../controllers/FrontSharedController.php';
-$footerData = FrontSharedController::getFooterData($base_path ?? null);
-$base_path = $footerData['base_path'];
+// Determine base path based on current directory (if not already set)
+if (!isset($base_path)) {
+    $current_dir = basename(dirname($_SERVER['PHP_SELF']));
+    $base_path = ($current_dir == 'room-details' || $current_dir == 'apartment-details' || $current_dir == 'services-pages') ? '../' : '';
+}
+
+// Load language helper if not loaded
+if (!function_exists('__')) {
+    require_once __DIR__ . '/../helpers/language.php';
+    initLanguage();
+}
 ?>
-
-<!-- Footer Styles -->
-<link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/common/footer.css">
-
 <!-- Footer -->
-<footer class="w-full bg-surface-dark text-white/80 footer-main">
+<footer class="w-full bg-surface-dark text-white/80">
     <div class="mx-auto max-w-7xl px-4 py-20">
         <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
             <!-- Logo & Description -->
@@ -167,7 +166,7 @@ $base_path = $footerData['base_path'];
         <div class="mt-12 pt-8 border-t border-white/20">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-sm text-white/60 text-center md:text-left">
-                    <?php _e('footer.copyright', ['year' => $footerData['current_year']]); ?>
+                    <?php _e('footer.copyright', ['year' => date('Y')]); ?>
                 </p>
                 <div class="flex gap-6 text-sm">
                     <a href="<?php echo $base_path; ?>privacy.php"
@@ -186,12 +185,14 @@ $base_path = $footerData['base_path'];
 <?php require_once __DIR__ . '/chat-widget.php'; ?>
 
 <button id="backToTopBtn" type="button" aria-label="Back to top"
-    class="fixed bottom-6 right-[90px] z-[10000] hidden h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/80 text-white shadow-lg hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50">
+    class="fixed bottom-6 right-[90px] z-[10000] hidden h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/80 text-white shadow-lg hover:bg-[#b8941f] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50"
+    style="-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:-webkit-transform .3s cubic-bezier(.34,1.56,.64,1);transition:transform .3s cubic-bezier(.34,1.56,.64,1);">
     <span class="material-symbols-outlined">arrow_upward</span>
 </button>
 
 <!-- Footer Popup Modal -->
-<div id="footerPopupModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+<div id="footerPopupModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="background: rgba(0,0,0,0.5);">
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
         <div
             class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gradient-to-r from-[#d4af37] to-[#b8941f]">
@@ -215,8 +216,94 @@ $base_path = $footerData['base_path'];
     </div>
 </div>
 
+<script>
+    // Footer popup for coming soon links
+    document.querySelectorAll('.footer-link-popup').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const title = this.dataset.title || '<?php echo addslashes(__('footer.notification')); ?>';
+            const content = this.dataset.content || '<?php echo addslashes(__('footer.content_coming_soon')); ?>';
+            document.getElementById('footerPopupTitle').textContent = title;
+            document.getElementById('footerPopupContent').textContent = content;
+            document.getElementById('footerPopupModal').classList.remove('hidden');
+            document.getElementById('footerPopupModal').classList.add('flex');
+        });
+    });
+
+    function closeFooterPopup() {
+        document.getElementById('footerPopupModal').classList.add('hidden');
+        document.getElementById('footerPopupModal').classList.remove('flex');
+    }
+
+    // Close on backdrop click
+    document.getElementById('footerPopupModal')?.addEventListener('click', function (e) {
+        if (e.target === this) closeFooterPopup();
+    });
+
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    function updateBackToTopVisibility() {
+        if (!backToTopBtn) return;
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.remove('hidden');
+            backToTopBtn.classList.add('flex');
+        } else {
+            backToTopBtn.classList.add('hidden');
+            backToTopBtn.classList.remove('flex');
+        }
+    }
+
+    updateBackToTopVisibility();
+    window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+
+    backToTopBtn?.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Scroll Progress Bar Logic
+    window.addEventListener('scroll', function () {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById("scroll-progress");
+        if (progressBar) {
+            progressBar.style.width = scrolled + "%";
+        }
+    }, { passive: true });
+
+    // ============================================
+    // BOOKING TYPE SELECTION
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function () {
+        let pendingUrl = null;
+        const show = id => { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
+        const hide = id => { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
+
+        // Intercept booking links (skip hero-slider)
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('a[href*="booking/index.php"], a[href*="booking/"]');
+            if (!link || link.closest('.hero-slider') || link.classList.contains('booking-bypass')) return;
+            const href = link.getAttribute('href');
+            if (!href || (!href.includes('booking/index.php') && !href.endsWith('/booking/'))) return;
+            e.preventDefault();
+            pendingUrl = href;
+            show('bookingTypeModal');
+        });
+
+        document.getElementById('btn-individual')?.addEventListener('click', () => { hide('bookingTypeModal'); if (pendingUrl) window.location.href = pendingUrl; });
+        document.getElementById('btn-group')?.addEventListener('click', () => { hide('bookingTypeModal'); show('groupContactModal'); });
+        document.getElementById('close-type-modal')?.addEventListener('click', () => hide('bookingTypeModal'));
+        document.getElementById('close-group-modal')?.addEventListener('click', () => hide('groupContactModal'));
+
+        ['bookingTypeModal', 'groupContactModal'].forEach(id => {
+            document.getElementById(id)?.addEventListener('click', function (e) { if (e.target === this) hide(id); });
+        });
+    });
+</script>
+
 <!-- Booking Type Modal -->
-<div id="bookingTypeModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+<div id="bookingTypeModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+    style="background:rgba(0,0,0,0.7);">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
             class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-[#d4af37] to-[#b8941f]">
@@ -252,7 +339,8 @@ $base_path = $footerData['base_path'];
 </div>
 
 <!-- Group Contact Modal -->
-<div id="groupContactModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+<div id="groupContactModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+    style="background:rgba(0,0,0,0.7);">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
             class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-amber-500 to-orange-500">
@@ -275,12 +363,10 @@ $base_path = $footerData['base_path'];
     </div>
 </div>
 
-<!-- Footer Scripts -->
-<script src="<?php echo $base_path; ?>assets/js/common/footer.js" defer></script>
-
 <!-- ── Aurora AI Error Tracker (JS) ──────────────── -->
 <?php if (!defined('DISABLE_ERROR_TRACKER')): ?>
     <script>
+        // Khai báo siteBase nếu chưa được admin-header set
         if (typeof window.siteBase === 'undefined') {
             window.siteBase = '<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') : ''; ?>';
         }

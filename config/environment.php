@@ -67,9 +67,6 @@ define('API_URL', getApiUrl());
 define('ENVIRONMENT', 'production');
 define('DOMAIN', getDomain());
 
-// Load Security Helper
-require_once __DIR__ . '/../helpers/security.php';
-
 // Production: Disable error display, log only
 error_reporting(E_ALL);
 ini_set('display_errors', 0);

@@ -80,14 +80,7 @@ try {
         ORDER BY m.message_id DESC
         LIMIT :limit
     ");
-    
-    $stmt->bindValue(':cid', $conv_id, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    if ($before_id > 0) {
-        $stmt->bindValue(':before_id', $before_id, PDO::PARAM_INT);
-    }
-    
-    $stmt->execute();
+    $stmt->execute($params);
     $messages = array_reverse($stmt->fetchAll()); // Đảo lại: cũ → mới
 
     // Đánh dấu đã đọc

@@ -1,13 +1,3 @@
-<?php
-/**
- * includes/hero-slider.php
- * Refactored to follow MVC pattern.
- * Logic moved to FrontSharedController.
- */
-require_once __DIR__ . '/../controllers/FrontSharedController.php';
-$heroData = FrontSharedController::getHeroSliderData();
-?>
-
 <!-- Hero Slider Section -->
 <section class="hero-slider relative flex min-h-screen w-full items-center justify-center">
     <!-- Slider Images - Optimized for Lazy Loading -->
@@ -56,7 +46,7 @@ $heroData = FrontSharedController::getHeroSliderData();
                         <?php _e('hero.check_in'); ?>
                     </label>
                     <input class="glass-input-solid h-12" id="checkin" name="check_in" type="date"
-                        min="<?php echo $heroData['current_date']; ?>" max="2030-12-31" value="<?php echo $heroData['current_date']; ?>" />
+                        min="<?php echo date('Y-m-d'); ?>" max="2030-12-31" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="checkout">
@@ -64,8 +54,8 @@ $heroData = FrontSharedController::getHeroSliderData();
                         <?php _e('hero.check_out'); ?>
                     </label>
                     <input class="glass-input-solid h-12" id="checkout" name="check_out" type="date"
-                        min="<?php echo $heroData['next_date']; ?>" max="2030-12-31"
-                        value="<?php echo $heroData['next_date']; ?>" />
+                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="2030-12-31"
+                        value="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" />
                 </div>
                 <div class="flex flex-col text-left">
                     <label class="mb-2 text-sm font-medium flex items-center gap-1" for="adults">
@@ -129,5 +119,44 @@ $heroData = FrontSharedController::getHeroSliderData();
     </div>
 </section>
 
-<!-- Hero Slider Scripts -->
-<script src="<?php echo $base_path ?? ''; ?>assets/js/common/hero-slider.js" defer></script>
+<script>
+    // Set minimum dates for booking form
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkinInput = document.getElementById('checkin');
+        const checkoutInput = document.getElementById('checkout');
+
+        if (checkinInput && checkoutInput) {
+            checkinInput.addEventListener('change', function () {
+                const checkinDate = new Date(this.value);
+                checkinDate.setDate(checkinDate.getDate() + 1);
+                const minCheckout = checkinDate.toISOString().split('T')[0];
+                checkoutInput.min = minCheckout;
+
+                if (checkoutInput.value && checkoutInput.value <= this.value) {
+                    checkoutInput.value = minCheckout;
+                }
+            });
+        }
+
+        // Lazy load slider images
+        const lazySlides = document.querySelectorAll('.hero-slide[data-bg]');
+        if ('IntersectionObserver' in window) {
+            // Option 1: Load when slider is in view (which is immediately for hero)
+            // But we want to prioritize first paint, so we can use a timeout or idle callback
+            const loadImages = () => {
+                lazySlides.forEach(slide => {
+                    slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
+                    slide.removeAttribute('data-bg');
+                });
+            };
+
+            // Load rest of images 3 seconds after load to not block initial render
+            setTimeout(loadImages, 3000);
+        } else {
+            // Fallback for older browsers
+            lazySlides.forEach(slide => {
+                slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
+            });
+        }
+    });
+</script>

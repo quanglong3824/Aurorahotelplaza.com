@@ -4,14 +4,9 @@
  * Chỉ cập nhật các field có trong POST và không rỗng
  */
 session_start();
-require_once '../../config/environment.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
     http_response_code(403);
     exit('Forbidden');
-}
-
-if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
-    die('CSRF validation failed.');
 }
 
 require_once '../../config/database.php';
