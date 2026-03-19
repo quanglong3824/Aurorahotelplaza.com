@@ -1058,44 +1058,121 @@ function updateSummary() {
 
 function formatDate(ds) { if (!ds) return ''; return new Date(ds).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }); }
 
+
+
 async function handleSubmit(e) {
-    e.preventDefault();
-    if (!document.getElementById('agree_terms').checked) { alert(translations.booking_form.agree_terms_alert); return; }
-    const formData = new FormData(e.target);
-    const fo = Object.fromEntries(formData);
-    let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
-    if (isInquiryMode) {
-        const pci = document.getElementById('preferred_check_in').value, dt = document.getElementById('duration_type').value, na = document.getElementById('inquiry_num_adults').value, nc = document.getElementById('inquiry_num_children').value, im = document.getElementById('inquiry_message')?.value || '', rm = document.getElementById('rent_mode')?.value || 'by_month';
-        let co = pci; if (pci) {
-            const sd = new Date(pci); if (rm === 'by_month') { const m = parseInt(document.getElementById('duration_months')?.value) || 1; sd.setMonth(sd.getMonth() + m); co = sd.toISOString().split('T')[0]; }
-            else { const med = document.getElementById('manual_end_date')?.value; if (med) co = med; else { const d = parseInt(document.getElementById('duration_days')?.value) || 30; sd.setDate(sd.getDate() + d); co = sd.toISOString().split('T')[0]; } }
+    try {
+        e.preventDefault();
+        if (!document.getElementById('agree_terms')?.checked) { 
+            alert(translations?.booking_form?.agree_terms_alert || 'Vui lòng đồng ý với điều khoản và điều kiện'); 
+            return; 
         }
-        data = { ...data, room_type_id: fo.room_type_id, check_in_date: pci, check_out_date: co, num_guests: na, num_adults: na, num_children: nc, duration_type: dt, message: im, num_nights: 0 };
-    } else {
-        const rs = document.getElementById('room_type_id'), na = parseInt(document.getElementById('num_adults')?.value) || 2, nc = parseInt(document.getElementById('num_children')?.value) || 0, neb = parseInt(document.getElementById('extra_beds')?.value) || 0, nn = currentBookingType === 'short_stay' ? 1 : calculateNights(), rp = parseFloat(rs.getAttribute('data-room-price')) || 0, ct = parseFloat(rs.getAttribute('data-calculated-total')) || 0, pt = rs.getAttribute('data-price-type') || 'double', rst = parseFloat(rs.getAttribute('data-room-subtotal')) || 0, egf = parseFloat(rs.getAttribute('data-extra-guest-fee')) || 0, ebf = parseFloat(rs.getAttribute('data-extra-bed-fee')) || 0;
-        data.booking_type = currentBookingType; data.num_adults = na; data.num_children = nc; data.num_guests = na; data.num_nights = nn; data.calculated_nights = nn; data.room_price = rp; data.room_subtotal = rst; data.calculated_total = ct; data.price_type_used = pt; data.extra_beds = neb; data.extra_bed_fee = ebf; data.extra_guest_fee = egf; data.extra_guests_data = JSON.stringify(extraGuests);
-    }
-    const sb = document.getElementById('submitBtn'), sbt = document.getElementById('submitBtnText'), ot = sbt.textContent;
-    try {
-        const vr = await fetch('./api/validate-booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) });
-        const validation = await vr.json();
-        if (!validation.allowed) { showBookingConflictModal(validation); return; }
-    } catch (error) { console.error('Pre-validation error:', error); }
-    sb.disabled = true; sbt.textContent = translations.common.processing;
-    try {
-        const response = await fetch('./api/create_booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-        const result = await response.json();
-        if (result.success) {
-            if (result.booking_type === 'inquiry') { alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); window.location.href = '../index.php'; }
-            else { if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; else window.location.href = result.is_guest ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; }
+        
+        const formData = new FormData(e.target);
+        const fo = Object.fromEntries(formData);
+        let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
+
+        if (isInquiryMode) {
+            const pci = document.getElementById('preferred_check_in')?.value || '';
+            const dt = document.getElementById('duration_type')?.value || '';
+            const na = document.getElementById('inquiry_num_adults')?.value || '1';
+            const nc = document.getElementById('inquiry_num_children')?.value || '0';
+            const im = document.getElementById('inquiry_message')?.value || '';
+            const rm = document.getElementById('rent_mode')?.value || 'by_month';
+            
+            let co = pci; 
+            if (pci) {
+                const sd = new Date(pci); 
+                if (rm === 'by_month') { 
+                    const m = parseInt(document.getElementById('duration_months')?.value) || 1; 
+                    sd.setMonth(sd.getMonth() + m); 
+                    co = sd.toISOString().split('T')[0]; 
+                } else { 
+                    const med = document.getElementById('manual_end_date')?.value; 
+                    if (med) co = med; 
+                    else { 
+                        const d = parseInt(document.getElementById('duration_days')?.value) || 30; 
+                        sd.setDate(sd.getDate() + d); 
+                        co = sd.toISOString().split('T')[0]; 
+                    } 
+                } 
+            }
+            data = { ...data, room_type_id: fo.room_type_id, check_in_date: pci, check_out_date: co, num_guests: na, num_adults: na, num_children: nc, duration_type: dt, message: im, num_nights: 0 };
         } else {
-            if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
-            else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
-            else if (result.message) showToast(result.message, 'error');
-            else alert('Có lỗi xảy ra. Vui lòng thử lại.');
-            sb.disabled = false; sbt.textContent = ot;
+            const rs = document.getElementById('room_type_id');
+            if (!rs) {
+                alert('Lỗi hệ thống: Không tìm thấy ID phòng. Vui lòng tải lại trang.');
+                return;
+            }
+            const na = parseInt(document.getElementById('num_adults')?.value) || 2;
+            const nc = parseInt(document.getElementById('num_children')?.value) || 0;
+            const neb = parseInt(document.getElementById('extra_beds')?.value) || 0;
+            const nn = currentBookingType === 'short_stay' ? 1 : (typeof calculateNights === 'function' ? calculateNights() : 1);
+            const rp = parseFloat(rs.getAttribute('data-room-price')) || 0;
+            const ct = parseFloat(rs.getAttribute('data-calculated-total')) || 0;
+            const pt = rs.getAttribute('data-price-type') || 'double';
+            const rst = parseFloat(rs.getAttribute('data-room-subtotal')) || 0;
+            const egf = parseFloat(rs.getAttribute('data-extra-guest-fee')) || 0;
+            const ebf = parseFloat(rs.getAttribute('data-extra-bed-fee')) || 0;
+            
+            data.booking_type = currentBookingType; 
+            data.num_adults = na; data.num_children = nc; data.num_guests = na; 
+            data.num_nights = nn; data.calculated_nights = nn; 
+            data.room_price = rp; data.room_subtotal = rst; data.calculated_total = ct; 
+            data.price_type_used = pt; data.extra_beds = neb; 
+            data.extra_bed_fee = ebf; data.extra_guest_fee = egf; 
+            data.extra_guests_data = JSON.stringify(typeof extraGuests !== 'undefined' ? extraGuests : []);
         }
-    } catch (error) { console.error('Error:', error); alert('Có lỗi xảy ra. Vui lòng thử lại.'); sb.disabled = false; sbt.textContent = ot; }
+
+        const sb = document.getElementById('submitBtn');
+        const sbt = document.getElementById('submitBtnText');
+        const ot = sbt ? sbt.textContent : 'Xác nhận';
+        const processingText = translations?.common?.processing || 'Đang xử lý...';
+
+        try {
+            const vr = await fetch('./api/validate-booking.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) 
+            });
+            const validation = await vr.json();
+            if (!validation.allowed) { showBookingConflictModal(validation); return; }
+        } catch (error) { console.error('Pre-validation error:', error); }
+
+        if (sb) sb.disabled = true; 
+        if (sbt) sbt.textContent = processingText;
+
+        try {
+            const response = await fetch('./api/create_booking.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data) 
+            });
+            const result = await response.json();
+            if (result.success) {
+                if (result.booking_type === 'inquiry') { 
+                    alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); 
+                    window.location.href = '../index.php'; 
+                } else { 
+                    if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; 
+                    else window.location.href = (result.is_guest || result.is_anonymous) ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; 
+                }
+            } else {
+                if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
+                else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
+                else if (result.message) showToast(result.message, 'error');
+                else alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
+            }
+        } catch (error) { 
+            console.error('Error during creation:', error); 
+            alert('Có lỗi xảy ra trong quá trình đặt phòng. Vui lòng thử lại.'); 
+            if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
+        }
+    } catch (globalError) {
+        console.error('Global Submit Error:', globalError);
+        alert('Có lỗi phát sinh. Vui lòng tải lại trang và thử lại.');
+    }
 }
 
 function showBookingConflictModal(result) {

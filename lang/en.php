@@ -1647,6 +1647,7 @@ return [
         'long_stay_title' => 'Long-term Booking Request',
         'long_stay_msg' => 'You have selected a stay of more than 30 days. To receive the best price quotes and policies for long-term stays, please switch to our inquiry form or contact us directly.',
         'switch_to_inquiry' => 'Switch to Inquiry Mode',
+        'pay_at_hotel_desc' => 'Pay directly at the reception desk upon check-in.',
     ],
 
     // Tracking

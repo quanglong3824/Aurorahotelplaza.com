@@ -78,7 +78,11 @@ extract($data);
                 guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>",
                 long_stay_title: "<?php echo addslashes(__('booking_form.long_stay_title')); ?>",
                 long_stay_msg: "<?php echo addslashes(__('booking_form.long_stay_msg')); ?>",
-                switch_to_inquiry: "<?php echo addslashes(__('booking_form.switch_to_inquiry')); ?>"
+                switch_to_inquiry: "<?php echo addslashes(__('booking_form.switch_to_inquiry')); ?>",
+                pay_at_hotel_desc: "<?php echo addslashes(__('booking_form.pay_at_hotel_desc')); ?>"
+            },
+            booking_page: {
+                pay_at_hotel_desc: "<?php echo addslashes(__('booking_form.pay_at_hotel_desc')); ?>"
             },
             common: {
                 night: "<?php echo addslashes(__('common.night')); ?>",
