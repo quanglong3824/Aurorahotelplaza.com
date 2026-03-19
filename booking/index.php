@@ -107,6 +107,7 @@ extract($data);
     
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pages/booking-page.js"></script>
+    <script src="./assets/js/booking-diagnostic.js"></script>
 
 </body>
 
