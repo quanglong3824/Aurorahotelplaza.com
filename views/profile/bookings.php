@@ -108,7 +108,7 @@ $payment_labels = [
                                     <div class="flex-1 p-6 flex flex-col md:flex-row justify-between gap-6">
                                         <div class="space-y-3">
                                             <div class="flex items-center gap-3">
-                                                <span class="px-2 py-1 bg-accent/20 text-accent text-xs font-mono rounded">#<?php echo $booking['booking_code']; ?></span>
+                                                <span class="booking-code-tag">#<?php echo $booking['booking_code']; ?></span>
                                                 <h3 class="text-xl font-bold text-white group-hover:text-accent transition-colors">
                                                     <?php echo htmlspecialchars($booking['type_name']); ?>
                                                 </h3>
@@ -134,15 +134,15 @@ $payment_labels = [
                                         </div>
                                         <div class="flex flex-row md:flex-col justify-between items-end md:items-end gap-4">
                                             <div class="flex flex-col items-end gap-2">
-                                                <span class="px-3 py-1 rounded-full text-xs font-bold <?php echo $status_labels[$booking['status']]['color'] ?? 'bg-gray-100'; ?>">
+                                                <span class="status-badge <?php echo $status_labels[$booking['status']]['color'] ?? 'bg-gray-100'; ?>">
                                                     <?php echo $status_labels[$booking['status']]['label'] ?? $booking['status']; ?>
                                                 </span>
-                                                <span class="px-3 py-1 rounded-full text-xs font-bold <?php echo $payment_labels[$booking['payment_status']]['color'] ?? 'bg-gray-100'; ?>">
+                                                <span class="status-badge <?php echo $payment_labels[$booking['payment_status']]['color'] ?? 'bg-gray-100'; ?>">
                                                     <?php echo $payment_labels[$booking['payment_status']]['label'] ?? $booking['payment_status']; ?>
                                                 </span>
                                             </div>
                                             <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
-                                               class="bg-white/10 hover:bg-accent text-white px-6 py-2 rounded-xl transition-all text-sm font-bold flex items-center gap-2">
+                                               class="btn-details flex items-center gap-2">
                                                 <?php _e('common.details'); ?>
                                                 <span class="material-symbols-outlined text-sm">chevron_right</span>
                                             </a>

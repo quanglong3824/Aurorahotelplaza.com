@@ -1093,8 +1093,15 @@ async function handleSubmit(e) {
         }
 
         if (result.success) {
-            if (result.booking_type === 'inquiry') { alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); window.location.href = '../index.php'; }
-            else { if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; else window.location.href = result.is_guest ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; }
+            if (result.booking_type === 'inquiry') {
+                showSuccessModal(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!', '../index.php');
+            } else {
+                if (data.payment_method === 'vnpay' && result.payment_url) {
+                    window.location.href = result.payment_url;
+                } else {
+                    showBookingSuccessModal(result, data);
+                }
+            }
         } else {
             if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
             else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
@@ -1212,4 +1219,89 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     document.body.appendChild(toast);
     setTimeout(() => { toast.classList.add('opacity-0', 'translate-x-full'); setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+/**
+ * Hiển thị Modal thành công chung
+ */
+function showSuccessModal(message, redirectUrl) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8 text-center border border-green-500/30">
+            <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-5xl text-green-600 dark:text-green-400">check_circle</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Thành công!</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-8">${message}</p>
+            <button onclick="window.location.href='${redirectUrl}'" class="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-accent/20">
+                Xác nhận
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+/**
+ * Hiển thị Modal xác nhận sau khi đặt phòng thành công
+ */
+function showBookingSuccessModal(result, data) {
+    const isGuest = !result.user_id && !data.user_id;
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+    
+    let guestMessage = '';
+    if (isGuest) {
+        guestMessage = `
+            <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl text-left">
+                <p class="text-sm text-yellow-800 dark:text-yellow-200 font-bold mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">info</span> Dành cho khách vãng lai:
+                </p>
+                <p class="text-xs text-yellow-700 dark:text-yellow-300 leading-relaxed">
+                    Vui lòng lưu lại <b>Mã đặt phòng</b> này. Bạn có thể tra cứu đơn đặt phòng của mình bằng <b>Email</b> hoặc <b>Số điện thoại</b> tại mục tra cứu trên trang chủ.
+                </p>
+            </div>
+        `;
+    }
+
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg p-8 text-center border border-accent/30 overflow-hidden relative">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-accent to-gold"></div>
+            
+            <div class="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6 mt-2">
+                <span class="material-symbols-outlined text-5xl text-accent">hotel_class</span>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Đặt phòng hoàn tất!</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Cảm ơn bạn đã tin tưởng lựa chọn Aurora Hotel Plaza.</p>
+            
+            <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-6 mb-6 border border-gray-100 dark:border-white/10">
+                <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Mã đặt phòng của bạn</p>
+                <p class="text-3xl font-mono font-black text-accent tracking-wider select-all">${result.booking_code}</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-left text-sm mb-6">
+                <div class="p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                    <p class="text-gray-400 text-xs mb-1">Loại phòng</p>
+                    <p class="text-gray-900 dark:text-white font-bold truncate">${data.room_type_name || 'Phòng nghỉ'}</p>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                    <p class="text-gray-400 text-xs mb-1">Nhận phòng</p>
+                    <p class="text-gray-900 dark:text-white font-bold">${data.check_in_date}</p>
+                </div>
+            </div>
+
+            ${guestMessage}
+
+            <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                <button onclick="window.location.href='../index.php'" class="flex-1 px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
+                    Về trang chủ
+                </button>
+                <button onclick="window.location.href='${isGuest ? '../index.php' : '../profile/bookings.php'}'" class="flex-1 bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-accent/20">
+                    Xác nhận & Tra cứu
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }

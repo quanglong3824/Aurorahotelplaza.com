@@ -1854,3 +1854,49 @@ section.py-16 {
         font-size: 0.6875rem;
     }
 }
+
+/* Profile Booking List Enhancements */
+.glass-card.group {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card.group:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+}
+
+.btn-details {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-details:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateX(3px);
+}
+
+.booking-code-tag {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+}

@@ -36,6 +36,7 @@ return [
 
     // Common
     'common' => [
+        'all' => 'Tất cả',
         'note' => 'Lưu ý',
         'day' => 'ngày',
         'type' => 'loại',
@@ -75,6 +76,9 @@ return [
         'currency' => 'VND',
         'guest_add' => 'khách thêm',
         'processing' => 'Đang xử lý...',
+        'details' => 'Chi tiết',
+        'check_in' => 'Nhận phòng',
+        'check_out' => 'Trả phòng',
     ],
 
     // Booking
@@ -1145,8 +1149,28 @@ return [
     'profile_bookings' => [
         'no_permission' => 'Bạn không có quyền truy cập',
         'title' => 'Lịch sử đặt phòng - Aurora Hotel Plaza',
+        'subtitle' => 'Xem và quản lý các đơn đặt phòng của bạn tại Aurora',
+        'SUBTITLE' => 'Xem và quản lý các đơn đặt phòng của bạn tại Aurora',
         'page_title' => 'Lịch sử đặt phòng',
         'page_subtitle' => 'Xem và quản lý các đặt phòng của bạn',
+        'stat_total' => 'Tổng đặt phòng',
+        'STAT_TOTAL' => 'Tổng đặt phòng',
+        'stat_pending' => 'Chờ xác nhận',
+        'STAT_PENDING' => 'Chờ xác nhận',
+        'stat_completed' => 'Hoàn thành',
+        'STAT_COMPLETED' => 'Hoàn thành',
+        'stat_cancelled' => 'Đã hủy',
+        'STAT_CANCELLED' => 'Đã hủy',
+        'stat_spent' => 'Tổng chi tiêu',
+        'STAT_SPENT' => 'Tổng chi tiêu',
+        'filter_status' => 'Trạng thái',
+        'FILTER_STATUS' => 'Trạng thái',
+        'filter_payment' => 'Thanh toán',
+        'FILTER_PAYMENT' => 'Thanh toán',
+        'filter_search' => 'Tìm kiếm thông minh',
+        'FILTER_SEARCH' => 'Tìm kiếm thông minh',
+        'search_placeholder' => 'VD: 6C320B hoặc BK20251119...',
+        'SEARCH_PLACEHOLDER' => 'VD: 6C320B hoặc BK20251119...',
         'back' => 'Quay lại',
         'total_bookings' => 'Tổng đặt phòng',
         'pending' => 'Chờ xác nhận',
@@ -1163,6 +1187,7 @@ return [
         'all' => 'Tất cả',
         'filter' => 'Lọc',
         'no_bookings' => 'Chưa có đặt phòng nào',
+        'no_results' => 'Không tìm thấy kết quả phù hợp với bộ lọc của bạn.',
         'no_bookings_desc' => 'Bạn chưa có lịch sử đặt phòng. Hãy đặt phòng đầu tiên của bạn!',
         'book_now' => 'Đặt phòng ngay',
         // Booking list items

@@ -81,7 +81,7 @@ class BookingService {
         );
 
         // 5. Lưu vào Database (Transaction)
-        $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
+        $bookingCode = 'BK' . date('Ymd') . strtoupper(substr(md5(uniqid()), 0, 6));
         
         $bookingId = $this->bookingRepo->create([
             'booking_code' => $bookingCode,
