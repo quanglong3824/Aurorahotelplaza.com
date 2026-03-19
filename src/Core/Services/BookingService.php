@@ -2,6 +2,7 @@
 namespace Aurora\Core\Services;
 
 use Aurora\Core\Repositories\RoomRepository;
+use Aurora\Core\Repositories\BookingRepository;
 use Aurora\Core\Services\PricingService;
 use Exception;
 
