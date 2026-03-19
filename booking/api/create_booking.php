@@ -17,11 +17,13 @@ require_once __DIR__ . '/../../helpers/language.php';
 require_once __DIR__ . '/../../src/Core/DTOs/GuestDTO.php';
 require_once __DIR__ . '/../../src/Core/Repositories/RoomRepository.php';
 require_once __DIR__ . '/../../src/Core/Repositories/BookingRepository.php';
+require_once __DIR__ . '/../../src/Core/Repositories/UserRepository.php';
 require_once __DIR__ . '/../../src/Core/Services/PricingService.php';
 require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
 
 use Aurora\Core\Repositories\RoomRepository;
 use Aurora\Core\Repositories\BookingRepository;
+use Aurora\Core\Repositories\UserRepository;
 use Aurora\Core\Services\PricingService;
 use Aurora\Core\Services\BookingService;
 
@@ -38,8 +40,9 @@ try {
     // Initialize OOP Services
     $roomRepo = new RoomRepository($db);
     $bookingRepo = new BookingRepository($db);
+    $userRepo = new UserRepository($db);
     $pricingService = new PricingService();
-    $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
+    $bookingService = new BookingService($roomRepo, $bookingRepo, $userRepo, $pricingService);
 
     // Prepare Request Data
     $requestData = [
@@ -71,9 +74,9 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => __('booking_success.message'),
+        'message' => $result['message'] ?? 'Đặt phòng thành công!',
         'booking_code' => $result['booking_code'] ?? '',
-        'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
+        'redirect' => '../confirmation.php?booking_code=' . ($result['booking_code'] ?? '')
     ]);
 
 } catch (Exception $e) {
