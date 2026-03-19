@@ -75,7 +75,10 @@ extract($data);
                 short_stay_label: "<?php echo addslashes(__('booking_form.short_stay_label')); ?>",
                 agree_terms_alert: "<?php echo addslashes(__('booking_form.agree_terms_alert')); ?>",
                 guest_promo_lock: "<?php echo addslashes(__('booking_form.guest_promo_lock')); ?>",
-                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>"
+                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>",
+                long_stay_title: "<?php echo addslashes(__('booking_form.long_stay_title')); ?>",
+                long_stay_msg: "<?php echo addslashes(__('booking_form.long_stay_msg')); ?>",
+                switch_to_inquiry: "<?php echo addslashes(__('booking_form.switch_to_inquiry')); ?>"
             },
             common: {
                 night: "<?php echo addslashes(__('common.night')); ?>",

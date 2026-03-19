@@ -985,7 +985,10 @@ function validateStep(step) {
                 if (!co) { alert(translations.booking_form.select_checkout_date); return false; }
                 if (new Date(co) <= new Date(ci)) { alert(translations.booking_form.checkout_after_checkin); return false; }
                 if (co <= todayStr) { alert(translations.booking_form.checkout_future || 'Ngày trả phòng phải ở tương lai.'); return false; }
-                if (Math.ceil((new Date(co) - new Date(ci)) / (1000 * 60 * 60 * 24)) > 30) { alert('Số đêm lưu trú tối đa là 30 đêm theo cấu hình hệ thống, vui lòng chọn lại ngày trả phòng!'); return false; }
+                if (Math.ceil((new Date(co) - new Date(ci)) / (1000 * 60 * 60 * 24)) > 30) {
+                    showLongTermBookingModal();
+                    return false;
+                }
             }
             if (!na || na < 1) { alert(translations.booking_form.invalid_guests); return false; }
         }
@@ -1147,6 +1150,110 @@ function showBookingConflictModal(result) {
 function closeBookingConflictModal() {
     const modal = document.getElementById('bookingConflictModal');
     if (modal) { if (modal.cleanup) modal.cleanup(); modal.remove(); document.body.style.overflow = ''; }
+}
+
+function showLongTermBookingModal() {
+    closeLongTermBookingModal();
+    const modal = document.createElement('div');
+    modal.id = 'longTermBookingModal';
+    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+    modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
+    
+    modal.innerHTML = `
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl w-full max-w-lg border border-amber-500/30 overflow-hidden transform transition-all animate-fade-in" onclick="event.stopPropagation()">
+            <!-- Banner/Header -->
+            <div class="relative px-6 py-8 text-center bg-gradient-to-r from-amber-600 to-amber-700">
+                <div class="absolute top-4 right-4">
+                    <button onclick="closeLongTermBookingModal()" class="text-white/60 hover:text-white p-2 hover:bg-white/10 rounded-full transition-all">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 border-4 border-white/30 mb-4 shadow-inner">
+                    <span class="material-symbols-outlined text-4xl text-white">apartment</span>
+                </div>
+                <h3 class="font-bold text-2xl text-white">${translations.booking_form.long_stay_title}</h3>
+                <div class="mt-2 text-amber-100 text-sm font-medium tracking-wide">30+ ${translations.common.nights.toUpperCase()}</div>
+            </div>
+
+            <div class="p-8">
+                <p class="text-gray-200 text-center leading-relaxed mb-8 text-lg">
+                    ${translations.booking_form.long_stay_msg}
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Inquiry Mode Button -->
+                    <button onclick="handleSwitchToInquiry()" class="w-full flex items-center justify-between p-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl transition-all shadow-lg hover:shadow-blue-500/30 group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined">edit_note</span>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold">${translations.booking_form.switch_to_inquiry}</div>
+                                <div class="text-xs text-blue-100">${translations.booking_form.submit_btn_apt}</div>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                    </button>
+
+                    <!-- Hotline Button -->
+                    <a href="tel:02513918888" class="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-2xl transition-all group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined">call</span>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold">(0251) 391.8888</div>
+                                <div class="text-xs text-gray-400">Trưởng phòng kinh doanh</div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 bg-amber-500/20 text-amber-500 rounded-full">GỌI NGAY</span>
+                    </a>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-white/10 text-center text-xs text-gray-500 uppercase tracking-widest">
+                    Aurora Hotel Plaza - Service Excellence
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeLongTermBookingModal(); });
+    const handleEscKey = (e) => { if (e.key === 'Escape') closeLongTermBookingModal(); };
+    document.addEventListener('keydown', handleEscKey);
+    modal.cleanup = () => document.removeEventListener('keydown', handleEscKey);
+}
+
+function closeLongTermBookingModal() {
+    const modal = document.getElementById('longTermBookingModal');
+    if (modal) { 
+        if (modal.cleanup) modal.cleanup(); 
+        modal.remove(); 
+        document.body.style.overflow = ''; 
+    }
+}
+
+function handleSwitchToInquiry() {
+    closeLongTermBookingModal();
+    // Switch to inquiry mode
+    const switchInquiry = document.getElementById('switch_to_inquiry');
+    if (switchInquiry) {
+        switchInquiry.click();
+        
+        // Populate preferred check-in from previous attempt
+        const ci = document.getElementById('check_in_date').value;
+        if (ci) {
+            const pci = document.getElementById('preferred_check_in');
+            if (pci) pci.value = ci;
+        }
+    } else {
+        // Fallback for case where switch button is not found (shouldn't happen on booking page)
+        updateUIForInquiry();
+        isInquiryMode = true;
+    }
+    
+    // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 let appliedPromotion = null;

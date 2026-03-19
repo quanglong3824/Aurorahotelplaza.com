@@ -106,7 +106,6 @@ return [
         'err_max_guests' => 'Số lượng khách quá lớn cho một đơn đặt phòng đơn lẻ.',
         'err_room_not_found' => 'Loại phòng không tồn tại.',
         'err_no_availability' => 'Loại phòng này đã hết trong thời gian bạn chọn.',
-        'pay_at_hotel' => 'Thanh toán tại khách sạn',
         'pay_online' => 'Thanh toán online',
         'select_type' => 'Chọn loại đặt phòng',
         'individual_family' => 'Cá nhân / Gia đình',
@@ -221,6 +220,9 @@ return [
         'active_booking_checkout' => 'Chờ đến ngày trả phòng và trả phòng',
         'active_booking_contact' => 'Liên hệ lễ tân: ',
         'extra_bed_note' => 'Lưu ý: Tối đa 2 giường phụ/phòng. Không áp dụng cho căn hộ.',
+        'long_stay_title' => 'Yêu cầu đặt phòng dài hạn',
+        'long_stay_msg' => 'Bạn đã chọn thời gian lưu trú trên 30 ngày. Để nhận được báo giá và các chính sách ưu đãi tốt nhất cho khách lưu trú dài hạn (Long-stay), vui lòng chuyển sang biểu mẫu yêu cầu tư vấn hoặc liên hệ trực tiếp với chúng tôi.',
+        'switch_to_inquiry' => 'Chuyển sang Yêu cầu Tư vấn',
     ],
 
     // Booking status

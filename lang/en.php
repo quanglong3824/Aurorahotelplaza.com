@@ -107,7 +107,6 @@ return [
         'err_max_guests' => 'Number of guests exceeds the limit for a single booking.',
         'err_room_not_found' => 'Room type not found.',
         'err_no_availability' => 'This room type is fully booked for your selected dates.',
-        'pay_at_hotel' => 'Pay at Hotel',
         'pay_online' => 'Pay Online',
         'select_type' => 'Select Booking Type',
         'individual_family' => 'Individual / Family',
@@ -749,6 +748,9 @@ return [
         'child_height_note' => 'Enter child height for accurate surcharge',
         'extra_bed_for_room' => 'Add extra bed for room (only for regular rooms)',
         'price_estimate_note_final' => 'This is an estimated price which may vary when guest checks in at reception',
+        'long_stay_title' => 'Long-term Booking Request',
+        'long_stay_msg' => 'You have selected a stay of more than 30 days. To receive the best price quotes and policies for long-term stays, please switch to our inquiry form or contact us directly.',
+        'switch_to_inquiry' => 'Switch to Inquiry Mode',
     ],
 
     // Room detail page
