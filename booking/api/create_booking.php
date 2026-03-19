@@ -10,7 +10,7 @@ session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/load_env.php';
 require_once __DIR__ . '/../../helpers/functions.php';
-require_once __DIR__ . '/../../helpers/booking-helper.php';
+require_once __DIR__ . '/../../helpers/booking-validator.php';
 require_once __DIR__ . '/../../helpers/language.php';
 
 // Load Core OOP Classes
@@ -22,7 +22,6 @@ require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
 
 use Aurora\Core\Repositories\RoomRepository;
 use Aurora\Core\Repositories\BookingRepository;
-use Aurora\Core\Repositories\UserRepository;
 use Aurora\Core\Services\PricingService;
 use Aurora\Core\Services\BookingService;
 
@@ -35,51 +34,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     $db = getDB();
-    if (!$db) {
-        throw new Exception("Kết nối cơ sở dữ liệu thất bại. Vui lòng kiểm tra lại cấu hình hệ thống.");
-    }
-
+    
     // Initialize OOP Services
     $roomRepo = new RoomRepository($db);
     $bookingRepo = new BookingRepository($db);
-    $userRepo = new UserRepository($db);
     $pricingService = new PricingService();
-    $bookingService = new BookingService($roomRepo, $bookingRepo, $userRepo, $pricingService);
-
-    // Get input data
-    $input_data = $_POST;
-    $content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-    if (stripos($content_type, 'application/json') !== false) {
-        $input_json = file_get_contents('php://input');
-        $input_data = json_decode($input_json, true) ?? [];
-    }
+    $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
 
     // Prepare Request Data
     $requestData = [
-        'room_type_id' => (int)($input_data['room_type_id'] ?? 0),
-        'check_in' => sanitize($input_data['check_in_date'] ?? $input_data['check_in'] ?? ''),
-        'check_out' => sanitize($input_data['check_out_date'] ?? $input_data['check_out'] ?? ''),
-        'num_adults' => (int)($input_data['num_adults'] ?? $input_data['adults'] ?? 2),
-        'num_children' => (int)($input_data['num_children'] ?? 0),
-        'num_nights' => (int)($input_data['num_nights'] ?? 1),
-        'extra_beds' => (int)($input_data['extra_beds'] ?? 0),
-        'stay_type' => sanitize($input_data['booking_type'] ?? $input_data['stay_type'] ?? 'standard'),
-        'booking_type' => sanitize($input_data['booking_type'] ?? 'standard'),
-        'inquiry_message' => sanitize($input_data['inquiry_message'] ?? ''),
-        'duration_type' => sanitize($input_data['duration_type'] ?? ''),
-        'guest_name' => sanitize($input_data['guest_name'] ?? ''),
-        'guest_phone' => sanitize($input_data['guest_phone'] ?? ''),
-        'guest_email' => sanitize($input_data['guest_email'] ?? ''),
-        'special_requests' => sanitize($input_data['special_requests'] ?? ''),
-        'payment_method' => sanitize($input_data['payment_method'] ?? 'cash'),
+        'room_type_id' => (int)($_POST['room_type_id'] ?? 0),
+        'check_in' => sanitize($_POST['check_in'] ?? ''),
+        'check_out' => sanitize($_POST['check_out'] ?? ''),
+        'num_adults' => (int)($_POST['adults'] ?? 2),
+        'num_nights' => (int)($_POST['num_nights'] ?? 1),
+        'extra_beds' => (int)($_POST['extra_beds'] ?? 0),
+        'stay_type' => sanitize($_POST['stay_type'] ?? 'standard'),
+        'guest_name' => sanitize($_POST['guest_name'] ?? ''),
+        'guest_phone' => sanitize($_POST['guest_phone'] ?? ''),
+        'guest_email' => sanitize($_POST['guest_email'] ?? ''),
+        'special_requests' => sanitize($_POST['special_requests'] ?? ''),
         'user_id' => $_SESSION['user_id'] ?? null,
-        'extra_guests' => []
+        'extra_guests' => [] // Will be populated below
     ];
 
     // Parse extra guests from JSON if provided
-    $extraGuestsData = $input_data['extra_guests_data'] ?? null;
-    if ($extraGuestsData) {
-        $extraGuestsJson = is_string($extraGuestsData) ? json_decode($extraGuestsData, true) : $extraGuestsData;
+    if (isset($_POST['extra_guests_data'])) {
+        $extraGuestsJson = json_decode($_POST['extra_guests_data'], true);
         if (is_array($extraGuestsJson)) {
             $requestData['extra_guests'] = $extraGuestsJson;
         }
@@ -90,15 +71,12 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => $result['message'] ?? __('booking_success'),
+        'message' => __('booking_success.message'),
         'booking_code' => $result['booking_code'] ?? '',
-        'booking_id' => $result['booking_id'] ?? 0,
-        'booking_type' => $result['booking_type'] ?? 'instant',
-        'pricing' => $result['pricing'] ?? [],
-        'redirect' => '../confirmation.php?booking_code=' . ($result['booking_code'] ?? '')
+        'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
     ]);
 
-} catch (Throwable $e) {
+} catch (Exception $e) {
     error_log("Booking API Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,

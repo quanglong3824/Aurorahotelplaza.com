@@ -138,7 +138,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
             <button type="submit"
                 class="bg-[#d4af37] hover:bg-[#b5952f] text-white font-bold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap flex items-center justify-center min-w-[36px] gap-1 shrink-0">
-                <span class="material-symbols-outlined" style="font-size: 16px;">search</span>
+                <span class="material-symbols-outlined hidden sm:inline-block" style="font-size:16px;">search</span>
+                <span class="sm:hidden material-symbols-outlined" style="font-size:18px;">search</span>
                 <span class="hidden sm:inline-block"><?php _e('tracking.search_btn'); ?></span>
             </button>
         </form>

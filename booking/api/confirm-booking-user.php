@@ -9,13 +9,8 @@ ob_start();
 header('Content-Type: application/json');
 
 require_once '../../config/database.php';
-require_once '../../config/load_env.php';
-require_once '../../helpers/functions.php';
-require_once '../../helpers/language.php';
 require_once '../../models/Booking.php';
 require_once '../../includes/email-helper.php';
-
-initLanguage();
 
 try {
     // Get JSON input
@@ -44,24 +39,6 @@ try {
 
     if (!$booking) {
         throw new Exception('Không tìm thấy đơn đặt phòng');
-    }
-
-    // VÁ LỖI BẢO MẬT: Kiểm tra quyền sở hữu
-    $user_id = $_SESSION['user_id'] ?? null;
-    $user_email = $_SESSION['user_email'] ?? null;
-    
-    // Nếu user đã đăng nhập, kiểm tra user_id
-    if ($user_id !== null && $booking['user_id'] !== null) {
-        if ($booking['user_id'] != $user_id) {
-            throw new Exception('Bạn không có quyền xác nhận đơn đặt phòng này');
-        }
-    }
-    
-    // Nếu không có user_id, kiểm tra email
-    if ($user_email !== null && $booking['guest_email'] !== null) {
-        if (strtolower($booking['guest_email']) !== strtolower($user_email)) {
-            throw new Exception('Bạn không có quyền xác nhận đơn đặt phòng này');
-        }
     }
 
     // Check if booking is in pending status
@@ -95,7 +72,7 @@ try {
             $booking['booking_id'],
             'pending',
             'confirmed',
-            $user_id,
+            $booking['user_id'],
             'Booking confirmed by user'
         );
 

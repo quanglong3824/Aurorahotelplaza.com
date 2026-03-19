@@ -216,7 +216,7 @@
                                         data-size="<?php echo $room['size_sqm'] ?? 0; ?>"
                                         data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($data['selected_room_type_id'] !== null && (int) $data['selected_room_type_id'] === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
                                         <?php echo _f($room, 'type_name'); ?> -
-                                        <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($display_price) . ' ' . __('common.currency') . __('common.per_night') . ' ' . $availability_text; ?>
+                                        <?php echo $is_inquiry ? __('inquiry.contact_btn') : number_format($display_price) . ' ' . __('common.currency') . '/' . __('common.per_night') . ' ' . $availability_text; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -464,7 +464,7 @@
                                     <!-- Number of nights -->
                                     <div class="flex justify-between items-center">
                                         <span class="text-gray-400"><?php _e('booking_page.num_nights'); ?>:</span>
-                                        <span id="num_nights">0 <?php _e('common.nights'); ?></span>
+                                        <span id="num_nights">0 <?php _e('common.per_night'); ?></span>
                                     </div>
 
                                     <!-- Room Subtotal -->

@@ -55,7 +55,7 @@
                             <div class="text-white/70 text-sm"><?php _e('home.apartment'); ?></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-accent mb-1">4 sao +</div>
+                            <div class="text-3xl font-bold text-accent mb-1">4★</div>
                             <div class="text-white/70 text-sm"><?php _e('common.standard'); ?></div>
                         </div>
                         <div class="text-center">

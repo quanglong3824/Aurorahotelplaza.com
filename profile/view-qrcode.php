@@ -739,7 +739,7 @@ try {
             </div>
             
             <div class="footer">
-                <p>Aurora Hotel Plaza - phường Tam Hiệp, tỉnh Đồng Nai</p>
+                <p>Aurora Hotel Plaza - Biên Hòa, Đồng Nai</p>
                 <p>Hotline: 0251 3511 888 | Email: info@aurorahotelplaza.com</p>
                 <p style="margin-top: 10px;">In lúc: ${new Date().toLocaleString('vi-VN')}</p>
             </div>

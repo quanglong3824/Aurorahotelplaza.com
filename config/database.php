@@ -7,7 +7,7 @@
 require_once __DIR__ . '/load_env.php';
 
 // Tự động phát hiện môi trường
-$isLocal = false;
+$isLocal = true;
 if (isset($_SERVER['SERVER_NAME'])) {
     $isLocal = (
         $_SERVER['SERVER_NAME'] === 'localhost' ||
@@ -17,17 +17,17 @@ if (isset($_SERVER['SERVER_NAME'])) {
     );
 }
 
-// Cấu hình Database - Tất cả lấy từ .env
+// Cấu hình Database
 if ($isLocal) {
-    define('DB_NAME', env('DB_LOCAL_NAME'));
+    define('DB_NAME', env('DB_LOCAL_NAME', ''));
     define('DB_USER', env('DB_LOCAL_USER', 'root'));
     define('DB_PASSWORD', env('DB_LOCAL_PASSWORD', ''));
     define('DB_HOST', env('DB_LOCAL_HOST', '127.0.0.1:3306'));
     define('DB_ENVIRONMENT', 'LOCAL');
 } else {
-    define('DB_NAME', env('DB_HOST_NAME'));
-    define('DB_USER', env('DB_HOST_USER'));
-    define('DB_PASSWORD', env('DB_HOST_PASSWORD'));
+    define('DB_NAME', env('DB_HOST_NAME', ''));
+    define('DB_USER', env('DB_HOST_USER', ''));
+    define('DB_PASSWORD', env('DB_HOST_PASSWORD', ''));
     define('DB_HOST', env('DB_HOST_HOST', 'localhost:3306'));
     define('DB_ENVIRONMENT', 'PRODUCTION');
 }
@@ -45,14 +45,11 @@ class Database
     private $password = DB_PASSWORD;
     private $charset = DB_CHARSET;
     public $conn;
+    private $last_error = null;
+    private $last_error_code = null;
 
     public function getConnection()
     {
-        if (empty($this->db_name)) {
-            error_log("Database Error: DB_NAME is not defined in .env");
-            return false;
-        }
-
         $this->conn = null;
         try {
             $hostWithoutPort = $this->parseHostAndPort($this->host);
@@ -61,7 +58,8 @@ class Database
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
-            error_log("Connection failed: " . $exception->getMessage());
+            $this->last_error = $exception->getMessage();
+            $this->last_error_code = $exception->getCode();
             return false;
         }
         return $this->conn;
@@ -79,6 +77,9 @@ class Database
         }
         return $host;
     }
+
+    public function getLastError() { return $this->last_error; }
+    public function getLastErrorCode() { return $this->last_error_code; }
 }
 
 function getDB()

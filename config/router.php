@@ -125,7 +125,7 @@ class Router {
             return '#';
         }
         
-        $url = rtrim(BASE_URL, '/') . '/' . ltrim($route, '/');
+        $url = BASE_URL . '/' . $route;
         
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);

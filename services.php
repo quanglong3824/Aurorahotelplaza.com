@@ -94,7 +94,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                             <div class="text-sm opacity-70"><?php _e('nav.services'); ?></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">4 sao +</div>
+                            <div class="text-3xl font-bold text-[#d4af37] mb-1 font-display">4★</div>
                             <div class="text-sm opacity-70"><?php _e('common.standard'); ?></div>
                         </div>
                         <div class="text-center">

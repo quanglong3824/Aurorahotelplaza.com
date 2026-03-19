@@ -75,14 +75,7 @@ extract($data);
                 short_stay_label: "<?php echo addslashes(__('booking_form.short_stay_label')); ?>",
                 agree_terms_alert: "<?php echo addslashes(__('booking_form.agree_terms_alert')); ?>",
                 guest_promo_lock: "<?php echo addslashes(__('booking_form.guest_promo_lock')); ?>",
-                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>",
-                long_stay_title: "<?php echo addslashes(__('booking_form.long_stay_title')); ?>",
-                long_stay_msg: "<?php echo addslashes(__('booking_form.long_stay_msg')); ?>",
-                switch_to_inquiry: "<?php echo addslashes(__('booking_form.switch_to_inquiry')); ?>",
-                pay_at_hotel_desc: "<?php echo addslashes(__('booking_form.pay_at_hotel_desc')); ?>"
-            },
-            booking_page: {
-                pay_at_hotel_desc: "<?php echo addslashes(__('booking_form.pay_at_hotel_desc')); ?>"
+                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>"
             },
             common: {
                 night: "<?php echo addslashes(__('common.night')); ?>",
@@ -107,7 +100,6 @@ extract($data);
     
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pages/booking-page.js"></script>
-    <script src="./assets/js/booking-diagnostic.js"></script>
 
 </body>
 

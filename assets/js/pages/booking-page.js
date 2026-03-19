@@ -985,10 +985,7 @@ function validateStep(step) {
                 if (!co) { alert(translations.booking_form.select_checkout_date); return false; }
                 if (new Date(co) <= new Date(ci)) { alert(translations.booking_form.checkout_after_checkin); return false; }
                 if (co <= todayStr) { alert(translations.booking_form.checkout_future || 'Ngày trả phòng phải ở tương lai.'); return false; }
-                if (Math.ceil((new Date(co) - new Date(ci)) / (1000 * 60 * 60 * 24)) > 30) {
-                    showLongTermBookingModal();
-                    return false;
-                }
+                if (Math.ceil((new Date(co) - new Date(ci)) / (1000 * 60 * 60 * 24)) > 30) { alert('Số đêm lưu trú tối đa là 30 đêm theo cấu hình hệ thống, vui lòng chọn lại ngày trả phòng!'); return false; }
             }
             if (!na || na < 1) { alert(translations.booking_form.invalid_guests); return false; }
         }
@@ -1058,142 +1055,44 @@ function updateSummary() {
 
 function formatDate(ds) { if (!ds) return ''; return new Date(ds).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }); }
 
-
-
-
-
-let isSubmitting = false;
 async function handleSubmit(e) {
-    if (isSubmitting) return;
-    
-    const sb = document.getElementById('submitBtn');
-    const sbt = document.getElementById('submitBtnText');
-    const ot = sbt ? sbt.textContent : 'Xác nhận';
-    const processingText = translations?.common?.processing || 'Đang xử lý...';
-
-    try {
-        e.preventDefault();
-        if (!document.getElementById('agree_terms')?.checked) { 
-            alert(translations?.booking_form?.agree_terms_alert || 'Vui lòng đồng ý với điều khoản và điều kiện'); 
-            return; 
+    e.preventDefault();
+    if (!document.getElementById('agree_terms').checked) { alert(translations.booking_form.agree_terms_alert); return; }
+    const formData = new FormData(e.target);
+    const fo = Object.fromEntries(formData);
+    let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
+    if (isInquiryMode) {
+        const pci = document.getElementById('preferred_check_in').value, dt = document.getElementById('duration_type').value, na = document.getElementById('inquiry_num_adults').value, nc = document.getElementById('inquiry_num_children').value, im = document.getElementById('inquiry_message')?.value || '', rm = document.getElementById('rent_mode')?.value || 'by_month';
+        let co = pci; if (pci) {
+            const sd = new Date(pci); if (rm === 'by_month') { const m = parseInt(document.getElementById('duration_months')?.value) || 1; sd.setMonth(sd.getMonth() + m); co = sd.toISOString().split('T')[0]; }
+            else { const med = document.getElementById('manual_end_date')?.value; if (med) co = med; else { const d = parseInt(document.getElementById('duration_days')?.value) || 30; sd.setDate(sd.getDate() + d); co = sd.toISOString().split('T')[0]; } }
         }
-        
-        isSubmitting = true;
-        if (sb) sb.disabled = true; 
-        if (sbt) sbt.textContent = processingText;
-        const formData = new FormData(e.target);
-        const fo = Object.fromEntries(formData);
-        let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
-
-        console.log('--- [DEBUG] STARTING SUBMISSION ---');
-        console.log('Payload data:', data);
-        if (isInquiryMode) {
-            const pci = document.getElementById('preferred_check_in')?.value || '';
-            const dt = document.getElementById('duration_type')?.value || '';
-            const na = document.getElementById('inquiry_num_adults')?.value || '1';
-            const nc = document.getElementById('inquiry_num_children')?.value || '0';
-            const im = document.getElementById('inquiry_message')?.value || '';
-            const rm = document.getElementById('rent_mode')?.value || 'by_month';
-            
-            let co = pci; 
-            if (pci) {
-                const sd = new Date(pci); 
-                if (rm === 'by_month') { 
-                    const m = parseInt(document.getElementById('duration_months')?.value) || 1; 
-                    sd.setMonth(sd.getMonth() + m); 
-                    co = sd.toISOString().split('T')[0]; 
-                } else { 
-                    const med = document.getElementById('manual_end_date')?.value; 
-                    if (med) co = med; 
-                    else { 
-                        const d = parseInt(document.getElementById('duration_days')?.value) || 30; 
-                        sd.setDate(sd.getDate() + d); 
-                        co = sd.toISOString().split('T')[0]; 
-                    } 
-                } 
-            }
-            data = { ...data, room_type_id: fo.room_type_id, check_in_date: pci, check_out_date: co, num_guests: na, num_adults: na, num_children: nc, duration_type: dt, message: im, num_nights: 0 };
-        } else {
-            const rs = document.getElementById('room_type_id');
-            if (!rs) {
-                alert('Lỗi hệ thống: Không tìm thấy ID phòng. Vui lòng tải lại trang.');
-                isSubmitting = false; if (sb) sb.disabled = false; return;
-            }
-            const na = parseInt(document.getElementById('num_adults')?.value) || 2;
-            const nc = parseInt(document.getElementById('num_children')?.value) || 0;
-            const neb = parseInt(document.getElementById('extra_beds')?.value) || 0;
-            const nn = currentBookingType === 'short_stay' ? 1 : (typeof calculateNights === 'function' ? calculateNights() : 1);
-            const rp = parseFloat(rs.getAttribute('data-room-price')) || 0;
-            const ct = parseFloat(rs.getAttribute('data-calculated-total')) || 0;
-            const pt = rs.getAttribute('data-price-type') || 'double';
-            const rst = parseFloat(rs.getAttribute('data-room-subtotal')) || 0;
-            const egf = parseFloat(rs.getAttribute('data-extra-guest-fee')) || 0;
-            const ebf = parseFloat(rs.getAttribute('data-extra-bed-fee')) || 0;
-            
-            data.booking_type = currentBookingType; 
-            data.num_adults = na; data.num_children = nc; data.num_guests = na; 
-            data.num_nights = nn; data.calculated_nights = nn; 
-            data.room_price = rp; data.room_subtotal = rst; data.calculated_total = ct; 
-            data.price_type_used = pt; data.extra_beds = neb; 
-            data.extra_bed_fee = ebf; data.extra_guest_fee = egf; 
-            data.extra_guests_data = JSON.stringify(typeof extraGuests !== 'undefined' ? extraGuests : []);
-        }
-
-        try {
-            const vr = await fetch('./api/validate-booking.php', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) 
-            });
-            const validation = await vr.json();
-            console.log('Validation Response:', validation);
-            if (!validation.allowed) { 
-                showBookingConflictModal(validation); 
-                isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
-                return; 
-            }
-        } catch (error) { console.error('Pre-validation error:', error); }
-
-        try {
-            const response = await fetch('./api/create_booking.php', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify(data) 
-            });
-            
-            // Check for raw text first - debug purposes
-            const rawResponseText = await response.clone().text();
-            console.log('Raw Server Response Body:', rawResponseText);
-
-            const result = await response.json();
-            console.log('Parsed API Result:', result);
-
-            if (result.success) {
-                if (result.booking_type === 'inquiry') { 
-                    alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); 
-                    window.location.href = '../index.php'; 
-                } else { 
-                    if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; 
-                    else window.location.href = (result.is_guest || result.is_anonymous || result.booking_code) ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; 
-                }
-            } else {
-                if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
-                else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
-                else if (result.message) showToast(result.message, 'error');
-                else alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
-            }
-        } catch (error) { 
-            console.error('Error during creation:', error); 
-            alert('Có lỗi xảy ra trong quá trình đặt phòng. Vui lòng thử lại.'); 
-            isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
-        }
-    } catch (globalError) {
-        console.error('Global Submit Error:', globalError);
-        alert('Có lỗi phát sinh. Vui lòng tải lại trang và thử lại.');
-        isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
+        data = { ...data, room_type_id: fo.room_type_id, check_in_date: pci, check_out_date: co, num_guests: na, num_adults: na, num_children: nc, duration_type: dt, message: im, num_nights: 0 };
+    } else {
+        const rs = document.getElementById('room_type_id'), na = parseInt(document.getElementById('num_adults')?.value) || 2, nc = parseInt(document.getElementById('num_children')?.value) || 0, neb = parseInt(document.getElementById('extra_beds')?.value) || 0, nn = currentBookingType === 'short_stay' ? 1 : calculateNights(), rp = parseFloat(rs.getAttribute('data-room-price')) || 0, ct = parseFloat(rs.getAttribute('data-calculated-total')) || 0, pt = rs.getAttribute('data-price-type') || 'double', rst = parseFloat(rs.getAttribute('data-room-subtotal')) || 0, egf = parseFloat(rs.getAttribute('data-extra-guest-fee')) || 0, ebf = parseFloat(rs.getAttribute('data-extra-bed-fee')) || 0;
+        data.booking_type = currentBookingType; data.num_adults = na; data.num_children = nc; data.num_guests = na; data.num_nights = nn; data.calculated_nights = nn; data.room_price = rp; data.room_subtotal = rst; data.calculated_total = ct; data.price_type_used = pt; data.extra_beds = neb; data.extra_bed_fee = ebf; data.extra_guest_fee = egf; data.extra_guests_data = JSON.stringify(extraGuests);
     }
-
+    const sb = document.getElementById('submitBtn'), sbt = document.getElementById('submitBtnText'), ot = sbt.textContent;
+    try {
+        const vr = await fetch('./api/validate-booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) });
+        const validation = await vr.json();
+        if (!validation.allowed) { showBookingConflictModal(validation); return; }
+    } catch (error) { console.error('Pre-validation error:', error); }
+    sb.disabled = true; sbt.textContent = translations.common.processing;
+    try {
+        const response = await fetch('./api/create_booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+            if (result.booking_type === 'inquiry') { alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); window.location.href = '../index.php'; }
+            else { if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; else window.location.href = result.is_guest ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; }
+        } else {
+            if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
+            else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
+            else if (result.message) showToast(result.message, 'error');
+            else alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            sb.disabled = false; sbt.textContent = ot;
+        }
+    } catch (error) { console.error('Error:', error); alert('Có lỗi xảy ra. Vui lòng thử lại.'); sb.disabled = false; sbt.textContent = ot; }
 }
 
 function showBookingConflictModal(result) {
@@ -1248,131 +1147,6 @@ function showBookingConflictModal(result) {
 function closeBookingConflictModal() {
     const modal = document.getElementById('bookingConflictModal');
     if (modal) { if (modal.cleanup) modal.cleanup(); modal.remove(); document.body.style.overflow = ''; }
-}
-
-function showLongTermBookingModal() {
-    closeLongTermBookingModal();
-    const modal = document.createElement('div');
-    modal.id = 'longTermBookingModal';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.zIndex = '200000';
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.style.padding = '1rem';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
-    modal.style.backdropFilter = 'blur(12px)';
-    modal.style.webkitBackdropFilter = 'blur(12px)';
-    modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
-    
-    // Safeguards for translations
-    const t_form = translations?.booking_form || {};
-    const t_common = translations?.common || {};
-    const title = t_form.long_stay_title || 'Long-term Stay Request';
-    const msg = t_form.long_stay_msg || 'Stays over 30 days require special handling. Please contact us.';
-    const switchInqText = t_form.switch_to_inquiry || 'Switch to Inquiry';
-    const submitAptText = t_form.submit_btn_apt || 'Send Inquiry';
-    const nightsLabel = (t_common.nights || 'nights').toUpperCase();
-    
-    modal.innerHTML = `
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl w-full max-w-lg border border-amber-500/30 overflow-hidden transform transition-all" onclick="event.stopPropagation()" style="box-shadow: 0 0 50px rgba(0,0,0,0.5);">
-            <!-- Banner/Header -->
-            <div class="relative px-6 py-8 text-center bg-gradient-to-r from-amber-600 to-amber-700">
-                <div class="absolute top-4 right-4">
-                    <button onclick="closeLongTermBookingModal()" class="text-white/60 hover:text-white p-2 hover:bg-white/10 rounded-full transition-all">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
-                </div>
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 border-4 border-white/30 mb-4 shadow-inner">
-                    <span class="material-symbols-outlined text-4xl text-white">apartment</span>
-                </div>
-                <h3 class="font-bold text-2xl text-white" style="color: white !important;">${title}</h3>
-                <div class="mt-2 text-amber-100 text-sm font-medium tracking-wide">30+ ${nightsLabel}</div>
-            </div>
-
-            <div class="p-8">
-                <p class="text-gray-200 text-center leading-relaxed mb-8 text-lg">
-                    ${msg}
-                </p>
-
-                <div class="space-y-4">
-                    <!-- Inquiry Mode Button -->
-                    <button onclick="handleSwitchToInquiry()" class="w-full flex items-center justify-between p-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl transition-all shadow-lg hover:shadow-blue-500/30 group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined">edit_note</span>
-                            </div>
-                            <div class="text-left">
-                                <div class="font-bold">${switchInqText}</div>
-                                <div class="text-xs text-blue-100">${submitAptText}</div>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
-                    </button>
-
-                    <!-- Hotline Button -->
-                    <a href="tel:02513918888" class="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-2xl transition-all group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined">call</span>
-                            </div>
-                            <div class="text-left">
-                                <div class="font-bold">(0251) 391.8888</div>
-                                <div class="text-xs text-gray-400">Trưởng phòng kinh doanh</div>
-                            </div>
-                        </div>
-                        <span class="text-xs font-semibold px-3 py-1 bg-amber-500/20 text-amber-500 rounded-full">GỌI NGAY</span>
-                    </a>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-white/10 text-center text-xs text-gray-500 uppercase tracking-widest">
-                    Aurora Hotel Plaza - Service Excellence
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeLongTermBookingModal(); });
-    const handleEscKey = (e) => { if (e.key === 'Escape') closeLongTermBookingModal(); };
-    document.addEventListener('keydown', handleEscKey);
-    modal.cleanup = () => document.removeEventListener('keydown', handleEscKey);
-}
-
-function closeLongTermBookingModal() {
-    const modal = document.getElementById('longTermBookingModal');
-    if (modal) { 
-        if (modal.cleanup) modal.cleanup(); 
-        modal.remove(); 
-        document.body.style.overflow = ''; 
-    }
-}
-
-function handleSwitchToInquiry() {
-    closeLongTermBookingModal();
-    // Switch to inquiry mode
-    const switchInquiry = document.getElementById('switch_to_inquiry');
-    if (switchInquiry) {
-        switchInquiry.click();
-        
-        // Populate preferred check-in from previous attempt
-        const ci = document.getElementById('check_in_date').value;
-        if (ci) {
-            const pci = document.getElementById('preferred_check_in');
-            if (pci) pci.value = ci;
-        }
-    } else {
-        // Fallback for case where switch button is not found (shouldn't happen on booking page)
-        updateUIForInquiry();
-        isInquiryMode = true;
-    }
-    
-    // Smooth scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 let appliedPromotion = null;
