@@ -1156,11 +1156,32 @@ function showLongTermBookingModal() {
     closeLongTermBookingModal();
     const modal = document.createElement('div');
     modal.id = 'longTermBookingModal';
-    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.zIndex = '200000';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.padding = '1rem';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+    modal.style.backdropFilter = 'blur(12px)';
+    modal.style.webkitBackdropFilter = 'blur(12px)';
     modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
     
+    // Safeguards for translations
+    const t_form = translations?.booking_form || {};
+    const t_common = translations?.common || {};
+    const title = t_form.long_stay_title || 'Long-term Stay Request';
+    const msg = t_form.long_stay_msg || 'Stays over 30 days require special handling. Please contact us.';
+    const switchInqText = t_form.switch_to_inquiry || 'Switch to Inquiry';
+    const submitAptText = t_form.submit_btn_apt || 'Send Inquiry';
+    const nightsLabel = (t_common.nights || 'nights').toUpperCase();
+    
     modal.innerHTML = `
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl w-full max-w-lg border border-amber-500/30 overflow-hidden transform transition-all animate-fade-in" onclick="event.stopPropagation()">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl w-full max-w-lg border border-amber-500/30 overflow-hidden transform transition-all" onclick="event.stopPropagation()" style="box-shadow: 0 0 50px rgba(0,0,0,0.5);">
             <!-- Banner/Header -->
             <div class="relative px-6 py-8 text-center bg-gradient-to-r from-amber-600 to-amber-700">
                 <div class="absolute top-4 right-4">
@@ -1171,13 +1192,13 @@ function showLongTermBookingModal() {
                 <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 border-4 border-white/30 mb-4 shadow-inner">
                     <span class="material-symbols-outlined text-4xl text-white">apartment</span>
                 </div>
-                <h3 class="font-bold text-2xl text-white">${translations.booking_form.long_stay_title}</h3>
-                <div class="mt-2 text-amber-100 text-sm font-medium tracking-wide">30+ ${translations.common.nights.toUpperCase()}</div>
+                <h3 class="font-bold text-2xl text-white" style="color: white !important;">${title}</h3>
+                <div class="mt-2 text-amber-100 text-sm font-medium tracking-wide">30+ ${nightsLabel}</div>
             </div>
 
             <div class="p-8">
                 <p class="text-gray-200 text-center leading-relaxed mb-8 text-lg">
-                    ${translations.booking_form.long_stay_msg}
+                    ${msg}
                 </p>
 
                 <div class="space-y-4">
@@ -1188,8 +1209,8 @@ function showLongTermBookingModal() {
                                 <span class="material-symbols-outlined">edit_note</span>
                             </div>
                             <div class="text-left">
-                                <div class="font-bold">${translations.booking_form.switch_to_inquiry}</div>
-                                <div class="text-xs text-blue-100">${translations.booking_form.submit_btn_apt}</div>
+                                <div class="font-bold">${switchInqText}</div>
+                                <div class="text-xs text-blue-100">${submitAptText}</div>
                             </div>
                         </div>
                         <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
