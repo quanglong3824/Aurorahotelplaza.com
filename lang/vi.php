@@ -858,6 +858,9 @@ return [
         'child_height_note' => 'Khai báo chiều cao trẻ em để tính phụ thu chính xác',
         'extra_bed_for_room' => 'Thêm giường phụ cho phòng (chỉ áp dụng cho phòng thường)',
         'price_estimate_note_final' => 'Đây là giá tham khảo sẽ có biến động khi khách tới check in phòng với lễ tân',
+        'long_stay_title' => 'Yêu cầu đặt phòng dài hạn',
+        'long_stay_msg' => 'Bạn đã chọn thời gian lưu trú trên 30 ngày. Để nhận được báo giá và các chính sách ưu đãi tốt nhất cho khách lưu trú dài hạn (Long-stay), vui lòng chuyển sang biểu mẫu yêu cầu tư vấn hoặc liên hệ trực tiếp với chúng tôi.',
+        'switch_to_inquiry' => 'Chuyển sang Yêu cầu Tư vấn',
     ],
 
     // Room detail page

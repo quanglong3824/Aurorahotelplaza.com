@@ -748,9 +748,6 @@ return [
         'child_height_note' => 'Enter child height for accurate surcharge',
         'extra_bed_for_room' => 'Add extra bed for room (only for regular rooms)',
         'price_estimate_note_final' => 'This is an estimated price which may vary when guest checks in at reception',
-        'long_stay_title' => 'Long-term Booking Request',
-        'long_stay_msg' => 'You have selected a stay of more than 30 days. To receive the best price quotes and policies for long-term stays, please switch to our inquiry form or contact us directly.',
-        'switch_to_inquiry' => 'Switch to Inquiry Mode',
     ],
 
     // Room detail page
@@ -1647,6 +1644,9 @@ return [
         'active_booking_checkout' => 'Wait until checkout date and check out',
         'active_booking_contact' => 'Contact reception: ',
         'extra_bed_note' => 'Note: Max 2 extra beds/room. Not applicable for apartments.',
+        'long_stay_title' => 'Long-term Booking Request',
+        'long_stay_msg' => 'You have selected a stay of more than 30 days. To receive the best price quotes and policies for long-term stays, please switch to our inquiry form or contact us directly.',
+        'switch_to_inquiry' => 'Switch to Inquiry Mode',
     ],
 
     // Tracking
