@@ -1060,7 +1060,17 @@ function formatDate(ds) { if (!ds) return ''; return new Date(ds).toLocaleDateSt
 
 
 
+
+
+let isSubmitting = false;
 async function handleSubmit(e) {
+    if (isSubmitting) return;
+    
+    const sb = document.getElementById('submitBtn');
+    const sbt = document.getElementById('submitBtnText');
+    const ot = sbt ? sbt.textContent : 'Xác nhận';
+    const processingText = translations?.common?.processing || 'Đang xử lý...';
+
     try {
         e.preventDefault();
         if (!document.getElementById('agree_terms')?.checked) { 
@@ -1068,6 +1078,10 @@ async function handleSubmit(e) {
             return; 
         }
         
+        isSubmitting = true;
+        if (sb) sb.disabled = true; 
+        if (sbt) sbt.textContent = processingText;
+
         const formData = new FormData(e.target);
         const fo = Object.fromEntries(formData);
         let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
@@ -1102,7 +1116,7 @@ async function handleSubmit(e) {
             const rs = document.getElementById('room_type_id');
             if (!rs) {
                 alert('Lỗi hệ thống: Không tìm thấy ID phòng. Vui lòng tải lại trang.');
-                return;
+                isSubmitting = false; if (sb) sb.disabled = false; return;
             }
             const na = parseInt(document.getElementById('num_adults')?.value) || 2;
             const nc = parseInt(document.getElementById('num_children')?.value) || 0;
@@ -1124,11 +1138,6 @@ async function handleSubmit(e) {
             data.extra_guests_data = JSON.stringify(typeof extraGuests !== 'undefined' ? extraGuests : []);
         }
 
-        const sb = document.getElementById('submitBtn');
-        const sbt = document.getElementById('submitBtnText');
-        const ot = sbt ? sbt.textContent : 'Xác nhận';
-        const processingText = translations?.common?.processing || 'Đang xử lý...';
-
         try {
             const vr = await fetch('./api/validate-booking.php', { 
                 method: 'POST', 
@@ -1136,11 +1145,12 @@ async function handleSubmit(e) {
                 body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) 
             });
             const validation = await vr.json();
-            if (!validation.allowed) { showBookingConflictModal(validation); return; }
+            if (!validation.allowed) { 
+                showBookingConflictModal(validation); 
+                isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
+                return; 
+            }
         } catch (error) { console.error('Pre-validation error:', error); }
-
-        if (sb) sb.disabled = true; 
-        if (sbt) sbt.textContent = processingText;
 
         try {
             const response = await fetch('./api/create_booking.php', { 
@@ -1155,24 +1165,26 @@ async function handleSubmit(e) {
                     window.location.href = '../index.php'; 
                 } else { 
                     if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; 
-                    else window.location.href = (result.is_guest || result.is_anonymous) ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; 
+                    else window.location.href = (result.is_guest || result.is_anonymous || result.booking_code) ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; 
                 }
             } else {
                 if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
                 else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
                 else if (result.message) showToast(result.message, 'error');
                 else alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
+                isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
             }
         } catch (error) { 
             console.error('Error during creation:', error); 
             alert('Có lỗi xảy ra trong quá trình đặt phòng. Vui lòng thử lại.'); 
-            if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
+            isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
         }
     } catch (globalError) {
         console.error('Global Submit Error:', globalError);
         alert('Có lỗi phát sinh. Vui lòng tải lại trang và thử lại.');
+        isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot; 
     }
+
 }
 
 function showBookingConflictModal(result) {
