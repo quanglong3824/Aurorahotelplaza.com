@@ -34,7 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     $db = getDB();
-    
+    if (!$db) {
+        throw new Exception("Kết nối cơ sở dữ liệu thất bại. Vui lòng kiểm tra lại cấu hình hệ thống.");
+    }
+
     // Initialize OOP Services
     $roomRepo = new RoomRepository($db);
     $bookingRepo = new BookingRepository($db);
@@ -87,7 +90,7 @@ try {
         'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
     ]);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     error_log("Booking API Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
