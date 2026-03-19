@@ -88,7 +88,7 @@ try {
         WHERE status = 'active' 
         AND start_date <= CURDATE() 
         AND end_date >= CURDATE()
-        ORDER BY discount_percent DESC
+        ORDER BY discount_value DESC
         LIMIT 3
     ");
     $stmt->execute();
@@ -103,7 +103,7 @@ try {
     $db = getDB();
     $stmt = $db->prepare("
         SELECT * FROM services 
-        WHERE status = 'active'
+        WHERE is_available = 1
         ORDER BY sort_order ASC
         LIMIT 6
     ");
@@ -145,20 +145,30 @@ try {
     <!-- DNS Prefetch & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="<?php echo assetVersion('css/fonts.css'); ?>" as="style">
+    <link rel="preload" href="<?php echo assetVersion('css/style.css'); ?>" as="style">
+    
+    <!-- Critical CSS (External) - First Paint Optimization -->
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages/index.css'); ?>">
 
-    <!-- Tailwind CSS -->
-    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>"></script>
+    <!-- Tailwind CSS - Now loading via CDN -->
+    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>" defer></script>
     <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Tailwind Configuration -->
 
-    <!-- Custom CSS -->
+    <!-- Custom CSS - Essential styles loaded synchronously -->
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
+    
+    <!-- Preload Hero Images -->
+    <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -288,15 +298,15 @@ try {
                                 <div>
                                     <h3 class="text-2xl font-bold"><?php _e('home.special_offer'); ?></h3>
                                     <p class="text-white/90">
-                                        <?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_percent'))]); ?>
+                                        <?php _e('home.discount_online', ['percent' => max(array_column($active_promotions, 'discount_value'))]); ?>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-3">
                                 <?php foreach ($active_promotions as $promo): ?>
                                     <div class="glass-promo-code">
-                                        <span><?php echo htmlspecialchars($promo['code']); ?></span>
-                                        <span class="text-sm opacity-80">-<?php echo $promo['discount_percent']; ?>%</span>
+                                        <span><?php echo htmlspecialchars($promo['promotion_code']); ?></span>
+                                        <span class="text-sm opacity-80">-<?php echo (int)$promo['discount_value']; ?>%</span>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -903,116 +913,8 @@ try {
 
     <!--  JavaScript -->
     <script src="<?php echo assetVersion('js/main.js'); ?>" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('action') === 'track_booking') {
-                // Clear URL to prevent re-opening on refresh
-                window.history.replaceState({}, document.title, window.location.pathname);
-
-                setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    if (typeof toggleTrackForm === 'function') {
-                        toggleTrackForm(true);
-
-                        // Show enhanced tooltip with higher z-index - Gold theme
-                        const trackInput = document.getElementById('trackInput');
-                        if (trackInput) {
-                            const tooltip = document.createElement('div');
-                            tooltip.className = 'help-tooltip-highlight';
-                            tooltip.innerHTML = `
-                                <div class="tooltip-content">
-                                    <span class="tooltip-icon">🔍</span>
-                                    <span class="tooltip-text"><strong>Theo dõi đơn đặt phòng</strong><br>Nhập mã đặt phòng, SĐT hoặc email của bạn vào đây!</span>
-                                </div>
-                            `;
-
-                            // Style the tooltip - Gold theme matching website
-                            tooltip.style.cssText = `
-                                position: fixed;
-                                z-index: 100000;
-                                background: rgba(30, 41, 59, 0.95);
-                                backdrop-filter: blur(16px) saturate(120%);
-                                -webkit-backdrop-filter: blur(16px) saturate(120%);
-                                color: white;
-                                padding: 16px 20px;
-                                border-radius: 12px;
-                                border: 1px solid rgba(212, 175, 55, 0.3);
-                                box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
-                                font-size: 14px;
-                                font-weight: 500;
-                                line-height: 1.5;
-                                pointer-events: none;
-                                animation: tooltipPulse 2s ease-in-out infinite;
-                                max-width: 320px;
-                            `;
-
-                            // Position the tooltip above the input
-                            const rect = trackInput.getBoundingClientRect();
-                            const isMobile = window.innerWidth < 640;
-
-                            if (isMobile) {
-                                // Mobile: show below the input
-                                tooltip.style.left = '50%';
-                                tooltip.style.top = (rect.bottom + 15) + 'px';
-                                tooltip.style.transform = 'translateX(-50%)';
-                                tooltip.style.marginTop = '10px';
-                            } else {
-                                // Desktop: show above and to the left
-                                tooltip.style.right = '100%';
-                                tooltip.style.top = '50%';
-                                tooltip.style.transform = 'translateY(-50%)';
-                                tooltip.style.marginRight = '20px';
-                            }
-
-                            trackInput.parentNode.appendChild(tooltip);
-
-                            // Add animation keyframes
-                            const style = document.createElement('style');
-                            style.textContent = `
-                                @keyframes tooltipPulse {
-                                    0%, 100% {
-                                        transform: ${isMobile ? 'translateX(-50%) scale(1)' : 'translateY(-50%) scale(1)'};
-                                        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
-                                        border-color: rgba(212, 175, 55, 0.3);
-                                    }
-                                    50% {
-                                        transform: ${isMobile ? 'translateX(-50%) scale(1.05)' : 'translateY(-50%) scale(1.05)'};
-                                        box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
-                                        border-color: rgba(212, 175, 55, 0.5);
-                                    }
-                                }
-                                .tooltip-content {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 12px;
-                                }
-                                .tooltip-icon {
-                                    font-size: 24px;
-                                    flex-shrink: 0;
-                                }
-                                .tooltip-text strong {
-                                    display: block;
-                                    margin-bottom: 4px;
-                                    font-size: 15px;
-                                    color: #d4af37;
-                                }
-                            `;
-                            document.head.appendChild(style);
-
-                            // Remove tooltip after 8 seconds
-                            setTimeout(() => {
-                                tooltip.style.opacity = '0';
-                                tooltip.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                                tooltip.style.transform = isMobile ? 'translateX(-50%) translateY(-10px)' : 'translateY(-50%) translateX(10px)';
-                                setTimeout(() => tooltip.remove(), 500);
-                            }, 8000);
-                        }
-                    }
-                }, 500);
-            }
-        });
-    </script>
+    <!-- Custom Page Scripts -->
+    <script src="<?php echo assetVersion('js/pages/index.js'); ?>" defer></script>
 </body>
 
 </html>

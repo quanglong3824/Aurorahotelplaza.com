@@ -74,7 +74,22 @@ try {
     // Tính số đêm
     $ci = new DateTime($check_in_date);
     $co = new DateTime($check_out_date);
+    $today = new DateTime(date('Y-m-d'));
+
+    if ($ci < $today) {
+        throw new Exception("Ngày nhận phòng không thể nằm trong quá khứ.");
+    }
+
+    if ($ci >= $co) {
+        throw new Exception("Ngày trả phòng phải sau ngày nhận phòng.");
+    }
+
     $nights = $ci->diff($co)->days;
+    
+    if ($nights > 30) {
+        throw new Exception("Số đêm lưu trú tối đa là 30 đêm. (AI chỉ được phép tạo đặt phòng dưới 30 đêm)");
+    }
+
     if ($nights < 1)
         $nights = 1;
 

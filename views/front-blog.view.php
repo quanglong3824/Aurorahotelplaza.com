@@ -18,7 +18,7 @@
     <style>
         .page-header-blog,
         .blog-content-wrapper {
-            background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-4.jpg'); ?>') !important;
+            background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg'); ?>') !important;
         }
     </style>
 </head>

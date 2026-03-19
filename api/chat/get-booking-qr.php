@@ -53,8 +53,8 @@ try {
     $qr_data .= "Booking: {$booking['booking_code']}\n";
     $qr_data .= "Guest: {$booking['guest_name']}\n";
     $qr_data .= "Room: {$booking['type_name']}\n";
-    $qr_data .= "Check-in: " . date('d/m/Y', strtotime($booking['check_in_date'])) . "\n";
-    $qr_data .= "Check-out: " . date('d/m/Y', strtotime($booking['check_out_date'])) . "\n";
+    $qr_data .= "Check-in: " . date('m/d/Y', strtotime($booking['check_in_date'])) . "\n";
+    $qr_data .= "Check-out: " . date('m/d/Y', strtotime($booking['check_out_date'])) . "\n";
     $qr_data .= "Amount: " . number_format($booking['total_amount']) . " VND\n";
     $qr_data .= "Status: {$booking['status']}";
 

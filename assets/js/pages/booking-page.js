@@ -1089,17 +1089,10 @@ async function handleSubmit(e) {
             if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
             else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
             else if (result.message) showToast(result.message, 'error');
-            else {
-                console.error('Booking creation failed:', result);
-                alert('Có lỗi hệ thống: ' + (result.message || 'Lỗi không xác định'));
-            }
+            else alert('Có lỗi xảy ra. Vui lòng thử lại.');
             sb.disabled = false; sbt.textContent = ot;
         }
-    } catch (error) { 
-        console.error('Network or parsing error:', error); 
-        alert('Lỗi kết nối hoặc phản hồi không hợp lệ: ' + error.message); 
-        sb.disabled = false; sbt.textContent = ot; 
-    }
+    } catch (error) { console.error('Error:', error); alert('Có lỗi xảy ra. Vui lòng thử lại.'); sb.disabled = false; sbt.textContent = ot; }
 }
 
 function showBookingConflictModal(result) {

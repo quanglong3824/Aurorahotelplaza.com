@@ -180,7 +180,7 @@ class EmailHelper {
                 </div>
                 
                 <div class='footer'>
-                    <p>Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa</p>
+                    <p>Aurora Hotel Plaza - Khách sạn sang trọng tại phường Tam Hiệp, tỉnh Đồng Nai</p>
                     <p>Email: info@aurorahotel.com | Hotline: +84 123 456 789</p>
                 </div>
             </div>

@@ -33,7 +33,7 @@ foreach ($files as $file) {
         // 2. Add meta tag to head if not exists
         if (strpos($content, '<head>') !== false && strpos($content, 'name="google" content="notranslate"') === false) {
             $meta = "
-    <meta name="google" content="notranslate" />";
+    <meta name='google' content='notranslate' />";
             $content = str_replace('<head>', '<head>' . $meta, $content);
         }
         

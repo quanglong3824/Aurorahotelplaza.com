@@ -5,7 +5,7 @@
  */
 
 // Ngôn ngữ mặc định
-define('DEFAULT_LANG', 'vi');
+define('DEFAULT_LANG', 'en');
 define('SUPPORTED_LANGS', ['vi', 'en']);
 
 /**
@@ -14,6 +14,12 @@ define('SUPPORTED_LANGS', ['vi', 'en']);
 function initLanguage() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
+    }
+
+    // Khởi tạo Chat Guest (Cookie/Session) trước khi có output
+    if (file_exists(__DIR__ . '/../controllers/FrontSharedController.php')) {
+        require_once __DIR__ . '/../controllers/FrontSharedController.php';
+        \FrontSharedController::initChatGuest();
     }
     
     // Ưu tiên: GET param > Session > Cookie > Browser > Default
@@ -24,8 +30,8 @@ function initLanguage() {
         if (isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], SUPPORTED_LANGS)) {
             $_SESSION['lang'] = $_COOKIE['lang'];
         } else {
-            // Detect từ browser
-            $_SESSION['lang'] = detectBrowserLanguage();
+            // Force default to EN
+            $_SESSION['lang'] = DEFAULT_LANG;
         }
     }
     
@@ -152,24 +158,6 @@ function formatMoney($amount, $lang = null) {
     }
 
     return number_format($amount, 0, ',', '.') . ' VND';
-}
-
-/**
- * Format ngày theo ngôn ngữ
- */
-function formatDate($date, $format = null, $lang = null) {
-    $lang = $lang ?? getLang();
-    $timestamp = is_string($date) ? strtotime($date) : $date;
-    
-    if ($format) {
-        return date($format, $timestamp);
-    }
-    
-    if ($lang === 'en') {
-        return date('M d, Y', $timestamp);
-    }
-    
-    return date('m/d/Y', $timestamp);
 }
 
 /**

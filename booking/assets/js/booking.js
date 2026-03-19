@@ -1618,7 +1618,14 @@ function validateStep(step) {
                 }
 
                 if (checkout <= todayStr) {
-                    alert(translations.booking_form.checkout_future);
+                    alert(translations.booking_form.checkout_future || 'Ngày trả phòng phải ở tương lai.');
+                    return false;
+                }
+
+                const diffTime = new Date(checkout).getTime() - new Date(checkin).getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 30) {
+                    alert('Số đêm lưu trú tối đa là 30 đêm theo cấu hình hệ thống, vui lòng chọn lại ngày trả phòng!');
                     return false;
                 }
             }
@@ -1638,7 +1645,19 @@ function validateStep(step) {
         const email = document.getElementById('guest_email').value.trim();
 
         if (!name || !phone || !email) {
-            alert(translations.booking_form.fill_required);
+            alert(translations.booking_form.fill_required || 'Vui lòng điền đầy đủ thông tin bắt buộc.');
+            return false;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert('Vui lòng nhập đúng định dạng Email hợp lệ!');
+            return false;
+        }
+
+        const pureNum = phone.replace(/[^0-9]/g, '');
+        if (pureNum.length < 9 || pureNum.length > 15) {
+            alert('Số điện thoại không hợp lệ (yêu cầu từ 9 đến 15 chữ số thuần túy)!');
             return false;
         }
 

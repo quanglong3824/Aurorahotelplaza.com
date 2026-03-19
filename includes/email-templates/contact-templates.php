@@ -46,7 +46,7 @@ class ContactEmailTemplates
             
             <div style="background: linear-gradient(135deg, #d4af37 0%, #f5d77a 50%, #b8941f 100%); padding: 55px 35px; text-align: center;">
                 <h1 style="margin: 0; color: #ffffff; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; text-shadow: 0 2px 15px rgba(0,0,0,0.2);">Aurora Hotel Plaza</h1>
-                <p style="margin: 14px 0 0; color: rgba(255, 255, 255, 0.95); font-size: 15px; font-weight: 500;">Khách sạn 4 sao tại Đồng Nai</p>
+                <p style="margin: 14px 0 0; color: rgba(255, 255, 255, 0.95); font-size: 15px; font-weight: 500;">Khách sạn 4 sao + tại Đồng Nai</p>
             </div>
             
             <div style="text-align: center; margin-top: -32px; position: relative; z-index: 10;">
