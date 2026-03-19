@@ -8,31 +8,32 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 session_start();
 
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/load_env.php';
+require_once __DIR__ . '/../../helpers/functions.php';
+require_once __DIR__ . '/../../helpers/booking-validator.php';
+require_once __DIR__ . '/../../helpers/language.php';
+
+// Load Core OOP Classes
+require_once __DIR__ . '/../../src/Core/DTOs/GuestDTO.php';
+require_once __DIR__ . '/../../src/Core/Repositories/RoomRepository.php';
+require_once __DIR__ . '/../../src/Core/Repositories/BookingRepository.php';
+require_once __DIR__ . '/../../src/Core/Services/PricingService.php';
+require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
+
+use Aurora\Core\Repositories\RoomRepository;
+use Aurora\Core\Repositories\BookingRepository;
+use Aurora\Core\Services\PricingService;
+use Aurora\Core\Services\BookingService;
+
+initLanguage();
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
 try {
-    require_once __DIR__ . '/../../config/database.php';
-    require_once __DIR__ . '/../../config/load_env.php';
-    require_once __DIR__ . '/../../helpers/functions.php';
-    require_once __DIR__ . '/../../helpers/booking-validator.php';
-    require_once __DIR__ . '/../../helpers/language.php';
-
-    // Load Core OOP Classes
-    require_once __DIR__ . '/../../src/Core/DTOs/GuestDTO.php';
-    require_once __DIR__ . '/../../src/Core/Repositories/RoomRepository.php';
-    require_once __DIR__ . '/../../src/Core/Repositories/BookingRepository.php';
-    require_once __DIR__ . '/../../src/Core/Services/PricingService.php';
-    require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
-
-    use Aurora\Core\Repositories\RoomRepository;
-    use Aurora\Core\Repositories\BookingRepository;
-    use Aurora\Core\Services\PricingService;
-    use Aurora\Core\Services\BookingService;
-
-    initLanguage();
-
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new Exception('Method not allowed');
-    }
-
     $db = getDB();
     if (!$db) {
         throw new Exception('Không thể kết nối cơ sở dữ liệu. Vui lòng kiểm tra cấu hình.');
