@@ -1081,18 +1081,32 @@ async function handleSubmit(e) {
     sb.disabled = true; sbt.textContent = translations.common.processing;
     try {
         const response = await fetch('./api/create_booking.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-        const result = await response.json();
+        let result;
+        const responseText = await response.text();
+        try {
+            result = JSON.parse(responseText);
+        } catch (e) {
+            console.error('Phản hồi từ server không phải JSON:', responseText);
+            alert('Lỗi hệ thống (Server Error): ' + (responseText.substring(0, 200) || 'Phản hồi trống'));
+            sb.disabled = false; sbt.textContent = ot;
+            return;
+        }
+
         if (result.success) {
             if (result.booking_type === 'inquiry') { alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); window.location.href = '../index.php'; }
             else { if (data.payment_method === 'vnpay' && result.payment_url) window.location.href = result.payment_url; else window.location.href = result.is_guest ? './confirmation.php?booking_code=' + result.booking_code : '../profile/bookings.php'; }
         } else {
             if (result.existing_bookings || result.overlapping_bookings) showBookingConflictModal(result);
             else if (result.retry_after) showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
-            else if (result.message) showToast(result.message, 'error');
+            else if (result.message) alert('Lỗi đặt phòng: ' + result.message);
             else alert('Có lỗi xảy ra. Vui lòng thử lại.');
             sb.disabled = false; sbt.textContent = ot;
         }
-    } catch (error) { console.error('Error:', error); alert('Có lỗi xảy ra. Vui lòng thử lại.'); sb.disabled = false; sbt.textContent = ot; }
+    } catch (error) { 
+        console.error('Error:', error); 
+        alert('Lỗi kết nối hoặc thực thi: ' + error.message); 
+        sb.disabled = false; sbt.textContent = ot; 
+    }
 }
 
 function showBookingConflictModal(result) {
