@@ -9,10 +9,15 @@
     <link href="../assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/room-detail.css">
+    <link rel="stylesheet" href="../assets/css/pages-glass.css">
+    <style>
+        body.glass-page::before {
+            background-image: url('<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg'); ?>');
+        }
+    </style>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-body">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
         <main class="flex h-full grow flex-col">

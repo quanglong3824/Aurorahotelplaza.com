@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
     <link rel="stylesheet" href="../assets/css/pages-glass.css">
+    <style>
+        body.glass-page::before {
+            background-image: url('<?php echo imgUrl('assets/img/classical-family-apartment/classical-family-apartment1.jpg'); ?>');
+        }
+    </style>
 </head>
 
 <body class="glass-page font-body text-white">
