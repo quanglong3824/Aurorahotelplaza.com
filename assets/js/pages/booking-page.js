@@ -1081,11 +1081,12 @@ async function handleSubmit(e) {
         isSubmitting = true;
         if (sb) sb.disabled = true; 
         if (sbt) sbt.textContent = processingText;
-
         const formData = new FormData(e.target);
         const fo = Object.fromEntries(formData);
         let data = { ...fo, booking_type: isInquiryMode ? 'inquiry' : 'instant' };
 
+        console.log('--- [DEBUG] STARTING SUBMISSION ---');
+        console.log('Payload data:', data);
         if (isInquiryMode) {
             const pci = document.getElementById('preferred_check_in')?.value || '';
             const dt = document.getElementById('duration_type')?.value || '';
@@ -1145,6 +1146,7 @@ async function handleSubmit(e) {
                 body: JSON.stringify({ check_in_date: data.check_in_date, check_out_date: data.check_out_date }) 
             });
             const validation = await vr.json();
+            console.log('Validation Response:', validation);
             if (!validation.allowed) { 
                 showBookingConflictModal(validation); 
                 isSubmitting = false; if (sb) sb.disabled = false; if (sbt) sbt.textContent = ot;
@@ -1158,7 +1160,14 @@ async function handleSubmit(e) {
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify(data) 
             });
+            
+            // Check for raw text first - debug purposes
+            const rawResponseText = await response.clone().text();
+            console.log('Raw Server Response Body:', rawResponseText);
+
             const result = await response.json();
+            console.log('Parsed API Result:', result);
+
             if (result.success) {
                 if (result.booking_type === 'inquiry') { 
                     alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!'); 
