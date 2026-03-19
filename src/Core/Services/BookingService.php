@@ -66,7 +66,9 @@ class BookingService {
         // 3. Chuẩn bị DTO cho khách thêm
         $extraGuests = [];
         foreach (($requestData['extra_guests'] ?? []) as $g) {
-            $extraGuests[] = new \Aurora\Core\DTOs\GuestDTO($g['height_m'], $g['includes_breakfast'] ?? true);
+            // Ensure height is always a float, provide a default if null or missing
+            $height = isset($g['height_m']) && $g['height_m'] !== null ? (float)$g['height_m'] : 1.0; // Default height if null or missing
+            $extraGuests[] = new \Aurora\Core\DTOs\GuestDTO($height, $g['includes_breakfast'] ?? true);
         }
 
         // 4. Tính toán tài chính qua PricingService
