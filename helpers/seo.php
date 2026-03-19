@@ -27,8 +27,8 @@ class SEO {
     public static function generateMetaTags($data = []) {
         $defaults = [
             'title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại phường Tam Hiệp, tỉnh Đồng Nai',
-            'description' => 'Aurora Hotel Plaza - Khách sạn 4 sao sang trọng tại trung tâm phường Tam Hiệp, tỉnh Đồng Nai. Phòng đẹp, dịch vụ chuyên nghiệp, tiện nghi hiện đại.',
-            'keywords' => 'khách sạn phường Tam Hiệp tỉnh Đồng Nai, aurora hotel plaza, khách sạn 4 sao, đặt phòng khách sạn, khách sạn đồng nai',
+            'description' => 'Aurora Hotel Plaza - Khách sạn 4 sao + sang trọng tại trung tâm phường Tam Hiệp, tỉnh Đồng Nai. Phòng đẹp, dịch vụ chuyên nghiệp, tiện nghi hiện đại.',
+            'keywords' => 'khách sạn phường Tam Hiệp tỉnh Đồng Nai, aurora hotel plaza, khách sạn 4 sao +, đặt phòng khách sạn, khách sạn đồng nai',
             'image' => self::$default_image,
             'url' => self::getCurrentURL(),
             'type' => 'website',
@@ -122,7 +122,7 @@ class SEO {
             '@context' => 'https://schema.org',
             '@type' => 'Hotel',
             'name' => 'Aurora Hotel Plaza',
-            'description' => 'Khách sạn 4 sao sang trọng tại trung tâm phường Tam Hiệp, tỉnh Đồng Nai',
+            'description' => 'Khách sạn 4 sao + sang trọng tại trung tâm phường Tam Hiệp, tỉnh Đồng Nai',
             'image' => self::$site_url . '/assets/img/hotel-exterior.jpg',
             'url' => self::$site_url,
             'telephone' => '+84-251-3836-888',
@@ -268,7 +268,7 @@ class SEO {
             'name' => 'Aurora Hotel Plaza',
             'url' => self::$site_url,
             'logo' => self::$site_url . '/assets/img/logo.png',
-            'description' => 'Khách sạn 4 sao sang trọng tại phường Tam Hiệp, tỉnh Đồng Nai',
+            'description' => 'Khách sạn 4 sao + sang trọng tại phường Tam Hiệp, tỉnh Đồng Nai',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => '253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai',
