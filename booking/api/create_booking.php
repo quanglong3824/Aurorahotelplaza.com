@@ -41,26 +41,36 @@ try {
     $pricingService = new PricingService();
     $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
 
+    // Get input data
+    $input_data = $_POST;
+    $content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (stripos($content_type, 'application/json') !== false) {
+        $input_json = file_get_contents('php://input');
+        $input_data = json_decode($input_json, true) ?? [];
+    }
+
     // Prepare Request Data
     $requestData = [
-        'room_type_id' => (int)($_POST['room_type_id'] ?? 0),
-        'check_in' => sanitize($_POST['check_in'] ?? ''),
-        'check_out' => sanitize($_POST['check_out'] ?? ''),
-        'num_adults' => (int)($_POST['adults'] ?? 2),
-        'num_nights' => (int)($_POST['num_nights'] ?? 1),
-        'extra_beds' => (int)($_POST['extra_beds'] ?? 0),
-        'stay_type' => sanitize($_POST['stay_type'] ?? 'standard'),
-        'guest_name' => sanitize($_POST['guest_name'] ?? ''),
-        'guest_phone' => sanitize($_POST['guest_phone'] ?? ''),
-        'guest_email' => sanitize($_POST['guest_email'] ?? ''),
-        'special_requests' => sanitize($_POST['special_requests'] ?? ''),
+        'room_type_id' => (int)($input_data['room_type_id'] ?? 0),
+        'check_in' => sanitize($input_data['check_in_date'] ?? $input_data['check_in'] ?? ''),
+        'check_out' => sanitize($input_data['check_out_date'] ?? $input_data['check_out'] ?? ''),
+        'num_adults' => (int)($input_data['num_adults'] ?? $input_data['adults'] ?? 2),
+        'num_nights' => (int)($input_data['num_nights'] ?? 1),
+        'extra_beds' => (int)($input_data['extra_beds'] ?? 0),
+        'stay_type' => sanitize($input_data['booking_type'] ?? $input_data['stay_type'] ?? 'standard'),
+        'guest_name' => sanitize($input_data['guest_name'] ?? ''),
+        'guest_phone' => sanitize($input_data['guest_phone'] ?? ''),
+        'guest_email' => sanitize($input_data['guest_email'] ?? ''),
+        'special_requests' => sanitize($input_data['special_requests'] ?? ''),
+        'payment_method' => sanitize($input_data['payment_method'] ?? 'cash'),
         'user_id' => $_SESSION['user_id'] ?? null,
-        'extra_guests' => [] // Will be populated below
+        'extra_guests' => []
     ];
 
     // Parse extra guests from JSON if provided
-    if (isset($_POST['extra_guests_data'])) {
-        $extraGuestsJson = json_decode($_POST['extra_guests_data'], true);
+    $extraGuestsData = $input_data['extra_guests_data'] ?? null;
+    if ($extraGuestsData) {
+        $extraGuestsJson = is_string($extraGuestsData) ? json_decode($extraGuestsData, true) : $extraGuestsData;
         if (is_array($extraGuestsJson)) {
             $requestData['extra_guests'] = $extraGuestsJson;
         }
@@ -71,8 +81,9 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => __('booking_success.message'),
+        'message' => $result['message'] ?? __('booking_success'),
         'booking_code' => $result['booking_code'] ?? '',
+        'booking_type' => $result['booking_type'] ?? 'instant',
         'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
     ]);
 

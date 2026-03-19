@@ -2,6 +2,7 @@
 namespace Aurora\Core\Services;
 
 use Aurora\Core\Repositories\RoomRepository;
+use Aurora\Core\Repositories\BookingRepository;
 use Aurora\Core\Services\PricingService;
 use Exception;
 
@@ -10,10 +11,12 @@ use Exception;
  */
 class BookingService {
     private RoomRepository $roomRepo;
+    private BookingRepository $bookingRepo;
     private PricingService $pricingService;
 
-    public function __construct(RoomRepository $roomRepo, PricingService $pricingService) {
+    public function __construct(RoomRepository $roomRepo, BookingRepository $bookingRepo, PricingService $pricingService) {
         $this->roomRepo = $roomRepo;
+        $this->bookingRepo = $bookingRepo;
         $this->pricingService = $pricingService;
     }
 
@@ -77,14 +80,34 @@ class BookingService {
         );
 
         // 5. Lưu vào Database (Transaction)
-        // [Tạm thời sinh mã đặt phòng ngẫu nhiên để phục vụ testing và parity]
         $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
+        
+        $bookingData = [
+            'booking_code' => $bookingCode,
+            'user_id' => $requestData['user_id'] ?? null,
+            'room_id' => null, // Sẽ được hệ thống gán sau hoặc gán random nếu cần
+            'room_type_id' => $roomTypeId,
+            'check_in_date' => $requestData['check_in'],
+            'check_out_date' => $requestData['check_out'],
+            'total_amount' => $pricing['total_amount'],
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+            'payment_method' => $requestData['payment_method'] ?? 'cash',
+            'guest_name' => $requestData['guest_name'],
+            'guest_phone' => $requestData['guest_phone'],
+            'guest_email' => $requestData['guest_email'],
+            'special_requests' => $requestData['special_requests'] ?? null
+        ];
+
+        $bookingId = $this->bookingRepo->create($bookingData);
 
         return [
             'success' => true,
+            'booking_id' => $bookingId,
             'booking_code' => $bookingCode,
+            'booking_type' => ($requestData['stay_type'] === 'inquiry' ? 'inquiry' : 'instant'),
             'pricing' => $pricing,
-            'message' => 'Đơn đặt phòng đã được chuẩn bị thành công.'
+            'message' => ($requestData['stay_type'] === 'inquiry' ? 'Yêu cầu tư vấn của bạn đã được gửi thành công!' : 'Đơn đặt phòng của bạn đã được ghi nhận thành công.')
         ];
     }
 }
