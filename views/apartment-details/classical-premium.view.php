@@ -5,21 +5,21 @@
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <title><?php _e('apartment_detail.classical_premium_title'); ?></title>
-    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="../assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/pages-glass.css">
+    <link href="<?php echo asset('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo asset('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/pages-glass.css'); ?>">
     <style>
         body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg'); ?>');
+            background-image: url('<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-1.jpg'); ?>') !important;
         }
     </style>
 </head>
 
 <body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
-        <?php include '../includes/header.php'; ?>
+        <?php include __DIR__ . '/../../includes/header.php'; ?>
         <main class="flex h-full grow flex-col">
             <!-- Top Hero Section -->
             <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
@@ -124,7 +124,7 @@
                                         <span class="text-sm text-white/60 mb-1">VND<?php _e('apartment_detail.per_night'); ?></span>
                                     </div>
                                 </div>
-                                <form action="../booking/index.php" method="get" class="space-y-4 !block">
+                                <form action="<?php echo url('booking/index.php'); ?>" method="get" class="space-y-4 !block">
                                     <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($room_slug); ?>">
                                     <div class="space-y-2">
                                         <label class="text-sm font-bold text-white ml-1"><?php _e('apartment_detail.check_in_date'); ?></label>
@@ -149,13 +149,13 @@
                 $currentRoom = getRoomBySlug($room_slug);
                 $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
                 $sectionTitle = __('apartment_detail.other_apartments');
-                include '../includes/related-rooms.php';
+                include __DIR__ . '/../../includes/related-rooms.php';
                 ?>
             </div>
         </main>
-        <?php include '../includes/footer.php'; ?>
+        <?php include __DIR__ . '/../../includes/footer.php'; ?>
     </div>
-    <script src="../assets/js/main.js"></script>
+    <script src="<?php echo asset('js/main.js'); ?>"></script>
 </body>
 
 </html>

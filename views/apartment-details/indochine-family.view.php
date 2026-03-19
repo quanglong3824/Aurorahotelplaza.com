@@ -4,135 +4,81 @@
 <head>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('apartment_detail.indochine_family_title'); ?></title>
-    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="../assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/pages-glass.css">
+    <link href="<?php echo asset('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo asset('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/pages-glass.css'); ?>">
     <style>
         body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg'); ?>');
+            background-image: url('<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg'); ?>') !important;
         }
     </style>
 </head>
 
 <body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
-        <?php include '../includes/header.php'; ?>
+        <?php include __DIR__ . '/../../includes/header.php'; ?>
+
         <main class="flex h-full grow flex-col">
-            <section class="page-header-room"
-                data-bg-image="../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg">
-                <div class="page-header-overlay"></div>
-                <div class="page-header-content">
-                    <span class="room-badge-header"><?php _e('apartment_detail.badge_indochine'); ?></span>
-                    <h1 class="page-title"><?php _e('apartment_detail.indochine_family_name'); ?></h1>
-                    <p class="page-subtitle"><?php _e('apartment_detail.indochine_family_subtitle'); ?></p>
+            <!-- Top Hero Section -->
+            <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
+                <!-- Hero Background -->
+                <div class="absolute inset-0 z-0">
+                    <img src="<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg'); ?>"
+                        class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                 </div>
-            </section>
-            <section class="section-padding">
-                <div class="container-custom">
-                    <div class="room-info-section">
-                        <div class="room-content">
-                            <p class="room-description"><?php _e('apartment_detail.indochine_family_desc'); ?></p>
-                            <div class="room-specs">
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">bed</span></div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.bed_type'); ?></div>
-                                        <div class="spec-value"><?php _e('apartment_detail.family_bed'); ?></div>
-                                    </div>
-                                </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">square_foot</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.area'); ?></div>
-                                        <div class="spec-value">105 m²</div>
-                                    </div>
-                                </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">person</span></div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.capacity'); ?></div>
-                                        <div class="spec-value">4-6 <?php _e('apartment_detail.persons'); ?></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="amenities-section">
-                                <h3 class="section-title"><?php _e('apartment_detail.amenities'); ?></h3>
-                                <div class="amenities-grid">
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_wifi'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_tv'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_ac'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_stove'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_washer'); ?></div>
-                                </div>
+
+                <div class="relative z-10 text-center max-w-4xl mx-auto">
+                    <span
+                        class="glass-badge-pill mb-6 mx-auto bg-accent/20 border-accent/40 text-accent"><?php _e('apartment_detail.badge_indochine'); ?></span>
+                    <h1
+                        class="text-4xl md:text-6xl font-bold text-white mb-4 font-display text-shadow-lg tracking-tight">
+                        <?php _e('apartment_detail.indochine_family_name'); ?>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="glass-page-wrapper relative z-20 -mt-12">
+                <div class="container mx-auto px-4 pb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-8">
+                            <div class="glass-card p-8">
+                                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-accent">description</span>
+                                    <?php _e('apartment_detail.indochine_family_name'); ?>
+                                </h2>
+                                <p class="text-white/80 leading-relaxed text-lg">
+                                    <?php _e('apartment_detail.indochine_family_desc'); ?>
+                                </p>
                             </div>
                         </div>
-                        <div class="booking-card">
-                            <div class="price-section">
-                                <div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div>
-                                <div><span
-                                        class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>VND</span><span
-                                        class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
+                        <div class="lg:col-span-1">
+                            <div class="sticky top-32 glass-booking-form !p-6 !block space-y-6">
+                                <form action="<?php echo url('booking/index.php'); ?>" method="get" class="space-y-4 !block">
+                                    <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($room_slug); ?>">
+                                    <button type="submit" class="btn-glass-primary w-full justify-center !mt-6 shadow-lg shadow-accent/20">
+                                        <?php _e('inquiry.contact_btn'); ?>
+                                    </button>
+                                </form>
                             </div>
-                            <form class="booking-form" action="../booking/index.php" method="get">
-                                <input type="hidden" name="room_type" value="indochine-family">
-                                <div class="form-group"><label
-                                        class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input
-                                        type="date" name="check_in" class="form-input" required></div>
-                                <div class="form-group"><label
-                                        class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input
-                                        type="date" name="check_out" class="form-input" required></div>
-                                <button type="submit" class="btn-book"><?php _e('inquiry.contact_btn'); ?></button>
-                            </form>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Gallery -->
-            <section class="gallery-section">
-                <div class="container-custom">
-                    <h2 class="section-title-center"><?php _e('apartment_detail.gallery'); ?></h2>
-                    <div class="room-gallery">
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-1.jpg"
-                                alt="Indochine Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-2.jpg"
-                                alt="Indochine Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-3.jpg"
-                                alt="Indochine Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-4.jpg"
-                                alt="Indochine Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-5.jpg"
-                                alt="Indochine Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/indochine-family-apartment/indochine-family-apartment-6.jpg"
-                                alt="Indochine Family Apartment"></div>
-                    </div>
-                </div>
-            </section>
-
-            <?php
-            // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
-            require_once __DIR__ . '/../../helpers/room-helper.php';
-            $currentRoom = getRoomBySlug($room_slug);
-            $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
-            $sectionTitle = __('apartment_detail.other_apartments');
-            include '../includes/related-rooms.php';
-            ?>
+                <?php
+                require_once __DIR__ . '/../../helpers/room-helper.php';
+                $sectionTitle = __('apartment_detail.other_apartments');
+                include __DIR__ . '/../../includes/related-rooms.php';
+                ?>
+            </div>
         </main>
-        <?php include '../includes/footer.php'; ?>
+        <?php include __DIR__ . '/../../includes/footer.php'; ?>
     </div>
-    <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/room-detail-bg.js"></script>
+    <script src="<?php echo asset('js/main.js'); ?>"></script>
 </body>
 
 </html>
