@@ -177,7 +177,7 @@
                                         <span
                                             class="text-3xl font-bold text-accent"><?php echo number_format($room_price, 0, ',', '.'); ?></span>
                                         <span
-                                            class="text-sm text-white/60 mb-1"> VND/<?php _e('apartment_detail.per_night'); ?></span>
+                                            class="text-sm text-white/60 mb-1"> VND<?php _e('apartment_detail.per_night'); ?></span>
                                     </div>
                                     <p class="text-xs text-white/60 mt-2 italic">
                                         <?php _e('apartment_detail.discount_7days'); ?>

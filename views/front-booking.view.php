@@ -464,7 +464,7 @@
                                     <!-- Number of nights -->
                                     <div class="flex justify-between items-center">
                                         <span class="text-gray-400"><?php _e('booking_page.num_nights'); ?>:</span>
-                                        <span id="num_nights">0 <?php _e('common.per_night'); ?></span>
+                                        <span id="num_nights">0 <?php _e('common.nights'); ?></span>
                                     </div>
 
                                     <!-- Room Subtotal -->
