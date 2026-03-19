@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../src/Core/Services/BookingService.php';
 
 use Aurora\Core\Repositories\RoomRepository;
 use Aurora\Core\Repositories\BookingRepository;
+use Aurora\Core\Repositories\UserRepository;
 use Aurora\Core\Services\PricingService;
 use Aurora\Core\Services\BookingService;
 
@@ -41,8 +42,9 @@ try {
     // Initialize OOP Services
     $roomRepo = new RoomRepository($db);
     $bookingRepo = new BookingRepository($db);
+    $userRepo = new UserRepository($db);
     $pricingService = new PricingService();
-    $bookingService = new BookingService($roomRepo, $bookingRepo, $pricingService);
+    $bookingService = new BookingService($roomRepo, $bookingRepo, $userRepo, $pricingService);
 
     // Get input data
     $input_data = $_POST;

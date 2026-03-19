@@ -3,6 +3,7 @@ namespace Aurora\Core\Services;
 
 use Aurora\Core\Repositories\RoomRepository;
 use Aurora\Core\Repositories\BookingRepository;
+use Aurora\Core\Repositories\UserRepository;
 use Aurora\Core\Services\PricingService;
 use Exception;
 
@@ -12,11 +13,13 @@ use Exception;
 class BookingService {
     private RoomRepository $roomRepo;
     private BookingRepository $bookingRepo;
+    private UserRepository $userRepo;
     private PricingService $pricingService;
 
-    public function __construct(RoomRepository $roomRepo, BookingRepository $bookingRepo, PricingService $pricingService) {
+    public function __construct(RoomRepository $roomRepo, BookingRepository $bookingRepo, UserRepository $userRepo, PricingService $pricingService) {
         $this->roomRepo = $roomRepo;
         $this->bookingRepo = $bookingRepo;
+        $this->userRepo = $userRepo;
         $this->pricingService = $pricingService;
     }
 
@@ -86,11 +89,33 @@ class BookingService {
 
         // 6. Tạo booking code
         $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
+
+        // 6b. Đảm bảo user_id không null (Tự động tạo user nếu là Guest)
+        $userId = $requestData['user_id'];
+        if (!$userId && !empty($requestData['guest_email'])) {
+            $existingUser = $this->userRepo->findByEmail($requestData['guest_email']);
+            if ($existingUser) {
+                $userId = $existingUser['user_id'];
+            } else {
+                // Tạo user mới cho khách vãng lai
+                $userId = $this->userRepo->create([
+                    'email' => $requestData['guest_email'],
+                    'full_name' => $requestData['guest_name'],
+                    'phone' => $requestData['guest_phone'],
+                    'password_hash' => password_hash(bin2hex(random_bytes(8)), PASSWORD_DEFAULT)
+                ]);
+            }
+        }
+
+        // Nếu vẫn null sau khi thử tạo/tìm (không có email), ném lỗi hoặc dùng ID mặc định
+        if (!$userId) {
+            throw new Exception("Vui lòng đăng nhập hoặc cung cấp email để đặt phòng.");
+        }
         
         // 7. Chuẩn bị dữ liệu đầy đủ cho repository
         $bookingData = [
             'booking_code' => $bookingCode,
-            'user_id' => $requestData['user_id'] ?? null,
+            'user_id' => $userId,
             'room_id' => null,
             'room_type_id' => $roomTypeId,
             'check_in_date' => $requestData['check_in'],
