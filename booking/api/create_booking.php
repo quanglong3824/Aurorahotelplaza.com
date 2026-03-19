@@ -1,14 +1,11 @@
 <?php
 /**
  * Aurora Hotel Plaza - Create Booking API
- * Refactored to OOP N+ & Removed VNPAY
  */
-
+ob_start();
 header('Content-Type: application/json');
-// Tắt hiển thị lỗi trực tiếp để không làm hỏng JSON, nhưng log lại
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
 session_start();
 
 try {
