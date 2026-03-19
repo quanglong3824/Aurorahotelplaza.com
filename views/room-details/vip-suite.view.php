@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
     <link rel="stylesheet" href="../assets/css/pages-glass.css">
 </head>
-
 <body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
