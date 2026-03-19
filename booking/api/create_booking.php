@@ -10,7 +10,7 @@ session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/load_env.php';
 require_once __DIR__ . '/../../helpers/functions.php';
-require_once __DIR__ . '/../../helpers/booking-validator.php';
+require_once __DIR__ . '/../../helpers/booking-helper.php';
 require_once __DIR__ . '/../../helpers/language.php';
 
 // Load Core OOP Classes
@@ -58,9 +58,13 @@ try {
         'check_in' => sanitize($input_data['check_in_date'] ?? $input_data['check_in'] ?? ''),
         'check_out' => sanitize($input_data['check_out_date'] ?? $input_data['check_out'] ?? ''),
         'num_adults' => (int)($input_data['num_adults'] ?? $input_data['adults'] ?? 2),
+        'num_children' => (int)($input_data['num_children'] ?? 0),
         'num_nights' => (int)($input_data['num_nights'] ?? 1),
         'extra_beds' => (int)($input_data['extra_beds'] ?? 0),
         'stay_type' => sanitize($input_data['booking_type'] ?? $input_data['stay_type'] ?? 'standard'),
+        'booking_type' => sanitize($input_data['booking_type'] ?? 'standard'),
+        'inquiry_message' => sanitize($input_data['inquiry_message'] ?? ''),
+        'duration_type' => sanitize($input_data['duration_type'] ?? ''),
         'guest_name' => sanitize($input_data['guest_name'] ?? ''),
         'guest_phone' => sanitize($input_data['guest_phone'] ?? ''),
         'guest_email' => sanitize($input_data['guest_email'] ?? ''),
@@ -86,8 +90,10 @@ try {
         'success' => true,
         'message' => $result['message'] ?? __('booking_success'),
         'booking_code' => $result['booking_code'] ?? '',
+        'booking_id' => $result['booking_id'] ?? 0,
         'booking_type' => $result['booking_type'] ?? 'instant',
-        'redirect' => '../confirmation.php?code=' . ($result['booking_code'] ?? '')
+        'pricing' => $result['pricing'] ?? [],
+        'redirect' => '../confirmation.php?booking_code=' . ($result['booking_code'] ?? '')
     ]);
 
 } catch (Throwable $e) {

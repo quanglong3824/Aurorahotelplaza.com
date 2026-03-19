@@ -79,13 +79,17 @@ class BookingService {
             $requestData['stay_type'] ?? 'standard'
         );
 
-        // 5. Lưu vào Database (Transaction)
+        // 5. Xác định booking type
+        $bookingType = ($requestData['stay_type'] === 'inquiry') ? 'inquiry' : 'instant';
+
+        // 6. Tạo booking code
         $bookingCode = 'AUR' . strtoupper(substr(md5(uniqid()), 0, 8));
         
+        // 7. Chuẩn bị dữ liệu đầy đủ cho repository
         $bookingData = [
             'booking_code' => $bookingCode,
             'user_id' => $requestData['user_id'] ?? null,
-            'room_id' => null, // Sẽ được hệ thống gán sau hoặc gán random nếu cần
+            'room_id' => null,
             'room_type_id' => $roomTypeId,
             'check_in_date' => $requestData['check_in'],
             'check_out_date' => $requestData['check_out'],
@@ -96,18 +100,97 @@ class BookingService {
             'guest_name' => $requestData['guest_name'],
             'guest_phone' => $requestData['guest_phone'],
             'guest_email' => $requestData['guest_email'],
-            'special_requests' => $requestData['special_requests'] ?? null
+            'special_requests' => $requestData['special_requests'] ?? null,
+            // Các trường MỚI thêm vào
+            'booking_type' => $bookingType,
+            'inquiry_message' => $requestData['inquiry_message'] ?? null,
+            'duration_type' => $requestData['duration_type'] ?? null,
+            'num_adults' => $requestData['num_adults'],
+            'num_children' => $requestData['num_children'] ?? 0,
+            'total_nights' => $requestData['num_nights'],
+            'room_price' => $pricing['room_total'] ?? 0,
+            'extra_guest_fee' => $pricing['extra_guest_fee'] ?? 0,
+            'extra_bed_fee' => $pricing['extra_bed_fee'] ?? 0,
+            'extra_beds' => $requestData['extra_beds'] ?? 0,
+            'occupancy_type' => $pricing['occupancy_type'] ?? 'standard',
+            'price_type_used' => $pricing['price_type_used'] ?? 'standard',
+            'cancellation_reason' => null
         ];
 
-        $bookingId = $this->bookingRepo->create($bookingData);
+        // 8. Thực hiện INSERT với transaction
+        try {
+            $this->bookingRepo->beginTransaction();
+            
+            $bookingId = $this->bookingRepo->create($bookingData);
+            
+            // Lưu extra guests data nếu có
+            if (!empty($requestData['extra_guests']) && is_array($requestData['extra_guests'])) {
+                foreach ($requestData['extra_guests'] as $index => $guest) {
+                    $this->bookingRepo->saveExtraGuest($bookingId, $index + 1, $guest);
+                }
+            }
+            
+            $this->bookingRepo->commit();
+            
+            return [
+                'success' => true,
+                'booking_id' => $bookingId,
+                'booking_code' => $bookingCode,
+                'booking_type' => $bookingType,
+                'pricing' => $pricing,
+                'message' => ($bookingType === 'inquiry' ? 'Yêu cầu tư vấn của bạn đã được gửi thành công!' : 'Đơn đặt phòng của bạn đã được ghi nhận thành công.')
+            ];
+        } catch (\Exception $e) {
+            $this->bookingRepo->rollBack();
+            throw $e;
+        }
+    }
 
-        return [
-            'success' => true,
-            'booking_id' => $bookingId,
-            'booking_code' => $bookingCode,
-            'booking_type' => ($requestData['stay_type'] === 'inquiry' ? 'inquiry' : 'instant'),
-            'pricing' => $pricing,
-            'message' => ($requestData['stay_type'] === 'inquiry' ? 'Yêu cầu tư vấn của bạn đã được gửi thành công!' : 'Đơn đặt phòng của bạn đã được ghi nhận thành công.')
-        ];
+    /**
+     * Lấy thông tin chi tiết booking theo code
+     */
+    public function getBookingByCode(string $bookingCode): ?array {
+        return $this->bookingRepo->findByCode($bookingCode);
+    }
+
+    /**
+     * Xác nhận booking
+     */
+    public function confirmBooking(string $bookingCode, int $userId = null): array {
+        try {
+            $this->bookingRepo->beginTransaction();
+            
+            $booking = $this->bookingRepo->findByCode($bookingCode);
+            
+            if (!$booking) {
+                throw new Exception('Không tìm thấy booking');
+            }
+            
+            if ($booking['status'] !== 'pending') {
+                throw new Exception('Booking không ở trạng thái pending');
+            }
+            
+            // Kiểm tra ownership nếu có userId
+            if ($userId !== null && $booking['user_id'] !== null && $booking['user_id'] != $userId) {
+                throw new Exception('Bạn không có quyền xác nhận booking này');
+            }
+            
+            $this->bookingRepo->updateStatus($bookingCode, 'confirmed');
+            
+            $this->bookingRepo->addHistory(
+                $booking['booking_id'],
+                'pending',
+                'confirmed',
+                $userId,
+                'Booking confirmed by user'
+            );
+            
+            $this->bookingRepo->commit();
+            
+            return ['success' => true, 'message' => 'Booking đã được xác nhận'];
+        } catch (\Exception $e) {
+            $this->bookingRepo->rollBack();
+            throw $e;
+        }
     }
 }

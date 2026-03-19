@@ -22,12 +22,20 @@ class BookingRepository {
                 booking_code, user_id, room_id, room_type_id, 
                 check_in_date, check_out_date, total_amount, 
                 status, payment_status, payment_method, 
-                guest_name, guest_phone, guest_email, special_requests
+                guest_name, guest_phone, guest_email, special_requests,
+                booking_type, inquiry_message, duration_type,
+                num_adults, num_children, total_nights,
+                room_price, extra_guest_fee, extra_bed_fee, extra_beds,
+                occupancy_type, price_type_used, cancellation_reason
             ) VALUES (
                 :booking_code, :user_id, :room_id, :room_type_id, 
                 :check_in_date, :check_out_date, :total_amount, 
                 :status, :payment_status, :payment_method, 
-                :guest_name, :guest_phone, :guest_email, :special_requests
+                :guest_name, :guest_phone, :guest_email, :special_requests,
+                :booking_type, :inquiry_message, :duration_type,
+                :num_adults, :num_children, :total_nights,
+                :room_price, :extra_guest_fee, :extra_bed_fee, :extra_beds,
+                :occupancy_type, :price_type_used, :cancellation_reason
             )
         ");
         
@@ -45,9 +53,86 @@ class BookingRepository {
             ':guest_name' => $data['guest_name'],
             ':guest_phone' => $data['guest_phone'],
             ':guest_email' => $data['guest_email'],
-            ':special_requests' => $data['special_requests'] ?? null
+            ':special_requests' => $data['special_requests'] ?? null,
+            ':booking_type' => $data['booking_type'] ?? 'instant',
+            ':inquiry_message' => $data['inquiry_message'] ?? null,
+            ':duration_type' => $data['duration_type'] ?? null,
+            ':num_adults' => $data['num_adults'] ?? 2,
+            ':num_children' => $data['num_children'] ?? 0,
+            ':total_nights' => $data['total_nights'] ?? 1,
+            ':room_price' => $data['room_price'] ?? 0,
+            ':extra_guest_fee' => $data['extra_guest_fee'] ?? 0,
+            ':extra_bed_fee' => $data['extra_bed_fee'] ?? 0,
+            ':extra_beds' => $data['extra_beds'] ?? 0,
+            ':occupancy_type' => $data['occupancy_type'] ?? 'standard',
+            ':price_type_used' => $data['price_type_used'] ?? 'standard',
+            ':cancellation_reason' => $data['cancellation_reason'] ?? null
         ]);
 
+        return (int)$this->db->lastInsertId();
+    }
+
+    /**
+     * Bắt đầu transaction
+     */
+    public function beginTransaction(): bool {
+        return $this->db->beginTransaction();
+    }
+
+    /**
+     * Commit transaction
+     */
+    public function commit(): bool {
+        return $this->db->commit();
+    }
+
+    /**
+     * Rollback transaction
+     */
+    public function rollBack(): bool {
+        return $this->db->rollBack();
+    }
+
+    /**
+     * Cập nhật trạng thái booking
+     */
+    public function updateStatus(string $bookingCode, string $status): bool {
+        $stmt = $this->db->prepare("UPDATE bookings SET status = ?, updated_at = NOW() WHERE booking_code = ?");
+        return $stmt->execute([$status, $bookingCode]);
+    }
+
+    /**
+     * Lưu thông tin khách bổ sung
+     */
+    public function saveExtraGuest(int $bookingId, int $guestIndex, array $guestData): int {
+        $stmt = $this->db->prepare("
+            INSERT INTO booking_extra_guests (booking_id, guest_index, height_m, includes_breakfast, created_at)
+            VALUES (:booking_id, :guest_index, :height_m, :includes_breakfast, NOW())
+        ");
+        $stmt->execute([
+            ":booking_id" => $bookingId,
+            ":guest_index" => $guestIndex,
+            ":height_m" => $guestData["height_m"] ?? 1.2,
+            ":includes_breakfast" => $guestData["includes_breakfast"] ?? true ? 1 : 0
+        ]);
+        return (int)$this->db->lastInsertId();
+    }
+
+    /**
+     * Thêm lịch sử thay đổi booking
+     */
+    public function addHistory(int $bookingId, string $oldStatus, string $newStatus, ?int $userId, string $notes): int {
+        $stmt = $this->db->prepare("
+            INSERT INTO booking_history (booking_id, old_status, new_status, changed_by, notes, created_at)
+            VALUES (:booking_id, :old_status, :new_status, :changed_by, :notes, NOW())
+        ");
+        $stmt->execute([
+            ":booking_id" => $bookingId,
+            ":old_status" => $oldStatus,
+            ":new_status" => $newStatus,
+            ":changed_by" => $userId,
+            ":notes" => $notes
+        ]);
         return (int)$this->db->lastInsertId();
     }
 
