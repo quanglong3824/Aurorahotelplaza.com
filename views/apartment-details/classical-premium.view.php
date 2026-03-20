@@ -149,18 +149,6 @@
                                         <img src="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-3.jpg'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-4.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-5.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-6.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
                                 </div>
                             </div>
 
