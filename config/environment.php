@@ -10,23 +10,8 @@ function getBaseUrl() {
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
-    // Tự động nhận diện root path từ REQUEST_URI
-    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-    $rootPath = '';
-    
-    // Nếu URL chứa /2025/, chúng ta ép rootPath về /2025
-    if (strpos($requestUri, '/2025/') !== false || strpos($_SERVER['SCRIPT_NAME'], '/2025/') !== false) {
-        $rootPath = '/2025';
-    } else {
-        // Fallback: Tự động lấy root path của project
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
-        $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details'];
-        $pattern = '#/(' . implode('|', $subdirs) . ').*#';
-        $rootPath = preg_replace($pattern, '', $scriptName);
-    }
-    
-    // Chuẩn hóa rootPath
-    $rootPath = ($rootPath === '/' || $rootPath === '\\') ? '' : rtrim($rootPath, '/');
+    // ÉP CỨNG ROOT PATH LÀ /2025 VÌ WEBSITE ĐANG CHẠY TRONG THƯ MỤC NÀY
+    $rootPath = '/2025';
     
     return $protocol . '://' . $host . $rootPath;
 }
