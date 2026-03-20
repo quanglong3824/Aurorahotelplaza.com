@@ -363,7 +363,14 @@ function stream_qwen_reply($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_exec($ch);
+        
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        // Giả lập tính token (hoặc lấy từ API nếu có hỗ trợ trong stream)
+        // Qwen stream không trả về usage trực tiếp trừ khi dùng cờ stream_options.
+        // Ta ước tính tạm thời hoặc ghi nhận 1 request.
+        log_key_usage('qwen', strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
 
         if (!empty($tool_calls)) {
             // Qwen (OpenAI) style tool handling
