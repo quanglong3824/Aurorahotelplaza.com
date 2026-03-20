@@ -338,6 +338,8 @@ const ChatWidget = {
                 }
                 if (data.status === 'running_tool') {
                     this.showTyping(`Aurora đang tìm kiếm thông tin...`);
+                } else if (data.status === 'switching') {
+                    this.showTyping(data.message || `Đang chuyển đổi AI...`);
                 } else {
                     this.hideTyping();
                 }
