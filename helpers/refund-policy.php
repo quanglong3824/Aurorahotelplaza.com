@@ -1,7 +1,7 @@
 <?php
 /**
  * Refund Policy Helper
- * Chính sách hoàn tiền chuẩn khách sạn 4 sao +
+ * Chính sách hoàn tiền chuẩn khách sạn 4 sao
  */
 
 /**

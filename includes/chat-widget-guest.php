@@ -1,9 +1,9 @@
 <!-- Messages container -->
-<div id="cwMessages" class="cw-flex-1 cw-overflow-y-auto">
-    <!-- Rendered by ChatWidget.renderMessages() -->
-    <div data-empty class="cw-empty-state">
-        <div class="cw-empty-icon"></div>
-        <p class="cw-empty-text">
+<div id="cwMessages" style="flex:1;overflow-y:auto;">
+    <!-- Render bởi ChatWidget.renderMessages() -->
+    <div data-empty style="text-align:center;padding:32px 16px;color:#94a3b8">
+        <div style="font-size:36px;margin-bottom:8px"></div>
+        <p style="font-size:13px;line-height:1.6">
             <?php _e('chat.welcome', ['name' => '<strong>' . htmlspecialchars($user_name) . '</strong>']); ?><br>
             <?php _e('chat.ready_to_help'); ?>
         </p>

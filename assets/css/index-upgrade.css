@@ -993,33 +993,3 @@ section#apartments .glass-card-solid img[src=""]::after {
   transform: translate(-50%, -50%);
   font-size: 3rem;
 }
-
-/* ============================================
-   FOOTER FIX - Standard Styles
-   ============================================ */
-footer {
-  background-color: #1f2937 !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  position: relative;
-  z-index: 10;
-}
-
-footer a {
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-}
-
-footer a:hover {
-  color: #d4af37;
-}
-
-footer h4, footer h3 {
-  color: #ffffff !important;
-  font-weight: 700;
-}
-
-@media (max-width: 768px) {
-  footer {
-    padding-bottom: 2rem;
-  }
-}

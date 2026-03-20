@@ -125,18 +125,18 @@ function imgUrl($path, $fallback = 'assets/img/hero-banner/aurora-hotel-bien-hoa
 
     // Use BASE_URL if defined (recommended)
     if (defined('BASE_URL')) {
-        return rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
+        return BASE_URL . '/' . $path;
     }
 
     // Fallback if BASE_URL not defined
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
+    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 
     // Build absolute URL
-    $baseUrl = rtrim($protocol . '://' . $host . $basePath, '/');
+    $baseUrl = $protocol . '://' . $host . $basePath;
 
-    return $baseUrl . '/' . ltrim($path, '/');
+    return $baseUrl . '/' . $path;
 }
 
 /**

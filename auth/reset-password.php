@@ -31,9 +31,6 @@ if (empty($token)) {
             $valid_token = true;
             
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
-                    die('CSRF validation failed.');
-                }
                 $password = $_POST['password'] ?? '';
                 $confirm_password = $_POST['confirm_password'] ?? '';
                 

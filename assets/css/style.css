@@ -92,52 +92,6 @@ html {
     --text-secondary-dark: #9ca3af;
 }
 
-/* Custom Surface Background Classes - Fix for missing tailwind classes */
-.bg-surface-light {
-    background-color: var(--surface-light) !important;
-}
-
-.bg-surface-dark {
-    background-color: var(--surface-dark) !important;
-}
-
-.dark .bg-surface-dark {
-    background-color: #111827 !important;
-}
-
-/* Ensure footer has a base dark background on all pages */
-footer {
-    background-color: #1f2937 !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    position: relative;
-    z-index: 10;
-}
-
-footer a {
-    color: rgba(255, 255, 255, 0.7);
-    transition: all 0.3s ease;
-}
-
-footer a:hover {
-    color: #d4af37;
-}
-
-footer h4, footer h3 {
-    color: #ffffff !important;
-    font-weight: 700;
-}
-
-/* Mobile Footer Fix */
-@media (max-width: 768px) {
-    footer.bg-surface-dark {
-        background-color: #1f2937 !important;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        min-height: 100px;
-    }
-}
-
 /* Material Icons Configuration */
 .material-symbols-outlined {
     font-variation-settings:
@@ -1853,54 +1807,4 @@ section.py-16 {
     .uppercase.tracking-wider {
         font-size: 0.6875rem;
     }
-}
-
-/* Profile Booking List Enhancements */
-.glass-card.group {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card.group:hover {
-    border-color: rgba(212, 175, 55, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-}
-
-.status-badge {
-    padding: 0.35rem 0.85rem;
-    border-radius: 9999px;
-    font-weight: 600;
-    font-size: 0.65rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-}
-
-.btn-details {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 0.5rem 1.25rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.btn-details:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: translateX(3px);
-}
-
-.booking-code-tag {
-    font-family: 'JetBrains Mono', monospace;
-    background: rgba(212, 175, 55, 0.1);
-    color: var(--accent);
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
 }

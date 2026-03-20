@@ -126,11 +126,6 @@ function getThumbnailPath($thumbnail, $category = 'room')
         return '..' . $thumbnail;
     }
 
-    // Nếu bắt đầu bằng assets/img/ thì thêm ../ vào đầu
-    if (strpos($thumbnail, 'assets/img/') === 0) {
-        return '../' . $thumbnail;
-    }
-
     // Nếu chỉ là tên file thì thêm đường dẫn đầy đủ
     return '../assets/img/' . $thumbnail;
 }

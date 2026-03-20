@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once '../../config/environment.php';
 require_once '../../config/database.php';
 
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale'])) {
@@ -11,10 +10,6 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../room-types.php');
     exit;
-}
-
-if (!isset($_POST['csrf_token']) || !Security::validateCSRFToken($_POST['csrf_token'])) {
-    die('CSRF validation failed.');
 }
 
 $room_type_id = $_POST['room_type_id'] ?? null;

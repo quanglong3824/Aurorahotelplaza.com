@@ -41,16 +41,14 @@ if (empty($email)) {
 
 if (empty($phone)) {
     $errors[] = 'Vui lòng nhập số điện thoại';
-} elseif (!preg_match('/^[0-9]{9,15}$/', preg_replace('/[^0-9]/', '', $phone))) {
-    $errors[] = 'Số điện thoại không hợp lệ (yêu cầu từ 9 đến 15 chữ số thuần túy)';
+} elseif (!preg_match('/^[0-9]{10,11}$/', preg_replace('/[^0-9]/', '', $phone))) {
+    $errors[] = 'Số điện thoại không hợp lệ';
 }
 
 if (empty($message)) {
     $errors[] = 'Vui lòng nhập nội dung tin nhắn';
 } elseif (strlen($message) < 10) {
     $errors[] = 'Nội dung tin nhắn quá ngắn (tối thiểu 10 ký tự)';
-} elseif (preg_match('/<[\s\S]*>/i', $message) || preg_match('/script|javascript|onerror|onload/i', $message)) {
-    $errors[] = 'Lỗi bảo mật: Không được phép nhập thẻ mã lệnh (code) vào form!';
 }
 
 if (!empty($errors)) {

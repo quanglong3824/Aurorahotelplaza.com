@@ -56,7 +56,7 @@ include 'includes/admin-header.php';
                 Bảng giá Phòng Khách sạn
             </h3>
             <p class="text-sm text-gray-500 mt-1">
-                Aurora Hotel Plaza - 4 sao + | 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai
+                Aurora Hotel Plaza - 4 sao | 253, Phạm Văn Thuận, KP2, Phường Tam Hiệp, Tỉnh Đồng Nai
             </p>
         </div>
     </div>

@@ -11,22 +11,20 @@ function getBaseUrl() {
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
     // Lấy root path của project (loại bỏ các thư mục con như admin, auth, etc.)
-    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-    $scriptDir = dirname($scriptName);
+    $scriptName = dirname($_SERVER['SCRIPT_NAME']);
     
     // Danh sách các subdirectories cần loại bỏ để tìm root
-    $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details', 'api'];
+    $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details'];
     $pattern = '#/(' . implode('|', $subdirs) . ').*#';
-    $rootPath = preg_replace($pattern, '', $scriptDir);
+    $rootPath = preg_replace($pattern, '', $scriptName);
     
     // Nếu ở root thì không thêm path
-    if ($rootPath === '/' || $rootPath === '\\' || $rootPath === '') {
+    if ($rootPath === '/' || $rootPath === '') {
         return $protocol . '://' . $host;
     }
     
     // Trả về URL với subdirectory (ví dụ: https://aurorahotelplaza.com/2025)
-    // Luôn rtrim để tránh double slash khi nối tiếp
-    return rtrim($protocol . '://' . $host . $rootPath, '/');
+    return $protocol . '://' . $host . $rootPath;
 }
 
 // Lấy site URL (với trailing slash)
@@ -36,22 +34,22 @@ function getSiteUrl() {
 
 // Lấy assets URL
 function getAssetsUrl() {
-    return rtrim(getBaseUrl(), '/') . '/assets';
+    return getBaseUrl() . '/assets';
 }
 
 // Lấy uploads URL
 function getUploadsUrl() {
-    return rtrim(getBaseUrl(), '/') . '/uploads';
+    return getBaseUrl() . '/uploads';
 }
 
 // Lấy admin URL
 function getAdminUrl() {
-    return rtrim(getBaseUrl(), '/') . '/admin';
+    return getBaseUrl() . '/admin';
 }
 
 // Lấy API URL
 function getApiUrl() {
-    return rtrim(getBaseUrl(), '/') . '/api';
+    return getBaseUrl() . '/api';
 }
 
 // Lấy domain chính (không có protocol)
@@ -68,9 +66,6 @@ define('ADMIN_URL', getAdminUrl());
 define('API_URL', getApiUrl());
 define('ENVIRONMENT', 'production');
 define('DOMAIN', getDomain());
-
-// Load Security Helper
-require_once __DIR__ . '/../helpers/security.php';
 
 // Production: Disable error display, log only
 error_reporting(E_ALL);
@@ -93,7 +88,7 @@ if (session_status() === PHP_SESSION_NONE) {
  */
 function url($path = '') {
     $path = ltrim($path, '/');
-    return rtrim(BASE_URL, '/') . '/' . $path;
+    return BASE_URL . '/' . $path;
 }
 
 /**
@@ -104,7 +99,7 @@ function url($path = '') {
  */
 function asset($path = '') {
     $path = ltrim($path, '/');
-    return rtrim(ASSETS_URL, '/') . '/' . $path;
+    return ASSETS_URL . '/' . $path;
 }
 
 /**

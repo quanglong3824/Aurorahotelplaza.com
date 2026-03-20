@@ -1451,17 +1451,9 @@ async function nextStep(step) {
 
     // ========== ANTI-SPAM: Check before step 3 ==========
     if (step === 3 && !isInquiryMode) {
-        // Show loading safely (handle event if it's undefined)
-        let continueBtn = null;
-        try {
-            if (typeof event !== 'undefined' && event.target) {
-                continueBtn = event.target;
-            } else if (window.event && window.event.target) {
-                continueBtn = window.event.target;
-            }
-        } catch(e) {}
-        
-        const originalText = continueBtn ? continueBtn.innerHTML : '';
+        // Show loading
+        const continueBtn = event?.target;
+        const originalText = continueBtn?.innerHTML;
         if (continueBtn) {
             continueBtn.disabled = true;
             continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang kiểm tra...';
@@ -1626,14 +1618,7 @@ function validateStep(step) {
                 }
 
                 if (checkout <= todayStr) {
-                    alert(translations.booking_form.checkout_future || 'Ngày trả phòng phải ở tương lai.');
-                    return false;
-                }
-
-                const diffTime = new Date(checkout).getTime() - new Date(checkin).getTime();
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays > 30) {
-                    alert('Số đêm lưu trú tối đa là 30 đêm theo cấu hình hệ thống, vui lòng chọn lại ngày trả phòng!');
+                    alert(translations.booking_form.checkout_future);
                     return false;
                 }
             }
@@ -1653,19 +1638,7 @@ function validateStep(step) {
         const email = document.getElementById('guest_email').value.trim();
 
         if (!name || !phone || !email) {
-            alert(translations.booking_form.fill_required || 'Vui lòng điền đầy đủ thông tin bắt buộc.');
-            return false;
-        }
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            alert('Vui lòng nhập đúng định dạng Email hợp lệ!');
-            return false;
-        }
-
-        const pureNum = phone.replace(/[^0-9]/g, '');
-        if (pureNum.length < 9 || pureNum.length > 15) {
-            alert('Số điện thoại không hợp lệ (yêu cầu từ 9 đến 15 chữ số thuần túy)!');
+            alert(translations.booking_form.fill_required);
             return false;
         }
 
@@ -1980,73 +1953,11 @@ async function handleSubmit(e) {
                 if (data.payment_method === 'vnpay' && result.payment_url) {
                     window.location.href = result.payment_url;
                 } else {
-                    // Reset button state since we are showing modal
-                    submitBtn.disabled = false;
-                    submitBtnText.textContent = originalText;
-
-                    // Show dynamic confirmation modal instead of immediate redirect
-                    const modalHtml = `
-                    <div id="dynamicConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" style="animation: fadeIn 0.3s ease-out;">
-                        <div class="glass-card w-full max-w-md p-6 overflow-hidden text-center border border-accent/30 shadow-2xl" style="background: rgba(20, 20, 25, 0.95); animation: zoomIn 0.3s ease-out;">
-                            <div class="w-20 h-20 rounded-full bg-accent/20 text-accent flex items-center justify-center mx-auto mb-5 border-4 border-accent/40 shadow-[0_0_20px_rgba(255,215,0,0.2)]">
-                                <span class="material-symbols-outlined" style="font-size: 40px;">check_circle</span>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white uppercase tracking-wider mb-2">ĐẶT PHÒNG THÀNH CÔNG</h3>
-                            <p class="text-white/80 text-sm mb-8 leading-relaxed">
-                                Mã đơn của bạn là <strong class="text-accent text-lg">${result.booking_code}</strong>.<br>
-                                Vui lòng bấm xác nhận để khách sạn chính thức giữ phòng cho bạn.
-                            </p>
-                            <div class="flex gap-4">
-                                <button type="button" id="btnCancelConfirm" class="btn-secondary flex-1 py-3 text-sm font-bold">ĐỂ SAU</button>
-                                <button type="button" id="btnDoConfirm" class="btn-primary flex-1 py-3 text-sm font-bold shadow-lg shadow-accent/20 flex justify-center items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">verified</span>
-                                    <span>XÁC NHẬN NGAY</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-                    document.getElementById('btnCancelConfirm').onclick = () => {
-                        document.getElementById('dynamicConfirmModal').remove();
-                        if (result.is_guest) {
-                            window.location.href = './confirmation.php?booking_code=' + result.booking_code;
-                        } else {
-                            window.location.href = '../profile/bookings.php';
-                        }
-                    };
-
-                    document.getElementById('btnDoConfirm').onclick = async function() {
-                        const btn = this;
-                        btn.disabled = true;
-                        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">refresh</span> <span>ĐANG XỬ LÝ...</span>';
-                        
-                        try {
-                            const res = await fetch('./api/confirm-booking-user.php', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ booking_code: result.booking_code })
-                            });
-                            const confirmResult = await res.json();
-                            
-                            if (confirmResult.success) {
-                                if (result.is_guest) {
-                                    window.location.href = './confirmation.php?booking_code=' + result.booking_code;
-                                } else {
-                                    window.location.href = '../profile/booking-detail.php?code=' + result.booking_code;
-                                }
-                            } else {
-                                alert(confirmResult.message || "Không thể xác nhận");
-                                if (!result.is_guest) window.location.href = '../profile/bookings.php';
-                                else window.location.href = './confirmation.php?booking_code=' + result.booking_code;
-                            }
-                        } catch (e) {
-                            alert("Lỗi kết nối khi xác nhận");
-                            if (!result.is_guest) window.location.href = '../profile/bookings.php';
-                            else window.location.href = './confirmation.php?booking_code=' + result.booking_code;
-                        }
-                    };
+                    if (result.is_guest) {
+                        window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                    } else {
+                        window.location.href = '../profile/bookings.php';
+                    }
                 }
             }
         } else {

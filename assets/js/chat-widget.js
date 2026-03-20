@@ -320,16 +320,10 @@ const ChatWidget = {
 
     // ── Send message ──────────────────────────────────────────────────────
     sendMessage() {
-        if (this.isSending) return;
-        
         if (!this.convId) {
-            this.isSending = true;
             // Lần đầu gửi → tạo conversation rồi gửi
             this.createOrGetConversation().then(() => {
-                this.isSending = false;
                 this._doSend();
-            }).catch(() => {
-                this.isSending = false;
             });
             return;
         }
@@ -337,13 +331,11 @@ const ChatWidget = {
     },
 
     _doSend() {
-        if (this.isSending) return;
         const input  = document.getElementById('cwInput');
         const sendBtn = document.getElementById('cwSendBtn');
         const msg    = input?.value.trim();
         if (!msg || !this.convId) return;
 
-        this.isSending = true;
         sendBtn.disabled = true;
 
         const tempId = 'pending_' + Date.now();
@@ -389,7 +381,6 @@ const ChatWidget = {
         })
         .catch(() => {})
         .finally(() => {
-            this.isSending = false;
             sendBtn.disabled = false;
             input.focus();
         });
