@@ -29,7 +29,7 @@
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     
     <!-- Main stylesheets with versioning -->
-    <?php $css_version = '1.0.7'; ?>
+    <?php $css_version = '1.0.8'; ?>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $css_version; ?>">
     <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo $css_version; ?>">
 </head>
@@ -253,7 +253,7 @@
 <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2"></div>
 
 <!-- Scripts with defer for non-blocking load -->
-<?php $js_version = '1.0.7'; ?>
+<?php $js_version = '1.0.8'; ?>
 <script src="assets/js/main.js?v=<?php echo $js_version; ?>" defer></script>
 <script src="assets/js/contact.js?v=<?php echo $js_version; ?>" defer></script>
 <script src="assets/js/lazy-map.js?v=<?php echo $js_version; ?>" defer></script>

@@ -142,8 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4';
         modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/80 backdrop-blur-md" onclick="this.parentElement.remove(); document.body.style.overflow = '';"></div>
-            <div class="relative bg-slate-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center animate-scale-in">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="this.parentElement.remove(); document.body.style.overflow = '';"></div>
+            <div class="relative z-10 bg-slate-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center animate-scale-in">
                 <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/20">
                     <span class="material-symbols-outlined text-4xl text-white">check</span>
                 </div>
