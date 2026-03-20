@@ -30,6 +30,8 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('apartments_page.title'); ?></title>
+    <?php require_once 'includes/seo.php'; ?>
+    <meta name="description" content="<?php echo get_meta_description(); ?>">
     <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css">

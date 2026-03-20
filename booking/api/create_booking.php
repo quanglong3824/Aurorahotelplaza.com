@@ -144,7 +144,7 @@ try {
     $num_nights = $interval->days;
 
     if ($num_nights > 30) {
-        throw new Exception('Số đêm lưu trú tối đa là 30 đêm, nếu ở lâu hơn xin vui lòng liên hệ trực tiếp lễ tân khách sạn');
+        throw new Exception('Số đêm lưu trú vượt quá giới hạn 30 đêm. Vui lòng liên hệ trực tiếp khách sạn.');
     }
 
     // For short stay, we count as 1 night but use short stay price

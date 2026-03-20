@@ -10,20 +10,24 @@ function getBaseUrl() {
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
-    // Lấy root path của project (loại bỏ các thư mục con như admin, auth, etc.)
-    $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+    // Tự động nhận diện root path từ REQUEST_URI
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+    $rootPath = '';
     
-    // Danh sách các subdirectories cần loại bỏ để tìm root
-    $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details'];
-    $pattern = '#/(' . implode('|', $subdirs) . ').*#';
-    $rootPath = preg_replace($pattern, '', $scriptName);
-    
-    // Nếu ở root thì không thêm path
-    if ($rootPath === '/' || $rootPath === '') {
-        return $protocol . '://' . $host;
+    // Nếu URL chứa /2025/, chúng ta ép rootPath về /2025
+    if (strpos($requestUri, '/2025/') !== false || strpos($_SERVER['SCRIPT_NAME'], '/2025/') !== false) {
+        $rootPath = '/2025';
+    } else {
+        // Fallback: Tự động lấy root path của project
+        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+        $subdirs = ['admin', 'auth', 'booking', 'payment', 'profile', 'services-pages', 'apartment-details', 'room-details'];
+        $pattern = '#/(' . implode('|', $subdirs) . ').*#';
+        $rootPath = preg_replace($pattern, '', $scriptName);
     }
     
-    // Trả về URL với subdirectory (ví dụ: https://aurorahotelplaza.com/2025)
+    // Chuẩn hóa rootPath
+    $rootPath = ($rootPath === '/' || $rootPath === '\\') ? '' : rtrim($rootPath, '/');
+    
     return $protocol . '://' . $host . $rootPath;
 }
 
@@ -34,7 +38,9 @@ function getSiteUrl() {
 
 // Lấy assets URL
 function getAssetsUrl() {
-    return getBaseUrl() . '/assets';
+    $baseUrl = getBaseUrl();
+    // Đảm bảo không bị lặp /2025/assets nếu baseUrl đã có /2025
+    return rtrim($baseUrl, '/') . '/assets';
 }
 
 // Lấy uploads URL

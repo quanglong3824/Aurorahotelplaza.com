@@ -141,6 +141,8 @@ try {
     <meta name="google" content="notranslate" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('home.meta_title'); ?></title>
+    <?php require_once 'includes/seo.php'; ?>
+    <meta name="description" content="<?php echo get_meta_description(); ?>">
 
     <!-- DNS Prefetch & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
