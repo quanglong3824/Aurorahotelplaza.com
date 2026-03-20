@@ -1,6 +1,8 @@
 <?php
 // helpers/api_key_manager.php
 
+require_once __DIR__ . '/../config/load_env.php';
+
 /**
  * Lấy Provider AI đang hoạt động (gemini, qwen)
  */
@@ -10,7 +12,7 @@ function get_active_ai_provider() {
         $saved = trim(file_get_contents($file));
         if (in_array($saved, ['gemini', 'qwen'])) return $saved;
     }
-    return defined('AI_PROVIDER') ? AI_PROVIDER : 'gemini';
+    return env('AI_PROVIDER', 'gemini');
 }
 
 /**
@@ -26,14 +28,14 @@ function set_active_ai_provider($provider) {
  * Lấy API Key cho Qwen
  */
 function get_active_qwen_key() {
-    return defined('QWEN_API_KEY') ? QWEN_API_KEY : '';
+    return env('QWEN_API_KEY', '');
 }
 
 /**
  * Lấy Model cho Qwen
  */
 function get_active_qwen_model() {
-    return defined('QWEN_MODEL') ? QWEN_MODEL : 'qwen-max';
+    return env('QWEN_MODEL', 'qwen-max');
 }
 
 function get_active_gemini_key()
@@ -143,9 +145,10 @@ function get_all_valid_keys()
     }
 
     // Tương thích ngược với define cũ
-    if (defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) && strpos(GEMINI_API_KEY, 'ĐIỀN_API_KEY') === false) {
-        if (!in_array(GEMINI_API_KEY, $valid_keys)) {
-            $valid_keys[] = GEMINI_API_KEY;
+    $gemini_key = env('GEMINI_API_KEY');
+    if ($gemini_key && !empty($gemini_key) && strpos($gemini_key, 'ĐIỀN_API_KEY') === false) {
+        if (!in_array($gemini_key, $valid_keys)) {
+            $valid_keys[] = $gemini_key;
         }
     }
 

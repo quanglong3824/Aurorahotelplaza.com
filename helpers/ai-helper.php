@@ -208,7 +208,7 @@ function stream_gemini_reply($user_message, $db, $conv_id)
     $api_key = get_active_gemini_key();
     if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini API Key.";
 
-    $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
+    $model = env('AI_MODEL', 'gemini-2.0-flash');
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
     $tools = get_ai_tools('gemini');
@@ -373,7 +373,7 @@ function generate_gemini_reply_sync($user_message, $db, $conv_id)
 {
     $api_key = get_active_gemini_key();
     if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini.";
-    $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
+    $model = env('AI_MODEL', 'gemini-2.0-flash');
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
     for ($i = 0; $i < 3; $i++) {

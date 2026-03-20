@@ -47,12 +47,8 @@ class AuroraErrorTracker
      */
     private static function loadTelegramConfig()
     {
-        if (defined('TELEGRAM_BOT_TOKEN')) {
-            self::$telegramBotToken = TELEGRAM_BOT_TOKEN;
-        }
-        if (defined('TELEGRAM_CHAT_ID')) {
-            self::$telegramChatId = TELEGRAM_CHAT_ID;
-        }
+        self::$telegramBotToken = env('TELEGRAM_BOT_TOKEN');
+        self::$telegramChatId = env('TELEGRAM_CHAT_ID');
 
         try {
             $db = self::getDb();

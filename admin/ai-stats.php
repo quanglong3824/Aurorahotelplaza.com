@@ -102,7 +102,7 @@ require_once 'includes/admin-header.php';
         <p class="text-2xl font-black text-gray-900 dark:text-white uppercase"><?php echo $active_provider; ?></p>
         <div class="flex items-center gap-1.5 mt-2">
             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span class="text-xs font-bold text-gray-500"><?php echo ($active_provider === 'qwen') ? get_active_qwen_model() : (defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash'); ?></span>
+            <span class="text-xs font-bold text-gray-500"><?php echo ($active_provider === 'qwen') ? get_active_qwen_model() : env('AI_MODEL', 'gemini-2.0-flash'); ?></span>
         </div>
     </div>
 
