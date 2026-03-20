@@ -63,7 +63,7 @@
                     <div class="story-split-card">
                         <div class="story-image">
                             <!-- Ensure image path is correct -->
-                            <img src="assets/img/src/ui/horizontal/le_tan_aurora.jpg" alt="Aurora Hotel Plaza">
+                            <img src="<?php echo imgUrl('assets/img/src/ui/horizontal/le_tan_aurora.jpg'); ?>" alt="Aurora Hotel Plaza">
                         </div>
                         <div class="story-content">
                             <div class="glass-badge-pill mb-4 w-max">

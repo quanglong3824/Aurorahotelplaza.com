@@ -115,7 +115,26 @@ function imgUrl($path, $fallback = 'assets/img/hero-banner/aurora-hotel-bien-hoa
         $path = $fallback;
     }
 
-    // Remove leading slash if exists
+    // Remove leading slash for local file check
+    $localPath = ltrim($path, '/');
+
+    // PRIORITIZE WEBP: Check if a .webp version exists
+    // 1. Check for .jpg.webp or .png.webp (common in this project)
+    // 2. Check for .webp replacement
+    $webpPath = $localPath . '.webp';
+    $pathWithoutExt = preg_replace('/\.(jpg|jpeg|png)$/i', '', $localPath);
+    $webpPathAlt = $pathWithoutExt . '.webp';
+
+    if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $webpPath)) {
+        $path = $webpPath;
+    } elseif (file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $webpPathAlt)) {
+        $path = $webpPathAlt;
+    } elseif (strpos($localPath, 'assets/img/') === 0 && !file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $localPath)) {
+        // If original doesn't exist but it's an internal asset, try to find ANY webp in that folder? 
+        // No, stay safe. Just use path.
+    }
+
+    // Remove leading slash if exists for URL building
     $path = ltrim($path, '/');
 
     // Check if path is already absolute URL
@@ -131,12 +150,16 @@ function imgUrl($path, $fallback = 'assets/img/hero-banner/aurora-hotel-bien-hoa
     // Fallback if BASE_URL not defined
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/');
-
+    
+    // Determine the base path carefully
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $baseDir = str_replace('\\', '/', dirname($scriptName));
+    if ($baseDir === '/') $baseDir = '';
+    
     // Build absolute URL
-    $baseUrl = rtrim($protocol . '://' . $host . $basePath, '/');
+    $baseUrl = $protocol . '://' . $host . $baseDir;
 
-    return $baseUrl . '/' . ltrim($path, '/');
+    return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
 }
 
 /**

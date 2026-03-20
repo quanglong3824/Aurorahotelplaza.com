@@ -442,7 +442,7 @@
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <?php if ($post['featured_image']): ?>
-                                                <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                                <img src="<?php echo imgUrl($post['featured_image']); ?>"
                                                     alt="<?php echo htmlspecialchars($post['title']); ?>"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                             <?php else: ?>
@@ -484,7 +484,7 @@
 
             <!-- CTA Section - Dark Style -->
             <section class="py-20 relative overflow-hidden"
-                style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); background-size: cover; background-position: center;">
+                style="background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.85)), url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>'); background-size: cover; background-position: center;">
                 <div class="mx-auto max-w-7xl px-4 text-center relative z-10">
                     <span
                         class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 border border-white/20">
