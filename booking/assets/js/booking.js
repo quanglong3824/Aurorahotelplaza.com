@@ -1443,21 +1443,17 @@ document.addEventListener('change', function (e) {
 });
 
 // Navigate to next step
-async function nextStep(e, step) {
+async function nextStep(step) {
     // Validate current step
     if (!validateStep(currentStep)) {
         return;
     }
 
-    // Get currentStep before incrementing
-    const fromStep = currentStep;
-
     // ========== ANTI-SPAM: Check before step 3 ==========
     if (step === 3 && !isInquiryMode) {
         // Show loading
-        const continueBtn = e?.target || e?.currentTarget;
+        const continueBtn = event?.target;
         const originalText = continueBtn?.innerHTML;
-        
         if (continueBtn) {
             continueBtn.disabled = true;
             continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang kiểm tra...';
@@ -1497,14 +1493,9 @@ async function nextStep(e, step) {
     // ========== END ANTI-SPAM ==========
 
     // Hide current step
-    const currentStepEl = document.getElementById('step' + currentStep);
-    if (currentStepEl) currentStepEl.classList.remove('active');
-    
-    const stepItemEl = document.querySelector(`.step-item[data-step="${currentStep}"]`);
-    if (stepItemEl) {
-        stepItemEl.classList.remove('active');
-        stepItemEl.classList.add('completed');
-    }
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.querySelector(`.step-item[data-step="${currentStep}"]`).classList.remove('active');
+    document.querySelector(`.step-item[data-step="${currentStep}"]`).classList.add('completed');
 
     // Update connector for completed step
     const completedConnector = document.querySelector(`.step-connector[data-from="${currentStep}"]`);
@@ -1515,11 +1506,8 @@ async function nextStep(e, step) {
 
     // Show next step
     currentStep = step;
-    const nextStepEl = document.getElementById('step' + currentStep);
-    if (nextStepEl) nextStepEl.classList.add('active');
-    
-    const nextStepItemEl = document.querySelector(`.step-item[data-step="${currentStep}"]`);
-    if (nextStepItemEl) nextStepItemEl.classList.add('active');
+    document.getElementById('step' + currentStep).classList.add('active');
+    document.querySelector(`.step-item[data-step="${currentStep}"]`).classList.add('active');
 
     // Update connector for active step (if not last step)
     const activeConnector = document.querySelector(`.step-connector[data-from="${currentStep}"]`);

@@ -1774,36 +1774,4 @@ return [
         'status_cancelled' => 'Đã hủy',
         'status_no_show' => 'Không đến',
     ],
-
-    'timeline' => [
-        'booked' => 'Đã đặt',
-        'booked_desc' => 'Hệ thống đã ghi nhận đơn đặt phòng của bạn.',
-        'confirmed' => 'Xác nhận',
-        'confirmed_desc' => 'Lễ tân đã xác nhận và giữ phòng cho bạn.',
-        'checkin' => 'Nhận phòng',
-        'checkin_desc' => 'Bắt đầu kỳ nghỉ tuyệt vời tại Aurora.',
-        'staying' => 'Lưu trú',
-        'staying_desc' => 'Đang tận hưởng các dịch vụ tại khách sạn.',
-        'checkout' => 'Trả phòng',
-        'checkout_desc' => 'Hoàn tất thủ tục và hẹn gặp lại bạn.',
-    ],
-
-    'booking_history' => [
-        'title' => 'Lịch sử đặt phòng',
-        'empty' => 'Bạn chưa có đơn đặt phòng nào.',
-        'book_now' => 'Đặt phòng ngay',
-        'details' => 'Chi tiết đặt phòng',
-        'get_directions' => 'Chỉ đường',
-        'support' => 'Hỗ trợ',
-        'invoice' => 'Hóa đơn',
-        'cancel_booking' => 'Hủy đặt phòng',
-    ],
-
-    'booking_confirmation' => [
-        'your_journey' => 'Hành trình của bạn',
-        'journey_start' => 'Đặt phòng thành công',
-        'journey_checkin' => 'Nhận phòng (14:00)',
-        'journey_stay' => 'Trải nghiệm dịch vụ',
-        'journey_checkout' => 'Trả phòng (12:00)',
-    ],
 ];

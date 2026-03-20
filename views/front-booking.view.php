@@ -651,7 +651,7 @@
 
                         <div class="flex justify-end mt-4">
                             <button type="button" class="btn-primary"
-                                onclick="nextStep(event, 2)"><?php _e('booking_page.continue'); ?></button>
+                                onclick="nextStep(2)"><?php _e('booking_page.continue'); ?></button>
                         </div>
                     </div>
 
@@ -733,7 +733,7 @@
                             <button type="button" class="btn-secondary"
                                 onclick="prevStep(1)"><?php _e('booking_page.back'); ?></button>
                             <button type="button" class="btn-primary flex-1"
-                                onclick="nextStep(event, 3)"><?php _e('booking_page.continue'); ?></button>
+                                onclick="nextStep(3)"><?php _e('booking_page.continue'); ?></button>
                         </div>
                     </div>
 
@@ -897,9 +897,9 @@
                         <div class="flex gap-4 mt-4">
                             <button type="button" class="btn-secondary"
                                 onclick="prevStep(2)"><?php _e('booking_page.back'); ?></button>
-                            <button type="button" class="btn-primary flex-1" id="confirmBookingModalBtn">
-                                <span class="material-symbols-outlined">verified</span>
-                                <span><?php _e('booking_page.confirm_booking'); ?></span>
+                            <button type="submit" class="btn-primary flex-1" id="submitBtn">
+                                <span class="material-symbols-outlined" id="submitBtnIcon">lock</span>
+                                <span id="submitBtnText"><?php _e('booking_page.confirm_booking'); ?></span>
                             </button>
                         </div>
                     </div>
@@ -908,124 +908,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Booking Confirmation Modal -->
-    <div id="bookingConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
-        <div class="glass-card w-full max-w-lg p-0 overflow-hidden animate-zoomIn">
-            <div class="bg-accent/10 p-6 border-b border-white/10 flex items-center justify-between">
-                <h3 class="text-xl font-bold text-accent uppercase tracking-wider flex items-center gap-2">
-                    <span class="material-symbols-outlined">info</span>
-                    Xác nhận thông tin đặt phòng
-                </h3>
-                <button type="button" onclick="closeConfirmModal()" class="text-white/50 hover:text-white transition-colors">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-            
-            <div class="p-6 space-y-6">
-                <!-- Summary Content -->
-                <div id="modalSummary" class="space-y-4">
-                    <!-- Dynamic Content will be injected here via JS -->
-                </div>
-
-                <!-- Action -->
-                <div class="flex gap-4 pt-4 border-t border-white/10">
-                    <button type="button" onclick="closeConfirmModal()" class="btn-secondary flex-1">
-                        Quay lại sửa
-                    </button>
-                    <button type="button" id="finalSubmitBtn" class="btn-primary flex-1 shadow-lg shadow-accent/20">
-                        <span class="material-symbols-outlined">check_circle</span>
-                        Đồng ý đặt ngay
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const confirmBtn = document.getElementById('confirmBookingModalBtn');
-            const modal = document.getElementById('bookingConfirmModal');
-            const finalSubmit = document.getElementById('finalSubmitBtn');
-            const form = document.getElementById('bookingForm');
-
-            if (confirmBtn && modal) {
-                confirmBtn.onclick = function(e) {
-                    e.preventDefault();
-                    
-                    // Validate form
-                    if (!form.checkValidity()) {
-                        form.reportValidity();
-                        return;
-                    }
-
-                    // Get data summary
-                    const checkIn = document.getElementById('check_in')?.value || 'N/A';
-                    const checkOut = document.getElementById('check_out')?.value || 'N/A';
-                    const roomType = document.querySelector('input[name="room_type"]:checked')?.dataset.typeName || 'N/A';
-                    const guestName = document.getElementById('full_name')?.value || 'N/A';
-                    const totalAmount = document.getElementById('total-amount-display')?.textContent || 'N/A';
-
-                    // Update modal content
-                    const modalSummary = document.getElementById('modalSummary');
-                    if (modalSummary) {
-                        modalSummary.innerHTML = `
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
-                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Loại phòng</span>
-                                    <span class="text-white font-bold leading-tight block">${roomType}</span>
-                                </div>
-                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
-                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Tổng tiền</span>
-                                    <span class="text-accent font-bold text-lg block">${totalAmount}</span>
-                                </div>
-                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
-                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Nhận phòng</span>
-                                    <span class="text-white font-bold block">${checkIn}</span>
-                                </div>
-                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
-                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Trả phòng</span>
-                                    <span class="text-white font-bold block">${checkOut}</span>
-                                </div>
-                                <div class="col-span-2 p-3 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-sm text-white/50">person</span>
-                                    <span class="text-white font-bold">${guestName}</span>
-                                </div>
-                            </div>
-                            <div class="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20 flex gap-2">
-                                <span class="material-symbols-outlined text-amber-500 text-sm mt-0.5">info</span>
-                                <p class="text-[11px] text-amber-400 italic leading-relaxed">
-                                    Quý khách vui lòng kiểm tra kỹ thông tin. Đơn đặt phòng sau khi xác nhận sẽ được lễ tân xử lý và giữ phòng.
-                                </p>
-                            </div>
-                        `;
-                    }
-
-                    modal.classList.remove('hidden');
-                };
-            }
-
-            if (finalSubmit) {
-                finalSubmit.onclick = function() {
-                    this.disabled = true;
-                    this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Đang đặt phòng...';
-                    
-                    // Trigger real form submission
-                    const submitEvent = new Event('submit', { 'cancelable': true, 'bubbles': true });
-                    form.dispatchEvent(submitEvent);
-                    
-                    // Fallback to direct submit if no Ajax handler
-                    if (!submitEvent.defaultPrevented) {
-                        form.submit();
-                    }
-                };
-            }
-        });
-
-        function closeConfirmModal() {
-            document.getElementById('bookingConfirmModal').classList.add('hidden');
-        }
-    </script>
 
     <?php include '../includes/footer.php'; ?>
 
