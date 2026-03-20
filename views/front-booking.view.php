@@ -943,69 +943,88 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmBtn = document.getElementById('confirmBookingModalBtn');
+            const modal = document.getElementById('bookingConfirmModal');
+            const finalSubmit = document.getElementById('finalSubmitBtn');
+            const form = document.getElementById('bookingForm');
+
+            if (confirmBtn && modal) {
+                confirmBtn.onclick = function(e) {
+                    e.preventDefault();
+                    
+                    // Validate form
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+
+                    // Get data summary
+                    const checkIn = document.getElementById('check_in')?.value || 'N/A';
+                    const checkOut = document.getElementById('check_out')?.value || 'N/A';
+                    const roomType = document.querySelector('input[name="room_type"]:checked')?.dataset.typeName || 'N/A';
+                    const guestName = document.getElementById('full_name')?.value || 'N/A';
+                    const totalAmount = document.getElementById('total-amount-display')?.textContent || 'N/A';
+
+                    // Update modal content
+                    const modalSummary = document.getElementById('modalSummary');
+                    if (modalSummary) {
+                        modalSummary.innerHTML = `
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
+                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Loại phòng</span>
+                                    <span class="text-white font-bold leading-tight block">${roomType}</span>
+                                </div>
+                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
+                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Tổng tiền</span>
+                                    <span class="text-accent font-bold text-lg block">${totalAmount}</span>
+                                </div>
+                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
+                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Nhận phòng</span>
+                                    <span class="text-white font-bold block">${checkIn}</span>
+                                </div>
+                                <div class="p-3 bg-white/5 rounded-lg border border-white/5 text-center">
+                                    <span class="text-white/50 text-[10px] uppercase block mb-1">Trả phòng</span>
+                                    <span class="text-white font-bold block">${checkOut}</span>
+                                </div>
+                                <div class="col-span-2 p-3 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-sm text-white/50">person</span>
+                                    <span class="text-white font-bold">${guestName}</span>
+                                </div>
+                            </div>
+                            <div class="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20 flex gap-2">
+                                <span class="material-symbols-outlined text-amber-500 text-sm mt-0.5">info</span>
+                                <p class="text-[11px] text-amber-400 italic leading-relaxed">
+                                    Quý khách vui lòng kiểm tra kỹ thông tin. Đơn đặt phòng sau khi xác nhận sẽ được lễ tân xử lý và giữ phòng.
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    modal.classList.remove('hidden');
+                };
+            }
+
+            if (finalSubmit) {
+                finalSubmit.onclick = function() {
+                    this.disabled = true;
+                    this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Đang đặt phòng...';
+                    
+                    // Trigger real form submission
+                    const submitEvent = new Event('submit', { 'cancelable': true, 'bubbles': true });
+                    form.dispatchEvent(submitEvent);
+                    
+                    // Fallback to direct submit if no Ajax handler
+                    if (!submitEvent.defaultPrevented) {
+                        form.submit();
+                    }
+                };
+            }
+        });
+
         function closeConfirmModal() {
             document.getElementById('bookingConfirmModal').classList.add('hidden');
         }
-
-        document.getElementById('confirmBookingModalBtn').addEventListener('click', function() {
-            // Validate form first
-            const form = document.getElementById('bookingForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            // Get data for summary
-            const checkIn = document.getElementById('check_in').value;
-            const checkOut = document.getElementById('check_out').value;
-            const roomType = document.querySelector('input[name="room_type"]:checked')?.dataset.typeName || 'N/A';
-            const guestName = document.getElementById('full_name').value;
-            const email = document.getElementById('email').value;
-            const totalAmount = document.getElementById('total-amount-display')?.textContent || 'N/A';
-
-            // Inject to modal
-            document.getElementById('modalSummary').innerHTML = `
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
-                        <span class="text-white/50 text-[10px] uppercase block">Loại phòng</span>
-                        <span class="text-white font-bold">${roomType}</span>
-                    </div>
-                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
-                        <span class="text-white/50 text-[10px] uppercase block">Tổng tiền</span>
-                        <span class="text-accent font-bold">${totalAmount}</span>
-                    </div>
-                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
-                        <span class="text-white/50 text-[10px] uppercase block">Nhận phòng</span>
-                        <span class="text-white font-bold">${checkIn}</span>
-                    </div>
-                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
-                        <span class="text-white/50 text-[10px] uppercase block">Trả phòng</span>
-                        <span class="text-white font-bold">${checkOut}</span>
-                    </div>
-                    <div class="col-span-2 p-3 bg-white/5 rounded-lg border border-white/5">
-                        <span class="text-white/50 text-[10px] uppercase block">Khách hàng</span>
-                        <span class="text-white font-bold">${guestName} (${email})</span>
-                    </div>
-                </div>
-                <div class="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
-                    <p class="text-[11px] text-amber-400 italic">
-                        * Quý khách vui lòng kiểm tra kỹ thông tin. Đơn đặt phòng sau khi xác nhận sẽ được lễ tân xử lý và giữ phòng.
-                    </p>
-                </div>
-            `;
-
-            // Show modal
-            document.getElementById('bookingConfirmModal').classList.remove('hidden');
-        });
-
-        document.getElementById('finalSubmitBtn').addEventListener('click', function() {
-            // Change button state
-            this.disabled = true;
-            this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Đang đặt...';
-            
-            // Actually submit the form
-            document.getElementById('bookingForm').submit();
-        });
     </script>
 
     <?php include '../includes/footer.php'; ?>
