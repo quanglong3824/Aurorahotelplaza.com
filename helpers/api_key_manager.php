@@ -143,14 +143,29 @@ function get_all_valid_keys()
     }
 
     $valid_keys = [];
+    
+    // 1. Lấy từ biến global trong api_keys.php
     if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
-        $valid_keys = array_filter($GEMINI_API_KEYS, function ($k) {
-            return !empty(trim($k)) && strpos($k, 'ĐIỀN_API_KEY') === false;
-        });
-        $valid_keys = array_values($valid_keys);
+        foreach ($GEMINI_API_KEYS as $k) {
+            if (!empty(trim($k)) && strpos($k, 'ĐIỀN_API_KEY') === false) {
+                $valid_keys[] = trim($k);
+            }
+        }
     }
 
-    // Tương thích ngược với define cũ
+    // 2. Lấy từ biến môi trường GEMINI_API_KEYS (chuỗi phân cách bởi dấu phẩy)
+    $env_keys_str = env('GEMINI_API_KEYS');
+    if ($env_keys_str) {
+        $ek = explode(',', $env_keys_str);
+        foreach ($ek as $k) {
+            $k = trim($k);
+            if (!empty($k) && !in_array($k, $valid_keys)) {
+                $valid_keys[] = $k;
+            }
+        }
+    }
+
+    // 3. Tương thích ngược với GEMINI_API_KEY (đơn lẻ)
     $gemini_key = env('GEMINI_API_KEY');
     if ($gemini_key && !empty($gemini_key) && strpos($gemini_key, 'ĐIỀN_API_KEY') === false) {
         if (!in_array($gemini_key, $valid_keys)) {
@@ -158,13 +173,7 @@ function get_all_valid_keys()
         }
     }
 
-    if (empty($valid_keys)) {
-        $env_key = getenv('GEMINI_API_KEY');
-        if ($env_key)
-            $valid_keys[] = $env_key;
-    }
-
-    return $valid_keys;
+    return array_values(array_unique($valid_keys));
 }
 
 function get_active_key_index()
