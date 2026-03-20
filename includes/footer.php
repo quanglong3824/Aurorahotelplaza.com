@@ -12,7 +12,7 @@ if (!function_exists('__')) {
 }
 ?>
 <!-- Footer -->
-<footer class="w-full bg-surface-dark text-white/80">
+<footer class="w-full bg-surface-dark text-white/80" style="background-color: #1f2937 !important; color: rgba(255, 255, 255, 0.8) !important;">
     <div class="mx-auto max-w-7xl px-4 py-20">
         <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
             <!-- Logo & Description -->

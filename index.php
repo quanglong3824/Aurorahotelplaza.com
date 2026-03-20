@@ -145,20 +145,123 @@ try {
     <!-- DNS Prefetch & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="<?php echo assetVersion('css/fonts.css'); ?>" as="style">
+    <link rel="preload" href="<?php echo assetVersion('css/style.css'); ?>" as="style">
+    
+    <!-- Critical CSS (Inline) - Above the fold styles -->
+    <style>
+        /* Critical Layout Styles - First Paint Optimization */
+        body { margin: 0; font-family: 'Be Vietnam Pro', Inter, system-ui, -apple-system, sans-serif; }
+        .min-h-screen { min-height: 100vh; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .w-full { width: 100%; }
+        .flex-grow { flex-grow: 1; }
+        .h-full { height: 100%; }
+        .min-h-screen { min-height: 100vh; }
+        .font-body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
+        .font-display { font-family: 'Montserrat', 'Be Vietnam Pro', sans-serif; }
+        .text-accent { color: #d4af37; }
+        .bg-background-light { background-color: #ffffff; }
+        .dark .bg-background-dark { background-color: #111827; }
+        .text-text-primary-light { color: #1f2937; }
+        .dark .text-text-primary-dark { color: #f3f4f6; }
+        .text-text-secondary-light { color: #6b7280; }
+        .dark .text-text-secondary-dark { color: #9ca3af; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+        .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+        .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .max-w-7xl { max-width: 80rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        .gap-10 { gap: 2.5rem; }
+        .gap-12 { gap: 3rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .font-display { font-weight: 700; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        .leading-relaxed { line-height: 1.625; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-full { border-radius: 9999px; }
+        .overflow-hidden { overflow: hidden; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .fixed { position: fixed; }
+        .z-50 { z-index: 50; }
+        .z-[10000] { z-index: 10000; }
+        .hidden { display: none; }
+        .invisible { visibility: hidden; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        .pointer-events-none { pointer-events: none; }
+        .pointer-events-auto { pointer-events: auto; }
+        .cursor-pointer { cursor: pointer; }
+        .cursor-default { cursor: default; }
+        .select-none { user-select: none; }
+        .outline-none { outline: none; }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); }
+        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .transition { transition: all 0.3s ease; }
+        .duration-300 { transition-duration: 0.3s; }
+        .duration-500 { transition-duration: 0.5s; }
+        .ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        .hover\\:scale-105:hover { transform: scale(1.05); }
+        .hover\\:scale-110:hover { transform: scale(1.1); }
+        .hover\\:scale-115:hover { transform: scale(1.15); }
+        .hover\\:rotate-5:hover { transform: rotate(5deg); }
+        .hover\\:translate-y-\\-2\\/:hover { transform: translateY(-2px); }
+        .hover\\:translate-y-\\-4\\/:hover { transform: translateY(-4px); }
+        .hover\\:translate-y-\\-6\\/:hover { transform: translateY(-6px); }
+        .hover\\:translate-y-\\-8\\/:hover { transform: translateY(-8px); }
+        .hover\\:translate-y-\\-10\\/:hover { transform: translateY(-10px); }
+        .active\\:scale-95:active { transform: scale(0.95); }
+        .focus\\:outline-none:focus { outline: none; }
+        .focus\\:ring-2:focus { ring-width: 2px; }
+        .focus\\:ring-4:focus { ring-width: 4px; }
+        .focus\\:ring-inset:focus { ring-inset: inset; }
+        .aspect-w-16 { position: relative; padding-bottom: calc(100% / (16 / 9)); }
+        .aspect-w-16\\.aspect-h-9 { position: relative; padding-bottom: calc(100% / (16 / 9)); height: 0; }
+        .aspect-w-4\\.aspect-h-3 { position: relative; padding-bottom: calc(100% / (4 / 3)); height: 0; }
+    </style>
 
-    <!-- Tailwind CSS -->
-    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>"></script>
+    <!-- Tailwind CSS - Now loading via CDN -->
+    <script src="<?php echo assetVersion('js/tailwindcss-cdn.js'); ?>" defer></script>
     <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Tailwind Configuration -->
 
-    <!-- Custom CSS -->
+    <!-- Custom CSS - Essential styles loaded synchronously -->
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/responsive-index.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/index-upgrade.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/featured-apartments-glass.css'); ?>">
+    
+    <!-- Preload Hero Images -->
+    <link rel="preload" as="image" href="<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">

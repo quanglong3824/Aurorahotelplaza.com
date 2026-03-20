@@ -5,7 +5,7 @@
  */
 
 // Ngôn ngữ mặc định
-define('DEFAULT_LANG', 'vi');
+define('DEFAULT_LANG', 'en');
 define('SUPPORTED_LANGS', ['vi', 'en']);
 
 /**

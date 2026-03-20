@@ -47,6 +47,14 @@ try {
     if (empty($guest_name) || empty($guest_email) || empty($guest_phone)) {
         throw new Exception('Vui lòng điền đầy đủ thông tin khách hàng');
     }
+
+    if (!filter_var($guest_email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception('Định dạng email không hợp lệ');
+    }
+    
+    if (!preg_match('/^[0-9]{9,15}$/', preg_replace('/[^0-9]/', '', $guest_phone))) {
+        throw new Exception('Định dạng số điện thoại không hợp lệ');
+    }
     
     if (!$room_type_id || !$check_in_date || !$check_out_date) {
         throw new Exception('Vui lòng chọn loại phòng và ngày');
@@ -72,6 +80,11 @@ try {
     
     if ($checkOut <= $checkIn) {
         throw new Exception('Ngày trả phòng phải sau ngày nhận phòng');
+    }
+
+    $nights_diff = $checkIn->diff($checkOut)->days;
+    if ($nights_diff > 30) {
+        throw new Exception('Số đêm lưu trú tối đa là 30 đêm theo quy định hệ thống.');
     }
     
     $db->beginTransaction();
