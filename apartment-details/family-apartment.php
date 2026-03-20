@@ -95,8 +95,11 @@ try {
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_stove'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_fridge'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_washer'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_desk'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_cookware'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_dishes'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_hairdryer'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_toiletries'); ?></div>
                                 </div>
                             </div>

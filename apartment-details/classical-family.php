@@ -77,6 +77,14 @@ try {
                                         <div class="spec-value">4-6 <?php _e('apartment_detail.persons'); ?></div>
                                     </div>
                                 </div>
+                                <div class="spec-item">
+                                    <div class="spec-icon"><span class="material-symbols-outlined">countertops</span>
+                                    </div>
+                                    <div class="spec-content">
+                                        <div class="spec-label"><?php _e('apartment_detail.kitchen'); ?></div>
+                                        <div class="spec-value"><?php _e('apartment_detail.premium_kitchen'); ?></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="amenities-section">
                                 <h3 class="section-title"><?php _e('apartment_detail.amenities'); ?></h3>
@@ -85,8 +93,14 @@ try {
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_tv'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_ac'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_stove'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_fridge'); ?></div>
                                     <div class="amenity-item"><?php _e('apartment_detail.amenity_washer'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_desk'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_cookware'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_dishes'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_hairdryer'); ?></div>
+                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_toiletries'); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -96,6 +110,8 @@ try {
                                 <div><span
                                         class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>VND</span><span
                                         class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
+                                <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">
+                                    <?php _e('apartment_detail.discount_30_7days'); ?></p>
                             </div>
                             <form class="booking-form" action="../booking/index.php" method="get">
                                 <input type="hidden" name="room_type" value="classical-family">
@@ -105,8 +121,20 @@ try {
                                 <div class="form-group"><label
                                         class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input
                                         type="date" name="check_out" class="form-input" required></div>
+                                <div class="form-group">
+                                    <label class="form-label"><?php _e('apartment_detail.num_guests'); ?></label>
+                                    <select name="guests" class="form-input">
+                                        <option value="2">2 <?php _e('apartment_detail.persons'); ?></option>
+                                        <option value="4" selected>4 <?php _e('apartment_detail.persons'); ?></option>
+                                        <option value="6">6 <?php _e('apartment_detail.persons'); ?></option>
+                                    </select>
+                                </div>
                                 <button type="submit" class="btn-book"><?php _e('inquiry.contact_btn'); ?></button>
                             </form>
+                            <div class="contact-info">
+                                <div class="contact-text"><?php _e('apartment_detail.or_call'); ?></div>
+                                <div class="contact-phone">(+84-251) 391.8888</div>
+                            </div>
                         </div>
                     </div>
                 </div>
