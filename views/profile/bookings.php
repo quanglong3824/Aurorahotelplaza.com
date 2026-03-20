@@ -160,9 +160,16 @@ $payment_labels = [
                                             </div>
                                         </div>
 
-                                        <div class="mt-6 flex justify-end border-t border-white/5 pt-4">
+                                        <div class="mt-6 flex justify-end items-center border-t border-white/5 pt-4 gap-4">
+                                            <?php if ($booking['status'] === 'pending'): ?>
+                                                <button onclick="confirmBooking('<?php echo $booking['booking_code']; ?>', this)" 
+                                                   class="bg-accent/10 hover:bg-accent/20 text-accent border border-accent/30 px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(255,215,0,0.15)] animate-pulse">
+                                                    <span class="material-symbols-outlined text-sm">verified</span>
+                                                    <span>XÁC NHẬN NGAY</span>
+                                                </button>
+                                            <?php endif; ?>
                                             <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
-                                               class="btn-details group/btn flex items-center gap-2 px-8 py-2.5">
+                                               class="btn-details group/btn flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all text-sm font-medium">
                                                 <span><?php _e('common.details'); ?></span>
                                                 <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
                                             </a>
@@ -189,3 +196,48 @@ $payment_labels = [
         </div>
     </div>
 </main>
+
+<script>
+async function confirmBooking(bookingCode, btnElement) {
+    if (!confirm('Bạn có chắc chắn muốn xác nhận đơn đặt phòng này?')) return;
+    
+    const originalHtml = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">refresh</span> <span>ĐANG XỬ LÝ...</span>';
+    btnElement.classList.remove('animate-pulse');
+
+    try {
+        const res = await fetch('../booking/api/confirm-booking-user.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_code: bookingCode })
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+            // Hiển thị alert nhẹ nhàng sau đó refresh trang
+            const toastHtml = `
+            <div id="successToast" class="fixed top-24 right-4 z-50 bg-green-500/10 border border-green-500/30 text-green-400 px-6 py-4 rounded-xl shadow-lg backdrop-blur-md flex items-center gap-3 animate-zoomIn">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span>Xác nhận thành công! Đang chuyển hướng...</span>
+            </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            
+            setTimeout(() => {
+                window.location.href = 'booking-detail.php?code=' + bookingCode;
+            }, 1000);
+        } else {
+            alert(data.message || 'Có lỗi xảy ra khi xác nhận.');
+            btnElement.disabled = false;
+            btnElement.innerHTML = originalHtml;
+            btnElement.classList.add('animate-pulse');
+        }
+    } catch (e) {
+        alert('Lỗi kết nối máy chủ.');
+        btnElement.disabled = false;
+        btnElement.innerHTML = originalHtml;
+        btnElement.classList.add('animate-pulse');
+    }
+}
+</script>
