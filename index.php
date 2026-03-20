@@ -504,7 +504,7 @@ try {
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         <!-- Wedding Service -->
                         <a href="service-detail.php?slug=wedding-service" class="glass-service-card group">
-                            <img src="<?php echo imgUrl('assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg'); ?>"
+                            <img src="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"
                                 alt="<?php _e('home.wedding_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
@@ -519,7 +519,7 @@ try {
 
                         <!-- Conference Service -->
                         <a href="service-detail.php?slug=conference-service" class="glass-service-card group">
-                            <img src="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg'); ?>"
+                            <img src="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"
                                 alt="<?php _e('home.conference_service'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
@@ -534,7 +534,7 @@ try {
 
                         <!-- Restaurant Service -->
                         <a href="service-detail.php?slug=aurora-restaurant" class="glass-service-card group">
-                            <img src="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-6.jpg'); ?>"
+                            <img src="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"
                                 alt="<?php _e('home.restaurant_aurora'); ?>" loading="lazy">
                             <div class="glass-service-overlay"></div>
                             <div class="glass-service-content">
@@ -589,7 +589,7 @@ try {
             <section class="w-full relative py-20" id="why-choose-us">
                 <!-- Parallax Background & Overlay -->
                 <div class="absolute inset-0 z-0 bg-cover bg-center"
-                    style="background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>');"></div>
+                    style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');"></div>
                 <div class="absolute inset-0 z-0 bg-slate-900/90"></div>
 
                 <div class="relative z-10 mx-auto max-w-7xl px-4">
@@ -725,7 +725,7 @@ try {
                 <!-- Background & Overlay -->
                 <!-- Optimization: Removed fixed attachment for smoother scroll -->
                 <div class="absolute inset-0 z-0 bg-cover bg-center"
-                    style="background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg'); ?>');">
+                    style="background-image: url('assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg');">
                 </div>
                 <div class="absolute inset-0 z-0 bg-slate-900/90"></div>
 

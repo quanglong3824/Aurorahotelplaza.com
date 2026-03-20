@@ -13,17 +13,17 @@ $heroData = FrontSharedController::getHeroSliderData();
     <!-- Slider Images - Optimized for Lazy Loading -->
     <!-- First image loads immediately -->
     <div class="hero-slide active"
-        style="background-image: url('<?php echo imgUrl('assets/img/classical-family-apartment/classical-family-apartment6.jpg'); ?>');"></div>
+        style="background-image: url('assets/img/classical-family-apartment/classical-family-apartment6.jpg');"></div>
     <!-- Subsequent images load via JS -->
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-6.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'); ?>"></div>
+    <div class="hero-slide" data-bg="assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/nha-hang-aurora-hotel-4.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/restaurant/nha-hang-aurora-hotel-6.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg"></div>
+    <div class="hero-slide" data-bg="assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg"></div>
 
     <!-- Previous Arrow -->
     <div class="slider-arrow prev">

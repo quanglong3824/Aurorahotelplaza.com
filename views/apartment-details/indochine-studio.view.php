@@ -22,7 +22,7 @@
             <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
                 <!-- Hero Background -->
                 <div class="absolute inset-0 z-0">
-                    <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg.webp'); ?>"
+                    <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg'); ?>"
                         class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
@@ -138,15 +138,19 @@
                                 </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-2.jpg.webp'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-1.jpg'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg.webp'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-2.jpg'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-4.jpg.webp'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg'); ?>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
+                                        <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-4.jpg'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                 </div>
