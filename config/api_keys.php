@@ -21,5 +21,12 @@ if (!empty($env_keys)) {
 }
 
 // Giữ lại tương thích ngược, load biến trực tiếp
-define('GEMINI_API_KEY', env('GEMINI_API_KEY', 'ĐIỀN_API_KEY_MỚI_VÀO_ĐÂY'));
+define('GEMINI_API_KEY', env('GEMINI_API_KEY', ''));
+
+// Qwen API Configuration (DashScope)
+define('QWEN_API_KEY', env('QWEN_API_KEY', ''));
+define('QWEN_MODEL', env('QWEN_MODEL', 'qwen-max')); // Qwen Next / Max
+
+// AI Provider Configuration (Mặc định là gemini nếu không set)
+define('AI_PROVIDER', env('AI_PROVIDER', 'gemini'));
 ?>

@@ -149,17 +149,41 @@ $rate_limits = get_key_rate_limits();
 
     <div class="stat-card">
         <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">AI Provider Hiện Tại</h3>
+            <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <span class="material-symbols-outlined text-purple-500">smart_toy</span>
+            </div>
+        </div>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white uppercase">
+            <?php echo get_active_ai_provider(); ?>
+        </p>
+        <p class="text-xs text-gray-500 mt-2">
+            Model: <b><?php echo (get_active_ai_provider() === 'qwen') ? get_active_qwen_model() : (defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash'); ?></b>
+        </p>
+        <?php if (get_active_ai_provider() === 'qwen'): ?>
+            <p class="text-[10px] text-purple-600 mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[12px]">verified</span> DashScope (Alibaba)
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="stat-card">
+        <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">API Key Đang Hoạt Động</h3>
             <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
                 <span class="material-symbols-outlined text-orange-500">key</span>
             </div>
         </div>
-        <p class="text-2xl font-bold text-gray-900 dark:text-white">Key #
-            <?php echo $current_active_key_idx; ?>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">
+            <?php if (get_active_ai_provider() === 'qwen'): ?>
+                Qwen Key
+            <?php else: ?>
+                Gemini #<?php echo $current_active_key_idx; ?>
+            <?php endif; ?>
         </p>
         <p class="text-sm text-gray-500 mt-2 text-green-600 flex items-center gap-1">
             <span class="material-symbols-outlined text-[16px]">check_circle</span>
-            Hệ thống Auto-Rotate Đang Bật
+            <?php echo (get_active_ai_provider() === 'qwen') ? 'Đang sử dụng Qwen API' : 'Hệ thống Auto-Rotate Đang Bật'; ?>
         </p>
     </div>
 </div>

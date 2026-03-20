@@ -1,6 +1,27 @@
 <?php
 // helpers/api_key_manager.php
 
+/**
+ * Lấy Provider AI đang hoạt động (gemini, qwen)
+ */
+function get_active_ai_provider() {
+    return defined('AI_PROVIDER') ? AI_PROVIDER : 'gemini';
+}
+
+/**
+ * Lấy API Key cho Qwen
+ */
+function get_active_qwen_key() {
+    return defined('QWEN_API_KEY') ? QWEN_API_KEY : '';
+}
+
+/**
+ * Lấy Model cho Qwen
+ */
+function get_active_qwen_model() {
+    return defined('QWEN_MODEL') ? QWEN_MODEL : 'qwen-max';
+}
+
 function get_active_gemini_key()
 {
     global $GEMINI_API_KEYS;
