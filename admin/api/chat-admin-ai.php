@@ -171,189 +171,170 @@ PROMPT;
     $full_prompt = $system_prompt . $room_context . $bi_context . $schema_context;
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Gọi Gemini API
+    // GỌI AI API (Hỗ trợ Gemini & Qwen fallback)
     // ─────────────────────────────────────────────────────────────────────────
-    // Sử dụng model Gemini 2.0 Flash mới nhất cho tốc độ cực nhanh
-    $model = "gemini-2.0-flash";
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $api_key;
+    $active_provider = get_active_ai_provider();
+    $bot_reply = "";
+    $total_tokens = 0;
+    $current_key_info = "";
+    $current_key_idx = 0;
 
-    $reqData = [
-        "system_instruction" => [
-            "parts" => [["text" => $full_prompt]]
-        ],
-        "contents" => [
-            ["role" => "user", "parts" => [["text" => $user_message]]]
-        ],
-        "generationConfig" => [
-            "temperature" => 0.1,
-            "maxOutputTokens" => 4096,
-        ]
-    ];
+    function call_gemini_admin($api_key, $system_prompt, $user_message, $history = []) {
+        $model = "gemini-2.0-flash";
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $api_key;
 
-    $ch = curl_init($url);
-    if (!$ch)
-        throw new Exception("Không thể khởi tạo CURL.");
-
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($reqData));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
-    $response = curl_exec($ch);
-    $err = curl_error($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    // Kích hoạt tự động Switch Key khi Quota Của Key Hiển Tại đã hết
-    if ($http_code === 429) {
-        $errData = json_decode($response, true);
-        $retryDelay = '60s';
-        if (isset($errData['error']['details'])) {
-            foreach ($errData['error']['details'] as $detail) {
-                if (isset($detail['retryDelay']))
-                    $retryDelay = $detail['retryDelay'];
-            }
-        }
-        $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT) ?: 60;
-        mark_key_rate_limited(get_active_key_index(), $retrySeconds + 5);
-
-        $new_key = rotate_gemini_key();
-        if ($new_key && $new_key !== $api_key) {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $response = curl_exec($ch);
-            $err = curl_error($ch);
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        }
-    }
-
-    curl_close($ch);
-
-    if ($err) {
-        throw new Exception("Lỗi cURL: " . $err);
-    }
-
-    if ($http_code === 429) {
-        // Quota exceeded - parse details for frontend countdown
-        $errData = json_decode($response, true);
-        $retryDelay = '60s';
-        $quotaLimit = 'N/A';
-        $quotaId = 'N/A';
-
-        if (isset($errData['error']['details'])) {
-            foreach ($errData['error']['details'] as $detail) {
-                if (isset($detail['retryDelay'])) {
-                    $retryDelay = $detail['retryDelay'];
-                }
-                if (isset($detail['violations'][0])) {
-                    $v = $detail['violations'][0];
-                    $quotaLimit = $v['quotaValue'] ?? 'N/A';
-                    $quotaId = $v['quotaId'] ?? 'N/A';
-                }
-            }
-        }
-        $retrySeconds = (int) filter_var($retryDelay, FILTER_SANITIZE_NUMBER_INT);
-
-        $rate_limits = get_key_rate_limits();
-        $blocked_keys = [];
-        $now = time();
-        foreach ($rate_limits as $idx => $ts) {
-            if ($ts > $now)
-                $blocked_keys[$idx] = $ts - $now;
+        $contents = $history;
+        if (empty($contents)) {
+            $contents = [["role" => "user", "parts" => [["text" => $user_message]]]];
         }
 
-        ob_clean();
-        echo json_encode([
-            'success' => false,
-            'error_type' => 'QUOTA_EXCEEDED',
-            'retry_after' => $retrySeconds ?: 60,
-            'quota_limit' => $quotaLimit,
-            'quota_id' => $quotaId,
-            'blocked_keys' => $blocked_keys,
-            'message' => "Hết lưu lượng. Đang bị phạt chờ! Xin làm mới lại sau {$retryDelay}.",
+        $reqData = [
+            "system_instruction" => ["parts" => [["text" => $system_prompt]]],
+            "contents" => $contents,
+            "generationConfig" => ["temperature" => 0.1, "maxOutputTokens" => 4096]
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($reqData),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 30
         ]);
-        exit;
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ['code' => $http_code, 'body' => $response];
     }
 
-    if ($http_code != 200) {
-        throw new Exception("Lỗi gọi Gemini API (HTTP {$http_code}): " . $response);
+    function call_qwen_admin($api_key, $model, $system_prompt, $user_message, $history = []) {
+        $url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
+
+        $messages = [["role" => "system", "content" => $system_prompt]];
+        if (empty($history)) {
+            $messages[] = ["role" => "user", "content" => $user_message];
+        } else {
+            // Convert Gemini history format to OpenAI format if needed, 
+            // but for simplicity in admin chat we usually just have 1-2 turns.
+            foreach ($history as $h) {
+                $role = ($h['role'] === 'model') ? 'assistant' : 'user';
+                $messages[] = ["role" => $role, "content" => $h['parts'][0]['text']];
+            }
+        }
+
+        $reqData = [
+            "model" => $model,
+            "messages" => $messages,
+            "temperature" => 0.1
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($reqData),
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $api_key
+            ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 30
+        ]);
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ['code' => $http_code, 'body' => $response];
     }
 
-    $res_json = json_decode($response, true);
-    if (!isset($res_json['candidates'][0]['content']['parts'][0]['text'])) {
-        throw new Exception("Gemini không trả về kết quả hợp lệ: " . json_encode($res_json));
+    if ($active_provider === 'qwen') {
+        $q_key = get_active_qwen_key();
+        $q_model = get_active_qwen_model();
+        $res = call_qwen_admin($q_key, $q_model, $system_prompt, $user_message);
+
+        if ($res['code'] === 200) {
+            $data = json_decode($res['body'], true);
+            $bot_reply = $data['choices'][0]['message']['content'] ?? "";
+            $total_tokens = $data['usage']['total_tokens'] ?? 0;
+            $current_key_info = "Qwen (" . $q_model . ")";
+            $current_key_idx = 'qwen';
+        } else {
+            // Fallback to Gemini
+            $active_provider = 'gemini';
+        }
     }
 
-    $bot_reply = $res_json['candidates'][0]['content']['parts'][0]['text'];
-    $usage = $res_json['usageMetadata'] ?? null;
-    $total_tokens = $usage ? $usage['totalTokenCount'] : 0;
+    if ($active_provider === 'gemini') {
+        $res = call_gemini_admin($api_key, $system_prompt, $user_message);
+
+        // Xoay key 429
+        if ($res['code'] === 429) {
+            mark_key_rate_limited(get_active_key_index(), 65);
+            $api_key = rotate_gemini_key();
+            if ($api_key) {
+                $res = call_gemini_admin($api_key, $system_prompt, $user_message);
+            }
+        }
+
+        if ($res['code'] === 200) {
+            $data = json_decode($res['body'], true);
+            $bot_reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? "";
+            $total_tokens = $data['usageMetadata']['totalTokenCount'] ?? 0;
+            $current_key_idx = get_active_key_index();
+            $total_keys = count(get_all_valid_keys());
+            $current_key_info = "Gemini (Key #$current_key_idx/$total_keys)";
+        } else {
+            throw new Exception("Lỗi gọi AI API (HTTP " . $res['code'] . "): " . $res['body']);
+        }
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // INTERCEPT AUTO-READ (PROXY ĐỌC DATABASE 2 BƯỚC CỦA J.A.R.V.I.S)
+    // INTERCEPT AUTO-READ (Hỗ trợ cả 2 Provider)
     // ─────────────────────────────────────────────────────────────────────────
     if (preg_match('/\[READ_DB:\s*(.*?)\]/s', $bot_reply, $matches)) {
-        $read_sql = trim($matches[1], " \t\n\r\0\x0B\"'"); // Strip whitespace and quotes
-
-        // Chỉ cho phép lệnh đọc SELECT ngầm, không cho lén sửa
+        $read_sql = trim($matches[1], " \t\n\r\0\x0B\"'");
         if (stripos($read_sql, 'SELECT') === 0) {
             try {
                 $stmtRead = $db->query($read_sql);
                 $read_data = $stmtRead->fetchAll(PDO::FETCH_ASSOC);
-                // Giới hạn chuỗi JSON để không bùng nổ token
                 $read_content = json_encode($read_data, JSON_UNESCAPED_UNICODE);
-                if (strlen($read_content) > 10000) {
-                    $read_content = substr($read_content, 0, 10000) . "... [Đã cắt bớt vì quá dài]";
-                }
+                if (strlen($read_content) > 8000) $read_content = substr($read_content, 0, 8000) . "...";
                 $read_result_msg = "KẾT QUẢ TRUY VẤN NGẦM TỪ DATABASE:\n" . $read_content;
             } catch (Exception $e) {
-                $read_result_msg = "LỖI KHI ĐỌC DATABASE KHÔNG THÀNH CÔNG: " . $e->getMessage();
+                $read_result_msg = "LỖI KHI ĐỌC DATABASE: " . $e->getMessage();
             }
 
-            // Gửi vòng lặp thứ 2 cho Gemini
-            $reqData['contents'][] = ["role" => "model", "parts" => [["text" => $bot_reply]]];
-            $reqData['contents'][] = ["role" => "user", "parts" => [["text" => $read_result_msg . "\n\nHãy phân tích kết quả trên và trả lời cho Sếp (lúc này cấm xuất thẻ READ_DB nữa)."]]];
-
-            // Mở lại kết nối CURL Request thứ 2
-            $ch2 = curl_init($url);
-            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch2, CURLOPT_POST, true);
-            curl_setopt($ch2, CURLOPT_POSTFIELDS, json_encode($reqData));
-            curl_setopt($ch2, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
-
-            $response2 = curl_exec($ch2);
-            $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-
-            // Tự động Xoay Key nếu dính Quota (429) ở vòng lặp thứ 2
-            if ($http_code2 === 429) {
-                $new_key = rotate_gemini_key();
-                if ($new_key && $new_key !== $api_key) {
-                    $url2 = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $new_key;
-                    curl_setopt($ch2, CURLOPT_URL, $url2);
-                    $response2 = curl_exec($ch2);
-                    $http_code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-                }
-            }
-
-            curl_close($ch2);
-
-            if ($http_code2 == 200) {
-                $res_json2 = json_decode($response2, true);
-                if (isset($res_json2['candidates'][0]['content']['parts'][0]['text'])) {
-                    $bot_reply = $res_json2['candidates'][0]['content']['parts'][0]['text'];
-                    $usage2 = $res_json2['usageMetadata'] ?? null;
-                    if ($usage2) {
-                        $total_tokens += $usage2['totalTokenCount'];
-                    }
+            if ($active_provider === 'gemini') {
+                $history = [
+                    ["role" => "user", "parts" => [["text" => $user_message]]],
+                    ["role" => "model", "parts" => [["text" => $bot_reply]]],
+                    ["role" => "user", "parts" => [["text" => $read_result_msg . "\n\nHãy phân tích kết quả trên và trả lời cho Sếp."]]]
+                ];
+                $res2 = call_gemini_admin($api_key, $system_prompt, $user_message, $history);
+                if ($res2['code'] === 200) {
+                    $data2 = json_decode($res2['body'], true);
+                    $bot_reply = $data2['candidates'][0]['content']['parts'][0]['text'] ?? $bot_reply;
+                    $total_tokens += $data2['usageMetadata']['totalTokenCount'] ?? 0;
                 }
             } else {
-                $bot_reply = "Xin lỗi Sếp, lỗi phân tích ở vòng Auto-Read. Mã lỗi {$http_code2}. Lệnh SQL chìm: `{$read_sql}`";
+                $history = [
+                    ["role" => "user", "parts" => [["text" => $user_message]]],
+                    ["role" => "model", "parts" => [["text" => $bot_reply]]],
+                    ["role" => "user", "parts" => [["text" => $read_result_msg . "\n\nHãy phân tích kết quả trên và trả lời cho Sếp."]]]
+                ];
+                $res2 = call_qwen_admin(get_active_qwen_key(), get_active_qwen_model(), $system_prompt, $user_message, $history);
+                if ($res2['code'] === 200) {
+                    $data2 = json_decode($res2['body'], true);
+                    $bot_reply = $data2['choices'][0]['message']['content'] ?? $bot_reply;
+                    $total_tokens += $data2['usage']['total_tokens'] ?? 0;
+                }
             }
-        } else {
-            $bot_reply = "Xin lỗi Sếp, em định dùng READ_DB nhưng lại lỡ tạo lệnh không phải SELECT. Mã gãy: {$read_sql}";
         }
-    } elseif (preg_match('/\[SCRAPE_OTA_COMPETITORS:\s*(.*?)\]/is', $bot_reply, $matches)) {
+    }
+ elseif (preg_match('/\[SCRAPE_OTA_COMPETITORS:\s*(.*?)\]/is', $bot_reply, $matches)) {
         // TÍNH NĂNG AI: CÀO DATA OTA VÀ XUẤT EXCEL
         $keyword = trim($matches[1]);
         $export_dir = __DIR__ . '/../../../admin/exports';
@@ -512,7 +493,8 @@ PROMPT;
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
-        'key_info' => "Key #" . $current_key_idx . " (trong tổng số $total_keys Keys)",
+        'provider' => $active_provider,
+        'key_info' => $current_key_info,
         'tokens' => $total_tokens,
         'key_idx' => $current_key_idx,
         'blocked_keys' => $blocked_keys,
