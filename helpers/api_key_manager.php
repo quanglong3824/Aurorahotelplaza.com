@@ -12,7 +12,9 @@ function get_active_ai_provider() {
         $saved = trim(file_get_contents($file));
         if (in_array($saved, ['gemini', 'qwen'])) return $saved;
     }
-    return env('AI_PROVIDER', 'gemini');
+    $p = env('AI_PROVIDER', 'gemini');
+    // error_log("AI Provider: " . $p); // Uncomment to debug
+    return $p;
 }
 
 /**
@@ -28,7 +30,11 @@ function set_active_ai_provider($provider) {
  * Lấy API Key cho Qwen
  */
 function get_active_qwen_key() {
-    return env('QWEN_API_KEY', '');
+    $key = env('QWEN_API_KEY', '');
+    if (empty($key)) {
+        // error_log("QWEN API KEY is empty in env");
+    }
+    return $key;
 }
 
 /**

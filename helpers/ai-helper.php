@@ -180,19 +180,21 @@ function stream_ai_reply($user_message, $db, $conv_id = 0)
     
     // Thử Provider chính
     if ($provider === 'qwen') {
+        // error_log("Calling Qwen provider for conversation " . $conv_id);
         $res = stream_qwen_reply($user_message, $db, $conv_id);
         if (empty($res) || strpos($res, 'Lỗi:') === 0) {
             // Qwen lỗi -> Thử Gemini (Dự phòng)
-            echo "data: " . json_encode(["status" => "switching", "message" => "Qwen API bận, đang chuyển sang Gemini..."]) . "\n\n";
+            echo "data: " . json_encode(["status" => "switching", "message" => "Qwen bận, đang chuyển sang Gemini..."]) . "\n\n";
             if (ob_get_level() > 0) ob_flush(); flush();
             return stream_gemini_reply($user_message, $db, $conv_id);
         }
         return $res;
     } else {
+        // error_log("Calling Gemini provider for conversation " . $conv_id);
         $res = stream_gemini_reply($user_message, $db, $conv_id);
         if (empty($res) || strpos($res, 'Lỗi:') === 0) {
             // Gemini lỗi -> Thử Qwen (Dự phòng)
-            echo "data: " . json_encode(["status" => "switching", "message" => "Gemini API bận, đang chuyển sang Qwen..."]) . "\n\n";
+            echo "data: " . json_encode(["status" => "switching", "message" => "Gemini bận, đang chuyển sang Qwen..."]) . "\n\n";
             if (ob_get_level() > 0) ob_flush(); flush();
             return stream_qwen_reply($user_message, $db, $conv_id);
         }

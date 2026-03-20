@@ -54,7 +54,7 @@ if (!function_exists('loadEnvVariables')) {
                     }
                 }
                 $env_loaded = true;
-                break; // Chỉ dừng lại khi load thành công file .env đầu tiên tìm thấy
+                // Tiếp tục quét các file .env khác để lấy thêm biến nếu chưa có (không break)
             }
         }
     }

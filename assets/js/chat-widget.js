@@ -41,11 +41,13 @@ const ChatWidget = {
 
     open() {
         this.isOpen = true;
-        document.getElementById('cwPanel').classList.add('open');
-        document.getElementById('cwBtn').classList.add('open');
+        document.getElementById('cwPanel')?.classList.add('open');
+        document.getElementById('cwBtn')?.classList.add('open');
         if (this.convId) {
             this.startSSE();
-            this.markRead();
+            if (typeof ChatWidget.markRead === 'function') {
+                ChatWidget.markRead();
+            }
             this.scrollToBottom(true);
         }
         this.clearUnread();
@@ -540,6 +542,15 @@ const ChatWidget = {
             badge.classList.toggle('show', count > 0);
         }
         document.getElementById('cwBtn')?.classList.toggle('has-unread', count > 0);
+    },
+
+    markRead() {
+        if (!this.convId) return;
+        fetch(this._url('api/chat/mark-read.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conversation_id: this.convId })
+        }).catch(() => {});
     },
 
     clearUnread() { this.setUnread(0); },
