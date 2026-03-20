@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 
 require_once 'config/database.php';
 require_once 'helpers/language.php';
+require_once 'helpers/image-helper.php';
 initLanguage();
 
 $slug = $_GET['slug'] ?? '';
