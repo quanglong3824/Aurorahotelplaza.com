@@ -264,7 +264,7 @@ try {
 
                 <?php
                 // Related Apartments
-                require_once __DIR__ . '/../../helpers/room-helper.php';
+                require_once __DIR__ . '/../helpers/room-helper.php';
                 $currentRoom = getRoomBySlug($room_slug);
                 $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
                 $sectionTitle = __('apartment_detail.other_apartments');
