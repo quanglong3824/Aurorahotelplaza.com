@@ -41,7 +41,7 @@ try {
             <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
                 <!-- Hero Background -->
                 <div class="absolute inset-0 z-0">
-                    <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg'); ?>"
+                    <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg.webp'); ?>"
                         class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
@@ -155,27 +155,27 @@ try {
                                 </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-1.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-2.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-3.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-5.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-6.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-7.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-7.jpg'); ?>"
+                                        <img src="<?php echo imgUrl('assets/img/premium-deluxe/premium-deluxe-aurora-hotel-8.jpg.webp'); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@ try {
                                 </div>
 
                                 <form action="../booking/index.php" method="get" class="space-y-4 !block">
-                                    <input type="hidden" name="room_type" value="premium-deluxe">
+                                    <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($room_slug); ?>">
 
                                     <div class="space-y-2">
                                         <label
@@ -254,16 +254,16 @@ try {
                 <?php
                 // Related Rooms
                 require_once __DIR__ . '/../helpers/room-helper.php';
-                $currentRoom = getRoomBySlug('premium-deluxe');
+                $currentRoom = getRoomBySlug($room_slug);
                 $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
                 $sectionTitle = __('room_detail.other_rooms');
-                include '../includes/related-rooms.php';
+                include __DIR__ . '/../includes/related-rooms.php';
                 ?>
 
             </div>
         </main>
 
-        <?php include '../includes/footer.php'; ?>
+        <?php include __DIR__ . '/../includes/footer.php'; ?>
     </div>
     <script src="../assets/js/room-detail-validation.js"></script>
     <script src="../assets/js/main.js"></script>
