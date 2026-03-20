@@ -22,7 +22,11 @@
             <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
                 <!-- Hero Background -->
                 <div class="absolute inset-0 z-0">
-                    <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg'); ?>"
+                    <?php 
+                    $gallery_images = !empty($room_data['images']) ? explode(',', $room_data['images']) : [];
+                    $hero_image = !empty($gallery_images[0]) ? trim($gallery_images[0]) : "assets/img/{$room_slug}/{$room_slug}-1.jpg";
+                    ?>
+                    <img src="<?php echo imgUrl($hero_image); ?>"
                         class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
@@ -137,26 +141,15 @@
                                     <?php _e('apartment_detail.gallery'); ?>
                                 </h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <?php 
+                                    for($i = 1; $i <= 6; $i++): 
+                                        $img_path = !empty($gallery_images[$i]) ? trim($gallery_images[$i]) : "assets/img/{$room_slug}/{$room_slug}-" . ($i + 1) . ".jpg";
+                                    ?>
                                     <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-1.jpg'); ?>"
+                                        <img src="<?php echo imgUrl($img_path); ?>"
                                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                     </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-2.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-3.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
-                                    <div class="aspect-video rounded-2xl overflow-hidden glass-card-solid group">
-                                        <img src="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-5.jpg'); ?>"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    </div>
+                                    <?php endfor; ?>
                                 </div>
                             </div>
 
