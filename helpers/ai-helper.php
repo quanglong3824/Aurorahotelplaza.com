@@ -1,10 +1,14 @@
 <?php
 /**
- * Trợ lý ảo AI - Xử lý gọi API Lễ tân (Version 2.7 - Smart Switching & Failover)
+ * Trợ lý ảo AI - Xử lý gọi API Lễ tân (Version 2.8 - SSE Robustness & Enhanced Failover)
  * ==============================================================================
  */
 
 require_once __DIR__ . '/api_key_manager.php';
+
+// Đảm bảo buffering tắt hoàn toàn cho SSE
+if (ob_get_level()) ob_end_clean();
+ini_set('output_buffering', 'off');
 
 /**
  * Lấy System Prompt tối ưu cho Aurora AI
@@ -180,6 +184,7 @@ function stream_ai_reply($user_message, $db, $conv_id = 0)
         if (empty($res) || strpos($res, 'Lỗi:') === 0) {
             // Qwen lỗi -> Thử Gemini (Dự phòng)
             echo "data: " . json_encode(["status" => "switching", "message" => "Qwen API bận, đang chuyển sang Gemini..."]) . "\n\n";
+            if (ob_get_level() > 0) ob_flush(); flush();
             return stream_gemini_reply($user_message, $db, $conv_id);
         }
         return $res;
@@ -188,6 +193,7 @@ function stream_ai_reply($user_message, $db, $conv_id = 0)
         if (empty($res) || strpos($res, 'Lỗi:') === 0) {
             // Gemini lỗi -> Thử Qwen (Dự phòng)
             echo "data: " . json_encode(["status" => "switching", "message" => "Gemini API bận, đang chuyển sang Qwen..."]) . "\n\n";
+            if (ob_get_level() > 0) ob_flush(); flush();
             return stream_qwen_reply($user_message, $db, $conv_id);
         }
         return $res;
@@ -228,7 +234,8 @@ function stream_gemini_reply($user_message, $db, $conv_id)
                 $lines = explode("\n", $event);
                 foreach ($lines as $line) {
                     if (strpos($line, 'data: ') === 0) {
-                        $chunk = json_decode(substr($line, 6), true);
+                        $json_str = substr($line, 6);
+                        $chunk = json_decode($json_str, true);
                         if (isset($chunk['candidates'][0]['content']['parts'])) {
                             foreach ($chunk['candidates'][0]['content']['parts'] as $part) {
                                 if (isset($part['text'])) {
@@ -249,7 +256,10 @@ function stream_gemini_reply($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        if ($http_code !== 200 && empty($full_response_text)) return "Lỗi: API Gemini trả về mã lỗi " . $http_code;
 
         // Ghi log
         if (!empty($full_response_text)) {
@@ -326,7 +336,10 @@ function stream_qwen_reply($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        if ($http_code !== 200 && empty($full_response_text)) return "Lỗi: API Qwen trả về mã lỗi " . $http_code;
 
         if (!empty($full_response_text)) {
             log_key_usage('qwen', strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
