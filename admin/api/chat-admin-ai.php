@@ -173,7 +173,9 @@ PROMPT;
     // ─────────────────────────────────────────────────────────────────────────
     // Gọi Gemini API
     // ─────────────────────────────────────────────────────────────────────────
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $api_key;
+    // Sử dụng model Gemini 2.0 Flash mới nhất cho tốc độ cực nhanh
+    $model = "gemini-2.0-flash";
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $api_key;
 
     $reqData = [
         "system_instruction" => [
