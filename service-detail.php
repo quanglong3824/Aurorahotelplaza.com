@@ -1,4 +1,9 @@
 <?php
+// Tạm thời bật hiển thị lỗi để debug
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once 'config/database.php';
 require_once 'helpers/language.php';
 initLanguage();
@@ -11,11 +16,17 @@ if (empty($slug)) {
 
 try {
     $db = getDB();
+    if (!$db) {
+        die("Lỗi: Không thể kết nối cơ sở dữ liệu. Vui lòng kiểm tra cấu hình trong tệp .env");
+    }
+
     $stmt = $db->prepare("SELECT * FROM services WHERE slug = :slug AND is_available = 1");
     $stmt->execute([':slug' => $slug]);
     $service = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$service) {
+        // Debug nếu không tìm thấy service
+        echo "<!-- Debug: Slug '$slug' không tồn tại hoặc is_available != 1 -->";
         header('Location: services.php');
         exit;
     }
@@ -24,8 +35,12 @@ try {
     $stmt->execute([':service_id' => $service['service_id']]);
     $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
+    echo "<div style='background: #fff; color: #000; padding: 20px; border: 5px solid red;'>";
+    echo "<h2>Service Detail Error:</h2>";
+    echo "<p>Message: " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p>File: " . htmlspecialchars($e->getFile()) . " (Line: " . $e->getLine() . ")</p>";
+    echo "</div>";
     error_log("Service detail error: " . $e->getMessage());
-    header('Location: services.php');
     exit;
 }
 
