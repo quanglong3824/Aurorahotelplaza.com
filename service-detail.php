@@ -25,22 +25,29 @@ try {
     $service = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$service) {
-        // Debug nếu không tìm thấy service
-        echo "<!-- Debug: Slug '$slug' không tồn tại hoặc is_available != 1 -->";
-        header('Location: services.php');
+        echo "<div style='color: white; background: red; padding: 10px;'>Debug: Không tìm thấy dịch vụ với slug: " . htmlspecialchars($slug) . "</div>";
+        // Nếu không có dữ liệu, thử in ra danh sách slug đang có để đối chiếu
+        $stmt = $db->query("SELECT slug FROM services");
+        $all_slugs = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        echo "<div style='color: white; background: blue; padding: 10px;'>Slugs hiện có: " . implode(', ', $all_slugs) . "</div>";
         exit;
     }
 
     $stmt = $db->prepare("SELECT * FROM service_packages WHERE service_id = :service_id AND is_available = 1 ORDER BY sort_order ASC");
     $stmt->execute([':service_id' => $service['service_id']]);
     $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    echo "<div style='background: #fff; color: #000; padding: 20px; border: 5px solid red;'>";
-    echo "<h2>Service Detail Error:</h2>";
+
+    // Debug thành công
+    echo "<!-- Debug: Service found: " . $service['service_name'] . " | Packages: " . count($packages) . " -->";
+
+} catch (Throwable $e) {
+    echo "<div style='position: fixed; top: 50px; left: 0; width: 100%; z-index: 9999; background: #fff; color: #000; padding: 20px; border: 5px solid red;'>";
+    echo "<h2>Service Detail Critical Error:</h2>";
     echo "<p>Message: " . htmlspecialchars($e->getMessage()) . "</p>";
     echo "<p>File: " . htmlspecialchars($e->getFile()) . " (Line: " . $e->getLine() . ")</p>";
+    echo "<h3>Stack Trace:</h3><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
     echo "</div>";
-    error_log("Service detail error: " . $e->getMessage());
+    error_log("Service detail critical error: " . $e->getMessage());
     exit;
 }
 
