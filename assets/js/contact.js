@@ -6,156 +6,158 @@
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
+    const lookupForm = document.getElementById('lookupForm');
+    const lookupBtn = document.getElementById('lookupBtn');
+    const lookupResult = document.getElementById('lookupResult');
     
-    if (!contactForm) return;
-    
-    contactForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Disable button and show loading
-        setLoading(true);
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        
-        // Validate
-        const name = formData.get('name').trim();
-        const email = formData.get('email').trim();
-        const phone = formData.get('phone').trim();
-        const message = formData.get('message').trim();
-        
-        if (!name || !email || !phone || !message) {
-            alert('Vui lòng điền đầy đủ thông tin bắt buộc.');
-            setLoading(false);
-            return;
-        }
-        
-        if (!isValidEmail(email)) {
-            alert('Định dạng Email không hợp lệ.');
-            setLoading(false);
-            return;
-        }
-        
-        const cleanedPhone = phone.replace(/[^0-9]/g, '');
-        if (cleanedPhone.length < 9 || cleanedPhone.length > 15) {
-            alert('Số điện thoại không hợp lệ (yêu cầu từ 9 đến 15 chữ số).');
-            setLoading(false);
-            return;
-        }
-        
-        if (message.length < 10) {
-            alert('Nội dung tin nhắn quá ngắn (tối thiểu 10 ký tự).');
-            setLoading(false);
-            return;
-        }
-
-        // Chống nhập mã HTML/JS (Script injection)
-        if (/<[\s\S]*>/i.test(message) || /script|javascript|onerror|onload/i.test(message)) {
-            alert('Lỗi bảo mật: Không được phép nhập thẻ mã lệnh (code) vào form!');
-            setLoading(false);
-            return;
-        }
-        
-        try {
-            const response = await fetch('api/contact.php', {
-                method: 'POST',
-                body: formData
-            });
+    // --- Contact Form Submission ---
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            const data = await response.json();
+            // Disable button and show loading immediately
+            setLoading(submitBtn, true, 'send');
             
-            if (data.success) {
-                showToast(data.message, 'success');
-                
-                // Reset form (chỉ reset message và subject)
-                contactForm.querySelector('textarea[name="message"]').value = '';
-                contactForm.querySelector('select[name="subject"]').selectedIndex = 0;
-                
-                // Show success modal
-                showSuccessModal(data.submission_id);
-            } else {
-                showToast(data.message || 'Có lỗi xảy ra', 'error');
+            // Get form data
+            const formData = new FormData(contactForm);
+            
+            // Validate basic inputs
+            const name = formData.get('name').trim();
+            const email = formData.get('email').trim();
+            const phone = formData.get('phone').trim();
+            const message = formData.get('message').trim();
+            
+            if (!name || !email || !phone || !message) {
+                showToast('Vui lòng điền đầy đủ thông tin bắt buộc.', 'warning');
+                setLoading(submitBtn, false, 'send');
+                return;
             }
-        } catch (error) {
-            console.error('Error:', error);
-            showToast('Có lỗi xảy ra khi gửi liên hệ. Vui lòng thử lại sau.', 'error');
-        } finally {
-            setLoading(false);
-        }
-    });
+            
+            try {
+                const response = await fetch('api/contact.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    
+                    // Reset message only, keep info
+                    contactForm.querySelector('textarea[name="message"]').value = '';
+                    
+                    // Show success modal with the ID
+                    showSuccessModal(data.submission_id);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Không thể gửi liên hệ. Vui lòng kiểm tra kết nối mạng.', 'error');
+            } finally {
+                setLoading(submitBtn, false, 'send');
+            }
+        });
+    }
+
+    // --- Status Lookup Handler ---
+    if (lookupForm) {
+        lookupForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('lookupCode').value.trim();
+            if (!code) return;
+            
+            setLoading(lookupBtn, true, 'search');
+            lookupResult.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`api/contact-status.php?code=${encodeURIComponent(code)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const status = data.data;
+                    let responseHtml = '';
+                    
+                    if (status.has_response) {
+                        responseHtml = `
+                            <div class="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                <p class="text-[10px] text-emerald-400 uppercase font-bold mb-2">Phản hồi từ Aurora:</p>
+                                <p class="text-sm text-white/90 italic">"${status.response}"</p>
+                                <p class="text-[10px] text-white/40 mt-2">Ngày phản hồi: ${status.responded_at}</p>
+                            </div>
+                        `;
+                    }
+
+                    lookupResult.innerHTML = `
+                        <div class="p-5 rounded-2xl bg-white/5 border border-white/10 animate-fade-in">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-[10px] text-white/40 uppercase font-bold tracking-widest">Kết quả tra cứu</span>
+                                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-${status.color}-500/20 text-${status.color}-400 text-[10px] font-bold border border-${status.color}-500/30">
+                                    <span class="material-symbols-outlined text-[14px]">${status.icon}</span>
+                                    ${status.status}
+                                </div>
+                            </div>
+                            <h4 class="text-white font-bold mb-1">${status.subject}</h4>
+                            <p class="text-xs text-white/60 mb-3">Gửi bởi: ${status.name} • ${status.created_at}</p>
+                            ${responseHtml}
+                        </div>
+                    `;
+                    lookupResult.classList.remove('hidden');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Lỗi khi tra cứu trạng thái.', 'error');
+            } finally {
+                setLoading(lookupBtn, false, 'search');
+            }
+        });
+    }
     
-    // Helper functions
-    function setLoading(loading) {
+    // Global Helper: setLoading
+    function setLoading(btn, loading, originalIcon = 'send') {
+        if (!btn) return;
+        const icon = btn.querySelector('.material-symbols-outlined');
+        
         if (loading) {
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            const icon = submitBtn.querySelector('.material-symbols-outlined');
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
             if (icon) {
                 icon.textContent = 'hourglass_empty';
-                icon.classList.add('animate-pulse');
+                icon.classList.add('animate-spin');
             }
         } else {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            const icon = submitBtn.querySelector('.material-symbols-outlined');
+            btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-not-allowed');
             if (icon) {
-                icon.textContent = 'send';
-                icon.classList.remove('animate-pulse');
+                icon.textContent = originalIcon;
+                icon.classList.remove('animate-spin');
             }
         }
-    }
-    
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-    
-    function isValidPhone(phone) {
-        const cleaned = phone.replace(/[^0-9]/g, '');
-        return cleaned.length >= 10 && cleaned.length <= 11;
     }
     
     function showSuccessModal(submissionId) {
-        // Scroll to top for better modal visibility
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Create modal with liquid glass style
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0;';
         modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;" onclick="this.parentElement.remove()"></div>
-            <div class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full p-10 text-center animate-scale-in border border-white/20" style="position: relative; z-index: 10;">
-                <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/30">
-                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                    </svg>
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-md" onclick="this.parentElement.remove(); document.body.style.overflow = '';"></div>
+            <div class="relative bg-slate-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center animate-scale-in">
+                <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/20">
+                    <span class="material-symbols-outlined text-4xl text-white">check</span>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Gửi thành công</h3>
-                <p class="text-gray-600 dark:text-gray-300 mb-6">Cảm ơn bạn đã liên hệ với Aurora Hotel Plaza</p>
-                <div class="bg-gradient-to-br from-amber-50 to-amber-100/80 dark:from-amber-900/30 dark:to-amber-800/20 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-amber-200/50 dark:border-amber-700/30">
-                    <p class="text-sm text-amber-700 dark:text-amber-300 mb-2 uppercase tracking-wider font-semibold">Mã liên hệ của bạn</p>
-                    <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 tracking-widest font-mono">${submissionId}</p>
+                <h3 class="text-2xl font-bold text-white mb-2">Gửi thành công!</h3>
+                <p class="text-white/60 mb-6">Cảm ơn bạn đã liên hệ. Chúng tôi đã nhận được tin nhắn.</p>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 mb-6">
+                    <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-1">Mã tra cứu của bạn</p>
+                    <p class="text-2xl font-mono font-bold text-accent tracking-widest">${submissionId}</p>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-                    Chúng tôi đã gửi email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư.
-                </p>
-                <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-accent to-amber-500 text-white rounded-xl px-6 py-4 font-bold hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:-translate-y-0.5">
-                    Đóng
-                </button>
+                <button onclick="this.closest('.fixed').remove(); document.body.style.overflow = '';" class="btn-glass-gold w-full justify-center">Đóng</button>
             </div>
         `;
         document.body.appendChild(modal);
-        
-        // Prevent body scroll when modal is open
         document.body.style.overflow = 'hidden';
-        
-        // Restore scroll when modal is closed
-        modal.querySelector('button').addEventListener('click', () => {
-            document.body.style.overflow = '';
-        });
-        modal.querySelector('.fixed.inset-0.bg-black\\/60').addEventListener('click', () => {
-            document.body.style.overflow = '';
-        });
     }
 });
 
@@ -167,10 +169,10 @@ function showToast(message, type = 'info') {
     if (!container) return;
     
     const colors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500'
+        success: 'bg-emerald-600',
+        error: 'bg-red-600',
+        warning: 'bg-amber-600',
+        info: 'bg-blue-600'
     };
     
     const icons = {
@@ -181,20 +183,16 @@ function showToast(message, type = 'info') {
     };
     
     const toast = document.createElement('div');
-    toast.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-slide-in-right max-w-sm`;
+    toast.className = `${colors[type]} text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 animate-slide-in-right max-w-xs border border-white/10`;
     toast.innerHTML = `
-        <span class="material-symbols-outlined">${icons[type]}</span>
-        <span class="flex-1">${message}</span>
-        <button onclick="this.parentElement.remove()" class="hover:opacity-70">
-            <span class="material-symbols-outlined text-sm">close</span>
-        </button>
+        <span class="material-symbols-outlined text-xl">${icons[type]}</span>
+        <span class="text-sm font-medium flex-1">${message}</span>
     `;
     
     container.appendChild(toast);
-    
-    // Auto remove after 5 seconds
     setTimeout(() => {
-        toast.classList.add('animate-slide-out-right');
-        setTimeout(() => toast.remove(), 300);
-    }, 5000);
+        toast.classList.add('opacity-0', 'translate-x-full');
+        toast.style.transition = 'all 0.5s ease';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 }
