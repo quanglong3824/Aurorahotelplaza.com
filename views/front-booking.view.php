@@ -897,9 +897,9 @@
                         <div class="flex gap-4 mt-4">
                             <button type="button" class="btn-secondary"
                                 onclick="prevStep(2)"><?php _e('booking_page.back'); ?></button>
-                            <button type="submit" class="btn-primary flex-1" id="submitBtn">
-                                <span class="material-symbols-outlined" id="submitBtnIcon">lock</span>
-                                <span id="submitBtnText"><?php _e('booking_page.confirm_booking'); ?></span>
+                            <button type="button" class="btn-primary flex-1" id="confirmBookingModalBtn">
+                                <span class="material-symbols-outlined">verified</span>
+                                <span><?php _e('booking_page.confirm_booking'); ?></span>
                             </button>
                         </div>
                     </div>
@@ -908,6 +908,105 @@
             </div>
         </div>
     </main>
+
+    <!-- Booking Confirmation Modal -->
+    <div id="bookingConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="glass-card w-full max-w-lg p-0 overflow-hidden animate-zoomIn">
+            <div class="bg-accent/10 p-6 border-b border-white/10 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-accent uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined">info</span>
+                    Xác nhận thông tin đặt phòng
+                </h3>
+                <button type="button" onclick="closeConfirmModal()" class="text-white/50 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <!-- Summary Content -->
+                <div id="modalSummary" class="space-y-4">
+                    <!-- Dynamic Content will be injected here via JS -->
+                </div>
+
+                <!-- Action -->
+                <div class="flex gap-4 pt-4 border-t border-white/10">
+                    <button type="button" onclick="closeConfirmModal()" class="btn-secondary flex-1">
+                        Quay lại sửa
+                    </button>
+                    <button type="button" id="finalSubmitBtn" class="btn-primary flex-1 shadow-lg shadow-accent/20">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Đồng ý đặt ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeConfirmModal() {
+            document.getElementById('bookingConfirmModal').classList.add('hidden');
+        }
+
+        document.getElementById('confirmBookingModalBtn').addEventListener('click', function() {
+            // Validate form first
+            const form = document.getElementById('bookingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Get data for summary
+            const checkIn = document.getElementById('check_in').value;
+            const checkOut = document.getElementById('check_out').value;
+            const roomType = document.querySelector('input[name="room_type"]:checked')?.dataset.typeName || 'N/A';
+            const guestName = document.getElementById('full_name').value;
+            const email = document.getElementById('email').value;
+            const totalAmount = document.getElementById('total-amount-display')?.textContent || 'N/A';
+
+            // Inject to modal
+            document.getElementById('modalSummary').innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="text-white/50 text-[10px] uppercase block">Loại phòng</span>
+                        <span class="text-white font-bold">${roomType}</span>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="text-white/50 text-[10px] uppercase block">Tổng tiền</span>
+                        <span class="text-accent font-bold">${totalAmount}</span>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="text-white/50 text-[10px] uppercase block">Nhận phòng</span>
+                        <span class="text-white font-bold">${checkIn}</span>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="text-white/50 text-[10px] uppercase block">Trả phòng</span>
+                        <span class="text-white font-bold">${checkOut}</span>
+                    </div>
+                    <div class="col-span-2 p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="text-white/50 text-[10px] uppercase block">Khách hàng</span>
+                        <span class="text-white font-bold">${guestName} (${email})</span>
+                    </div>
+                </div>
+                <div class="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
+                    <p class="text-[11px] text-amber-400 italic">
+                        * Quý khách vui lòng kiểm tra kỹ thông tin. Đơn đặt phòng sau khi xác nhận sẽ được lễ tân xử lý và giữ phòng.
+                    </p>
+                </div>
+            `;
+
+            // Show modal
+            document.getElementById('bookingConfirmModal').classList.remove('hidden');
+        });
+
+        document.getElementById('finalSubmitBtn').addEventListener('click', function() {
+            // Change button state
+            this.disabled = true;
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Đang đặt...';
+            
+            // Actually submit the form
+            document.getElementById('bookingForm').submit();
+        });
+    </script>
 
     <?php include '../includes/footer.php'; ?>
 

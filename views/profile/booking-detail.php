@@ -267,7 +267,7 @@ $payment_labels = [
                                             <?php _e('booking_history.invoice'); ?>
                                         </button>
                                     <?php endif; ?>
-                                    <a href="view-qrcode.php?code=<?php echo $booking['booking_code']; ?>" 
+                                    <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>" 
                                        class="flex items-center justify-center gap-2 py-3 bg-accent/10 hover:bg-accent/20 text-accent rounded-xl border border-accent/20 transition-all">
                                         <span class="material-symbols-outlined">qr_code</span>
                                         <?php _e('profile_qrcode.your_qr'); ?>
