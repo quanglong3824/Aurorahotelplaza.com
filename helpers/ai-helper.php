@@ -1,13 +1,10 @@
 <?php
 /**
- * Trợ lý ảo AI - Xử lý gọi API Lễ tân (Version 2.5 - Multi-Provider: Gemini & Qwen)
+ * Trợ lý ảo AI - Xử lý gọi API Lễ tân (Version 2.7 - Smart Switching & Failover)
  * ==============================================================================
  */
 
 require_once __DIR__ . '/api_key_manager.php';
-
-// Model mặc định dựa trên Provider
-if (!defined('AI_PROVIDER')) define('AI_PROVIDER', get_active_ai_provider());
 
 /**
  * Lấy System Prompt tối ưu cho Aurora AI
@@ -123,7 +120,6 @@ function get_ai_tools($provider = 'gemini')
             ]
         ];
     } else {
-        // Định dạng OpenAI compatible cho Qwen
         return [
             [
                 "type" => "function",
@@ -153,17 +149,14 @@ function handle_tool_call($functionCall, $db)
 
     if ($name === 'run_sql' && isset($args['sql'])) {
         $sql = $args['sql'];
-        
-        // Security check
         if (preg_match('/^\s*(DROP|DELETE|TRUNCATE|ALTER|GRANT|REVOKE)/i', $sql)) {
-            return ["error" => "Câu lệnh SQL bị từ chối vì lý do bảo mật."];
+            return ["error" => "SQL denied for security reasons."];
         }
 
         try {
             $stmt = $db->query($sql);
             if (preg_match('/^\s*(SELECT|SHOW|DESCRIBE|EXPLAIN)/i', $sql)) {
-                $db_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                return ["result" => $db_result];
+                return ["result" => $stmt->fetchAll(PDO::FETCH_ASSOC)];
             } else {
                 return ["ok" => true, "affected_rows" => $stmt->rowCount(), "last_id" => $db->lastInsertId()];
             }
@@ -171,20 +164,33 @@ function handle_tool_call($functionCall, $db)
             return ["error" => $e->getMessage()];
         }
     }
-    return ["error" => "Công cụ không tồn tại."];
+    return ["error" => "Tool not found."];
 }
 
 /**
- * Stream câu trả lời từ AI (SSE) - Hỗ trợ Gemini & Qwen (DashScope)
+ * Stream câu trả lời từ AI (SSE) - Hỗ trợ Gemini & Qwen với Smart Switching
  */
 function stream_ai_reply($user_message, $db, $conv_id = 0)
 {
     $provider = get_active_ai_provider();
     
+    // Thử Provider chính
     if ($provider === 'qwen') {
-        return stream_qwen_reply($user_message, $db, $conv_id);
+        $res = stream_qwen_reply($user_message, $db, $conv_id);
+        if (empty($res) || strpos($res, 'Lỗi:') === 0) {
+            // Qwen lỗi -> Thử Gemini (Dự phòng)
+            echo "data: " . json_encode(["status" => "switching", "message" => "Qwen API bận, đang chuyển sang Gemini..."]) . "\n\n";
+            return stream_gemini_reply($user_message, $db, $conv_id);
+        }
+        return $res;
     } else {
-        return stream_gemini_reply($user_message, $db, $conv_id);
+        $res = stream_gemini_reply($user_message, $db, $conv_id);
+        if (empty($res) || strpos($res, 'Lỗi:') === 0) {
+            // Gemini lỗi -> Thử Qwen (Dự phòng)
+            echo "data: " . json_encode(["status" => "switching", "message" => "Gemini API bận, đang chuyển sang Qwen..."]) . "\n\n";
+            return stream_qwen_reply($user_message, $db, $conv_id);
+        }
+        return $res;
     }
 }
 
@@ -194,28 +200,17 @@ function stream_ai_reply($user_message, $db, $conv_id = 0)
 function stream_gemini_reply($user_message, $db, $conv_id)
 {
     $api_key = get_active_gemini_key();
-    if (empty($api_key)) {
-        echo "data: " . json_encode(["text" => "Lỗi: Chưa cấu hình Gemini API Key."]) . "\n\n";
-        return "";
-    }
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini API Key.";
 
     $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
-    $contents = [
-        ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]
-    ];
+    $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
     $tools = get_ai_tools('gemini');
 
-    $max_iterations = 3;
     $full_response_text = "";
 
-    for ($i = 0; $i < $max_iterations; $i++) {
-        $data = [
-            "contents" => $contents,
-            "tools" => $tools,
-            "generationConfig" => ["temperature" => 0.2, "maxOutputTokens" => 2048]
-        ];
-
+    for ($i = 0; $i < 3; $i++) {
+        $data = ["contents" => $contents, "tools" => $tools, "generationConfig" => ["temperature" => 0.2, "maxOutputTokens" => 2048]];
         $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":streamGenerateContent?alt=sse&key=" . $api_key;
         
         $ch = curl_init($url);
@@ -230,13 +225,10 @@ function stream_gemini_reply($user_message, $db, $conv_id)
             while (($pos = strpos($buffer, "\n\n")) !== false) {
                 $event = substr($buffer, 0, $pos);
                 $buffer = substr($buffer, $pos + 2);
-                
                 $lines = explode("\n", $event);
                 foreach ($lines as $line) {
                     if (strpos($line, 'data: ') === 0) {
-                        $jsonStr = substr($line, 6);
-                        $chunk = json_decode($jsonStr, true);
-                        
+                        $chunk = json_decode(substr($line, 6), true);
                         if (isset($chunk['candidates'][0]['content']['parts'])) {
                             foreach ($chunk['candidates'][0]['content']['parts'] as $part) {
                                 if (isset($part['text'])) {
@@ -244,9 +236,7 @@ function stream_gemini_reply($user_message, $db, $conv_id)
                                     echo "data: " . json_encode(["text" => $part['text']]) . "\n\n";
                                     if (ob_get_level() > 0) ob_flush(); flush();
                                 }
-                                if (isset($part['functionCall'])) {
-                                    $current_fc = $part['functionCall'];
-                                }
+                                if (isset($part['functionCall'])) $current_fc = $part['functionCall'];
                             }
                         }
                     }
@@ -261,67 +251,44 @@ function stream_gemini_reply($user_message, $db, $conv_id)
         curl_exec($ch);
         curl_close($ch);
 
-        // Ghi log sử dụng Gemini
-        log_key_usage(get_active_key_index(), strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+        // Ghi log
+        if (!empty($full_response_text)) {
+            log_key_usage(get_active_key_index(), strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+        }
 
         if ($current_fc) {
             $contents[] = ["role" => "model", "parts" => [["functionCall" => $current_fc]]];
             $tool_result = handle_tool_call($current_fc, $db);
-            
             echo "data: " . json_encode(["status" => "running_tool", "tool" => $current_fc['name']]) . "\n\n";
             if (ob_get_level() > 0) ob_flush(); flush();
-
-            $contents[] = [
-                "role" => "user",
-                "parts" => [["functionResponse" => ["name" => $current_fc['name'], "response" => ["content" => $tool_result]]]]
-            ];
+            $contents[] = ["role" => "user", "parts" => [["functionResponse" => ["name" => $current_fc['name'], "response" => ["content" => $tool_result]]]]];
             $current_fc = null;
-        } else {
-            break;
-        }
+        } else break;
     }
-
     return $full_response_text;
 }
 
 /**
- * Stream Qwen Logic (DashScope OpenAI-Compatible)
+ * Stream Qwen Logic
  */
 function stream_qwen_reply($user_message, $db, $conv_id)
 {
     $api_key = get_active_qwen_key();
     $model = get_active_qwen_model();
-    
-    if (empty($api_key)) {
-        echo "data: " . json_encode(["text" => "Lỗi: Chưa cấu hình Qwen API Key."]) . "\n\n";
-        return "";
-    }
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Qwen API Key.";
 
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
-    $messages = [
-        ["role" => "system", "content" => $system_prompt],
-        ["role" => "user", "content" => $user_message]
-    ];
+    $messages = [["role" => "system", "content" => $system_prompt], ["role" => "user", "content" => $user_message]];
     $tools = get_ai_tools('qwen');
 
-    $max_iterations = 3;
     $full_response_text = "";
 
-    for ($i = 0; $i < $max_iterations; $i++) {
-        $data = [
-            "model" => $model,
-            "messages" => $messages,
-            "stream" => true,
-            "tools" => $tools,
-            "temperature" => 0.2
-        ];
-
-        // DashScope OpenAI Compatible Endpoint
+    for ($i = 0; $i < 3; $i++) {
+        $data = ["model" => $model, "messages" => $messages, "stream" => true, "tools" => $tools, "temperature" => 0.2];
         $url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-        
         $buffer = "";
         $tool_calls = [];
 
@@ -330,21 +297,17 @@ function stream_qwen_reply($user_message, $db, $conv_id)
             while (($pos = strpos($buffer, "\n")) !== false) {
                 $line = trim(substr($buffer, 0, $pos));
                 $buffer = substr($buffer, $pos + 1);
-                
                 if (strpos($line, 'data: ') === 0) {
                     $jsonStr = substr($line, 6);
                     if ($jsonStr === '[DONE]') break;
-                    
                     $chunk = json_decode($jsonStr, true);
                     if (isset($chunk['choices'][0]['delta'])) {
                         $delta = $chunk['choices'][0]['delta'];
-                        
                         if (isset($delta['content'])) {
                             $full_response_text .= $delta['content'];
                             echo "data: " . json_encode(["text" => $delta['content']]) . "\n\n";
                             if (ob_get_level() > 0) ob_flush(); flush();
                         }
-                        
                         if (isset($delta['tool_calls'])) {
                             foreach ($delta['tool_calls'] as $tc) {
                                 $idx = $tc['index'];
@@ -359,119 +322,87 @@ function stream_qwen_reply($user_message, $db, $conv_id)
             return strlen($data);
         });
         
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $api_key
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_exec($ch);
-        
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        // Giả lập tính token (hoặc lấy từ API nếu có hỗ trợ trong stream)
-        // Qwen stream không trả về usage trực tiếp trừ khi dùng cờ stream_options.
-        // Ta ước tính tạm thời hoặc ghi nhận 1 request.
-        log_key_usage('qwen', strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+        if (!empty($full_response_text)) {
+            log_key_usage('qwen', strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+        }
 
         if (!empty($tool_calls)) {
-            // Qwen (OpenAI) style tool handling
             $messages[] = ["role" => "assistant", "content" => $full_response_text, "tool_calls" => array_values($tool_calls)];
-            
             foreach ($tool_calls as $tc) {
                 echo "data: " . json_encode(["status" => "running_tool", "tool" => $tc['function']['name']]) . "\n\n";
                 if (ob_get_level() > 0) ob_flush(); flush();
-
                 $result = handle_tool_call($tc, $db);
-                $messages[] = [
-                    "role" => "tool",
-                    "tool_call_id" => $tc['id'],
-                    "name" => $tc['function']['name'],
-                    "content" => json_encode($result)
-                ];
+                $messages[] = ["role" => "tool", "tool_call_id" => $tc['id'], "name" => $tc['function']['name'], "content" => json_encode($result)];
             }
             $tool_calls = [];
-        } else {
-            break;
-        }
+        } else break;
     }
-
     return $full_response_text;
 }
 
 /**
- * Hàm cũ (Legacy) - Tương thích ngược
+ * Legacy Support
  */
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
-    // Chuyển hướng sang stream nhưng không stream output (hoặc thực hiện gọi không stream)
-    // Để nhanh chóng, ta có thể dùng hàm generateContent bình thường
     $provider = get_active_ai_provider();
-    if ($provider === 'qwen') {
-        return generate_qwen_reply_sync($user_message, $db, $conv_id);
-    } else {
-        return generate_gemini_reply_sync($user_message, $db, $conv_id);
-    }
+    if ($provider === 'qwen') return generate_qwen_reply_sync($user_message, $db, $conv_id);
+    return generate_gemini_reply_sync($user_message, $db, $conv_id);
 }
 
 function generate_gemini_reply_sync($user_message, $db, $conv_id)
 {
     $api_key = get_active_gemini_key();
-    if (empty($api_key)) return "Lỗi cấu hình AI.";
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini.";
     $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
-    $tools = get_ai_tools('gemini');
-
     for ($i = 0; $i < 3; $i++) {
         $ch = curl_init("https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => $contents, "tools" => $tools]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => $contents, "tools" => get_ai_tools('gemini')]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $result = json_decode($response, true);
-        if (!isset($result['candidates'][0]['content']['parts'])) break;
-        $parts = $result['candidates'][0]['content']['parts'];
-        $found_fc = false;
-        $final_text = "";
-        foreach ($parts as $part) {
-            if (isset($part['text'])) $final_text .= $part['text'];
-            if (isset($part['functionCall'])) { $found_fc = true; $fc = $part['functionCall']; }
+        $res = json_decode(curl_exec($ch), true); curl_close($ch);
+        if (!isset($res['candidates'][0]['content']['parts'])) break;
+        $final_text = ""; $fc = null;
+        foreach ($res['candidates'][0]['content']['parts'] as $p) {
+            if (isset($p['text'])) $final_text .= $p['text'];
+            if (isset($p['functionCall'])) $fc = $p['functionCall'];
         }
-        if ($found_fc) {
+        if ($fc) {
             $contents[] = ["role" => "model", "parts" => [["functionCall" => $fc]]];
             $contents[] = ["role" => "user", "parts" => [["functionResponse" => ["name" => $fc['name'], "response" => ["content" => handle_tool_call($fc, $db)]]]]];
-        } else { return $final_text; }
+        } else return $final_text;
     }
-    return "AI hiện chưa có phản hồi.";
+    return "AI hiện bận, vui lòng thử lại sau.";
 }
 
 function generate_qwen_reply_sync($user_message, $db, $conv_id)
 {
     $api_key = get_active_qwen_key();
     $model = get_active_qwen_model();
-    if (empty($api_key)) return "Lỗi cấu hình Qwen AI.";
-    $system_prompt = get_aurora_system_prompt($db, $conv_id);
-    $messages = [["role" => "system", "content" => $system_prompt], ["role" => "user", "content" => $user_message]];
-    $tools = get_ai_tools('qwen');
-
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Qwen.";
+    $messages = [["role" => "system", "content" => get_aurora_system_prompt($db, $conv_id)], ["role" => "user", "content" => $user_message]];
     for ($i = 0; $i < 3; $i++) {
         $ch = curl_init("https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["model" => $model, "messages" => $messages, "tools" => $tools]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["model" => $model, "messages" => $messages, "tools" => get_ai_tools('qwen')]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch); curl_close($ch);
-        $result = json_decode($response, true);
-        if (!isset($result['choices'][0]['message'])) break;
-        $msg = $result['choices'][0]['message'];
+        $res = json_decode(curl_exec($ch), true); curl_close($ch);
+        if (!isset($res['choices'][0]['message'])) break;
+        $msg = $res['choices'][0]['message'];
         if (isset($msg['tool_calls'])) {
             $messages[] = $msg;
             foreach ($msg['tool_calls'] as $tc) {
                 $messages[] = ["role" => "tool", "tool_call_id" => $tc['id'], "name" => $tc['function']['name'], "content" => json_encode(handle_tool_call($tc, $db))];
             }
-        } else { return $msg['content']; }
+        } else return $msg['content'];
     }
-    return "AI hiện chưa có phản hồi.";
+    return "AI hiện bận, vui lòng thử lại sau.";
 }

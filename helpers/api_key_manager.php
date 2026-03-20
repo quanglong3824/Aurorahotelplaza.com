@@ -5,7 +5,21 @@
  * Lấy Provider AI đang hoạt động (gemini, qwen)
  */
 function get_active_ai_provider() {
+    $file = __DIR__ . '/../config/ai_active_provider.txt';
+    if (file_exists($file)) {
+        $saved = trim(file_get_contents($file));
+        if (in_array($saved, ['gemini', 'qwen'])) return $saved;
+    }
     return defined('AI_PROVIDER') ? AI_PROVIDER : 'gemini';
+}
+
+/**
+ * Đặt Provider AI đang hoạt động
+ */
+function set_active_ai_provider($provider) {
+    if (!in_array($provider, ['gemini', 'qwen'])) return false;
+    $file = __DIR__ . '/../config/ai_active_provider.txt';
+    return file_put_contents($file, $provider);
 }
 
 /**
