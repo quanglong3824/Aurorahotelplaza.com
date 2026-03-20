@@ -1451,9 +1451,17 @@ async function nextStep(step) {
 
     // ========== ANTI-SPAM: Check before step 3 ==========
     if (step === 3 && !isInquiryMode) {
-        // Show loading
-        const continueBtn = event?.target;
-        const originalText = continueBtn?.innerHTML;
+        // Show loading safely (handle event if it's undefined)
+        let continueBtn = null;
+        try {
+            if (typeof event !== 'undefined' && event.target) {
+                continueBtn = event.target;
+            } else if (window.event && window.event.target) {
+                continueBtn = window.event.target;
+            }
+        } catch(e) {}
+        
+        const originalText = continueBtn ? continueBtn.innerHTML : '';
         if (continueBtn) {
             continueBtn.disabled = true;
             continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang kiểm tra...';
