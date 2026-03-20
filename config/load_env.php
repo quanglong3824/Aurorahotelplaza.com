@@ -25,7 +25,13 @@ if (!function_exists('loadEnvVariables')) {
             $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
             $paths[] = dirname($doc_root) . '/config/.env';
             $paths[] = dirname($doc_root) . '/.env';
+            $paths[] = $doc_root . '/../config/.env';
+            $paths[] = $doc_root . '/../.env';
         }
+
+        // Ưu tiên nạp cả từ file .env.local nếu có (để debug)
+        $paths[] = __DIR__ . '/.env';
+        $paths[] = dirname(__DIR__) . '/.env';
 
         $paths = array_unique($paths);
         
@@ -68,11 +74,13 @@ if (!function_exists('env')) {
         $val = null;
         if (isset($_ENV[$key])) {
             $val = $_ENV[$key];
+        } elseif (isset($_SERVER[$key])) {
+            $val = $_SERVER[$key];
         } elseif (function_exists('getenv')) {
             $val = @getenv($key);
         }
 
-        if ($val === false || $val === null) {
+        if ($val === false || $val === null || $val === '') {
             return $default;
         }
 
