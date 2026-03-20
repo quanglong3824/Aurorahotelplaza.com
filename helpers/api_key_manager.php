@@ -4,37 +4,17 @@
 require_once __DIR__ . '/../config/load_env.php';
 
 /**
- * Lấy Provider AI đang hoạt động (gemini, qwen)
+ * Lấy Provider AI đang hoạt động (Luôn là qwen)
  */
 function get_active_ai_provider() {
-    $file = __DIR__ . '/../config/ai_active_provider.txt';
-    if (file_exists($file)) {
-        $saved = trim(file_get_contents($file));
-        if (in_array($saved, ['gemini', 'qwen'])) return $saved;
-    }
-    $p = env('AI_PROVIDER', 'gemini');
-    // error_log("AI Provider: " . $p); // Uncomment to debug
-    return $p;
-}
-
-/**
- * Đặt Provider AI đang hoạt động
- */
-function set_active_ai_provider($provider) {
-    if (!in_array($provider, ['gemini', 'qwen'])) return false;
-    $file = __DIR__ . '/../config/ai_active_provider.txt';
-    return file_put_contents($file, $provider);
+    return 'qwen';
 }
 
 /**
  * Lấy API Key cho Qwen
  */
 function get_active_qwen_key() {
-    $key = env('QWEN_API_KEY', '');
-    if (empty($key)) {
-        // error_log("QWEN API KEY is empty in env");
-    }
-    return $key;
+    return env('QWEN_API_KEY', '');
 }
 
 /**
@@ -44,160 +24,19 @@ function get_active_qwen_model() {
     return env('QWEN_MODEL', 'qwen-max');
 }
 
-function get_active_gemini_key()
-{
-    global $GEMINI_API_KEYS;
-
-    // Load config nếu chưa có
-    $key_file = __DIR__ . '/../config/api_keys.php';
-    if (file_exists($key_file)) {
-        require_once $key_file;
-    }
-
-    $valid_keys = get_all_valid_keys();
-
-    if (empty($valid_keys)) {
-        return '';
-    }
-
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
-    $current_idx = 0;
-    if (file_exists($index_file)) {
-        $current_idx = (int) file_get_contents($index_file);
-    }
-
-    if ($current_idx >= count($valid_keys)) {
-        $current_idx = 0;
-        file_put_contents($index_file, 0);
-    }
-
-    // Kiểm tra xem Rate Limit có đang block key này không
-    $limits = get_key_rate_limits();
-    $now = time();
-    $start_idx = $current_idx;
-
-    // Tìm key đầu tiên không bị block
-    while (isset($limits[$current_idx])) {
-        $check_ts = is_array($limits[$current_idx]) ? ($limits[$current_idx]['reset_time'] ?? 0) : $limits[$current_idx];
-        if ($check_ts <= $now) break;
-        
-        $current_idx++;
-        if ($current_idx >= count($valid_keys))
-            $current_idx = 0;
-        if ($current_idx == $start_idx) {
-            // Tất cả các key đều bị block! Trả về key có thời gian chờ NGẮN NHẤT
-            return $valid_keys[$start_idx]; // fallback (sẽ bị lỗi limit tiếp, nhưng để cho người dùng xem lỗi)
-        }
-    }
-
-    // Nếu phải xoay vòng để tìm ra key sống sót, update lại file
-    if ($current_idx != $start_idx) {
-        file_put_contents($index_file, $current_idx);
-    }
-
-    return $valid_keys[$current_idx];
-}
-
-function rotate_gemini_key()
-{
-    $valid_keys = get_all_valid_keys();
-
-    if (count($valid_keys) <= 1)
-        return false; // Không có key để xoay vòng
-
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
-    $current_idx = 0;
-    if (file_exists($index_file)) {
-        $current_idx = (int) file_get_contents($index_file);
-    }
-
-    $limits = get_key_rate_limits();
-    $now = time();
-    $start_idx = $current_idx;
-
-    do {
-        $current_idx++;
-        if ($current_idx >= count($valid_keys)) {
-            $current_idx = 0;
-        }
-        if ($current_idx == $start_idx) {
-            break; // Đã xoay 1 vòng, tất cả đều tèo
-        }
-        
-        $limit_val = $limits[$current_idx] ?? 0;
-        $check_ts = is_array($limit_val) ? ($limit_val['reset_time'] ?? 0) : $limit_val;
-    } while ($check_ts > $now);
-
-    // Cập nhật index xuống file
-    file_put_contents($index_file, $current_idx);
-
-    return $valid_keys[$current_idx];
-}
-
-function get_all_valid_keys()
-{
-    global $GEMINI_API_KEYS;
-    $key_file = __DIR__ . '/../config/api_keys.php';
-    if (file_exists($key_file)) {
-        require_once $key_file;
-    }
-
-    $valid_keys = [];
-    
-    // 1. Lấy từ biến global trong api_keys.php
-    if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
-        foreach ($GEMINI_API_KEYS as $k) {
-            if (!empty(trim($k)) && strpos($k, 'ĐIỀN_API_KEY') === false) {
-                $valid_keys[] = trim($k);
-            }
-        }
-    }
-
-    // 2. Lấy từ biến môi trường GEMINI_API_KEYS (chuỗi phân cách bởi dấu phẩy)
-    $env_keys_str = env('GEMINI_API_KEYS');
-    if ($env_keys_str) {
-        $ek = explode(',', $env_keys_str);
-        foreach ($ek as $k) {
-            $k = trim($k);
-            if (!empty($k) && !in_array($k, $valid_keys)) {
-                $valid_keys[] = $k;
-            }
-        }
-    }
-
-    // 3. Tương thích ngược với GEMINI_API_KEY (đơn lẻ)
-    $gemini_key = env('GEMINI_API_KEY');
-    if ($gemini_key && !empty($gemini_key) && strpos($gemini_key, 'ĐIỀN_API_KEY') === false) {
-        if (!in_array($gemini_key, $valid_keys)) {
-            $valid_keys[] = $gemini_key;
-        }
-    }
-
-    return array_values(array_unique($valid_keys));
-}
-
-function get_active_key_index()
-{
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
-    if (file_exists($index_file)) {
-        return (int) file_get_contents($index_file);
-    }
-    return 0;
-}
-
-// Hàm ghi nhận chi tiêu (Tokens và Request) của một Key
+/**
+ * Hàm ghi nhận chi tiêu (Tokens và Request) của một Key
+ */
 function log_key_usage($key_id, $tokens_used, $role = 'admin')
 {
     $log_file = __DIR__ . '/../config/key_usage_stats.json';
     $stats = [];
 
-    // Đọc log cũ nếu có
     if (file_exists($log_file)) {
         $data = file_get_contents($log_file);
         $stats = json_decode($data, true) ?: [];
     }
 
-    // Khởi tạo nếu key này chưa được track ngày hôm nay
     $today = date('Y-m-d');
     if (!isset($stats[$today])) {
         $stats = [$today => []];
@@ -215,7 +54,6 @@ function log_key_usage($key_id, $tokens_used, $role = 'admin')
         ];
     }
 
-    // Cộng dồn
     $stats[$today][$key_id]['requests'] += 1;
     $stats[$today][$key_id]['tokens'] += (int) $tokens_used;
 
@@ -228,42 +66,22 @@ function log_key_usage($key_id, $tokens_used, $role = 'admin')
     }
 
     $stats[$today][$key_id]['last_used'] = date('H:i:s');
-
-    // Lưu lại
     file_put_contents($log_file, json_encode($stats, JSON_PRETTY_PRINT));
 }
 
-// Ghi nhận một Key bị dính Rate Limit (HTTP 429) và thời gian sống sót
-function mark_key_rate_limited($key_index, $retry_seconds = 60)
-{
-    $file = __DIR__ . '/../config/rate_limits.json';
-    $limits = [];
-    if (file_exists($file)) {
-        $limits = json_decode(file_get_contents($file), true) ?: [];
-    }
-    // Lưu timestamp thời điểm sẽ được "thả tự do"
-    $limits[$key_index] = time() + (int) $retry_seconds;
-    file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
-}
-
-// Lấy danh sách các Key đang bị Rate Limit và Timestamp tha bổng
-function get_key_rate_limits()
-{
-    $file = __DIR__ . '/../config/rate_limits.json';
-    if (!file_exists($file))
-        return [];
-    return json_decode(file_get_contents($file), true) ?: [];
-}
-
-// Lấy thông kê sử dụng của các Key trong ngày
 function get_key_usage_stats()
 {
     $log_file = __DIR__ . '/../config/key_usage_stats.json';
-    if (!file_exists($log_file))
-        return [];
-
+    if (!file_exists($log_file)) return [];
     $stats = json_decode(file_get_contents($log_file), true);
     $today = date('Y-m-d');
     return $stats[$today] ?? [];
 }
 
+// Dummy functions to prevent errors in other files that might still call them
+function get_active_gemini_key() { return ''; }
+function rotate_gemini_key() { return false; }
+function get_all_valid_keys() { return []; }
+function mark_key_rate_limited($idx, $sec) { return true; }
+function get_key_rate_limits() { return []; }
+function get_active_key_index() { return 0; }
