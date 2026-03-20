@@ -244,6 +244,64 @@ $payment_labels = [
                                 </div>
                             </div>
 
+                            <!-- User Confirmation Action (Only if Pending) -->
+                            <?php if ($booking['status'] === 'pending'): ?>
+                                <div class="glass-card p-6 border-accent/30 bg-accent/5">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent">
+                                            <span class="material-symbols-outlined text-2xl animate-pulse">check_circle</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-lg font-bold text-white uppercase tracking-wider">Xác nhận đặt phòng</h4>
+                                            <p class="text-white/60 text-sm">Vui lòng xác nhận để chúng tôi chính thức giữ phòng cho bạn.</p>
+                                        </div>
+                                    </div>
+                                    <div id="confirmMessage" class="hidden mb-4 p-4 rounded-xl border"></div>
+                                    <button type="button" id="confirmBookingBtn" class="w-full py-4 bg-accent hover:bg-accent/90 text-gray-900 font-black rounded-xl transition-all shadow-xl flex items-center justify-center gap-3">
+                                        <span class="material-symbols-outlined">verified</span>
+                                        <span>ĐỒNG Ý XÁC NHẬN NGAY</span>
+                                    </button>
+                                </div>
+
+                                <script>
+                                    document.getElementById('confirmBookingBtn')?.addEventListener('click', async function() {
+                                        const btn = this;
+                                        const msgDiv = document.getElementById('confirmMessage');
+                                        
+                                        btn.disabled = true;
+                                        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Đang xử lý...';
+
+                                        try {
+                                            const response = await fetch('../booking/api/confirm-booking-user.php', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ booking_code: '<?php echo $booking['booking_code']; ?>' })
+                                            });
+
+                                            const result = await response.json();
+
+                                            if (result.success) {
+                                                msgDiv.className = 'mb-4 p-4 rounded-xl border border-green-500/30 bg-green-500/10 text-green-400 flex items-center gap-2';
+                                                msgDiv.innerHTML = '<span class="material-symbols-outlined">check_circle</span> <span>' + result.message + '</span>';
+                                                msgDiv.classList.remove('hidden');
+                                                btn.classList.add('hidden');
+                                                
+                                                // Reload after 2s
+                                                setTimeout(() => window.location.reload(), 2000);
+                                            } else {
+                                                throw new Error(result.message || 'Có lỗi xảy ra');
+                                            }
+                                        } catch (error) {
+                                            msgDiv.className = 'mb-4 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 flex items-center gap-2';
+                                            msgDiv.innerHTML = '<span class="material-symbols-outlined">error</span> <span>' + error.message + '</span>';
+                                            msgDiv.classList.remove('hidden');
+                                            btn.disabled = false;
+                                            btn.innerHTML = '<span class="material-symbols-outlined">verified</span> <span>ĐỒNG Ý XÁC NHẬN NGAY</span>';
+                                        }
+                                    });
+                                </script>
+                            <?php endif; ?>
+
                             <!-- Action Buttons -->
                             <div class="glass-card p-6">
                                 <h3 class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">

@@ -160,7 +160,14 @@ $payment_labels = [
                                             </div>
                                         </div>
 
-                                        <div class="mt-6 flex justify-end border-t border-white/5 pt-4">
+                                        <div class="mt-6 flex justify-end border-t border-white/5 pt-4 gap-3">
+                                            <?php if ($booking['status'] === 'pending'): ?>
+                                                <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
+                                                   class="bg-accent/10 hover:bg-accent/20 text-accent border border-accent/30 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all animate-pulse">
+                                                    <span class="material-symbols-outlined text-sm">verified</span>
+                                                    <span>XÁC NHẬN NGAY</span>
+                                                </a>
+                                            <?php endif; ?>
                                             <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>" 
                                                class="btn-details group/btn flex items-center gap-2 px-8 py-2.5">
                                                 <span><?php _e('common.details'); ?></span>
