@@ -186,23 +186,31 @@ function stream_ai_reply($user_message, $db, $conv_id = 0)
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false); 
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$contents, &$functionCall) {
-            $lines = explode("\n", $data);
-            foreach ($lines as $line) {
-                if (strpos($line, 'data: ') === 0) {
-                    $jsonStr = substr($line, 6);
-                    $chunk = json_decode($jsonStr, true);
-                    
-                    if (isset($chunk['candidates'][0]['content']['parts'])) {
-                        foreach ($chunk['candidates'][0]['content']['parts'] as $part) {
-                            if (isset($part['text'])) {
-                                $full_response_text .= $part['text'];
-                                echo "data: " . json_encode(["text" => $part['text']]) . "\n\n";
-                                if (ob_get_level() > 0) ob_flush();
-                                flush();
-                            }
-                            if (isset($part['functionCall'])) {
-                                $functionCall = $part['functionCall'];
+        
+        $buffer = ""; // Biến đệm để xử lý dữ liệu SSE bị cắt đoạn
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$contents, &$functionCall, &$buffer) {
+            $buffer .= $data;
+            while (($pos = strpos($buffer, "\n\n")) !== false) {
+                $event = substr($buffer, 0, $pos);
+                $buffer = substr($buffer, $pos + 2);
+                
+                $lines = explode("\n", $event);
+                foreach ($lines as $line) {
+                    if (strpos($line, 'data: ') === 0) {
+                        $jsonStr = substr($line, 6);
+                        $chunk = json_decode($jsonStr, true);
+                        
+                        if (isset($chunk['candidates'][0]['content']['parts'])) {
+                            foreach ($chunk['candidates'][0]['content']['parts'] as $part) {
+                                if (isset($part['text'])) {
+                                    $full_response_text .= $part['text'];
+                                    echo "data: " . json_encode(["text" => $part['text']]) . "\n\n";
+                                    if (ob_get_level() > 0) ob_flush();
+                                    flush();
+                                }
+                                if (isset($part['functionCall'])) {
+                                    $functionCall = $part['functionCall'];
+                                }
                             }
                         }
                     }

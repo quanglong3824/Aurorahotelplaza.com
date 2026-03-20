@@ -668,3 +668,51 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ── AI Stream Loading Animation ─────────────────────────── */
+.cw-stream-loading {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+.cw-stream-loading .dot {
+    width: 6px;
+    height: 6px;
+    background: #94a3b8;
+    border-radius: 50%;
+    animation: cw-dot-blink 1.4s infinite both;
+}
+.cw-stream-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+.cw-stream-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cw-dot-blink {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+}
+
+.cw-btn-restart {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
+}
+.cw-btn-restart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(184, 134, 11, 0.3);
+    filter: brightness(1.1);
+}
+.cw-btn-restart:active {
+    transform: translateY(0);
+}

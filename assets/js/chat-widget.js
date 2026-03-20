@@ -16,6 +16,7 @@ const ChatWidget = {
     unread:      0,
     staffOnline: false,
     _staffCheckInterval: null,
+    _optimisticMsgs: new Set(), // Theo dõi các tin nhắn đang gửi để tránh trùng lặp
 
     // ── URL helper ────────────────────────────────────────────────────────
     _url(path) {
@@ -115,7 +116,7 @@ const ChatWidget = {
             const btn = document.createElement('button');
             btn.id = 'cwRestartBtn';
             btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:18px">play_arrow</span> Bắt đầu trò chuyện mới`;
-            btn.className = 'cw-btn-restart'; // Custom class or inline style
+            btn.className = 'cw-btn-restart';
             btn.onclick = () => this.reopenConversation();
             cwInputArea.appendChild(btn);
         } else {
@@ -182,8 +183,20 @@ const ChatWidget = {
                 const msg = JSON.parse(e.data);
                 if (+msg.message_id > this.lastMsgId) {
                     this.lastMsgId = +msg.message_id;
+                    
+                    // Chống trùng lặp tin nhắn khách (Kiểm tra tin nhắn pending cùng nội dung)
+                    if (msg.sender_type === 'customer') {
+                        const pendingMsg = document.querySelector(`.cw-bubble-row.user[data-msg-id^="pending_"]`);
+                        if (pendingMsg && pendingMsg.innerText.includes(msg.message)) {
+                            pendingMsg.setAttribute('data-msg-id', msg.message_id);
+                            pendingMsg.querySelector('.cw-bubble').style.opacity = '1';
+                            const timeEl = pendingMsg.querySelector('.cw-bubble-time');
+                            if (timeEl) timeEl.innerHTML = timeEl.innerHTML.replace('⏳', '✓');
+                            return;
+                        }
+                    }
+
                     if (!document.querySelector(`[data-msg-id="${msg.message_id}"]`)) {
-                        // Nếu là bot message và ta đang có một streamID active, hãy xóa nó đi vì message thật đã tới
                         const activeStream = document.querySelector('[data-msg-id^="stream_"]');
                         if (msg.sender_type === 'bot' && activeStream) activeStream.remove();
                         this.appendMessage(msg);
@@ -260,8 +273,9 @@ const ChatWidget = {
                     tmpEl.setAttribute('data-msg-id', data.message_id);
                     const bubble = tmpEl.querySelector('.cw-bubble');
                     if (bubble) bubble.style.opacity = '1';
+                    const timeEl = tmpEl.querySelector('.cw-bubble-time');
+                    if (timeEl) timeEl.innerHTML = timeEl.innerHTML.replace('⏳', '✓');
                 }
-                // [UPGRADE] Trigger AI Streaming
                 this.triggerAiStream(data.message_id);
             }
         }).finally(() => {
@@ -278,10 +292,11 @@ const ChatWidget = {
         if (!container) return;
 
         const wrapper = document.createElement('div');
+        // Lúc đầu render bubble với nội dung là loading animation để tránh "box trắng nhỏ"
         wrapper.innerHTML = this.renderBubble({
             message_id: streamId,
             sender_type: 'bot',
-            message: '',
+            message: '<div class="cw-stream-loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>',
             created_at: new Date().toISOString()
         });
         container.appendChild(wrapper.firstElementChild);
@@ -289,6 +304,7 @@ const ChatWidget = {
 
         const bubbleEl = document.querySelector(`[data-msg-id="${streamId}"] .cw-bubble`);
         let fullText = "";
+        let hasContent = false;
         const aiStreamSource = new EventSource(this._url(`api/chat/ai-stream.php?conversation_id=${this.convId}&user_message_id=${userMsgId}`));
 
         aiStreamSource.onmessage = (e) => {
@@ -301,7 +317,6 @@ const ChatWidget = {
                         const streamEl = document.querySelector(`[data-msg-id="${streamId}"]`);
                         if (streamEl) {
                             streamEl.setAttribute('data-msg-id', data.message_id);
-                            // Cập nhật lại HTML một lần nữa với ID thật để các nút bấm (onclick) có msgId đúng
                             const finalParsed = this.parseAiContent(fullText, data.message_id, true);
                             bubbleEl.innerHTML = finalParsed.html + finalParsed.extra;
                         }
@@ -310,13 +325,17 @@ const ChatWidget = {
                 }
 
                 if (data.text) {
+                    if (!hasContent) {
+                        hasContent = true;
+                        bubbleEl.innerHTML = ''; // Xóa loading animation khi có text đầu tiên
+                    }
                     fullText += data.text;
                     const parsed = this.parseAiContent(fullText, streamId, true);
                     bubbleEl.innerHTML = parsed.html + parsed.extra;
                     this.scrollToBottom();
                 }
                 if (data.status === 'running_tool') {
-                    this.showTyping(`Đang xử lý ${data.tool}...`);
+                    this.showTyping(`Aurora đang tìm kiếm thông tin...`);
                 } else {
                     this.hideTyping();
                 }
@@ -324,7 +343,7 @@ const ChatWidget = {
         };
         aiStreamSource.onerror = () => {
             aiStreamSource.close();
-            if (!fullText) bubbleEl.innerHTML = "<i>AI đang bận, vui lòng thử lại sau.</i>";
+            if (!fullText) bubbleEl.innerHTML = "<i>Dạ Aurora đang gặp chút sự cố kết nối, Anh/Chị vui lòng thử lại sau ít phút hoặc gọi Hotline nhé!</i>";
         };
     },
 
@@ -371,7 +390,12 @@ const ChatWidget = {
 
         const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) : '';
         const init = isBot ? 'AI' : (isUser ? '' : 'NV');
-        const parsed = this.parseAiContent(msg.message, msg.message_id, isBot);
+        
+        // Chỉ parse nội dung nếu không phải là loading animation (đã có thẻ HTML)
+        let parsed = { html: msg.message, extra: '' };
+        if (!msg.message.includes('cw-stream-loading')) {
+            parsed = this.parseAiContent(msg.message, msg.message_id, isBot);
+        }
 
         if (isUser) {
             return `
