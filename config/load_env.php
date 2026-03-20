@@ -29,9 +29,8 @@ if (!function_exists('loadEnvVariables')) {
 
         $paths = array_unique($paths);
         
-        $env_loaded = false;
         foreach ($paths as $path) {
-            if ($path && file_exists($path)) {
+            if ($path && file_exists($path) && is_readable($path)) {
                 $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                 if ($lines === false) continue;
                 
@@ -44,17 +43,15 @@ if (!function_exists('loadEnvVariables')) {
                         $name = trim($name);
                         $value = trim($value, " \t\n\r\0\x0B\"'");
                         
-                        if (!isset($_ENV[$name])) {
+                        // Nạp nếu chưa có HOẶC nếu giá trị hiện tại đang trống (giúp lấy từ file dự phòng)
+                        if (!isset($_ENV[$name]) || $_ENV[$name] === '') {
                             $_ENV[$name] = $value;
-                            // Kiểm tra function_exists để tránh LỖI 500 TRẮNG TRANG trên các Hosting cấm hàm putenv
                             if (function_exists('putenv')) {
                                 @putenv(sprintf('%s=%s', $name, $value));
                             }
                         }
                     }
                 }
-                $env_loaded = true;
-                // Tiếp tục quét các file .env khác để lấy thêm biến nếu chưa có (không break)
             }
         }
     }
