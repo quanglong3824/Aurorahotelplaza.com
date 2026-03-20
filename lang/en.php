@@ -1766,4 +1766,36 @@ return [
         'note_apartment' => 'Apartment - Contact for consultation',
         'note_no_online_booking' => 'Apartments do not support online booking. Please contact for consultation.',
     ],
+
+    'timeline' => [
+        'booked' => 'Booked',
+        'booked_desc' => 'System has recorded your booking.',
+        'confirmed' => 'Confirmed',
+        'confirmed_desc' => 'Reception has confirmed and reserved your room.',
+        'checkin' => 'Check-in',
+        'checkin_desc' => 'Start your wonderful stay at Aurora.',
+        'staying' => 'Staying',
+        'staying_desc' => 'Enjoying hotel services.',
+        'checkout' => 'Check-out',
+        'checkout_desc' => 'Complete procedures and see you again.',
+    ],
+
+    'booking_history' => [
+        'title' => 'Booking History',
+        'empty' => 'You have no bookings yet.',
+        'book_now' => 'Book Now',
+        'details' => 'Booking Details',
+        'get_directions' => 'Directions',
+        'support' => 'Support',
+        'invoice' => 'Invoice',
+        'cancel_booking' => 'Cancel Booking',
+    ],
+
+    'booking_confirmation' => [
+        'your_journey' => 'Your Journey',
+        'journey_start' => 'Booking Success',
+        'journey_checkin' => 'Check-in (14:00)',
+        'journey_stay' => 'Experience Service',
+        'journey_checkout' => 'Check-out (12:00)',
+    ],
 ];

@@ -314,6 +314,58 @@ try {
                                 </span>
                             </div>
 
+                            <!-- Journey Timeline -->
+                            <div class="mt-8 pt-8 border-t border-white/10">
+                                <h4 class="text-sm font-semibold text-accent uppercase tracking-wider mb-6 text-center">
+                                    <?php _e('booking_confirmation.your_journey'); ?>
+                                </h4>
+                                <div class="relative flex justify-between items-start max-w-md mx-auto">
+                                    <!-- Progress Line -->
+                                    <div class="absolute top-4 left-0 w-full h-0.5 bg-white/10 z-0"></div>
+                                    <div class="absolute top-4 left-0 h-0.5 bg-accent z-0" style="width: 25%"></div>
+
+                                    <!-- Step 1 -->
+                                    <div class="relative z-10 flex flex-col items-center text-center w-1/4">
+                                        <div class="w-8 h-8 rounded-full bg-accent text-gray-900 flex items-center justify-center mb-2 shadow-lg shadow-accent/20">
+                                            <span class="material-symbols-outlined text-sm">check</span>
+                                        </div>
+                                        <span class="text-[10px] text-accent font-bold uppercase leading-tight">
+                                            <?php _e('booking_confirmation.journey_start'); ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Step 2 -->
+                                    <div class="relative z-10 flex flex-col items-center text-center w-1/4">
+                                        <div class="w-8 h-8 rounded-full bg-gray-800 border-2 border-white/10 text-white/30 flex items-center justify-center mb-2">
+                                            <span class="material-symbols-outlined text-sm">login</span>
+                                        </div>
+                                        <span class="text-[10px] text-white/40 font-medium uppercase leading-tight">
+                                            <?php _e('booking_confirmation.journey_checkin'); ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Step 3 -->
+                                    <div class="relative z-10 flex flex-col items-center text-center w-1/4">
+                                        <div class="w-8 h-8 rounded-full bg-gray-800 border-2 border-white/10 text-white/30 flex items-center justify-center mb-2">
+                                            <span class="material-symbols-outlined text-sm">bed</span>
+                                        </div>
+                                        <span class="text-[10px] text-white/40 font-medium uppercase leading-tight">
+                                            <?php _e('booking_confirmation.journey_stay'); ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Step 4 -->
+                                    <div class="relative z-10 flex flex-col items-center text-center w-1/4">
+                                        <div class="w-8 h-8 rounded-full bg-gray-800 border-2 border-white/10 text-white/30 flex items-center justify-center mb-2">
+                                            <span class="material-symbols-outlined text-sm">logout</span>
+                                        </div>
+                                        <span class="text-[10px] text-white/40 font-medium uppercase leading-tight">
+                                            <?php _e('booking_confirmation.journey_checkout'); ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Disclaimer Notes -->
                             <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
                                 <p class="text-xs text-amber-400 flex items-start gap-1">

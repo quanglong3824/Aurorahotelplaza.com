@@ -86,6 +86,61 @@ $payment_labels = [
                             </div>
                         </div>
 
+                        <!-- Enhanced Status Timeline -->
+                        <div class="mt-8 mb-10">
+                            <div class="relative flex justify-between items-start max-w-4xl mx-auto px-4">
+                                <!-- Progress Line Background -->
+                                <div class="absolute top-5 left-8 right-8 h-1 bg-white/10 z-0 hidden md:block"></div>
+                                
+                                <?php
+                                $status = $booking['status'];
+                                $progress_width = '0%';
+                                if ($status === 'confirmed') $progress_width = '25%';
+                                if ($status === 'checked_in') $progress_width = '75%';
+                                if ($status === 'checked_out') $progress_width = '100%';
+                                if ($status === 'cancelled') $progress_width = '0%';
+                                ?>
+                                <!-- Active Progress Line -->
+                                <div class="absolute top-5 left-8 h-1 bg-accent z-0 transition-all duration-1000 hidden md:block" style="width: calc(<?php echo $progress_width; ?> - 64px)"></div>
+
+                                <!-- Step 1: Booked -->
+                                <div class="relative z-10 flex flex-col items-center text-center w-24 md:w-32">
+                                    <div class="w-10 h-10 rounded-full <?php echo $status !== 'cancelled' ? 'bg-accent text-gray-900' : 'bg-red-500/20 text-red-500'; ?> flex items-center justify-center mb-3 shadow-lg shadow-accent/20 border-4 border-[#1a1a1a]">
+                                        <span class="material-symbols-outlined text-sm font-bold"><?php echo $status === 'cancelled' ? 'close' : 'check'; ?></span>
+                                    </div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider <?php echo $status !== 'cancelled' ? 'text-accent' : 'text-red-400'; ?> mb-1"><?php _e('timeline.booked'); ?></h4>
+                                    <p class="text-[10px] text-white/40 leading-tight hidden md:block"><?php _e('timeline.booked_desc'); ?></p>
+                                </div>
+
+                                <!-- Step 2: Confirmed -->
+                                <div class="relative z-10 flex flex-col items-center text-center w-24 md:w-32">
+                                    <div class="w-10 h-10 rounded-full <?php echo in_array($status, ['confirmed', 'checked_in', 'checked_out']) ? 'bg-accent text-gray-900 shadow-lg shadow-accent/20' : 'bg-gray-800 text-white/20'; ?> flex items-center justify-center mb-3 border-4 border-[#1a1a1a] transition-colors duration-500">
+                                        <span class="material-symbols-outlined text-sm">verified</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider <?php echo in_array($status, ['confirmed', 'checked_in', 'checked_out']) ? 'text-white' : 'text-white/20'; ?> mb-1"><?php _e('timeline.confirmed'); ?></h4>
+                                    <p class="text-[10px] text-white/40 leading-tight hidden md:block"><?php _e('timeline.confirmed_desc'); ?></p>
+                                </div>
+
+                                <!-- Step 3: Checked In -->
+                                <div class="relative z-10 flex flex-col items-center text-center w-24 md:w-32">
+                                    <div class="w-10 h-10 rounded-full <?php echo in_array($status, ['checked_in', 'checked_out']) ? 'bg-accent text-gray-900 shadow-lg shadow-accent/20' : 'bg-gray-800 text-white/20'; ?> flex items-center justify-center mb-3 border-4 border-[#1a1a1a] transition-colors duration-500">
+                                        <span class="material-symbols-outlined text-sm">key</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider <?php echo in_array($status, ['checked_in', 'checked_out']) ? 'text-white' : 'text-white/20'; ?> mb-1"><?php _e('timeline.checkin'); ?></h4>
+                                    <p class="text-[10px] text-white/40 leading-tight hidden md:block"><?php _e('timeline.checkin_desc'); ?></p>
+                                </div>
+
+                                <!-- Step 4: Checked Out -->
+                                <div class="relative z-10 flex flex-col items-center text-center w-24 md:w-32">
+                                    <div class="w-10 h-10 rounded-full <?php echo $status === 'checked_out' ? 'bg-accent text-gray-900 shadow-lg shadow-accent/20' : 'bg-gray-800 text-white/20'; ?> flex items-center justify-center mb-3 border-4 border-[#1a1a1a] transition-colors duration-500">
+                                        <span class="material-symbols-outlined text-sm">sentiment_satisfied</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider <?php echo $status === 'checked_out' ? 'text-white' : 'text-white/20'; ?> mb-1"><?php _e('timeline.checkout'); ?></h4>
+                                    <p class="text-[10px] text-white/40 leading-tight hidden md:block"><?php _e('timeline.checkout_desc'); ?></p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
                             <div class="p-3 bg-white/5 rounded-lg border border-white/5">
                                 <span class="block text-white/50 text-xs uppercase tracking-wider mb-1"><?php _e('booking_detail.booked_date'); ?></span>
@@ -188,6 +243,38 @@ $payment_labels = [
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Action Buttons -->
+                            <div class="glass-card p-6">
+                                <h3 class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
+                                    <span class="material-symbols-outlined text-accent">bolt</span>
+                                    <?php _e('common.actions'); ?>
+                                </h3>
+                                <div class="grid grid-cols-1 gap-3">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination=Aurora+Hotel+Plaza+Bien+Hoa" target="_blank" 
+                                       class="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all">
+                                        <span class="material-symbols-outlined">directions</span>
+                                        <?php _e('booking_history.get_directions'); ?>
+                                    </a>
+                                    <a href="https://zalo.me/02513918888" target="_blank"
+                                       class="flex items-center justify-center gap-2 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/20 transition-all">
+                                        <span class="material-symbols-outlined">support_agent</span>
+                                        <?php _e('booking_history.support'); ?>
+                                    </a>
+                                    <?php if ($booking['payment_status'] === 'paid'): ?>
+                                        <button class="flex items-center justify-center gap-2 py-3 bg-green-500/10 hover:bg-green-500/20 text-green-400 rounded-xl border border-green-500/20 transition-all">
+                                            <span class="material-symbols-outlined">description</span>
+                                            <?php _e('booking_history.invoice'); ?>
+                                        </button>
+                                    <?php endif; ?>
+                                    <a href="view-qrcode.php?code=<?php echo $booking['booking_code']; ?>" 
+                                       class="flex items-center justify-center gap-2 py-3 bg-accent/10 hover:bg-accent/20 text-accent rounded-xl border border-accent/20 transition-all">
+                                        <span class="material-symbols-outlined">qr_code</span>
+                                        <?php _e('profile_qrcode.your_qr'); ?>
+                                    </a>
+                                </div>
+                            </div>
+
                             <?php if ($can_cancel): ?>
                                 <div class="glass-card p-6 border-red-500/20">
                                     <button onclick="openCancelModal()" class="w-full py-3 bg-red-500/20 hover:bg-red-500/40 text-red-400 font-bold rounded-xl transition-all border border-red-500/30">
