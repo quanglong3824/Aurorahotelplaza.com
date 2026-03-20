@@ -261,6 +261,9 @@ function stream_gemini_reply($user_message, $db, $conv_id)
         curl_exec($ch);
         curl_close($ch);
 
+        // Ghi log sử dụng Gemini
+        log_key_usage(get_active_key_index(), strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+
         if ($current_fc) {
             $contents[] = ["role" => "model", "parts" => [["functionCall" => $current_fc]]];
             $tool_result = handle_tool_call($current_fc, $db);
