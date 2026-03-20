@@ -132,25 +132,21 @@
                                 </a>
                             </div>
 
-                            <!-- New Status Lookup Form -->
-                            <div class="mt-8 p-6 bg-white/5 border border-white/10 rounded-2xl">
-                                <h3 class="text-white font-bold mb-2 flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-accent">search</span>
-                                    Tra cứu yêu cầu
-                                </h3>
-                                <p class="text-white/50 text-[11px] mb-4">Nhập mã liên hệ của bạn để xem trạng thái xử lý.</p>
+                            <!-- Compact Status Lookup Form -->
+                            <div class="mt-6 p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="material-symbols-outlined text-accent text-sm">search</span>
+                                    <h3 class="text-white font-bold text-sm">Tra cứu yêu cầu</h3>
+                                </div>
                                 
-                                <form id="lookupForm" class="space-y-3">
-                                    <div class="relative">
-                                        <input type="text" id="lookupCode" class="form-input-glass text-center font-mono tracking-widest text-accent" placeholder="Mã liên hệ (8 số)">
-                                    </div>
-                                    <button type="submit" id="lookupBtn" class="w-full py-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold text-sm hover:bg-white/20 transition-all flex items-center justify-center gap-2">
-                                        <span class="material-symbols-outlined text-lg">search</span>
-                                        Kiểm tra
+                                <form id="lookupForm" class="flex gap-2">
+                                    <input type="text" id="lookupCode" class="form-input-glass text-center font-mono tracking-widest text-accent py-2 flex-grow text-sm" placeholder="Mã 8 số">
+                                    <button type="submit" id="lookupBtn" class="px-4 rounded-xl bg-accent/20 border border-accent/30 text-accent hover:bg-accent/30 transition-all flex items-center justify-center">
+                                        <span class="material-symbols-outlined">arrow_forward</span>
                                     </button>
                                 </form>
                                 
-                                <div id="lookupResult" class="mt-4 hidden">
+                                <div id="lookupResult" class="mt-3 hidden">
                                     <!-- Dynamic content -->
                                 </div>
                             </div>
