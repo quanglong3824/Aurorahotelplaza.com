@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/language.php';
+require_once __DIR__ . '/../helpers/image-helper.php';
 initLanguage();
 
 $room_slug = 'family-apartment';
@@ -28,151 +29,242 @@ try {
     <link href="../assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/room-detail.css">
+    <link rel="stylesheet" href="../assets/css/pages-glass.css">
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
+<body class="glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <section class="page-header-room"
-                data-bg-image="../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg">
-                <div class="page-header-overlay"></div>
-                <div class="page-header-content">
-                    <span class="room-badge-header"><?php _e('apartment_detail.badge_family'); ?></span>
-                    <h1 class="page-title"><?php _e('apartment_detail.family_name'); ?></h1>
-                    <p class="page-subtitle"><?php _e('apartment_detail.family_subtitle'); ?></p>
+            <!-- Top Hero Section -->
+            <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
+                <!-- Hero Background -->
+                <div class="absolute inset-0 z-0">
+                    <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg'); ?>"
+                        class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                 </div>
-            </section>
 
-            <section class="section-padding">
-                <div class="container-custom">
-                    <div class="room-info-section">
-                        <div class="room-content">
-                            <p class="room-description">
-                                <?php _e('apartment_detail.family_desc'); ?>
-                            </p>
+                <div class="relative z-10 text-center max-w-4xl mx-auto">
+                    <span
+                        class="glass-badge-pill mb-6 mx-auto bg-accent/20 border-accent/40 text-accent"><?php _e('apartment_detail.badge_family'); ?></span>
+                    <h1
+                        class="text-4xl md:text-6xl font-bold text-white mb-4 font-display text-shadow-lg tracking-tight">
+                        <?php _e('apartment_detail.family_name'); ?>
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto font-light leading-relaxed">
+                        <?php _e('apartment_detail.family_subtitle'); ?>
+                    </p>
+                </div>
+            </div>
 
-                            <div class="room-specs">
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">bed</span></div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.bed_type'); ?></div>
-                                        <div class="spec-value"><?php _e('apartment_detail.family_bed'); ?></div>
-                                    </div>
+            <!-- Glass Page Wrapper for Content -->
+            <div class="glass-page-wrapper relative z-20 -mt-12">
+                <div class="container mx-auto px-4 pb-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                        <!-- Left Column: Details -->
+                        <div class="lg:col-span-2 space-y-8">
+
+                            <!-- Description Card -->
+                            <div class="glass-card p-8">
+                                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-accent">description</span>
+                                    <?php _e('apartment_detail.family_name'); ?>
+                                </h2>
+                                <p class="text-white/80 leading-relaxed text-lg">
+                                    <?php _e('apartment_detail.family_desc'); ?>
+                                </p>
+                            </div>
+
+                            <!-- Specs Grid -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">bed</span>
+                                    <span class="text-sm text-white/60"><?php _e('apartment_detail.bed_type'); ?></span>
+                                    <span class="font-bold text-accent"><?php _e('apartment_detail.family_bed'); ?></span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">square_foot</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.area'); ?></div>
-                                        <div class="spec-value">100 m²</div>
-                                    </div>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">square_foot</span>
+                                    <span class="text-sm text-white/60"><?php _e('apartment_detail.area'); ?></span>
+                                    <span class="font-bold text-accent">100 m²</span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">person</span></div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.capacity'); ?></div>
-                                        <div class="spec-value">4-6 <?php _e('apartment_detail.persons'); ?></div>
-                                    </div>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">group</span>
+                                    <span class="text-sm text-white/60"><?php _e('apartment_detail.capacity'); ?></span>
+                                    <span class="font-bold text-accent">4-6 <?php _e('apartment_detail.persons'); ?></span>
                                 </div>
-                                <div class="spec-item">
-                                    <div class="spec-icon"><span class="material-symbols-outlined">countertops</span>
-                                    </div>
-                                    <div class="spec-content">
-                                        <div class="spec-label"><?php _e('apartment_detail.kitchen'); ?></div>
-                                        <div class="spec-value"><?php _e('apartment_detail.premium_kitchen'); ?></div>
-                                    </div>
+                                <div class="glass-amenity-card">
+                                    <span class="material-symbols-outlined text-3xl mb-2">countertops</span>
+                                    <span class="text-sm text-white/60"><?php _e('apartment_detail.kitchen'); ?></span>
+                                    <span class="font-bold text-accent"><?php _e('apartment_detail.premium_kitchen'); ?></span>
                                 </div>
                             </div>
-                            <div class="amenities-section">
-                                <h3 class="section-title"><?php _e('apartment_detail.amenities'); ?></h3>
-                                <div class="amenities-grid">
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_wifi'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_tv'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_ac'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_stove'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_fridge'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_washer'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_desk'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_cookware'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_dishes'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_bathroom'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_hairdryer'); ?></div>
-                                    <div class="amenity-item"><?php _e('apartment_detail.amenity_toiletries'); ?></div>
+
+                            <!-- Amenities Grid -->
+                            <div class="glass-card p-8">
+                                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-accent">fact_check</span>
+                                    <?php _e('apartment_detail.amenities'); ?>
+                                </h3>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6">
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_wifi'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_tv'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_ac'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_stove'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_fridge'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_washer'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_desk'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_cookware'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_dishes'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_bathroom'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_hairdryer'); ?>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-white/80">
+                                        <span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+                                        <?php _e('apartment_detail.amenity_toiletries'); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="booking-card">
-                            <div class="price-section">
-                                <div class="price-label"><?php _e('apartment_detail.apartment_price'); ?></div>
-                                <div><span
-                                        class="price-amount"><?php echo number_format($room_price, 0, ',', '.'); ?>VND</span><span
-                                        class="price-unit"><?php _e('apartment_detail.per_night'); ?></span></div>
-                                <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">
-                                    <?php _e('apartment_detail.discount_30_7days'); ?></p>
-                            </div>
-                            <form class="booking-form" action="../booking/index.php" method="get">
-                                <input type="hidden" name="room_type" value="family-apartment">
-                                <div class="form-group"><label
-                                        class="form-label"><?php _e('apartment_detail.check_in_date'); ?></label><input
-                                        type="date" name="check_in" class="form-input" required></div>
-                                <div class="form-group"><label
-                                        class="form-label"><?php _e('apartment_detail.check_out_date'); ?></label><input
-                                        type="date" name="check_out" class="form-input" required></div>
-                                <div class="form-group"><label
-                                        class="form-label"><?php _e('apartment_detail.num_guests'); ?></label><select
-                                        name="guests" class="form-input">
-                                        <option value="2">2 <?php _e('apartment_detail.persons'); ?></option>
-                                        <option value="4">4 <?php _e('apartment_detail.persons'); ?></option>
-                                        <option value="6" selected>6 <?php _e('apartment_detail.persons'); ?></option>
-                                    </select></div>
-                                <button type="submit" class="btn-book"><?php _e('inquiry.contact_btn'); ?></button>
-                            </form>
-                            <div class="contact-info">
-                                <div class="contact-text"><?php _e('apartment_detail.or_call'); ?></div>
-                                <div class="contact-phone">(+84-251) 391.8888</div>
+
+                        <!-- Right Column: Sidebar Booking -->
+                        <div class="lg:col-span-1">
+                            <div class="sticky top-24 space-y-6">
+                                <!-- Price Glass Card -->
+                                <div class="glass-card p-8 border-t-4 border-t-accent">
+                                    <div class="flex items-baseline justify-between mb-6">
+                                        <span class="text-white/60"><?php _e('apartment_detail.apartment_price'); ?></span>
+                                        <div class="text-right">
+                                            <div class="text-3xl font-bold text-accent">
+                                                <?php echo number_format($room_price, 0, ',', '.'); ?>VND</div>
+                                            <div class="text-sm text-white/60"><?php _e('apartment_detail.per_night'); ?></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-accent/10 border border-accent/20 rounded-lg p-3 mb-6 flex items-center gap-3 text-sm text-accent">
+                                        <span class="material-symbols-outlined">auto_awesome</span>
+                                        <?php _e('apartment_detail.discount_30_7days'); ?>
+                                    </div>
+
+                                    <form class="space-y-4" action="../booking/index.php" method="get">
+                                        <input type="hidden" name="room_type" value="<?php echo $room_slug; ?>">
+                                        
+                                        <div class="space-y-2">
+                                            <label class="text-sm text-white/60 ml-1"><?php _e('apartment_detail.check_in_date'); ?></label>
+                                            <input type="date" name="check_in" 
+                                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors" required>
+                                        </div>
+                                        
+                                        <div class="space-y-2">
+                                            <label class="text-sm text-white/60 ml-1"><?php _e('apartment_detail.check_out_date'); ?></label>
+                                            <input type="date" name="check_out" 
+                                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors" required>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <label class="text-sm text-white/60 ml-1"><?php _e('apartment_detail.num_guests'); ?></label>
+                                            <select name="guests" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors">
+                                                <option value="2" class="bg-slate-900">2 <?php _e('apartment_detail.persons'); ?></option>
+                                                <option value="4" class="bg-slate-900">4 <?php _e('apartment_detail.persons'); ?></option>
+                                                <option value="6" selected class="bg-slate-900">6 <?php _e('apartment_detail.persons'); ?></option>
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" class="w-full bg-accent hover:bg-accent-light text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-accent/20 transition-all active:scale-[0.98]">
+                                            <?php _e('inquiry.contact_btn'); ?>
+                                        </button>
+                                    </form>
+
+                                    <div class="mt-8 pt-6 border-t border-white/10 text-center">
+                                        <p class="text-white/60 text-sm mb-2"><?php _e('apartment_detail.or_call'); ?></p>
+                                        <a href="tel:+842513918888" class="text-xl font-bold text-white hover:text-accent transition-colors">
+                                            (+84-251) 391.8888
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            <section class="gallery-section">
-                <div class="container-custom">
-                    <h2 class="section-title-center"><?php _e('apartment_detail.gallery'); ?></h2>
-                    <div class="room-gallery">
-                        <div class="gallery-item"><img
-                                src="../assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg"
-                                alt="Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg"
-                                alt="Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg"
-                                alt="Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/family-apartment/can-ho-family-aurora-hotel-7.jpg"
-                                alt="Family Apartment"></div>
-                        <div class="gallery-item"><img
-                                src="../assets/img/family-apartment/can-ho-family-aurora-hotel-8.jpg"
-                                alt="Family Apartment"></div>
+
+                    <!-- Gallery Section -->
+                    <div class="mt-16">
+                        <h2 class="text-3xl font-bold text-white mb-8 text-center"><?php _e('apartment_detail.gallery'); ?></h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="glass-card overflow-hidden group aspect-video md:col-span-2 md:row-span-2">
+                                <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-3.jpg'); ?>" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="glass-card overflow-hidden group aspect-video">
+                                <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-5.jpg'); ?>" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="glass-card overflow-hidden group aspect-video">
+                                <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-6.jpg'); ?>" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="glass-card overflow-hidden group aspect-video">
+                                <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-7.jpg'); ?>" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="glass-card overflow-hidden group aspect-video">
+                                <img src="<?php echo imgUrl('assets/img/family-apartment/can-ho-family-aurora-hotel-8.jpg'); ?>" 
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Rooms -->
+                    <div class="mt-16 pt-16 border-t border-white/10">
+                        <?php
+                        require_once __DIR__ . '/../helpers/room-helper.php';
+                        $currentRoom = getRoomBySlug($room_slug);
+                        $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
+                        $sectionTitle = __('apartment_detail.other_apartments');
+                        include '../includes/related-rooms.php';
+                        ?>
                     </div>
                 </div>
-            </section>
-            <?php
-            // Lấy thông tin căn hộ hiện tại để loại trừ khỏi danh sách related
-            require_once __DIR__ . '/../helpers/room-helper.php';
-            $currentRoom = getRoomBySlug('family-apartment');
-            $currentRoomTypeId = $currentRoom ? $currentRoom['id'] : null;
-            $sectionTitle = __('apartment_detail.other_apartments');
-            include '../includes/related-rooms.php';
-            ?>
+            </div>
         </main>
+
         <?php include '../includes/footer.php'; ?>
     </div>
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/room-detail-bg.js"></script>
 </body>
 
 </html>
