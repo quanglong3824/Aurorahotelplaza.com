@@ -651,7 +651,7 @@
 
                         <div class="flex justify-end mt-4">
                             <button type="button" class="btn-primary"
-                                onclick="nextStep(2)"><?php _e('booking_page.continue'); ?></button>
+                                onclick="nextStep(event, 2)"><?php _e('booking_page.continue'); ?></button>
                         </div>
                     </div>
 
@@ -733,7 +733,7 @@
                             <button type="button" class="btn-secondary"
                                 onclick="prevStep(1)"><?php _e('booking_page.back'); ?></button>
                             <button type="button" class="btn-primary flex-1"
-                                onclick="nextStep(3)"><?php _e('booking_page.continue'); ?></button>
+                                onclick="nextStep(event, 3)"><?php _e('booking_page.continue'); ?></button>
                         </div>
                     </div>
 
