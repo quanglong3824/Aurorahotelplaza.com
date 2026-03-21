@@ -224,7 +224,8 @@ function stream_gemini_reply($user_message, $db, $conv_id)
         curl_close($ch);
 
         if ($http_code !== 200 && empty($full_response_text)) {
-            if ($http_code === 429) {
+            // Xoay vòng key nếu gặp lỗi 429 (hết quota) hoặc 403 (key bị khóa/lộ), 400 (bad request/key invalid)
+            if (in_array($http_code, [429, 403, 400])) {
                 $api_key = rotate_gemini_key();
                 if ($api_key) continue; // Thử lại với key mới
             }
@@ -270,8 +271,18 @@ function generate_gemini_reply_sync($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => $contents, "tools" => get_ai_tools()]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $res = json_decode(curl_exec($ch), true); curl_close($ch);
+        $res = json_decode(curl_exec($ch), true); 
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
         
+        if ($http_code !== 200) {
+            if (in_array($http_code, [429, 403, 400])) {
+                $api_key = rotate_gemini_key();
+                if ($api_key) continue;
+            }
+            break;
+        }
+
         if (!isset($res['candidates'][0]['content']['parts'])) break;
         $final_text = ""; $fc = null;
         foreach ($res['candidates'][0]['content']['parts'] as $p) {

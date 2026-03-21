@@ -70,8 +70,8 @@ RULE 3: Tuyệt đối KHÔNG DELETE/DROP nếu không có mật mã.";
             
             if ($code === 200) {
                 return ['code' => $code, 'body' => $res, 'key_used' => $api_key];
-            } else if ($code === 429) {
-                // Hết quota, xoay vòng key và thử lại
+            } else if (in_array($code, [429, 403, 400])) {
+                // Hết quota hoặc Key bị khóa/lộ (403), xoay vòng key và thử lại
                 $new_key = rotate_gemini_key();
                 if ($new_key && $new_key !== $api_key) {
                     $api_key = $new_key;
