@@ -13,17 +13,11 @@ function get_active_ai_provider() {
         $saved = trim(file_get_contents($file));
         if (in_array($saved, ['gemini', 'qwen'])) return $saved;
     }
-    if (defined('AI_PROVIDER')) return AI_PROVIDER;
-    return env('AI_PROVIDER', 'gemini');
-}
+    
+    $from_env = env('AI_PROVIDER');
+    if ($from_env) return $from_env;
 
-/**
- * Đặt Provider AI đang hoạt động
- */
-function set_active_ai_provider($provider) {
-    if (!in_array($provider, ['gemini', 'qwen'])) return false;
-    $file = __DIR__ . '/../config/ai_active_provider.txt';
-    return file_put_contents($file, $provider);
+    return defined('AI_PROVIDER') ? AI_PROVIDER : 'qwen';
 }
 
 /**
@@ -38,10 +32,13 @@ function get_active_qwen_key() {
  * Lấy Model cho Qwen
  */
 function get_active_qwen_model() {
-    if (defined('QWEN_MODEL')) return QWEN_MODEL;
+    if (defined('QWEN_MODEL') && QWEN_MODEL !== '') return QWEN_MODEL;
     return env('QWEN_MODEL', 'qwen-max');
 }
 
+/**
+ * Lấy API Key cho Gemini (Sẵn sàng cho Failover)
+ */
 function get_active_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
@@ -58,22 +55,17 @@ function get_active_gemini_key()
         file_put_contents($index_file, 0);
     }
 
-    // Kiểm tra xem Rate Limit có đang block key này không
     $limits = get_key_rate_limits();
     $now = time();
     $start_idx = $current_idx;
 
-    // Tìm key đầu tiên không bị block
     while (isset($limits[$current_idx])) {
         $check_ts = is_array($limits[$current_idx]) ? ($limits[$current_idx]['reset_time'] ?? 0) : $limits[$current_idx];
         if ($check_ts <= $now) break;
         
         $current_idx++;
-        if ($current_idx >= count($valid_keys))
-            $current_idx = 0;
-        if ($current_idx == $start_idx) {
-            return $valid_keys[$start_idx];
-        }
+        if ($current_idx >= count($valid_keys)) $current_idx = 0;
+        if ($current_idx == $start_idx) return $valid_keys[$start_idx];
     }
 
     if ($current_idx != $start_idx) {
@@ -102,7 +94,6 @@ function rotate_gemini_key()
         $current_idx++;
         if ($current_idx >= count($valid_keys)) $current_idx = 0;
         if ($current_idx == $start_idx) break;
-        
         $limit_val = $limits[$current_idx] ?? 0;
         $check_ts = is_array($limit_val) ? ($limit_val['reset_time'] ?? 0) : $limit_val;
     } while ($check_ts > $now);
@@ -113,38 +104,30 @@ function rotate_gemini_key()
 
 function get_all_valid_keys()
 {
-    // 1. Lấy từ biến môi trường (Ưu tiên nhất)
-    $env_keys_str = env('GEMINI_API_KEYS', '');
     $valid_keys = [];
-    
-    if (!empty($env_keys_str)) {
-        $valid_keys = array_map('trim', explode(',', $env_keys_str));
-    }
 
-    // 2. Lấy từ config file (Tương thích ngược)
+    // 1. Lấy từ biến toàn cục (đã nạp trong api_keys.php)
     global $GEMINI_API_KEYS;
     if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
-        foreach ($GEMINI_API_KEYS as $k) {
-            if (!empty(trim($k)) && !in_array(trim($k), $valid_keys)) {
-                $valid_keys[] = trim($k);
-            }
-        }
+        $valid_keys = array_merge($valid_keys, $GEMINI_API_KEYS);
     }
 
-    // 3. Lấy từ define đơn lẻ
-    if (defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) && !in_array(GEMINI_API_KEY, $valid_keys)) {
+    // 2. Lấy từ env() chuỗi danh sách
+    $env_keys_str = env('GEMINI_API_KEYS');
+    if ($env_keys_str) {
+        $ek = array_map('trim', explode(',', $env_keys_str));
+        $valid_keys = array_merge($valid_keys, $ek);
+    }
+
+    // 3. Lấy từ define cũ
+    if (defined('GEMINI_API_KEY') && GEMINI_API_KEY !== '') {
         $valid_keys[] = GEMINI_API_KEY;
     }
-    
-    // 4. Lấy từ env đơn lẻ
-    $single_env = env('GEMINI_API_KEY');
-    if ($single_env && !in_array($single_env, $valid_keys)) {
-        $valid_keys[] = $single_env;
-    }
 
-    return array_values(array_filter($valid_keys, function($k) {
-        return !empty($k) && strpos($k, 'ĐIỀN_API_KEY') === false;
-    }));
+    // Làm sạch và lọc các key trống/placeholder
+    return array_values(array_unique(array_filter($valid_keys, function($k) {
+        return !empty($k) && strpos($k, 'ĐIỀN_API_KEY') === false && strlen($k) > 10;
+    })));
 }
 
 function get_active_key_index() {
@@ -163,11 +146,9 @@ function log_key_usage($key_id, $tokens_used, $role = 'admin') {
     $stats[$today][$key_id]['requests'] += 1;
     $stats[$today][$key_id]['tokens'] += (int) $tokens_used;
     if ($role === 'admin') {
-        $stats[$today][$key_id]['admin_requests'] += 1;
-        $stats[$today][$key_id]['admin_tokens'] += (int) $tokens_used;
+        $stats[$today][$key_id]['admin_requests'] += 1; $stats[$today][$key_id]['admin_tokens'] += (int) $tokens_used;
     } else {
-        $stats[$today][$key_id]['client_requests'] += 1;
-        $stats[$today][$key_id]['client_tokens'] += (int) $tokens_used;
+        $stats[$today][$key_id]['client_requests'] += 1; $stats[$today][$key_id]['client_tokens'] += (int) $tokens_used;
     }
     $stats[$today][$key_id]['last_used'] = date('H:i:s');
     file_put_contents($log_file, json_encode($stats, JSON_PRETTY_PRINT));
