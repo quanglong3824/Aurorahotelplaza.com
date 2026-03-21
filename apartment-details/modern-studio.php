@@ -33,19 +33,42 @@ try {
 </head>
 
 <body class="glass-page font-body text-white">
+    <style>
+        /* Thay thế nền nhà hàng bằng ảnh phòng Modern Studio */
+        body.glass-page {
+            background-image: url('<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>') !important;
+            background-position: center top !important;
+            background-attachment: fixed !important;
+        }
+        
+        /* Hiệu ứng nối mượt mà: Làm tối và mờ dần ở phía dưới */
+        body.glass-page::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            /* Gradient từ trong suốt ở trên đến tối hẳn ở dưới để nối vào nội dung */
+            background: linear-gradient(to bottom, 
+                rgba(17, 24, 39, 0.7) 0%, 
+                rgba(17, 24, 39, 0.6) 40%, 
+                rgba(17, 24, 39, 0.9) 80%, 
+                rgba(17, 24, 39, 1) 100%
+            ) !important;
+            z-index: 1;
+        }
+        
+        /* Làm Hero trong suốt để lộ ảnh nền body */
+        .modern-hero-section {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
             <!-- Top Hero Section -->
-            <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
-                <!-- Hero Background -->
-                <div class="absolute inset-0 z-0">
-                    <img src="<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>"
-                        class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                </div>
+            <div class="modern-hero-section relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
+                <!-- Hero Background - Removed redundant image to show Body Background -->
 
                 <div class="relative z-10 text-center max-w-4xl mx-auto">
                     <span
