@@ -50,7 +50,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <style>
         body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/hero-banner/caffe-aurora-hotel-1.jpg'); ?>');
+            background-image: url('<?php echo imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'); ?>');
         }
     </style>
 </head>
