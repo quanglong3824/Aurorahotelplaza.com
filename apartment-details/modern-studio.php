@@ -33,14 +33,35 @@ try {
 </head>
 
 <body class="glass-page font-body text-white">
+    <?php 
+    $bg_image = imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg');
+    // Đảm bảo đường dẫn bắt đầu bằng ../ nếu không phải URL tuyệt đối
+    if (!str_starts_with($bg_image, 'http') && !str_starts_with($bg_image, '/')) {
+        $bg_image = '../' . $bg_image;
+    }
+    ?>
     <style>
-        /* Ghi đè nền mặc định bằng ảnh riêng của phòng này */
+        /* Hiệu ứng Layer Flow: Nền cố định, nội dung lướt trên */
         body.glass-page {
-            background-image: url('<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>') !important;
+            background-image: url('<?php echo $bg_image; ?>') !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            background-size: cover !important;
         }
         body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>') !important;
-            opacity: 0.8; /* Độ tối của lớp phủ để nổi bật nội dung */
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: inherit !important;
+            background-attachment: fixed !important;
+            background-size: cover !important;
+            background-position: center !important;
+            filter: brightness(0.4) saturate(1.2); /* Làm tối nền để nổi bật UI */
+            z-index: 1;
+        }
+        /* Đảm bảo các thành phần khác nằm trên lớp phủ */
+        .relative.flex.min-h-screen {
+            z-index: 2;
         }
     </style>
     <div class="relative flex min-h-screen w-full flex-col">
