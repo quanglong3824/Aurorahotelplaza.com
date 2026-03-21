@@ -229,15 +229,15 @@ try {
                         <h2 class="text-3xl font-bold text-white mb-8 text-center"><?php _e('room_detail.gallery'); ?></h2>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="glass-card overflow-hidden group aspect-video md:col-span-2 md:row-span-2">
-                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-twin-aurora-hotel-1.jpg'); ?>" 
+                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg'); ?>" 
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
                             <div class="glass-card overflow-hidden group aspect-video">
-                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-twin-aurora-hotel-2.jpg'); ?>" 
+                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-deluxe-twin-aurora-10.jpg'); ?>" 
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
                             <div class="glass-card overflow-hidden group aspect-video">
-                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-twin-aurora-hotel-3.jpg'); ?>" 
+                                <img src="<?php echo imgUrl('assets/img/premium-twin/premium-deluxe-twin-aurora-3.jpg'); ?>" 
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
                         </div>

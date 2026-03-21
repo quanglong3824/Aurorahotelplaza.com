@@ -260,10 +260,6 @@ try {
                                 <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-4.jpg'); ?>" 
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
-                            <div class="glass-card overflow-hidden group aspect-video">
-                                <img src="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-5.jpg'); ?>" 
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            </div>
                         </div>
                     </div>
 
