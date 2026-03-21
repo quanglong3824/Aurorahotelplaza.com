@@ -363,7 +363,7 @@ class AuroraErrorTracker
             self::sendTelegramAlert($errorId, $errorData, '(AI dang phan tich... vao Admin de xem ket qua)');
 
             // ── BƯỚC 2: Gọi Gemini để phân tích sâu hơn ─────────────────────────
-            require_once __DIR__ . '/../config/api_keys.php';
+            @include_once __DIR__ . '/../config/api_keys.php';
 
             $severity = $errorData['severity'] ?? 'error';
             $message = $errorData['message'] ?? '';

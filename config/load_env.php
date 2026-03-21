@@ -25,11 +25,17 @@ if (!function_exists('loadEnvVariables')) {
         // Bổ sung quét dự phòng ở ngoài Document Root của Webserver (tuyệt đối an toàn)
         if (!empty($_SERVER['DOCUMENT_ROOT'])) {
             $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
+            
+            // Đi lên 1 cấp từ doc_root
             $paths[] = dirname($doc_root) . '/config/.env';
-            $paths[] = dirname($doc_root) . '/config/env';
             $paths[] = dirname($doc_root) . '/.env';
-            $paths[] = dirname($doc_root) . '/env';
+            
+            // Đi lên 2 cấp từ doc_root (Trường hợp website nằm trong thư mục con như /2025/)
+            $paths[] = dirname(dirname($doc_root)) . '/config/.env';
+            $paths[] = dirname(dirname($doc_root)) . '/.env';
+
             $paths[] = $doc_root . '/../config/.env';
+            $paths[] = $doc_root . '/../../config/.env';
             $paths[] = $doc_root . '/../.env';
         }
 

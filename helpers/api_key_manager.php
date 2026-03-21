@@ -2,7 +2,7 @@
 // helpers/api_key_manager.php
 
 require_once __DIR__ . '/../config/load_env.php';
-@require_once __DIR__ . '/../config/api_keys.php';
+@include_once __DIR__ . '/../config/api_keys.php';
 
 /**
  * Lấy Provider AI đang hoạt động (Luôn là gemini)
@@ -107,7 +107,12 @@ function get_all_valid_keys()
         $valid_keys = array_merge($valid_keys, $ek);
     }
 
-    // 3. Lấy từ define cũ
+    // 3. Lấy từ define cũ hoặc env() đơn lẻ
+    $single_key = env('GEMINI_API_KEY');
+    if ($single_key) {
+        $valid_keys[] = $single_key;
+    }
+    
     if (defined('GEMINI_API_KEY') && GEMINI_API_KEY !== '') {
         $valid_keys[] = GEMINI_API_KEY;
     }
