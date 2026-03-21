@@ -22,31 +22,42 @@ if (!function_exists('loadEnvVariables')) {
             $current_dir = $parent;
         }
 
-        // Bổ sung quét dự phòng ở ngoài Document Root của Webserver (tuyệt đối an toàn)
+        // Cơ chế dò tìm thông minh: Quét ngược từ Document Root lên thư mục cha
         if (!empty($_SERVER['DOCUMENT_ROOT'])) {
-            $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
-            $parent_root = dirname($doc_root);
+            $start_dir = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
+            $current = $start_dir;
             
-            // Các vị trí phổ biến của thư mục config nằm ngoài public_html
-            $paths[] = $parent_root . '/config/.env';
-            $paths[] = $parent_root . '/.env';
-            $paths[] = dirname($parent_root) . '/config/.env'; // Lên thêm 1 cấp nếu cần
-            
-            // Fallback cho cấu trúc website nằm sâu trong subfolder
-            $paths[] = $doc_root . '/../config/.env';
-            $paths[] = $doc_root . '/../../config/.env';
+            // Quét ngược lên tối đa 3 cấp (ví dụ: từ public_html/2025/ -> public_html/ -> home/user/)
+            for ($i = 0; $i < 4; $i++) {
+                $paths[] = $current . '/config/.env';
+                $paths[] = $current . '/.env';
+                
+                $parent = dirname($current);
+                if ($parent === $current || $parent === '/' || $parent === '.') break;
+                $current = $parent;
+            }
         }
 
-        // Tạo hằng số để các helper khác biết chỗ lưu file log/index
+        // Tạo hằng số AI_CONFIG_PATH bằng cách tự động xác định thư mục config khả dụng
         if (!defined('AI_CONFIG_PATH')) {
-            $found_config_dir = __DIR__; // Mặc định
+            $config_dir = __DIR__; // Fallback
             if (!empty($_SERVER['DOCUMENT_ROOT'])) {
-                $check_path = dirname(rtrim($_SERVER['DOCUMENT_ROOT'], '/\\')) . '/config';
-                if (is_dir($check_path) && is_writable($check_path)) {
-                    $found_config_dir = $check_path;
+                $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
+                $search_locations = [
+                    dirname($doc_root) . '/config', // Vị trí chuẩn: /home/user/config
+                    $doc_root . '/../config',
+                    $doc_root . '/config',
+                    dirname(dirname($doc_root)) . '/config' // Trường hợp website ở subfolder sâu
+                ];
+                
+                foreach ($search_locations as $loc) {
+                    if (is_dir($loc) && is_writable($loc)) {
+                        $config_dir = $loc;
+                        break;
+                    }
                 }
             }
-            define('AI_CONFIG_PATH', $found_config_dir);
+            define('AI_CONFIG_PATH', $config_dir);
         }
 
         $paths = array_unique($paths);
