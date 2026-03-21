@@ -1738,6 +1738,8 @@ return [
         // Notes
         'note_apartment' => 'Apartment - Contact for consultation',
         'note_no_online_booking' => 'Apartments do not support online booking. Please contact for consultation.',
+    ],
+
     // Contact tracking
     'contact_track' => [
         'title' => 'Track Submission',

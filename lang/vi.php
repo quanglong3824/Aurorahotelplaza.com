@@ -1741,6 +1741,8 @@ return [
         'status_checked_out' => 'Đã trả phòng',
         'status_cancelled' => 'Đã hủy',
         'status_no_show' => 'Không đến',
+    ],
+
     // Contact tracking
     'contact_track' => [
         'title' => 'Tra cứu liên hệ',
