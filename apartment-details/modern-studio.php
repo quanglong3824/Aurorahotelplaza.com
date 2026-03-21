@@ -34,31 +34,32 @@ try {
 
 <body class="glass-page font-body text-white">
     <style>
-        /* Thay thế nền nhà hàng bằng ảnh phòng Modern Studio */
+        /* Hiệu ứng Layer Flow hoàn hảo: Ảnh phòng mờ dần vào nội dung */
         body.glass-page {
-            background-image: url('<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>') !important;
-            background-position: center top !important;
-            background-attachment: fixed !important;
+            background: none !important;
+            background-color: #111827 !important; /* Màu nền dự phòng tối */
         }
         
-        /* Hiệu ứng nối mượt mà: Làm tối và mờ dần ở phía dưới */
         body.glass-page::before {
             content: '';
             position: fixed;
             inset: 0;
-            /* Gradient từ trong suốt ở trên đến tối hẳn ở dưới để nối vào nội dung */
-            background: linear-gradient(to bottom, 
-                rgba(17, 24, 39, 0.7) 0%, 
-                rgba(17, 24, 39, 0.6) 40%, 
-                rgba(17, 24, 39, 0.9) 80%, 
-                rgba(17, 24, 39, 1) 100%
-            ) !important;
+            /* Gộp ảnh và Gradient để nối mượt mà */
+            background: 
+                linear-gradient(to bottom, 
+                    rgba(17, 24, 39, 0.3) 0%, 
+                    rgba(17, 24, 39, 0.5) 30%, 
+                    rgba(17, 24, 39, 0.8) 70%, 
+                    rgba(17, 24, 39, 1) 100%
+                ),
+                url('../assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg') !important;
+            background-size: cover !important;
+            background-position: center top !important;
+            background-attachment: fixed !important;
             z-index: 1;
         }
         
-        /* Làm Hero trong suốt để lộ ảnh nền body */
-        .modern-hero-section {
-            position: relative;
+        .relative.flex.min-h-screen {
             z-index: 2;
         }
     </style>
