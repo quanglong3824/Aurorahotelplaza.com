@@ -156,10 +156,14 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                                         <?php echo htmlspecialchars(_f($pkg, 'package_name')); ?>
                                     </h3>
                                     <div class="package-price-large">
-                                        <?php echo number_format($pkg['price'], 0, ',', '.'); ?>
-                                        <span class="text-sm font-sans font-normal text-white/60 ml-1">
-                                            <?php echo htmlspecialchars(_f($pkg, 'price_unit')); ?>
-                                        </span>
+                                        <?php if ($pkg['price'] > 0): ?>
+                                            <?php echo number_format($pkg['price'], 0, ',', '.'); ?>
+                                            <span class="text-sm font-sans font-normal text-white/60 ml-1">
+                                                <?php echo htmlspecialchars(_f($pkg, 'price_unit')); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <?php _e('nav.contact'); ?>
+                                        <?php endif; ?>
                                     </div>
 
                                     <?php if (!empty($features)): ?>

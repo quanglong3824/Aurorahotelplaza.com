@@ -110,7 +110,7 @@ include 'includes/admin-header.php';
                                         data-price="<?php echo $type['base_price']; ?>"
                                         data-name="<?php echo htmlspecialchars($type['type_name']); ?>">
                                         <?php echo htmlspecialchars($type['type_name']); ?> -
-                                        <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VND/ đêm
+                                        <?php echo number_format($type['base_price'], 0, ',', '.'); ?>VND/đêm
                                     </option>
                                 <?php endforeach; ?>
                             </select>

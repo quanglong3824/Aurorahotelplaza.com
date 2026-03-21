@@ -159,7 +159,7 @@ try {
                                         <span class="text-white/60"><?php _e('room_detail.from_price'); ?></span>
                                         <div class="text-right">
                                             <div class="text-3xl font-bold text-accent">
-                                                <?php echo number_format($room_price, 0, ',', '.'); ?>VND</div>
+                                                <?php echo number_format($room_price, 0, ',', '.'); ?> VND</div>
                                             <div class="text-sm text-white/60"><?php _e('room_detail.per_night'); ?></div>
                                         </div>
                                     </div>

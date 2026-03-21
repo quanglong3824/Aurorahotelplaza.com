@@ -40,7 +40,7 @@ $relatedRooms = getRandomRooms($currentRoomTypeId, 3, $category);
                             <!-- Price Tag -->
                             <div class="absolute bottom-4 left-4 glass-price-overlay">
                                 <span class="price"><?php echo formatPrice($room['base_price']); ?></span>
-                                <span class="unit text-xs text-white/80">/ <?php _e('apartment_detail.per_night'); ?></span>
+                                <span class="unit text-xs text-white/80"><?php _e('apartment_detail.per_night'); ?></span>
                             </div>
                         </div>
 

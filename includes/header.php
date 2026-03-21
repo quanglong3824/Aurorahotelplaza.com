@@ -631,28 +631,28 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 let html = '<div class="space-y-4">';
 
                 data.bookings.forEach((bookingItem) => {
-                    let statusColor = 'bg-gray-100 text-gray-800';
-                    if (bookingItem.status_raw === 'confirmed') statusColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200';
-                    if (bookingItem.status_raw === 'checked_in') statusColor = 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200';
-                    if (bookingItem.status_raw === 'cancelled' || bookingItem.status_raw === 'no_show') statusColor = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200';
-                    if (bookingItem.status_raw === 'pending') statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200';
+                    let statusColor = 'bg-gray-800 text-gray-200';
+                    if (bookingItem.status_raw === 'confirmed') statusColor = 'bg-blue-900/60 text-blue-100';
+                    if (bookingItem.status_raw === 'checked_in') statusColor = 'bg-green-900/60 text-green-100';
+                    if (bookingItem.status_raw === 'cancelled' || bookingItem.status_raw === 'no_show') statusColor = 'bg-red-900/60 text-red-100';
+                    if (bookingItem.status_raw === 'pending') statusColor = 'bg-yellow-900/60 text-yellow-100';
 
                     let statusLabel = trackingLang.statusText[bookingItem.status_raw] || bookingItem.status_raw;
 
-                    html += '<div class="bg-gray-50/80 dark:bg-gray-800/80 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">';
-                    html += '<h4 class="font-bold text-lg text-primary-600 dark:text-primary-400 border-b pb-2 mb-3">' + trackingLang.bookingCode + ': ' + bookingItem.booking_code + '</h4>';
-                    html += '<div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">';
-                    html += '<div class="flex justify-between items-center"><strong class="w-1/3">' + trackingLang.status + ':</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + statusLabel + '</span></div>';
-                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.customer + ':</strong> <span class="flex-1">' + bookingItem.customer_name + '</span></div>';
-                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkIn + ':</strong> <span class="flex-1">' + bookingItem.check_in + '</span></div>';
-                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.checkOut + ':</strong> <span class="flex-1">' + bookingItem.check_out + '</span></div>';
-                    html += '<div class="flex"><strong class="w-1/3">' + trackingLang.phone + ':</strong> <span class="flex-1">' + (bookingItem.phone || '') + '</span></div>';
+                    html += '<div class="bg-white/5 p-4 rounded-xl border border-white/10 shadow-sm">';
+                    html += '<h4 class="font-bold text-lg text-accent border-b border-white/10 pb-2 mb-3">' + trackingLang.bookingCode + ': ' + bookingItem.booking_code + '</h4>';
+                    html += '<div class="space-y-2 text-sm text-white/80">';
+                    html += '<div class="flex justify-between items-center"><strong class="w-1/3 text-white/60">' + trackingLang.status + ':</strong> <span class="badge ' + statusColor + ' px-2 py-0.5 rounded font-semibold text-center flex-1">' + statusLabel + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3 text-white/60">' + trackingLang.customer + ':</strong> <span class="flex-1">' + bookingItem.customer_name + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3 text-white/60">' + trackingLang.checkIn + ':</strong> <span class="flex-1">' + bookingItem.check_in + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3 text-white/60">' + trackingLang.checkOut + ':</strong> <span class="flex-1">' + bookingItem.check_out + '</span></div>';
+                    html += '<div class="flex"><strong class="w-1/3 text-white/60">' + trackingLang.phone + ':</strong> <span class="flex-1">' + (bookingItem.phone || '') + '</span></div>';
                     html += '</div></div>';
-                    html += '<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 pb-1">';
-                    html += '<strong class="text-gray-800 dark:text-gray-200">' + trackingLang.total + ':</strong>';
-                    html += '<span class="text-xl font-bold text-primary-600 mt-auto">' + new Intl.NumberFormat('vi-VN').format(bookingItem.total_amount) + ' VND</span>';
+                    html += '<div class="flex items-center justify-between border-t border-white/10 pt-3 pb-1">';
+                    html += '<strong class="text-white/60">' + trackingLang.total + ':</strong>';
+                    html += '<span class="text-xl font-bold text-accent mt-auto">' + new Intl.NumberFormat('vi-VN').format(bookingItem.total_amount) + ' VND</span>';
                     html += '</div></div>';
-                    html += '<hr class="my-3 border-gray-200 dark:border-gray-700">';
+                    html += '<hr class="my-3 border-white/10">';
                 });
 
                 html += '</div>';
@@ -781,12 +781,14 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     }
 
     .tracking-modal-content {
-        background: white;
+        background: #111827; /* Dark background */
+        color: white;
         width: 90%;
         max-width: 450px;
         max-height: 85vh;
         border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(212, 175, 55, 0.3); /* Gold border */
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
         position: relative;
         z-index: 10;
         transform: translateY(-50px);
@@ -796,12 +798,20 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         overflow: hidden;
     }
 
-    .dark .tracking-modal-content {
-        background: var(--bg-dark);
+    .tracking-modal-header {
+        padding: 24px 24px 16px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        background: rgba(212, 175, 55, 0.05);
     }
 
-    .tracking-modal.active .tracking-modal-content {
-        transform: translateY(0);
+    .tracking-modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #d4af37; /* Gold title */
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .tracking-modal-close {
@@ -811,8 +821,8 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         width: 32px;
         height: 32px;
         border: none;
-        background: rgba(0, 0, 0, 0.05);
-        color: var(--text-dark);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -820,43 +830,6 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         cursor: pointer;
         transition: background 0.2s, transform 0.2s;
         z-index: 20;
-    }
-
-    .dark .tracking-modal-close {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-    }
-
-    .tracking-modal-close:hover {
-        background: rgba(0, 0, 0, 0.1);
-        transform: rotate(90deg);
-    }
-
-    .dark .tracking-modal-close:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    .tracking-modal-header {
-        padding: 24px 24px 16px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .dark .tracking-modal-header {
-        border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .tracking-modal-header h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .dark .tracking-modal-header h3 {
-        color: white;
     }
 
     .tracking-modal-body {

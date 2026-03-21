@@ -336,7 +336,7 @@ try {
                                 </p>
                             </div>
                             <a href="apartments.php"
-                                class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
+                                class="inline-flex items-center gap-2 text-white font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_apartments'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
                             </a>
@@ -425,10 +425,10 @@ try {
                                         </h3>
                                         <?php if ($service['price'] > 0): ?>
                                             <p class="text-xs text-accent font-bold"><?php _e('explore_page.from_price'); ?>
-                                                <?php echo number_format($service['price'], 0, ',', '.'); ?>VND
+                                                <?php echo number_format($service['price'], 0, ',', '.'); ?> VND
                                             </p>
                                         <?php else: ?>
-                                            <p class="text-xs text-green-400 font-bold"><?php _e('explore_page.free'); ?></p>
+                                            <p class="text-xs text-accent font-bold"><?php _e('nav.contact'); ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </a>

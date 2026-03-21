@@ -12,7 +12,7 @@ function get_meta_description() {
         'apartments' => 'Căn hộ Indochine và Modern Studio cho thuê dài hạn tại Aurora Hotel Plaza. Không gian sống đẳng cấp, đầy đủ tiện nghi bếp, máy giặt, phục vụ chuyên nghiệp như khách sạn.',
         'services' => 'Dịch vụ đẳng cấp tại Aurora Hotel Plaza: Nhà hàng cao cấp, hồ bơi, phòng Gym, Massage trị liệu, trung tâm hội nghị tiệc cưới và cho thuê văn phòng chuyên nghiệp.',
         'about' => 'Tìm hiểu về lịch sử và sứ mệnh của Aurora Hotel Plaza - biểu tượng nghỉ dưỡng sang trọng tại cửa ngõ TP. Biên Hòa với hơn 200 phòng nghỉ và căn hộ cao cấp.',
-        'contact' => 'Liên hệ Aurora Hotel Plaza Biên Hòa. Địa chỉ: 253 Phạm Văn Thuận, P. Tân Mai, TP. Biên Hòa, Đồng Nai. Hotline: (+84-251) 391.8888.',
+        'contact' => 'Liên hệ Aurora Hotel Plaza Biên Hòa. Địa chỉ: 253 Phạm Văn Thuận, Khu phố 2, Phường Tam Hiệp, Đồng Nai. Hotline: (+84-251) 391.8888.',
         'blog' => 'Cập nhật tin tức, sự kiện và cẩm nang du lịch Biên Hòa, Đồng Nai từ Aurora Hotel Plaza.',
         'explore' => 'Khám phá các địa danh du lịch nổi tiếng xung quanh Biên Hòa như Khu du lịch Bửu Long, Văn miếu Trấn Biên khi lưu trú tại Aurora Hotel Plaza.'
     ];

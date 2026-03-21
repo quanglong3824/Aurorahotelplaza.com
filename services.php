@@ -182,7 +182,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                                         <div class="package-item-mini">
                                                             <span><?php echo htmlspecialchars(_f($pkg, 'package_name')); ?></span>
                                                             <span
-                                                                class="package-price-mini"><?php echo number_format($pkg['price'], 0, ',', '.'); ?>VND</span>
+                                                                class="package-price-mini"><?php echo $pkg['price'] > 0 ? number_format($pkg['price'], 0, ',', '.') . 'VND' : __('nav.contact'); ?></span>
                                                         </div>
                                                     <?php endforeach; ?>
                                                     <?php if (count($service['packages']) > 3): ?>

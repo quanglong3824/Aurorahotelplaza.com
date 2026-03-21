@@ -55,22 +55,8 @@ function formatDate($date, $format = null) {
     // 3. Lấy ngôn ngữ/vùng của trình duyệt (Thiết bị)
     $browser_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'vi', 0, 2);
     
-    // Quyết định định dạng: 
-    // Nếu khách đã chọn ngôn ngữ Web, ưu tiên định dạng của ngôn ngữ đó.
-    // Nếu chưa chọn, dùng định dạng của thiết bị (Browser).
-    $final_lang = $web_lang ?: $browser_lang;
-
-    if ($final_lang === 'en') {
-        // Kiểm tra vùng cụ thể nếu là EN (Mỹ dùng m/d/Y, còn lại đa số dùng d/m/Y)
-        $full_locale = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en-US';
-        if (strpos($full_locale, 'en-US') !== false) {
-            return date('m/d/Y', $timestamp);
-        }
-        return date('d/m/Y', $timestamp);
-    }
-    
-    // Mặc định cho Tiếng Việt và các vùng khác dùng dd/mm/yyyy
-    return date('d/m/Y', $timestamp);
+    // Quyết định định dạng: Thống nhất dùng mm/dd/yyyy (theo yêu cầu Giai đoạn 2)
+    return date('m/d/Y', $timestamp);
 }
 
 /**

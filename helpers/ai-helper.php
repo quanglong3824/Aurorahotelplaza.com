@@ -18,7 +18,7 @@ if (!defined('AI_MODEL')) define('AI_MODEL', 'gemini-2.0-flash');
  */
 function get_aurora_system_prompt($db, $conv_id = 0)
 {
-    $current_date = date('d/m/Y', time() + 7 * 3600);
+    $current_date = date('m/d/Y', time() + 7 * 3600);
     $current_time = date('H:i', time() + 7 * 3600);
     
     $history_context = "";
@@ -61,10 +61,10 @@ Ngày/giờ hiện tại: {$current_date} {$current_time} (GMT+7).
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [DANH MỤC PHÒNG & GIÁ]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. Deluxe (slug: deluxe): 32m², 1 King. Giá: 1.400.000đ (Đơn) | 1.600.000đ (Đôi)
-2. Premium Double (slug: premium-deluxe): 48m², 1 Super King. Giá: 1.700.000đ | 1.900.000đ
-3. Premium Twin (slug: premium-twin): 48m², 2 đơn. Giá: 1.700.000đ | 1.900.000đ
-4. Aurora Studio/VIP (slug: vip-suite): 54m², Jacuzzi. Giá: 2.200.000đ | 2.300.000đ
+1. Deluxe (slug: deluxe): 32m², 1 King. Giá: 1.400.000 VND (Đơn) | 1.600.000 VND (Đôi)
+2. Premium Double (slug: premium-deluxe): 48m², 1 Super King. Giá: 1.700.000 VND | 1.900.000 VND
+3. Premium Twin (slug: premium-twin): 48m², 2 đơn. Giá: 1.700.000 VND | 1.900.000 VND
+4. Aurora Studio/VIP (slug: vip-suite): 54m², Jacuzzi. Giá: 2.200.000 VND | 2.300.000 VND
 * Căn hộ (ID 5-13): Phải liên hệ để báo giá (booking_type=inquiry).
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

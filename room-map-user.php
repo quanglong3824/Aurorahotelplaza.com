@@ -600,7 +600,7 @@ function showRoomModal(room) {
     
     document.getElementById('modalRoomNumber').textContent = 'Phòng ' + room.room_number;
     document.getElementById('modalRoomType').textContent = room.type_name || 'Chưa phân loại';
-    document.getElementById('modalRoomPrice').textContent = parseInt(room.base_price).toLocaleString('vi-VN') + 'đ/đêm';
+    document.getElementById('modalRoomPrice').textContent = parseInt(room.base_price).toLocaleString('vi-VN') + ' VND/đêm';
     document.getElementById('modalRoomStatus').textContent = statusText[room.display_status] || 'Không xác định';
     document.getElementById('modalStatusIcon').textContent = statusIcons[room.display_status] || 'info';
     

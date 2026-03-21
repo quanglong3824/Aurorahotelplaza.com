@@ -10,20 +10,35 @@
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, backdrop-filter 0.3s ease;
     will-change: transform;
     /* Lớp phủ mờ nhẹ phía trên để bảo vệ chữ trắng */
-    background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+}
+
+/* Tăng độ tương phản đặc biệt cho các trang glass-page (Chi tiết căn hộ) */
+.glass-page #main-header.header-transparent {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Thu gọn chiều cao header (kéo lên trên) */
 #main-header .container {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-    min-height: 60px; /* Giảm chiều cao xuống mức thanh thoát */
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    min-height: 70px; /* Giảm chiều cao xuống mức thanh thoát */
+}
+
+@media (max-width: 768px) {
+    #main-header .container {
+        padding-top: 1rem !important;
+        padding-bottom: 0.5rem !important;
+    }
 }
 
 #main-header.header-transparent {
-    background: transparent;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 #main-header.header-scrolled {
