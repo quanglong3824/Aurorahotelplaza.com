@@ -219,17 +219,31 @@ function stream_gemini_reply($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_exec($ch);
+        $exec_res = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
         curl_close($ch);
 
-        if ($http_code !== 200 && empty($full_response_text)) {
-            // Xoay vòng key nếu gặp lỗi 429 (hết quota) hoặc 403 (key bị khóa/lộ), 400 (bad request/key invalid)
-            if (in_array($http_code, [429, 403, 400])) {
-                $api_key = rotate_gemini_key();
-                if ($api_key) continue; // Thử lại với key mới
+        if ($http_code !== 200) {
+            // Log lỗi vào hệ thống để Admin theo dõi
+            if (class_exists('AuroraErrorTracker')) {
+                AuroraErrorTracker::capture('ai_api_error', "Gemini API Error $http_code: $curl_error", ['model' => $model, 'key_index' => get_active_key_index()]);
             }
-            return "Lỗi: API Gemini trả về mã lỗi " . $http_code;
+
+            // Xoay vòng key nếu gặp lỗi 429 (hết quota) hoặc 403 (key bị khóa/lộ), 400 (bad request/key invalid)
+            if (in_array($http_code, [429, 403, 400, 401])) {
+                mark_key_rate_limited(get_active_key_index(), 3600); // Tạm khóa key này 1h
+                $new_key = rotate_gemini_key();
+                if ($new_key) {
+                    $api_key = $new_key;
+                    continue; 
+                }
+            }
+            
+            if (empty($full_response_text)) {
+                echo "data: " . json_encode(["error" => "AI hiện đang bận (Mã lỗi: $http_code). Vui lòng thử lại sau giây lát."]) . "\n\n";
+                return "Error $http_code";
+            }
         }
 
         // Ghi log
