@@ -1,7 +1,7 @@
 <?php
 /**
- * Trợ lý ảo AI - Aurora Hotel Plaza (Qwen Exclusive Version)
- * ==========================================================
+ * Trợ lý ảo AI - Xử lý gọi API Lễ tân (Version 2.8 - SSE Robustness & Enhanced Failover)
+ * ==============================================================================
  */
 
 require_once __DIR__ . '/api_key_manager.php';
@@ -101,26 +101,46 @@ Ngày/giờ hiện tại: {$current_date} {$current_time} (GMT+7).
 }
 
 /**
- * Tool definitions cho Qwen
+ * Tool definitions cho Gemini/Qwen
  */
-function get_ai_tools()
+function get_ai_tools($provider = 'gemini')
 {
-    return [
-        [
-            "type" => "function",
-            "function" => [
-                "name" => "run_sql",
-                "description" => "Truy vấn hoặc cập nhật CSDL khách sạn (SELECT/INSERT).",
-                "parameters" => [
-                    "type" => "object",
-                    "properties" => [
-                        "sql" => ["type" => "string", "description" => "Câu lệnh SQL MySQL hợp lệ."]
-                    ],
-                    "required" => ["sql"]
+    if ($provider === 'gemini') {
+        return [
+            [
+                "functionDeclarations" => [
+                    [
+                        "name" => "run_sql",
+                        "description" => "Truy vấn hoặc cập nhật CSDL khách sạn (SELECT/INSERT).",
+                        "parameters" => [
+                            "type" => "OBJECT",
+                            "properties" => [
+                                "sql" => ["type" => "STRING", "description" => "Câu lệnh SQL MySQL hợp lệ."]
+                            ],
+                            "required" => ["sql"]
+                        ]
+                    ]
                 ]
             ]
-        ]
-    ];
+        ];
+    } else {
+        return [
+            [
+                "type" => "function",
+                "function" => [
+                    "name" => "run_sql",
+                    "description" => "Truy vấn hoặc cập nhật CSDL khách sạn (SELECT/INSERT).",
+                    "parameters" => [
+                        "type" => "object",
+                        "properties" => [
+                            "sql" => ["type" => "string", "description" => "Câu lệnh SQL MySQL hợp lệ."]
+                        ],
+                        "required" => ["sql"]
+                    ]
+                ]
+            ]
+        ];
+    }
 }
 
 /**
@@ -128,8 +148,8 @@ function get_ai_tools()
  */
 function handle_tool_call($functionCall, $db)
 {
-    $name = $functionCall['function']['name'] ?? '';
-    $args = json_decode($functionCall['function']['arguments'] ?? '{}', true);
+    $name = isset($functionCall['name']) ? $functionCall['name'] : ($functionCall['function']['name'] ?? '');
+    $args = isset($functionCall['args']) ? $functionCall['args'] : (json_decode($functionCall['function']['arguments'] ?? '{}', true));
 
     if ($name === 'run_sql' && isset($args['sql'])) {
         $sql = $args['sql'];
@@ -152,11 +172,110 @@ function handle_tool_call($functionCall, $db)
 }
 
 /**
- * Stream câu trả lời từ AI (SSE) - Qwen Exclusive
+ * Stream câu trả lời từ AI (SSE) - Hỗ trợ Gemini & Qwen với Smart Switching
  */
 function stream_ai_reply($user_message, $db, $conv_id = 0)
 {
-    return stream_qwen_reply($user_message, $db, $conv_id);
+    $provider = get_active_ai_provider();
+    
+    // Thử Provider chính
+    if ($provider === 'qwen') {
+        $res = stream_qwen_reply($user_message, $db, $conv_id);
+        if (empty($res) || strpos($res, 'Lỗi:') === 0) {
+            // Qwen lỗi -> Thử Gemini (Dự phòng)
+            echo "data: " . json_encode(["status" => "switching", "message" => "Qwen API bận, đang chuyển sang Gemini..."]) . "\n\n";
+            if (ob_get_level() > 0) ob_flush(); flush();
+            return stream_gemini_reply($user_message, $db, $conv_id);
+        }
+        return $res;
+    } else {
+        $res = stream_gemini_reply($user_message, $db, $conv_id);
+        if (empty($res) || strpos($res, 'Lỗi:') === 0) {
+            // Gemini lỗi -> Thử Qwen (Dự phòng)
+            echo "data: " . json_encode(["status" => "switching", "message" => "Gemini API bận, đang chuyển sang Qwen..."]) . "\n\n";
+            if (ob_get_level() > 0) ob_flush(); flush();
+            return stream_qwen_reply($user_message, $db, $conv_id);
+        }
+        return $res;
+    }
+}
+
+/**
+ * Stream Gemini Logic
+ */
+function stream_gemini_reply($user_message, $db, $conv_id)
+{
+    $api_key = get_active_gemini_key();
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini API Key.";
+
+    $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
+    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+    $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
+    $tools = get_ai_tools('gemini');
+
+    $full_response_text = "";
+
+    for ($i = 0; $i < 3; $i++) {
+        $data = ["contents" => $contents, "tools" => $tools, "generationConfig" => ["temperature" => 0.2, "maxOutputTokens" => 2048]];
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":streamGenerateContent?alt=sse&key=" . $api_key;
+        
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false); 
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        
+        $buffer = "";
+        $current_fc = null;
+
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$current_fc, &$buffer) {
+            $buffer .= $data;
+            while (($pos = strpos($buffer, "\n\n")) !== false) {
+                $event = substr($buffer, 0, $pos);
+                $buffer = substr($buffer, $pos + 2);
+                $lines = explode("\n", $event);
+                foreach ($lines as $line) {
+                    if (strpos($line, 'data: ') === 0) {
+                        $json_str = substr($line, 6);
+                        $chunk = json_decode($json_str, true);
+                        if (isset($chunk['candidates'][0]['content']['parts'])) {
+                            foreach ($chunk['candidates'][0]['content']['parts'] as $part) {
+                                if (isset($part['text'])) {
+                                    $full_response_text .= $part['text'];
+                                    echo "data: " . json_encode(["text" => $part['text']]) . "\n\n";
+                                    if (ob_get_level() > 0) ob_flush(); flush();
+                                }
+                                if (isset($part['functionCall'])) $current_fc = $part['functionCall'];
+                            }
+                        }
+                    }
+                }
+            }
+            return strlen($data);
+        });
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code !== 200 && empty($full_response_text)) return "Lỗi: API Gemini trả về mã lỗi " . $http_code;
+
+        // Ghi log
+        if (!empty($full_response_text)) {
+            log_key_usage(get_active_key_index(), strlen($full_response_text) / 4, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+        }
+
+        if ($current_fc) {
+            $contents[] = ["role" => "model", "parts" => [["functionCall" => $current_fc]]];
+            $tool_result = handle_tool_call($current_fc, $db);
+            echo "data: " . json_encode(["status" => "running_tool", "tool" => $current_fc['name']]) . "\n\n";
+            if (ob_get_level() > 0) ob_flush(); flush();
+            $contents[] = ["role" => "user", "parts" => [["functionResponse" => ["name" => $current_fc['name'], "response" => ["content" => $tool_result]]]]];
+            $current_fc = null;
+        } else break;
+    }
+    return $full_response_text;
 }
 
 /**
@@ -170,7 +289,7 @@ function stream_qwen_reply($user_message, $db, $conv_id)
 
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     $messages = [["role" => "system", "content" => $system_prompt], ["role" => "user", "content" => $user_message]];
-    $tools = get_ai_tools();
+    $tools = get_ai_tools('qwen');
 
     $full_response_text = "";
 
@@ -216,7 +335,6 @@ function stream_qwen_reply($user_message, $db, $conv_id)
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -242,11 +360,40 @@ function stream_qwen_reply($user_message, $db, $conv_id)
 }
 
 /**
- * Sync Reply - Qwen Exclusive
+ * Legacy Support
  */
 function generate_ai_reply($user_message, $db, $conv_id = 0)
 {
-    return generate_qwen_reply_sync($user_message, $db, $conv_id);
+    $provider = get_active_ai_provider();
+    if ($provider === 'qwen') return generate_qwen_reply_sync($user_message, $db, $conv_id);
+    return generate_gemini_reply_sync($user_message, $db, $conv_id);
+}
+
+function generate_gemini_reply_sync($user_message, $db, $conv_id)
+{
+    $api_key = get_active_gemini_key();
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Gemini.";
+    $model = defined('AI_MODEL') ? AI_MODEL : 'gemini-2.0-flash';
+    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+    $contents = [["role" => "user", "parts" => [["text" => $system_prompt . "\n\nKhách: " . $user_message]]]];
+    for ($i = 0; $i < 3; $i++) {
+        $ch = curl_init("https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["contents" => $contents, "tools" => get_ai_tools('gemini')]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $res = json_decode(curl_exec($ch), true); curl_close($ch);
+        if (!isset($res['candidates'][0]['content']['parts'])) break;
+        $final_text = ""; $fc = null;
+        foreach ($res['candidates'][0]['content']['parts'] as $p) {
+            if (isset($p['text'])) $final_text .= $p['text'];
+            if (isset($p['functionCall'])) $fc = $p['functionCall'];
+        }
+        if ($fc) {
+            $contents[] = ["role" => "model", "parts" => [["functionCall" => $fc]]];
+            $contents[] = ["role" => "user", "parts" => [["functionResponse" => ["name" => $fc['name'], "response" => ["content" => handle_tool_call($fc, $db)]]]]];
+        } else return $final_text;
+    }
+    return "AI hiện bận, vui lòng thử lại sau.";
 }
 
 function generate_qwen_reply_sync($user_message, $db, $conv_id)
@@ -258,9 +405,8 @@ function generate_qwen_reply_sync($user_message, $db, $conv_id)
     for ($i = 0; $i < 3; $i++) {
         $ch = curl_init("https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["model" => $model, "messages" => $messages, "tools" => get_ai_tools()]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["model" => $model, "messages" => $messages, "tools" => get_ai_tools('qwen')]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $res = json_decode(curl_exec($ch), true); curl_close($ch);
         if (!isset($res['choices'][0]['message'])) break;
         $msg = $res['choices'][0]['message'];
@@ -273,7 +419,3 @@ function generate_qwen_reply_sync($user_message, $db, $conv_id)
     }
     return "AI hiện bận, vui lòng thử lại sau.";
 }
-
-// Dummy functions for compatibility
-function stream_gemini_reply($msg, $db, $id) { return stream_qwen_reply($msg, $db, $id); }
-function generate_gemini_reply_sync($msg, $db, $id) { return generate_qwen_reply_sync($msg, $db, $id); }
