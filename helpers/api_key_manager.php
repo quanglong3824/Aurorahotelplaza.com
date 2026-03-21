@@ -175,7 +175,3 @@ function get_key_usage_stats() {
     $stats = json_decode(file_get_contents($log_file), true);
     return $stats[date('Y-m-d')] ?? [];
 }
-
-// Dummy functions to prevent errors
-function get_active_qwen_key() { return ''; }
-function get_active_qwen_model() { return 'gemini-model-only'; }
