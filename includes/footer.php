@@ -12,8 +12,16 @@ if (!function_exists('__')) {
 }
 ?>
 <!-- Footer -->
-<footer class="w-full bg-surface-dark text-white/80" style="background-color: #1f2937 !important; color: rgba(255, 255, 255, 0.8) !important;">
-    <div class="mx-auto max-w-7xl px-4 py-20">
+<footer class="w-full relative text-white/80 overflow-hidden" style="color: rgba(255, 255, 255, 0.8) !important;">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+        <img src="<?php echo $base_path; ?>assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg" 
+             alt="Footer Background" 
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-[2px]"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-20">
         <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
             <!-- Logo & Description -->
             <div class="lg:col-span-2">
