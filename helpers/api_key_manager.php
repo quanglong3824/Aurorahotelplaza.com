@@ -24,34 +24,28 @@ function set_active_ai_provider($provider) {
 function get_active_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
-    if (empty($valid_keys)) return '';
+    $total = count($valid_keys);
+    if ($total === 0) return '';
 
     $index_file = __DIR__ . '/../config/current_key_idx.txt';
     $current_idx = 0;
     if (file_exists($index_file)) {
-        $current_idx = (int) file_get_contents($index_file);
+        $current_idx = (int) @file_get_contents($index_file);
     }
 
-    if ($current_idx >= count($valid_keys)) {
+    if ($current_idx >= $total) {
         $current_idx = 0;
-        file_put_contents($index_file, 0);
+        @file_put_contents($index_file, 0);
     }
 
     $limits = get_key_rate_limits();
     $now = time();
-    $start_idx = $current_idx;
 
-    while (isset($limits[$current_idx])) {
-        $check_ts = is_array($limits[$current_idx]) ? ($limits[$current_idx]['reset_time'] ?? 0) : $limits[$current_idx];
-        if ($check_ts <= $now) break;
-        
-        $current_idx++;
-        if ($current_idx >= count($valid_keys)) $current_idx = 0;
-        if ($current_idx == $start_idx) return $valid_keys[$start_idx];
-    }
-
-    if ($current_idx != $start_idx) {
-        file_put_contents($index_file, $current_idx);
+    // Nếu key hiện tại bị giới hạn, hãy rotate ngay lập tức
+    $limit_until = $limits[$current_idx] ?? 0;
+    if ($limit_until > $now) {
+        $new_key = rotate_gemini_key();
+        return $new_key ?: $valid_keys[0]; // Trả về key mới hoặc fallback key đầu tiên
     }
 
     return $valid_keys[$current_idx];
@@ -63,7 +57,8 @@ function get_active_gemini_key()
 function rotate_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
-    if (count($valid_keys) <= 1) return false;
+    $total = count($valid_keys);
+    if ($total <= 1) return false;
 
     $index_file = __DIR__ . '/../config/current_key_idx.txt';
     $current_idx = 0;
@@ -73,18 +68,21 @@ function rotate_gemini_key()
 
     $limits = get_key_rate_limits();
     $now = time();
-    $start_idx = $current_idx;
+    $next_idx = $current_idx;
 
-    do {
-        $current_idx++;
-        if ($current_idx >= count($valid_keys)) $current_idx = 0;
-        if ($current_idx == $start_idx) break;
-        $limit_val = $limits[$current_idx] ?? 0;
-        $check_ts = is_array($limit_val) ? ($limit_val['reset_time'] ?? 0) : $limit_val;
-    } while ($check_ts > $now);
+    // Thử tìm key tiếp theo trong vòng lặp (tránh lặp vô tận)
+    for ($i = 0; $i < $total; $i++) {
+        $next_idx = ($next_idx + 1) % $total;
+        
+        $limit_until = $limits[$next_idx] ?? 0;
+        if ($limit_until <= $now) {
+            // Đã tìm thấy key không bị limit
+            file_put_contents($index_file, $next_idx);
+            return $valid_keys[$next_idx];
+        }
+    }
 
-    file_put_contents($index_file, $current_idx);
-    return $valid_keys[$current_idx];
+    return false; // Không còn key nào khả dụng
 }
 
 /**
@@ -94,33 +92,34 @@ function get_all_valid_keys()
 {
     $valid_keys = [];
 
-    // 1. Lấy từ biến toàn cục trong api_keys.php
-    global $GEMINI_API_KEYS;
-    if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
-        $valid_keys = array_merge($valid_keys, $GEMINI_API_KEYS);
-    }
-
-    // 2. Lấy từ env() chuỗi danh sách
+    // 1. ƯU TIÊN: Lấy từ env() đơn lẻ hoặc danh sách (Đây là nơi người dùng thường cấu hình mới nhất)
     $env_keys_str = env('GEMINI_API_KEYS');
     if ($env_keys_str) {
         $ek = array_map('trim', explode(',', $env_keys_str));
         $valid_keys = array_merge($valid_keys, $ek);
     }
 
-    // 3. Lấy từ define cũ hoặc env() đơn lẻ
     $single_key = env('GEMINI_API_KEY');
     if ($single_key) {
         $valid_keys[] = $single_key;
+    }
+
+    // 2. PHỤ: Lấy từ biến toàn cục trong api_keys.php (Dự phòng)
+    global $GEMINI_API_KEYS;
+    if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
+        $valid_keys = array_merge($valid_keys, $GEMINI_API_KEYS);
     }
     
     if (defined('GEMINI_API_KEY') && GEMINI_API_KEY !== '') {
         $valid_keys[] = GEMINI_API_KEY;
     }
 
-    // Làm sạch và lọc các key trống/placeholder
-    return array_values(array_unique(array_filter($valid_keys, function($k) {
-        return !empty($k) && strpos($k, 'ĐIỀN_API_KEY') === false && strlen($k) > 10;
-    })));
+    // Làm sạch: Bỏ các key trùng, key placeholder, key quá ngắn
+    $valid_keys = array_filter(array_unique($valid_keys), function($k) {
+        return !empty($k) && strlen($k) > 20 && strpos($k, 'ĐIỀN_') === false;
+    });
+
+    return array_values($valid_keys);
 }
 
 function get_active_key_index() {
