@@ -105,6 +105,11 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
     curl_setopt($ch, CURLOPT_TIMEOUT, 90);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_TCP_KEEPALIVE, 1);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4); // Bắt buộc dùng IPv4 để bỏ qua fallback IPv6, giảm ping DNS
+    
+    // Gửi byte padding để bung bộ đệm (cache) của các web server như NGINX hoặc Cloudflare
+    echo ":" . str_repeat(' ', 2048) . "\n\n";
+    if (ob_get_level() > 0) ob_flush(); flush();
 
     $full_response_text = "";
     $buffer = "";
