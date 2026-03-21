@@ -64,12 +64,11 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                 url('<?php 
                     $bg_img = "assets/img/hero-banner/caffe-aurora-hotel-1.jpg"; // Default
                     switch($slug) {
-                        case "tiec-cuoi": $bg_img = "assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg"; break;
-                        case "hoi-nghi": $bg_img = "assets/img/service/meet/hoi-nghi-aurora-6.jpg"; break;
-                        case "nha-hang": $bg_img = "assets/img/restaurant/nha-hang-aurora-hotel-1.jpg"; break;
-                        case "van-phong": $bg_img = "assets/img/service/office/van-phong-cho-thue-aurora-3.jpg"; break;
-                        case "gym": $bg_img = "assets/img/service/gym/gym-aurora-hotel-1.jpg"; break;
-                        case "pool": $bg_img = "assets/img/service/pool/pool.jpg"; break;
+                        case "wedding-service": $bg_img = "assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg"; break;
+                        case "conference-service": $bg_img = "assets/img/service/meet/hoi-nghi-aurora-6.jpg"; break;
+                        case "aurora-restaurant": $bg_img = "assets/img/restaurant/nha-hang-aurora-hotel-1.jpg"; break;
+                        case "office-rental": $bg_img = "assets/img/service/office/van-phong-cho-thue-aurora-3.jpg"; break;
+                        case "pool-gym": $bg_img = "assets/img/service/pool/pool.jpg"; break;
                     }
                     echo $bg_img;
                 ?>') !important;
