@@ -43,36 +43,54 @@ RULE 3: Tuyệt đối KHÔNG DELETE/DROP nếu không có mật mã.";
     $bi_context = "\n--- THỰC TRẠNG HOẠT ĐỘNG ---\n+ KHO PHÒNG: {$total_rooms} phòng. Trống: {$available_rooms}.\n";
     $full_prompt = $system_prompt . $bi_context;
 
-    // Call Gemini
-    function call_gemini_admin($api_key, $model, $system_prompt, $user_message, $history = []) {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
+    // Call Gemini with Rotation
+    function call_gemini_admin_with_retry($initial_key, $model, $system_prompt, $user_message, $history = []) {
+        $api_key = $initial_key;
+        $max_retries = 3;
         
         $contents = [
             ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nSếp: " . $user_message]]]
         ];
 
-        if (!empty($history)) {
-            // Transform history for Gemini if needed, but for simplicity here we just use the prompt
-            // Gemini doesn't use the same role structure as OpenAI/Qwen easily in a single call without specialized array
+        for ($i = 0; $i < $max_retries; $i++) {
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
+            
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode(["contents" => $contents]),
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_TIMEOUT => 30
+            ]);
+            $res = curl_exec($ch);
+            $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($code === 200) {
+                return ['code' => $code, 'body' => $res, 'key_used' => $api_key];
+            } else if ($code === 429) {
+                // Hết quota, xoay vòng key và thử lại
+                $new_key = rotate_gemini_key();
+                if ($new_key && $new_key !== $api_key) {
+                    $api_key = $new_key;
+                    continue;
+                }
+            }
+            
+            // Nếu không phải 429 hoặc không còn key để xoay, trả về lỗi luôn
+            return ['code' => $code, 'body' => $res, 'key_used' => $api_key];
         }
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["contents" => $contents]),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_TIMEOUT => 30
-        ]);
-        $res = curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        return ['code' => $code, 'body' => $res];
+        
+        return ['code' => 500, 'body' => 'Hệ thống AI hiện đang bận hoặc quá tải.', 'key_used' => $api_key];
     }
 
-    $res = call_gemini_admin($api_key, $model, $full_prompt, $user_message);
-    if ($res['code'] !== 200) throw new Exception("Gemini API Error: " . $res['body']);
+    $res = call_gemini_admin_with_retry($api_key, $model, $full_prompt, $user_message);
+    if ($res['code'] !== 200) throw new Exception("Gemini API Error (Code: " . $res['code'] . "): " . $res['body']);
+
+    // Cập nhật lại key hiện tại sau khi có thể đã xoay vòng
+    $api_key = $res['key_used'];
 
     $data = json_decode($res['body'], true);
     $bot_reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? "";
@@ -85,10 +103,11 @@ RULE 3: Tuyệt đối KHÔNG DELETE/DROP nếu không có mật mã.";
             $stmtRead = $db->query($read_sql);
             $read_data = $stmtRead->fetchAll(PDO::FETCH_ASSOC);
             $new_prompt = $bot_reply . "\nDữ liệu DB: " . json_encode($read_data) . "\nPhân tích và trả lời sếp.";
-            $res2 = call_gemini_admin($api_key, $model, $full_prompt, $new_prompt);
+            $res2 = call_gemini_admin_with_retry($api_key, $model, $full_prompt, $new_prompt);
             if ($res2['code'] === 200) {
                 $data2 = json_decode($res2['body'], true);
                 $bot_reply = $data2['candidates'][0]['content']['parts'][0]['text'] ?? $bot_reply;
+                $api_key = $res2['key_used'];
             }
         }
     }
