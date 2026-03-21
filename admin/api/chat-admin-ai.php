@@ -12,11 +12,11 @@ try {
     require_once '../../config/database.php';
     require_once __DIR__ . '/../../helpers/api_key_manager.php';
 
-    $q_key = get_active_qwen_key();
-    $q_model = get_active_qwen_model();
+    $api_key = get_active_gemini_key();
+    $model = 'gemini-2.0-flash';
 
-    if (empty($q_key)) {
-        throw new Exception("Lỗi API Key: Chưa cấu hình QWEN_API_KEY trong file .env");
+    if (empty($api_key)) {
+        throw new Exception("Lỗi API Key: Chưa cấu hình GEMINI_API_KEY trong file .env");
     }
 
     $input = json_decode(file_get_contents('php://input'), true);
@@ -43,22 +43,25 @@ RULE 3: Tuyệt đối KHÔNG DELETE/DROP nếu không có mật mã.";
     $bi_context = "\n--- THỰC TRẠNG HOẠT ĐỘNG ---\n+ KHO PHÒNG: {$total_rooms} phòng. Trống: {$available_rooms}.\n";
     $full_prompt = $system_prompt . $bi_context;
 
-    // Call Qwen
-    function call_qwen_admin($api_key, $model, $system_prompt, $user_message, $history = []) {
-        $url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
-        $messages = [["role" => "system", "content" => $system_prompt]];
-        if (empty($history)) {
-            $messages[] = ["role" => "user", "content" => $user_message];
-        } else {
-            foreach ($history as $msg) $messages[] = $msg;
+    // Call Gemini
+    function call_gemini_admin($api_key, $model, $system_prompt, $user_message, $history = []) {
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
+        
+        $contents = [
+            ["role" => "user", "parts" => [["text" => $system_prompt . "\n\nSếp: " . $user_message]]]
+        ];
+
+        if (!empty($history)) {
+            // Transform history for Gemini if needed, but for simplicity here we just use the prompt
+            // Gemini doesn't use the same role structure as OpenAI/Qwen easily in a single call without specialized array
         }
 
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["model" => $model, "messages" => $messages, "temperature" => 0.1]),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key],
+            CURLOPT_POSTFIELDS => json_encode(["contents" => $contents]),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_TIMEOUT => 30
         ]);
@@ -68,43 +71,38 @@ RULE 3: Tuyệt đối KHÔNG DELETE/DROP nếu không có mật mã.";
         return ['code' => $code, 'body' => $res];
     }
 
-    $res = call_qwen_admin($q_key, $q_model, $full_prompt, $user_message);
-    if ($res['code'] !== 200) throw new Exception("Qwen API Error: " . $res['body']);
+    $res = call_gemini_admin($api_key, $model, $full_prompt, $user_message);
+    if ($res['code'] !== 200) throw new Exception("Gemini API Error: " . $res['body']);
 
     $data = json_decode($res['body'], true);
-    $bot_reply = $data['choices'][0]['message']['content'] ?? "";
-    $total_tokens = $data['usage']['total_tokens'] ?? 0;
+    $bot_reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? "";
+    $total_tokens = 0; // Gemini response doesn't always include usage in this format
 
-    // Handle Auto-Read
+    // Handle Auto-Read (Simplified for Admin Bot)
     if (preg_match('/\[READ_DB:\s*(.*?)\]/s', $bot_reply, $matches)) {
         $read_sql = trim($matches[1], " \t\n\r\0\x0B\"'");
         if (stripos($read_sql, 'SELECT') === 0) {
             $stmtRead = $db->query($read_sql);
             $read_data = $stmtRead->fetchAll(PDO::FETCH_ASSOC);
-            $history = [
-                ["role" => "user", "content" => $user_message],
-                ["role" => "assistant", "content" => $bot_reply],
-                ["role" => "user", "content" => "Dữ liệu DB: " . json_encode($read_data) . "\nPhân tích và trả lời sếp."]
-            ];
-            $res2 = call_qwen_admin($q_key, $q_model, $full_prompt, "", $history);
+            $new_prompt = $bot_reply . "\nDữ liệu DB: " . json_encode($read_data) . "\nPhân tích và trả lời sếp.";
+            $res2 = call_gemini_admin($api_key, $model, $full_prompt, $new_prompt);
             if ($res2['code'] === 200) {
                 $data2 = json_decode($res2['body'], true);
-                $bot_reply = $data2['choices'][0]['message']['content'] ?? $bot_reply;
-                $total_tokens += $data2['usage']['total_tokens'] ?? 0;
+                $bot_reply = $data2['candidates'][0]['content']['parts'][0]['text'] ?? $bot_reply;
             }
         }
     }
 
-    log_key_usage('qwen', $total_tokens);
+    log_key_usage(get_active_key_index(), 500); // Admin calls are usually heavier
 
     ob_clean();
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
-        'provider' => 'qwen',
-        'key_info' => "Qwen (" . $q_model . ")",
-        'tokens' => $total_tokens,
-        'key_idx' => 'qwen',
+        'provider' => 'gemini',
+        'key_info' => "Gemini (" . $model . ")",
+        'tokens' => 0,
+        'key_idx' => get_active_key_index(),
         'stats' => get_key_usage_stats()
     ]);
 
