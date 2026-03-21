@@ -5,39 +5,21 @@ require_once __DIR__ . '/../config/load_env.php';
 @require_once __DIR__ . '/../config/api_keys.php';
 
 /**
- * Lấy Provider AI đang hoạt động (gemini, qwen)
+ * Lấy Provider AI đang hoạt động (Luôn là gemini)
  */
 function get_active_ai_provider() {
-    $file = __DIR__ . '/../config/ai_active_provider.txt';
-    if (file_exists($file)) {
-        $saved = trim(file_get_contents($file));
-        if (in_array($saved, ['gemini', 'qwen'])) return $saved;
-    }
-    
-    $from_env = env('AI_PROVIDER');
-    if ($from_env) return $from_env;
-
-    return defined('AI_PROVIDER') ? AI_PROVIDER : 'qwen';
+    return 'gemini';
 }
 
 /**
- * Lấy API Key cho Qwen
+ * Đặt Provider AI đang hoạt động (Vô hiệu hóa việc đổi sang qwen)
  */
-function get_active_qwen_key() {
-    if (defined('QWEN_API_KEY') && QWEN_API_KEY !== '') return QWEN_API_KEY;
-    return env('QWEN_API_KEY', '');
+function set_active_ai_provider($provider) {
+    return true;
 }
 
 /**
- * Lấy Model cho Qwen
- */
-function get_active_qwen_model() {
-    if (defined('QWEN_MODEL') && QWEN_MODEL !== '') return QWEN_MODEL;
-    return env('QWEN_MODEL', 'qwen-max');
-}
-
-/**
- * Lấy API Key cho Gemini (Sẵn sàng cho Failover)
+ * Lấy API Key cho Gemini
  */
 function get_active_gemini_key()
 {
@@ -75,6 +57,9 @@ function get_active_gemini_key()
     return $valid_keys[$current_idx];
 }
 
+/**
+ * Xoay vòng Key Gemini khi gặp lỗi 429
+ */
 function rotate_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
@@ -102,11 +87,14 @@ function rotate_gemini_key()
     return $valid_keys[$current_idx];
 }
 
+/**
+ * Thu thập tất cả các Key Gemini hợp lệ
+ */
 function get_all_valid_keys()
 {
     $valid_keys = [];
 
-    // 1. Lấy từ biến toàn cục (đã nạp trong api_keys.php)
+    // 1. Lấy từ biến toàn cục trong api_keys.php
     global $GEMINI_API_KEYS;
     if (!empty($GEMINI_API_KEYS) && is_array($GEMINI_API_KEYS)) {
         $valid_keys = array_merge($valid_keys, $GEMINI_API_KEYS);
@@ -172,3 +160,7 @@ function get_key_usage_stats() {
     $stats = json_decode(file_get_contents($log_file), true);
     return $stats[date('Y-m-d')] ?? [];
 }
+
+// Dummy functions to prevent errors
+function get_active_qwen_key() { return ''; }
+function get_active_qwen_model() { return 'gemini-model-only'; }
