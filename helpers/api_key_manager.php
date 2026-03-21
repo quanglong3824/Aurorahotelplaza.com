@@ -2,18 +2,21 @@
 // helpers/api_key_manager.php
 
 require_once __DIR__ . '/../config/load_env.php';
+@require_once __DIR__ . '/../config/api_keys.php';
 
 /**
  * Lấy Provider AI đang hoạt động (Luôn là qwen)
  */
 function get_active_ai_provider() {
-    return 'qwen';
+    if (defined('AI_PROVIDER')) return AI_PROVIDER;
+    return env('AI_PROVIDER', 'qwen');
 }
 
 /**
  * Lấy API Key cho Qwen
  */
 function get_active_qwen_key() {
+    if (defined('QWEN_API_KEY') && QWEN_API_KEY !== '') return QWEN_API_KEY;
     return env('QWEN_API_KEY', '');
 }
 
@@ -21,6 +24,7 @@ function get_active_qwen_key() {
  * Lấy Model cho Qwen
  */
 function get_active_qwen_model() {
+    if (defined('QWEN_MODEL')) return QWEN_MODEL;
     return env('QWEN_MODEL', 'qwen-max');
 }
 
