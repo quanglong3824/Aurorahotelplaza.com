@@ -25,18 +25,28 @@ if (!function_exists('loadEnvVariables')) {
         // Bổ sung quét dự phòng ở ngoài Document Root của Webserver (tuyệt đối an toàn)
         if (!empty($_SERVER['DOCUMENT_ROOT'])) {
             $doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\');
+            $parent_root = dirname($doc_root);
             
-            // Đi lên 1 cấp từ doc_root
-            $paths[] = dirname($doc_root) . '/config/.env';
-            $paths[] = dirname($doc_root) . '/.env';
+            // Các vị trí phổ biến của thư mục config nằm ngoài public_html
+            $paths[] = $parent_root . '/config/.env';
+            $paths[] = $parent_root . '/.env';
+            $paths[] = dirname($parent_root) . '/config/.env'; // Lên thêm 1 cấp nếu cần
             
-            // Đi lên 2 cấp từ doc_root (Trường hợp website nằm trong thư mục con như /2025/)
-            $paths[] = dirname(dirname($doc_root)) . '/config/.env';
-            $paths[] = dirname(dirname($doc_root)) . '/.env';
-
+            // Fallback cho cấu trúc website nằm sâu trong subfolder
             $paths[] = $doc_root . '/../config/.env';
             $paths[] = $doc_root . '/../../config/.env';
-            $paths[] = $doc_root . '/../.env';
+        }
+
+        // Tạo hằng số để các helper khác biết chỗ lưu file log/index
+        if (!defined('AI_CONFIG_PATH')) {
+            $found_config_dir = __DIR__; // Mặc định
+            if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+                $check_path = dirname(rtrim($_SERVER['DOCUMENT_ROOT'], '/\\')) . '/config';
+                if (is_dir($check_path) && is_writable($check_path)) {
+                    $found_config_dir = $check_path;
+                }
+            }
+            define('AI_CONFIG_PATH', $found_config_dir);
         }
 
         $paths = array_unique($paths);

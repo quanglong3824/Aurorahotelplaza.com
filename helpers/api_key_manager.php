@@ -27,7 +27,7 @@ function get_active_gemini_key()
     $total = count($valid_keys);
     if ($total === 0) return '';
 
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
+    $index_file = AI_CONFIG_PATH . '/current_key_idx.txt';
     $current_idx = 0;
     if (file_exists($index_file)) {
         $current_idx = (int) @file_get_contents($index_file);
@@ -60,7 +60,7 @@ function rotate_gemini_key()
     $total = count($valid_keys);
     if ($total <= 1) return false;
 
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
+    $index_file = AI_CONFIG_PATH . '/current_key_idx.txt';
     $current_idx = 0;
     if (file_exists($index_file)) {
         $current_idx = (int) file_get_contents($index_file);
@@ -123,12 +123,12 @@ function get_all_valid_keys()
 }
 
 function get_active_key_index() {
-    $index_file = __DIR__ . '/../config/current_key_idx.txt';
+    $index_file = AI_CONFIG_PATH . '/current_key_idx.txt';
     return file_exists($index_file) ? (int) file_get_contents($index_file) : 0;
 }
 
 function log_key_usage($key_id, $tokens_used, $role = 'admin') {
-    $log_file = __DIR__ . '/../config/key_usage_stats.json';
+    $log_file = AI_CONFIG_PATH . '/key_usage_stats.json';
     $stats = file_exists($log_file) ? json_decode(file_get_contents($log_file), true) ?: [] : [];
     $today = date('Y-m-d');
     if (!isset($stats[$today])) $stats[$today] = [];
@@ -147,19 +147,19 @@ function log_key_usage($key_id, $tokens_used, $role = 'admin') {
 }
 
 function mark_key_rate_limited($key_index, $retry_seconds = 60) {
-    $file = __DIR__ . '/../config/rate_limits.json';
+    $file = AI_CONFIG_PATH . '/rate_limits.json';
     $limits = file_exists($file) ? json_decode(file_get_contents($file), true) ?: [] : [];
     $limits[$key_index] = time() + (int) $retry_seconds;
     file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
 }
 
 function get_key_rate_limits() {
-    $file = __DIR__ . '/../config/rate_limits.json';
+    $file = AI_CONFIG_PATH . '/rate_limits.json';
     return file_exists($file) ? json_decode(file_get_contents($file), true) ?: [] : [];
 }
 
 function get_key_usage_stats() {
-    $log_file = __DIR__ . '/../config/key_usage_stats.json';
+    $log_file = AI_CONFIG_PATH . '/key_usage_stats.json';
     if (!file_exists($log_file)) return [];
     $stats = json_decode(file_get_contents($log_file), true);
     return $stats[date('Y-m-d')] ?? [];
