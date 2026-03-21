@@ -1,6 +1,7 @@
 # Aurora Hotel Plaza - Git Ignore
 
 # Sensitive files
+config/api_keys.php
 config/database.php
 config/current_key_idx.txt
 config/key_usage_stats.json
