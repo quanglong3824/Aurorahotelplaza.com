@@ -45,6 +45,43 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/pages-glass.css">
+    <style>
+        body.glass-page {
+            background: none !important;
+            background-color: #111827 !important;
+        }
+        body.glass-page::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                linear-gradient(to bottom, 
+                    rgba(17, 24, 39, 0.3) 0%, 
+                    rgba(17, 24, 39, 0.5) 30%, 
+                    rgba(17, 24, 39, 0.8) 70%, 
+                    rgba(17, 24, 39, 1) 100%
+                ),
+                url('<?php 
+                    $bg_img = "assets/img/hero-banner/caffe-aurora-hotel-1.jpg"; // Default
+                    switch($slug) {
+                        case "tiec-cuoi": $bg_img = "assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg"; break;
+                        case "hoi-nghi": $bg_img = "assets/img/service/meet/hoi-nghi-aurora-6.jpg"; break;
+                        case "nha-hang": $bg_img = "assets/img/restaurant/nha-hang-aurora-hotel-1.jpg"; break;
+                        case "van-phong": $bg_img = "assets/img/service/office/van-phong-cho-thue-aurora-3.jpg"; break;
+                        case "gym": $bg_img = "assets/img/service/gym/gym-aurora-hotel-1.jpg"; break;
+                        case "pool": $bg_img = "assets/img/service/pool/pool.jpg"; break;
+                    }
+                    echo $bg_img;
+                ?>') !important;
+            background-size: cover !important;
+            background-position: center top !important;
+            background-attachment: fixed !important;
+            z-index: 1;
+        }
+        .relative.flex.min-h-screen {
+            z-index: 2;
+        }
+    </style>
 </head>
 
 <body class="glass-page font-body text-white">
