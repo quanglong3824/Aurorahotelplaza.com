@@ -62,7 +62,7 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                     rgba(17, 24, 39, 1) 100%
                 ),
                 url('<?php 
-                    $bg_img = "assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg"; // Default
+                    $bg_img = "assets/img/hero-banner/caffe-aurora-hotel-1.jpg"; // Default
                     switch($slug) {
                         case "wedding-service": $bg_img = "assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg"; break;
                         case "conference-service": $bg_img = "assets/img/service/meet/hoi-nghi-aurora-6.jpg"; break;

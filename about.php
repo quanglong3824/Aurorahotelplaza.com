@@ -17,7 +17,7 @@ initLanguage();
     <link rel="stylesheet" href="assets/css/pages-glass.css">
     <style>
         body.glass-page::before {
-            background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>');
+            background-image: url('<?php echo imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'); ?>');
         }
     </style>
 </head>
