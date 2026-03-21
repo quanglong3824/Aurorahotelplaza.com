@@ -5,22 +5,34 @@ require_once __DIR__ . '/../config/load_env.php';
 @include_once __DIR__ . '/../config/api_keys.php';
 
 /**
- * Lấy Provider AI đang hoạt động (Luôn là gemini)
+ * Lấy Provider AI đang hoạt động (Mặc định là qwen nếu có cấu hình)
  */
 function get_active_ai_provider() {
-    return 'gemini';
+    return env('AI_PROVIDER', 'qwen');
 }
 
 /**
- * Đặt Provider AI đang hoạt động (Vô hiệu hóa việc đổi sang qwen)
+ * Đặt Provider AI đang hoạt động
  */
 function set_active_ai_provider($provider) {
+    // Nếu có hỗ trợ lưu vào file, có thể lưu tại AI_CONFIG_PATH
     return true;
 }
 
 /**
- * Lấy API Key cho Gemini
+ * Lấy API Key cho Qwen
  */
+function get_active_qwen_key() {
+    $keys_str = env('QWEN_API_KEY');
+    if (!$keys_str) return '';
+    
+    $keys = array_map('trim', explode(',', $keys_str));
+    return $keys[0] ?? ''; // Lấy key đầu tiên (có thể nâng cấp xoay vòng sau)
+}
+
+function get_active_qwen_model() {
+    return env('AI_MODEL', 'qwen-plus');
+}
 function get_active_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
