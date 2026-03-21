@@ -108,17 +108,28 @@ function stream_qwen_reply($user_message, $db, $conv_id)
 
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$buffer) {
         $buffer .= $data;
-        while (($pos = strpos($buffer, "\n\n")) !== false) {
-            $event = substr($buffer, 0, $pos);
-            $buffer = substr($buffer, $pos + 2);
-            
-            if (strpos($event, 'data:') === 0) {
-                $json = json_decode(substr($event, 5), true);
-                if (isset($json['output']['choices'][0]['message']['content'])) {
-                    $text = $json['output']['choices'][0]['message']['content'];
-                    $full_response_text .= $text;
-                    echo "data: " . json_encode(["text" => $text]) . "\n\n";
-                    if (ob_get_level() > 0) ob_flush(); flush();
+        // Xử lý cả \n\n (chuẩn) và các biến thể khác
+        $delimiters = ["\n\n", "\r\n\r\n", "\n"];
+        
+        foreach ($delimiters as $delim) {
+            while (($pos = strpos($buffer, $delim)) !== false) {
+                $event = trim(substr($buffer, 0, $pos));
+                $buffer = substr($buffer, $pos + strlen($delim));
+                
+                if (strpos($event, 'data:') === 0) {
+                    $json_str = trim(substr($event, 5));
+                    $json = json_decode($json_str, true);
+                    
+                    if (isset($json['output']['choices'][0]['message']['content'])) {
+                        $text = $json['output']['choices'][0]['message']['content'];
+                        $full_response_text .= $text;
+                        echo "data: " . json_encode(["text" => $text]) . "\n\n";
+                        if (ob_get_level() > 0) ob_flush(); flush();
+                    } elseif (isset($json['code']) && isset($json['message'])) {
+                        // Log lỗi từ API của Alibaba
+                        error_log("Qwen API Error: " . $json['code'] . " - " . $json['message']);
+                        echo "data: " . json_encode(["error" => "AI Error: " . $json['message']]) . "\n\n";
+                    }
                 }
             }
         }
@@ -126,10 +137,21 @@ function stream_qwen_reply($user_message, $db, $conv_id)
     });
 
     curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
     curl_close($ch);
+
+    if ($http_code !== 200 && empty($full_response_text)) {
+        if (class_exists('AuroraErrorTracker')) {
+            AuroraErrorTracker::capture('ai_api_error', "Qwen API Error $http_code: $curl_error", ['model' => $model]);
+        }
+        echo "data: " . json_encode(["error" => "AI hiện đang bận (Mã lỗi: $http_code). Vui lòng thử lại sau."]) . "\n\n";
+    }
     
-    return $full_response_text;
-}
+    // Log dung lượng sử dụng
+    if (!empty($full_response_text)) {
+        log_key_usage('qwen', strlen($full_response_text) / 2, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
+    }
 
 /**
  * Stream phản hồi từ Google Gemini
