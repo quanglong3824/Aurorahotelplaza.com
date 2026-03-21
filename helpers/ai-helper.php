@@ -76,7 +76,7 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
     $model = get_active_qwen_model();
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     
-    // Đảm bảo URL kết thúc bằng /chat/completions (v1 chuẩn)
+    // Đảm bảo URL kết thúc bằng /chat/completions
     $url = $base_url . "/chat/completions";
     
     $data = [
@@ -85,7 +85,8 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
             ["role" => "system", "content" => $system_prompt],
             ["role" => "user", "content" => $user_message]
         ],
-        "stream" => true
+        "stream" => true,
+        "temperature" => 0.7
     ];
 
     $ch = curl_init($url);
@@ -94,19 +95,25 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Bearer ' . $api_key
+        'Authorization: Bearer ' . $api_key,
+        'X-DashScope-SSE: enable', // Quan trọng cho một số Endpoint của Alibaba
+        'Accept: text/event-stream'
     ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 90);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TCP_KEEPALIVE, 1);
 
     $full_response_text = "";
     $buffer = "";
 
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$buffer) {
         $buffer .= $data;
+        // Xử lý các dòng dữ liệu từ SSE
         while (($pos = strpos($buffer, "\n")) !== false) {
             $line = trim(substr($buffer, 0, $pos));
             $buffer = substr($buffer, $pos + 1);
+            
+            if (empty($line)) continue;
             
             if (strpos($line, 'data: ') === 0) {
                 $content = substr($line, 6);
@@ -117,7 +124,8 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
                     $text = $json['choices'][0]['delta']['content'];
                     $full_response_text .= $text;
                     echo "data: " . json_encode(["text" => $text]) . "\n\n";
-                    if (ob_get_level() > 0) ob_flush(); flush();
+                    if (ob_get_level() > 0) ob_flush(); 
+                    flush();
                 }
             }
         }
@@ -126,10 +134,12 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
 
     curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
     curl_close($ch);
 
     if ($http_code !== 200 && empty($full_response_text)) {
-        echo "data: " . json_encode(["error" => "AI Server Error: $http_code. Vui lòng thử lại sau."]) . "\n\n";
+        $error_msg = "Mã lỗi: $http_code. " . ($curl_error ?: "Hệ thống AI đang bận.");
+        echo "data: " . json_encode(["error" => $error_msg]) . "\n\n";
     }
 
     if (!empty($full_response_text)) {
