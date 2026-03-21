@@ -49,7 +49,7 @@ try {
                     rgba(17, 24, 39, 0.8) 70%, 
                     rgba(17, 24, 39, 1) 100%
                 ),
-                url('../assets/img/premium-twin/premium-twin-aurora-hotel-1.jpg') !important;
+                url('../assets/img/premium-twin/premium-deluxe-twin-aurora-1.jpg') !important;
             background-size: cover !important;
             background-position: center top !important;
             background-attachment: fixed !important;

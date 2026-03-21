@@ -49,7 +49,7 @@ try {
                     rgba(17, 24, 39, 0.8) 70%, 
                     rgba(17, 24, 39, 1) 100%
                 ),
-                url('../assets/img/vip-suite/vip-suite-aurora-hotel-1.jpg') !important;
+                url('../assets/img/vip/vip-room-aurora-hotel-1.jpg') !important;
             background-size: cover !important;
             background-position: center top !important;
             background-attachment: fixed !important;
