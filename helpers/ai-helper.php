@@ -1,7 +1,7 @@
 <?php
 /**
- * Aurora Hotel Plaza - AI Chat Engine v2.0 (Qwen & Gemini Hybrid)
- * =============================================================
+ * Aurora Hotel Plaza - AI Chat Engine v2.1 (International Qwen & Gemini)
+ * ====================================================================
  */
 
 require_once __DIR__ . '/api_key_manager.php';
@@ -49,23 +49,22 @@ Ngày giờ: {$current_date} {$current_time}.
 }
 
 /**
- * Điều phối gọi AI tùy theo Provider đang được cấu hình
+ * Điều phối gọi AI
  */
 function stream_ai_reply($user_message, $db, $conv_id = 0)
 {
     $provider = get_active_ai_provider();
-    
     if ($provider === 'qwen') {
-        return stream_qwen_reply($user_message, $db, $conv_id);
+        return stream_qwen_reply_v1($user_message, $db, $conv_id);
     } else {
         return stream_gemini_reply($user_message, $db, $conv_id);
     }
 }
 
 /**
- * Stream phản hồi từ Alibaba Qwen (DashScope)
+ * Stream phản hồi từ Qwen V1 OpenAI Compatible API
  */
-function stream_qwen_reply($user_message, $db, $conv_id)
+function stream_qwen_reply_v1($user_message, $db, $conv_id)
 {
     $api_key = get_active_qwen_key();
     if (empty($api_key)) {
@@ -73,22 +72,20 @@ function stream_qwen_reply($user_message, $db, $conv_id)
         return "";
     }
 
+    $base_url = get_active_ai_base_url();
     $model = get_active_qwen_model();
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     
-    $url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation";
+    // Đảm bảo URL kết thúc bằng /chat/completions (v1 chuẩn)
+    $url = $base_url . "/chat/completions";
+    
     $data = [
         "model" => $model,
-        "input" => [
-            "messages" => [
-                ["role" => "system", "content" => $system_prompt],
-                ["role" => "user", "content" => $user_message]
-            ]
+        "messages" => [
+            ["role" => "system", "content" => $system_prompt],
+            ["role" => "user", "content" => $user_message]
         ],
-        "parameters" => [
-            "result_format" => "message",
-            "incremental_output" => true
-        ]
+        "stream" => true
     ];
 
     $ch = curl_init($url);
@@ -97,8 +94,7 @@ function stream_qwen_reply($user_message, $db, $conv_id)
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Bearer ' . $api_key,
-        'X-DashScope-SSE: enable'
+        'Authorization: Bearer ' . $api_key
     ]);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -108,28 +104,20 @@ function stream_qwen_reply($user_message, $db, $conv_id)
 
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$full_response_text, &$buffer) {
         $buffer .= $data;
-        // Xử lý cả \n\n (chuẩn) và các biến thể khác
-        $delimiters = ["\n\n", "\r\n\r\n", "\n"];
-        
-        foreach ($delimiters as $delim) {
-            while (($pos = strpos($buffer, $delim)) !== false) {
-                $event = trim(substr($buffer, 0, $pos));
-                $buffer = substr($buffer, $pos + strlen($delim));
+        while (($pos = strpos($buffer, "\n")) !== false) {
+            $line = trim(substr($buffer, 0, $pos));
+            $buffer = substr($buffer, $pos + 1);
+            
+            if (strpos($line, 'data: ') === 0) {
+                $content = substr($line, 6);
+                if ($content === "[DONE]") break;
                 
-                if (strpos($event, 'data:') === 0) {
-                    $json_str = trim(substr($event, 5));
-                    $json = json_decode($json_str, true);
-                    
-                    if (isset($json['output']['choices'][0]['message']['content'])) {
-                        $text = $json['output']['choices'][0]['message']['content'];
-                        $full_response_text .= $text;
-                        echo "data: " . json_encode(["text" => $text]) . "\n\n";
-                        if (ob_get_level() > 0) ob_flush(); flush();
-                    } elseif (isset($json['code']) && isset($json['message'])) {
-                        // Log lỗi từ API của Alibaba
-                        error_log("Qwen API Error: " . $json['code'] . " - " . $json['message']);
-                        echo "data: " . json_encode(["error" => "AI Error: " . $json['message']]) . "\n\n";
-                    }
+                $json = json_decode($content, true);
+                if (isset($json['choices'][0]['delta']['content'])) {
+                    $text = $json['choices'][0]['delta']['content'];
+                    $full_response_text .= $text;
+                    echo "data: " . json_encode(["text" => $text]) . "\n\n";
+                    if (ob_get_level() > 0) ob_flush(); flush();
                 }
             }
         }
@@ -138,20 +126,18 @@ function stream_qwen_reply($user_message, $db, $conv_id)
 
     curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curl_error = curl_error($ch);
     curl_close($ch);
 
     if ($http_code !== 200 && empty($full_response_text)) {
-        if (class_exists('AuroraErrorTracker')) {
-            AuroraErrorTracker::capture('ai_api_error', "Qwen API Error $http_code: $curl_error", ['model' => $model]);
-        }
-        echo "data: " . json_encode(["error" => "AI hiện đang bận (Mã lỗi: $http_code). Vui lòng thử lại sau."]) . "\n\n";
+        echo "data: " . json_encode(["error" => "AI Server Error: $http_code. Vui lòng thử lại sau."]) . "\n\n";
     }
-    
-    // Log dung lượng sử dụng
+
     if (!empty($full_response_text)) {
         log_key_usage('qwen', strlen($full_response_text) / 2, (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'admin' : 'client');
     }
+    
+    return $full_response_text;
+}
 
 /**
  * Stream phản hồi từ Google Gemini

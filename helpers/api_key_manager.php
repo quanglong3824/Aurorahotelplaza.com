@@ -30,7 +30,11 @@ function get_active_qwen_key() {
 
 function get_active_qwen_model() {
     // Ưu tiên QWEN_MODEL, nếu không có thì dùng AI_MODEL, cuối cùng là fallback qwen-max
-    return env('QWEN_MODEL', env('AI_MODEL', 'qwen-max'));
+    return env('QWEN_MODEL', env('AI_MODEL', 'qwen3.5-plus'));
+}
+
+function get_active_ai_base_url() {
+    return rtrim(env('AI_BASE_URL', 'https://dashscope.aliyuncs.com/api/v1'), '/');
 }
 function get_active_gemini_key()
 {
