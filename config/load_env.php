@@ -78,11 +78,10 @@ if (!function_exists('loadEnvVariables')) {
                         $name = trim($name);
                         $value = trim($value, " \t\n\r\0\x0B\"'");
                         
-                        if (!isset($_ENV[$name]) || $_ENV[$name] === '') {
-                            $_ENV[$name] = $value;
-                            if (function_exists('putenv')) {
-                                @putenv(sprintf('%s=%s', $name, $value));
-                            }
+                        // Luôn cập nhật $_ENV để ưu tiên giá trị từ file .env
+                        $_ENV[$name] = $value;
+                        if (function_exists('putenv')) {
+                            @putenv(sprintf('%s=%s', $name, $value));
                         }
                     }
                 }
@@ -100,9 +99,9 @@ if (!function_exists('env')) {
      */
     function env($key, $default = null) {
         $val = null;
-        if (isset($_ENV[$key])) {
+        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
             $val = $_ENV[$key];
-        } elseif (isset($_SERVER[$key])) {
+        } elseif (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
             $val = $_SERVER[$key];
         } elseif (function_exists('getenv')) {
             $val = @getenv($key);
