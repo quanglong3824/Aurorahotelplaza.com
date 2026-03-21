@@ -33,42 +33,21 @@ try {
 </head>
 
 <body class="glass-page font-body text-white">
-    <?php 
-    $bg_image = imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg');
-    ?>
-    <style>
-        /* Hiệu ứng Layer Flow: Nền cố định, nội dung lướt trên */
-        body.glass-page {
-            background-image: url('<?php echo $bg_image; ?>') !important;
-            background-attachment: fixed !important;
-            background-position: center !important;
-            background-size: cover !important;
-        }
-        body.glass-page::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: inherit !important;
-            background-attachment: fixed !important;
-            background-size: cover !important;
-            background-position: center !important;
-            filter: brightness(0.5) saturate(1.1); /* Độ sáng vừa phải để thấy rõ ảnh phòng */
-            z-index: 1;
-        }
-        /* Đảm bảo các thành phần khác nằm trên lớp phủ */
-        .relative.flex.min-h-screen {
-            z-index: 2;
-        }
-    </style>
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include '../includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
-            <!-- Top Hero Section - Now Transparent to show Body Background -->
-            <div class="relative min-h-[65vh] flex items-center justify-center pt-[100px] pb-12 px-4">
-                <!-- Removed local Hero Background div to use Body Background -->
-                
-                <div class="relative z-10 text-center max-w-4xl mx-auto animate-fade-in-up">
+            <!-- Top Hero Section -->
+            <div class="relative min-h-[60vh] flex items-center justify-center pt-[100px] pb-12 px-4">
+                <!-- Hero Background -->
+                <div class="absolute inset-0 z-0">
+                    <img src="<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg'); ?>"
+                        class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                </div>
+
+                <div class="relative z-10 text-center max-w-4xl mx-auto">
                     <span
                         class="glass-badge-pill mb-6 mx-auto bg-accent/20 border-accent/40 text-accent"><?php _e('apartment_detail.badge_modern'); ?></span>
                     <h1
