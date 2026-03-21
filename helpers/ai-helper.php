@@ -45,6 +45,21 @@ CẤU TRÚC DỮ LIỆU ĐỂ TRỢ LÝ (AURORA) PHỤC VỤ KHÁCH CHI TIẾT:
 - contact_submissions (Yêu cầu liên hệ của khách): name, email, phone, subject, message, submission_id. (Lưu ý: Bắt buộc truyền submission_id = FLOOR(RAND() * 1000000))
 ";
 
+    $user_context = "BẢO MẬT: Khách ĐANG CHAT là khách vãng lai (chưa đăng nhập). BẠN PHẢI TỪ CHỐI tra cứu lịch sử qua số điện thoại/email để bảo mật người dùng khác, chỉ cho phép tra cứu nếu khách cung cấp đúng mã Booking thực tế.";
+    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+        $uid = (int)$_SESSION['user_id'];
+        if ($db) {
+            try {
+                $stmt = $db->prepare("SELECT full_name, phone, email, user_id FROM users WHERE user_id = ?");
+                $stmt->execute([$uid]);
+                $u = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($u) {
+                    $user_context = "BẢO MẬT: Khách ĐANG CHAT đã ĐĂNG NHẬP VÀ XÁC THỰC LÀ CHÍNH CHỦ. Thông tin: Tên {$u['full_name']}, SĐT: {$u['phone']}, Email: {$u['email']}, user_id: {$u['user_id']}. BẠN ĐƯỢC TOÀN QUYỀN TRUY XUẤT toàn bộ lịch sử đặt phòng của user_id = {$u['user_id']} và báo cáo chi tiết cho khách (không được từ chối)!";
+                }
+            } catch (Exception $e) {}
+        }
+    }
+
     return "Bạn là Aurora - Trợ lý ảo lễ tân 5 sao của Aurora Hotel Plaza.
 Giới tính: Nữ. Tính cách: Sang trọng, nồng hậu, tinh tế, thông minh và phục vụ tận tâm.
 Bạn có quyền hạn tra cứu Database để phục vụ khách hàng.
@@ -66,6 +81,7 @@ NHIỆM VỤ & PHONG CÁCH:
 4. Định dạng giá: 1,500,000 VND.
 
 Ngày giờ: {$current_date} {$current_time}.
+{$user_context}
 {$history_context}";
 }
 
