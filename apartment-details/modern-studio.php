@@ -35,10 +35,6 @@ try {
 <body class="glass-page font-body text-white">
     <?php 
     $bg_image = imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-1.jpg');
-    // Đảm bảo đường dẫn bắt đầu bằng ../ nếu không phải URL tuyệt đối
-    if (!str_starts_with($bg_image, 'http') && !str_starts_with($bg_image, '/')) {
-        $bg_image = '../' . $bg_image;
-    }
     ?>
     <style>
         /* Hiệu ứng Layer Flow: Nền cố định, nội dung lướt trên */
@@ -56,7 +52,7 @@ try {
             background-attachment: fixed !important;
             background-size: cover !important;
             background-position: center !important;
-            filter: brightness(0.4) saturate(1.2); /* Làm tối nền để nổi bật UI */
+            filter: brightness(0.5) saturate(1.1); /* Độ sáng vừa phải để thấy rõ ảnh phòng */
             z-index: 1;
         }
         /* Đảm bảo các thành phần khác nằm trên lớp phủ */
