@@ -35,7 +35,15 @@ function get_active_qwen_model() {
 
 function get_active_ai_base_url() {
     // Chuẩn OpenAI Compatible của Alibaba thường yêu cầu /compatible-mode/v1
-    return rtrim(env('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'), '/');
+    $url = rtrim(env('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'), '/');
+    if (strpos($url, 'dashscope') !== false && strpos($url, 'compatible-mode') === false) {
+        if (substr($url, -3) === '/v1') {
+            $url = substr($url, 0, -3) . '/compatible-mode/v1';
+        } else {
+            $url .= '/compatible-mode/v1';
+        }
+    }
+    return $url;
 }
 function get_active_gemini_key()
 {

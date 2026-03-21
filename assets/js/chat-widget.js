@@ -312,6 +312,13 @@ const ChatWidget = {
         aiStreamSource.onmessage = (e) => {
             try {
                 const data = JSON.parse(e.data);
+
+                if (data.error) {
+                    aiStreamSource.close();
+                    bubbleEl.innerHTML = `<i>Lỗi: ${data.error}</i>`;
+                    this.scrollToBottom();
+                    return;
+                }
                 
                 if (data.done) {
                     aiStreamSource.close();
