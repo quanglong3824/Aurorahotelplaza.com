@@ -76,8 +76,11 @@ function stream_qwen_reply_v1($user_message, $db, $conv_id)
     $model = get_active_qwen_model();
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
     
-    // Đảm bảo URL kết thúc bằng /chat/completions
-    $url = $base_url . "/chat/completions";
+    // Đảm bảo URL kết thúc bằng /chat/completions chuẩn OpenAI
+    $url = $base_url;
+    if (strpos($url, '/chat/completions') === false) {
+        $url = rtrim($url, '/') . "/chat/completions";
+    }
     
     $data = [
         "model" => $model,

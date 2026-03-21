@@ -34,7 +34,8 @@ function get_active_qwen_model() {
 }
 
 function get_active_ai_base_url() {
-    return rtrim(env('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/v1'), '/');
+    // Chuẩn OpenAI Compatible của Alibaba thường yêu cầu /compatible-mode/v1
+    return rtrim(env('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'), '/');
 }
 function get_active_gemini_key()
 {

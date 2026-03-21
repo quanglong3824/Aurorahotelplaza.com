@@ -59,7 +59,12 @@ TRẠNG THÁI HỆ THỐNG HIỆN TẠI:
         $model = get_active_qwen_model();
         $base_url = get_active_ai_base_url();
         
-        $url = $base_url . "/chat/completions";
+        // Đảm bảo URL kết thúc bằng /chat/completions
+        $url = $base_url;
+        if (strpos($url, '/chat/completions') === false) {
+            $url = rtrim($url, '/') . "/chat/completions";
+        }
+
         $data = [
             "model" => $model,
             "messages" => [
