@@ -1738,5 +1738,24 @@ return [
         // Notes
         'note_apartment' => 'Apartment - Contact for consultation',
         'note_no_online_booking' => 'Apartments do not support online booking. Please contact for consultation.',
+    // Contact tracking
+    'contact_track' => [
+        'title' => 'Track Submission',
+        'placeholder' => 'Enter contact code (8 digits)',
+        'search_btn' => 'Search',
+        'result_title' => 'Contact Inquiry Result',
+        'code' => 'Contact Code',
+        'name' => 'Name',
+        'subject' => 'Subject',
+        'status' => 'Status',
+        'date' => 'Submitted Date',
+        'preview' => 'Content',
+        'error_empty' => 'Please enter contact code',
+        'error_not_found' => 'Contact not found with this code',
+        'error_system' => 'System tracking error',
+        'status_new' => 'Received',
+        'status_processing' => 'Processing',
+        'status_replied' => 'Replied',
+        'status_closed' => 'Closed',
     ],
 ];

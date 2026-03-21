@@ -166,7 +166,20 @@ if ($is_logged_in) {
 
                         <!-- Form Card (Right) -->
                         <div class="form-glass-card">
-                            <h2 class="font-display text-2xl font-bold mb-6 text-white"><?php _e('contact_page.send_us_message'); ?></h2>
+                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                                <h2 class="font-display text-2xl font-bold text-white"><?php _e('contact_page.send_us_message'); ?></h2>
+                                
+                                <!-- Small Tracking Form -->
+                                <div class="flex items-center gap-2 p-1.5 bg-white/5 border border-white/10 rounded-xl">
+                                    <input type="text" id="contactTrackCode" 
+                                           class="bg-transparent border-none text-xs text-white placeholder:text-white/40 focus:ring-0 w-32" 
+                                           placeholder="<?php _e('contact_track.placeholder'); ?>">
+                                    <button type="button" onclick="trackContact()" 
+                                            class="bg-accent hover:bg-accent-light text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all">
+                                        <?php _e('contact_track.search_btn'); ?>
+                                    </button>
+                                </div>
+                            </div>
                             
                             <?php if ($is_logged_in): ?>
                                 <div class="flex items-center gap-2 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm mb-6">
