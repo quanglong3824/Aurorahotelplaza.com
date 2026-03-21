@@ -107,7 +107,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showSuccessModal(submissionId) {
-        // ... (existing code)
+        // Scroll to top for better modal visibility
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Create modal with liquid glass style
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0;';
+        modal.innerHTML = `
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-md" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;" onclick="this.parentElement.remove()"></div>
+            <div class="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full p-10 text-center animate-scale-in border border-white/20" style="position: relative; z-index: 10;">
+                <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/30">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Gửi thành công</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">Cảm ơn bạn đã liên hệ với Aurora Hotel Plaza</p>
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100/80 dark:from-amber-900/30 dark:to-amber-800/20 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-amber-200/50 dark:border-amber-700/30">
+                    <p class="text-sm text-amber-700 dark:text-amber-300 mb-2 uppercase tracking-wider font-semibold">Mã liên hệ của bạn</p>
+                    <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 tracking-widest font-mono">${submissionId}</p>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+                    Chúng tôi đã gửi email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư.
+                </p>
+                <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-accent to-amber-500 text-white rounded-xl px-6 py-4 font-bold hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:-translate-y-0.5">
+                    Đóng
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+        
+        // Restore scroll when modal is closed
+        modal.querySelector('button').addEventListener('click', () => {
+            document.body.style.overflow = '';
+        });
+        modal.querySelector('.fixed.inset-0.bg-black\\/60').addEventListener('click', () => {
+            document.body.style.overflow = '';
+        });
     }
 });
 
@@ -116,6 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 async function trackContact() {
     const input = document.getElementById('contactTrackCode');
+    if (!input) return;
+    
     const code = input.value.trim();
     
     if (!code) {
@@ -243,7 +285,6 @@ function showContactStatusModal(data) {
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
 }
-});
 
 /**
  * Toast notification function
