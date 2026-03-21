@@ -19,19 +19,18 @@ function set_active_ai_provider($provider) {
     return true;
 }
 
-/**
- * Lấy API Key cho Qwen
- */
 function get_active_qwen_key() {
-    $keys_str = env('QWEN_API_KEY');
-    if (!$keys_str) return '';
+    $key = env('QWEN_API_KEY');
+    if (!$key) return '';
     
-    $keys = array_map('trim', explode(',', $keys_str));
-    return $keys[0] ?? ''; // Lấy key đầu tiên (có thể nâng cấp xoay vòng sau)
+    // Hỗ trợ nếu người dùng nhập nhiều key cách nhau bởi dấu phẩy
+    $keys = array_map('trim', explode(',', $key));
+    return $keys[0];
 }
 
 function get_active_qwen_model() {
-    return env('AI_MODEL', 'qwen-plus');
+    // Ưu tiên QWEN_MODEL, nếu không có thì dùng AI_MODEL, cuối cùng là fallback qwen-max
+    return env('QWEN_MODEL', env('AI_MODEL', 'qwen-max'));
 }
 function get_active_gemini_key()
 {
