@@ -1017,21 +1017,6 @@ function calculateNights() {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         if (diffDays > 0) {
-            // Check for maximum 30 nights stay
-            if (diffDays > 30) {
-                if (typeof showToast === 'function') {
-                    showToast('Thời gian đặt phòng không được vượt quá 30 ngày. Vui lòng liên hệ bộ phận kinh doanh để đặt dài hạn.', 'error');
-                } else {
-                    alert('Thời gian đặt phòng không được vượt quá 30 ngày. Vui lòng liên hệ bộ phận kinh doanh để đặt dài hạn.');
-                }
-                
-                // Reset check-out date to check-in + 1 day
-                const nextDay = new Date(date1);
-                nextDay.setDate(nextDay.getDate() + 1);
-                document.getElementById('check_out_date').value = nextDay.toISOString().split('T')[0];
-                return 1;
-            }
-
             const nightsElement = document.getElementById('num_nights');
             if (nightsElement) {
                 nightsElement.textContent = diffDays + ' ' + translations.common.nights;

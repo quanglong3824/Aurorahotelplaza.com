@@ -150,16 +150,7 @@ try {
     // For short stay, we count as 1 night but use short stay price
     if ($is_short_stay) {
         $num_nights = 1;
-    }
-
-    // ========== SAVE GUEST INFO TO SESSION FOR ANTI-SPAM ==========
-    // Giúp hệ thống nhận diện guest trong phiên làm việc hiện tại để chặn spam/overlap
-    $_SESSION['guest_email'] = $guest_email;
-    $_SESSION['guest_phone'] = $guest_phone;
-    $_SESSION['guest_name'] = $guest_name;
-    // ==============================================================
-
-    if ($num_nights < 1) {
+    } elseif ($num_nights < 1) {
         throw new Exception('Số đêm phải lớn hơn 0');
     }
 

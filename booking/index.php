@@ -24,16 +24,12 @@ $spam_check_passed = true;
 $booking_block_message = '';
 $booking_block_bookings = [];
 
-// Lấy thông tin từ session nếu là khách vãng lai đã từng nhập thông tin
-$guest_email = $_SESSION['guest_email'] ?? null;
-$guest_phone = $_SESSION['guest_phone'] ?? null;
-$user_id = $_SESSION['user_id'] ?? null;
+// CHỈ CHECK VỚI USER ĐÃ ĐĂNG NHẬP
+// Guest (vãng lai) không block vì họ không thể đăng nhập để kiểm tra booking
+if (isset($_SESSION['user_id'])) {
+    // User đã đăng ký: check theo user_id
+    $booking_spam_check = checkBookingSpam($_SESSION['user_id'], null, null);
 
-// Luôn kiểm tra spam nếu có bất kỳ thông tin định danh nào
-if ($user_id || $guest_email || $guest_phone) {
-    $booking_spam_check = checkBookingSpam($user_id, $guest_email, $guest_phone);
-
-    // CHỈ CHẶN NẾU ALLOWED = FALSE (Tức là >= 2 đơn)
     if (!$booking_spam_check['allowed']) {
         $spam_check_passed = false;
         $booking_block_message = $booking_spam_check['message'];
@@ -224,13 +220,14 @@ foreach ($room_types as $room) {
                                 <span class="material-symbols-outlined text-base">help_outline</span>
                                 <?php _e('booking_page.block_help_title'); ?>
                             </h5>
-                            <p class="text-xs text-gray-400 mb-3">
-                                Hệ thống ghi nhận bạn đã có các yêu cầu đặt phòng trước đó. Nếu bạn lỡ đóng trang xác nhận, vui lòng lưu lại mã booking phía trên để cung cấp cho lễ tân.
-                            </p>
                             <ul class="text-sm text-gray-300 space-y-1.5 list-none pl-2">
                                 <li class="flex items-start gap-2">
                                     <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
                                     <span><?php _e('booking_form.active_booking_pay'); ?></span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
+                                    <span><?php _e('booking_form.active_booking_checkout'); ?></span>
                                 </li>
                                 <li class="flex items-start gap-2">
                                     <span class="material-symbols-outlined text-xs text-blue-400 mt-0.5">check_circle</span>
@@ -244,15 +241,15 @@ foreach ($room_types as $room) {
                     <!-- Footer Actions -->
                     <div
                         class="px-6 py-4 border-t border-white/10 flex flex-col sm:flex-row justify-end gap-3 sticky bottom-0 bg-slate-900/90 backdrop-blur-md rounded-b-3xl">
-                        <button onclick="document.getElementById('bookingBlockModal').remove()"
-                            class="px-5 py-2.5 text-amber-400 hover:text-amber-300 bg-amber-500/5 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl transition-all duration-200 text-sm font-medium text-center backdrop-blur-sm">
-                            <span class="material-symbols-outlined text-sm align-middle mr-1">add_circle</span>
-                            Tôi muốn đặt thêm phòng
-                        </button>
                         <a href="../index.php"
                             class="px-5 py-2.5 text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 text-sm font-medium text-center backdrop-blur-sm">
                             <span class="material-symbols-outlined text-sm align-middle mr-1">home</span>
                             <?php _e('booking_page.home_link'); ?>
+                        </a>
+                        <a href="../profile/bookings.php"
+                            class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl transition-all duration-200 text-sm font-medium inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 backdrop-blur-sm border border-blue-400/20">
+                            <span class="material-symbols-outlined text-sm">list</span>
+                            <?php _e('booking_page.view_my_bookings'); ?>
                         </a>
                     </div>
                 </div>
@@ -436,18 +433,18 @@ foreach ($room_types as $room) {
                                         <p class="text-xs text-gray-500 mt-1"><?php _e('booking_page.max_children_text'); ?></p>
                                     </div>
 
-                                    <!-- Check-in Date -->
+                                        <!-- Check-in Date -->
                                     <div class="form-group">
                                         <label class="form-label"><?php _e('booking_page.check_in_date'); ?> *</label>
                                         <input type="date" name="check_in_date" id="check_in_date" class="form-input"
-                                            value="<?php echo $prefilled_check_in; ?>" min="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d', strtotime('+1 year')); ?>" required>
+                                            value="<?php echo $prefilled_check_in; ?>" min="<?php echo date('Y-m-d'); ?>" max="2030-12-31" required>
                                     </div>
 
                                     <!-- Check-out Date -->
                                     <div class="form-group" id="checkout_group">
                                         <label class="form-label"><?php _e('booking_page.check_out_date'); ?> *</label>
                                         <input type="date" name="check_out_date" id="check_out_date" class="form-input"
-                                            value="<?php echo $prefilled_check_out; ?>" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="<?php echo date('Y-m-d', strtotime('+1 year + 30 days')); ?>" required>
+                                            value="<?php echo $prefilled_check_out; ?>" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" max="2030-12-31" required>
                                     </div>
                                 </div>
 

@@ -27,8 +27,8 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         error_log("Guest Phone: " . ($guest_phone ?? 'null'));
         
         // Các trạng thái booking CHƯA HOÀN TẤT (không được đặt tiếp)
-        // SIẾT CHẶT: Bao gồm cả 'confirmed' để tránh spam đặt nhiều phòng cùng lúc
-        $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
+        // MỚI: 'confirmed' đã cho phép đặt tiếp (không cần đợi checkout)
+        $blocked_statuses = ['pending', 'checked_in'];
         
         $where_conditions = [];
         $params = [];
@@ -90,19 +90,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
                 'allowed' => true,
                 'message' => '',
                 'pending_bookings' => []
-            ];
-        }
-
-        // CẢI TIẾN: Cho phép tối đa 2 đơn đang chờ (Pending/Confirmed) để khách có thể đặt thêm hoặc đặt lại nếu lỗi
-        $max_allowed_pending = 2;
-        $count = count($pending_bookings);
-        
-        if ($count < $max_allowed_pending) {
-            return [
-                'allowed' => true,
-                'message' => "Bạn đang có $count đơn đặt phòng chưa hoàn tất. Bạn vẫn có thể đặt thêm, nhưng vui lòng hạn chế spam.",
-                'pending_bookings' => $pending_bookings,
-                'is_warning' => true
             ];
         }
         
@@ -170,37 +157,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         ];
     }
 }
-
-/**
- * Kiểm tra giới hạn ngày đặt phòng (Tối đa 30 ngày)
- * 
- * @param string $check_in
- * @param string $check_out
- * @return array
- */
-function validateBookingDuration($check_in, $check_out) {
-    $start = new DateTime($check_in);
-    $end = new DateTime($check_out);
-    $interval = $start->diff($end);
-    $days = $interval->days;
-
-    if ($days > 30) {
-        return [
-            'allowed' => false,
-            'message' => "Thời gian đặt phòng không được vượt quá 30 ngày. Vui lòng liên hệ bộ phận kinh doanh để đặt dài hạn."
-        ];
-    }
-
-    if ($days <= 0) {
-        return [
-            'allowed' => false,
-            'message' => "Ngày trả phòng phải sau ngày nhận phòng ít nhất 1 ngày."
-        ];
-    }
-
-    return ['allowed' => true];
-}
-
 
 /**
  * Kiểm tra trùng lặp đặt phòng (overlap detection)
