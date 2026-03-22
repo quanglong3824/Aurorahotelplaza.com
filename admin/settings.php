@@ -64,6 +64,7 @@ try {
         'email_notifications' => '1',
         'sms_notifications' => '0',
         'maintenance_mode' => '0',
+        'testing_mode' => '0',
         'allow_guest_booking' => '1',
         'require_payment_upfront' => '0',
         'auto_confirm_booking' => '0',
@@ -313,6 +314,17 @@ include 'includes/admin-header.php';
                     </label>
                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark ml-6">
                         Khi bật, website sẽ hiển thị thông báo bảo trì cho khách hàng
+                    </p>
+                </div>
+
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="settings[testing_mode]" value="1" 
+                               <?php echo $settings['testing_mode'] ? 'checked' : ''; ?>>
+                        <span class="font-medium text-blue-600">Bật chế độ Testing (Auto-fill Booking)</span>
+                    </label>
+                    <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark ml-6">
+                        Khi bật, trang đặt phòng sẽ hiển thị tùy chọn tự động điền thông tin mẫu để test nhanh
                     </p>
                 </div>
                 

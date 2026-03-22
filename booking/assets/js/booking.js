@@ -340,6 +340,37 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', handleSubmit);
     }
 
+    // Testing Auto-fill logic
+    const testingAutofill = document.getElementById('testing_autofill');
+    if (testingAutofill) {
+        testingAutofill.addEventListener('change', function() {
+            if (this.checked) {
+                // Fill with dummy data
+                const dummyData = {
+                    guest_name: 'Khách Hàng Testing ' + Math.floor(Math.random() * 1000),
+                    guest_phone: '09' + Math.floor(10000000 + Math.random() * 90000000),
+                    guest_email: 'tester' + Math.floor(Math.random() * 100) + '@example.com',
+                    special_requests: 'Đây là yêu cầu đặc biệt từ chế độ Testing Auto-fill. Vui lòng bỏ qua đơn này.'
+                };
+
+                document.getElementById('guest_name').value = dummyData.guest_name;
+                document.getElementById('guest_phone').value = dummyData.guest_phone;
+                document.getElementById('guest_email').value = dummyData.guest_email;
+                document.getElementById('special_requests').value = dummyData.special_requests;
+
+                if (typeof showToast === 'function') {
+                    showToast('Đã tự động điền thông tin mẫu!', 'success');
+                }
+            } else {
+                // Clear fields if unchecked
+                document.getElementById('guest_name').value = '';
+                document.getElementById('guest_phone').value = '';
+                document.getElementById('guest_email').value = '';
+                document.getElementById('special_requests').value = '';
+            }
+        });
+    }
+
     // Update short stay availability based on selected room
     updateShortStayAvailability();
 });

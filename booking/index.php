@@ -46,6 +46,11 @@ if (!$spam_check_passed) {
 
 // Get room types for selection with room availability count and extended pricing
 $db = getDB();
+
+// Load system settings
+$stmt = $db->query("SELECT setting_key, setting_value FROM system_settings");
+$system_settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+
 $stmt = $db->prepare("
     SELECT 
         rt.*,
@@ -803,6 +808,25 @@ foreach ($room_types as $room) {
                         <!-- Step 2: Guest Information -->
                         <div class="form-step" id="step2">
                             <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.guest_info'); ?></h3>
+
+                            <?php if (($system_settings['testing_mode'] ?? '0') === '1'): ?>
+                                <div class="mb-6 p-4 bg-blue-600/20 border border-blue-500/40 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-lg shadow-blue-900/20 group hover:border-blue-400/60 transition-all duration-300">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                            <span class="material-symbols-outlined">biotech</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-blue-100 block">Chế độ Testing</span>
+                                            <span class="text-xs text-blue-300/80">Sử dụng dữ liệu mẫu để đặt thử nhanh</span>
+                                        </div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="testing_autofill" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                        <span class="ml-3 text-sm font-bold text-blue-200 select-none">AUTO-FILL</span>
+                                    </label>
+                                </div>
+                            <?php endif; ?>
 
                             <?php if (!$user_info): ?>
                                 <div class="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
