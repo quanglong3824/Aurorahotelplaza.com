@@ -90,7 +90,7 @@ include 'includes/admin-header.php';
     </div>
     <div class="stat-card">
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Điểm TB</p>
-        <p class="text-2xl font-bold text-accent"><?php echo number_format($counts['avg_rating'], 1); ?> ⭐</p>
+        <p class="text-2xl font-bold text-accent"><?php echo number_format((float)($counts['avg_rating'] ?? 0), 1); ?> ⭐</p>
     </div>
 </div>
 
