@@ -200,9 +200,22 @@ try {
                         <div id="confirmationMessage" class="hidden mb-6 p-4 rounded-lg"></div>
 
                         <div class="space-y-4 mb-8">
-                            <div class="flex justify-between items-center py-2 border-b border-white/10">
-                                <span class="text-white/70"><?php _e('booking_confirmation.booking_code'); ?>:</span>
-                                <span class="font-semibold text-accent"><?php echo $booking['booking_code']; ?></span>
+                            <div class="flex flex-col py-2 border-b border-white/10">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-white/70"><?php _e('booking_confirmation.booking_code'); ?>:</span>
+                                    <span class="font-semibold text-accent text-lg tracking-wider">
+                                        <?php 
+                                        $full_code = $booking['booking_code'];
+                                        $prefix = substr($full_code, 0, -6);
+                                        $suffix = substr($full_code, -6);
+                                        echo htmlspecialchars($prefix); 
+                                        ?><span class="bg-accent text-black px-1.5 rounded-md shadow-sm ml-0.5 animate-pulse-slow"><?php echo htmlspecialchars($suffix); ?></span>
+                                    </span>
+                                </div>
+                                <div class="flex items-start gap-1.5 text-[10px] text-accent/80 italic mt-0.5">
+                                    <span class="material-symbols-outlined text-[12px] mt-0.5">info</span>
+                                    <span>Ghi chú: 6 ký tự tô sáng cuối là mã rút gọn để tra cứu nhanh hoặc cung cấp cho lễ tân.</span>
+                                </div>
                             </div>
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.room_type'); ?>:</span>

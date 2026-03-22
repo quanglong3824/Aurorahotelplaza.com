@@ -268,7 +268,18 @@ HTML;
                     <div class="info-box-title">Thông tin đặt phòng</div>
                     <div class="info-row">
                         <span class="info-label">Mã đặt phòng</span>
-                        <span class="info-value">{$bookingData['booking_code']}</span>
+                        <span class="info-value">
+                            <?php 
+                            $full_code = $bookingData['booking_code'];
+                            $prefix = substr($full_code, 0, -6);
+                            $suffix = substr($full_code, -6);
+                            echo htmlspecialchars($prefix); 
+                            ?><span style="background-color: #f59e0b; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold; margin-left: 2px;">{$suffix}</span>
+                            <br>
+                            <span style="font-size: 10px; color: #f59e0b; font-style: italic;">
+                                * Mã rút gọn để tra cứu nhanh hoặc báo lễ tân: <strong>{$suffix}</strong>
+                            </span>
+                        </span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Loại phòng</span>

@@ -126,9 +126,20 @@ $payment_labels = [
                             <h1 class="text-3xl font-bold text-white uppercase tracking-wider">
                                 <?php _e('booking_detail.page_title'); ?>
                             </h1>
-                            <p class="mt-1 text-white/60">
-                                <?php _e('booking_detail.booking_code'); ?>: <span
-                                    class="font-mono text-accent text-lg"><?php echo htmlspecialchars($booking_code); ?></span>
+                            <p class="mt-1 text-white/60 flex items-center gap-2 flex-wrap">
+                                <?php _e('booking_detail.booking_code'); ?>: 
+                                <span class="font-mono text-accent text-xl font-bold tracking-wider bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                                    <?php 
+                                    $display_code = $booking['booking_code'] ?? $booking_code;
+                                    $prefix = substr($display_code, 0, -6);
+                                    $suffix = substr($display_code, -6);
+                                    echo htmlspecialchars($prefix); 
+                                    ?><span class="bg-accent text-black px-1.5 rounded ml-0.5"><?php echo htmlspecialchars($suffix); ?></span>
+                                </span>
+                                <span class="text-[10px] text-accent/70 italic flex items-center gap-1 bg-accent/5 px-2 py-1 rounded border border-accent/10">
+                                    <span class="material-symbols-outlined text-[12px]">info</span>
+                                    Dùng 6 ký tự tô sáng cuối để tra cứu nhanh hoặc báo lễ tân.
+                                </span>
                             </p>
                         </div>
 
