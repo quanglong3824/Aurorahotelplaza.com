@@ -1983,8 +1983,12 @@ async function handleSubmit(e) {
             // Handle specific error types from backend
             if (result.existing_bookings || result.overlapping_bookings) {
                 showBookingConflictModal(result);
+                submitBtn.disabled = false;
+                submitBtnText.textContent = originalText;
             } else if (result.retry_after) {
                 showToast(`Vui lòng đợi ${result.retry_after} giây trước khi đặt tiếp`, 'error');
+                submitBtn.disabled = false;
+                submitBtnText.textContent = originalText;
             } else if (result.message) {
                 showToast(result.message, 'error');
             } else {
