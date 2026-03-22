@@ -26,17 +26,22 @@ try {
         throw new Exception("Lỗi kết nối cơ sở dữ liệu");
     }
 
-    // Search by booking code, email or phone
+    // Search by booking code (full or last 6 chars), email or phone
     $limitSql = ($mode === 'all') ? "" : "LIMIT 1";
     $stmt = $conn->prepare("
         SELECT booking_code, status, total_amount, created_at, check_in_date, check_out_date, 
                guest_name, guest_email, guest_phone
         FROM bookings
-        WHERE booking_code = ? OR guest_email = ? OR guest_phone = ?
+        WHERE booking_code = ? 
+           OR booking_code LIKE ?
+           OR guest_email = ? 
+           OR guest_phone = ?
         ORDER BY created_at DESC
         $limitSql
     ");
-    $stmt->execute([$query, $query, $query]);
+    // Hỗ trợ tìm theo 6 ký tự cuối nếu query có độ dài 6
+    $wildcardQuery = (strlen($query) === 6) ? "%$query" : $query;
+    $stmt->execute([$query, $wildcardQuery, $query, $query]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($rows) > 0) {

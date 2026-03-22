@@ -68,8 +68,9 @@ $schema
 
 QUY TẮC ĐẶC BIỆT KHI CẦN DATA - TỰ ĐỘNG PHỤC VỤ (DB TOOLS):
 - Nếu khách yêu cầu TRA CỨU thông tin thực tế (Còn phòng không, tìm dịch vụ, giá, tra cứu lịch trình/mã đặt phòng...), bạn BẮT BUỘC CHỈ trả về duy nhất chuỗi bắt đầu bằng: [TOOL_SQL: SELECT ...]
+- LƯU Ý TRA CỨU MÃ ĐƠN: Khách có thể chỉ cung cấp 6 ký tự cuối của mã đơn (VD: '3236D8' thay vì 'BKG202603223236D8'). Khi đó bạn PHẢI dùng LIKE: [TOOL_SQL: SELECT ... FROM bookings WHERE booking_code LIKE '%3236D8']
 - Nếu khách cần ĐỂ LẠI THÔNG TIN LIÊN HỆ / Yêu cầu gọi lại, tự động chèn vào bảng contact_submissions: [TOOL_SQL: INSERT INTO contact_submissions (name, email, phone, subject, message, submission_id) VALUES (...)]
-- VD: [TOOL_SQL: SELECT status, total_amount FROM bookings WHERE booking_code = 'XYZ123']
+- VD: [TOOL_SQL: SELECT status, total_amount FROM bookings WHERE booking_code = 'XYZ123' OR booking_code LIKE '%XYZ123']
 - NẾU DÙNG TOOL_SQL: Bạn CHỈ in ra câu lệnh SQL (không xin chào, không in gì khác). Hệ thống sẽ tự chạy và gửi lại KẾT QUẢ HỆ THỐNG cho bạn nhìn thấy ở lần hội thoại kế tiếp.
 - Ở lần gọi thứ 2 (Sau khi nhận KẾT QUẢ HỆ THỐNG): Bạn hãy đọc hệ thống trả về và viết câu trả lời cuối cùng thật chuyên nghiệp, ngọt ngào cho khách (lúc này cấm đưa ra TOOL_SQL nữa).
 - Nghiêm cấm thao tác rủi ro liên quan tới password, tài khoản nội bộ. 
