@@ -240,6 +240,12 @@ HTML;
         $checkOut = date('m/d/Y', strtotime($bookingData['check_out_date']));
         $totalAmount = number_format($bookingData['total_amount']);
         $hotelUrl = self::getBaseUrl();
+
+        // Tách mã booking để tô sáng 6 ký tự cuối
+        $full_code = $bookingData['booking_code'];
+        $prefix = substr($full_code, 0, -6);
+        $suffix = substr($full_code, -6);
+        $highlighted_code = htmlspecialchars($prefix) . '<span style="background-color: #f59e0b; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold; margin-left: 2px;">' . htmlspecialchars($suffix) . '</span>';
         
         // Load CSS
         $css = file_get_contents(__DIR__ . '/../includes/email-templates/email-styles.css');
@@ -269,12 +275,7 @@ HTML;
                     <div class="info-row">
                         <span class="info-label">Mã đặt phòng</span>
                         <span class="info-value">
-                            <?php 
-                            $full_code = $bookingData['booking_code'];
-                            $prefix = substr($full_code, 0, -6);
-                            $suffix = substr($full_code, -6);
-                            echo htmlspecialchars($prefix); 
-                            ?><span style="background-color: #f59e0b; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold; margin-left: 2px;">{$suffix}</span>
+                            {$highlighted_code}
                             <br>
                             <span style="font-size: 10px; color: #f59e0b; font-style: italic;">
                                 * Mã rút gọn để tra cứu nhanh hoặc báo lễ tân: <strong>{$suffix}</strong>
