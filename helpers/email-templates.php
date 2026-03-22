@@ -245,7 +245,7 @@ HTML;
         $full_code = $bookingData['booking_code'];
         $prefix = substr($full_code, 0, -6);
         $suffix = substr($full_code, -6);
-        $highlighted_code = htmlspecialchars($prefix) . '<span style="background-color: #f59e0b; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold; margin-left: 2px;">' . htmlspecialchars($suffix) . '</span>';
+        $highlighted_code = htmlspecialchars($prefix) . '<span style="background-color: #d4af37; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold;">' . htmlspecialchars($suffix) . '</span>';
         
         // Load CSS
         $css = file_get_contents(__DIR__ . '/../includes/email-templates/email-styles.css');
@@ -277,7 +277,7 @@ HTML;
                         <span class="info-value">
                             {$highlighted_code}
                             <br>
-                            <span style="font-size: 10px; color: #f59e0b; font-style: italic;">
+                            <span style="font-size: 10px; color: #d4af37; font-style: italic;">
                                 * Mã rút gọn để tra cứu nhanh hoặc báo lễ tân: <strong>{$suffix}</strong>
                             </span>
                         </span>

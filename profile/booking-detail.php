@@ -133,8 +133,7 @@ $payment_labels = [
                                     $display_code = $booking['booking_code'] ?? $booking_code;
                                     $prefix = substr($display_code, 0, -6);
                                     $suffix = substr($display_code, -6);
-                                    echo htmlspecialchars($prefix); 
-                                    ?><span class="bg-accent text-black px-1.5 rounded ml-0.5"><?php echo htmlspecialchars($suffix); ?></span>
+                                    echo htmlspecialchars($prefix); ?><span class="bg-accent text-black px-1.5 rounded"><?php echo htmlspecialchars($suffix); ?></span>
                                 </span>
                                 <span class="text-[10px] text-accent/70 italic flex items-center gap-1 bg-accent/5 px-2 py-1 rounded border border-accent/10">
                                     <span class="material-symbols-outlined text-[12px]">info</span>

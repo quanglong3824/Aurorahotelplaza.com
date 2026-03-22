@@ -208,8 +208,7 @@ try {
                                         $full_code = $booking['booking_code'];
                                         $prefix = substr($full_code, 0, -6);
                                         $suffix = substr($full_code, -6);
-                                        echo htmlspecialchars($prefix); 
-                                        ?><span class="bg-accent text-black px-1.5 rounded-md shadow-sm ml-0.5 animate-pulse-slow"><?php echo htmlspecialchars($suffix); ?></span>
+                                        echo htmlspecialchars($prefix); ?><span class="bg-accent text-black px-1 rounded-md shadow-sm font-bold"><?php echo htmlspecialchars($suffix); ?></span>
                                     </span>
                                 </div>
                                 <div class="flex items-start gap-1.5 text-[10px] text-accent/80 italic mt-0.5">
