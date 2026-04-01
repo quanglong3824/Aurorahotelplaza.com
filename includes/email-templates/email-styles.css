@@ -1,311 +1,225 @@
 /* 
- * Professional Email Template Styles
- * Aurora Hotel Plaza
+ * Aurora Hotel Plaza - Unified Email Styles
+ * Style: Modern Luxury / Liquid Glass / Golden Accent
  */
 
-/* Reset & Base */
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
     line-height: 1.6;
-    color: #333333;
 }
 
-/* Container */
 .email-wrapper {
     width: 100%;
-    background-color: #f5f5f5;
-    padding: 40px 20px;
+    background-color: #f8fafc;
+    padding: 40px 10px;
 }
 
 .email-container {
     max-width: 600px;
     margin: 0 auto;
     background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-/* Header */
+/* Header Section */
 .email-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 40px 30px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    padding: 50px 40px;
     text-align: center;
+    position: relative;
 }
 
 .email-header h1 {
     margin: 0;
-    color: #ffffff;
+    color: #d4af37;
     font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .email-header p {
-    margin: 8px 0 0;
-    color: rgba(255, 255, 255, 0.9);
+    margin: 10px 0 0;
+    color: #94a3b8;
     font-size: 14px;
+    letter-spacing: 2px;
 }
 
-/* Content */
+/* Accent Bar */
+.accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #b8941f, #d4af37, #b8941f);
+}
+
+/* Content Area */
 .email-content {
-    padding: 40px 30px;
+    padding: 45px 40px;
 }
 
-.email-greeting {
+.greeting {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.main-text {
     font-size: 16px;
-    color: #333333;
-    margin: 0 0 20px;
+    color: #475569;
+    margin-bottom: 30px;
 }
 
-.email-text {
+/* Highlight Box (Liquid Glass feel) */
+.highlight-box {
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.highlight-label {
+    font-size: 12px;
+    color: #b8941f;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.highlight-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: 4px;
+}
+
+/* Data Table */
+.data-card {
+    background: #fdfdfd;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.card-title {
     font-size: 15px;
-    color: #555555;
-    line-height: 1.7;
-    margin: 0 0 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Info Box */
-.info-box {
-    background-color: #f8f9fa;
-    border-left: 4px solid #667eea;
-    padding: 20px;
-    margin: 25px 0;
+.data-row {
+    display: table;
+    width: 100%;
+    margin-bottom: 12px;
 }
 
-.info-box-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333333;
-    margin: 0 0 15px;
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.info-label {
+.data-label {
+    display: table-cell;
     font-size: 14px;
-    color: #666666;
-    font-weight: 500;
+    color: #64748b;
+    width: 40%;
 }
 
-.info-value {
+.data-value {
+    display: table-cell;
     font-size: 14px;
-    color: #333333;
+    color: #1e293b;
     font-weight: 600;
     text-align: right;
 }
 
-/* Booking Code */
-.booking-code-box {
-    background-color: #f8f9fa;
-    border: 2px dashed #667eea;
-    padding: 20px;
-    text-align: center;
-    margin: 25px 0;
-}
-
-.booking-code-label {
-    font-size: 13px;
-    color: #666666;
-    margin: 0 0 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.booking-code {
-    font-size: 24px;
-    font-weight: 700;
-    color: #667eea;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
-}
-
-/* Status Badge */
-.status-badge {
+/* Badge */
+.badge {
     display: inline-block;
-    padding: 8px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 20px 0;
-}
-
-.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-confirmed {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-/* Total Amount */
-.total-amount-box {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 25px;
-    text-align: center;
-    margin: 25px 0;
-}
-
-.total-label {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.total-amount {
-    font-size: 32px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-gold {
+    background-color: #d4af37;
     color: #ffffff;
-    margin: 0;
+}
+
+.badge-outline {
+    border: 1px solid #d4af37;
+    color: #d4af37;
+}
+
+/* Footer Section */
+.email-footer {
+    background-color: #f1f5f9;
+    padding: 40px;
+    text-align: center;
+}
+
+.footer-brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.footer-info {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.social-links {
+    margin-bottom: 25px;
+}
+
+.social-icon {
+    display: inline-block;
+    margin: 0 10px;
+    color: #d4af37;
+    text-decoration: none;
+}
+
+.copyright {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* Button */
-.email-button {
+.cta-button {
     display: inline-block;
-    padding: 14px 32px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    color: #ffffff !important;
     text-decoration: none;
-    font-weight: 600;
+    border-radius: 30px;
+    font-weight: 700;
     font-size: 15px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.email-button:hover {
-    transform: translateY(-2px);
-}
-
-.button-wrapper {
-    text-align: center;
-    margin: 30px 0;
-}
-
-/* Alert Box */
-.alert-box {
-    background-color: #e7f3ff;
-    border-left: 4px solid #2196F3;
-    padding: 20px;
-    margin: 25px 0;
-}
-
-.alert-box-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #1976D2;
-    margin: 0 0 12px;
-}
-
-.alert-box ul {
-    margin: 0;
-    padding-left: 20px;
-}
-
-.alert-box li {
-    font-size: 14px;
-    color: #555555;
-    margin: 8px 0;
-    line-height: 1.6;
-}
-
-/* Contact Info */
-.contact-info {
-    background-color: #f8f9fa;
-    padding: 20px;
-    margin: 25px 0;
-}
-
-.contact-info-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333333;
-    margin: 0 0 15px;
-}
-
-.contact-item {
-    font-size: 14px;
-    color: #555555;
-    margin: 8px 0;
-    line-height: 1.6;
-}
-
-.contact-item strong {
-    color: #333333;
-}
-
-/* Footer */
-.email-footer {
-    background-color: #f8f9fa;
-    padding: 30px;
-    text-align: center;
-    border-top: 1px solid #e9ecef;
-}
-
-.footer-text {
-    font-size: 13px;
-    color: #999999;
-    margin: 5px 0;
-}
-
-.footer-link {
-    color: #667eea;
-    text-decoration: none;
-}
-
-/* Divider */
-.divider {
-    height: 1px;
-    background-color: #e9ecef;
-    margin: 30px 0;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+    margin: 20px 0;
 }
 
 /* Responsive */
-@media only screen and (max-width: 600px) {
-    .email-wrapper {
-        padding: 20px 10px;
-    }
-    
-    .email-content {
-        padding: 30px 20px;
-    }
-    
-    .email-header {
-        padding: 30px 20px;
-    }
-    
-    .email-header h1 {
-        font-size: 24px;
-    }
-    
-    .booking-code {
-        font-size: 20px;
-    }
-    
-    .total-amount {
-        font-size: 28px;
-    }
-    
-    .info-row {
-        flex-direction: column;
-    }
-    
-    .info-value {
-        text-align: left;
-        margin-top: 5px;
-    }
+@media only screen and (max-width: 480px) {
+    .email-content { padding: 30px 20px; }
+    .email-header { padding: 40px 20px; }
+    .highlight-value { font-size: 24px; }
+    .data-label, .data-value { display: block; width: 100%; text-align: left; }
+    .data-value { margin-top: 4px; }
 }
