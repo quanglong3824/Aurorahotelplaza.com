@@ -75,6 +75,7 @@ return [
         'currency' => 'VND',
         'guest_add' => 'khách thêm',
         'processing' => 'Đang xử lý...',
+        'help' => 'Hỗ trợ',
     ],
 
     // Booking
@@ -1767,7 +1768,29 @@ return [
         'error_system' => 'Lỗi hệ thống tra cứu',
         'status_new' => 'Mới nhận',
         'status_processing' => 'Đang xử lý',
-        'status_replied' => 'Đã phản hồi',
+        'status_replied' => 'Đã trả lời',
         'status_closed' => 'Đã đóng',
-    ],
-];
+        ],
+
+        // Email Inquiry
+        'email_inquiry' => [
+        'admin_subject' => '[Aurora Hotel] Yêu cầu tư vấn căn hộ mới - {:code}',
+        'admin_title' => 'Yêu cầu tư vấn căn hộ mới',
+        'customer_subject' => 'Xác nhận yêu cầu tư vấn - {:code} | Aurora Hotel Plaza',
+        'customer_title' => 'Cảm ơn quý khách đã quan tâm đến căn hộ tại Aurora Hotel Plaza!',
+        'customer_greeting' => 'Kính chào {:name},',
+        'customer_body' => 'Chúng tôi đã nhận được yêu cầu tư vấn của quý khách về căn hộ {:room_type}.',
+        'customer_code' => 'Mã yêu cầu: {:code}',
+        'customer_promise' => 'Đội ngũ tư vấn của chúng tôi sẽ liên hệ với quý khách trong thời gian sớm nhất (trong vòng 24 giờ làm việc).',
+        'customer_contact' => 'Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ:',
+        'label_code' => 'Mã yêu cầu',
+        'label_apartment' => 'Căn hộ',
+        'label_customer' => 'Khách hàng',
+        'label_email' => 'Email',
+        'label_phone' => 'Điện thoại',
+        'label_check_in' => 'Ngày nhận phòng mong muốn',
+        'label_adults' => 'Số người lớn',
+        'label_children' => 'Số trẻ em',
+        'label_message' => 'Tin nhắn',
+        ],
+        ];
