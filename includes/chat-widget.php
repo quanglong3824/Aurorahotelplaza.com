@@ -61,8 +61,15 @@ $cw_base = rtrim(BASE_URL, '/');
 <link rel="stylesheet" href="<?php echo $bp; ?>assets/css/chat-widget.css?v=<?php echo time(); ?>">
 
 <!-- ══════════════════════════════════════════════════════════════
-     FLOATING BOOKING BUBBLE (Lịch sử đặt phòng nhanh)
+     FLOATING BOOKING BUBBLE & BUTTON
 ══════════════════════════════════════════════════════════════ -->
+<!-- Nút nổi Lịch sử (Chỉ hiện khi có booking) -->
+<button id="cwBookingBtn" class="cw-booking-btn" aria-label="Lịch sử đặt phòng">
+    <span class="material-symbols-outlined">hotel_class</span>
+    <span id="cwBookingCount">0</span>
+</button>
+
+<!-- Khung danh sách đặt phòng -->
 <div id="cwBookingBubble" class="cw-booking-bubble">
     <div class="cw-bb-header">
         <span class="material-symbols-outlined" style="font-size:16px;">history</span>
@@ -72,13 +79,12 @@ $cw_base = rtrim(BASE_URL, '/');
         </button>
     </div>
     <div id="cwBookingList" class="cw-bb-list">
-        <!-- Bookings will be loaded here via JS -->
         <div class="cw-bb-loading">Đang tải...</div>
     </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     FLOATING BUTTON
+     FLOATING BUTTON (CHAT)
 ══════════════════════════════════════════════════════════════ -->
 <button id="cwBtn" aria-label="<?php _e('chat.open_chat'); ?>" data-logged-in="<?php echo $is_logged ? '1' : '0'; ?>">
 

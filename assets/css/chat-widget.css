@@ -727,10 +727,64 @@
   animation: cwShake 0.5s ease-in-out;
 }
 
+/* ── Booking Button (Secondary Floating Button) ───────────── */
+.cw-booking-btn {
+  position: fixed;
+  bottom: 96px; /* Cách nút chat 1 khoảng */
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none; /* Chỉ hiện qua JS */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: var(--cw-z);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.cw-booking-btn.show {
+  display: flex;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.cw-booking-btn:hover {
+  transform: scale(1.1);
+  border-color: #d4af37;
+  background: #0f172a;
+}
+
+#cwBookingCount {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  background: #d4af37;
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #0f172a;
+  transform: scale(0);
+  transition: transform 0.3s;
+}
+.cw-booking-btn.show #cwBookingCount { transform: scale(1); }
+
 /* ── Booking Bubble (Floating History) ─────────────────────── */
 .cw-booking-bubble {
   position: fixed;
-  bottom: 96px;
+  bottom: 156px; /* Đặt trên cả 2 nút */
   right: 28px;
   width: 280px;
   background: rgba(255, 255, 255, 0.92);

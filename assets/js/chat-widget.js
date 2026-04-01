@@ -40,7 +40,13 @@ const ChatWidget = {
     initBookingBubble() {
         const bubble = document.getElementById('cwBookingBubble');
         const closeBtn = document.getElementById('cwCloseBubble');
-        if (!bubble || !closeBtn) return;
+        const bookingBtn = document.getElementById('cwBookingBtn');
+        if (!bubble || !closeBtn || !bookingBtn) return;
+
+        bookingBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.toggleBookingBubble();
+        };
 
         closeBtn.onclick = (e) => {
             e.stopPropagation();
@@ -55,21 +61,29 @@ const ChatWidget = {
         fetch(this._url('api/chat/get-session-bookings.php'))
             .then(r => r.json())
             .then(data => {
+                const bookingBtn = document.getElementById('cwBookingBtn');
+                const bookingCount = document.getElementById('cwBookingCount');
+
                 if (data.success && data.bookings?.length > 0) {
                     this.renderBookingBubble(data.bookings);
                     
-                    // Tự động hiện bóng nổi nếu có bất kỳ booking nào và chưa bị đóng thủ công
+                    // Hiện nút nổi
+                    if (bookingBtn) {
+                        bookingBtn.classList.add('show');
+                        if (bookingCount) bookingCount.textContent = data.count || data.bookings.length;
+                    }
+
+                    // Tự động hiện bóng nổi lần đầu để gây chú ý
                     const isClosed = sessionStorage.getItem('cw_bubble_closed');
-                    
                     if (!isClosed) {
                         setTimeout(() => {
                             this.showBookingBubble();
-                            // Thêm hiệu ứng rung nhẹ cho nút chat để gây chú ý
-                            document.getElementById('cwBtn')?.classList.add('cw-shake');
-                            setTimeout(() => document.getElementById('cwBtn')?.classList.remove('cw-shake'), 1000);
+                            bookingBtn.classList.add('cw-shake');
+                            setTimeout(() => bookingBtn.classList.remove('cw-shake'), 1000);
                         }, 1500);
                     }
                 } else {
+                    if (bookingBtn) bookingBtn.classList.remove('show');
                     const list = document.getElementById('cwBookingList');
                     if (list) list.innerHTML = '<div class="cw-bb-empty">Không có dữ liệu đặt phòng gần đây.</div>';
                 }
@@ -92,6 +106,17 @@ const ChatWidget = {
         `).join('');
     },
 
+    toggleBookingBubble() {
+        const bubble = document.getElementById('cwBookingBubble');
+        if (bubble) {
+            if (bubble.classList.contains('show')) {
+                this.hideBookingBubble();
+            } else {
+                this.showBookingBubble();
+            }
+        }
+    },
+
     showBookingBubble() {
         const bubble = document.getElementById('cwBookingBubble');
         if (bubble && !this.isOpen) {
@@ -112,7 +137,7 @@ const ChatWidget = {
         if (this.isOpen) {
             this.close();
         } else {
-            this.hideBookingBubble(); // Đóng bóng nổi khi mở chat
+            this.hideBookingBubble(); 
             this.open();
         }
     },
