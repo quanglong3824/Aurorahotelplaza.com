@@ -15,7 +15,7 @@
   --cw-z: 10005; /* Đè lên toàn bộ Modal/BackToTop (10000) */
 }
 
-/* ── Floating Button ───────────────────────────────────────── */
+/* ── Floating Button (CHAT) ────────────────────────────────── */
 #cwBtn {
   position: fixed;
   bottom: 28px;
@@ -35,709 +35,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-transition:
-    -webkit-transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.2s ease,
-    bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition:
-    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.2s ease,
-    bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
   color: #fff;
-  -webkit-transform: translateZ(0);  /* Safari GPU layer */
-  transform: translateZ(0);
-  will-change: transform, bottom;
+  will-change: transform;
 }
 #cwBtn:hover {
   transform: scale(1.1);
   box-shadow: 0 12px 36px rgba(212, 175, 55, 0.65);
 }
-#cwBtn:active {
-  transform: scale(0.95);
-}
+#cwBtn:active { transform: scale(0.95); }
 
-/* Icon transition khi mở/đóng */
 #cwBtn .cw-icon-chat,
 #cwBtn .cw-icon-close {
   position: absolute;
-  transition:
-    opacity 0.2s,
-    transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 }
-#cwBtn .cw-icon-close {
-  opacity: 0;
-  transform: rotate(-90deg) scale(0.5);
-}
-#cwBtn.open .cw-icon-chat {
-  opacity: 0;
-  transform: rotate(90deg) scale(0.5);
-}
-#cwBtn.open .cw-icon-close {
-  opacity: 1;
-  transform: rotate(0) scale(1);
-}
+#cwBtn .cw-icon-close { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+#cwBtn.open .cw-icon-chat { opacity: 0; transform: rotate(90deg) scale(0.5); }
+#cwBtn.open .cw-icon-close { opacity: 1; transform: rotate(0) scale(1); }
 
-/* Badge unread trên nút */
 #cwUnreadBadge {
   position: absolute;
   top: -4px;
   right: -4px;
-  min-width: 20px;
-  height: 20px;
-  background: #ef4444;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 10px;
-  padding: 0 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 20px; height: 20px;
+  background: #ef4444; color: #fff;
+  font-size: 10px; font-weight: 700;
+  border-radius: 10px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center;
   border: 2px solid #fff;
-  line-height: 1;
   transform: scale(0);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-#cwUnreadBadge.show {
-  transform: scale(1);
-}
-
-/* Pulse animation khi có tin mới */
-@keyframes cwPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 12px rgba(212, 175, 55, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
-  }
-}
-#cwBtn.has-unread {
-  animation: cwPulse 2s ease-out infinite;
-}
-
-/* ── Widget Panel ──────────────────────────────────────────── */
-#cwPanel {
-  position: fixed;
-  bottom: 96px;
-  right: 24px;
-  z-index: var(--cw-z);
-  width: 380px;
-  height: 520px;
-  border-radius: var(--cw-radius);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  box-shadow: var(--cw-shadow);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  /*
-   * Safari iOS: backdrop-filter + transform animation = giật cứng.
-   * Giải pháp: tách backdrop-filter ra pseudo-element tĩnh,
-   * chỉ animate transform/opacity trên container chính.
-   */
-  background: rgba(255, 255, 255, 0.96);
-
-  /* Vào/ra animation — GPU accelerated */
-  transform-origin: bottom right;
-  -webkit-transform: scale(0.85) translateY(16px) translateZ(0);
-  transform: scale(0.85) translateY(16px) translateZ(0);
-  opacity: 0;
-  pointer-events: none;
-  -webkit-transition:
-    -webkit-transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.22s ease;
-  transition:
-    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.22s ease;
-  will-change: transform, opacity;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-/* Backdrop blur tách riêng — không animate → Safari không giật */
-#cwPanel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: rgba(255, 255, 255, 0.92);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-  z-index: -1;
-}
-
-#cwPanel.open {
-  -webkit-transform: scale(1) translateY(0) translateZ(0);
-  transform: scale(1) translateY(0) translateZ(0);
-  opacity: 1;
-  pointer-events: auto;  /* chuẩn W3C, thay vì 'all' */
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  #cwPanel {
-    background: rgba(15, 23, 42, 0.96);
-    border-color: rgba(212, 175, 55, 0.2);
-  }
-  #cwPanel::before {
-    background: rgba(15, 23, 42, 0.93);
-  }
-}
-
-/* Mobile (≤767px): button sang PHẢI (vị trí cũ), panel slide-up full-width
-   — Sắp xếp tránh đụng cụm nút bên phải: 
-     1. Chat (bottom:24, right:24)
-     2. Menu (bottom:96, right:24)
-     3. Booking Toggle (bottom:168, right:28)
-     4. Booking History Button (bottom:232, right:28)
-*/
-@media (max-width: 767px) {
-  #cwBtn {
-    bottom: 24px;
-    right: 24px;
-    left: auto;
-  }
-  
-  .cw-booking-btn {
-    bottom: 310px; /* Đẩy lên cao hẳn để nhường chỗ cho Menu bung lên */
-    right: 28px;
-    left: auto;
-  }
-
-  .cw-booking-bubble {
-    right: 84px; 
-    left: auto;
-    bottom: 310px; /* Khớp với chân nút Lịch sử */
-    width: calc(100vw - 110px);
-    max-width: 280px;
-    transform: scale(0.8) translateX(20px);
-  }
-  
-  .cw-booking-bubble.show {
-    transform: scale(1) translateX(0);
-  }
-
-  /* Khi panel mở: button nhô lên trên panel */
-  #cwBtn.open {
-    bottom: calc(76vh + 12px);
-  }
-  #cwPanel {
-    width: 100vw;
-    height: 76vh;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    border-radius: 22px 22px 0 0;
-    transform-origin: bottom center;
-  }
-}
-
-/* iPhone safe-area (home bar / notch) */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  @media (max-width: 767px) {
-    #cwBtn {
-      bottom: calc(24px + env(safe-area-inset-bottom));
-    }
-    .cw-booking-btn {
-      bottom: calc(310px + env(safe-area-inset-bottom));
-    }
-    .cw-booking-bubble {
-      bottom: calc(310px + env(safe-area-inset-bottom));
-    }
-    #cwBtn.open {
-      bottom: calc(76vh + 12px + env(safe-area-inset-bottom));
-    }
-    #cwInputArea {
-      padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    }
-  }
-}
-
-/* ── Panel Header ──────────────────────────────────────────── */
-#cwHeader {
-  background: linear-gradient(
-    135deg,
-    var(--cw-gold) 0%,
-    var(--cw-gold-dark) 100%
-  );
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-}
-/* Shine effect */
-#cwHeader::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.25),
-    transparent
-  );
-  transform: skewX(-20deg);
-  animation: cwShine 4s ease-in-out infinite 1s;
-}
-@keyframes cwShine {
-  0%,
-  100% {
-    left: -60%;
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  60% {
-    left: 130%;
-    opacity: 0;
-  }
-}
-
-#cwHeader .cw-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-}
-#cwHeader .cw-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.3;
-}
-#cwHeader .cw-subtitle {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-#cwHeader .cw-online-dot {
-  width: 7px;
-  height: 7px;
-  background: #4ade80;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background 0.3s, box-shadow 0.3s;
-}
-
-/* Offline pulse animation */
-@keyframes cwOfflinePulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.3; }
-}
-#cwHeader .cw-close-btn {
-  margin-left: auto;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
-#cwHeader .cw-close-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-}
-
-/* ── Login prompt (khi chưa đăng nhập) ────────────────────── */
-#cwLoginPrompt {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px;
-  text-align: center;
-}
-#cwLoginPrompt p {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.6;
-}
-#cwLoginPrompt .cw-login-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  border-radius: 12px;
-  text-decoration: none;
-  transition:
-    transform 0.15s,
-    box-shadow 0.15s;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
-}
-#cwLoginPrompt .cw-login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
-}
-
-/* ── Messages Area ─────────────────────────────────────────── */
-#cwMessages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px 12px 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  scroll-behavior: smooth;
-}
-/* Scrollbar đẹp */
-#cwMessages::-webkit-scrollbar {
-  width: 4px;
-}
-#cwMessages::-webkit-scrollbar-track {
-  background: transparent;
-}
-#cwMessages::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.3);
-  border-radius: 4px;
-}
-
-/* ── Bubble styles ─────────────────────────────────────────── */
-.cw-bubble-row {
-  display: flex;
-  gap: 6px;
-  max-width: 85%;
-}
-.cw-bubble-row.user {
-  align-self: flex-end;
-  flex-direction: row-reverse;
-}
-.cw-bubble-row.staff {
-  align-self: flex-start;
-}
-
-.cw-bubble {
-  padding: 9px 13px;
-  font-size: 13.5px;
-  line-height: 1.5;
-  border-radius: 18px;
-  word-break: break-word;
-  position: relative;
-}
-.cw-bubble-row.user .cw-bubble {
-  background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
-  color: #fff;
-  border-radius: 18px 18px 4px 18px;
-  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.35);
-}
-.cw-bubble-row.staff .cw-bubble {
-  background: #f1f5f9;
-  color: #1e293b;
-  border-radius: 18px 18px 18px 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
-}
-@media (prefers-color-scheme: dark) {
-  .cw-bubble-row.staff .cw-bubble {
-    background: #1e293b;
-    color: #e2e8f0;
-  }
-}
-
-.cw-bubble-time {
-  font-size: 10px;
-  color: #94a3b8;
-  margin-top: 3px;
-  padding: 0 4px;
-}
-.cw-bubble-row.user .cw-bubble-time {
-  text-align: right;
-}
-
-/* System message */
-.cw-system-msg {
-  text-align: center;
-  font-size: 11px;
-  color: #94a3b8;
-  background: rgba(241, 245, 249, 0.8);
-  border-radius: 20px;
-  padding: 4px 12px;
-  margin: 6px auto;
-  max-width: 80%;
-}
-
-/* Day divider */
-.cw-day-divider {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 12px 0 6px;
-  font-size: 11px;
-  color: #94a3b8;
-}
-.cw-day-divider::before,
-.cw-day-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(148, 163, 184, 0.25);
-}
-
-/* Staff avatar micro */
-.cw-staff-avatar-micro {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  align-self: flex-end;
-}
-
-/* ── Typing Indicator ──────────────────────────────────────── */
-#cwTyping {
-  padding: 4px 12px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  color: #94a3b8;
-  flex-shrink: 0;
-}
-.cw-typing-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #94a3b8;
-  animation: cwTyping 1.2s ease-in-out infinite;
-}
-.cw-typing-dot:nth-child(2) {
-  animation-delay: 0.15s;
-}
-.cw-typing-dot:nth-child(3) {
-  animation-delay: 0.3s;
-}
-@keyframes cwTyping {
-  0%,
-  80%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  40% {
-    transform: translateY(-5px);
-    opacity: 1;
-  }
-}
-
-/* ── Input Area ────────────────────────────────────────────── */
-#cwInputArea {
-  padding: 10px 12px 12px;
-  border-top: 1px solid rgba(212, 175, 55, 0.15);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-}
-@media (prefers-color-scheme: dark) {
-  #cwInputArea {
-    background: rgba(15, 23, 42, 0.85);
-  }
-}
-
-#cwInputRow {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  background: rgba(241, 245, 249, 0.8);
-  border: 1.5px solid rgba(212, 175, 55, 0.2);
-  border-radius: 14px;
-  padding: 8px 10px;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-#cwInputRow:focus-within {
-  border-color: var(--cw-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
-}
-@media (prefers-color-scheme: dark) {
-  #cwInputRow {
-    background: rgba(30, 41, 59, 0.8);
-  }
-}
-
-#cwInput {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 13.5px;
-  color: #1e293b;
-  resize: none;
-  max-height: 100px;
-  overflow-y: auto;
-  line-height: 1.5;
-  font-family: inherit;
-}
-@media (prefers-color-scheme: dark) {
-  #cwInput {
-    color: #e2e8f0;
-  }
-}
-#cwInput::placeholder {
-  color: #94a3b8;
-}
-
-#cwSendBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  flex-shrink: 0;
-  transition:
-    transform 0.15s,
-    box-shadow 0.15s,
-    opacity 0.15s;
-  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
-}
-#cwSendBtn:hover:not(:disabled) {
-  transform: scale(1.08);
-  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.55);
-}
-#cwSendBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-#cwSendBtn:active:not(:disabled) {
-  transform: scale(0.93);
-}
-
-#cwInputHint {
-  font-size: 10.5px;
-  color: #94a3b8;
-  text-align: center;
-  margin-top: 6px;
-}
-
-/* ── Offline Notice ────────────────────────────────────────── */
-#cwOfflineBar {
-  background: rgba(251, 191, 36, 0.15);
-  border-top: 1px solid rgba(251, 191, 36, 0.3);
-  padding: 6px 12px;
-  font-size: 11.5px;
-  color: #92400e;
-  text-align: center;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-#cwOfflineBar.show {
-  display: flex;
-}
-
-/* ── Unread toast inside panel ─────────────────────────────── */
-.cw-new-msg-toast {
-  position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background: var(--cw-gold);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.45);
-  cursor: pointer;
-  opacity: 0;
-  transition:
-    opacity 0.2s,
-    transform 0.2s;
-  white-space: nowrap;
-  z-index: 5;
-}
-.cw-new-msg-toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* ── AI Stream Loading Animation ─────────────────────────── */
-.cw-stream-loading {
-    display: flex;
-    gap: 4px;
-    padding: 4px 0;
-}
-.cw-stream-loading .dot {
-    width: 6px;
-    height: 6px;
-    background: #94a3b8;
-    border-radius: 50%;
-    animation: cw-dot-blink 1.4s infinite both;
-}
-.cw-stream-loading .dot:nth-child(2) { animation-delay: 0.2s; }
-.cw-stream-loading .dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes cw-dot-blink {
-    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-    40% { opacity: 1; transform: scale(1); }
-}
-
-.cw-btn-restart {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
-}
-.cw-btn-restart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(184, 134, 11, 0.3);
-    filter: brightness(1.1);
-}
-.cw-btn-restart:active {
-    transform: translateY(0);
-}
+#cwUnreadBadge.show { transform: scale(1); }
 
 @keyframes cwShake {
   0%, 100% { transform: scale(1); }
@@ -745,14 +75,12 @@
   50% { transform: scale(1.1) rotate(5deg); }
   75% { transform: scale(1.1) rotate(-5deg); }
 }
-#cwBtn.cw-shake {
-  animation: cwShake 0.5s ease-in-out;
-}
+#cwBtn.cw-shake, .cw-booking-btn.cw-shake { animation: cwShake 0.5s ease-in-out; }
 
-/* ── Booking Button (Secondary Floating Button) ───────────── */
+/* ── Booking Button (FAB) ────────────────────────────────── */
 .cw-booking-btn {
   position: fixed;
-  bottom: 96px; /* Cách nút chat 1 khoảng */
+  bottom: 92px; /* Desktop: Trên nút Chat */
   right: 32px;
   width: 48px;
   height: 48px;
@@ -761,165 +89,145 @@
   color: #d4af37;
   border: 1px solid rgba(212, 175, 55, 0.3);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  display: none; /* Chỉ hiện qua JS */
-  align-items: center;
-  justify-content: center;
+  display: none;
+  align-items: center; justify-content: center;
   cursor: pointer;
   z-index: var(--cw-z);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0;
-  transform: scale(0.5);
+  opacity: 0; transform: scale(0.5);
 }
-
-.cw-booking-btn.show {
-  display: flex;
-  opacity: 1;
-  transform: scale(1);
-}
-
-.cw-booking-btn:hover {
-  transform: scale(1.1);
-  border-color: #d4af37;
-  background: #0f172a;
-}
+.cw-booking-btn.show { display: flex; opacity: 1; transform: scale(1); }
+.cw-booking-btn:hover { transform: scale(1.1); border-color: #d4af37; }
 
 #cwBookingCount {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  min-width: 18px;
-  height: 18px;
-  background: #d4af37;
-  color: #000;
-  font-size: 10px;
-  font-weight: 800;
+  position: absolute; top: -2px; right: -2px;
+  min-width: 18px; height: 18px;
+  background: #d4af37; color: #000;
+  font-size: 10px; font-weight: 800;
   border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   border: 1.5px solid #0f172a;
-  transform: scale(0);
-  transition: transform 0.3s;
+  transform: scale(0); transition: transform 0.3s;
 }
 .cw-booking-btn.show #cwBookingCount { transform: scale(1); }
 
-/* ── Booking Bubble (Floating History) ─────────────────────── */
+/* ── Booking Bubble (Card) ────────────────────────────────── */
 .cw-booking-bubble {
   position: fixed;
-  bottom: 156px; /* Đặt trên cả 2 nút */
-  right: 28px;
+  bottom: 92px; /* Cùng cao độ với nút bấm trên Desktop */
+  right: 88px; /* Bên trái nút bấm */
   width: 280px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px);
   border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   z-index: var(--cw-z);
   display: none;
   flex-direction: column;
-  overflow: hidden;
-  transform: scale(0.8) translateY(20px);
-  opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+  overflow: visible;
+  transform: scale(0.8) translateX(20px); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: auto;
 }
+.cw-booking-bubble.show { display: flex; transform: scale(1) translateX(0); opacity: 1; }
 
-.cw-booking-bubble.show {
-  display: flex;
-  transform: scale(1) translateY(0);
-  opacity: 1;
+.cw-booking-bubble::after {
+  content: ""; position: absolute; bottom: 16px; right: -8px;
+  border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+  border-left: 8px solid rgba(212, 175, 55, 0.25);
 }
 
 .cw-bb-header {
   padding: 10px 14px;
   background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  color: #fff; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  border-radius: 18px 18px 0 0;
 }
-
 .cw-bb-close {
-  margin-left: auto;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: #fff;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  margin-left: auto; background: rgba(255, 255, 255, 0.2); border: none;
+  color: #fff; width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
-
-.cw-bb-list {
-  max-height: 240px;
-  overflow-y: auto;
-  padding: 8px;
-}
-
+.cw-bb-list { max-height: 240px; overflow-y: auto; padding: 8px; }
 .cw-bb-item {
-  padding: 10px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.03);
-  margin-bottom: 8px;
-  transition: background 0.2s;
-  cursor: pointer;
-  border: 1px solid transparent;
+  padding: 10px; border-radius: 12px; background: rgba(0, 0, 0, 0.03);
+  margin-bottom: 8px; transition: background 0.2s; cursor: pointer; border: 1px solid transparent;
 }
-.cw-bb-item:hover {
-  background: rgba(212, 175, 55, 0.08);
-  border-color: rgba(212, 175, 55, 0.15);
-}
+.cw-bb-item:hover { background: rgba(212, 175, 55, 0.08); border-color: rgba(212, 175, 55, 0.15); }
+.cw-bb-room { font-weight: 700; font-size: 12.5px; color: #1e293b; margin-bottom: 2px; }
+.cw-bb-meta { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #64748b; }
+.cw-bb-status { padding: 2px 8px; border-radius: 20px; font-weight: 600; font-size: 10px; }
+.cw-bb-loading, .cw-bb-empty { padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; }
 
-.cw-bb-room {
-  font-weight: 700;
-  font-size: 12.5px;
-  color: #1e293b;
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* ── Panel Header ──────────────────────────────────────────── */
+#cwPanel {
+  position: fixed; bottom: 96px; right: 24px;
+  z-index: var(--cw-z); width: 380px; height: 520px;
+  border-radius: var(--cw-radius); border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: var(--cw-shadow); display: flex; flex-direction: column;
+  overflow: hidden; background: rgba(255, 255, 255, 0.96);
+  transform-origin: bottom right; transform: scale(0.85) translateY(16px);
+  opacity: 0; pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
 }
+#cwPanel.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
 
-.cw-bb-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10.5px;
-  color: #64748b;
+#cwHeader {
+  background: linear-gradient(135deg, var(--cw-gold) 0%, var(--cw-gold-dark) 100%);
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px;
 }
-
-.cw-bb-status {
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 10px;
+#cwHeader .cw-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
+  display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255, 255, 255, 0.4);
 }
+#cwHeader .cw-title { font-size: 14px; font-weight: 700; color: #fff; }
+#cwHeader .cw-subtitle { font-size: 11px; color: rgba(255, 255, 255, 0.8); display: flex; align-items: center; gap: 4px; }
+#cwHeader .cw-online-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
 
-.cw-bb-loading, .cw-bb-empty {
-  padding: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: #94a3b8;
-}
+/* ── Messages & Input ──────────────────────────────────────── */
+#cwMessages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+#cwInputArea { padding: 10px 12px 12px; border-top: 1px solid rgba(212, 175, 55, 0.15); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); }
+#cwInputRow { display: flex; align-items: flex-end; gap: 8px; background: rgba(241, 245, 249, 0.8); border: 1.5px solid rgba(212, 175, 55, 0.2); border-radius: 14px; padding: 8px 10px; }
+#cwInput { flex: 1; background: transparent; border: none; outline: none; font-size: 13.5px; resize: none; max-height: 100px; }
+#cwSendBtn { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark)); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-/* Dark mode for bubble */
-@media (prefers-color-scheme: dark) {
-  .cw-booking-bubble {
-    background: rgba(15, 23, 42, 0.94);
-    border-color: rgba(212, 175, 55, 0.15);
+/* ── Mobile Layout ─────────────────────────────────────────── */
+@media (max-width: 767px) {
+  #cwBtn { bottom: 24px; right: 24px; left: auto; }
+  
+  /* Sắp xếp: Chat(24) -> Menu(96) -> Tìm phòng(168) -> Lịch sử(240) */
+  .cw-booking-btn {
+    bottom: 240px; right: 28px; left: auto;
   }
+
+  .cw-booking-bubble {
+    right: 84px; bottom: 240px; 
+    width: calc(100vw - 110px); max-width: 280px;
+  }
+
+  #cwBtn.open { bottom: calc(76vh + 12px); }
+  #cwPanel { width: 100vw; height: 76vh; bottom: 0; right: 0; left: 0; border-radius: 22px 22px 0 0; }
+}
+
+/* Safe Area iPhone */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (max-width: 767px) {
+    #cwBtn { bottom: calc(24px + env(safe-area-inset-bottom)); }
+    .cw-booking-btn { bottom: calc(240px + env(safe-area-inset-bottom)); }
+    .cw-booking-bubble { bottom: calc(240px + env(safe-area-inset-bottom)); }
+    #cwBtn.open { bottom: calc(76vh + 12px + env(safe-area-inset-bottom)); }
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  #cwPanel { background: rgba(15, 23, 42, 0.96); }
+  .cw-booking-bubble { background: rgba(15, 23, 42, 0.94); }
   .cw-bb-room { color: #f1f5f9; }
   .cw-bb-item { background: rgba(255, 255, 255, 0.05); }
-}
-
-@media (max-width: 767px) {
-  /* Di động đã được xử lý ở phần Media Query chính phía trên */
-}
-ng đã được xử lý ở phần Media Query chính phía trên */
+  #cwInputArea { background: rgba(15, 23, 42, 0.85); }
+  #cwInputRow { background: rgba(30, 41, 59, 0.8); }
+  #cwInput { color: #e2e8f0; }
 }
