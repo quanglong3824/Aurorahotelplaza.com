@@ -1906,16 +1906,34 @@ async function handleSubmit(e) {
     } else {
         // ========== ROOM BOOKING DATA ==========
         const roomSelect = document.getElementById('room_type_id');
+        const selectedOption = roomSelect?.options[roomSelect.selectedIndex];
         const numAdults = parseInt(document.getElementById('num_adults')?.value) || 2;
         const numChildren = parseInt(document.getElementById('num_children')?.value) || 0;
         const numExtraBeds = parseInt(document.getElementById('extra_beds')?.value) || 0;
         const numNights = currentBookingType === 'short_stay' ? 1 : calculateNights();
+        
+        // Recalculate total to ensure we have fresh data
+        const currentTotal = calculateTotal();
+        
+        // Get values from data attributes (set by calculateTotal)
         const roomPrice = parseFloat(roomSelect.getAttribute('data-room-price')) || 0;
-        const calculatedTotal = parseFloat(roomSelect.getAttribute('data-calculated-total')) || 0;
+        const calculatedTotal = parseFloat(roomSelect.getAttribute('data-calculated-total')) || currentTotal;
         const priceType = roomSelect.getAttribute('data-price-type') || 'double';
         const roomSubtotal = parseFloat(roomSelect.getAttribute('data-room-subtotal')) || 0;
         const extraGuestFee = parseFloat(roomSelect.getAttribute('data-extra-guest-fee')) || 0;
         const extraBedFee = parseFloat(roomSelect.getAttribute('data-extra-bed-fee')) || 0;
+
+        // Debug logging
+        console.log('=== SUBMIT DATA ===');
+        console.log('room_type_id:', roomSelect.value);
+        console.log('numAdults:', numAdults);
+        console.log('numChildren:', numChildren);
+        console.log('numNights:', numNights);
+        console.log('roomPrice:', roomPrice);
+        console.log('calculatedTotal:', calculatedTotal);
+        console.log('extraGuestFee:', extraGuestFee);
+        console.log('extraBedFee:', extraBedFee);
+        console.log('extraGuests:', extraGuests);
 
         data.booking_type = currentBookingType; // 'standard' or 'short_stay'
         data.num_adults = numAdults;
