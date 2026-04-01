@@ -2,11 +2,6 @@
 session_start();
 header('Content-Type: application/json');
 
-// Enable error logging for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors in JSON response
-ini_set('log_errors', 1);
-
 require_once '../../config/database.php';
 require_once '../../helpers/logger.php';
 require_once '../../helpers/booking-validator.php'; // Anti-spam & overlap detection
@@ -19,14 +14,7 @@ $content_type = $_SERVER['CONTENT_TYPE'] ?? '';
 if (stripos($content_type, 'application/json') !== false) {
     $input_json = file_get_contents('php://input');
     $input_data = json_decode($input_json, true) ?? [];
-    
-    // Log JSON input for debugging
-    error_log("=== CREATE BOOKING REQUEST ===");
-    error_log("JSON Input: " . $input_json);
 }
-
-// Log received data
-error_log("Parsed input_data: " . print_r($input_data, true));
 
 $room_type_id = $input_data['room_type_id'] ?? null;
 $check_in_date = $input_data['check_in_date'] ?? null;
@@ -61,16 +49,6 @@ $calculated_nights = intval($input_data['calculated_nights'] ?? 0);
 $frontend_room_price = floatval($input_data['room_price'] ?? 0);
 $price_type_used = $input_data['price_type_used'] ?? 'double';
 
-// Log key fields
-error_log("room_type_id: $room_type_id");
-error_log("check_in_date: $check_in_date");
-error_log("check_out_date: $check_out_date");
-error_log("guest_name: $guest_name");
-error_log("guest_email: $guest_email");
-error_log("guest_phone: $guest_phone");
-error_log("booking_type: $booking_type_input");
-error_log("is_short_stay: " . ($is_short_stay ? 'yes' : 'no'));
-
 // Validate required fields
 if (!$room_type_id || !$check_in_date || !$check_out_date || !$guest_name || !$guest_email || !$guest_phone) {
     echo json_encode([
@@ -98,9 +76,7 @@ if (!preg_match('/^[0-9]{9,15}$/', preg_replace('/[^0-9]/', '', $guest_phone))) 
 
 // ========== ANTI-SPAM & OVERLAP DETECTION ==========
 $user_id = $_SESSION['user_id'] ?? null;
-
-// Pass input_data to getRateLimitIdentifier so it works with JSON input
-$rate_limit_id = getRateLimitIdentifier($input_data);
+$rate_limit_id = getRateLimitIdentifier();
 
 // 1. Check rate limiting (chống spam requests)
 $rate_limit = checkRateLimit($rate_limit_id, $max_requests = 5, $time_window = 60); // 5 requests/phút
@@ -556,16 +532,9 @@ try {
     echo json_encode($response);
 
 } catch (Exception $e) {
-    // Log full error details
-    error_log("=== BOOKING CREATION ERROR ===");
-    error_log("Exception: " . $e->getMessage());
-    error_log("Trace: " . $e->getTraceAsString());
-    error_log("POST data: " . print_r($_POST, true));
-    error_log("JSON input: " . ($input_json ?? 'N/A'));
-    
     echo json_encode([
         'success' => false,
-        'message' => 'Lỗi hệ thống: ' . $e->getMessage()
+        'message' => $e->getMessage()
     ]);
 }
 ?>

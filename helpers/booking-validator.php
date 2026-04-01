@@ -336,39 +336,24 @@ function saveRateLimits($file, $limits) {
 
 /**
  * Generate rate limit identifier from request
- * 
- * @param array|null $input_data Input data array (for JSON requests)
- * @return string
  */
-function getRateLimitIdentifier($input_data = null) {
+function getRateLimitIdentifier() {
     $identifiers = [];
-
+    
     if (isset($_SESSION['user_id'])) {
         $identifiers[] = 'user_' . $_SESSION['user_id'];
     }
-
-    // Use input_data if provided (for JSON requests), otherwise fall back to $_POST
-    if ($input_data !== null) {
-        if (isset($input_data['guest_email'])) {
-            $identifiers[] = 'email_' . $input_data['guest_email'];
-        }
-
-        if (isset($input_data['guest_phone'])) {
-            $identifiers[] = 'phone_' . $input_data['guest_phone'];
-        }
-    } else {
-        // Fallback to $_POST for form submissions
-        if (isset($_POST['guest_email'])) {
-            $identifiers[] = 'email_' . $_POST['guest_email'];
-        }
-
-        if (isset($_POST['guest_phone'])) {
-            $identifiers[] = 'phone_' . $_POST['guest_phone'];
-        }
+    
+    if (isset($_POST['guest_email'])) {
+        $identifiers[] = 'email_' . $_POST['guest_email'];
     }
-
+    
+    if (isset($_POST['guest_phone'])) {
+        $identifiers[] = 'phone_' . $_POST['guest_phone'];
+    }
+    
     // Always include IP
     $identifiers[] = 'ip_' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
-
+    
     return implode('|', $identifiers);
 }
