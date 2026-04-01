@@ -717,6 +717,16 @@
     transform: translateY(0);
 }
 
+@keyframes cwShake {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  75% { transform: scale(1.1) rotate(-5deg); }
+}
+#cwBtn.cw-shake {
+  animation: cwShake 0.5s ease-in-out;
+}
+
 /* ── Booking Bubble (Floating History) ─────────────────────── */
 .cw-booking-bubble {
   position: fixed;

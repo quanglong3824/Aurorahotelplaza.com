@@ -58,14 +58,16 @@ const ChatWidget = {
                 if (data.success && data.bookings?.length > 0) {
                     this.renderBookingBubble(data.bookings);
                     
-                    // Tự động hiện bóng nổi nếu:
-                    // 1. Có booking 'pending' (cần chú ý)
-                    // 2. Chưa bị người dùng đóng trong session này
-                    const hasPending = data.bookings.some(b => b.status === 'pending');
+                    // Tự động hiện bóng nổi nếu có bất kỳ booking nào và chưa bị đóng thủ công
                     const isClosed = sessionStorage.getItem('cw_bubble_closed');
                     
-                    if (hasPending && !isClosed) {
-                        setTimeout(() => this.showBookingBubble(), 2000);
+                    if (!isClosed) {
+                        setTimeout(() => {
+                            this.showBookingBubble();
+                            // Thêm hiệu ứng rung nhẹ cho nút chat để gây chú ý
+                            document.getElementById('cwBtn')?.classList.add('cw-shake');
+                            setTimeout(() => document.getElementById('cwBtn')?.classList.remove('cw-shake'), 1000);
+                        }, 1500);
                     }
                 } else {
                     const list = document.getElementById('cwBookingList');
