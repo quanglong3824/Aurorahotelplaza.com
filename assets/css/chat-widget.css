@@ -202,16 +202,22 @@
   }
   
   .cw-booking-btn {
-    bottom: 232px; /* Phía trên nút Tìm phòng (168px + 56px + padding) */
+    bottom: 248px; /* Phía trên nút Tìm phòng (168px + 56px + padding) */
     right: 28px;
     left: auto;
   }
 
   .cw-booking-bubble {
-    left: 16px;
-    right: 16px;
-    bottom: calc(24px + 56px + 12px + env(safe-area-inset-bottom));
-    width: calc(100vw - 32px);
+    right: 84px; /* Nằm bên TRÁI nút bấm */
+    left: auto;
+    bottom: 248px; /* Trùng chân với nút Lịch sử trên Mobile */
+    width: calc(100vw - 110px); /* Co giãn theo chiều ngang */
+    max-width: 280px;
+    transform: scale(0.8) translateX(20px);
+  }
+  
+  .cw-booking-bubble.show {
+    transform: scale(1) translateX(0);
   }
 
   /* Khi panel mở: button nhô lên trên panel */
@@ -236,7 +242,10 @@
       bottom: calc(24px + env(safe-area-inset-bottom));
     }
     .cw-booking-btn {
-      bottom: calc(232px + env(safe-area-inset-bottom));
+      bottom: calc(248px + env(safe-area-inset-bottom));
+    }
+    .cw-booking-bubble {
+      bottom: calc(248px + env(safe-area-inset-bottom));
     }
     #cwBtn.open {
       bottom: calc(76vh + 12px + env(safe-area-inset-bottom));
@@ -911,4 +920,6 @@
 
 @media (max-width: 767px) {
   /* Di động đã được xử lý ở phần Media Query chính phía trên */
+}
+ng đã được xử lý ở phần Media Query chính phía trên */
 }
