@@ -420,6 +420,15 @@ try {
     $_SESSION['pending_booking_id'] = $booking_id;
     $_SESSION['pending_booking_code'] = $booking_code;
 
+    // Store in cookie for device-based history (guest support)
+    $recent_bookings = $_COOKIE['aurora_recent_bookings'] ?? '';
+    $recent_array = !empty($recent_bookings) ? explode(',', $recent_bookings) : [];
+    if (!in_array($booking_code, $recent_array)) {
+        array_unshift($recent_array, $booking_code); // Thêm vào đầu danh sách
+        $recent_array = array_slice($recent_array, 0, 10); // Giữ tối đa 10 booking gần nhất
+        setcookie('aurora_recent_bookings', implode(',', $recent_array), time() + (90 * 24 * 60 * 60), '/');
+    }
+
     // Send booking confirmation email (don't block booking if email fails)
     $emailSent = false;
     try {

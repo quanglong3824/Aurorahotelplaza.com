@@ -716,3 +716,126 @@
 .cw-btn-restart:active {
     transform: translateY(0);
 }
+
+/* ── Booking Bubble (Floating History) ─────────────────────── */
+.cw-booking-bubble {
+  position: fixed;
+  bottom: 96px;
+  right: 28px;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: var(--cw-z);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.8) translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+  pointer-events: auto;
+}
+
+.cw-booking-bubble.show {
+  display: flex;
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.cw-bb-header {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--cw-gold), var(--cw-gold-dark));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cw-bb-close {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.cw-bb-list {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.cw-bb-item {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  margin-bottom: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.cw-bb-item:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.15);
+}
+
+.cw-bb-room {
+  font-weight: 700;
+  font-size: 12.5px;
+  color: #1e293b;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cw-bb-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.cw-bb-status {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.cw-bb-loading, .cw-bb-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Dark mode for bubble */
+@media (prefers-color-scheme: dark) {
+  .cw-booking-bubble {
+    background: rgba(15, 23, 42, 0.94);
+    border-color: rgba(212, 175, 55, 0.15);
+  }
+  .cw-bb-room { color: #f1f5f9; }
+  .cw-bb-item { background: rgba(255, 255, 255, 0.05); }
+}
+
+@media (max-width: 767px) {
+  .cw-booking-bubble {
+    right: 16px;
+    bottom: calc(24px + 56px + 12px + env(safe-area-inset-bottom));
+    width: calc(100vw - 32px);
+  }
+}

@@ -33,10 +33,86 @@ const ChatWidget = {
         this.checkStaffOnline();
         this._staffCheckInterval = setInterval(() => this.checkStaffOnline(), 30000);
         this.checkExistingConversation();
+        this.initBookingBubble();
+    },
+
+    // ── Booking Bubble ────────────────────────────────────────────────────
+    initBookingBubble() {
+        const bubble = document.getElementById('cwBookingBubble');
+        const closeBtn = document.getElementById('cwCloseBubble');
+        if (!bubble || !closeBtn) return;
+
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.hideBookingBubble();
+            sessionStorage.setItem('cw_bubble_closed', '1');
+        };
+
+        this.loadSessionBookings();
+    },
+
+    loadSessionBookings() {
+        fetch(this._url('api/chat/get-session-bookings.php'))
+            .then(r => r.json())
+            .then(data => {
+                if (data.success && data.bookings?.length > 0) {
+                    this.renderBookingBubble(data.bookings);
+                    
+                    // Tự động hiện bóng nổi nếu:
+                    // 1. Có booking 'pending' (cần chú ý)
+                    // 2. Chưa bị người dùng đóng trong session này
+                    const hasPending = data.bookings.some(b => b.status === 'pending');
+                    const isClosed = sessionStorage.getItem('cw_bubble_closed');
+                    
+                    if (hasPending && !isClosed) {
+                        setTimeout(() => this.showBookingBubble(), 2000);
+                    }
+                } else {
+                    const list = document.getElementById('cwBookingList');
+                    if (list) list.innerHTML = '<div class="cw-bb-empty">Không có dữ liệu đặt phòng gần đây.</div>';
+                }
+            }).catch(() => {});
+    },
+
+    renderBookingBubble(bookings) {
+        const list = document.getElementById('cwBookingList');
+        if (!list) return;
+
+        list.innerHTML = bookings.map(b => `
+            <div class="cw-bb-item" onclick="window.location.href='${this._url('booking/confirmation.php?booking_code=' + b.code)}'">
+                <div class="cw-bb-room">${b.room}</div>
+                <div class="cw-bb-meta">
+                    <span class="cw-bb-status" style="background:${b.status_color}20; color:${b.status_color}">${b.status_label}</span>
+                    <span style="font-size:10px;">${b.check_in}</span>
+                </div>
+                <div style="font-size:9px; color:#94a3b8; margin-top:4px; font-family:monospace;">Mã: ${b.code}</div>
+            </div>
+        `).join('');
+    },
+
+    showBookingBubble() {
+        const bubble = document.getElementById('cwBookingBubble');
+        if (bubble && !this.isOpen) {
+            bubble.style.display = 'flex';
+            setTimeout(() => bubble.classList.add('show'), 10);
+        }
+    },
+
+    hideBookingBubble() {
+        const bubble = document.getElementById('cwBookingBubble');
+        if (bubble) {
+            bubble.classList.remove('show');
+            setTimeout(() => bubble.style.display = 'none', 300);
+        }
     },
 
     toggle() {
-        this.isOpen ? this.close() : this.open();
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.hideBookingBubble(); // Đóng bóng nổi khi mở chat
+            this.open();
+        }
     },
 
     open() {
