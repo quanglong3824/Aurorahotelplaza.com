@@ -1179,6 +1179,9 @@ return [
         'confirming' => 'Processing...',
         'confirmed_mail_sent' => 'Your booking has been confirmed. A confirmation email has been sent to your email address.',
         'view_my_bookings' => 'View My Bookings',
+        'qr_title' => 'Check-in QR Code',
+        'qr_instruction' => 'Please save this QR code for fast check-in at the reception desk.',
+        'qr_save_hint' => 'Take a screenshot or Save Image',
     ],
 
     // Apartment detail page

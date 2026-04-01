@@ -3,6 +3,7 @@ session_start();
 require_once '../config/environment.php';
 require_once '../config/database.php';
 require_once '../helpers/language.php';
+require_once '../includes/qrcode-helper.php';
 initLanguage();
 
 $booking_code = $_GET['booking_code'] ?? '';
@@ -326,6 +327,30 @@ try {
                                 </span>
                             </div>
 
+                            <!-- QR Code Section -->
+                            <div id="qrCodeSection" class="<?php echo $booking['status'] === 'confirmed' ? '' : 'hidden'; ?> mt-6 p-6 bg-white rounded-2xl flex flex-col items-center gap-4 border border-accent/20">
+                                <h4 class="text-black font-bold text-lg"><?php _e('booking_confirmation.qr_title'); ?></h4>
+                                <div class="bg-white p-2 rounded-xl shadow-inner border border-gray-100">
+                                    <?php 
+                                    $qr_url = generateQRCodeImage(generateBookingQRData($booking), 300);
+                                    ?>
+                                    <img src="<?php echo $qr_url; ?>" alt="Booking QR Code" class="w-48 h-48 sm:w-64 sm:h-64">
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                                        <?php _e('booking_confirmation.qr_instruction'); ?>
+                                    </p>
+                                    <p class="text-accent font-bold mt-2 flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">download</span>
+                                        <?php _e('booking_confirmation.qr_save_hint'); ?>
+                                    </p>
+                                </div>
+                                <button type="button" onclick="window.print()" class="mt-2 text-xs text-gray-400 flex items-center gap-1 hover:text-gray-600 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">print</span>
+                                    In hoặc lưu PDF
+                                </button>
+                            </div>
+
                             <!-- Disclaimer Notes -->
                             <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
                                 <p class="text-xs text-amber-400 flex items-start gap-1">
@@ -403,6 +428,14 @@ try {
                             // Update status badge
                             statusSpan.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-500/20 text-green-400 border border-green-500/30';
                             statusSpan.textContent = '<?php echo addslashes(__('booking_confirmation.confirmed')); ?>';
+
+                            // Show QR code section
+                            const qrSection = document.getElementById('qrCodeSection');
+                            if (qrSection) {
+                                qrSection.classList.remove('hidden');
+                                // Scroll to QR section
+                                qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
 
                             // Hide button and show success state
                             setTimeout(() => {

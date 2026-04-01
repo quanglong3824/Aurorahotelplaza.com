@@ -1287,6 +1287,9 @@ return [
         'confirming' => 'Đang xử lý...',
         'confirmed_mail_sent' => 'Đặt phòng của bạn đã được xác nhận. Email xác nhận đã được gửi đến địa chỉ email của bạn.',
         'view_my_bookings' => 'Xem danh sách đặt phòng',
+        'qr_title' => 'Mã QR Check-in',
+        'qr_instruction' => 'Vui lòng lưu lại mã QR này để làm thủ tục nhận phòng nhanh chóng tại lễ tân.',
+        'qr_save_hint' => 'Chụp màn hình hoặc Lưu hình ảnh',
     ],
 
     // Apartment detail page
