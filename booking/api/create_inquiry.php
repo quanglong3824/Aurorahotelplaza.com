@@ -82,18 +82,18 @@ try {
     try {
         if (function_exists('sendEmail')) {
             $adminEmail = 'info@aurorahotelplaza.com';
-            $subject = __('email_inquiry.admin_subject', ['code' => $result['inquiry_code']]);
+            $subject = "[Aurora Hotel] Yêu cầu tư vấn căn hộ mới - {$result['inquiry_code']}";
             $body = "
-                <h2>" . __('email_inquiry.admin_title') . "</h2>
-                <p><strong>" . __('email_inquiry.label_code') . ":</strong> {$result['inquiry_code']}</p>
-                <p><strong>" . __('email_inquiry.label_apartment') . ":</strong> {$roomType['type_name']}</p>
-                <p><strong>" . __('email_inquiry.label_customer') . ":</strong> {$inquiryData['guest_name']}</p>
-                <p><strong>" . __('email_inquiry.label_email') . ":</strong> {$inquiryData['guest_email']}</p>
-                <p><strong>" . __('email_inquiry.label_phone') . ":</strong> {$inquiryData['guest_phone']}</p>
-                <p><strong>" . __('email_inquiry.label_check_in') . ":</strong> {$inquiryData['preferred_check_in']}</p>
-                <p><strong>" . __('email_inquiry.label_adults') . ":</strong> {$inquiryData['num_adults']}</p>
-                <p><strong>" . __('email_inquiry.label_children') . ":</strong> {$inquiryData['num_children']}</p>
-                <p><strong>" . __('email_inquiry.label_message') . ":</strong> {$inquiryData['message']}</p>
+                <h2>Yêu cầu tư vấn căn hộ mới</h2>
+                <p><strong>Mã yêu cầu:</strong> {$result['inquiry_code']}</p>
+                <p><strong>Căn hộ:</strong> {$roomType['type_name']}</p>
+                <p><strong>Khách hàng:</strong> {$inquiryData['guest_name']}</p>
+                <p><strong>Email:</strong> {$inquiryData['guest_email']}</p>
+                <p><strong>Điện thoại:</strong> {$inquiryData['guest_phone']}</p>
+                <p><strong>Ngày nhận phòng mong muốn:</strong> {$inquiryData['preferred_check_in']}</p>
+                <p><strong>Số người lớn:</strong> {$inquiryData['num_adults']}</p>
+                <p><strong>Số trẻ em:</strong> {$inquiryData['num_children']}</p>
+                <p><strong>Tin nhắn:</strong> {$inquiryData['message']}</p>
             ";
             sendEmail($adminEmail, $subject, $body);
         }
@@ -104,19 +104,19 @@ try {
     // Send confirmation email to customer (optional)
     try {
         if (function_exists('sendEmail')) {
-            $subject = __('email_inquiry.customer_subject', ['code' => $result['inquiry_code']]);
+            $subject = "Xác nhận yêu cầu tư vấn - {$result['inquiry_code']} | Aurora Hotel Plaza";
             $body = "
-                <h2>" . __('email_inquiry.customer_title') . "</h2>
-                <p>" . __('email_inquiry.customer_greeting', ['name' => $inquiryData['guest_name']]) . "</p>
-                <p>" . __('email_inquiry.customer_body', ['room_type' => $roomType['type_name']]) . "</p>
-                <p><strong>" . __('email_inquiry.customer_code', ['code' => $result['inquiry_code']]) . "</strong></p>
-                <p>" . __('email_inquiry.customer_promise') . "</p>
-                <p>" . __('email_inquiry.customer_contact') . "</p>
+                <h2>Cảm ơn quý khách đã quan tâm đến căn hộ tại Aurora Hotel Plaza!</h2>
+                <p>Kính chào <strong>{$inquiryData['guest_name']}</strong>,</p>
+                <p>Chúng tôi đã nhận được yêu cầu tư vấn của quý khách về căn hộ <strong>{$roomType['type_name']}</strong>.</p>
+                <p><strong>Mã yêu cầu:</strong> {$result['inquiry_code']}</p>
+                <p>Đội ngũ tư vấn của chúng tôi sẽ liên hệ với quý khách trong thời gian sớm nhất (trong vòng 24 giờ làm việc).</p>
+                <p>Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ:</p>
                 <ul>
                     <li>Hotline: (0251) 123 4567</li>
                     <li>Email: info@aurorahotelplaza.com</li>
                 </ul>
-                <p>" . __('booking_detail.regards', [], 'email') . "<br>Aurora Hotel Plaza</p>
+                <p>Trân trọng,<br>Aurora Hotel Plaza</p>
             ";
             sendEmail($inquiryData['guest_email'], $subject, $body);
         }
