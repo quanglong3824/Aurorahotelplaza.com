@@ -5,96 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác nhận liên hệ - Aurora Hotel Plaza</title>
     <style>
-/* (Dán CSS từ email-styles.css vào đây để xem trước ngoại tuyến tốt hơn) */
-body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
-.email-wrapper { width: 100%; background-color: #f8fafc; padding: 40px 10px; }
-.email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1); border: 1px solid rgba(226, 232, 240, 0.8); }
-.email-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 50px 40px; text-align: center; }
-.email-header h1 { margin: 0; color: #d4af37; font-size: 28px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-.email-header p { margin: 10px 0 0; color: #94a3b8; font-size: 14px; letter-spacing: 2px; }
+/* Client-specific Styles */
+#outlook a { padding: 0; }
+.ReadMsgBody { width: 100%; }
+.ExternalClass { width: 100%; }
+.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+table { border-collapse: collapse !important; }
+
+body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: 100% !important; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+.email-wrapper { width: 100%; table-layout: fixed; background-color: #f1f5f9; }
+.email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); }
+.email-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 45px 30px; text-align: center; }
+.email-header h1 { margin: 0; color: #d4af37; font-size: 26px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.email-header p { margin: 10px 0 0; color: #94a3b8; font-size: 13px; letter-spacing: 2px; }
 .accent-bar { height: 4px; background: linear-gradient(90deg, #b8941f, #d4af37, #b8941f); }
-.email-content { padding: 45px 40px; }
-.greeting { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
-.main-text { font-size: 16px; color: #475569; margin-bottom: 30px; }
-.highlight-box { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 30px; text-align: center; margin: 30px 0; }
-.highlight-label { font-size: 12px; color: #b8941f; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; }
-.highlight-value { font-size: 32px; font-weight: 800; color: #1e293b; letter-spacing: 4px; }
-.data-card { background: #fdfdfd; border: 1px solid #f1f5f9; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
-.card-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; text-transform: uppercase; letter-spacing: 1px; }
-.data-row { display: table; width: 100%; margin-bottom: 12px; }
-.data-label { display: table-cell; font-size: 14px; color: #64748b; width: 40%; }
-.data-value { display: table-cell; font-size: 14px; color: #1e293b; font-weight: 600; text-align: right; }
-.badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-.badge-gold { background-color: #d4af37; color: #ffffff; }
-.email-footer { background-color: #f1f5f9; padding: 40px; text-align: center; }
-.footer-brand { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 15px; }
-.footer-info { font-size: 13px; color: #64748b; margin-bottom: 20px; }
-.copyright { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-.cta-button { display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%); color: #ffffff !important; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); margin: 20px 0; }
+.email-body { padding: 40px 30px; }
+.greeting { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
+.main-text { font-size: 15px; color: #475569; line-height: 1.7; margin-bottom: 25px; }
+.highlight-box { background-color: #fefce8; border: 1px solid #fef08a; border-radius: 16px; padding: 25px; text-align: center; margin: 25px 0; }
+.highlight-label { font-size: 11px; color: #a16207; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; }
+.highlight-value { font-size: 28px; font-weight: 800; color: #1e293b; letter-spacing: 3px; }
+.info-card { background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+.data-table { width: 100%; }
+.data-table td { padding: 8px 0; font-size: 14px; }
+.label { color: #64748b; width: 40%; }
+.value { color: #1e293b; font-weight: 600; text-align: right; }
+.button-container { text-align: center; margin: 35px 0; }
+.btn-cta { display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%); color: #ffffff !important; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.25); }
+.email-footer { background-color: #f8fafc; padding: 40px 30px; text-align: center; border-top: 1px solid #f1f5f9; }
+.footer-brand { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+.footer-text { font-size: 12px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px; }
+.copyright { font-size: 10px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; }
+
+@media screen and (max-width: 600px) {
+    .email-container { width: 100% !important; border-radius: 0 !important; }
+    .email-header { padding: 35px 20px !important; }
+    .email-body { padding: 30px 20px !important; }
+    .highlight-value { font-size: 24px !important; }
+    .label, .value { display: block !important; width: 100% !important; text-align: left !important; }
+    .value { margin-top: 4px !important; font-size: 15px !important; }
+    .btn-cta { width: 80% !important; padding: 15px 20px !important; }
+}
     </style>
 </head>
 <body>
-    <div class="email-wrapper">
-        <div class="email-container">
-            <div class="email-header">
-                <h1>AURORA HOTEL PLAZA</h1>
-                <p>CUSTOMER SUPPORT SERVICE</p>
-            </div>
-            <div class="accent-bar"></div>
-            
-            <div class="email-content">
-                <div class="greeting">Xin chào Nguyễn Văn A,</div>
-                <p class="main-text">Cảm ơn bạn đã quan tâm và liên hệ với Aurora Hotel Plaza. Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
-                
-                <div class="highlight-box">
-                    <div class="highlight-label">Mã liên hệ của bạn</div>
-                    <div class="highlight-value">CT-889922</div>
-                    <div style="margin-top: 10px;"><span class="badge badge-gold">Thành viên Aurora</span></div>
-                </div>
-                
-                <div class="data-card">
-                    <div class="card-title">Thông tin đã gửi</div>
-                    <div class="data-row">
-                        <span class="data-label">Họ và tên</span>
-                        <span class="data-value">Nguyễn Văn A</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Email</span>
-                        <span class="data-value">nguyenvana@example.com</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Chủ đề</span>
-                        <span class="data-value">Tổ chức sự kiện</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Thời gian</span>
-                        <span class="data-value">15/05/2026 14:30</span>
-                    </div>
-                </div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-wrapper">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container">
+                    <!-- Header -->
+                    <tr>
+                        <td class="email-header">
+                            <h1>AURORA HOTEL PLAZA</h1>
+                            <p>CUSTOMER SUPPORT SERVICE</p>
+                        </td>
+                    </tr>
+                    <tr><td class="accent-bar"></td></tr>
+                    
+                    <!-- Body -->
+                    <tr>
+                        <td class="email-body">
+                            <div class="greeting">Xin chào Nguyễn Văn A,</div>
+                            <p class="main-text">Cảm ơn bạn đã quan tâm và liên hệ với Aurora Hotel Plaza. Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
+                            
+                            <!-- Highlight Box -->
+                            <div class="highlight-box">
+                                <div class="highlight-label">Mã liên hệ của bạn</div>
+                                <div class="highlight-value">CT-889922</div>
+                                <div style="margin-top: 10px;">
+                                    <span style="background-color: #d4af37; color: #ffffff; padding: 4px 12px; border-radius: 15px; font-size: 10px; font-weight: 700;">THÀNH VIÊN AURORA</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Info Card -->
+                            <div class="info-card">
+                                <div class="card-title">Thông tin đã gửi</div>
+                                <table class="data-table">
+                                    <tr><td class="label">Họ và tên</td><td class="value">Nguyễn Văn A</td></tr>
+                                    <tr><td class="label">Email</td><td class="value">nguyenvana@example.com</td></tr>
+                                    <tr><td class="label">Chủ đề</td><td class="value">Tổ chức sự kiện</td></tr>
+                                    <tr><td class="label">Thời gian</td><td class="value">15/05/2026 14:30</td></tr>
+                                </table>
+                            </div>
 
-                <div class="data-card">
-                    <div class="card-title">Nội dung tin nhắn</div>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; font-size: 14px; color: #475569; line-height: 1.8;">
-                        Tôi muốn tư vấn đặt tiệc cưới vào cuối năm nay cho khoảng 300 khách. Vui lòng gửi báo giá các gói tiệc cưới hiện có.
-                    </div>
-                </div>
-                
-                <p class="main-text" style="text-align: center; font-style: italic;">Đội ngũ hỗ trợ của chúng tôi sẽ liên hệ với bạn qua Email hoặc Số điện thoại trong vòng 24 giờ làm việc.</p>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="#" class="cta-button">Khám phá Aurora Hotel</a>
-                </div>
-            </div>
-            
-            <div class="email-footer">
-                <div class="footer-brand">AURORA HOTEL PLAZA</div>
-                <div class="footer-info">
-                    253 Phạm Văn Thuận, Biên Hòa, Đồng Nai<br>
-                    Hotline: (+84-251) 391 8888
-                </div>
-                <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. ALL RIGHTS RESERVED.</div>
-            </div>
-        </div>
-    </div>
+                            <!-- Message Content -->
+                            <div class="info-card">
+                                <div class="card-title">Nội dung tin nhắn</div>
+                                <div style="background-color: #f8fafc; padding: 15px; border-radius: 12px; font-size: 14px; color: #475569; line-height: 1.6;">
+                                    Tôi muốn tư vấn đặt tiệc cưới vào cuối năm nay cho khoảng 300 khách. Vui lòng gửi báo giá các gói tiệc cưới hiện có.
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div class="button-container">
+                                <a href="#" class="btn-cta">Truy cập Website</a>
+                            </div>
+
+                            <p class="main-text" style="font-size: 13px; color: #94a3b8; text-align: center; font-style: italic;">
+                                Đội ngũ hỗ trợ của chúng tôi sẽ liên hệ với bạn qua Email hoặc Số điện thoại trong vòng 24 giờ làm việc.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td class="email-footer">
+                            <div class="footer-brand">AURORA HOTEL PLAZA</div>
+                            <div class="footer-text">
+                                253 Phạm Văn Thuận, Biên Hòa, Đồng Nai<br>
+                                Hotline: (+84-251) 391 8888
+                            </div>
+                            <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. ALL RIGHTS RESERVED.</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

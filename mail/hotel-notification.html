@@ -5,78 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liên hệ mới - Admin Notification</title>
     <style>
-/* Base Style from email-styles.css */
-body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
-.email-wrapper { width: 100%; background-color: #f8fafc; padding: 40px 10px; }
-.email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1); border: 1px solid rgba(226, 232, 240, 0.8); }
-.email-content { padding: 45px 40px; }
-.greeting { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
-.main-text { font-size: 16px; color: #475569; margin-bottom: 30px; }
-.highlight-box { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 30px; text-align: center; margin: 30px 0; }
-.highlight-label { font-size: 12px; color: #b8941f; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; }
-.data-card { background: #fdfdfd; border: 1px solid #f1f5f9; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
-.card-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; text-transform: uppercase; letter-spacing: 1px; }
-.data-row { display: table; width: 100%; margin-bottom: 12px; }
-.data-label { display: table-cell; font-size: 14px; color: #64748b; width: 40%; }
-.data-value { display: table-cell; font-size: 14px; color: #1e293b; font-weight: 600; text-align: right; }
-.email-footer { background-color: #f1f5f9; padding: 40px; text-align: center; }
-.footer-brand { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 15px; }
-.copyright { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+/* Base Responsive Styles */
+body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: 100% !important; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+.email-wrapper { width: 100%; table-layout: fixed; background-color: #f1f5f9; }
+.email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); }
+.email-body { padding: 40px 30px; }
+.greeting { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
+.main-text { font-size: 15px; color: #475569; line-height: 1.7; margin-bottom: 25px; }
+.highlight-box { border-radius: 16px; padding: 25px; text-align: center; margin: 25px 0; }
+.highlight-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; }
+.highlight-value { font-size: 28px; font-weight: 800; letter-spacing: 3px; }
+.info-card { background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+.data-table { width: 100%; }
+.data-table td { padding: 8px 0; font-size: 14px; }
+.label { color: #64748b; width: 40%; }
+.value { color: #1e293b; font-weight: 600; text-align: right; }
+.button-container { text-align: center; margin: 35px 0; }
+.btn-cta { display: inline-block; padding: 15px 40px; color: #ffffff !important; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 15px; }
+.email-footer { background-color: #f8fafc; padding: 40px 30px; text-align: center; border-top: 1px solid #f1f5f9; }
+.copyright { font-size: 10px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Admin Specific Overrides */
-.email-header { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); padding: 50px 40px; text-align: center; }
-.email-header h1 { margin: 0; color: #ffffff; font-size: 24px; font-weight: 700; text-transform: uppercase; }
-.email-header p { margin: 10px 0 0; color: #fca5a5; font-size: 13px; letter-spacing: 2px; }
-.accent-bar { height: 4px; background: #dc2626; }
-.highlight-value { font-size: 32px; font-weight: 800; color: #dc2626; letter-spacing: 4px; }
-.cta-button { display: inline-block; padding: 16px 40px; background: #dc2626; color: #ffffff !important; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2); margin: 20px 0; }
+/* Admin Specific */
+.email-header { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%) !important; padding: 45px 30px; text-align: center; }
+.email-header h1 { margin: 0; color: #ffffff !important; font-size: 24px !important; font-weight: 700; }
+.email-header p { margin: 10px 0 0; color: #fca5a5 !important; font-size: 13px; letter-spacing: 2px; }
+.accent-bar { height: 4px; background: #dc2626 !important; }
+.highlight-box { background-color: #fef2f2; border: 1px solid #fee2e2; }
+.highlight-value { color: #dc2626; }
+.btn-cta { background: #dc2626 !important; box-shadow: 0 10px 20px rgba(220, 38, 38, 0.2) !important; }
+
+@media screen and (max-width: 600px) {
+    .email-container { width: 100% !important; border-radius: 0 !important; }
+    .label, .value { display: block !important; width: 100% !important; text-align: left !important; }
+    .value { margin-top: 4px !important; }
+}
     </style>
 </head>
 <body>
-    <div class="email-wrapper">
-        <div class="email-container">
-            <div class="email-header">
-                <h1>ADMIN NOTIFICATION</h1>
-                <p>NEW WEBSITE INQUIRY RECEIVED</p>
-            </div>
-            <div class="accent-bar"></div>
-            
-            <div class="email-content">
-                <div class="greeting">Thông báo hệ thống,</div>
-                <p class="main-text">Có một yêu cầu liên hệ mới vừa được gửi từ website chính thức.</p>
-                
-                <div class="highlight-box">
-                    <div class="highlight-label">Mã yêu cầu</div>
-                    <div class="highlight-value">CT-889922</div>
-                </div>
-                
-                <div class="data-card">
-                    <div class="card-title">Chi tiết khách hàng</div>
-                    <div class="data-row"><span class="data-label">Họ tên</span><span class="data-value">Nguyễn Văn A</span></div>
-                    <div class="data-row"><span class="data-label">Email</span><span class="data-value">nguyenvana@example.com</span></div>
-                    <div class="data-row"><span class="data-label">Điện thoại</span><span class="data-value">0908887766</span></div>
-                    <div class="data-row"><span class="data-label">Phân loại</span><span class="data-value">Thành viên #1024</span></div>
-                    <div class="data-row"><span class="data-label">Chủ đề</span><span class="data-value">Tổ chức sự kiện</span></div>
-                    <div class="data-row"><span class="data-label">Thời gian</span><span class="data-value">15/05/2026 14:30</span></div>
-                </div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-wrapper">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container">
+                    <!-- Header -->
+                    <tr>
+                        <td class="email-header">
+                            <h1>ADMIN NOTIFICATION</h1>
+                            <p>NEW WEBSITE INQUIRY RECEIVED</p>
+                        </td>
+                    </tr>
+                    <tr><td class="accent-bar"></td></tr>
+                    
+                    <!-- Body -->
+                    <tr>
+                        <td class="email-body">
+                            <div class="greeting">Thông báo hệ thống,</div>
+                            <p class="main-text">Có một yêu cầu liên hệ mới vừa được gửi từ website chính thức.</p>
+                            
+                            <!-- Highlight Box -->
+                            <div class="highlight-box">
+                                <div class="highlight-label">Mã yêu cầu</div>
+                                <div class="highlight-value">CT-889922</div>
+                            </div>
+                            
+                            <!-- Contact Info Card -->
+                            <div class="info-card">
+                                <div class="card-title">Chi tiết khách hàng</div>
+                                <table class="data-table">
+                                    <tr><td class="label">Họ tên</td><td class="value">Nguyễn Văn A</td></tr>
+                                    <tr><td class="label">Email</td><td class="value">nguyenvana@example.com</td></tr>
+                                    <tr><td class="label">Điện thoại</td><td class="value">0908887766</td></tr>
+                                    <tr><td class="label">Phân loại</td><td class="value">Thành viên #1024</td></tr>
+                                </table>
+                            </div>
 
-                <div class="data-card">
-                    <div class="card-title">Nội dung tin nhắn</div>
-                    <div style="background: #fff; border-left: 4px solid #dc2626; padding: 15px; font-size: 14px; color: #1e293b; line-height: 1.6;">
-                        Tôi muốn tư vấn đặt tiệc cưới vào cuối năm nay cho khoảng 300 khách. Vui lòng gửi báo giá các gói tiệc cưới hiện có.
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="#" class="cta-button">Phản hồi khách hàng ngay</a>
-                </div>
-            </div>
-            
-            <div class="email-footer">
-                <div class="footer-brand">SYSTEM AUTOMATION</div>
-                <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. MANAGEMENT SYSTEM.</div>
-            </div>
-        </div>
-    </div>
+                            <!-- Message Content -->
+                            <div class="info-card">
+                                <div class="card-title">Nội dung tin nhắn</div>
+                                <div style="background-color: #ffffff; border-left: 4px solid #dc2626; padding: 15px; font-size: 14px; color: #1e293b; line-height: 1.6;">
+                                    Tôi muốn tư vấn đặt tiệc cưới vào cuối năm nay cho khoảng 300 khách. Vui lòng gửi báo giá các gói tiệc cưới hiện có.
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div class="button-container">
+                                <a href="#" class="btn-cta">Phản hồi Email ngay</a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td class="email-footer">
+                            <div class="footer-brand" style="color: #1e293b; font-weight: 700;">SYSTEM AUTOMATION</div>
+                            <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. MANAGEMENT SYSTEM.</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

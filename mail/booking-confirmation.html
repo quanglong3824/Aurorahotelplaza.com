@@ -5,302 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác nhận đặt phòng - Aurora Hotel Plaza</title>
     <style>
-/* 
- * Aurora Hotel Plaza - Unified Email Styles
- * Style: Modern Luxury / Liquid Glass / Golden Accent
- */
+/* Client-specific Styles */
+#outlook a { padding: 0; }
+.ReadMsgBody { width: 100%; }
+.ExternalClass { width: 100%; }
+.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+table { border-collapse: collapse !important; }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f8fafc;
-    color: #1e293b;
-    line-height: 1.6;
-}
+body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: 100% !important; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+.email-wrapper { width: 100%; table-layout: fixed; background-color: #f1f5f9; }
+.email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); }
+.email-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 45px 30px; text-align: center; }
+.email-header h1 { margin: 0; color: #d4af37; font-size: 26px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.email-header p { margin: 10px 0 0; color: #94a3b8; font-size: 13px; letter-spacing: 2px; }
+.accent-bar { height: 4px; background: linear-gradient(90deg, #b8941f, #d4af37, #b8941f); }
+.email-body { padding: 40px 30px; }
+.greeting { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
+.main-text { font-size: 15px; color: #475569; line-height: 1.7; margin-bottom: 25px; }
+.highlight-box { background-color: #fefce8; border: 1px solid #fef08a; border-radius: 16px; padding: 25px; text-align: center; margin: 25px 0; }
+.highlight-label { font-size: 11px; color: #a16207; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; }
+.highlight-value { font-size: 28px; font-weight: 800; color: #1e293b; letter-spacing: 3px; }
+.info-card { background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+.data-table { width: 100%; }
+.data-table td { padding: 8px 0; font-size: 14px; }
+.label { color: #64748b; width: 40%; }
+.value { color: #1e293b; font-weight: 600; text-align: right; }
+.button-container { text-align: center; margin: 35px 0; }
+.btn-cta { display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%); color: #ffffff !important; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.25); }
+.email-footer { background-color: #f8fafc; padding: 40px 30px; text-align: center; border-top: 1px solid #f1f5f9; }
+.footer-brand { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+.footer-text { font-size: 12px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px; }
+.copyright { font-size: 10px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; }
 
-.email-wrapper {
-    width: 100%;
-    background-color: #f8fafc;
-    padding: 40px 10px;
-}
-
-.email-container {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-}
-
-/* Header Section */
-.email-header {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    padding: 50px 40px;
-    text-align: center;
-    position: relative;
-}
-
-.email-header h1 {
-    margin: 0;
-    color: #d4af37;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.email-header p {
-    margin: 10px 0 0;
-    color: #94a3b8;
-    font-size: 14px;
-    letter-spacing: 2px;
-}
-
-/* Accent Bar */
-.accent-bar {
-    height: 4px;
-    background: linear-gradient(90deg, #b8941f, #d4af37, #b8941f);
-}
-
-/* Content Area */
-.email-content {
-    padding: 45px 40px;
-}
-
-.greeting {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 20px;
-}
-
-.main-text {
-    font-size: 16px;
-    color: #475569;
-    margin-bottom: 30px;
-}
-
-/* Highlight Box (Liquid Glass feel) */
-.highlight-box {
-    background: rgba(212, 175, 55, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 16px;
-    padding: 30px;
-    text-align: center;
-    margin: 30px 0;
-}
-
-.highlight-label {
-    font-size: 12px;
-    color: #b8941f;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.highlight-value {
-    font-size: 32px;
-    font-weight: 800;
-    color: #1e293b;
-    letter-spacing: 4px;
-}
-
-/* Data Table */
-.data-card {
-    background: #fdfdfd;
-    border: 1px solid #f1f5f9;
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f5f9;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.data-row {
-    display: table;
-    width: 100%;
-    margin-bottom: 12px;
-}
-
-.data-label {
-    display: table-cell;
-    font-size: 14px;
-    color: #64748b;
-    width: 40%;
-}
-
-.data-value {
-    display: table-cell;
-    font-size: 14px;
-    color: #1e293b;
-    font-weight: 600;
-    text-align: right;
-}
-
-/* Badge */
-.badge {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.badge-gold {
-    background-color: #d4af37;
-    color: #ffffff;
-}
-
-.badge-outline {
-    border: 1px solid #d4af37;
-    color: #d4af37;
-}
-
-/* Footer Section */
-.email-footer {
-    background-color: #f1f5f9;
-    padding: 40px;
-    text-align: center;
-}
-
-.footer-brand {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 15px;
-}
-
-.footer-info {
-    font-size: 13px;
-    color: #64748b;
-    margin-bottom: 20px;
-}
-
-. সামাজিক-icon {
-    display: inline-block;
-    margin: 0 10px;
-    color: #d4af37;
-    text-decoration: none;
-}
-
-.copyright {
-    font-size: 11px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Button */
-.cta-button {
-    display: inline-block;
-    padding: 16px 40px;
-    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-    color: #ffffff !important;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 15px;
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-    margin: 20px 0;
-}
-
-/* Responsive */
-@media only screen and (max-width: 480px) {
-    .email-content { padding: 30px 20px; }
-    .email-header { padding: 40px 20px; }
-    .highlight-value { font-size: 24px; }
-    .data-label, .data-value { display: block; width: 100%; text-align: left; }
-    .data-value { margin-top: 4px; }
+@media screen and (max-width: 600px) {
+    .email-container { width: 100% !important; border-radius: 0 !important; }
+    .email-header { padding: 35px 20px !important; }
+    .email-body { padding: 30px 20px !important; }
+    .highlight-value { font-size: 24px !important; }
+    .label, .value { display: block !important; width: 100% !important; text-align: left !important; }
+    .value { margin-top: 4px !important; font-size: 15px !important; }
+    .btn-cta { width: 80% !important; padding: 15px 20px !important; }
 }
     </style>
 </head>
 <body>
-    <div class="email-wrapper">
-        <div class="email-container">
-            <div class="email-header">
-                <h1>AURORA HOTEL PLAZA</h1>
-                <p>LUXURY HOSPITALITY EXPERIENCE</p>
-            </div>
-            <div class="accent-bar"></div>
-            
-            <div class="email-content">
-                <div class="greeting">Kính gửi Nguyễn Văn A,</div>
-                <p class="main-text">Cảm ơn quý khách đã tin tưởng lựa chọn Aurora Hotel Plaza. Chúng tôi rất vui mừng thông báo rằng yêu cầu đặt phòng của quý khách đã được nhận thành công.</p>
-                
-                <div class="highlight-box">
-                    <div class="highlight-label">Mã đặt phòng của bạn</div>
-                    <div class="highlight-value">AUR-2025-X7Z9</div>
-                    <div style="margin-top: 15px;">
-                        <span class="badge badge-gold">Chờ xác nhận</span>
-                    </div>
-                </div>
-                
-                <div class="data-card">
-                    <div class="card-title">Chi tiết đặt phòng</div>
-                    <div class="data-row">
-                        <span class="data-label">Loại phòng</span>
-                        <span class="data-value">Premium Deluxe Room</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Nhận phòng</span>
-                        <span class="data-value">25/10/2025 (14:00)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Trả phòng</span>
-                        <span class="data-value">27/10/2025 (12:00)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Số đêm lưu trú</span>
-                        <span class="data-value">2 đêm</span>
-                    </div>
-                </div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-wrapper">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container">
+                    <!-- Header -->
+                    <tr>
+                        <td class="email-header">
+                            <h1>AURORA HOTEL PLAZA</h1>
+                            <p>LUXURY HOSPITALITY EXPERIENCE</p>
+                        </td>
+                    </tr>
+                    <tr><td class="accent-bar"></td></tr>
+                    
+                    <!-- Body -->
+                    <tr>
+                        <td class="email-body">
+                            <div class="greeting">Kính gửi Nguyễn Văn A,</div>
+                            <p class="main-text">Cảm ơn quý khách đã tin tưởng lựa chọn Aurora Hotel Plaza. Chúng tôi rất vui mừng thông báo rằng yêu cầu đặt phòng của quý khách đã được nhận thành công.</p>
+                            
+                            <!-- Highlight Box -->
+                            <div class="highlight-box">
+                                <div class="highlight-label">Mã đặt phòng của bạn</div>
+                                <div class="highlight-value">AUR-2025-X7Z9</div>
+                                <div style="margin-top: 15px;">
+                                    <span style="background-color: #d4af37; color: #ffffff; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase;">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Booking Details Card -->
+                            <div class="info-card">
+                                <div class="card-title">Chi tiết đặt phòng</div>
+                                <table class="data-table">
+                                    <tr>
+                                        <td class="label">Loại phòng</td>
+                                        <td class="value">Premium Deluxe Room</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Nhận phòng</td>
+                                        <td class="value">25/10/2025 (14:00)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Trả phòng</td>
+                                        <td class="value">27/10/2025 (12:00)</td>
+                                    </tr>
+                                </table>
+                            </div>
 
-                <div class="data-card">
-                    <div class="card-title">Tổng chi phí dự kiến</div>
-                    <div style="text-align: center; padding: 10px 0;">
-                        <div style="font-size: 28px; font-weight: 800; color: #d4af37;">4.500.000 VND</div>
-                        <p style="font-size: 12px; color: #94a3b8; margin-top: 5px;">(Đã bao gồm thuế và phí dịch vụ)</p>
-                    </div>
-                </div>
-                
-                <div class="data-card" style="background-color: #f8fafc; border: 1px dashed #cbd5e1;">
-                    <div class="card-title" style="color: #64748b;">Lưu ý quan trọng</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #64748b;">
-                        <li style="margin-bottom: 8px;">Nhân viên của chúng tôi sẽ liên hệ để xác nhận đặt phòng trong vòng 24 giờ tới.</li>
-                        <li style="margin-bottom: 8px;">Vui lòng xuất trình mã đặt phòng này khi làm thủ tục nhận phòng tại lễ tân.</li>
-                    </ul>
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px;">
-                    <a href="#" class="cta-button">Quản lý đặt phòng</a>
-                </div>
-            </div>
-            
-            <div class="email-footer">
-                <div class="footer-brand">AURORA HOTEL PLAZA</div>
-                <div class="footer-info">
-                    253 Phạm Văn Thuận, KP2, Phường Tam Hiệp, Biên Hòa, Đồng Nai<br>
-                    T: (+84-251) 391 8888 | E: info@aurorahotelplaza.com
-                </div>
-                <div class="copyright">
-                    &copy; 2026 AURORA HOTEL PLAZA. ALL RIGHTS RESERVED.
-                </div>
-            </div>
-        </div>
-    </div>
+                            <!-- Payment Card -->
+                            <div class="info-card">
+                                <div class="card-title">Tổng chi phí dự kiến</div>
+                                <div style="text-align: center; padding: 10px 0;">
+                                    <div style="font-size: 26px; font-weight: 800; color: #d4af37;">4.500.000 VND</div>
+                                    <p style="font-size: 11px; color: #94a3b8; margin-top: 5px;">(Đã bao gồm thuế và phí dịch vụ)</p>
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div class="button-container">
+                                <a href="#" class="btn-cta">Quản lý đặt phòng</a>
+                            </div>
+
+                            <p class="main-text" style="font-size: 13px; color: #94a3b8; text-align: center;">
+                                * Nhân viên của chúng tôi sẽ liên hệ xác nhận trong vòng 24 giờ.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td class="email-footer">
+                            <div class="footer-brand">AURORA HOTEL PLAZA</div>
+                            <div class="footer-text">
+                                253 Phạm Văn Thuận, Biên Hòa, Đồng Nai<br>
+                                Hotline: (+84-251) 391 8888 | Email: info@aurorahotelplaza.com
+                            </div>
+                            <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. ALL RIGHTS RESERVED.</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
