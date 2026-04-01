@@ -187,28 +187,24 @@
   }
 }
 
-/* Mobile (≤767px): button sang TRÁI, panel slide-up full-width
-   — Tránh đụng cụm nút bên phải: floating-menu (bottom:24,right:24)
-     floating-booking-toggle (bottom:94,right:28), backToTop (bottom:6,right:90) */
+/* Mobile (≤767px): button sang PHẢI (vị trí cũ), panel slide-up full-width
+   — Sắp xếp tránh đụng cụm nút bên phải: 
+     1. Chat (bottom:24, right:24)
+     2. Menu (bottom:96, right:24)
+     3. Booking Toggle (bottom:168, right:28)
+     4. Booking History Button (bottom:232, right:28)
+*/
 @media (max-width: 767px) {
   #cwBtn {
     bottom: 24px;
-    left: 24px; /* Chuyển sang trái */
-    right: auto;
-    -webkit-transition:
-      -webkit-transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 0.2s ease,
-      bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transition:
-      transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 0.2s ease,
-      bottom 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    right: 24px;
+    left: auto;
   }
   
   .cw-booking-btn {
-    bottom: 88px; /* Trên nút chat */
-    left: 28px;   /* Chuyển sang trái */
-    right: auto;
+    bottom: 232px; /* Phía trên nút Tìm phòng (168px + 56px + padding) */
+    right: 28px;
+    left: auto;
   }
 
   .cw-booking-bubble {
@@ -240,7 +236,7 @@
       bottom: calc(24px + env(safe-area-inset-bottom));
     }
     .cw-booking-btn {
-      bottom: calc(88px + env(safe-area-inset-bottom));
+      bottom: calc(232px + env(safe-area-inset-bottom));
     }
     #cwBtn.open {
       bottom: calc(76vh + 12px + env(safe-area-inset-bottom));
