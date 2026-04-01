@@ -96,12 +96,17 @@ const ChatWidget = {
 
         list.innerHTML = bookings.map(b => `
             <div class="cw-bb-item" onclick="window.location.href='${this._url('booking/confirmation.php?booking_code=' + b.code)}'">
-                <div class="cw-bb-room">${b.room}</div>
-                <div class="cw-bb-meta">
-                    <span class="cw-bb-status" style="background:${b.status_color}20; color:${b.status_color}">${b.status_label}</span>
-                    <span style="font-size:10px;">${b.check_in}</span>
+                <div class="cw-bb-item-content">
+                    <div class="cw-bb-room">${b.room}</div>
+                    <div class="cw-bb-meta">
+                        <span class="cw-bb-status" style="background:${b.status_color}20; color:${b.status_color}">${b.status_label}</span>
+                        <span style="font-size:10px;">${b.check_in}</span>
+                    </div>
+                    <div style="font-size:9px; color:#94a3b8; margin-top:4px; font-family:monospace;">Mã: ${b.code}</div>
                 </div>
-                <div style="font-size:9px; color:#94a3b8; margin-top:4px; font-family:monospace;">Mã: ${b.code}</div>
+                <div class="cw-bb-qr">
+                    <img src="${this._url('api/chat/get-booking-qr.php?code=' + b.code)}" alt="QR ${b.short_code}">
+                </div>
             </div>
         `).join('');
     },
