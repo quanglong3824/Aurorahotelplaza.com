@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact Email Templates (Enhanced Responsive)
+ * Contact Email Templates (Advanced Responsive & Bilingual)
  * Style: Modern Luxury / Golden Accent
  */
 
@@ -21,7 +21,7 @@ class ContactEmailTemplates
         $user_id = isset($data['user_id']) ? $data['user_id'] : null;
 
         $css = file_get_contents(__DIR__ . '/email-styles.css');
-        $member_status = $user_id ? '<span style="background-color: #d4af37; color: #ffffff; padding: 4px 12px; border-radius: 15px; font-size: 10px; font-weight: 700;">THÀNH VIÊN AURORA</span>' : '';
+        $member_status = $user_id ? '<span style="background-color: #d4af37; color: #ffffff; padding: 4px 12px; border-radius: 15px; font-size: 10px; font-weight: 700;">' . strtoupper(__('profile.member_since', [], 'profile')) . '</span>' : '';
 
         return <<<HTML
 <!DOCTYPE html>
@@ -29,7 +29,7 @@ class ContactEmailTemplates
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác nhận liên hệ - Aurora Hotel Plaza</title>
+    <title>{__('contact.send_success', [], 'contact')}</title>
     <style>{$css}</style>
 </head>
 <body>
@@ -49,30 +49,30 @@ class ContactEmailTemplates
                     <!-- Body -->
                     <tr>
                         <td class="email-body">
-                            <div class="greeting">Xin chào {$name},</div>
-                            <p class="main-text">Cảm ơn bạn đã quan tâm và liên hệ với Aurora Hotel Plaza. Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
+                            <div class="greeting">{__('email.dear')} {$name},</div>
+                            <p class="main-text">{__('email_inquiry.customer_promise')}</p>
                             
                             <!-- Highlight Box -->
                             <div class="highlight-box">
-                                <div class="highlight-label">Mã liên hệ của bạn</div>
+                                <div class="highlight-label">{__('contact_track.code', [], 'contact_track')}</div>
                                 <div class="highlight-value">{$submission_id}</div>
                                 <div style="margin-top: 10px;">{$member_status}</div>
                             </div>
                             
                             <!-- Contact Info Card -->
                             <div class="info-card">
-                                <div class="card-title">Thông tin đã gửi</div>
+                                <div class="card-title">{__('inquiry.your_info', [], 'inquiry')}</div>
                                 <table class="data-table">
-                                    <tr><td class="label">Họ và tên</td><td class="value">{$name}</td></tr>
-                                    <tr><td class="label">Email</td><td class="value">{$email}</td></tr>
-                                    <tr><td class="label">Chủ đề</td><td class="value">{$subject}</td></tr>
-                                    <tr><td class="label">Thời gian</td><td class="value">{$created_at}</td></tr>
+                                    <tr><td class="label">{__('contact.full_name', [], 'contact')}</td><td class="value">{$name}</td></tr>
+                                    <tr><td class="label">{__('contact.email', [], 'contact')}</td><td class="value">{$email}</td></tr>
+                                    <tr><td class="label">{__('contact.subject', [], 'contact')}</td><td class="value">{$subject}</td></tr>
+                                    <tr><td class="label">{__('contact_track.date', [], 'contact_track')}</td><td class="value">{$created_at}</td></tr>
                                 </table>
                             </div>
 
                             <!-- Message Content -->
                             <div class="info-card">
-                                <div class="card-title">Nội dung tin nhắn</div>
+                                <div class="card-title">{__('contact.message', [], 'contact')}</div>
                                 <div style="background-color: #f8fafc; padding: 15px; border-radius: 12px; font-size: 14px; color: #475569; line-height: 1.6;">
                                     {$message}
                                 </div>
@@ -80,11 +80,11 @@ class ContactEmailTemplates
                             
                             <!-- CTA Button -->
                             <div class="button-container">
-                                <a href="https://aurorahotelplaza.com" class="btn-cta">Truy cập Website</a>
+                                <a href="https://aurorahotelplaza.com" class="btn-cta">{__('home.explore_more', [], 'home')}</a>
                             </div>
 
                             <p class="main-text" style="font-size: 13px; color: #94a3b8; text-align: center; font-style: italic;">
-                                Đội ngũ hỗ trợ của chúng tôi sẽ liên hệ với bạn qua Email hoặc Số điện thoại trong vòng 24 giờ làm việc.
+                                * {__('email.contact_note')}
                             </p>
                         </td>
                     </tr>
@@ -97,7 +97,7 @@ class ContactEmailTemplates
                                 253 Phạm Văn Thuận, Biên Hòa, Đồng Nai<br>
                                 Hotline: (+84-251) 391 8888
                             </div>
-                            <div class="copyright">&copy; 2026 AURORA HOTEL PLAZA. ALL RIGHTS RESERVED.</div>
+                            <div class="copyright">{__('email.copyright', ['year' => date('Y')])}</div>
                         </td>
                     </tr>
                 </table>
@@ -111,6 +111,7 @@ HTML;
 
     /**
      * Template email thông báo gửi cho khách sạn (Admin)
+     * Giữ nguyên tiếng Việt cho thông báo nội bộ
      */
     public static function getHotelNotificationTemplate($data)
     {
