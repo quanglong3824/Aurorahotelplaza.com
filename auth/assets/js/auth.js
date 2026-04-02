@@ -369,7 +369,8 @@ function initSocialLogin() {
             
             // Redirect to Google OAuth
             setTimeout(() => {
-                window.location.href = './login-google.php';
+                const basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/auth/') === -1 ? window.location.pathname.lastIndexOf('/') : window.location.pathname.indexOf('/auth/'));
+                window.location.href = (basePath === '/' ? '' : basePath) + '/auth/login-google.php';
             }, 500);
         });
     }

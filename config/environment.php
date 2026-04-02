@@ -129,3 +129,17 @@ function isCurrentUrl($path) {
 
 // Load router configuration
 require_once __DIR__ . '/router.php';
+
+// Session Security Configuration
+if (session_status() === PHP_SESSION_NONE) {
+    // Force secure cookies if on HTTPS
+    $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+    
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    
+    if ($is_secure) {
+        ini_set('session.cookie_secure', 1);
+    }
+}

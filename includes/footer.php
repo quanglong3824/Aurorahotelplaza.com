@@ -26,7 +26,7 @@ if (!function_exists('__')) {
         <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
             <!-- Logo & Description -->
             <div class="lg:col-span-2">
-                <a href="<?php echo $site_url; ?>/">
+                <a href="<?php echo route(''); ?>">
                     <img src="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
                         alt="Aurora Hotel Plaza Logo" class="h-14 w-auto mb-6">
                 </a>
@@ -77,22 +77,22 @@ if (!function_exists('__')) {
                 <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.quick_links'); ?></h4>
                 <ul class="space-y-3 text-sm">
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/gioi-thieu"><?php _e('footer.about_us'); ?></a></li>
+                            href="<?php echo route('gioi-thieu'); ?>"><?php _e('footer.about_us'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/phong-khach-san"><?php _e('footer.rooms_suite'); ?></a></li>
+                            href="<?php echo route('phong-khach-san'); ?>"><?php _e('footer.rooms_suite'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu"><?php _e('footer.services'); ?></a></li>
+                            href="<?php echo route('dich-vu'); ?>"><?php _e('footer.services'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/aurora-restaurant"><?php _e('footer.restaurant'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'aurora-restaurant']); ?>"><?php _e('footer.restaurant'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/thu-vien-anh"><?php _e('footer.gallery'); ?></a></li>
+                            href="<?php echo route('thu-vien-anh'); ?>"><?php _e('footer.gallery'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors footer-link-popup" href="#"
                             data-title="<?php _e('footer.events'); ?>"
                             data-content="<?php _e('footer.events_coming_soon'); ?>"><?php _e('footer.events'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/lien-he"><?php _e('footer.contact'); ?></a></li>
+                            href="<?php echo route('lien-he'); ?>"><?php _e('footer.contact'); ?></a></li>
                 </ul>
             </div>
 
@@ -101,24 +101,24 @@ if (!function_exists('__')) {
                 <h4 class="font-bold text-white text-lg mb-4"><?php _e('footer.services_title'); ?></h4>
                 <ul class="space-y-3 text-sm">
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dat-phong"><?php _e('footer.online_booking'); ?></a></li>
+                            href="<?php echo route('dat-phong'); ?>"><?php _e('footer.online_booking'); ?></a></li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/aurora-restaurant"><?php _e('footer.restaurant_bar'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'aurora-restaurant']); ?>"><?php _e('footer.restaurant_bar'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/conference-service"><?php _e('footer.conference_events'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'conference-service']); ?>"><?php _e('footer.conference_events'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/therapeutic-massage"><?php _e('footer.spa_massage'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'therapeutic-massage']); ?>"><?php _e('footer.spa_massage'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/pool-gym"><?php _e('footer.swimming_pool'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'pool-gym']); ?>"><?php _e('footer.swimming_pool'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/pool-gym"><?php _e('footer.gym'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'pool-gym']); ?>"><?php _e('footer.gym'); ?></a>
                     </li>
                     <li><a class="text-white/70 hover:text-accent transition-colors"
-                            href="<?php echo $site_url; ?>/dich-vu/airport-transfer"><?php _e('footer.shuttle_service'); ?></a>
+                            href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'airport-transfer']); ?>"><?php _e('footer.shuttle_service'); ?></a>
                     </li>
                 </ul>
             </div>
@@ -380,8 +380,5 @@ if (!function_exists('__')) {
             window.siteBase = '<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') : ''; ?>';
         }
     </script>
-    <script src="<?php echo $base_path; ?>assets/js/error-tracker.js" defer></script>
-<?php endif; ?>s/js/error-tracker.js" defer></script>
-<?php endif; ?>t>
     <script src="<?php echo $base_path; ?>assets/js/error-tracker.js" defer></script>
 <?php endif; ?>

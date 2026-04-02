@@ -164,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Redirect to main page or intended destination
                 $redirect = $_GET['redirect'] ?? '../index.php';
+                session_write_close();
                 header('Location: ' . $redirect);
                 exit;
             } else {
@@ -267,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <span class="checkmark"></span>
                                     <span class="checkbox-text"><?php _e('auth.remember_me'); ?></span>
                                 </label>
-                                <a href="<?php echo url('auth/forgot-password.php'); ?>" class="forgot-link">
+                                <a href="<?php echo route('quen-mat-khau'); ?>" class="forgot-link">
                                     <?php _e('auth.forgot_password'); ?>
                                 </a>
                             </div>
@@ -314,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Register Link -->
                     <div class="auth-footer">
                         <p><?php _e('auth.no_account'); ?>
-                            <a href="<?php echo url('auth/register.php'); ?>" class="auth-link">
+                            <a href="<?php echo route('dang-ky'); ?>" class="auth-link">
                                 <?php _e('auth.register_now'); ?>
                             </a>
                         </p>
