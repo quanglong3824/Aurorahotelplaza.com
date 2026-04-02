@@ -59,41 +59,23 @@ QUY TẮC PHẢN HỒI:
 
 TRẠNG THÁI HỆ THỐNG: $bi_context";
 
-        // Hàm gọi AI
+            // Hàm gọi AI sử dụng google-gemini-php/client
     function call_ai_sync($provider, $sys_prompt, $messages) {
-        $bot_reply = "";
         $api_key = get_active_gemini_key();
-        $model = env('AI_MODEL', 'gemini-2.0-flash');
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
+        $model_name = env('AI_MODEL', 'gemini-2.0-flash');
         
-        // Chuyển messages thành format gemini
         $gemini_history = "";
         foreach($messages as $m) {
             $gemini_history .= ($m['role']=='user' ? "Sếp: " : "AI: ") . $m['content'] . "\n\n";
         }
-        
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode([
-                "contents" => [["role" => "user", "parts" => [["text" => $sys_prompt . "\n\n" . $gemini_history]]]]
-            ]),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_TIMEOUT => 40
-        ]);
-        $res = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
 
-        if ($http_code === 200) {
-            $json = json_decode($res, true);
-            $bot_reply = $json['candidates'][0]['content']['parts'][0]['text'] ?? "";
-        } else {
-            throw new Exception("Gemini API Error (Code: $http_code): " . $res);
+        try {
+            $client = Gemini::client($api_key);
+            $response = $client->generativeModel($model_name)->generateContent($sys_prompt . "\n\n" . $gemini_history);
+            return $response->text();
+        } catch (Exception $e) {
+            throw new Exception("Gemini Client Sync Error: " . $e->getMessage());
         }
-        return $bot_reply;
     }
 
     $chat_history = [

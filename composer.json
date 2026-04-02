@@ -1,0 +1,19 @@
+{
+    "name": "aurora/hotel-plaza",
+    "description": "Aurora Hotel Plaza Website",
+    "type": "project",
+    "require": {
+        "google-gemini-php/client": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "LongDev",
+            "email": "quanglong.3824@gmail.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
