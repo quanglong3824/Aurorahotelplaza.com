@@ -174,9 +174,16 @@ if (!function_exists('__')) {
         <!-- Bottom Bar -->
         <div class="mt-12 pt-8 border-t border-white/20">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-white/60 text-center md:text-left">
-                    <?php _e('footer.copyright', ['year' => date('Y')]); ?>
-                </p>
+                <div class="flex flex-col gap-1 text-center md:text-left">
+                    <p class="text-sm text-white/60">
+                        <?php _e('footer.copyright', ['year' => '2026']); ?>
+                    </p>
+                    <p class="text-[10px] text-white/30 tracking-wider uppercase">
+                        Developed by <span class="font-bold text-white/40">LongDev</span> • 
+                        Version <span class="text-white/40">v1.1.0</span> • 
+                        Commit <span class="font-mono text-white/40" id="commit-id">ed2e7c8</span>
+                    </p>
+                </div>
                 <div class="flex gap-6 text-sm">
                     <a href="<?php echo route('chinh-sach-bao-mat'); ?>"
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.privacy_policy'); ?></a>
