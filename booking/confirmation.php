@@ -51,7 +51,7 @@ try {
     <link href="<?php echo asset('css/fonts.css'); ?>?v=<?php echo time(); ?>" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="./assets/css/booking.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/booking/assets/css/booking.css?v=<?php echo time(); ?>">
 </head>
 
 <body class="booking-page">

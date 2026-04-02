@@ -119,16 +119,16 @@ foreach ($room_types as $room) {
     <title><?php _e('booking_page.title'); ?></title>
 
     <!-- Tailwind CSS (Local Build) -->
-    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="../assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo asset('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo asset('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Google Fonts -->
-    <link href="../assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo asset('css/fonts.css'); ?>" rel="stylesheet" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="./assets/css/booking.css">
+    <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/booking/assets/css/booking.css">
 
 </head>
 
@@ -1129,8 +1129,8 @@ foreach ($room_types as $room) {
             }
         };
     </script>
-    <script src="../assets/js/main.js"></script>
-    <script src="./assets/js/booking.js"></script>
+    <script src="<?php echo asset('js/main.js'); ?>"></script>
+    <script src="<?php echo BASE_URL; ?>/booking/assets/js/booking.js"></script>
 
 </body>
 
