@@ -3,6 +3,9 @@
 # Performance + URL Rewrites + Security
 # ============================================
 
+# ── Custom Error Pages ──────────────────────
+ErrorDocument 404 /404.php
+
 # Enable Rewrite Engine
 RewriteEngine On
 
