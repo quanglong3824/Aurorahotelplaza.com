@@ -180,8 +180,8 @@ if (!function_exists('__')) {
                     </p>
                     <p class="text-[10px] text-white/30 tracking-wider uppercase">
                         Developed by <span class="font-bold text-white/40">LongDev</span> • 
-                        Version <span class="text-white/40">v1.1.0</span> • 
-                        Commit <span class="font-mono text-white/40" id="commit-id">ed2e7c8</span>
+                        Version <span class="text-white/40">v1.8.2 Rel Test</span> • 
+                        Commit <span class="font-mono text-white/40" id="commit-id">73cced4</span>
                     </p>
                 </div>
                 <div class="flex gap-6 text-sm">
