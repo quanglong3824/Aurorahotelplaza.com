@@ -43,7 +43,7 @@ $client_tokens = 0;
 $client_requests = 0;
 
 foreach ($today_stats as $key_id => $stat) {
-    if ($key_id === 'qwen') continue;
+    
     $tt = $stat['tokens'] ?? 0;
     $rt = $stat['requests'] ?? 0;
     $at = $stat['admin_tokens'] ?? 0;

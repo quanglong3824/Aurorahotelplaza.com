@@ -21,7 +21,9 @@ if (strpos($current_path, '/admin/') !== false)
     return;
 
 // Luôn start session để quản lý guest chat
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Tạo guest_id nếu chưa có (cho phép khách vãng lai chat)
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {

@@ -59,74 +59,39 @@ QUY TẮC PHẢN HỒI:
 
 TRẠNG THÁI HỆ THỐNG: $bi_context";
 
-    // Hàm gọi AI
+        // Hàm gọi AI
     function call_ai_sync($provider, $sys_prompt, $messages) {
         $bot_reply = "";
-        if ($provider === 'qwen') {
-            $api_key = get_active_qwen_key();
-            $model = get_active_qwen_model();
-            $base_url = get_active_ai_base_url();
-            
-            $url = $base_url;
-            if (strpos($url, '/chat/completions') === false) {
-                $url = rtrim($url, '/') . "/chat/completions";
-            }
-            $data = [
-                "model" => $model,
-                "messages" => array_merge([["role" => "system", "content" => $sys_prompt]], $messages),
-                "stream" => false
-            ];
-            $ch = curl_init($url);
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $api_key],
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT => 60
-            ]);
-            $res = curl_exec($ch);
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+        $api_key = get_active_gemini_key();
+        $model = env('AI_MODEL', 'gemini-2.0-flash');
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
+        
+        // Chuyển messages thành format gemini
+        $gemini_history = "";
+        foreach($messages as $m) {
+            $gemini_history .= ($m['role']=='user' ? "Sếp: " : "AI: ") . $m['content'] . "\n\n";
+        }
+        
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                "contents" => [["role" => "user", "parts" => [["text" => $sys_prompt . "\n\n" . $gemini_history]]]]
+            ]),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 40
+        ]);
+        $res = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-            if ($http_code === 200) {
-                $json = json_decode($res, true);
-                $bot_reply = $json['choices'][0]['message']['content'] ?? "";
-            } else {
-                throw new Exception("Qwen API Error (Code: $http_code): " . $res);
-            }
+        if ($http_code === 200) {
+            $json = json_decode($res, true);
+            $bot_reply = $json['candidates'][0]['content']['parts'][0]['text'] ?? "";
         } else {
-            $api_key = get_active_gemini_key();
-            $model = env('AI_MODEL', 'gemini-2.0-flash');
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $api_key;
-            
-            // Chuyển messages thành format gemini
-            $gemini_history = "";
-            foreach($messages as $m) {
-                $gemini_history .= ($m['role']=='user' ? "Sếp: " : "AI: ") . $m['content'] . "\n\n";
-            }
-            
-            $ch = curl_init($url);
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode([
-                    "contents" => [["role" => "user", "parts" => [["text" => $sys_prompt . "\n\n" . $gemini_history]]]]
-                ]),
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT => 40
-            ]);
-            $res = curl_exec($ch);
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($http_code === 200) {
-                $json = json_decode($res, true);
-                $bot_reply = $json['candidates'][0]['content']['parts'][0]['text'] ?? "";
-            } else {
-                throw new Exception("Gemini API Error (Code: $http_code): " . $res);
-            }
+            throw new Exception("Gemini API Error (Code: $http_code): " . $res);
         }
         return $bot_reply;
     }
@@ -161,14 +126,14 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
         }
     }
 
-    log_key_usage($provider === 'qwen' ? 'qwen' : get_active_key_index(), 1500, 'admin');
+    log_key_usage(get_active_key_index(), 1500, 'admin');
 
     ob_clean();
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
         'provider' => $provider,
-        'key_info' => $provider === 'qwen' ? "Qwen (" . get_active_qwen_model() . ")" : "Gemini (" . env('AI_MODEL', 'gemini-2.0-flash') . ")",
+        'key_info' => "Gemini (" . env('AI_MODEL', 'gemini-2.0-flash') . ")",
         'tokens' => 0,
         'key_idx' => get_active_key_index(),
         'stats' => get_key_usage_stats()

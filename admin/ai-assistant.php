@@ -384,7 +384,7 @@ require_once 'includes/admin-header.php';
                 }
 
                 if (data.success) {
-                    const agentName = data.provider === 'qwen' ? 'Qwen Agent' : 'Gemini Agent';
+                    const agentName = 'Gemini Agent';
                     appendTerminal(`[AGENT] ${agentName} is responding...`, 'INFO');
                     appendTerminal(`[QUOTA REPORT] System is running on Active ${data.key_info}.`, 'INFO');
 

@@ -5,10 +5,10 @@ require_once __DIR__ . '/../config/load_env.php';
 @include_once __DIR__ . '/../config/api_keys.php';
 
 /**
- * Lấy Provider AI đang hoạt động (Mặc định là qwen nếu có cấu hình)
+ * Lấy Provider AI đang hoạt động (Cố định là gemini)
  */
 function get_active_ai_provider() {
-    return env('AI_PROVIDER', 'qwen');
+    return 'gemini';
 }
 
 /**
@@ -19,32 +19,6 @@ function set_active_ai_provider($provider) {
     return true;
 }
 
-function get_active_qwen_key() {
-    $key = env('QWEN_API_KEY');
-    if (!$key) return '';
-    
-    // Hỗ trợ nếu người dùng nhập nhiều key cách nhau bởi dấu phẩy
-    $keys = array_map('trim', explode(',', $key));
-    return $keys[0];
-}
-
-function get_active_qwen_model() {
-    // Ưu tiên QWEN_MODEL, nếu không có thì dùng AI_MODEL, cuối cùng là fallback qwen-max
-    return env('QWEN_MODEL', env('AI_MODEL', 'qwen3.5-plus'));
-}
-
-function get_active_ai_base_url() {
-    // Chuẩn OpenAI Compatible của Alibaba thường yêu cầu /compatible-mode/v1
-    $url = rtrim(env('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1'), '/');
-    if (strpos($url, 'dashscope') !== false && strpos($url, 'compatible-mode') === false) {
-        if (substr($url, -3) === '/v1') {
-            $url = substr($url, 0, -3) . '/compatible-mode/v1';
-        } else {
-            $url .= '/compatible-mode/v1';
-        }
-    }
-    return $url;
-}
 function get_active_gemini_key()
 {
     $valid_keys = get_all_valid_keys();
