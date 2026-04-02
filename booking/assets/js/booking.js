@@ -1937,12 +1937,13 @@ async function handleSubmit(e) {
     const submitBtnText = document.getElementById('submitBtnText');
     const originalText = submitBtnText.textContent;
 
+    const basePath = window.siteBase || '';
     // ========== PRE-SUBMIT VALIDATION (Anti-spam) ==========
     // Check if user has existing bookings before submitting
     let validation;
     try {
         const validationResponse = await Promise.race([
-            fetch('./api/validate-booking.php', {
+            fetch(basePath + '/booking/api/validate-booking.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1969,7 +1970,7 @@ async function handleSubmit(e) {
     } catch (error) {
         console.error('Pre-validation error:', error);
         // Continue with booking if validation API fails or times out (don't block legitimate users)
-        showToast('Không thể kiểm tra đặt phòng. Tiếp tục xử lý...', 'info');
+        // showToast('Không thể kiểm tra đặt phòng. Tiếp tục xử lý...', 'info');
     }
     // ========== END PRE-SUBMIT VALIDATION ==========
 
@@ -1979,7 +1980,7 @@ async function handleSubmit(e) {
 
     try {
         // Always use create_booking.php - it handles both instant and inquiry bookings
-        const apiUrl = './api/create_booking.php';
+        const apiUrl = basePath + '/booking/api/create_booking.php';
 
         // Send request
         const response = await fetch(apiUrl, {
@@ -1997,16 +1998,16 @@ async function handleSubmit(e) {
             if (result.booking_type === 'inquiry') {
                 // Success for inquiry - Show alert and redirect home
                 alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!');
-                window.location.href = '../index.php';
+                window.location.href = basePath + '/';
             } else {
                 // Success for instant booking
                 if (data.payment_method === 'vnpay' && result.payment_url) {
                     window.location.href = result.payment_url;
                 } else {
                     if (result.is_guest) {
-                        window.location.href = './confirmation.php?booking_code=' + result.booking_code;
+                        window.location.href = basePath + '/booking/confirmation.php?booking_code=' + result.booking_code;
                     } else {
-                        window.location.href = '../profile/bookings.php';
+                        window.location.href = basePath + '/ho-so/dat-phong';
                     }
                 }
             }

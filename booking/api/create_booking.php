@@ -506,7 +506,7 @@ try {
             "vnp_Locale" => $vnp_Locale,
             "vnp_OrderInfo" => "Thanh toan dat phong " . $vnp_TxnRef,
             "vnp_OrderType" => "billpayment",
-            "vnp_ReturnUrl" => str_replace('/payment/', '/booking/', $vnp_Returnurl),
+            "vnp_ReturnUrl" => route('dat-phong/thanh-toan'),
             "vnp_TxnRef" => $vnp_TxnRef,
             "vnp_ExpireDate" => $expire
         );
