@@ -5,11 +5,8 @@
  */
 
 /**
- * Kiểm tra xem user có đang có booking chưa hoàn tất không
- * SIẾT CHẶT: Chỉ cho đặt tiếp khi TẤT CẢ booking cũ đã:
- * - checked_out (đã trả phòng)
- * - cancelled (đã hủy)
- * - confirmed (đã xác nhận) - SIẾT CHẶT: Chặn cả confirmed
+ * Kiểm tra xem user có đang có quá nhiều booking chưa hoàn tất không
+ * NỚI LỎNG: Cho phép đặt tối đa 5 booking cùng lúc để khách có thể đặt cho nhiều gia đình
  * 
  * @param int|null $user_id User ID (nếu đăng nhập)
  * @param string $guest_email Email khách (nếu không đăng nhập)
@@ -19,7 +16,11 @@
 function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = null) {
     try {
         $db = getDB();
-        $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
+        // Chỉ chặn nếu có quá nhiều đơn 'pending' (chưa thanh toán/xác nhận)
+        // Các đơn 'confirmed' hoặc 'checked_in' thì cho phép đặt thêm thoải mái
+        $blocked_statuses = ['pending']; 
+        $max_pending_bookings = 5; 
+        
         $where_conditions = [];
         $params = [];
         
@@ -28,8 +29,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
             $params[] = $user_id;
         } else {
             $sub_conditions = [];
-            
-            // Xử lý Email (có thể là chuỗi hoặc mảng)
             if ($guest_email) {
                 if (is_array($guest_email) && !empty($guest_email)) {
                     $placeholders = implode(',', array_fill(0, count($guest_email), '?'));
@@ -40,8 +39,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
                     $params[] = $guest_email;
                 }
             }
-            
-            // Xử lý Phone (có thể là chuỗi hoặc mảng)
             if ($guest_phone) {
                 if (is_array($guest_phone) && !empty($guest_phone)) {
                     $placeholders = implode(',', array_fill(0, count($guest_phone), '?'));
@@ -52,7 +49,6 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
                     $params[] = $guest_phone;
                 }
             }
-            
             if (empty($sub_conditions)) return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
             $where_conditions[] = "(" . implode(' OR ', $sub_conditions) . ")";
         }
@@ -60,13 +56,11 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         $placeholders = implode(',', array_fill(0, count($blocked_statuses), '?'));
         $where_conditions[] = "status IN ($placeholders)";
         $params = array_merge($params, $blocked_statuses);
-        $where_conditions[] = "(check_in_date >= CURDATE() OR status IN ('pending', 'checked_in'))";
         
         $where_sql = implode(' AND ', $where_conditions);
         
         $stmt = $db->prepare("
-            SELECT booking_id, booking_code, status, payment_status, check_in_date, check_out_date, 
-                   total_amount, guest_name, guest_email, guest_phone, created_at,
+            SELECT booking_id, booking_code, status, payment_status, created_at,
                    TIMESTAMPDIFF(MINUTE, created_at, NOW()) as minutes_since_creation
             FROM bookings
             WHERE $where_sql
@@ -75,48 +69,29 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         $stmt->execute($params);
         $pending_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if (empty($pending_bookings)) {
-            return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
-        }
-        
-        // Auto-cancel unpaid
-        $has_active = false;
+        // Auto-cancel unpaid bookings older than 30 mins
+        $active_count = 0;
         foreach ($pending_bookings as $booking) {
             if ($booking['payment_status'] === 'unpaid' && $booking['minutes_since_creation'] > 30) {
                 autoCancelUnpaidBooking($booking['booking_id']);
             } else {
-                $has_active = true;
+                $active_count++;
             }
         }
         
-        if (!$has_active) {
+        if ($active_count < $max_pending_bookings) {
             return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
         }
 
-        // Re-fetch
-        $stmt->execute($params);
-        $pending_bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        if (empty($pending_bookings)) {
-            return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
-        }
-
-        $count = count($pending_bookings);
-        $status_labels = [
-            'pending' => 'Chờ xác nhận',
-            'confirmed' => 'Đã xác nhận',
-            'checked_in' => 'Đang ở'
-        ];
-        
+        // Nếu vượt quá giới hạn thì mới chặn
         $details = [];
-        foreach ($pending_bookings as $b) {
-            $lbl = $status_labels[$b['status']] ?? $b['status'];
-            $details[] = "Mã {$b['booking_code']} ($lbl)";
+        foreach (array_slice($pending_bookings, 0, 3) as $b) {
+            $details[] = "Mã {$b['booking_code']}";
         }
         
         return [
             'allowed' => false,
-            'message' => "Bạn đang có $count đặt phòng chưa hoàn tất: " . implode(', ', $details) . ". Vui lòng hoàn tất thanh toán và trả phòng trước khi đặt phòng mới.",
+            'message' => "Bạn đang có $active_count đơn hàng chờ xử lý. Vui lòng hoàn tất hoặc hủy các đơn cũ trước khi đặt thêm quá nhiều đơn mới.",
             'pending_bookings' => $pending_bookings
         ];
         
@@ -128,44 +103,11 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
 
 /**
  * Kiểm tra trùng lặp đặt phòng
+ * NỚI LỎNG: Chỉ cảnh báo hoặc cho phép đặt nhiều phòng cùng lúc
  */
 function checkBookingOverlap($user_id = null, $email = null, $phone = null, $new_check_in, $new_check_out) {
-    try {
-        $db = getDB();
-        $pending_statuses = ['pending', 'confirmed', 'checked_in'];
-        $where_conditions = [];
-        $params = [];
-        
-        if ($user_id) {
-            $where_conditions[] = "(user_id = ? OR guest_email = ? OR guest_phone = ?)";
-            $params[] = $user_id; $params[] = $email; $params[] = $phone;
-        } else {
-            $where_conditions[] = "(guest_email = ? OR guest_phone = ?)";
-            $params[] = $email; $params[] = $phone;
-        }
-        
-        $placeholders = implode(',', array_fill(0, count($pending_statuses), '?'));
-        $where_conditions[] = "status IN ($placeholders)";
-        $params = array_merge($params, $pending_statuses);
-        $where_conditions[] = "check_in_date < ? AND check_out_date > ?";
-        $params[] = $new_check_out; $params[] = $new_check_in;
-        
-        $where_sql = implode(' AND ', $where_conditions);
-        $stmt = $db->prepare("SELECT booking_id, booking_code, check_in_date, check_out_date FROM bookings WHERE $where_sql");
-        $stmt->execute($params);
-        $overlapping = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        if (!empty($overlapping)) {
-            return [
-                'allowed' => false,
-                'message' => "Bạn đã có đặt phòng trùng khoảng thời gian này.",
-                'overlapping_bookings' => $overlapping
-            ];
-        }
-        return ['allowed' => true, 'message' => '', 'overlapping_bookings' => []];
-    } catch (Exception $e) {
-        return ['allowed' => true, 'message' => '', 'overlapping_bookings' => []];
-    }
+    // Cho phép đặt trùng lặp vì khách có thể đặt nhiều phòng cho gia đình/đoàn
+    return ['allowed' => true, 'message' => '', 'overlapping_bookings' => []];
 }
 
 /**
