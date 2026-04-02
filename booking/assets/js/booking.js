@@ -1480,23 +1480,26 @@ async function nextStep(step) {
         return;
     }
 
-    // ========== ANTI-SPAM: Check before step 3 ==========
-    if (step === 3 && !isInquiryMode) {
+    // ========== ANTI-SPAM: Check before step 2 & 3 ==========
+    if ((step === 2 || step === 3) && !isInquiryMode) {
         // Show loading
-        const continueBtn = event?.target;
+        const continueBtn = event?.target?.closest('button');
         const originalText = continueBtn?.innerHTML;
         if (continueBtn) {
             continueBtn.disabled = true;
-            continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang kiểm tra...';
+            continueBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Đang kiểm tra...';
         }
 
+        const basePath = window.siteBase || '';
         try {
-            const validationResponse = await fetch('./api/validate-booking.php', {
+            const validationResponse = await fetch(basePath + '/booking/api/validate-booking.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     check_in_date: document.getElementById('check_in_date')?.value,
-                    check_out_date: document.getElementById('check_out_date')?.value
+                    check_out_date: document.getElementById('check_out_date')?.value,
+                    guest_email: document.getElementById('guest_email')?.value,
+                    guest_phone: document.getElementById('guest_phone')?.value
                 })
             });
             
@@ -1509,11 +1512,10 @@ async function nextStep(step) {
                     continueBtn.disabled = false;
                     continueBtn.innerHTML = originalText;
                 }
-                return; // Stop - don't go to step 3
+                return; // Stop - don't navigate
             }
         } catch (error) {
             console.error('Pre-validation error:', error);
-            // Continue if validation API fails (don't block legitimate users)
         } finally {
             if (continueBtn) {
                 continueBtn.disabled = false;
@@ -1946,10 +1948,7 @@ async function handleSubmit(e) {
             fetch(basePath + '/booking/api/validate-booking.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    check_in_date: data.check_in_date,
-                    check_out_date: data.check_out_date
-                })
+                body: JSON.stringify(data)
             }),
             // Timeout after 5 seconds
             new Promise((_, reject) => 
