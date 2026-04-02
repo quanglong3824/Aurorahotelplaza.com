@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once 'config/load_env.php';
+require_once 'config/environment.php';
 require_once 'config/database.php';
 
 // Check if user is logged in

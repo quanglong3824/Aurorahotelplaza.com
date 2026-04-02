@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/environment.php';
 
 // Prevent caching - quan trọng để tránh hiển thị data cũ
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
