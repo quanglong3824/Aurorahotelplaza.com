@@ -34,6 +34,15 @@ if (isset($_SESSION['user_id'])) {
         $booking_block_bookings = $booking_spam_check['pending_bookings'];
     }
 } 
+// 2. Kiểm tra theo dấu thiết bị (Guest identifiers trong Session)
+elseif (isset($_SESSION['guest_identifiers'])) {
+    $booking_spam_check = checkBookingSpam(null, $_SESSION['guest_identifiers']['emails'], $_SESSION['guest_identifiers']['phones']);
+    if (!$booking_spam_check['allowed']) {
+        $spam_check_passed = false;
+        $booking_block_message = $booking_spam_check['message'];
+        $booking_block_bookings = $booking_spam_check['pending_bookings'];
+    }
+}
 
 // 2. Nếu chưa bị chặn bởi User ID, kiểm tra theo IP (chống spam từ guest)
 if ($spam_check_passed) {

@@ -478,6 +478,19 @@ try {
         'is_guest' => !isset($_SESSION['user_id'])
     ];
 
+    // Ghi nhớ thông tin khách vãng lai để chặn spam (theo dấu thiết bị)
+    if ($response['is_guest']) {
+        if (!isset($_SESSION['guest_identifiers'])) {
+            $_SESSION['guest_identifiers'] = ['emails' => [], 'phones' => []];
+        }
+        if (!in_array($guest_email, $_SESSION['guest_identifiers']['emails'])) {
+            $_SESSION['guest_identifiers']['emails'][] = $guest_email;
+        }
+        if (!in_array($guest_phone, $_SESSION['guest_identifiers']['phones'])) {
+            $_SESSION['guest_identifiers']['phones'][] = $guest_phone;
+        }
+    }
+
     // For inquiry bookings, return a success message (no payment processing)
     if ($booking_type === 'inquiry') {
         $response['message'] = 'Yêu cầu tư vấn của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.';

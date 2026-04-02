@@ -49,20 +49,38 @@ if (!$rate_limit['allowed']) {
     exit;
 }
 
-// 2. CHỈ CHECK SPAM VỚI USER ĐÃ ĐĂNG NHẬP
-// Guest (vãng lai) không block vì họ không thể đăng nhập để kiểm tra booking
+// 2. CHECK SPAM (Chặn nếu có booking chưa hoàn tất)
+$spam_check = null;
+
 if ($user_id) {
+    // User đã đăng nhập
     $spam_check = checkBookingSpam($user_id, null, null);
+} else {
+    // Guest: Ưu tiên email/phone đang nhập vào form, nhưng bao gồm cả các identifiers đã dùng trên thiết bị này
+    $check_emails = [];
+    $check_phones = [];
     
-    if (!$spam_check['allowed']) {
-        echo json_encode([
-            'allowed' => false,
-            'message' => $spam_check['message'],
-            'pending_bookings' => $spam_check['pending_bookings'],
-            'type' => 'spam'
-        ]);
-        exit;
+    if ($guest_email) $check_emails[] = $guest_email;
+    if ($guest_phone) $check_phones[] = $guest_phone;
+    
+    if (isset($_SESSION['guest_identifiers'])) {
+        $check_emails = array_unique(array_merge($check_emails, $_SESSION['guest_identifiers']['emails']));
+        $check_phones = array_unique(array_merge($check_phones, $_SESSION['guest_identifiers']['phones']));
     }
+    
+    if (!empty($check_emails) || !empty($check_phones)) {
+        $spam_check = checkBookingSpam(null, $check_emails, $check_phones);
+    }
+}
+
+if ($spam_check && !$spam_check['allowed']) {
+    echo json_encode([
+        'allowed' => false,
+        'message' => $spam_check['message'],
+        'pending_bookings' => $spam_check['pending_bookings'],
+        'type' => 'spam'
+    ]);
+    exit;
 }
 
 // 3. Check for overlapping bookings (nếu có ngày) - CHO TẤT CẢ

@@ -19,22 +19,42 @@
 function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = null) {
     try {
         $db = getDB();
-        
-        // Trạng thái bị chặn
         $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
-        
         $where_conditions = [];
         $params = [];
         
         if ($user_id) {
             $where_conditions[] = "user_id = ?";
             $params[] = $user_id;
-        } elseif ($guest_email || $guest_phone) {
-            $where_conditions[] = "(guest_email = ? OR guest_phone = ?)";
-            $params[] = $guest_email;
-            $params[] = $guest_phone;
         } else {
-            return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
+            $sub_conditions = [];
+            
+            // Xử lý Email (có thể là chuỗi hoặc mảng)
+            if ($guest_email) {
+                if (is_array($guest_email) && !empty($guest_email)) {
+                    $placeholders = implode(',', array_fill(0, count($guest_email), '?'));
+                    $sub_conditions[] = "guest_email IN ($placeholders)";
+                    $params = array_merge($params, $guest_email);
+                } else {
+                    $sub_conditions[] = "guest_email = ?";
+                    $params[] = $guest_email;
+                }
+            }
+            
+            // Xử lý Phone (có thể là chuỗi hoặc mảng)
+            if ($guest_phone) {
+                if (is_array($guest_phone) && !empty($guest_phone)) {
+                    $placeholders = implode(',', array_fill(0, count($guest_phone), '?'));
+                    $sub_conditions[] = "guest_phone IN ($placeholders)";
+                    $params = array_merge($params, $guest_phone);
+                } else {
+                    $sub_conditions[] = "guest_phone = ?";
+                    $params[] = $guest_phone;
+                }
+            }
+            
+            if (empty($sub_conditions)) return ['allowed' => true, 'message' => '', 'pending_bookings' => []];
+            $where_conditions[] = "(" . implode(' OR ', $sub_conditions) . ")";
         }
         
         $placeholders = implode(',', array_fill(0, count($blocked_statuses), '?'));
