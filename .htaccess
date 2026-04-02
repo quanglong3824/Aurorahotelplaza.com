@@ -6,11 +6,6 @@
 # Enable Rewrite Engine
 RewriteEngine On
 
-# ── Fix Assets Path for Subdirectory ─────────
-# Nếu yêu cầu bắt đầu bằng assets/ nhưng không tồn tại ở gốc, hãy tìm trong /2025/assets/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^assets/(.*)$ 2025/assets/$1 [L]
-
 # ── Pretty URL Rewrites ──────────────────────
 # gallery/7 → gallery.php?page=7
 RewriteRule ^gallery/(\d+)$ gallery.php?page=$1 [L,QSA]

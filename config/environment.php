@@ -10,8 +10,8 @@ function getBaseUrl() {
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
-    // ÉP CỨNG ROOT PATH LÀ /2025 VÌ WEBSITE ĐANG CHẠY TRONG THƯ MỤC NÀY
-    $rootPath = '/2025';
+    // WEBSITE ĐANG CHẠY TRONG THƯ MỤC GỐC
+    $rootPath = '';
     
     return $protocol . '://' . $host . $rootPath;
 }
