@@ -836,7 +836,7 @@ return [
         // Anti-spam block modal
         'block_title' => 'Không thể đặt phòng',
         'anti_spam_title' => 'Bảo vệ Anti-Spam',
-        'pending_bookings_title' => 'Đặt phòng chưa hoàn tất',
+        'pending_bookings_title' => 'Các đơn đặt phòng chưa hoàn tất',
         'block_help_title' => 'Bạn cần làm gì?',
         'block_help_pay' => 'Hoàn tất thanh toán cho đặt phòng cũ',
         'block_help_checkout' => 'Chờ đến ngày trả phòng và trả phòng',
