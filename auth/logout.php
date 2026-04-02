@@ -37,9 +37,10 @@ foreach ($cookies_to_clear as $cookie_name) {
 }
 
 // Redirect to login page with success message
+require_once '../config/environment.php';
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
-header('Location: login.php?logged_out=1');
+header('Location: ' . route('dang-nhap', ['logged_out' => 1]));
 exit;
 ?>

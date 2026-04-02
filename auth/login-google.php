@@ -114,7 +114,7 @@ if (isset($_GET['code'])) {
     curl_close($ch);
     
     if ($http_code !== 200) {
-        header('Location: login.php?error=google_userinfo_failed');
+        header('Location: ' . route('dang-nhap', ['error' => 'google_userinfo_failed']));
         exit;
     }
     
@@ -291,5 +291,7 @@ $auth_url = 'https://accounts.google.com/o/oauth2/auth?' . http_build_query([
 ]);
 
 header('Location: ' . $auth_url);
+exit;
+?>$auth_url);
 exit;
 ?>
