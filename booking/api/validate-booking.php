@@ -8,6 +8,7 @@
 session_start();
 header('Content-Type: application/json');
 
+require_once '../../config/environment.php';
 require_once '../../config/database.php';
 require_once '../../helpers/booking-validator.php';
 

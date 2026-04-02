@@ -1970,7 +1970,7 @@ async function handleSubmit(e) {
     } catch (error) {
         console.error('Pre-validation error:', error);
         // Continue with booking if validation API fails or times out (don't block legitimate users)
-        // showToast('Không thể kiểm tra đặt phòng. Tiếp tục xử lý...', 'info');
+        showToast('Không thể kiểm tra đặt phòng. Tiếp tục xử lý...', 'info');
     }
     // ========== END PRE-SUBMIT VALIDATION ==========
 
