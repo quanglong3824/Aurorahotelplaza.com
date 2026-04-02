@@ -181,7 +181,7 @@ if (!function_exists('__')) {
                     <p class="text-[10px] text-white/30 tracking-wider uppercase">
                         Developed by <span class="font-bold text-white/40">LongDev</span> • 
                         Version <span class="text-white/40">v1.8.2 Rel Test</span> • 
-                        Commit <span class="font-mono text-white/40" id="commit-id">73cced4</span>
+                        <span class="text-white/20 font-mono" id="commit-id">ID : c06bdb19cbaf91f7ec92d2c00ad1bd19e6258dff</span>
                     </p>
                 </div>
                 <div class="flex gap-6 text-sm">
