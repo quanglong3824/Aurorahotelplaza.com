@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/environment.php';
 require_once '../config/database.php';
 require_once '../helpers/language.php';
 require_once '../helpers/booking-validator.php'; // Anti-spam validation
