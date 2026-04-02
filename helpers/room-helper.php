@@ -144,8 +144,8 @@ function getThumbnailPath($thumbnail, $category = 'room')
 function getRoomDetailUrl($slug, $category = 'room')
 {
     if ($category === 'apartment') {
-        return '../apartment-details/' . $slug . '.php';
+        return route('chi-tiet-can-ho', ['slug' => $slug]);
     }
-    return '../room-details/' . $slug . '.php';
+    return route('phong', ['slug' => $slug]);
 }
 ?>

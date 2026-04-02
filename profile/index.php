@@ -4,7 +4,7 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
 if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: ' . route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]));
     exit;
 }
 
@@ -247,7 +247,7 @@ function getContactStatusBadge($status)
                                 <div class="flex justify-between items-center mb-6">
                                     <h3 class="font-bold text-xl text-white"><?php _e('profile_page.personal_info'); ?>
                                     </h3>
-                                    <a href="edit.php"
+                                    <a href="<?php echo route('ho-so/chinh-sua'); ?>"
                                         class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-accent hover:text-white rounded-lg transition-all text-sm text-white/80">
                                         <span class="material-symbols-outlined text-sm">edit</span>
                                         <?php _e('profile_page.edit'); ?>
@@ -322,7 +322,7 @@ function getContactStatusBadge($status)
                                     <h3 class="font-bold text-xl text-white">
                                         <?php _e('profile_page.recent_bookings'); ?>
                                     </h3>
-                                    <a href="bookings.php"
+                                    <a href="<?php echo route('ho-so/dat-phong'); ?>"
                                         class="text-accent hover:text-white transition-colors text-sm font-medium flex items-center gap-1">
                                         <?php _e('profile_page.view_all'); ?> <span
                                             class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -334,7 +334,7 @@ function getContactStatusBadge($status)
                                         <span
                                             class="material-symbols-outlined text-6xl mb-4 opacity-50">calendar_today</span>
                                         <p><?php _e('profile_page.no_bookings'); ?></p>
-                                        <a href="../rooms.php" class="mt-4 btn-glass-gold px-6 py-2">
+                                        <a href="<?php echo route('phong-khach-san'); ?>" class="mt-4 btn-glass-gold px-6 py-2">
                                             <?php _e('nav.book_now'); ?>
                                         </a>
                                     </div>
@@ -385,7 +385,7 @@ function getContactStatusBadge($status)
                                 <div class="flex justify-between items-center mb-6">
                                     <h3 class="font-bold text-xl text-white"><?php _e('profile_page.points_history'); ?>
                                     </h3>
-                                    <a href="loyalty.php"
+                                    <a href="<?php echo route('ho-so/tich-diem'); ?>"
                                         class="text-accent hover:text-white transition-colors text-sm font-medium flex items-center gap-1">
                                         <?php _e('profile_page.details'); ?> <span
                                             class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -435,7 +435,7 @@ function getContactStatusBadge($status)
                                     <h3 class="font-bold text-xl text-white">
                                         <?php _e('profile_page.contact_history'); ?>
                                     </h3>
-                                    <a href="../contact.php"
+                                    <a href="<?php echo route('lien-he'); ?>"
                                         class="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-all text-sm font-bold">
                                         <span class="material-symbols-outlined text-sm">add</span>
                                         <?php _e('profile_full.new_contact'); ?>
@@ -497,6 +497,11 @@ function getContactStatusBadge($status)
 
             history.replaceState(null, '', '?tab=' + tab);
         }
+    </script>
+</body>
+
+</html>
+}
     </script>
 </body>
 

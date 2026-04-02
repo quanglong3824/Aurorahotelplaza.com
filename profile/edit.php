@@ -9,7 +9,7 @@ header('Expires: 0');
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: ' . route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]));
     exit;
 }
 
@@ -29,7 +29,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user) {
-        header('Location: ../auth/logout.php');
+        header('Location: ' . route('dang-xuat'));
         exit;
     }
 } catch (Exception $e) {

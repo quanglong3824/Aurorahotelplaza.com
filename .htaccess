@@ -1,6 +1,6 @@
 # ============================================
 # Aurora Hotel Plaza - Apache Configuration
-# Performance + URL Rewrites + Security
+# SEO-Friendly URLs + Performance + Security
 # ============================================
 
 # ── Custom Error Pages ──────────────────────
@@ -9,9 +9,95 @@ ErrorDocument 404 /404.php
 # Enable Rewrite Engine
 RewriteEngine On
 
-# ── Pretty URL Rewrites ──────────────────────
-# gallery/7 → gallery.php?page=7
-RewriteRule ^gallery/(\d+)$ gallery.php?page=$1 [L,QSA]
+# ── Block access to _trash folder ────────────
+RewriteRule ^_trash/ - [F,L]
+
+# ── Skip real files & directories ────────────
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ============================================
+# SEO-FRIENDLY URL REWRITES
+# ============================================
+
+# ── Trang chủ ────────────────────────────────
+RewriteRule ^$ index.php [L,QSA]
+
+# ── Phòng khách sạn ──────────────────────────
+RewriteRule ^phong-khach-san/?$ rooms.php [L,QSA]
+RewriteRule ^phong/([a-z0-9-]+)/?$ room-details/$1.php [L,QSA]
+
+# ── Căn hộ ───────────────────────────────────
+RewriteRule ^can-ho/?$ apartments.php [L,QSA]
+RewriteRule ^can-ho/([a-z0-9-]+)/?$ apartment-details/$1.php [L,QSA]
+
+# ── Dịch vụ ──────────────────────────────────
+RewriteRule ^dich-vu/?$ services.php [L,QSA]
+RewriteRule ^dich-vu/([a-z0-9-]+)/?$ service-detail.php?slug=$1 [L,QSA]
+
+# ── Thư viện ảnh ─────────────────────────────
+RewriteRule ^thu-vien-anh/?$ gallery.php [L,QSA]
+RewriteRule ^thu-vien-anh/([0-9]+)/?$ gallery.php?page=$1 [L,QSA]
+
+# ── Tin tức / Blog ────────────────────────────
+RewriteRule ^tin-tuc/?$ blog.php [L,QSA]
+RewriteRule ^tin-tuc/([a-z0-9-]+)/?$ blog-detail.php?slug=$1 [L,QSA]
+
+# ── Liên hệ ──────────────────────────────────
+RewriteRule ^lien-he/?$ contact.php [L,QSA]
+
+# ── Giới thiệu ───────────────────────────────
+RewriteRule ^gioi-thieu/?$ about.php [L,QSA]
+
+# ── Khám phá ─────────────────────────────────
+RewriteRule ^kham-pha/?$ explore.php [L,QSA]
+
+# ── Bản đồ phòng ─────────────────────────────
+RewriteRule ^ban-do-phong/?$ room-map-user.php [L,QSA]
+
+# ── Đặt phòng ────────────────────────────────
+RewriteRule ^dat-phong/?$ booking/index.php [L,QSA]
+RewriteRule ^dat-phong/xac-nhan/?$ booking/confirmation.php [L,QSA]
+RewriteRule ^dat-phong/thanh-toan/?$ booking/vnpay_return.php [L,QSA]
+
+# ── Xác thực ─────────────────────────────────
+RewriteRule ^dang-nhap/?$ auth/login.php [L,QSA]
+RewriteRule ^dang-ky/?$ auth/register.php [L,QSA]
+RewriteRule ^dang-xuat/?$ auth/logout.php [L,QSA]
+RewriteRule ^quen-mat-khau/?$ auth/forgot-password.php [L,QSA]
+RewriteRule ^dat-lai-mat-khau/?$ auth/reset-password.php [L,QSA]
+RewriteRule ^doi-mat-khau/?$ auth/change-password.php [L,QSA]
+RewriteRule ^dang-nhap-google/?$ auth/login-google.php [L,QSA]
+
+# ── Hồ sơ cá nhân ────────────────────────────
+RewriteRule ^ho-so/?$ profile/index.php [L,QSA]
+RewriteRule ^ho-so/dat-phong/?$ profile/bookings.php [L,QSA]
+RewriteRule ^ho-so/tich-diem/?$ profile/loyalty.php [L,QSA]
+RewriteRule ^ho-so/chinh-sua/?$ profile/edit.php [L,QSA]
+RewriteRule ^ho-so/chi-tiet-dat-phong/?$ profile/booking-detail.php [L,QSA]
+RewriteRule ^ho-so/ma-qr/?$ profile/view-qrcode.php [L,QSA]
+
+# ── Chính sách ───────────────────────────────
+RewriteRule ^chinh-sach-huy/?$ cancellation-policy.php [L,QSA]
+RewriteRule ^chinh-sach-bao-mat/?$ privacy.php [L,QSA]
+RewriteRule ^dieu-khoan/?$ terms.php [L,QSA]
+
+# ── Legacy redirects (.php → clean URL) ──────
+RewriteRule ^rooms\.php$ /phong-khach-san [R=301,L]
+RewriteRule ^apartments\.php$ /can-ho [R=301,L]
+RewriteRule ^services\.php$ /dich-vu [R=301,L]
+RewriteRule ^gallery\.php$ /thu-vien-anh [R=301,L]
+RewriteRule ^blog\.php$ /tin-tuc [R=301,L]
+RewriteRule ^contact\.php$ /lien-he [R=301,L]
+RewriteRule ^about\.php$ /gioi-thieu [R=301,L]
+RewriteRule ^explore\.php$ /kham-pha [R=301,L]
+RewriteRule ^room-map-user\.php$ /ban-do-phong [R=301,L]
+RewriteRule ^cancellation-policy\.php$ /chinh-sach-huy [R=301,L]
+RewriteRule ^privacy\.php$ /chinh-sach-bao-mat [R=301,L]
+RewriteRule ^terms\.php$ /dieu-khoan [R=301,L]
+RewriteRule ^blog-detail\.php$ /tin-tuc [R=301,L]
+RewriteRule ^service-detail\.php$ /dich-vu [R=301,L]
 
 # ── Browser Caching ──────────────────────────
 <IfModule mod_expires.c>
@@ -59,17 +145,17 @@ AddOutputFilterByType DEFLATE application/font-woff
 <IfModule mod_headers.c>
 # Static assets - long cache with immutable
 <FilesMatch "\.(css|js|woff2|woff|ttf|eot)$">
-Header set Cache-Control "public, max-age=604800, immutable"
+    Header set Cache-Control "public, max-age=604800, immutable"
 </FilesMatch>
 
 # Images - 30 days
 <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
-Header set Cache-Control "public, max-age=2592000"
+    Header set Cache-Control "public, max-age=2592000"
 </FilesMatch>
 
 # HTML/PHP - no cache
 <FilesMatch "\.(html|php)$">
-Header set Cache-Control "no-cache, must-revalidate"
+    Header set Cache-Control "no-cache, must-revalidate"
 </FilesMatch>
 
 # Keep-Alive for connection reuse
@@ -89,11 +175,11 @@ FileETag MTime Size
 Options -Indexes
 
 # ── Block access to sensitive files ──────────
-<FilesMatch "^(\.env|\.git|composer\.(json|lock)|package\.json)$">
-Require all denied
+<FilesMatch "^(\.env|\.git|composer\.(json|lock))$">
+    Require all denied
 </FilesMatch>
 
 # Block access to config directory
 <IfModule mod_rewrite.c>
-RewriteRule ^config/ - [F,L]
+    RewriteRule ^config/ - [F,L]
 </IfModule>

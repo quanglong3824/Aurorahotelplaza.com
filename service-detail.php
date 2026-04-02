@@ -213,7 +213,7 @@ $page_title = _f($service, 'service_name') . ' - Aurora Hotel Plaza';
                                         </div>
                                     <?php endif; ?>
 
-                                    <a href="booking/index.php?service=<?php echo $service['slug']; ?>&package=<?php echo $pkg['slug']; ?>"
+                                    <a href="<?php echo route('dat-phong', ['service' => $service['slug'], 'package' => $pkg['slug']]); ?>"
                                         class="btn-glass-gold w-full justify-center text-center">
                                         <?php _e('service_detail.book_now'); ?>
                                         <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>

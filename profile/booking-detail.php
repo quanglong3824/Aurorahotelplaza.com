@@ -110,13 +110,13 @@ $payment_labels = [
                         <div class="mb-8 pl-4 border-l-4 border-accent">
                             <div class="flex items-center gap-4 mb-2">
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <a href="bookings.php"
+                                    <a href="<?php echo route('ho-so/dat-phong'); ?>"
                                         class="inline-flex items-center gap-2 text-white/70 hover:text-accent transition-colors text-sm">
                                         <span class="material-symbols-outlined text-lg">arrow_back</span>
                                         <?php _e('booking_detail.back_to_list'); ?>
                                     </a>
                                 <?php else: ?>
-                                    <a href="../index.php"
+                                    <a href="<?php echo route(''); ?>"
                                         class="inline-flex items-center gap-2 text-white/70 hover:text-accent transition-colors text-sm">
                                         <span class="material-symbols-outlined text-lg">arrow_back</span>
                                         <?php _e('booking_detail.back_to_home'); ?>
@@ -576,7 +576,7 @@ $payment_labels = [
                                             </button>
 
                                             <!-- QR Code Button -->
-                                            <a href="view-qrcode.php?id=<?php echo $booking['booking_id']; ?>"
+                                            <a href="<?php echo route('ho-so/ma-qr', ['id' => $booking['booking_id']]); ?>"
                                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
                                                 <span class="material-symbols-outlined text-accent">qr_code</span>
                                                 <?php _e('booking_detail.view_qr'); ?>

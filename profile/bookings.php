@@ -3,7 +3,7 @@ session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: ' . route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]));
     exit;
 }
 
@@ -99,7 +99,7 @@ $payment_labels = [
                         <!-- Page Header -->
                         <div class="mb-8 pl-4 border-l-4 border-accent">
                             <div class="flex items-center gap-4 mb-2">
-                                <a href="index.php"
+                                <a href="<?php echo route('ho-so'); ?>"
                                     class="inline-flex items-center gap-2 text-white/70 hover:text-accent transition-colors text-sm">
                                     <span class="material-symbols-outlined text-lg">arrow_back</span>
                                     <?php _e('profile_bookings.back'); ?>
@@ -302,7 +302,7 @@ $payment_labels = [
                                             <span class="material-symbols-outlined mr-1 text-sm">search</span>
                                             <?php _e('profile_bookings.filter'); ?>
                                         </button>
-                                        <a href="bookings.php"
+                                        <a href="<?php echo route('ho-so/dat-phong'); ?>"
                                             class="px-4 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition-colors">
                                             <span class="material-symbols-outlined text-sm">refresh</span>
                                         </a>
@@ -473,7 +473,7 @@ $payment_labels = [
 
                                                     <div class="flex flex-wrap gap-2 lg:justify-end">
                                                         <?php if ($booking['status'] === 'pending' && !$bookingIsInquiry): ?>
-                                                            <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>"
+                                                            <a href="<?php echo route('dat-phong/xac-nhan', ['booking_code' => $booking['booking_code']]); ?>"
                                                                 class="px-4 py-2 bg-gradient-to-r from-accent to-yellow-600 text-white rounded-lg hover:opacity-90 transition-all text-xs font-bold uppercase tracking-wider inline-flex items-center shadow-lg shadow-accent/20">
                                                                 <span
                                                                     class="material-symbols-outlined mr-1 text-sm">check_circle</span>
@@ -481,7 +481,7 @@ $payment_labels = [
                                                             </a>
                                                         <?php endif; ?>
 
-                                                        <a href="booking-detail.php?code=<?php echo $booking['booking_code']; ?>"
+                                                        <a href="<?php echo route('ho-so/chi-tiet-dat-phong', ['code' => $booking['booking_code']]); ?>"
                                                             class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-xs font-bold uppercase tracking-wider inline-flex items-center border border-white/10">
                                                             <span
                                                                 class="material-symbols-outlined mr-1 text-sm">visibility</span>
@@ -564,13 +564,12 @@ $payment_labels = [
                                     <p class="text-white/50 mb-8 max-w-md mx-auto">
                                         <?php _e('profile_bookings.no_bookings_desc'); ?>
                                     </p>
-                                    <a href="../rooms.php"
+                                    <a href="<?php echo route('phong-khach-san'); ?>"
                                         class="btn-glass-gold px-8 py-3 rounded-xl text-lg inline-flex items-center gap-2">
                                         <span class="material-symbols-outlined">calendar_add_on</span>
                                         <?php _e('profile_bookings.book_now'); ?>
                                     </a>
-                                </div>
-                            <?php endif; ?>
+                                </div><?php endif; ?>
                         </div>
                     </div>
                 </div>

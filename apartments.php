@@ -186,13 +186,13 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="<?php echo route('dat-phong', ['room_type' => $apt['slug']]); ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
+                                                    <a href="<?php echo route('chi-tiet-can-ho', ['slug' => $apt['slug']]); ?>" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>
@@ -286,13 +286,13 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                 <?php endif; ?>
 
                                                 <div class="apt-actions">
-                                                    <a href="booking/index.php?room_type=<?php echo $apt['slug']; ?>"
+                                                    <a href="<?php echo route('dat-phong', ['room_type' => $apt['slug']]); ?>"
                                                         class="btn-book">
                                                         <span class="material-symbols-outlined"
                                                             style="font-size: 18px;">contact_support</span>
                                                         <?php _e('inquiry.contact_btn'); ?>
                                                     </a>
-                                                    <a href="apartment-details/<?php echo $apt['slug']; ?>.php" class="btn-detail">
+                                                    <a href="<?php echo route('chi-tiet-can-ho', ['slug' => $apt['slug']]); ?>" class="btn-detail">
                                                         <?php _e('apartments_page.details'); ?>
                                                         <span class="material-symbols-outlined">arrow_forward</span>
                                                     </a>

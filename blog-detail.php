@@ -1,4 +1,4 @@
-KJHYTDRAWE4564
+
 <?php
 session_start();
 require_once 'config/database.php';
@@ -586,7 +586,7 @@ try {
                             <?php else: ?>
                                 <div class="mb-8 p-6 bg-white/5 rounded-xl text-center border border-white/10">
                                     <p class="mb-4 text-white/70"><?php _e('blog_page.login_to_comment'); ?></p>
-                                    <a href="auth/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
+                                    <a href="<?php echo route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]); ?>"
                                         class="btn-primary inline-block">
                                         <?php _e('blog_page.login'); ?>
                                     </a>
@@ -691,6 +691,12 @@ try {
                 <span id="lightboxCurrent">1</span> / <span id="lightboxTotal">1</span>
             </div>
         </div>
+    </div>
+
+</body>
+
+</html>
+ </div>
     </div>
 
 </body>

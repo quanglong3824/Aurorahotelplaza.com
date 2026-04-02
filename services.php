@@ -193,7 +193,7 @@ $utility_services = array_filter($services, fn($s) => empty($s['packages']));
                                                 </div>
                                             <?php endif; ?>
 
-                                            <a href="service-detail.php?slug=<?php echo $service['slug']; ?>"
+                                            <a href="<?php echo route('chi-tiet-dich-vu', ['slug' => $service['slug']]); ?>"
                                                 class="btn-glass-gold">
                                                 <?php _e('services_page.view_details'); ?>
                                                 <span class="material-symbols-outlined"

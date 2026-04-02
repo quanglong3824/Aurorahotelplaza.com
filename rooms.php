@@ -66,7 +66,7 @@ try {
                         <?php _e('rooms_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo route('dat-phong'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('rooms_page.book_now'); ?>
                         </a>
@@ -246,3 +246,4 @@ try {
 </body>
 
 </html>
+ml>

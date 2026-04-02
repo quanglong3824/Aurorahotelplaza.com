@@ -17,65 +17,58 @@ class Router {
     public static function defineRoutes() {
         // Main pages
         self::$routes = [
-            // Frontend Routes
-            'index' => ['file' => 'index.php', 'name' => 'Trang chủ'],
-            'rooms' => ['file' => 'rooms.php', 'name' => 'Phòng'],
-            'apartments' => ['file' => 'apartments.php', 'name' => 'Căn hộ'],
-            'services' => ['file' => 'services.php', 'name' => 'Dịch vụ'],
-            'service-detail' => ['file' => 'service-detail.php', 'name' => 'Chi tiết dịch vụ'],
-            'gallery' => ['file' => 'gallery.php', 'name' => 'Thư viện ảnh'],
-            'blog' => ['file' => 'blog.php', 'name' => 'Blog'],
-            'blog-detail' => ['file' => 'blog-detail.php', 'name' => 'Chi tiết bài viết'],
-            'contact' => ['file' => 'contact.php', 'name' => 'Liên hệ'],
-            'about' => ['file' => 'about.php', 'name' => 'Về chúng tôi'],
-            'profile' => ['file' => 'profile.php', 'name' => 'Hồ sơ'],
-            'explore' => ['file' => 'explore.php', 'name' => 'Khám phá'],
-            'room-map' => ['file' => 'room-map-user.php', 'name' => 'Bản đồ phòng'],
-            
-            // Room Details
-            'room-details/deluxe' => ['file' => 'room-details/deluxe.php', 'name' => 'Phòng Deluxe'],
-            'room-details/premium-deluxe' => ['file' => 'room-details/premium-deluxe.php', 'name' => 'Premium Deluxe'],
-            'room-details/premium-twin' => ['file' => 'room-details/premium-twin.php', 'name' => 'Premium Twin'],
-            'room-details/vip-suite' => ['file' => 'room-details/vip-suite.php', 'name' => 'VIP Suite'],
-            
-            // Apartment Details
-            'apartment-details/studio' => ['file' => 'apartment-details/studio.php', 'name' => 'Studio'],
-            'apartment-details/premium' => ['file' => 'apartment-details/premium.php', 'name' => 'Premium'],
-            'apartment-details/family' => ['file' => 'apartment-details/family.php', 'name' => 'Family'],
-            'apartment-details/modern-studio' => ['file' => 'apartment-details/modern-studio.php', 'name' => 'Modern Studio'],
-            'apartment-details/modern-premium' => ['file' => 'apartment-details/modern-premium.php', 'name' => 'Modern Premium'],
-            'apartment-details/indochine-studio' => ['file' => 'apartment-details/indochine-studio.php', 'name' => 'Indochine Studio'],
-            'apartment-details/indochine-family' => ['file' => 'apartment-details/indochine-family.php', 'name' => 'Indochine Family'],
-            'apartment-details/classical-premium' => ['file' => 'apartment-details/classical-premium.php', 'name' => 'Classical Premium'],
-            'apartment-details/classical-family' => ['file' => 'apartment-details/classical-family.php', 'name' => 'Classical Family'],
-            
-            // Auth Routes
-            'auth/login' => ['file' => 'auth/login.php', 'name' => 'Đăng nhập'],
-            'auth/register' => ['file' => 'auth/register.php', 'name' => 'Đăng ký'],
-            'auth/logout' => ['file' => 'auth/logout.php', 'name' => 'Đăng xuất'],
-            'auth/forgot-password' => ['file' => 'auth/forgot-password.php', 'name' => 'Quên mật khẩu'],
-            
-            // Booking Routes
-            'booking' => ['file' => 'booking/index.php', 'name' => 'Đặt phòng'],
-            'booking/confirm' => ['file' => 'booking/confirm.php', 'name' => 'Xác nhận đặt phòng'],
-            'booking/success' => ['file' => 'booking/success.php', 'name' => 'Đặt phòng thành công'],
-            
-            // Payment Routes
-            'payment/process' => ['file' => 'payment/process.php', 'name' => 'Xử lý thanh toán'],
-            'payment/callback' => ['file' => 'payment/callback.php', 'name' => 'Callback thanh toán'],
-            
-            // Admin Routes
-            'admin' => ['file' => 'admin/index.php', 'name' => 'Admin Dashboard'],
-            'admin/dashboard' => ['file' => 'admin/dashboard.php', 'name' => 'Dashboard'],
-            'admin/bookings' => ['file' => 'admin/bookings.php', 'name' => 'Quản lý đặt phòng'],
-            'admin/rooms' => ['file' => 'admin/rooms.php', 'name' => 'Quản lý phòng'],
-            'admin/users' => ['file' => 'admin/users.php', 'name' => 'Quản lý người dùng'],
-            
-            // Test Routes
-            'test/connection' => ['file' => 'test/test-connection.php', 'name' => 'Test Connection'],
-            'test/audit' => ['file' => 'test/audit-project.php', 'name' => 'Project Audit'],
+            // ── Frontend Routes ──────────────────────────────────────
+            ''                          => ['file' => 'index.php',              'name' => 'Trang chủ'],
+            'phong-khach-san'           => ['file' => 'rooms.php',              'name' => 'Phòng khách sạn'],
+            'can-ho'                    => ['file' => 'apartments.php',         'name' => 'Căn hộ'],
+            'dich-vu'                   => ['file' => 'services.php',           'name' => 'Dịch vụ'],
+            'thu-vien-anh'              => ['file' => 'gallery.php',            'name' => 'Thư viện ảnh'],
+            'tin-tuc'                   => ['file' => 'blog.php',               'name' => 'Tin tức'],
+            'lien-he'                   => ['file' => 'contact.php',            'name' => 'Liên hệ'],
+            'gioi-thieu'                => ['file' => 'about.php',              'name' => 'Giới thiệu'],
+            'kham-pha'                  => ['file' => 'explore.php',            'name' => 'Khám phá'],
+            'ban-do-phong'              => ['file' => 'room-map-user.php',      'name' => 'Bản đồ phòng'],
+            'chinh-sach-huy'            => ['file' => 'cancellation-policy.php','name' => 'Chính sách hủy'],
+            'chinh-sach-bao-mat'        => ['file' => 'privacy.php',           'name' => 'Chính sách bảo mật'],
+            'dieu-khoan'                => ['file' => 'terms.php',              'name' => 'Điều khoản'],
+
+            // ── Dynamic Detail Routes (Base keys for URL generation) ──
+            'phong'                     => ['file' => 'room-details/{slug}.php',     'name' => 'Chi tiết phòng'],
+            'chi-tiet-can-ho'           => ['file' => 'apartment-details/{slug}.php','name' => 'Chi tiết căn hộ'],
+            'chi-tiet-dich-vu'          => ['file' => 'service-detail.php',          'name' => 'Chi tiết dịch vụ'],
+            'chi-tiet-tin-tuc'          => ['file' => 'blog-detail.php',             'name' => 'Chi tiết tin tức'],
+
+            // ── Auth Routes ─────────────────────────────────────────
+            'dang-nhap'                 => ['file' => 'auth/login.php',             'name' => 'Đăng nhập'],
+            'dang-ky'                   => ['file' => 'auth/register.php',          'name' => 'Đăng ký'],
+            'dang-xuat'                 => ['file' => 'auth/logout.php',            'name' => 'Đăng xuất'],
+            'quen-mat-khau'             => ['file' => 'auth/forgot-password.php',   'name' => 'Quên mật khẩu'],
+            'dat-lai-mat-khau'          => ['file' => 'auth/reset-password.php',    'name' => 'Đặt lại mật khẩu'],
+            'doi-mat-khau'              => ['file' => 'auth/change-password.php',   'name' => 'Đổi mật khẩu'],
+            'dang-nhap-google'          => ['file' => 'auth/login-google.php',      'name' => 'Đăng nhập Google'],
+
+            // ── Booking Routes ──────────────────────────────────────
+            'dat-phong'                 => ['file' => 'booking/index.php',          'name' => 'Đặt phòng'],
+            'dat-phong/xac-nhan'        => ['file' => 'booking/confirmation.php',   'name' => 'Xác nhận đặt phòng'],
+            'dat-phong/thanh-toan'      => ['file' => 'booking/vnpay_return.php',   'name' => 'Thanh toán VNPay'],
+
+            // ── Profile Routes ──────────────────────────────────────
+            'ho-so'                     => ['file' => 'profile/index.php',          'name' => 'Hồ sơ'],
+            'ho-so/dat-phong'           => ['file' => 'profile/bookings.php',       'name' => 'Đặt phòng của tôi'],
+            'ho-so/tich-diem'           => ['file' => 'profile/loyalty.php',        'name' => 'Tích điểm'],
+            'ho-so/chinh-sua'           => ['file' => 'profile/edit.php',           'name' => 'Chỉnh sửa hồ sơ'],
+            'ho-so/chi-tiet-dat-phong'  => ['file' => 'profile/booking-detail.php', 'name' => 'Chi tiết đặt phòng'],
+            'ho-so/ma-qr'               => ['file' => 'profile/view-qrcode.php',    'name' => 'Mã QR đặt phòng'],
+
+            // ── Admin Routes ────────────────────────────────────────
+            'admin'                     => ['file' => 'admin/index.php',            'name' => 'Admin Dashboard'],
+            'admin/dashboard'           => ['file' => 'admin/dashboard.php',        'name' => 'Dashboard'],
+            'admin/bookings'            => ['file' => 'admin/bookings.php',         'name' => 'Quản lý đặt phòng'],
+            'admin/rooms'               => ['file' => 'admin/rooms.php',            'name' => 'Quản lý phòng'],
+            'admin/users'               => ['file' => 'admin/users.php',            'name' => 'Quản lý người dùng'],
         ];
     }
+
     
     /**
      * Lấy tất cả routes
@@ -122,16 +115,40 @@ class Router {
      */
     public static function url($route, $params = []) {
         if (!self::routeExists($route)) {
-            return '#';
+            // Check if it's a dynamic route manually if not found in exact keys
+            return BASE_URL . '/' . ltrim($route, '/');
         }
         
-        $url = BASE_URL . '/' . $route;
+        $url = BASE_URL;
+        $slug = isset($params['slug']) ? $params['slug'] : '';
+        unset($params['slug']); // Remove slug from query params
+        
+        switch ($route) {
+            case 'phong':
+                $url .= '/phong/' . $slug;
+                break;
+            case 'chi-tiet-can-ho':
+                $url .= '/can-ho/' . $slug;
+                break;
+            case 'chi-tiet-dich-vu':
+                $url .= '/dich-vu/' . $slug;
+                break;
+            case 'chi-tiet-tin-tuc':
+                $url .= '/tin-tuc/' . $slug;
+                break;
+            case '':
+                $url .= '/';
+                break;
+            default:
+                $url .= '/' . $route;
+                break;
+        }
         
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
         }
         
-        return $url;
+        return rtrim($url, '/');
     }
     
     /**

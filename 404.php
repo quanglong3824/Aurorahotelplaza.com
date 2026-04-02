@@ -153,10 +153,10 @@ $base_url = defined('BASE_URL') ? BASE_URL : (isset($_SERVER['HTTPS']) && $_SERV
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="<?php echo $base_url; ?>/index.php" class="btn-aurora px-8 py-4 rounded-xl font-semibold text-white w-full sm:w-auto text-lg">
+            <a href="<?php echo route(''); ?>" class="btn-aurora px-8 py-4 rounded-xl font-semibold text-white w-full sm:w-auto text-lg">
                 <?php echo $btn_home; ?>
             </a>
-            <a href="<?php echo $base_url; ?>/booking/index.php" class="px-8 py-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors font-semibold text-slate-300 w-full sm:w-auto text-lg">
+            <a href="<?php echo route('dat-phong'); ?>" class="px-8 py-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition-colors font-semibold text-slate-300 w-full sm:w-auto text-lg">
                 <?php echo $btn_booking; ?>
             </a>
         </div>

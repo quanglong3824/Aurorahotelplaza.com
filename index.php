@@ -806,7 +806,7 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="flex justify-center pt-4">
-                        <a href="blog.php"
+                        <a href="<?php echo route('tin-tuc'); ?>"
                             class="inline-flex items-center gap-2 px-6 py-3 btn-glass-gold hover:opacity-90 transition-opacity">
                             <?php _e('home.view_all_posts'); ?>
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -1115,6 +1115,13 @@ try {
                         }
                     }
                 }, 500);
+            }
+        });
+    </script>
+</body>
+
+</html>
+       }, 500);
             }
         });
     </script>

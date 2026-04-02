@@ -5,14 +5,14 @@ require_once '../helpers/language.php';
 initLanguage();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php');
+    header('Location: ' . route('dang-nhap'));
     exit;
 }
 
 $booking_id = $_GET['id'] ?? 0;
 
 if (!$booking_id) {
-    header('Location: bookings.php');
+    header('Location: ' . route('ho-so/dat-phong'));
     exit;
 }
 

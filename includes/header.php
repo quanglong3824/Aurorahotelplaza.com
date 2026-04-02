@@ -51,10 +51,13 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Determine base path based on current directory
+// Determine base path based on current directory (kept for assets only)
 $current_dir = basename(dirname($_SERVER['PHP_SELF']));
-$subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin'];
+$subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin', 'payment'];
 $base_path = in_array($current_dir, $subdirs) ? '../' : '';
+
+// Site root URL for clean links
+$site_url = defined('BASE_URL') ? rtrim(BASE_URL, '/') : '';
 
 // Check if user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
@@ -146,7 +149,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between whitespace-nowrap px-6 py-5">
         <div class="flex items-center gap-3">
-            <a href="<?php echo $base_path; ?>index.php">
+            <a href="<?php echo route(''); ?>">
                 <img id="header-logo"
                     src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>"
                     data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
@@ -156,16 +159,16 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         </div>
         <nav class="hidden items-center gap-10 md:flex">
             <a class="text-base font-medium nav-link"
-                href="<?php echo $base_path; ?>index.php"><?php _e('nav.home'); ?></a>
+                href="<?php echo route(''); ?>"><?php _e('nav.home'); ?></a>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>rooms.php">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo route('phong-khach-san'); ?>">
                     <?php _e('nav.rooms'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>rooms.php" class="submenu-item"><?php _e('nav.rooms_only'); ?></a>
-                    <a href="<?php echo $base_path; ?>apartments.php" class="submenu-item submenu-item-badge">
+                    <a href="<?php echo route('phong-khach-san'); ?>" class="submenu-item"><?php _e('nav.rooms_only'); ?></a>
+                    <a href="<?php echo route('can-ho'); ?>" class="submenu-item submenu-item-badge">
                         <?php _e('nav.apartments'); ?>
                         <span class="badge-new"><?php _e('common.new'); ?></span>
                     </a>
@@ -173,38 +176,38 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
             </div>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>services.php">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo route('dich-vu'); ?>">
                     <?php _e('nav.services'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service"
+                    <a href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'wedding-service']); ?>"
                         class="submenu-item"><?php _e('services_menu.wedding'); ?></a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"
+                    <a href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'conference-service']); ?>"
                         class="submenu-item"><?php _e('services_menu.conference'); ?></a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"
+                    <a href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'aurora-restaurant']); ?>"
                         class="submenu-item"><?php _e('services_menu.restaurant'); ?></a>
-                    <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental"
+                    <a href="<?php echo route('chi-tiet-dich-vu', ['slug' => 'office-rental']); ?>"
                         class="submenu-item"><?php _e('services_menu.office'); ?></a>
                 </div>
             </div>
 
             <div class="submenu-wrapper">
-                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo $base_path; ?>explore.php">
+                <a class="text-base font-medium nav-link submenu-trigger" href="<?php echo route('kham-pha'); ?>">
                     <?php _e('nav.explore'); ?>
                     <span class="material-symbols-outlined text-sm">expand_more</span>
                 </a>
                 <div class="submenu">
-                    <a href="<?php echo $base_path; ?>about.php" class="submenu-item"><?php _e('nav.about'); ?></a>
-                    <a href="<?php echo $base_path; ?>gallery.php" class="submenu-item"><?php _e('nav.gallery'); ?></a>
-                    <a href="<?php echo $base_path; ?>blog.php" class="submenu-item"><?php _e('nav.blog'); ?></a>
+                    <a href="<?php echo route('gioi-thieu'); ?>" class="submenu-item"><?php _e('nav.about'); ?></a>
+                    <a href="<?php echo route('thu-vien-anh'); ?>" class="submenu-item"><?php _e('nav.gallery'); ?></a>
+                    <a href="<?php echo route('tin-tuc'); ?>" class="submenu-item"><?php _e('nav.blog'); ?></a>
                 </div>
             </div>
             <a class="text-base font-medium nav-link"
-                href="<?php echo $base_path; ?>contact.php"><?php _e('nav.contact'); ?></a>
+                href="<?php echo route('lien-he'); ?>"><?php _e('nav.contact'); ?></a>
         </nav>
         <div class="flex items-center gap-2">
-            <a href="<?php echo $base_path; ?>booking/index.php" class="btn-booking">
+            <a href="<?php echo route('dat-phong'); ?>" class="btn-booking">
                 <span class="truncate"><?php _e('nav.book_now'); ?></span>
             </a>
 
@@ -226,27 +229,27 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                             </div>
                         </div>
                         <div class="user-menu-divider"></div>
-                        <a href="<?php echo $base_path; ?>profile/index.php" class="user-menu-item">
+                        <a href="<?php echo route('ho-so'); ?>" class="user-menu-item">
                             <span class="material-symbols-outlined">person</span>
                             <?php _e('nav.profile'); ?>
                         </a>
-                        <a href="<?php echo $base_path; ?>profile/bookings.php" class="user-menu-item">
+                        <a href="<?php echo route('ho-so/dat-phong'); ?>" class="user-menu-item">
                             <span class="material-symbols-outlined">hotel</span>
                             <?php _e('nav.my_bookings'); ?>
                         </a>
-                        <a href="<?php echo $base_path; ?>profile/loyalty.php" class="user-menu-item">
+                        <a href="<?php echo route('ho-so/tich-diem'); ?>" class="user-menu-item">
                             <span class="material-symbols-outlined">stars</span>
                             <?php _e('nav.loyalty'); ?>
                         </a>
                         <?php if (in_array($user_role, ['admin', 'sale', 'receptionist'])): ?>
                             <div class="user-menu-divider"></div>
-                            <a href="<?php echo $base_path; ?>admin/index.php" class="user-menu-item">
+                            <a href="<?php echo route('admin'); ?>" class="user-menu-item">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <?php _e('nav.admin'); ?>
                             </a>
                         <?php endif; ?>
                         <div class="user-menu-divider"></div>
-                        <a href="<?php echo $base_path; ?>auth/logout.php"
+                        <a href="<?php echo route('dang-xuat'); ?>"
                             class="user-menu-item text-red-600 dark:text-red-400">
                             <span class="material-symbols-outlined">logout</span>
                             <?php _e('nav.logout'); ?>
@@ -254,7 +257,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     </div>
                 </div>
             <?php else: ?>
-                <a href="<?php echo $base_path; ?>auth/login.php" class="auth-btn">
+                <a href="<?php echo route('dang-nhap'); ?>" class="auth-btn">
                     <span class="material-symbols-outlined text-xl">login</span>
                     <span class="hidden md:inline"><?php _e('nav.login'); ?></span>
                 </a>
@@ -291,9 +294,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
     <div class="floating-menu-items">
         <!-- Trang chủ -->
         <div class="floating-menu-item">
-            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.home'); ?></a>
-            <a href="<?php echo $base_path; ?>index.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/" class="floating-menu-btn"
                 aria-label="<?php _e('nav.home'); ?>">
                 <span class="material-symbols-outlined">home</span>
             </a>
@@ -301,18 +304,18 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Phòng & Căn hộ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/phong-khach-san" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.rooms'); ?></a>
-            <a href="<?php echo $base_path; ?>rooms.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/phong-khach-san" class="floating-menu-btn"
                 aria-label="<?php _e('nav.rooms'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">hotel</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo $base_path; ?>rooms.php" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/phong-khach-san" class="floating-submenu-item">
                     <span class="material-symbols-outlined">bed</span>
                     <?php _e('nav.rooms_only'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>apartments.php" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/can-ho" class="floating-submenu-item">
                     <span class="material-symbols-outlined">apartment</span>
                     <?php _e('nav.apartments'); ?>
                     <span class="floating-badge-new"><?php _e('common.new'); ?></span>
@@ -322,29 +325,29 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Dịch vụ - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/dich-vu" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.services'); ?></a>
-            <a href="<?php echo $base_path; ?>services.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/dich-vu" class="floating-menu-btn"
                 aria-label="<?php _e('nav.services'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">room_service</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo $base_path; ?>service-detail.php?slug=wedding-service"
+                <a href="<?php echo $site_url; ?>/dich-vu/wedding-service"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">celebration</span>
                     <?php _e('services_menu.wedding'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>service-detail.php?slug=conference-service"
+                <a href="<?php echo $site_url; ?>/dich-vu/conference-service"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">groups</span>
                     <?php _e('services_menu.conference'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>service-detail.php?slug=aurora-restaurant"
+                <a href="<?php echo $site_url; ?>/dich-vu/aurora-restaurant"
                     class="floating-submenu-item">
                     <span class="material-symbols-outlined">restaurant</span>
                     <?php _e('services_menu.restaurant'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>service-detail.php?slug=office-rental" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/dich-vu/office-rental" class="floating-submenu-item">
                     <span class="material-symbols-outlined">business</span>
                     <?php _e('services_menu.office'); ?>
                 </a>
@@ -353,22 +356,22 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Khám phá - có submenu -->
         <div class="floating-menu-item floating-submenu-wrapper">
-            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/kham-pha" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.explore'); ?></a>
-            <a href="<?php echo $base_path; ?>explore.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/kham-pha" class="floating-menu-btn"
                 aria-label="<?php _e('nav.explore'); ?>" aria-haspopup="true">
                 <span class="material-symbols-outlined">explore</span>
             </a>
             <div class="floating-submenu">
-                <a href="<?php echo $base_path; ?>about.php" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/gioi-thieu" class="floating-submenu-item">
                     <span class="material-symbols-outlined">info</span>
                     <?php _e('nav.about'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>gallery.php" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/thu-vien-anh" class="floating-submenu-item">
                     <span class="material-symbols-outlined">photo_library</span>
                     <?php _e('nav.gallery'); ?>
                 </a>
-                <a href="<?php echo $base_path; ?>blog.php" class="floating-submenu-item">
+                <a href="<?php echo $site_url; ?>/tin-tuc" class="floating-submenu-item">
                     <span class="material-symbols-outlined">article</span>
                     <?php _e('nav.blog'); ?>
                 </a>
@@ -377,9 +380,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Liên hệ -->
         <div class="floating-menu-item">
-            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/lien-he" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.contact'); ?></a>
-            <a href="<?php echo $base_path; ?>contact.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/lien-he" class="floating-menu-btn"
                 aria-label="<?php _e('nav.contact'); ?>">
                 <span class="material-symbols-outlined">call</span>
             </a>
@@ -387,9 +390,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
 
         <!-- Đặt phòng -->
         <div class="floating-menu-item">
-            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-label"
+            <a href="<?php echo $site_url; ?>/dat-phong" class="floating-menu-label"
                 style="text-decoration: none;"><?php _e('nav.book_now'); ?></a>
-            <a href="<?php echo $base_path; ?>booking/index.php" class="floating-menu-btn"
+            <a href="<?php echo $site_url; ?>/dat-phong" class="floating-menu-btn"
                 aria-label="<?php _e('nav.book_now'); ?>">
                 <span class="material-symbols-outlined">calendar_month</span>
             </a>
@@ -398,9 +401,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <?php if ($is_logged_in): ?>
             <!-- Tài khoản -->
             <div class="floating-menu-item">
-                <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-label"
+                <a href="<?php echo $site_url; ?>/ho-so" class="floating-menu-label"
                     style="text-decoration: none;"><?php _e('nav.profile'); ?></a>
-                <a href="<?php echo $base_path; ?>profile/index.php" class="floating-menu-btn"
+                <a href="<?php echo $site_url; ?>/ho-so" class="floating-menu-btn"
                     aria-label="<?php _e('nav.profile'); ?>">
                     <span class="material-symbols-outlined">account_circle</span>
                 </a>
@@ -408,9 +411,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <?php else: ?>
             <!-- Đăng nhập -->
             <div class="floating-menu-item">
-                <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-label"
+                <a href="<?php echo $site_url; ?>/dang-nhap" class="floating-menu-label"
                     style="text-decoration: none;"><?php _e('nav.login'); ?></a>
-                <a href="<?php echo $base_path; ?>auth/login.php" class="floating-menu-btn"
+                <a href="<?php echo $site_url; ?>/dang-nhap" class="floating-menu-btn"
                     aria-label="<?php _e('nav.login'); ?>">
                     <span class="material-symbols-outlined">login</span>
                 </a>
@@ -444,7 +447,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <form action="<?php echo $base_path; ?>booking/index.php" method="GET" class="floating-booking-form-inner">
+            <form action="<?php echo $site_url; ?>/dat-phong" method="GET" class="floating-booking-form-inner">
                 <div class="floating-booking-field">
                     <label for="floating-checkin">
                         <span class="material-symbols-outlined">calendar_today</span>
@@ -616,7 +619,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         document.getElementById('trackErrorMsg').classList.add('hidden');
 
         try {
-            const res = await fetch('<?php echo $base_path; ?>booking/api/track.php', {
+            const res = await fetch('<?php echo $site_url; ?>/booking/api/track.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query: input, mode: mode })

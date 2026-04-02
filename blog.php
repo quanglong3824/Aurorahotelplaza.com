@@ -106,17 +106,17 @@ try {
                     <!-- Category Filters -->
                     <?php if (!empty($categories)): ?>
                         <div class="blog-categories">
-                            <a href="blog.php" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
+                            <a href="<?php echo route('tin-tuc'); ?>" class="category-tag <?php echo empty($category_slug) ? 'active' : ''; ?>">
                                 <?php _e('blog_page.all'); ?>
                             </a>
                             <?php foreach ($categories as $cat): ?>
-                                <a href="blog.php?category=<?php echo urlencode($cat['slug']); ?>"
+                                <a href="<?php echo route('tin-tuc', ['category' => $cat['slug']]); ?>"
                                     class="category-tag <?php echo $category_slug === $cat['slug'] ? 'active' : ''; ?>">
                                     <?php echo htmlspecialchars(_f($cat, 'category_name')); ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                    <?php endif; ?>
+<?php endif; ?>
 
                     <!-- Posts Grid -->
                     <?php if (!empty($posts)): ?>
@@ -125,7 +125,7 @@ try {
                                 $featured_img = imgUrl($post['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
                                 ?>
                                 <article class="h-full">
-                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
+                                    <a href="<?php echo route('chi-tiet-tin-tuc', ['slug' => $post['slug']]); ?>"
                                         class="blog-glass-card group block h-full">
 
                                         <div class="blog-card-image-wrapper">

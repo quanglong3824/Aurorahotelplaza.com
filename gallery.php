@@ -202,7 +202,7 @@ $category_names = [
                     <!-- Filter Tabs - Liquid Glass Style -->
                     <div class="flex flex-wrap justify-center gap-3 mb-12">
                         <?php foreach ($categories as $key => $cat): ?>
-                            <a href="?category=<?php echo $key; ?>" class="group inline-flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm
+                            <a href="<?php echo route('thu-vien-anh', ['category' => $key]); ?>" class="group inline-flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm
                           transition-all duration-300
                           <?php if ($current_category === $key): ?>
                           bg-accent text-white shadow-lg shadow-accent/30
@@ -315,7 +315,7 @@ $category_names = [
                             <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6">
                                 <?php _e('gallery_page.no_images_desc'); ?>
                             </p>
-                            <a href="?category=all" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl
+                            <a href="<?php echo route('thu-vien-anh', ['category' => 'all']); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl
                                               bg-accent text-white font-semibold hover:bg-accent/90 transition-colors">
                                 <span class="material-symbols-outlined">arrow_back</span>
                                 <?php _e('gallery_page.view_all_images'); ?>
@@ -547,5 +547,8 @@ $category_names = [
         });
     </script>
 </body>
+
+</html>
+ody>
 
 </html>

@@ -186,7 +186,7 @@ try {
                                         </div>
                                     </div>
 
-                                    <form class="space-y-4" action="../booking/index.php" method="get">
+                                    <form class="space-y-4" action="<?php echo route('dat-phong'); ?>" method="get">
                                         <input type="hidden" name="room_type" value="<?php echo $room_slug; ?>">
                                         
                                         <div class="space-y-2">

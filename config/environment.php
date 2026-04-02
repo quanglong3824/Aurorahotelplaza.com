@@ -126,3 +126,6 @@ function isCurrentUrl($path) {
     $checkPath = parse_url(url($path), PHP_URL_PATH);
     return $currentPath === $checkPath;
 }
+
+// Load router configuration
+require_once __DIR__ . '/router.php';

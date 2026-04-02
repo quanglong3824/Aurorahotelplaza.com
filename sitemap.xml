@@ -1,153 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-    
-    <!-- Homepage -->
-    <url>
-        <loc>https://aurorahotelplaza.com/</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-    
-    <!-- Main Pages -->
-    <url>
-        <loc>https://aurorahotelplaza.com/about.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/contact.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <!-- Rooms & Apartments -->
-    <url>
-        <loc>https://aurorahotelplaza.com/rooms.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/apartments.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <!-- Room Details -->
-    <url>
-        <loc>https://aurorahotelplaza.com/room-details/deluxe.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/room-details/premium-deluxe.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/room-details/premium-twin.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/room-details/vip-suite.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- Apartment Details -->
-    <url>
-        <loc>https://aurorahotelplaza.com/apartment-details/studio.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/apartment-details/family.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/apartment-details/premium.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- Services -->
-    <url>
-        <loc>https://aurorahotelplaza.com/services.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/service-detail.php?slug=wedding-service</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/service-detail.php?slug=conference-service</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/service-detail.php?slug=aurora-restaurant</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/service-detail.php?slug=office-rental</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- Gallery & Blog -->
-    <url>
-        <loc>https://aurorahotelplaza.com/gallery.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
-    <url>
-        <loc>https://aurorahotelplaza.com/blog.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
-    <!-- Booking -->
-    <url>
-        <loc>https://aurorahotelplaza.com/booking/index.php</loc>
-        <lastmod>2025-11-19</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Trang chủ -->
+  <url>
+    <loc>https://aurorahotelplaza.com/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://aurorahotelplaza.com/?lang=vi"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aurorahotelplaza.com/?lang=en"/>
+  </url>
+
+  <!-- Phòng khách sạn -->
+  <url>
+    <loc>https://aurorahotelplaza.com/phong-khach-san</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/phong/deluxe</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/phong/premium-deluxe</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/phong/premium-twin</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/phong/vip-suite</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Căn hộ -->
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/studio</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/premium</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/family</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/modern-studio</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/modern-premium</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/indochine-studio</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/indochine-family</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/classical-premium</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/can-ho/classical-family</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Đặt phòng -->
+  <url>
+    <loc>https://aurorahotelplaza.com/dat-phong</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Dịch vụ -->
+  <url>
+    <loc>https://aurorahotelplaza.com/dich-vu</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/dich-vu/wedding-service</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/dich-vu/conference-service</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/dich-vu/aurora-restaurant</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/dich-vu/office-rental</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Khám phá -->
+  <url>
+    <loc>https://aurorahotelplaza.com/kham-pha</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/gioi-thieu</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/thu-vien-anh</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/tin-tuc</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Liên hệ -->
+  <url>
+    <loc>https://aurorahotelplaza.com/lien-he</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Chính sách -->
+  <url>
+    <loc>https://aurorahotelplaza.com/chinh-sach-huy</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/chinh-sach-bao-mat</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://aurorahotelplaza.com/dieu-khoan</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
 </urlset>
