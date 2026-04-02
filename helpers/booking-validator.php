@@ -27,8 +27,8 @@ function checkBookingSpam($user_id = null, $guest_email = null, $guest_phone = n
         error_log("Guest Phone: " . ($guest_phone ?? 'null'));
         
         // Các trạng thái booking CHƯA HOÀN TẤT (không được đặt tiếp)
-        // MỚI: 'confirmed' đã cho phép đặt tiếp (không cần đợi checkout)
-        $blocked_statuses = ['pending', 'checked_in'];
+        // SIẾT CHẶT: Chặn cả 'confirmed' (phòng đã xác nhận nhưng chưa trả phòng)
+        $blocked_statuses = ['pending', 'confirmed', 'checked_in'];
         
         $where_conditions = [];
         $params = [];
@@ -356,4 +356,6 @@ function getRateLimitIdentifier() {
     $identifiers[] = 'ip_' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
     
     return implode('|', $identifiers);
+}
+'|', $identifiers);
 }

@@ -20,28 +20,30 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // ========== ANTI-SPAM: Server-side validation ==========
-// Check if user has pending bookings BEFORE allowing them to book
+// Chặn ngay lập tức nếu có booking chưa hoàn tất
 $spam_check_passed = true;
 $booking_block_message = '';
 $booking_block_bookings = [];
 
-// CHỈ CHECK VỚI USER ĐÃ ĐĂNG NHẬP
-// Guest (vãng lai) không block vì họ không thể đăng nhập để kiểm tra booking
+// 1. Kiểm tra theo User ID (nếu đã đăng nhập)
 if (isset($_SESSION['user_id'])) {
-    // User đã đăng ký: check theo user_id
     $booking_spam_check = checkBookingSpam($_SESSION['user_id'], null, null);
-
     if (!$booking_spam_check['allowed']) {
         $spam_check_passed = false;
         $booking_block_message = $booking_spam_check['message'];
         $booking_block_bookings = $booking_spam_check['pending_bookings'];
     }
-}
+} 
 
-// Only set session if blocked (to show modal)
-if (!$spam_check_passed) {
-    $_SESSION['booking_block_message'] = $booking_block_message;
-    $_SESSION['booking_block_bookings'] = $booking_block_bookings;
+// 2. Nếu chưa bị chặn bởi User ID, kiểm tra theo IP (chống spam từ guest)
+if ($spam_check_passed) {
+    // Check rate limit by IP
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $rate_limit = checkRateLimit('ip_booking_page_' . $ip, 10, 60); // Max 10 page loads/phút
+    if (!$rate_limit['allowed']) {
+        $spam_check_passed = false;
+        $booking_block_message = $rate_limit['message'];
+    }
 }
 // ========== END ANTI-SPAM ==========
 
