@@ -49,7 +49,9 @@ node_modules/
 package-lock.json
 
 # Composer (if using)
-vendor/
+# vendor/  # Commented out - we use standalone vendor/ folder
+vendor/guzzlehttp/  # Ignore if not using standalone
+vendor/psr/  # Ignore if not using standalone
 composer.lock
 
 # Cache
