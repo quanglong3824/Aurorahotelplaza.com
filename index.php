@@ -1121,9 +1121,6 @@ try {
 </body>
 
 </html>
-       }, 500);
-            }
-        });
     </script>
 </body>
 

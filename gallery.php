@@ -549,6 +549,3 @@ $category_names = [
 </body>
 
 </html>
-ody>
-
-</html>
