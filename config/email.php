@@ -12,16 +12,16 @@ define('MAIL_DEBUG', env('MAIL_DEBUG', 0)); // 0 = off, 1 = client, 2 = client a
 // SMTP Configuration (Gmail)
 define('SMTP_HOST', env('SMTP_HOST', 'smtp.gmail.com'));
 define('SMTP_PORT', env('SMTP_PORT', 587));
-define('SMTP_USERNAME', env('SMTP_USERNAME', 'long.lequang308@gmail.com'));
+define('SMTP_USERNAME', env('SMTP_USERNAME', 'info.aurorahotelplaza.com'));
 define('SMTP_PASSWORD', env('SMTP_PASSWORD', '')); // Password should strictly be loaded from .env
 define('SMTP_ENCRYPTION', env('SMTP_ENCRYPTION', 'tls')); // tls or ssl
 define('SMTP_SECURE', env('SMTP_SECURE', 'tls')); // Alias for SMTP_ENCRYPTION
 define('SMTP_AUTH', env('SMTP_AUTH', true)); // Set to true if using authentication
 
 // Email settings
-define('FROM_EMAIL', env('FROM_EMAIL', 'long.lequang308@gmail.com')); // Must match SMTP_USERNAME for Gmail
+define('FROM_EMAIL', env('FROM_EMAIL', 'info.aurorahotelplaza.com')); // Must match SMTP_USERNAME for Gmail
 define('FROM_NAME', env('FROM_NAME', 'Aurora Hotel Plaza'));
-define('REPLY_TO_EMAIL', env('REPLY_TO_EMAIL', 'long.lequang308@gmail.com'));
+define('REPLY_TO_EMAIL', env('REPLY_TO_EMAIL', 'info.aurorahotelplaza.com'));
 
 // Mailer class constants
 define('MAIL_FROM_EMAIL', FROM_EMAIL);
