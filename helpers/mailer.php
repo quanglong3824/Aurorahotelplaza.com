@@ -226,6 +226,53 @@ class Mailer {
             return false;
         }
     }
+
+    /**
+     * Send booking notification to Hotel staff (multiple recipients)
+     * using the Customer's email as From/Reply-To
+     * 
+     * @param string $guestEmail Customer email
+     * @param string $guestName Customer name
+     * @param array $bookingData Booking info
+     * @return bool Success status
+     */
+    public function sendBookingNotificationToHotel($guestEmail, $guestName, $bookingData) {
+        try {
+            require_once __DIR__ . '/../includes/email-templates/booking-confirmation.php';
+            
+            $hotel_info = [
+                'name' => 'Aurora Hotel Plaza',
+                'address' => 'KP2, Phường Tân Hiệp, Thủ Đông Nai',
+                'phone' => '(+84-251) 391 8888',
+                'email' => 'info@aurorahotelplaza.com',
+                'website' => 'https://aurorahotelplaza.com'
+            ];
+            
+            $bookingData['total_amount_formatted'] = number_format($bookingData['total_amount'], 0, ',', '.');
+            
+            $hotelEmail = defined('HOTEL_RECEIVE_EMAIL') ? HOTEL_RECEIVE_EMAIL : 'info@aurorahotelplaza.com';
+            $subject = "[Booking Mới #{$bookingData['booking_code']}] {$bookingData['type_name']} - Khách: {$guestName}";
+            
+            // Re-use the same beautiful template but send to hotel
+            $body = getBookingConfirmationEmailHTML($bookingData, $hotel_info);
+            $altBody = getBookingConfirmationEmailText($bookingData, $hotel_info);
+            
+            // Spoof sender exactly like Contact module
+            $this->setCustomFrom($guestEmail, $guestName);
+            $this->setCustomReplyTo($guestEmail, $guestName);
+            
+            $result = $this->send($hotelEmail, $subject, $body, $altBody);
+            
+            $this->resetFrom();
+            $this->resetReplyTo();
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            error_log("Booking notification to hotel error: " . $e->getMessage());
+            return false;
+        }
+    }
     
     /**
      * Send temporary password email

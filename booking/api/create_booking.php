@@ -453,12 +453,21 @@ try {
 
             // Send email using Mailer class
             $mailer = getMailer();
+            
+            // 1. Send to Customer
             $emailSent = $mailer->sendBookingConfirmation($guest_email, $booking_data);
+            
+            // 2. Send to Hotel Staff (using customer email as From/Reply-To and multiple recipients)
+            $hotelNotified = $mailer->sendBookingNotificationToHotel($guest_email, $guest_name, $booking_data);
 
             if ($emailSent) {
                 error_log("Booking confirmation email sent successfully to: $guest_email for booking: $booking_code");
             } else {
                 error_log("Failed to send booking confirmation email to: $guest_email for booking: $booking_code");
+            }
+            
+            if ($hotelNotified) {
+                error_log("Booking notification sent successfully to hotel for booking: $booking_code");
             }
         } else {
             error_log("Could not fetch booking data for email: $booking_code");
