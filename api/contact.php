@@ -153,6 +153,9 @@ try {
     $hotelSubject = "[Liên hệ mới #{$submission_id}] {$subject} - {$name}";
     $hotelBody = ContactEmailTemplates::getHotelNotificationTemplate($customerEmailData);
 
+    // Đặt Reply-To là email của khách, để nhân viên khách sạn có thể bấm "Reply/Trả lời" trực tiếp cho khách
+    $mailer->setCustomReplyTo($email, $name);
+    
     error_log("Contact form - Attempting to send hotel notification to: {$hotelEmail}");
     $hotelSent = $mailer->send($hotelEmail, $hotelSubject, $hotelBody);
 
@@ -161,6 +164,9 @@ try {
     } else {
         error_log("Contact form - Hotel notification sent successfully to: {$hotelEmail}");
     }
+    
+    // Khôi phục lại Reply-To mặc định cho các tiến trình nếu có tái sử dụng mailer sau này
+    $mailer->resetReplyTo();
 
     // Log activity
     if (function_exists('logActivity')) {

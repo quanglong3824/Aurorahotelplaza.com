@@ -279,6 +279,44 @@ class Mailer {
     public function sendCustom($to, $subject, $body, $altBody = '') {
         return $this->send($to, $subject, $body, $altBody);
     }
+    
+    /**
+     * Set custom Reply-To address dynamically
+     * 
+     * @param string $email
+     * @param string $name
+     * @return bool
+     */
+    public function setCustomReplyTo($email, $name = '') {
+        try {
+            if ($this->mail) {
+                $this->mail->clearReplyTos();
+                $this->mail->addReplyTo($email, $name);
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log("Set Custom Reply-To error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Reset Reply-To address to default configuration
+     * @return bool
+     */
+    public function resetReplyTo() {
+        try {
+            if ($this->mail) {
+                $this->mail->clearReplyTos();
+                $this->mail->addReplyTo(MAIL_REPLY_TO, MAIL_REPLY_NAME);
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
 
 /**
