@@ -16,7 +16,7 @@ if (!function_exists('__')) {
 <footer class="w-full relative text-white/80 overflow-hidden" style="color: rgba(255, 255, 255, 0.8) !important;">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo $base_path; ?>assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg" 
+        <img src="<?php echo asset('img/hero-banner/aurora-hotel-bien-hoa-2.jpg'); ?>" 
              alt="Footer Background" 
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-[2px]"></div>
@@ -27,7 +27,7 @@ if (!function_exists('__')) {
             <!-- Logo & Description -->
             <div class="lg:col-span-2">
                 <a href="<?php echo route(''); ?>">
-                    <img src="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
+                    <img src="<?php echo asset('img/src/logo/logo-dark-ui.png'); ?>"
                         alt="Aurora Hotel Plaza Logo" class="h-14 w-auto mb-6">
                 </a>
                 <p class="mt-2 text-base text-white/70 leading-relaxed">
@@ -387,5 +387,5 @@ if (!function_exists('__')) {
             window.siteBase = '<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') : ''; ?>';
         }
     </script>
-    <script src="<?php echo $base_path; ?>assets/js/error-tracker.js" defer></script>
+    <script src="<?php echo asset('js/error-tracker.js'); ?>" defer></script>
 <?php endif; ?>
