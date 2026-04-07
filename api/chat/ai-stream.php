@@ -40,12 +40,13 @@ if (!$message) {
 }
 
 // Tắt buffering
-if (ob_get_level()) ob_end_clean();
+if (ob_get_level())
+    ob_end_clean();
 ini_set('output_buffering', 'off');
 set_time_limit(120);
 
 // Gọi stream từ helper
-$full_reply = stream_ai_reply($message, $db, $conv_id);
+$full_reply = stream_gemini_reply($message, $db, $conv_id);
 
 // Sau khi stream xong, lưu vào DB nếu có kết quả
 $new_msg_id = 0;
@@ -72,13 +73,15 @@ if (!empty($full_reply)) {
                 updated_at = NOW()
             WHERE conversation_id = :cid
         ")->execute([
-            ':preview' => mb_substr($full_reply, 0, 100),
-            ':cid' => $conv_id
-        ]);
+                    ':preview' => mb_substr($full_reply, 0, 100),
+                    ':cid' => $conv_id
+                ]);
     } catch (Exception $e) {
         error_log("Failed to save AI reply: " . $e->getMessage());
     }
 }
 
 echo "data: " . json_encode(["done" => true, "message_id" => $new_msg_id]) . "\n\n";
-if (ob_get_level() > 0) ob_flush(); flush();
+if (ob_get_level() > 0)
+    ob_flush();
+flush();
