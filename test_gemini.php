@@ -65,7 +65,7 @@ echo "<h2>4. Test Gemini API Call</h2>";
 echo "<p>Đang gọi API...</p>";
 
 try {
-    $client = Gemini::client($apiKey);
+    $client = new \Gemini\Client($apiKey);
     $response = $client->generativeModel('gemini-2.0-flash')->generateContent('Xin chào, hãy giới thiệu ngắn về bản thân bạn bằng tiếng Việt.');
     $reply = $response->text();
 

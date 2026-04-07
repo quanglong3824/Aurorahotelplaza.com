@@ -126,7 +126,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     $full_prompt = $system_prompt . "\n\n" . $gemini_hist . "Khách: " . $user_message;
 
     try {
-        $client = Gemini::client($api_key);
+        $client = new \Gemini\Client($api_key);
         $response = $client->generativeModel($model_name)->streamGenerateContent($full_prompt);
 
         $full_response_text = "";
@@ -240,7 +240,7 @@ function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
     }
 
     try {
-        $client = Gemini::client($api_key);
+        $client = new \Gemini\Client($api_key);
         $response = $client->generativeModel($model_name)->generateContent($system_prompt . "\n\n" . $message);
         return $response->text();
     } catch (Exception $e) {

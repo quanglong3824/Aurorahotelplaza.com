@@ -164,7 +164,7 @@ function call_ai_admin($system_prompt, $messages)
     $full_prompt = $system_prompt . "\n\n" . $gemini_history;
 
     try {
-        $client = Gemini::client($api_key);
+        $client = new \Gemini\Client($api_key);
         $response = $client->generativeModel($model_name)->generateContent($full_prompt);
         $text = $response->text();
 
