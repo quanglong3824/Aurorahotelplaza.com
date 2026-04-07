@@ -106,8 +106,14 @@ class Mailer {
             $this->mail->clearAddresses();
             $this->mail->clearAllRecipients();
             
-            // Set recipient
-            $this->mail->addAddress($to);
+            // Handle multiple recipients (comma separated)
+            $emails = explode(',', $to);
+            foreach ($emails as $email) {
+                $email = trim($email);
+                if (!empty($email)) {
+                    $this->mail->addAddress($email);
+                }
+            }
             
             // Set subject and body
             $this->mail->Subject = $subject;
@@ -278,6 +284,43 @@ class Mailer {
      */
     public function sendCustom($to, $subject, $body, $altBody = '') {
         return $this->send($to, $subject, $body, $altBody);
+    }
+    
+    /**
+     * Set custom From address dynamically
+     * Note: May be overwritten by the SMTP server (like Gmail)
+     * 
+     * @param string $email
+     * @param string $name
+     * @return bool
+     */
+    public function setCustomFrom($email, $name = '') {
+        try {
+            if ($this->mail) {
+                $this->mail->setFrom($email, $name);
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log("Set Custom From error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Reset From address to default configuration
+     * @return bool
+     */
+    public function resetFrom() {
+        try {
+            if ($this->mail) {
+                $this->mail->setFrom(MAIL_FROM_EMAIL, MAIL_FROM_NAME);
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
     }
     
     /**

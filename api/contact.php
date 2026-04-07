@@ -148,11 +148,13 @@ try {
         error_log("Contact form - Customer email sent successfully to: {$email}");
     }
 
-    // Gửi email thông báo cho khách sạn
+    // Gửi email thông báo cho khách sạn (Có nhận đa email qua Config)
     $hotelEmail = defined('HOTEL_RECEIVE_EMAIL') ? HOTEL_RECEIVE_EMAIL : 'info@aurorahotelplaza.com';
     $hotelSubject = "[Liên hệ mới #{$submission_id}] {$subject} - {$name}";
     $hotelBody = ContactEmailTemplates::getHotelNotificationTemplate($customerEmailData);
 
+    // Gán trực tiếp "Người gửi (From)" là email của khách (Lưu ý: Có thể bị SMTP như Gmail ghi đè nếu cấu hình bảo mật)
+    $mailer->setCustomFrom($email, $name);
     // Đặt Reply-To là email của khách, để nhân viên khách sạn có thể bấm "Reply/Trả lời" trực tiếp cho khách
     $mailer->setCustomReplyTo($email, $name);
     
@@ -165,7 +167,8 @@ try {
         error_log("Contact form - Hotel notification sent successfully to: {$hotelEmail}");
     }
     
-    // Khôi phục lại Reply-To mặc định cho các tiến trình nếu có tái sử dụng mailer sau này
+    // Khôi phục lại From và Reply-To mặc định cho các tiến trình nếu có tái sử dụng mailer sau này
+    $mailer->resetFrom();
     $mailer->resetReplyTo();
 
     // Log activity
