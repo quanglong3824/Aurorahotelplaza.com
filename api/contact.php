@@ -149,7 +149,7 @@ try {
     }
 
     // Gửi email thông báo cho khách sạn
-    $hotelEmail = 'info@aurorahotelplaza.com';
+    $hotelEmail = defined('HOTEL_RECEIVE_EMAIL') ? HOTEL_RECEIVE_EMAIL : 'info@aurorahotelplaza.com';
     $hotelSubject = "[Liên hệ mới #{$submission_id}] {$subject} - {$name}";
     $hotelBody = ContactEmailTemplates::getHotelNotificationTemplate($customerEmailData);
 

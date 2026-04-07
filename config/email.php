@@ -22,6 +22,8 @@ define('SMTP_AUTH', env('SMTP_AUTH', true)); // Set to true if using authenticat
 define('FROM_EMAIL', env('FROM_EMAIL', 'info.aurorahotelplaza@gmail.com')); // Must match SMTP_USERNAME for Gmail
 define('FROM_NAME', env('FROM_NAME', 'Aurora Hotel Plaza'));
 define('REPLY_TO_EMAIL', env('REPLY_TO_EMAIL', 'info.aurorahotelplaza@gmail.com'));
+define('HOTEL_RECEIVE_EMAIL', env('HOTEL_RECEIVE_EMAIL', 'info.aurorahotelplaza@gmail.com')); // Địa chỉ email quản trị viên sẽ nhận thư liên hệ
+
 
 // Mailer class constants
 define('MAIL_FROM_EMAIL', FROM_EMAIL);
