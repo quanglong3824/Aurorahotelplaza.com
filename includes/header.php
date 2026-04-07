@@ -151,9 +151,9 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
         <div class="flex items-center gap-3">
             <a href="<?php echo route(''); ?>">
                 <img id="header-logo"
-                    src="<?php echo $base_path; ?>assets/img/src/logo/<?php echo ($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png'; ?>"
-                    data-logo-white="<?php echo $base_path; ?>assets/img/src/logo/logo-white-ui.png"
-                    data-logo-dark="<?php echo $base_path; ?>assets/img/src/logo/logo-dark-ui.png"
+                    src="<?php echo asset('img/src/logo/' . (($has_hero && !$is_solid_page) ? 'logo-dark-ui.png' : 'logo-white-ui.png')); ?>"
+                    data-logo-white="<?php echo asset('img/src/logo/logo-white-ui.png'); ?>"
+                    data-logo-dark="<?php echo asset('img/src/logo/logo-dark-ui.png'); ?>"
                     alt="Aurora Hotel Plaza Logo" class="h-16 w-auto transition-all duration-300">
             </a>
         </div>
@@ -871,7 +871,7 @@ $is_fixed_transparent = in_array($current_page, $pages_fixed_transparent) || in_
                 const link = document.createElement('link');
                 link.rel = 'icon';
                 link.type = 'image/png';
-                link.href = '<?php echo $base_path; ?>assets/img/src/logo/favicon.png';
+                link.href = '<?php echo asset('img/src/logo/favicon.png'); ?>';
                 document.head.appendChild(link);
             }
         } catch (e) { }
