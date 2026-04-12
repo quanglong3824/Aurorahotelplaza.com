@@ -53,8 +53,6 @@ package-lock.json
 vendor/guzzlehttp/  # Ignore if not using standalone
 vendor/psr/  # Ignore if not using standalone
 composer.lock
-
-# Cache
 cache/
 *.cache
 
