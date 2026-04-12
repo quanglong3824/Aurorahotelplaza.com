@@ -49,19 +49,26 @@ foreach ($configFiles as $file) {
 }
 
 // 4. Environment File Check
+// Cấu trúc production:
+// (root)/
+// ├── public_html/  (chứa code - tương đương thư mục hiện tại)
+// └── config/
+//     └── .env      (file .env ngoài public)
 $envLocations = [
-    'config/.env',           // Local development
-    '../.env',               // Production (config/ trong public_html, .env ngoài)
-    __DIR__ . '/../.env',    // Absolute path
+    'config/.env',                    // Local development (trong public_html)
+    __DIR__ . '/../../config/.env',   // Production: public_html/../config/.env
+    __DIR__ . '/../config/.env',      // Alternative path
 ];
 $envExists = false;
+$foundPath = '';
 foreach ($envLocations as $loc) {
     if (file_exists($loc)) {
         $envExists = true;
+        $foundPath = $loc;
         break;
     }
 }
-testResult(".env file exists", $envExists, "Checked: config/.env, ../.env");
+testResult(".env file exists", $envExists, $envExists ? "Found: $foundPath" : "Checked: config/.env, ../../config/.env");
 
 // 5. Database Connection Test
 echo "\n--- Database Connection ---\n";
