@@ -49,7 +49,19 @@ foreach ($configFiles as $file) {
 }
 
 // 4. Environment File Check
-testResult(".env file exists", file_exists('config/.env') || file_exists('.env'));
+$envLocations = [
+    'config/.env',           // Local development
+    '../.env',               // Production (config/ trong public_html, .env ngoài)
+    __DIR__ . '/../.env',    // Absolute path
+];
+$envExists = false;
+foreach ($envLocations as $loc) {
+    if (file_exists($loc)) {
+        $envExists = true;
+        break;
+    }
+}
+testResult(".env file exists", $envExists, "Checked: config/.env, ../.env");
 
 // 5. Database Connection Test
 echo "\n--- Database Connection ---\n";
