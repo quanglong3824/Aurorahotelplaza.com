@@ -1,6 +1,7 @@
 /**
  * chat-widget.js — Aurora Hotel Plaza
  * JavaScript riêng cho chat widget phía khách hàng
+ * Version: 2.0 — Modern UX, smooth animations
  * ─────────────────────────────────────────────────
  */
 
@@ -15,8 +16,10 @@ const ChatWidget = {
     isAtBottom:  true,
     unread:      0,
     staffOnline: false,
+    isSending:   false,
     _staffCheckInterval: null,
-    _optimisticMsgs: new Set(), // Theo dõi các tin nhắn đang gửi để tránh trùng lặp
+    _optimisticMsgs: new Set(),
+    _messageAnimations: new Map(), // Track animation states
 
     // ── URL helper ────────────────────────────────────────────────────────
     _url(path) {
@@ -142,15 +145,20 @@ const ChatWidget = {
         if (this.isOpen) {
             this.close();
         } else {
-            this.hideBookingBubble(); 
+            this.hideBookingBubble();
             this.open();
         }
     },
 
     open() {
         this.isOpen = true;
-        document.getElementById('cwPanel')?.classList.add('open');
-        document.getElementById('cwBtn')?.classList.add('open');
+
+        const panel = document.getElementById('cwPanel');
+        const btn = document.getElementById('cwBtn');
+
+        if (panel) panel.classList.add('open');
+        if (btn) btn.classList.add('open');
+
         if (this.convId) {
             this.startSSE();
             if (typeof ChatWidget.markRead === 'function') {
@@ -159,12 +167,23 @@ const ChatWidget = {
             this.scrollToBottom(true);
         }
         this.clearUnread();
+
+        // Focus input after animation completes
+        setTimeout(() => {
+            const input = document.getElementById('cwInput');
+            if (input) input.focus();
+        }, 350);
     },
 
     close() {
         this.isOpen = false;
-        document.getElementById('cwPanel').classList.remove('open');
-        document.getElementById('cwBtn').classList.remove('open');
+
+        const panel = document.getElementById('cwPanel');
+        const btn = document.getElementById('cwBtn');
+
+        if (panel) panel.classList.remove('open');
+        if (btn) btn.classList.remove('open');
+
         this.stopSSE();
     },
 
@@ -469,10 +488,23 @@ const ChatWidget = {
     renderMessages(msgs) {
         const container = document.getElementById('cwMessages');
         if (!container) return;
+
         if (!msgs || msgs.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:32px;color:#94a3b8">Xin chào! Chúng tôi sẵn sàng hỗ trợ bạn.</div>';
+            container.innerHTML = `
+                <div data-empty style="text-align:center;padding:40px 20px;color:#64748b;">
+                    <div style="font-size:48px;margin-bottom:16px;opacity:0.8;">
+                        <span class="material-symbols-outlined" style="font-size:48px;color:#d4af37;">chat_bubble</span>
+                    </div>
+                    <p style="font-size:14px;line-height:1.7;font-weight:500;color:#334155;">
+                        Xin chào! 👋<br>
+                        Aurora Hotel Plaza sẵn sàng hỗ trợ bạn.<br>
+                        <span style="font-size:12px;color:#94a3b8;display:block;margin-top:8px;">Hãy nhập tin nhắn để bắt đầu...</span>
+                    </p>
+                </div>
+            `;
             return;
         }
+
         let lastDate = '';
         container.innerHTML = msgs.map(msg => {
             const msgDate = msg.created_at ? new Date(msg.created_at).toLocaleDateString('vi-VN') : '';
@@ -483,21 +515,43 @@ const ChatWidget = {
             }
             return divider + this.renderBubble(msg);
         }).join('');
+
         this.scrollToBottom(true);
     },
 
     appendMessage(msg) {
         const container = document.getElementById('cwMessages');
         if (!container) return;
+
         const emptyEl = container.querySelector('[data-empty]');
         if (emptyEl) emptyEl.remove();
+
         const wrapper = document.createElement('div');
         wrapper.innerHTML = this.renderBubble(msg);
-        container.appendChild(wrapper.firstElementChild);
+
+        const newBubble = wrapper.firstElementChild;
+        if (newBubble) {
+            // Add entrance animation
+            newBubble.style.opacity = '0';
+            newBubble.style.transform = 'translateY(10px) scale(0.95)';
+            container.appendChild(newBubble);
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                newBubble.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                newBubble.style.opacity = '1';
+                newBubble.style.transform = 'translateY(0) scale(1)';
+            });
+        }
+
         const wasAtBottom = this.isAtBottom;
         this.scrollToBottom();
-        if (!this.isOpen && msg.sender_type !== 'customer') this.setUnread(this.unread + 1);
-        else if (this.isOpen && !wasAtBottom && msg.sender_type !== 'customer') this.showNewMsgToast();
+
+        if (!this.isOpen && msg.sender_type !== 'customer') {
+            this.setUnread(this.unread + 1);
+        } else if (this.isOpen && !wasAtBottom && msg.sender_type !== 'customer') {
+            this.showNewMsgToast();
+        }
     },
 
     renderBubble(msg) {
@@ -625,14 +679,28 @@ const ChatWidget = {
     showTyping(text = 'Nhân viên đang gõ...') {
         const el = document.getElementById('cwTyping');
         if (!el) return;
-        el.innerHTML = `<div class="cw-typing-dot"></div><div class="cw-typing-dot"></div><div class="cw-typing-dot"></div><span style="font-size:11px;color:#94a3b8;margin-left:4px">${text}</span>`;
+
+        // Modern typing indicator with gradient background
+        el.innerHTML = `
+            <div class="cw-typing-container" style="display:flex;align-items:center;gap:8px;background:rgba(212,175,55,0.08);padding:6px 12px;border-radius:12px;">
+                <div class="cw-typing-dot"></div>
+                <div class="cw-typing-dot"></div>
+                <div class="cw-typing-dot"></div>
+                <span style="font-size:12px;color:#64748b;font-weight:500;">${text}</span>
+            </div>
+        `;
+        el.classList.add('show');
+
         clearTimeout(this._typingClear);
-        this._typingClear = setTimeout(() => this.hideTyping(), 5000);
+        this._typingClear = setTimeout(() => this.hideTyping(), 8000);
     },
 
     hideTyping() {
         const el = document.getElementById('cwTyping');
-        if (el) el.innerHTML = '';
+        if (el) {
+            el.classList.remove('show');
+            el.innerHTML = '';
+        }
     },
 
     scrollToBottom(instant = false) {

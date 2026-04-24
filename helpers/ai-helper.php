@@ -1,14 +1,28 @@
 <?php
 /**
  * Aurora AI Helper - Xử lý chat AI với Google Gemini
- * 
+ *
  * Các hàm chính:
+ * - stream_ai_reply(): Alias cho stream_gemini_reply (tương thích ngược)
  * - stream_gemini_reply(): Stream phản hồi từ Gemini API
  * - get_aurora_system_prompt(): Lấy prompt hệ thống cho Aurora AI
  * - process_tool_call_after_stream(): Xử lý tool calls (nếu có)
+ * - call_ai_sync(): Gọi AI đồng bộ (không stream) - dùng cho admin
  */
 
 require_once __DIR__ . '/api_key_manager.php';
+
+// Load Gemini SDK
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+
+/**
+ * Alias cho stream_gemini_reply - tương thích ngược
+ */
+function stream_ai_reply($user_message, $db, $conv_id, &$history = [], $turn = 1) {
+    return stream_gemini_reply($user_message, $db, $conv_id, $history, $turn);
+}
 
 /**
  * Lấy prompt hệ thống cho Aurora AI Chat
@@ -16,7 +30,7 @@ require_once __DIR__ . '/api_key_manager.php';
 function get_aurora_system_prompt($db, $conv_id = null)
 {
     $prompt = "Bạn là Aurora AI - Trợ lý ảo của Aurora Hotel Plaza.
-    
+
 THÔNG TIN KHÁCH SẠN:
 - Tên: Aurora Hotel Plaza
 - Địa chỉ: Biên Hòa, Đồng Nai, Việt Nam
@@ -63,7 +77,7 @@ NGÔN NGỮ:
 
 LƯU Ý:
 - Không bịa đặt thông tin không có thật
-- Nếu không biết, hướng dẫn khách liên hệ lễ tân: 0901 234 567
+- Nếu không biết, hướng dẫn khách liên hệ lễ tân: 0251 3918 888
 - Luôn hỏi đầy đủ thông tin trước khi gợi ý đặt phòng";
 
     // Nếu có conv_id, có thể thêm thông tin từ DB
@@ -185,12 +199,19 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     } catch (Exception $e) {
         // Xử lý lỗi rate limit (429)
         $error_msg = $e->getMessage();
-        if (strpos($error_msg, '429') !== false || strpos($error_msg, 'quota') !== false) {
+        if (strpos($error_msg, '429') !== false || strpos($error_msg, 'quota') !== false || strpos($error_msg, 'rate') !== false) {
+            // Mark current key as rate limited
+            $current_idx = get_active_key_index();
+            mark_key_rate_limited($current_idx, 60);
+
             // Thử rotate key và retry
-            if (rotate_gemini_key()) {
+            $new_key = rotate_gemini_key();
+            if ($new_key && $turn <= 1) {
+                echo "data: " . json_encode(["status" => "switching", "message" => "Đang chuyển đổi API key..."]) . "\n\n";
+                if (ob_get_level() > 0) ob_flush(); flush();
                 return stream_gemini_reply($user_message, $db, $conv_id, $history, $turn + 1);
             }
-            echo "data: " . json_encode(["error" => "Hệ thống đang quá tải. Vui lòng thử lại sau ít giây."]) . "\n\n";
+            echo "data: " . json_encode(["error" => "Hệ thống đang quá tải. Vui lòng thử lại sau ít giây hoặc gọi Hotline 0251 3918 888."]) . "\n\n";
         } else {
             echo "data: " . json_encode(["error" => "Xin lỗi, Aurora đang gặp sự cố kết nối. Vui lòng thử lại sau."]) . "\n\n";
         }
@@ -207,7 +228,34 @@ function process_tool_call_after_stream($response, $user_message, $db, $conv_id,
 {
     // Kiểm tra xem có phải tool call không
     if (strpos($response, '[TOOL_') === 0) {
-        // Tool call handling - có thể mở rộng sau
+        // Parse tool call format: [TOOL_XXX: params]
+        $tool_pattern = '/\[TOOL_(\w+):\s*([^\]]+)\]/';
+        $matches = [];
+        if (preg_match($tool_pattern, $response, $matches)) {
+            $tool_name = $matches[1];
+            $tool_params = $matches[2];
+
+            // Parse parameters
+            $params = [];
+            $param_pairs = explode(',', $tool_params);
+            foreach ($param_pairs as $pair) {
+                $pair = trim($pair);
+                if (strpos($pair, '=') !== false) {
+                    $kv = explode('=', $pair, 2);
+                    $params[trim($kv[0])] = trim($kv[1]);
+                }
+            }
+
+            $result = handle_tool_call($tool_name, $params, $db, $conv_id);
+
+            // Add tool result to history and get AI's final response
+            $history[] = ['role' => 'user', 'content' => $user_message];
+            $history[] = ['role' => 'assistant', 'content' => $response];
+            $history[] = ['role' => 'system', 'content' => "Tool {$tool_name} executed. Result: " . json_encode($result)];
+
+            $final_prompt = "Dựa trên kết quả tool: " . json_encode($result) . "\n\nHãy trả lời khách hàng một cách thân thiện và hữu ích.";
+            return stream_gemini_reply($final_prompt, $db, $conv_id, $history, $turn + 1);
+        }
         return null;
     }
 
@@ -221,6 +269,194 @@ function process_tool_call_after_stream($response, $user_message, $db, $conv_id,
     }
 
     return null;
+}
+
+/**
+ * Handle tool calls
+ */
+function handle_tool_call($tool_name, $params, $db, $conv_id)
+{
+    switch ($tool_name) {
+        case 'BOOK_ROOM':
+            return handle_tool_book_room($params, $db, $conv_id);
+
+        case 'GET_PRICE':
+            return handle_tool_get_price($params, $db);
+
+        case 'CHECK_AVAILABILITY':
+            return handle_tool_check_availability($params, $db);
+
+        case 'GET_BOOKING_INFO':
+            return handle_tool_get_booking_info($params, $db);
+
+        default:
+            return ['success' => false, 'error' => 'Unknown tool: ' . $tool_name];
+    }
+}
+
+/**
+ * Tool: Đặt phòng
+ */
+function handle_tool_book_room($params, $db, $conv_id)
+{
+    $slug = $params['slug'] ?? '';
+    $check_in = $params['check_in'] ?? '';
+    $check_out = $params['check_out'] ?? '';
+
+    if (!$slug || !$check_in || !$check_out) {
+        return ['success' => false, 'error' => 'Thiếu thông tin đặt phòng'];
+    }
+
+    try {
+        $stmt = $db->prepare("SELECT type_id, type_name, price_per_night FROM room_types WHERE slug = ? AND status = 'active'");
+        $stmt->execute([$slug]);
+        $room = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$room) {
+            return ['success' => false, 'error' => 'Không tìm thấy loại phòng'];
+        }
+
+        $cin = new DateTime($check_in);
+        $cout = new DateTime($check_out);
+        $nights = $cin->diff($cout)->days;
+
+        if ($nights <= 0) {
+            return ['success' => false, 'error' => 'Ngày check-out phải sau ngày check-in'];
+        }
+
+        $total_price = $room['price_per_night'] * $nights;
+        $booking_code = 'AUR' . date('Ymd') . rand(1000, 9999);
+
+        $stmt = $db->prepare("
+            INSERT INTO bookings (room_type_id, check_in_date, check_out_date, total_price, status, created_at, booking_code)
+            VALUES (?, ?, ?, ?, 'pending', NOW(), ?)
+        ");
+        $stmt->execute([$room['type_id'], $check_in, $check_out, $total_price, $booking_code]);
+
+        return [
+            'success' => true,
+            'booking_code' => $booking_code,
+            'booking_id' => $db->lastInsertId(),
+            'room_name' => $room['type_name'],
+            'nights' => $nights,
+            'total_price' => $total_price
+        ];
+
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => 'Lỗi database: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Tool: Lấy giá phòng
+ */
+function handle_tool_get_price($params, $db)
+{
+    $room_type = $params['room_type'] ?? '';
+
+    try {
+        if ($room_type) {
+            $stmt = $db->prepare("SELECT type_name, price_per_night, capacity, size_sqm FROM room_types WHERE type_name LIKE ? AND status = 'active'");
+            $stmt->execute(['%' . $room_type . '%']);
+        } else {
+            $stmt = $db->query("SELECT type_name, price_per_night, capacity, size_sqm FROM room_types WHERE status = 'active' ORDER BY price_per_night ASC");
+        }
+
+        $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return ['success' => true, 'rooms' => $rooms];
+
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => 'Lỗi database'];
+    }
+}
+
+/**
+ * Tool: Kiểm tra phòng trống
+ */
+function handle_tool_check_availability($params, $db)
+{
+    $check_in = $params['check_in'] ?? '';
+    $check_out = $params['check_out'] ?? '';
+
+    if (!$check_in || !$check_out) {
+        return ['success' => false, 'error' => 'Thiếu ngày check-in/check-out'];
+    }
+
+    try {
+        $stmt = $db->query("SELECT type_id, type_name, slug, price_per_night FROM room_types WHERE status = 'active'");
+        $room_types = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $available = [];
+        foreach ($room_types as $rt) {
+            $stmt = $db->prepare("
+                SELECT COUNT(*) FROM bookings b
+                JOIN rooms r ON b.room_id = r.room_id
+                WHERE r.room_type_id = ?
+                AND b.status NOT IN ('cancelled', 'rejected')
+                AND (
+                    (b.check_in_date <= ? AND b.check_out_date > ?)
+                    OR (b.check_in_date < ? AND b.check_out_date >= ?)
+                    OR (b.check_in_date >= ? AND b.check_out_date <= ?)
+                )
+            ");
+            $stmt->execute([$rt['type_id'], $check_out, $check_in, $check_out, $check_in, $check_in, $check_out]);
+            $booked_count = $stmt->fetchColumn();
+
+            $stmt = $db->prepare("SELECT COUNT(*) FROM rooms WHERE room_type_id = ? AND status = 'available'");
+            $stmt->execute([$rt['type_id']]);
+            $total_rooms = $stmt->fetchColumn();
+
+            $available_count = $total_rooms - $booked_count;
+
+            if ($available_count > 0) {
+                $available[] = [
+                    'type_name' => $rt['type_name'],
+                    'slug' => $rt['slug'],
+                    'price_per_night' => $rt['price_per_night'],
+                    'available_rooms' => $available_count
+                ];
+            }
+        }
+
+        return ['success' => true, 'available' => $available];
+
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => 'Lỗi database'];
+    }
+}
+
+/**
+ * Tool: Lấy thông tin booking
+ */
+function handle_tool_get_booking_info($params, $db)
+{
+    $booking_code = $params['booking_code'] ?? '';
+
+    if (!$booking_code) {
+        return ['success' => false, 'error' => 'Thiếu mã booking'];
+    }
+
+    try {
+        $stmt = $db->prepare("
+            SELECT b.booking_id, b.booking_code, b.check_in_date, b.check_out_date,
+                   b.total_price, b.status, b.created_at,
+                   rt.type_name as room_type
+            FROM bookings b
+            JOIN room_types rt ON b.room_type_id = rt.type_id
+            WHERE b.booking_code = ?
+        ");
+        $stmt->execute([$booking_code]);
+        $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$booking) {
+            return ['success' => false, 'error' => 'Không tìm thấy booking'];
+        }
+
+        return ['success' => true, 'booking' => $booking];
+
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => 'Lỗi database'];
+    }
 }
 
 /**
@@ -245,6 +481,14 @@ function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
         return $response->text();
     } catch (Exception $e) {
         error_log("AI Sync Error: " . $e->getMessage());
+
+        // Handle rate limit
+        if (strpos($e->getMessage(), '429') !== false) {
+            $current_idx = get_active_key_index();
+            mark_key_rate_limited($current_idx, 60);
+            rotate_gemini_key();
+        }
+
         return "Xin lỗi, hệ thống AI đang gặp sự cố: " . $e->getMessage();
     }
 }
