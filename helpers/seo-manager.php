@@ -731,16 +731,25 @@ class SEOManager {
      * Save Sitemap to file
      */
     public static function saveSitemap() {
-        $sitemapContent = self::generateSitemap();
-        $sitemapPath = dirname(__DIR__) . '/sitemap.xml';
+        try {
+            $sitemapContent = self::generateSitemap();
+            $sitemapPath = dirname(__DIR__) . '/sitemap.xml';
 
-        file_put_contents($sitemapPath, $sitemapContent);
+            file_put_contents($sitemapPath, $sitemapContent);
 
-        // Update setting
-        self::$db->prepare("UPDATE seo_settings SET setting_value = ? WHERE setting_key = 'sitemap_last_generated'")
-            ->execute([date('Y-m-d H:i:s')]);
+            // Try to update setting (ignore if fails)
+            try {
+                self::$db->prepare("UPDATE seo_settings SET setting_value = ? WHERE setting_key = 'sitemap_last_generated'")
+                    ->execute([date('Y-m-d H:i:s')]);
+            } catch (Exception $e) {
+                // Ignore - setting might not exist
+            }
 
-        return true;
+            return true;
+        } catch (Exception $e) {
+            error_log("SEOManager::saveSitemap error: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**

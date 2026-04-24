@@ -4,26 +4,45 @@
  * Trang quản lý SEO toàn diện
  */
 
-session_start();
+// Session must be started before any includes
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/database.php';
 require_once '../helpers/auth-middleware.php';
 require_once '../helpers/seo-manager.php';
 
-// Check admin auth
-requireAdmin();
+// Check admin auth using AuthMiddleware class
+AuthMiddleware::requireAdmin();
+
+// Initialize SEOManager with DB connection
+SEOManager::init();
 
 $db = getDB();
 $current_page = 'seo';
 $page_title = 'Quản lý SEO';
 
-// Get SEO settings
-$settings = $db->query("SELECT * FROM seo_settings ORDER BY setting_key")->fetchAll(PDO::FETCH_ASSOC);
+// Get SEO settings (with fallback)
+try {
+    $settings = $db->query("SELECT * FROM seo_settings ORDER BY setting_key")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $settings = [];
+}
 
-// Get SEO pages
-$seo_pages = $db->query("SELECT * FROM seo_pages ORDER BY priority DESC, page_slug")->fetchAll(PDO::FETCH_ASSOC);
+// Get SEO pages (with fallback)
+try {
+    $seo_pages = $db->query("SELECT * FROM seo_pages ORDER BY priority DESC, page_slug")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $seo_pages = [];
+}
 
-// Get FAQs
-$faqs = $db->query("SELECT * FROM seo_faqs ORDER BY page_slug, display_order")->fetchAll(PDO::FETCH_ASSOC);
+// Get FAQs (with fallback)
+try {
+    $faqs = $db->query("SELECT * FROM seo_faqs ORDER BY page_slug, display_order")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $faqs = [];
+}
 
 // Handle actions
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
@@ -74,8 +93,13 @@ if ($action === 'update_page' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($action === 'generate_sitemap') {
-    SEOManager::saveSitemap();
-    $message = 'Đã tạo sitemap.xml mới!';
+    try {
+        SEOManager::saveSitemap();
+        $message = 'Đã tạo sitemap.xml mới!';
+    } catch (Exception $e) {
+        $message = 'Lỗi tạo sitemap: ' . $e->getMessage();
+        $messageType = 'error';
+    }
 }
 
 if ($action === 'add_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -114,9 +138,21 @@ if ($action === 'update_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Refresh data after updates
 if ($message) {
-    $settings = $db->query("SELECT * FROM seo_settings ORDER BY setting_key")->fetchAll(PDO::FETCH_ASSOC);
-    $seo_pages = $db->query("SELECT * FROM seo_pages ORDER BY priority DESC, page_slug")->fetchAll(PDO::FETCH_ASSOC);
-    $faqs = $db->query("SELECT * FROM seo_faqs ORDER BY page_slug, display_order")->fetchAll(PDO::FETCH_ASSOC);
+    try {
+        $settings = $db->query("SELECT * FROM seo_settings ORDER BY setting_key")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $settings = [];
+    }
+    try {
+        $seo_pages = $db->query("SELECT * FROM seo_pages ORDER BY priority DESC, page_slug")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $seo_pages = [];
+    }
+    try {
+        $faqs = $db->query("SELECT * FROM seo_faqs ORDER BY page_slug, display_order")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $faqs = [];
+    }
 }
 
 include 'includes/admin-header.php';
