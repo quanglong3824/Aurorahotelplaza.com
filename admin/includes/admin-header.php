@@ -287,7 +287,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'items' => [
                             ['page' => 'blog', 'icon' => 'article', 'label' => 'Blog'],
                             ['page' => 'gallery', 'icon' => 'photo_library', 'label' => 'Thư viện ảnh'],
-                            ['page' => 'faqs', 'icon' => 'help', 'label' => 'FAQs']
+                            ['page' => 'faqs', 'icon' => 'help', 'label' => 'FAQs'],
+                            ['page' => 'seo', 'icon' => 'search', 'label' => 'SEO']
                         ]
                     ],
                     [
