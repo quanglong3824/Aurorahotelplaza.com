@@ -894,6 +894,8 @@
 
 /* ── Mobile Layout ─────────────────────────────────────────── */
 @media (max-width: 767px) {
+  /* Stack from bottom: Chat(20px) -> Navigation(96px) -> Booking Form(168px) -> Booking History(240px) */
+
   #cwBtn {
     bottom: 20px;
     right: 20px;
@@ -901,16 +903,18 @@
     height: 58px;
   }
 
+  /* Booking history button - positioned above booking form toggle to avoid overlap with navigation */
   .cw-booking-btn {
-    bottom: 88px;
-    right: 24px;
+    bottom: 240px;
+    right: 28px;
     width: 48px;
     height: 48px;
   }
 
+  /* Booking bubble - positioned above the button */
   .cw-booking-bubble {
-    right: 76px;
-    bottom: 88px;
+    right: 80px;
+    bottom: 240px;
     width: calc(100vw - 110px);
     max-width: 300px;
   }
@@ -952,11 +956,11 @@
     }
 
     .cw-booking-btn {
-      bottom: calc(88px + env(safe-area-inset-bottom));
+      bottom: calc(240px + env(safe-area-inset-bottom));
     }
 
     .cw-booking-bubble {
-      bottom: calc(88px + env(safe-area-inset-bottom));
+      bottom: calc(240px + env(safe-area-inset-bottom));
     }
 
     #cwBtn.open {
