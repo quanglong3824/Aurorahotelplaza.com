@@ -425,7 +425,7 @@ const ChatWidget = {
         wrapper.innerHTML = this.renderBubble({
             message_id: streamId,
             sender_type: 'bot',
-            message: '<div class="cw-stream-loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>',
+            message: '<div class="cw-thinking-bubble"><span class="material-symbols-outlined cw-thinking-sparkle">auto_awesome</span><span class="cw-thinking-text">Aurora đang suy nghĩ...</span></div>',
             created_at: new Date().toISOString()
         });
         container.appendChild(wrapper.firstElementChild);
@@ -566,7 +566,7 @@ const ChatWidget = {
         
         // Chỉ parse nội dung nếu không phải là loading animation (đã có thẻ HTML)
         let parsed = { html: msg.message, extra: '' };
-        if (!msg.message.includes('cw-stream-loading')) {
+        if (!msg.message.includes('cw-stream-loading') && !msg.message.includes('cw-thinking-bubble')) {
             parsed = this.parseAiContent(msg.message, msg.message_id, isBot);
         }
 
@@ -609,9 +609,17 @@ const ChatWidget = {
 
         // [IMAGE: url] - Tự động nhận diện tag ảnh từ AI
         html = html.replace(/\[IMAGE:\s*([^\]]+)\]/gi, (match, url) => {
-            return `<div class="cw-msg-image-container" style="margin:10px 0; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.08); background:#fff;">
-                <img src="${url.trim()}" alt="Aurora Room" style="width:100%; height:auto; display:block; object-fit:cover; max-height:220px; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                <div style="font-size:10px; color:#d4af37; background:#fff; padding:6px 8px; text-align:center; font-weight:bold; letter-spacing:0.5px;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle; margin-right:4px;">image</span> XEM ẢNH THỰC TẾ</div>
+            const cleanUrl = url.trim();
+            return `<div class="cw-msg-image-container" style="margin:12px 0; border-radius:16px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 10px 25px rgba(0,0,0,0.1); background:#fff; max-width:280px;">
+                <div style="width:100%; height:180px; background:#f1f5f9; overflow:hidden;">
+                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover; transition:all 0.5s;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg'; this.parentElement.style.background='#f1f5f9';" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div style="padding:10px; background:#fff; text-align:center;">
+                    <div style="display:inline-flex; align-items:center; gap:6px; background:#d4af37; color:#fff; padding:6px 16px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 10px rgba(212,175,55,0.3); cursor:pointer;">
+                        <span class="material-symbols-outlined" style="font-size:14px;">photo_library</span> 
+                        Xem ảnh thực tế
+                    </div>
+                </div>
             </div>`;
         });
 

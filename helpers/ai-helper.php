@@ -91,7 +91,8 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
             $baseUrl = "https://aurorahotelplaza.com/"; 
             foreach ($rooms as $r) {
                 $displayPrice = $r['price_published'] > 0 ? $r['price_published'] : $r['base_price'];
-                $imgUrl = $baseUrl . "assets/img/rooms/" . $r['thumbnail'];
+                $thumb = ltrim($r['thumbnail'], '/');
+                $imgUrl = $baseUrl . $thumb;
                 $rooms_info .= "- {$r['type_name']}: " . number_format($displayPrice) . "đ. [IMAGE: {$imgUrl}] [slug: {$r['slug']}]\n";
             }
             
