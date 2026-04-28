@@ -371,6 +371,9 @@ class AuroraErrorTracker
             $line = $errorData['line'] ?? 0;
             $url = $errorData['url'] ?? '';
             $context = json_encode($errorData['context'] ?? [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            if (strlen($context) > 1000) {
+                $context = substr($context, 0, 1000) . '...[TRUNCATED]';
+            }
 
             $prompt = "THÔNG TIN LỖI:\n- Loại: $type\n- Mức độ: $severity\n- Thông điệp: $message\n- File: $file (dòng $line)\n- URL: $url\n- Context: $context\n\nHãy phân tích ngắn gọn (tối đa 300 từ):\n1. **Nguyên nhân**: Lỗi này do đâu?\n2. **Tác động**: Ảnh hưởng gì đến người dùng/hệ thống?\n3. **Giải pháp**: Cách khắc phục nhanh nhất?\n4. **Mức ưu tiên**: Cần sửa ngay hay có thể đợi?\n\nTrả lời súc tích, chuyên nghiệp bằng tiếng Việt.";
 

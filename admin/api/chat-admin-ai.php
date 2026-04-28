@@ -64,7 +64,7 @@ DB SCHEMA QUAN TRỌNG:
 $db_schema
 
 QUY TẮC PHẢN HỒI:
-1. Nếu cần dữ liệu để phân tích: Trả về DUY NHẤT [READ_DB: SELECT * FROM ...]
+1. Nếu cần dữ liệu để phân tích: Trả về DUY NHẤT [READ_DB: SELECT * FROM ...] (Luôn thêm LIMIT 20 để tiết kiệm token nếu không cần toàn bộ)
 2. Khi nhận kết quả SQL: Phân tích và trình bày báo cáo hoàn chỉnh
 3. Khi admin yêu cầu thao tác CSDL (Thêm, Sửa, Xóa): 
    - Xuất: [ACTION: {\"table\":\"TÊN_BẢNG\",\"action\":\"RAPID_CRUD\",\"level\":\"C\",\"data\":{\"query\":\"CÂU_LỆNH_SQL\"}}]
@@ -88,8 +88,8 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
                 $read_data = $stmtRead->fetchAll(PDO::FETCH_ASSOC);
                 $data_str = json_encode($read_data, JSON_UNESCAPED_UNICODE);
 
-                if (strlen($data_str) > 12000) {
-                    $data_str = substr($data_str, 0, 12000) . '...[TRUNCATED]';
+                if (strlen($data_str) > 4000) {
+                    $data_str = substr($data_str, 0, 4000) . '...[TRUNCATED_TO_SAVE_TOKENS]';
                 }
 
                 $db_result_msg = "HỆ THỐNG GỬI KẾT QUẢ SQL THÀNH CÔNG: " . $data_str . "\n\nTừ kết quả trên, hãy trình bày báo cáo phân tích và trả lời câu hỏi ban đầu của sếp.";
