@@ -10,10 +10,9 @@ $db = getDB();
 
 require_once __DIR__ . '/../helpers/api_key_manager.php';
 
-// Xử lý chuyển đổi Provider thủ công (Mặc định là Gemini)
+// Refresh Gemini connection
 if (isset($_POST['switch_provider'])) {
-    $new_p = $_POST['switch_provider'];
-    set_active_ai_provider($new_p);
+    refresh_keys_from_env();
     header('Location: ai-stats.php?switched=1');
     exit;
 }
@@ -63,7 +62,6 @@ $valid_keys = get_all_valid_keys();
 $total_keys = count($valid_keys);
 $current_active_key_idx = get_active_key_index();
 $last_updated_time = file_exists($log_file) ? date('H:i:s d/m/Y', filemtime($log_file)) : 'Chưa có dữ liệu';
-$active_provider = get_active_ai_provider();
 $rate_limits = get_key_rate_limits();
 $now = time();
 
@@ -223,7 +221,7 @@ require_once 'includes/admin-header.php';
                         <tbody class="divide-y divide-gray-50 dark:divide-slate-700">
                             <?php foreach ($valid_keys as $idx => $val): 
                                 $stat = $today_stats[$idx] ?? [];
-                                $is_active = ($idx == $current_active_key_idx && $active_provider === 'gemini');
+                                $is_active = ($idx == $current_active_key_idx);
                                 $is_blocked = isset($rate_limits[$idx]) && $rate_limits[$idx] > $now;
                                 $tokens = $stat['tokens'] ?? 0;
                                 $load_percent = min(100, round(($tokens / 1000000) * 100));

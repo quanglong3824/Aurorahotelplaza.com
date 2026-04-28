@@ -359,11 +359,10 @@ class AuroraErrorTracker
     {
         try {
             // ── BƯỚC 1: Gửi Telegram NGAY với thông tin cơ bản ───────────────────
-            // Không chờ Gemini — đảm bảo admin luôn nhận được alert
             self::sendTelegramAlert($errorId, $errorData, '(AI dang phan tich... vao Admin de xem ket qua)');
 
             // ── BƯỚC 2: Gọi Gemini để phân tích sâu hơn ─────────────────────────
-            @include_once __DIR__ . '/../config/api_keys.php';
+            @include_once __DIR__ . '/ai-helper.php';
 
             $severity = $errorData['severity'] ?? 'error';
             $message = $errorData['message'] ?? '';
@@ -373,77 +372,25 @@ class AuroraErrorTracker
             $url = $errorData['url'] ?? '';
             $context = json_encode($errorData['context'] ?? [], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-            $prompt = <<<PROMPT
-Bạn là AI chuyên gia phân tích lỗi web cho hệ thống Aurora Hotel Plaza.
+            $prompt = "THÔNG TIN LỖI:\n- Loại: $type\n- Mức độ: $severity\n- Thông điệp: $message\n- File: $file (dòng $line)\n- URL: $url\n- Context: $context\n\nHãy phân tích ngắn gọn (tối đa 300 từ):\n1. **Nguyên nhân**: Lỗi này do đâu?\n2. **Tác động**: Ảnh hưởng gì đến người dùng/hệ thống?\n3. **Giải pháp**: Cách khắc phục nhanh nhất?\n4. **Mức ưu tiên**: Cần sửa ngay hay có thể đợi?\n\nTrả lời súc tích, chuyên nghiệp bằng tiếng Việt.";
 
-THÔNG TIN LỖI:
-- Loại: $type
-- Mức độ: $severity
-- Thông điệp: $message
-- File: $file (dòng $line)
-- URL: $url
-- Context: $context
+            $system_prompt = "Bạn là AI chuyên gia phân tích lỗi web cho hệ thống Aurora Hotel Plaza.";
 
-Hãy phân tích ngắn gọn (tối đa 300 từ):
-1. **Nguyên nhân**: Lỗi này do đâu?
-2. **Tác động**: Ảnh hưởng gì đến người dùng/hệ thống?
-3. **Giải pháp**: Cách khắc phục nhanh nhất?
-4. **Mức ưu tiên**: Cần sửa ngay hay có thể đợi?
+            if (function_exists('call_gemini_sync')) {
+                $response = call_gemini_sync($prompt, null, null, $system_prompt);
 
-Trả lời súc tích, chuyên nghiệp bằng tiếng Việt.
-PROMPT;
-
-            $apiKeys = $GEMINI_API_KEYS ?? [];
-            foreach ($apiKeys as $key) {
-                if (empty(trim($key)))
-                    continue;
-
-                $response = self::callGeminiApi($key, $prompt);
-                if ($response) {
-                    // Lưu AI analysis vào DB
+                if ($response && strpos($response, 'Lỗi') !== 0) {
                     $db = self::getDb();
                     if ($db) {
                         $db->prepare("UPDATE error_logs SET ai_analysis = ?, ai_analyzed = 1 WHERE id = ?")
                             ->execute([$response, $errorId]);
                     }
-                    // Gemini xong — KHÔNG gửi Telegram lần 2 để tránh spam
                     return;
                 }
             }
         } catch (\Throwable $e) {
             error_log('[ErrorTracker] AI analysis failed: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Gọi Gemini API
-     */
-    private static function callGeminiApi(string $apiKey, string $prompt): ?string
-    {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey";
-        $body = json_encode([
-            'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
-            'generationConfig' => ['temperature' => 0.3, 'maxOutputTokens' => 512],
-        ]);
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $body,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_TIMEOUT => 15,
-            CURLOPT_SSL_VERIFYPEER => false,
-        ]);
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode === 200 && $result) {
-            $data = json_decode($result, true);
-            return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-        }
-        return null;
     }
 
     /**
