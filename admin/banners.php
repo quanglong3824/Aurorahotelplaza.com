@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/environment.php';
 require_once '../helpers/image-helper.php';
 
 $page_title = 'Quản lý Banner';
@@ -9,7 +10,7 @@ $page_subtitle = 'Banner trang chủ và quảng cáo';
 try {
     $db = getDB();
     
-    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status FROM banners ORDER BY sort_order ASC, created_at DESC");
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status FROM banners ORDER BY sort_order ASC, created_at DESC");
     $banners_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Map columns for frontend compatibility
@@ -336,24 +337,42 @@ function closeBannerModal() {
 
 function editBanner(bannerId) {
     console.log('editBanner called with bannerId:', bannerId);
+    if (!bannerId || bannerId <= 0) {
+        alert('Banner ID không hợp lệ: ' + bannerId);
+        return;
+    }
+    
     fetch('api/get-banner.php?banner_id=' + bannerId)
-        .then(res => res.json())
+        .then(res => {
+            console.log('get-banner HTTP status:', res.status);
+            return res.text().then(text => {
+                console.log('get-banner raw response:', text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 200));
+                }
+            });
+        })
         .then(data => {
-            console.log('get-banner response:', data);
+            console.log('get-banner parsed data:', data);
             if (data.success) {
                 const banner = data.banner;
-                console.log('Banner data:', banner);
+                console.log('Banner object:', banner);
+                
                 document.getElementById('modalTitle').textContent = 'Sửa Banner';
                 document.getElementById('banner_id').value = banner.banner_id;
                 document.getElementById('banner_title').value = banner.title;
                 document.getElementById('banner_subtitle').value = banner.subtitle || '';
-                document.getElementById('banner_image_url').value = banner.image_desktop || banner.image_url;
+                document.getElementById('banner_image_url').value = banner.image_desktop || '';
                 document.getElementById('banner_link_url').value = banner.link_url || '';
                 document.getElementById('banner_link_text').value = banner.link_text || '';
                 document.getElementById('banner_position').value = banner.position || 'popup';
-                document.getElementById('banner_sort_order').value = banner.sort_order;
+                document.getElementById('banner_sort_order').value = banner.sort_order || 0;
                 document.getElementById('banner_is_active').checked = banner.is_active == 1;
                 
+                console.log('Preview image URL:', banner.image_url);
                 document.getElementById('previewImg').src = banner.image_url;
                 document.getElementById('imagePreview').classList.remove('hidden');
                 
@@ -363,8 +382,8 @@ function editBanner(bannerId) {
             }
         })
         .catch(err => {
-            alert('Lỗi kết nối');
-            console.error(err);
+            alert('Lỗi: ' + err.message);
+            console.error('editBanner error:', err);
         });
 }
 
