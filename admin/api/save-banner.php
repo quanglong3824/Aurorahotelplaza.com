@@ -5,9 +5,17 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale'])) {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+function sendError($message, $debug = []) {
+    echo json_encode(['success' => false, 'message' => $message, 'debug' => $debug]);
     exit;
+}
+
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale'])) {
+    sendError('Unauthorized');
 }
 
 require_once '../../config/database.php';
@@ -25,13 +33,11 @@ try {
     $position = trim($_POST['position'] ?? 'hero');
     
     if (empty($title)) {
-        echo json_encode(['success' => false, 'message' => 'Tiêu đề không được trống']);
-        exit;
+        sendError('Tiêu đề không được trống');
     }
     
     if (empty($image_url)) {
-        echo json_encode(['success' => false, 'message' => 'URL hình ảnh không được trống']);
-        exit;
+        sendError('URL hình ảnh không được trống');
     }
     
     $status = $is_active ? 'active' : 'inactive';
@@ -84,9 +90,12 @@ try {
     }
     
 } catch (PDOException $e) {
-    error_log('Save banner error: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Lỗi database: ' . $e->getMessage()]);
+    error_log('Save banner PDO error: ' . $e->getMessage() . ' | SQLSTATE: ' . ($e->errorInfo[0] ?? 'N/A'));
+    sendError('Lỗi database: ' . $e->getMessage(), [
+        'code' => $e->getCode(),
+        'trace' => $e->getTraceAsString()
+    ]);
 } catch (Exception $e) {
     error_log('Save banner error: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
+    sendError('Lỗi: ' . $e->getMessage());
 }

@@ -354,22 +354,40 @@ document.getElementById('bannerForm').addEventListener('submit', function(e) {
     const formData = new FormData(this);
     const bannerId = formData.get('banner_id');
     
+    console.log('Submitting banner form:', {
+        banner_id: bannerId,
+        title: formData.get('title'),
+        image_url: formData.get('image_url')
+    });
+    
     fetch('api/save-banner.php', {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
+    .then(res => {
+        console.log('Response status:', res.status);
+        return res.text().then(text => {
+            console.log('Raw response:', text);
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                throw new Error('Invalid JSON response: ' + text.substring(0, 200));
+            }
+        });
+    })
     .then(data => {
+        console.log('Parsed data:', data);
         if (data.success) {
             closeBannerModal();
             refreshBannerGrid();
             showNotification(data.message, 'success');
         } else {
-            alert(data.message || 'Có lỗi xảy ra');
+            alert(data.message || 'Có lỗi xảy ra\n\n' + (data.debug ? JSON.stringify(data.debug, null, 2) : ''));
         }
     })
     .catch(err => {
-        alert('Lỗi kết nối');
+        alert('Lỗi: ' + err.message);
         console.error(err);
     });
 });
@@ -424,16 +442,38 @@ function toggleBannerStatus(bannerId, newStatus) {
 
 function refreshBannerGrid() {
     fetch('api/get-all-banners.php')
-        .then(res => res.json())
+        .then(res => res.text())
+        .then(text => {
+            console.log('get-all-banners raw:', text);
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                throw e;
+            }
+        })
         .then(data => {
+            console.log('Banners data:', data);
             if (data.success) {
                 renderBannerGrid(data.banners);
             }
-        });
+        })
+        .catch(err => console.error('refreshBannerGrid error:', err));
 }
 
 function renderBannerGrid(banners) {
+    console.log('renderBannerGrid called with:', banners);
     const grid = document.getElementById('bannerGrid');
+    if (!grid) {
+        console.error('bannerGrid element not found!');
+        return;
+    }
+    
+    if (!banners || !banners.length) {
+        grid.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Không có banner nào</div>';
+        return;
+    }
+    
     const baseUrl = window.siteBase || '';
     const fallbackImg = baseUrl + '/assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
     
