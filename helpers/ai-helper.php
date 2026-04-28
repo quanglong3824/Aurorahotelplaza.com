@@ -1,9 +1,14 @@
 <?php
 /**
- * Aurora AI Helper - Xử lý chat AI với Google Gemini
+ * Aurora AI Helper - Xử lý chat AI với nhiều AI Providers
+ * 
+ * Hỗ trợ:
+ * - Alibaba GLM-5 (mặc định)
+ * - Google Gemini
  *
  * Các hàm chính:
- * - stream_ai_reply(): Alias cho stream_gemini_reply (tương thích ngược)
+ * - stream_ai_reply(): Alias cho provider hiện tại
+ * - stream_alibaba_reply(): Stream phản hồi từ Alibaba GLM-5 API
  * - stream_gemini_reply(): Stream phản hồi từ Gemini API
  * - get_aurora_system_prompt(): Lấy prompt hệ thống cho Aurora AI
  * - process_tool_call_after_stream(): Xử lý tool calls (nếu có)
@@ -12,15 +17,20 @@
 
 require_once __DIR__ . '/api_key_manager.php';
 
-// Load Gemini SDK
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
 }
 
 /**
- * Alias cho stream_gemini_reply - tương thích ngược
+ * Main AI reply function - tự động chọn provider
  */
 function stream_ai_reply($user_message, $db, $conv_id, &$history = [], $turn = 1) {
+    $provider = get_active_ai_provider();
+    
+    if ($provider === 'alibaba') {
+        return stream_alibaba_reply($user_message, $db, $conv_id, $history, $turn);
+    }
+    
     return stream_gemini_reply($user_message, $db, $conv_id, $history, $turn);
 }
 
@@ -115,6 +125,153 @@ LƯU Ý:
     }
 
     return $prompt;
+}
+
+/**
+ * Stream phản hồi từ Alibaba GLM-5 API
+ */
+function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $turn = 1)
+{
+    $api_key = get_active_alibaba_key();
+    if (empty($api_key)) {
+        echo "data: " . json_encode(["error" => "Chưa cấu hình Alibaba API Key. Vui lòng liên hệ quản trị viên."]) . "\n\n";
+        return "";
+    }
+
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+
+    $messages = [
+        ['role' => 'system', 'content' => $system_prompt]
+    ];
+
+    foreach ($history as $msg) {
+        $messages[] = [
+            'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
+            'content' => $msg['content']
+        ];
+    }
+
+    $messages[] = ['role' => 'user', 'content' => $user_message];
+
+    $request_body = [
+        'model' => $model,
+        'messages' => $messages,
+        'stream' => true,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $api_url . '/chat/completions',
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($request_body),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $api_key
+        ],
+        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
+            static $buffer = '';
+            $buffer .= $data;
+
+            $lines = explode("\n", $buffer);
+            $buffer = array_pop($lines);
+
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if (empty($line) || $line === 'data: [DONE]') continue;
+                if (strpos($line, 'data: ') !== 0) continue;
+
+                $json_str = substr($line, 6);
+                $decoded = json_decode($json_str, true);
+
+                if (!$decoded || !isset($decoded['choices'][0]['delta']['content'])) continue;
+
+                $text = $decoded['choices'][0]['delta']['content'];
+                $full_response_text .= $text;
+
+                if (!$is_decided) {
+                    if (strlen($full_response_text) >= 1) {
+                        if ($full_response_text[0] !== '[') {
+                            $is_decided = true;
+                            echo "data: " . json_encode(["text" => $full_response_text]) . "\n\n";
+                            if (ob_get_level() > 0) ob_flush();
+                            flush();
+                        } else if (strlen($full_response_text) >= 6) {
+                            if (strpos($full_response_text, '[TOOL_') === 0 ||
+                                strpos($full_response_text, '[BOOK_') === 0 ||
+                                strpos($full_response_text, '[VIEW_') === 0) {
+                                $is_tool_call = true;
+                            }
+                            $is_decided = true;
+                            if (!$is_tool_call) {
+                                echo "data: " . json_encode(["text" => $full_response_text]) . "\n\n";
+                                if (ob_get_level() > 0) ob_flush();
+                                flush();
+                            }
+                        }
+                    }
+                } else {
+                    if (!$is_tool_call) {
+                        echo "data: " . json_encode(["text" => $text]) . "\n\n";
+                        if (ob_get_level() > 0) ob_flush();
+                        flush();
+                    }
+                }
+            }
+
+            return strlen($data);
+        }
+    ]);
+
+    $full_response_text = "";
+    $is_tool_call = false;
+    $is_decided = false;
+
+    try {
+        curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+
+        if ($http_code === 429 || strpos($curl_error, '429') !== false) {
+            $current_idx = get_active_alibaba_key_index();
+            mark_key_rate_limited($current_idx, 60, 'alibaba');
+
+            $new_key = rotate_alibaba_key();
+            if ($new_key && $turn <= 1) {
+                echo "data: " . json_encode(["status" => "switching", "message" => "Đang chuyển đổi API key..."]) . "\n\n";
+                if (ob_get_level() > 0) ob_flush();
+                flush();
+                return stream_alibaba_reply($user_message, $db, $conv_id, $history, $turn + 1);
+            }
+            echo "data: " . json_encode(["error" => "Hệ thống đang quá tải. Vui lòng thử lại sau ít giây hoặc gọi Hotline 0251 3918 888."]) . "\n\n";
+            return "";
+        }
+
+        if ($http_code >= 400 || $curl_error) {
+            error_log("Alibaba API Error: HTTP $http_code - $curl_error");
+            echo "data: " . json_encode(["error" => "Xin lỗi, Aurora đang gặp sự cố kết nối. Vui lòng thử lại sau."]) . "\n\n";
+            return "";
+        }
+
+        if ($is_tool_call && $turn <= 2) {
+            $tool_result = process_tool_call_after_stream($full_response_text, $user_message, $db, $conv_id, $history, $turn);
+            if ($tool_result !== null) {
+                return $tool_result;
+            }
+        }
+
+        return $full_response_text;
+
+    } catch (Exception $e) {
+        error_log("Alibaba API Exception: " . $e->getMessage());
+        echo "data: " . json_encode(["error" => "Xin lỗi, Aurora đang gặp sự cố kết nối. Vui lòng thử lại sau."]) . "\n\n";
+        return "";
+    }
 }
 
 /**
@@ -464,9 +621,97 @@ function handle_tool_get_booking_info($params, $db)
  */
 function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
 {
+    $provider = get_active_ai_provider();
+    
+    if ($provider === 'alibaba') {
+        return call_alibaba_sync($message, $db, $conv_id, $system_prompt);
+    }
+    
+    return call_gemini_sync($message, $db, $conv_id, $system_prompt);
+}
+
+/**
+ * Gọi Alibaba GLM đồng bộ (không stream)
+ */
+function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null)
+{
+    $api_key = get_active_alibaba_key();
+    if (empty($api_key)) {
+        return "Lỗi: Chưa cấu hình Alibaba API Key";
+    }
+
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+
+    if ($system_prompt === null) {
+        $system_prompt = get_aurora_system_prompt($db, $conv_id);
+    }
+
+    $messages = [
+        ['role' => 'system', 'content' => $system_prompt],
+        ['role' => 'user', 'content' => $message]
+    ];
+
+    $request_body = [
+        'model' => $model,
+        'messages' => $messages,
+        'stream' => false,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
+    ];
+
+    try {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $api_url . '/chat/completions',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($request_body),
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $api_key
+            ],
+            CURLOPT_TIMEOUT => 60
+        ]);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+
+        if ($http_code === 429) {
+            $current_idx = get_active_alibaba_key_index();
+            mark_key_rate_limited($current_idx, 60, 'alibaba');
+            rotate_alibaba_key();
+            return "Hệ thống đang quá tải, vui lòng thử lại sau.";
+        }
+
+        if ($http_code >= 400 || $curl_error) {
+            error_log("Alibaba Sync API Error: HTTP $http_code - $curl_error");
+            return "Lỗi kết nối AI: " . ($curl_error ?: "HTTP $http_code");
+        }
+
+        $decoded = json_decode($response, true);
+        if (isset($decoded['choices'][0]['message']['content'])) {
+            return $decoded['choices'][0]['message']['content'];
+        }
+
+        return "Lỗi: Không thể parse phản hồi từ AI";
+
+    } catch (Exception $e) {
+        error_log("Alibaba Sync Exception: " . $e->getMessage());
+        return "Lỗi hệ thống AI: " . $e->getMessage();
+    }
+}
+
+/**
+ * Gọi Gemini đồng bộ (không stream)
+ */
+function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null)
+{
     $api_key = get_active_gemini_key();
     if (empty($api_key)) {
-        return "Lỗi: Chưa cấu hình API Key";
+        return "Lỗi: Chưa cấu hình Gemini API Key";
     }
 
     $model_name = env('AI_MODEL', 'gemini-2.0-flash');
@@ -480,12 +725,11 @@ function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
         $response = $client->generativeModel($model_name)->generateContent($system_prompt . "\n\n" . $message);
         return $response->text();
     } catch (Exception $e) {
-        error_log("AI Sync Error: " . $e->getMessage());
+        error_log("Gemini Sync Error: " . $e->getMessage());
 
-        // Handle rate limit
         if (strpos($e->getMessage(), '429') !== false) {
             $current_idx = get_active_key_index();
-            mark_key_rate_limited($current_idx, 60);
+            mark_key_rate_limited($current_idx, 60, 'gemini');
             rotate_gemini_key();
         }
 
