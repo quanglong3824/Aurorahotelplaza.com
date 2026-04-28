@@ -24,6 +24,7 @@ define('GEMINI_API_BASE', 'https://generativelanguage.googleapis.com/v1beta/mode
 function get_aurora_system_prompt($db, $conv_id = null)
 {
     $prompt = "Bạn là Aurora AI - Trợ lý ảo Aurora Hotel Plaza.
+QUY TẮC: PHẢN HỒI NGAY LẬP TỨC, KHÔNG SUY NGHĨ LÂU.
 TÓM TẮT: KS 4 sao, style Indochine, Biên Hòa. Check-in 14:00, Check-out 12:00.
 TRẺ EM: <1m20 free, 1m20-1m40 phụ thu 50%, >1m40 tính người lớn. Hủy phòng trước 24h miễn phí.
 PHÒNG: Studio Apt(800k), Family Apt(1.2M), Premium Studio(1M), Premium Family(1.5M), Classical(700k), Indochine(1.1M).
@@ -614,17 +615,22 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_TIMEOUT => 120,
         CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
-            $lines = explode("\n", $data);
+            static $stream_buffer = '';
+            $stream_buffer .= $data;
+
+            $lines = explode("\n", $stream_buffer);
+            $stream_buffer = array_pop($lines); // Giữ lại dòng cuối cùng nếu nó chưa hoàn chỉnh
+
             foreach ($lines as $line) {
                 $line = trim($line);
-                if (empty($line)) continue;
-                if ($line === 'data: [DONE]') continue;
+                if (empty($line) || $line === 'data: [DONE]') continue;
                 if (strpos($line, 'data: ') !== 0) continue;
 
                 $json_str = substr($line, 6);
                 $decoded = json_decode($json_str, true);
                 if (!$decoded) continue;
 
+                // Ưu tiên content, bỏ qua reasoning_content để tăng tốc hiển thị
                 $text = $decoded['choices'][0]['delta']['content'] ?? null;
                 if ($text === null) continue;
 
