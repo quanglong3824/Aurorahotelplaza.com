@@ -162,6 +162,9 @@ try {
                 ]);
 
         // Gửi Telegram notification cho admin khi khách gửi tin nhắn
+        // Log để debug
+        error_log('[CHAT] Khách gửi tin nhắn - conv_id: ' . $conv_id . ', message: ' . mb_substr($message, 0, 50));
+        
         try {
             $convStmt = $db->prepare(
                 "SELECT c.conversation_id, c.customer_id, c.guest_id, 
@@ -173,24 +176,35 @@ try {
             $convStmt->execute([':cid' => $conv_id]);
             $convData = $convStmt->fetch(PDO::FETCH_ASSOC);
             
+            error_log('[CHAT] Conv data: ' . json_encode($convData, JSON_UNESCAPED_UNICODE));
+            
             if ($convData) {
                 $msgData = ['message' => $message];
-                $telegramResult = sendTelegramChatNotification($convData, $msgData);
                 
+                // Gửi Telegram
+                $telegramResult = TelegramHelper::sendChatNotification($convData, $msgData);
+                error_log('[CHAT] Telegram result: ' . json_encode($telegramResult, JSON_UNESCAPED_UNICODE));
+                
+                // Lưu mapping (nếu bảng tồn tại)
                 if ($telegramResult['success'] && isset($telegramResult['message_id'])) {
-                    $db->prepare(
-                        "INSERT INTO telegram_message_mapping 
-                            (conversation_id, telegram_message_id, message_type, created_at)
-                         VALUES (:cid, :msg_id, 'notification', NOW())
-                         ON DUPLICATE KEY UPDATE telegram_message_id = :msg_id"
-                    )->execute([
-                        ':cid' => $conv_id,
-                        ':msg_id' => $telegramResult['message_id']
-                    ]);
+                    try {
+                        $db->prepare(
+                            "INSERT INTO telegram_message_mapping 
+                                (conversation_id, telegram_message_id, message_type, created_at)
+                             VALUES (:cid, :msg_id, 'notification', NOW())"
+                        )->execute([
+                            ':cid' => $conv_id,
+                            ':msg_id' => $telegramResult['message_id']
+                        ]);
+                        error_log('[CHAT] Mapping saved: conv=' . $conv_id . ', msg_id=' . $telegramResult['message_id']);
+                    } catch (Throwable $mapErr) {
+                        // Bảng chưa tồn tại - ignore
+                        error_log('[CHAT] Mapping table not exists: ' . $mapErr->getMessage());
+                    }
                 }
             }
         } catch (Throwable $telegramErr) {
-            error_log('Telegram chat notification error: ' . $telegramErr->getMessage());
+            error_log('[CHAT] Telegram error: ' . $telegramErr->getMessage());
         }
 
         // [UPGRADE] AI Trợ lý ảo hiện đã chuyển sang cơ chế Streaming (ai-stream.php)

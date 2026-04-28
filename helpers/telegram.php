@@ -41,6 +41,7 @@ class TelegramHelper
         self::init();
 
         if (empty(self::$botToken) || empty(self::$chatId)) {
+            error_log('[TELEGRAM] Not configured - token or chatId empty');
             return ['success' => false, 'error' => 'Telegram not configured'];
         }
 
@@ -50,6 +51,9 @@ class TelegramHelper
             'parse_mode' => $parseMode,
             'disable_web_page_preview' => $disablePreview
         ]);
+
+        error_log('[TELEGRAM] Sending message to chat_id: ' . self::$chatId);
+        error_log('[TELEGRAM] Payload length: ' . strlen($payload));
 
         $ch = curl_init("https://api.telegram.org/bot" . self::$botToken . "/sendMessage");
         curl_setopt_array($ch, [
@@ -66,9 +70,16 @@ class TelegramHelper
         $curlError = curl_error($ch);
         curl_close($ch);
 
+        error_log('[TELEGRAM] HTTP Code: ' . $httpCode);
+        error_log('[TELEGRAM] Response: ' . substr($result, 0, 200));
+        if ($curlError) {
+            error_log('[TELEGRAM] Curl Error: ' . $curlError);
+        }
+
         $data = json_decode($result, true);
 
         if ($httpCode === 200 && ($data['ok'] ?? false)) {
+            error_log('[TELEGRAM] Success! Message ID: ' . ($data['result']['message_id'] ?? 'N/A'));
             return [
                 'success' => true,
                 'message_id' => $data['result']['message_id'] ?? null,
@@ -76,6 +87,7 @@ class TelegramHelper
             ];
         }
 
+        error_log('[TELEGRAM] Failed: ' . ($data['description'] ?? $curlError ?? 'Unknown'));
         return [
             'success' => false,
             'error' => $data['description'] ?? $curlError ?? 'Unknown error',
