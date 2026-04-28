@@ -9,7 +9,7 @@ try {
         require_once __DIR__ . '/../config/database.php';
     }
     $db = getDB();
-    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url FROM banners WHERE status = 'active' ORDER BY sort_order ASC, created_at DESC");
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url FROM banners WHERE status = 'active' AND position = 'hero' ORDER BY sort_order ASC, created_at DESC");
     $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if (empty($banners)) {
