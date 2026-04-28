@@ -169,6 +169,21 @@ include 'includes/admin-header.php';
                 <input type="url" name="link_url" id="banner_link_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="https://...">
             </div>
             
+            <div>
+                <label class="block text-sm font-medium mb-1">Text nút bấm (popup)</label>
+                <input type="text" name="link_text" id="banner_link_text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Xem chi tiết, Đăng ký ngay...">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Vị trí hiển thị</label>
+                <select name="position" id="banner_position" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    <option value="popup">Popup sự kiện (hiện khi tải trang)</option>
+                    <option value="hero">Hero slider (trang chủ)</option>
+                    <option value="sidebar">Sidebar</option>
+                    <option value="footer">Footer</option>
+                </select>
+            </div>
+            
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Thứ tự hiển thị</label>
@@ -334,6 +349,8 @@ function editBanner(bannerId) {
                 document.getElementById('banner_subtitle').value = banner.subtitle || '';
                 document.getElementById('banner_image_url').value = banner.image_desktop || banner.image_url;
                 document.getElementById('banner_link_url').value = banner.link_url || '';
+                document.getElementById('banner_link_text').value = banner.link_text || '';
+                document.getElementById('banner_position').value = banner.position || 'popup';
                 document.getElementById('banner_sort_order').value = banner.sort_order;
                 document.getElementById('banner_is_active').checked = banner.is_active == 1;
                 

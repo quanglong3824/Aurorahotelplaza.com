@@ -28,9 +28,10 @@ try {
     $subtitle = trim($_POST['subtitle'] ?? '');
     $image_url = trim($_POST['image_url'] ?? '');
     $link_url = trim($_POST['link_url'] ?? '');
+    $link_text = trim($_POST['link_text'] ?? '');
     $sort_order = isset($_POST['sort_order']) ? (int) $_POST['sort_order'] : null;
     $is_active = isset($_POST['is_active']) ? (int) $_POST['is_active'] : null;
-    $position = trim($_POST['position'] ?? 'hero');
+    $position = trim($_POST['position'] ?? 'popup');
     
     $status = $is_active === 1 ? 'active' : 'inactive';
     
@@ -57,6 +58,7 @@ try {
                 image_desktop = :image_desktop,
                 image_mobile = :image_mobile,
                 link_url = :link_url,
+                link_text = :link_text,
                 sort_order = :sort_order,
                 status = :status,
                 position = :position,
@@ -69,6 +71,7 @@ try {
             ':image_desktop' => $image_url,
             ':image_mobile' => $image_url,
             ':link_url' => $link_url,
+            ':link_text' => $link_text,
             ':sort_order' => $sort_order ?? 0,
             ':status' => $status,
             ':position' => $position,
@@ -78,8 +81,8 @@ try {
         echo json_encode(['success' => true, 'message' => 'Cập nhật banner thành công', 'banner_id' => $banner_id]);
     } else {
         $stmt = $db->prepare("
-            INSERT INTO banners (title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status, created_at, updated_at)
-            VALUES (:title, :subtitle, :image_desktop, :image_mobile, :link_url, :position, :sort_order, :status, NOW(), NOW())
+            INSERT INTO banners (title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status, created_at, updated_at)
+            VALUES (:title, :subtitle, :image_desktop, :image_mobile, :link_url, :link_text, :position, :sort_order, :status, NOW(), NOW())
         ");
         $stmt->execute([
             ':title' => $title,
@@ -87,8 +90,9 @@ try {
             ':image_desktop' => $image_url,
             ':image_mobile' => $image_url,
             ':link_url' => $link_url,
+            ':link_text' => $link_text,
             ':position' => $position,
-            ':sort_order' => $sort_order,
+            ':sort_order' => $sort_order ?? 0,
             ':status' => $status
         ]);
         

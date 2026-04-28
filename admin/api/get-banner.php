@@ -23,7 +23,7 @@ if ($banner_id <= 0) {
 try {
     $db = getDB();
     
-    $stmt = $db->prepare("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status FROM banners WHERE banner_id = :id");
+    $stmt = $db->prepare("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status FROM banners WHERE banner_id = :id");
     $stmt->execute([':id' => $banner_id]);
     $banner = $stmt->fetch(PDO::FETCH_ASSOC);
     
