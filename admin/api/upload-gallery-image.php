@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 
 }
 
 require_once '../../config/database.php';
+require_once '../../config/environment.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);

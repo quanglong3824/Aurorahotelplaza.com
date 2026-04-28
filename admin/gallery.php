@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../helpers/image-helper.php';
 
 $page_title = 'Quản lý thư viện ảnh';
 $page_subtitle = 'Quản lý hình ảnh khách sạn';
@@ -195,13 +196,14 @@ include 'includes/admin-header.php';
             <div class="card p-0 overflow-hidden group">
                 <!-- Image -->
                 <div class="relative aspect-square overflow-hidden bg-gray-200 dark:bg-gray-700">
-                    <img src="<?php echo htmlspecialchars($image['image_url']); ?>" 
+                    <img src="<?php echo imgUrl($image['image_url']); ?>" 
                          alt="<?php echo htmlspecialchars($image['title']); ?>"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                         onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>'">
                     
                     <!-- Overlay -->
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <button onclick="viewImage('<?php echo htmlspecialchars($image['image_url']); ?>')" 
+                        <button onclick="viewImage('<?php echo imgUrl($image['image_url']); ?>')" 
                                 class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-100">
                             <span class="material-symbols-outlined text-gray-800">visibility</span>
                         </button>

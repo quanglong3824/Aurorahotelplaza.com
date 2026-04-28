@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../helpers/image-helper.php';
 
 $page_title = 'Quản lý Banner';
 $page_subtitle = 'Banner trang chủ và quảng cáo';
@@ -57,10 +58,10 @@ include 'includes/admin-header.php';
                 <?php foreach ($banners as $banner): ?>
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" data-banner-id="<?php echo $banner['banner_id']; ?>">
                         <div class="relative group">
-                            <img src="<?php echo htmlspecialchars($banner['image_url']); ?>" 
+                            <img src="<?php echo imgUrl($banner['image_url']); ?>" 
                                  alt="<?php echo htmlspecialchars($banner['title']); ?>" 
                                  class="w-full h-48 object-cover"
-                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjkwIiB2aWV3Qm94PSIwIDAgMTIwIDkwIiBmaWxsPSIjZTNlNmVmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iOTAiIGZpbGw9IiNlM2U2ZWYiLz48dGV4dCB4PSI2MCIgeT0iNDUiIGZpbGw9IiM5Y2EzYWYiIGZvbnQtZmFtaWx5PSJJbnRlciIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                                 onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>'">
                             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                 <button onclick="editBanner(<?php echo $banner['banner_id']; ?>)" 
                                         class="bg-white text-gray-700 px-3 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-1">
@@ -425,10 +426,20 @@ function refreshBannerGrid() {
 
 function renderBannerGrid(banners) {
     const grid = document.getElementById('bannerGrid');
+    const baseUrl = window.siteBase || '';
+    const fallbackImg = baseUrl + '/assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
+    
+    function normalizeUrl(url) {
+        if (!url) return fallbackImg;
+        if (url.startsWith('http')) return url;
+        if (url.startsWith('/')) return baseUrl + url;
+        return baseUrl + '/' + url;
+    }
+    
     grid.innerHTML = banners.map(banner => `
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" data-banner-id="${banner.banner_id}">
             <div class="relative group">
-                <img src="${banner.image_url}" alt="${banner.title}" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjkwIiB2aWV3Qm94PSIwIDAgMTIwIDkwIiBmaWxsPSIjZTNlNmVmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iOTAiIGZpbGw9IiNlM2U2ZWYiLz48dGV4dCB4PSI2MCIgeT0iNDUiIGZpbGw9IiM5Y2EzYWYiIGZvbnQtZmFtaWx5PSJJbnRlciIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                <img src="${normalizeUrl(banner.image_url)}" alt="${banner.title}" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='${fallbackImg}'">
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button onclick="editBanner(${banner.banner_id})" class="bg-white text-gray-700 px-3 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-1">
                         <span class="material-symbols-outlined text-sm">edit</span>
