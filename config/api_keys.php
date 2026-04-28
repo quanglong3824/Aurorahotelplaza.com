@@ -60,11 +60,11 @@ if (!defined('AI_PROVIDER')) {
 
 /**
  * 5. ALIBABA API CONFIG
- * DashScope API (OpenAI-compatible mode)
- * URL: https://dashscope.aliyuncs.com/compatible-mode/v1
+ * DashScope API (China)
+ * URL: https://dashscope.aliyuncs.com/api/v1
  */
 if (!defined('ALIBABA_API_URL')) {
-    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://dashscope.aliyuncs.com/compatible-mode/v1'));
+    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://dashscope.aliyuncs.com/api/v1'));
 }
 
 if (!defined('ALIBABA_MODEL')) {

@@ -174,26 +174,30 @@ function call_ai_admin($system_prompt, $messages)
 }
 
 /**
- * Gọi Alibaba GLM/Qwen cho Admin (DashScope API)
+ * Gọi Alibaba DashScope cho Admin (China)
  */
 function call_alibaba_admin($api_key, $prompt)
 {
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/api/v1';
     $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
 
     $request_body = [
         'model' => $model,
-        'messages' => [
-            ['role' => 'user', 'content' => $prompt]
+        'input' => [
+            'messages' => [
+                ['role' => 'user', 'content' => $prompt]
+            ]
         ],
-        'stream' => false,
-        'temperature' => 0.7,
-        'max_tokens' => 2048
+        'parameters' => [
+            'temperature' => 0.7,
+            'max_tokens' => 2048,
+            'result_format' => 'message'
+        ]
     ];
 
     $ch = curl_init();
     curl_setopt_array($ch, [
-        CURLOPT_URL => $api_url . '/chat/completions',
+        CURLOPT_URL => $api_url . '/services/aigc/text-generation/generation',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($request_body),
@@ -223,11 +227,17 @@ function call_alibaba_admin($api_key, $prompt)
     }
 
     $decoded = json_decode($response, true);
-    if (!isset($decoded['choices'][0]['message']['content'])) {
-        throw new Exception("Alibaba API trả về phản hồi không hợp lệ");
+    
+    if (isset($decoded['output']['choices'][0]['message']['content'])) {
+        $content = $decoded['output']['choices'][0]['message']['content'];
+        return is_array($content) ? $content[0] : $content;
+    }
+    
+    if (isset($decoded['output']['text'])) {
+        return $decoded['output']['text'];
     }
 
-    return $decoded['choices'][0]['message']['content'];
+    throw new Exception("Alibaba API trả về phản hồi không hợp lệ");
 }
 
 /**
