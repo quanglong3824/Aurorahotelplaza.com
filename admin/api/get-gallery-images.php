@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 
 }
 
 require_once '../../config/database.php';
+require_once '../../config/environment.php';
 require_once '../../helpers/image-helper.php';
 
 try {

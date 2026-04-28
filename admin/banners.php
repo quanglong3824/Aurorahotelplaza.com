@@ -598,24 +598,39 @@ function loadGalleryImages() {
 function renderGalleryGrid(images) {
     const grid = document.getElementById('galleryGrid');
     
-    if (images.length === 0) {
+    if (!images || images.length === 0) {
         grid.innerHTML = '<div class="text-center py-8 text-gray-500 col-span-full">Không có ảnh</div>';
         return;
     }
     
-    grid.innerHTML = images.map(img => `
+    const baseUrl = window.siteBase || '';
+    
+    grid.innerHTML = images.map(img => {
+        let displayUrl = img.thumbnail_url || img.image_url;
+        if (!displayUrl.startsWith('http')) {
+            displayUrl = baseUrl + '/' + displayUrl.replace(/^\/+/, '');
+        }
+        return `
         <div onclick="selectGalleryImage('${img.image_url}')" class="cursor-pointer group relative" title="${img.title || ''}">
-            <img src="${img.thumbnail_url || img.image_url}" alt="${img.title || ''}" class="w-full h-24 object-cover rounded-lg border border-gray-200 group-hover:border-indigo-500 transition-colors">
+            <img src="${displayUrl}" 
+                 alt="${img.title || ''}" 
+                 class="w-full h-24 object-cover rounded-lg border border-gray-200 group-hover:border-indigo-500 transition-colors"
+                 onerror="this.onerror=null; this.src='${img.image_url}'">
             <div class="absolute inset-0 bg-indigo-600/0 group-hover:bg-indigo-600/20 transition-colors rounded-lg flex items-center justify-center">
                 <span class="material-symbols-outlined text-white opacity-0 group-hover:opacity-100 transition-opacity">check_circle</span>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function selectGalleryImage(url) {
+    const baseUrl = window.siteBase || '';
+    let fullUrl = url;
+    if (!url.startsWith('http')) {
+        fullUrl = baseUrl + '/' + url.replace(/^\/+/, '');
+    }
     document.getElementById('banner_image_url').value = url;
-    document.getElementById('previewImg').src = url;
+    document.getElementById('previewImg').src = fullUrl;
     document.getElementById('imagePreview').classList.remove('hidden');
     closeGalleryPicker();
 }

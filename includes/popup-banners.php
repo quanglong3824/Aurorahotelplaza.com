@@ -8,6 +8,9 @@ try {
     if (!defined('DB_NAME')) {
         require_once __DIR__ . '/../config/database.php';
     }
+    if (!defined('BASE_URL')) {
+        require_once __DIR__ . '/../config/environment.php';
+    }
     $db = getDB();
     $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, link_url, link_text FROM banners WHERE status = 'active' AND position = 'popup' ORDER BY sort_order ASC, created_at DESC");
     $popupBanners = $stmt->fetchAll(PDO::FETCH_ASSOC);
