@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/database.php';
 
 session_start();
 
-$isAdmin = isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$isAdmin = isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 if (!$isAdmin) {
     die('<h2>Access Denied</h2><p>Bạn cần đăng nhập admin để chạy script này.</p><a href="/auth/login.php">Đăng nhập</a>');
 }
