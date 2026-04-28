@@ -1,19 +1,65 @@
 <!-- Hero Slider Section -->
+<?php
+// Fetch active banners from database
+$banners = [];
+$useFallback = false;
+
+try {
+    if (!defined('DB_NAME')) {
+        require_once __DIR__ . '/../config/database.php';
+    }
+    $db = getDB();
+    $stmt = $db->query("SELECT * FROM banners WHERE is_active = 1 ORDER BY sort_order ASC, created_at DESC");
+    $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (empty($banners)) {
+        $useFallback = true;
+    }
+} catch (Throwable $e) {
+    $useFallback = true;
+    error_log('Hero slider banners error: ' . $e->getMessage());
+}
+
+// Fallback images if no banners in database
+$fallbackImages = [
+    imgUrl('assets/img/classical-family-apartment/classical-family-apartment6.jpg'),
+    imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg'),
+    imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg'),
+    imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg'),
+    imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg'),
+    imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg'),
+    imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg'),
+    imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-6.jpg'),
+    imgUrl('assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg'),
+    imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'),
+];
+?>
 <section class="hero-slider relative flex min-h-screen w-full items-center justify-center">
-    <!-- Slider Images - Optimized for Lazy Loading -->
-    <!-- First image loads immediately -->
-    <div class="hero-slide active"
-        style="background-image: url('<?php echo imgUrl('assets/img/classical-family-apartment/classical-family-apartment6.jpg'); ?>');"></div>
-    <!-- Subsequent images load via JS -->
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/indochine-studio-apartment/indochine-studio-apartment-3.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/modern-premium-apartment/modern-premium-apartment-4.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/modern-studio-apartment/modern-studio-apartment-5.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-4.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/restaurant/nha-hang-aurora-hotel-6.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/post/wedding/tiec-cuoi-tai-aurora-5.jpg'); ?>"></div>
-    <div class="hero-slide" data-bg="<?php echo imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'); ?>"></div>
+    <!-- Slider Images -->
+    <?php if ($useFallback): ?>
+        <!-- Fallback: Hardcoded images -->
+        <div class="hero-slide active"
+            style="background-image: url('<?php echo $fallbackImages[0]; ?>');"></div>
+        <?php for ($i = 1; $i < count($fallbackImages); $i++): ?>
+            <div class="hero-slide" data-bg="<?php echo $fallbackImages[$i]; ?>"></div>
+        <?php endfor; ?>
+    <?php else: ?>
+        <!-- Dynamic banners from database -->
+        <?php $first = true; foreach ($banners as $banner): ?>
+            <div class="hero-slide <?php echo $first ? 'active' : ''; ?>" 
+                 <?php echo $first ? 'style="background-image: url(\'' . htmlspecialchars($banner['image_url']) . '\');"' : 'data-bg="' . htmlspecialchars($banner['image_url']) . '"'; ?>
+                 data-title="<?php echo htmlspecialchars($banner['title']); ?>"
+                 data-subtitle="<?php echo htmlspecialchars($banner['subtitle'] ?? ''); ?>"
+                 data-link="<?php echo htmlspecialchars($banner['link_url'] ?? ''); ?>">
+            </div>
+            <?php $first = false; endforeach; ?>
+        
+        <?php if (count($banners) < 3): ?>
+            <?php for ($i = count($banners); $i < 3 && $i < count($fallbackImages); $i++): ?>
+                <div class="hero-slide" data-bg="<?php echo $fallbackImages[$i]; ?>"></div>
+            <?php endfor; ?>
+        <?php endif; ?>
+    <?php endif; ?>
 
     <!-- Previous Arrow -->
     <div class="slider-arrow prev">
@@ -141,8 +187,6 @@
         // Lazy load slider images
         const lazySlides = document.querySelectorAll('.hero-slide[data-bg]');
         if ('IntersectionObserver' in window) {
-            // Option 1: Load when slider is in view (which is immediately for hero)
-            // But we want to prioritize first paint, so we can use a timeout or idle callback
             const loadImages = () => {
                 lazySlides.forEach(slide => {
                     slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
