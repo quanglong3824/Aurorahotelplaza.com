@@ -28,7 +28,7 @@ if (!empty($env_keys_str)) {
  */
 $OPENCODE_API_KEY = env('OPENCODE_API_KEY', '');
 $OPENCODE_API_URL = env('OPENCODE_API_URL', 'https://opencode.ai/zen/go/v1');
-$OPENCODE_MODEL = env('OPENCODE_MODEL', 'gpt-4o-mini');
+$OPENCODE_MODEL = env('OPENCODE_MODEL', 'deepseek-v4-flash');
 
 /**
  * ĐỊNH NGHĨA HẰNG SỐ
