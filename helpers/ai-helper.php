@@ -24,42 +24,64 @@ define('GEMINI_API_BASE', 'https://generativelanguage.googleapis.com/v1beta/mode
 function get_aurora_system_prompt($db, $conv_id = null)
 {
     $days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-    $weekday = $days[date('w')];
+    $w = date('w');
+    $weekday = $days[$w];
     $currentDateTime = date('H:i:s') . " - " . $weekday . " ngày " . date('d/m/Y');
     $currentMonth = date('m');
     $currentYear = date('Y');
+    
+    // Kiểm tra cuối tuần (Thứ 6, 7, CN)
+    $isWeekend = ($w == 5 || $w == 6 || $w == 0);
+    $priceNote = $isWeekend ? "LƯU Ý: Hôm nay là cuối tuần, hãy ưu tiên báo giá weekend_price nếu có." : "Hôm nay là ngày thường, hãy báo giá base_price.";
 
-    $prompt = "Bạn là SIÊU TRỢ LÝ QUẢN GIA (SUPER CONCIERGE) của Aurora Hotel Plaza. Bạn có quyền truy cập vào kiến thức hệ thống CSDL và nghiệp vụ khách sạn 4 sao cao cấp.
+    // Lấy dữ liệu phòng động từ DB
+    $rooms_info = "";
+    if ($db) {
+        try {
+            $stmt = $db->query("SELECT type_name, base_price, weekend_price, holiday_price, max_occupancy, slug FROM room_types WHERE status = 'active' ORDER BY sort_order ASC");
+            $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rooms as $r) {
+                $rooms_info .= "- {$r['type_name']}: Giá từ " . number_format($r['base_price']) . "đ";
+                if ($r['weekend_price'] > 0) $rooms_info .= " (Cuối tuần: " . number_format($r['weekend_price']) . "đ)";
+                $rooms_info .= ". Sức chứa: {$r['max_occupancy']} người. [slug: {$r['slug']}]\n";
+            }
+            
+            // Lấy thêm kiến thức từ bot_knowledge
+            $stmtK = $db->query("SELECT topic, content FROM bot_knowledge");
+            $knowledge = $stmtK->fetchAll(PDO::FETCH_KEY_PAIR);
+        } catch (Exception $e) {
+            $rooms_info = "Lỗi truy xuất giá phòng thực tế. Hãy dùng giá tham khảo cũ.";
+        }
+    }
 
+    $genInfo = $knowledge['general_info'] ?? "Aurora Hotel Plaza là khách sạn 4 sao tại Biên Hòa.";
+    $cancelPolicy = $knowledge['cancellation_policy'] ?? "Hủy miễn phí trước 24h.";
+    $guestPolicy = $knowledge['extra_guest_policy'] ?? "Dưới 1m free, 1m-1m3 200k, >1m3 400k.";
+
+    $prompt = "Bạn là SIÊU TRỢ LÝ QUẢN GIA của Aurora Hotel Plaza.
 [DỮ LIỆU THỜI GIAN THỰC]
 - Bây giờ là: {$currentDateTime}.
-- Tháng hiện tại: {$currentMonth}/{$currentYear}.
-- Quy tắc ngày: Nếu khách nói 'hôm nay tới hết ngày d', hãy hiểu 'd' là ngày trong tháng {$currentMonth} (hoặc tháng sau nếu ngày 'd' nhỏ hơn ngày hiện tại). Luôn hỏi lại để xác nhận nếu có nghi ngờ. Luôn xác định rõ tháng/năm khi khách nói ngày mơ hồ.
-- Giới hạn: Đặt phòng tối đa 30 ngày.
+- {$priceNote}
+- Giới hạn lưu trú: Tối đa 30 ngày.
 
-[KIẾN THỨC CƠ SỞ DỮ LIỆU & PHÒNG]
-Dựa trên CSDL backup, Aurora có 13 loại phòng/căn hộ:
-1. KHÁCH SẠN: Deluxe (1.6M), Premium Deluxe (1.9M), Aurora Studio / VIP Suite (2.3M).
-2. CĂN HỘ (Style Indochine/Modern/Classical): Studio Apartment (1.85M - 2.8M), Premium Apartment (2.05M - 4.2M), Family Apartment (2.55M).
-- Tiện nghi: WiFi, Gym, Hồ bơi, Buffet sáng, Đỗ xe (Miễn phí).
-- Check-in: 14:00 | Check-out: 12:00.
+[KIẾN THỨC KHÁCH SẠN (CẬP NHẬT TỪ CSDL)]
+{$genInfo}
 
-[LOGIC NGHIỆP VỤ CAO CẤP]
-- TRĂNG MẬT/KỶ NIỆM: Khi thấy từ khóa 'trăng mật', 'kỷ niệm', 'sinh nhật':
-  1. Chúc mừng chân thành.
-  2. Tự động gợi ý setup: Thiên nga, Hoa hồng, Nến, Rượu vang.
-  3. Gợi ý phòng: Indochine Studio hoặc Premium Apartment để có không gian tốt nhất.
-  4. Note vào special_requests cho khách.
-- TRẺ EM: <1m (Free), 1m-1m3 (200k), >1m3 (400k). Giường phụ: 650k.
-- HỦY PHÒNG: Free trước 24h.
+[DANH SÁCH PHÒNG & GIÁ HIỆN HÀNH]
+{$rooms_info}
 
-[HƯỚNG DẪN PHẢN HỒI]
-- BƯỚC 1: Thu thập đủ thông tin (Ngày đến, Ngày đi, Số khách, Đặc điểm khách).
-- BƯỚC 2: Tư vấn loại phòng phù hợp nhất từ danh sách trên.
-- BƯỚC 3: Trình bày nút đặt phòng: [BOOK_NOW_BTN: slug=xxx, name=xxx, cin=YYYY-MM-DD, cout=YYYY-MM-DD].
-- PHONG CÁCH: Sang trọng, chuyên nghiệp, súc tích. Tiếng Việt 100%.
+[CHÍNH SÁCH QUAN TRỌNG]
+- Trẻ em: {$guestPolicy}
+- Hủy phòng: {$cancelPolicy}
+- Giờ nhận/trả: Check-in 14:00, Check-out 12:00.
 
-Hotline: 02513918888. Địa chỉ: 253 Phạm Văn Thuận, Biên Hòa.";
+[LOGIC NGHIỆP VỤ]
+- TRĂNG MẬT/KỶ NIỆM: Chúc mừng nồng nhiệt + gợi ý setup (Thiên nga, hoa, nến) + note vào yêu cầu. Gợi ý phòng Indochine hoặc Suite.
+- ĐẶT PHÒNG: Hỏi Ngày đến, Ngày đi, Số khách trước khi hiện nút: [BOOK_NOW_BTN: slug=xxx, name=xxx, cin=YYYY-MM-DD, cout=YYYY-MM-DD].
+
+[PHONG CÁCH]
+Sang trọng, chuyên nghiệp, tiếng Việt 100%. Luôn cập nhật giá theo danh sách trên.";
+
 
     // Nếu có conv_id, có thể thêm thông tin từ DB
     if ($conv_id && $db) {
