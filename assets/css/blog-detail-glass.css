@@ -1,0 +1,554 @@
+/* Blog Detail Glass Styles - Complete Layout Fix */
+
+/* Background setup for blog detail page */
+body.blog-detail-page {
+    background: none !important;
+    background-color: #111827 !important;
+}
+
+body.blog-detail-page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+        linear-gradient(to bottom, 
+            rgba(17, 24, 39, 0.4) 0%, 
+            rgba(17, 24, 39, 0.6) 30%, 
+            rgba(17, 24, 39, 0.85) 70%, 
+            rgba(17, 24, 39, 1) 100%
+        ),
+        url('../img/hero-banner/aurora-hotel-bien-hoa-1.jpg') !important;
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: fixed !important;
+    z-index: -2;
+    transform: translateZ(0);
+}
+
+body.blog-detail-page::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.88), rgba(17, 24, 39, 0.75));
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+}
+
+/* Main container z-index */
+.blog-detail-page .relative.flex.min-h-screen {
+    z-index: 1;
+    position: relative;
+}
+
+/* Blog article card - main content container */
+.blog-article-card {
+    background: rgba(30, 41, 59, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    transform: translateZ(0);
+}
+
+/* Glass card solid for blog detail context */
+body.blog-detail-page .glass-card-solid,
+.blog-detail-content .glass-card-solid {
+    background: rgba(30, 41, 59, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Breadcrumb styles */
+.blog-breadcrumb {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.blog-breadcrumb a {
+    color: #d4af37;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.blog-breadcrumb a:hover {
+    color: #e5bd43;
+    text-decoration: underline;
+}
+
+/* Category badge */
+.blog-category-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: white;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Blog title */
+.blog-detail-title {
+    font-family: 'Montserrat', 'Be Vietnam Pro', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+    .blog-detail-title {
+        font-size: 3rem;
+    }
+}
+
+/* Blog meta info */
+.blog-meta-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.blog-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.blog-meta-item .material-symbols-outlined {
+    font-size: 1.25rem;
+    color: #d4af37;
+}
+
+/* Author avatar */
+.blog-author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.blog-author-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Featured image container */
+.blog-featured-image {
+    width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.blog-featured-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Blog content prose */
+.blog-detail-prose {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.blog-detail-prose h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white !important;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.blog-detail-prose h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white !important;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.blog-detail-prose h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white !important;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.blog-detail-prose p {
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+}
+
+.blog-detail-prose ul,
+.blog-detail-prose ol {
+    color: rgba(255, 255, 255, 0.85);
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.blog-detail-prose li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.blog-detail-prose a {
+    color: #d4af37 !important;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.blog-detail-prose a:hover {
+    color: #e5bd43 !important;
+}
+
+.blog-detail-prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    margin: 2rem auto;
+    display: block;
+}
+
+.blog-detail-prose blockquote {
+    border-left: 4px solid #d4af37;
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.blog-detail-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+}
+
+.blog-detail-prose th,
+.blog-detail-prose td {
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+}
+
+.blog-detail-prose th {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+}
+
+/* Tags container */
+.blog-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.blog-tag {
+    padding: 0.375rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s;
+}
+
+.blog-tag:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+}
+
+/* Interaction section (rating, like, share) */
+.blog-interaction-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+}
+
+/* Star rating */
+.blog-star-rating {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.blog-star-btn {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.3);
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.blog-star-btn:hover,
+.blog-star-btn.active {
+    color: #facc15;
+}
+
+/* Like button */
+.blog-like-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid rgba(239, 68, 68, 0.5);
+    border-radius: 9999px;
+    color: rgba(239, 68, 68, 0.8);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.blog-like-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.blog-like-btn.liked {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Share buttons */
+.blog-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.blog-share-btn.facebook { background: #1877f2; }
+.blog-share-btn.twitter { background: #000; }
+.blog-share-btn.linkedin { background: #0a66c2; }
+.blog-share-btn.copy { background: #6b7280; }
+
+.blog-share-btn:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* Comments section */
+.blog-comments-section {
+    margin-bottom: 3rem;
+}
+
+.blog-comments-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+/* Comment form */
+.blog-comment-form {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.blog-comment-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: white;
+    resize: none;
+    transition: border-color 0.2s;
+}
+
+.blog-comment-input:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+/* Comment item */
+.blog-comment-item {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.blog-comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.blog-comment-author {
+    font-weight: 600;
+    color: white;
+}
+
+.blog-comment-date {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.blog-comment-content {
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 0.5rem;
+}
+
+/* Related posts section */
+.blog-related-section {
+    padding: 3rem 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.blog-related-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Related post card */
+.blog-related-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.blog-related-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.blog-related-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s;
+}
+
+.blog-related-card:hover .blog-related-image {
+    transform: scale(1.05);
+}
+
+.blog-related-content {
+    padding: 1.25rem;
+}
+
+.blog-related-title-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.blog-related-excerpt {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Login prompt */
+.blog-login-prompt {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    text-align: center;
+}
+
+/* Button primary */
+.blog-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: white;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.blog-btn-primary:hover {
+    background: linear-gradient(135deg, #e5bd43, #c5a028);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-detail-title {
+        font-size: 1.75rem;
+    }
+    
+    .blog-meta-info {
+        gap: 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .blog-detail-prose h2 {
+        font-size: 1.5rem;
+    }
+    
+    .blog-detail-prose h3 {
+        font-size: 1.25rem;
+    }
+    
+    .blog-featured-image {
+        border-radius: 0.75rem;
+    }
+    
+    .blog-article-card {
+        border-radius: 1rem;
+        padding: 1.25rem;
+    }
+}

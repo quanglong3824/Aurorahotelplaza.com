@@ -109,121 +109,88 @@ try {
 <head>
     <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport" />
     <title><?php echo htmlspecialchars(_f($post, 'title')); ?> - Aurora Hotel Plaza</title>
     <meta name="description" content="<?php echo htmlspecialchars(_f($post, 'excerpt') ?? ''); ?>">
     <link href="assets/css/tailwind-output.css" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css">
+    <link rel="stylesheet" href="assets/css/pages-glass.css">
     <link rel="stylesheet" href="assets/css/blog.css">
     <link rel="stylesheet" href="assets/css/blog-detail.css">
+    <link rel="stylesheet" href="assets/css/blog-detail-glass.css">
 </head>
 
-<body class="glass-page blog-detail-wrapper font-body text-white">
+<body class="blog-detail-page glass-page font-body text-white">
     <div class="relative flex min-h-screen w-full flex-col">
         <?php include 'includes/header.php'; ?>
 
         <main class="flex h-full grow flex-col">
             <!-- Article Header -->
-            <article class="py-0 relative z-10">
+            <article class="py-0 relative z-10 pt-20">
                 <div class="mx-auto max-w-4xl px-4">
 
                     <!-- Breadcrumb -->
-                    <nav class="mb-8 flex items-center gap-2 text-sm">
-                        <a href="index.php" class="text-accent hover:underline"><?php _e('blog_page.home'); ?></a>
-                        <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
-                        <a href="blog.php" class="text-accent hover:underline"><?php _e('blog_page.posts'); ?></a>
-                        <span class="material-symbols-outlined text-sm text-white/50">chevron_right</span>
-                        <span class="text-white/70">
-                            <?php echo htmlspecialchars(_f($post, 'title')); ?>
-                        </span>
+                    <nav class="blog-breadcrumb mb-6 flex items-center gap-2">
+                        <a href="index.php"><?php _e('blog_page.home'); ?></a>
+                        <span class="material-symbols-outlined text-sm text-white/40">chevron_right</span>
+                        <a href="blog.php"><?php _e('blog_page.posts'); ?></a>
+                        <span class="material-symbols-outlined text-sm text-white/40">chevron_right</span>
+                        <span class="text-white/60"><?php echo htmlspecialchars(_f($post, 'title')); ?></span>
                     </nav>
 
-                    <!-- Category -->
-                    <?php if ($post['category_name']): ?>
-                        <span class="blog-category inline-block mb-4">
-                            <?php echo htmlspecialchars(_f($post, 'category_name')); ?>
-                        </span>
-                    <?php endif; ?>
+                    <!-- Main Article Card -->
+                    <div class="blog-article-card p-6 md:p-8">
 
-                    <!-- Title -->
-                    <h1 class="font-display text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
-                        <?php echo htmlspecialchars(_f($post, 'title')); ?>
-                    </h1>
+                        <!-- Category Badge -->
+                        <?php if ($post['category_name']): ?>
+                            <span class="blog-category-badge"><?php echo htmlspecialchars(_f($post, 'category_name')); ?></span>
+                        <?php endif; ?>
 
-                    <!-- Meta -->
-                    <div class="flex flex-wrap items-center gap-6 mb-8 text-sm text-white/70">
-                        <div class="flex items-center gap-2">
-                            <?php if (!empty($post['avatar'])): ?>
-                                <img src="<?php echo imgUrl($post['avatar']); ?>"
-                                    alt="<?php echo htmlspecialchars($post['author_name']); ?>"
-                                    class="w-10 h-10 rounded-full object-cover border border-white/20">
-                            <?php else: ?>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center border border-white/20">
-                                    <span class="material-symbols-outlined text-accent">person</span>
-                                </div>
-                            <?php endif; ?>
-                            <span
-                                class="font-semibold text-white"><?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">calendar_today</span>
-                            <span><?php echo date('m/d/Y', strtotime($post['published_at'])); ?></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">visibility</span>
-                            <span><?php echo number_format($post['views']); ?>
-                                <?php _e('blog_page.views'); ?></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">comment</span>
-                            <span><?php echo count($blog_comments); ?> <?php _e('blog_page.comments'); ?></span>
-                        </div>
-                    </div>
+                        <!-- Title -->
+                        <h1 class="blog-detail-title mt-4">
+                            <?php echo htmlspecialchars(_f($post, 'title')); ?>
+                        </h1>
 
-                    <!-- Content Container with Glass Effect -->
-                    <div class="glass-card-solid p-6 md:p-10 mb-12">
+                        <!-- Meta -->
+                        <div class="blog-meta-info">
+                            <div class="blog-meta-item">
+                                <?php if (!empty($post['avatar'])): ?>
+                                    <img src="<?php echo imgUrl($post['avatar']); ?>" alt="<?php echo htmlspecialchars($post['author_name']); ?>" class="blog-author-avatar">
+                                <?php else: ?>
+                                    <div class="blog-author-avatar-placeholder">
+                                        <span class="material-symbols-outlined text-accent text-lg">person</span>
+                                    </div>
+                                <?php endif; ?>
+                                <span class="font-semibold text-white"><?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?></span>
+                            </div>
+                            <div class="blog-meta-item">
+                                <span class="material-symbols-outlined">calendar_today</span>
+                                <span><?php echo date('d/m/Y', strtotime($post['published_at'])); ?></span>
+                            </div>
+                            <div class="blog-meta-item">
+                                <span class="material-symbols-outlined">visibility</span>
+                                <span><?php echo number_format($post['views']); ?> <?php _e('blog_page.views'); ?></span>
+                            </div>
+                            <div class="blog-meta-item">
+                                <span class="material-symbols-outlined">comment</span>
+                                <span><?php echo count($blog_comments); ?> <?php _e('blog_page.comments'); ?></span>
+                            </div>
+                        </div>
 
-                        <!-- Dynamic Layout Based on Post Layout Type -->
+<!-- Dynamic Layout Based on Post Layout Type -->
                         <?php
                         $layout = $post['layout'] ?? 'standard';
                         $gallery_images = !empty($post['gallery_images']) ? json_decode($post['gallery_images'], true) : [];
                         $video_url = $post['video_url'] ?? '';
                         ?>
 
-                        <?php if ($layout === 'hero' && $post['featured_image']): ?>
-                            <!-- HERO LAYOUT - Full width hero image with overlay -->
-                            <div class="relative -mx-6 md:-mx-10 mt-[-2.5rem] mb-10 rounded-t-xl overflow-hidden">
-                                <div class="aspect-[21/9] overflow-hidden">
-                                    <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
-                                        alt="<?php echo htmlspecialchars($post['title']); ?>"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-                                </div>
+                        <!-- Featured Image Section -->
+                        <?php if ($post['featured_image']): ?>
+                            <div class="blog-featured-image">
+                                <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';" alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>">
                             </div>
-
-                        <?php elseif ($layout === 'fullwidth' && $post['featured_image']): ?>
-                            <!-- FULLWIDTH LAYOUT -->
-                            <div class="-mx-6 md:-mx-10 mb-12">
-                                <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
-                                    alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-auto">
-                                <div class="h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
-                            </div>
-
-                        <?php elseif ($layout === 'gallery' && !empty($gallery_images)): ?>
-                            <!-- GALLERY LAYOUT -->
-                            <div class="mb-12">
-                                <?php if ($post['featured_image']): ?>
-                                    <div class="mb-4 rounded-xl overflow-hidden">
-                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
-                                            alt="<?php echo htmlspecialchars($post['title']); ?>"
-                                            class="w-full h-auto cursor-pointer hover:scale-105 transition-transform duration-500"
-                                            onclick="openLightbox(0)">
-                                    </div>
-                                <?php endif; ?>
+                        <?php endif; ?>
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                     <?php foreach ($gallery_images as $index => $img): ?>
                                         <div class="aspect-square rounded-lg overflow-hidden group cursor-pointer"
@@ -455,7 +422,7 @@ try {
                         <?php endif; ?>
 
                         <!-- Content -->
-                        <div class="prose prose-lg dark:prose-invert max-w-none mb-12 text-white/90">
+                        <div class="blog-detail-prose max-w-none mb-8">
                             <?php
                             // Hiển thị content song ngữ (content có thể chứa HTML)
                             echo _f($post, 'content');
@@ -464,102 +431,77 @@ try {
 
                         <!-- Tags -->
                         <?php if ($post['tags']): ?>
-                            <div class="flex flex-wrap gap-2 mb-8">
+                            <div class="blog-tags-container">
                                 <?php foreach (explode(',', $post['tags']) as $tag): ?>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-sm text-white/70">
+                                    <span class="blog-tag">
                                         #<?php echo htmlspecialchars(trim($tag)); ?>
                                     </span>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
 
-                        <!-- Rating, Like, Share Section -->
-                        <div class="border-t border-b border-white/10 py-6 mb-12" id="interactionSection"
-                            data-post-id="<?php echo $post['post_id']; ?>">
+<!-- Rating, Like, Share Section -->
+                        <div class="blog-interaction-section" id="interactionSection" data-post-id="<?php echo $post['post_id']; ?>">
                             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
 
                                 <!-- Star Rating -->
                                 <div class="flex flex-col gap-2">
-                                    <span
-                                        class="text-sm font-medium text-white/60"><?php _e('blog_page.rate_post'); ?></span>
+                                    <span class="text-sm font-medium text-white/60"><?php _e('blog_page.rate_post'); ?></span>
                                     <div class="flex items-center gap-3">
-                                        <div class="star-rating flex gap-1" id="starRating">
+                                        <div class="blog-star-rating" id="starRating">
                                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <button type="button"
-                                                    class="star-btn text-2xl text-gray-500 hover:text-yellow-400 transition-colors"
-                                                    data-rating="<?php echo $i; ?>">
+                                                <button type="button" class="blog-star-btn" data-rating="<?php echo $i; ?>">
                                                     <span class="material-symbols-outlined">star</span>
                                                 </button>
                                             <?php endfor; ?>
                                         </div>
                                         <span class="text-sm text-white/60">
-                                            <span
-                                                id="ratingAvg"><?php echo number_format($post['rating_avg'] ?? 0, 1); ?></span>/5
-                                            (<span
-                                                id="ratingCount"><?php echo (int) ($post['rating_count'] ?? 0); ?></span>
-                                            <?php _e('blog_page.ratings'); ?>)
+                                            <span id="ratingAvg"><?php echo number_format($post['rating_avg'] ?? 0, 1); ?></span>/5
+                                            (<span id="ratingCount"><?php echo (int) ($post['rating_count'] ?? 0); ?></span> <?php _e('blog_page.ratings'); ?>)
                                         </span>
                                     </div>
                                 </div>
 
                                 <!-- Like Button -->
                                 <div class="flex items-center gap-4">
-                                    <button type="button" id="likeBtn"
-                                        class="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-red-400/50 text-red-400 hover:bg-red-900/20 transition-all">
+                                    <button type="button" id="likeBtn" class="blog-like-btn">
                                         <span class="material-symbols-outlined like-icon">favorite</span>
                                         <span id="likesCount"><?php echo (int) ($post['likes_count'] ?? 0); ?></span>
                                     </button>
 
                                     <!-- Share Buttons -->
                                     <div class="flex items-center gap-2">
-                                        <span
-                                            class="text-sm text-white/60 mr-2"><?php _e('blog_page.share_post'); ?></span>
-                                        <button type="button" class="share-btn-icon facebook" data-platform="facebook"
-                                            title="Facebook">
+                                        <span class="text-sm text-white/60 mr-2"><?php _e('blog_page.share_post'); ?></span>
+                                        <button type="button" class="blog-share-btn facebook" data-platform="facebook" title="Facebook">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                                             </svg>
                                         </button>
-                                        <button type="button" class="share-btn-icon twitter" data-platform="twitter"
-                                            title="Twitter/X">
+                                        <button type="button" class="blog-share-btn twitter" data-platform="twitter" title="Twitter/X">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                                <path d="M18.244 2.25h3.308l-7.727 8.79 7.292 11.71h-6.09l-4.64-6.17-5.277 6.17H2.25l8.09-9.39L2.25 4.5h6.19l4.24 5.56 5.764-5.56zm-1.08 16.5h1.72L8.7 7.21H6.92l10.244 11.54z"/>
                                             </svg>
                                         </button>
-                                        <button type="button" class="share-btn-icon linkedin" data-platform="linkedin"
-                                            title="LinkedIn">
-                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button" class="share-btn-icon copy-link" data-platform="copy_link"
-                                            title="Copy Link">
-                                            <span class="material-symbols-outlined text-xl">link</span>
+                                        <button type="button" class="blog-share-btn copy" data-platform="copy" title="Copy Link">
+                                            <span class="material-symbols-outlined text-lg">link</span>
                                         </button>
                                     </div>
-                                    <span class="text-sm text-white/60">
-                                        <span id="sharesCount"><?php echo (int) ($post['shares_count'] ?? 0); ?></span>
-                                        <?php _e('blog_page.shares'); ?>
-                                    </span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Comments Section -->
-                        <div class="mb-12">
-                            <h3 class="text-2xl font-bold mb-6 text-white">
-                                <?php _e('blog_page.comments_title'); ?> (<?php echo count($blog_comments); ?>)
-                            </h3>
+                    <!-- Comments Section -->
+                    <div class="blog-comments-section">
+                        <h3 class="blog-comments-title">
+                            <?php _e('blog_page.comments_title'); ?> (<?php echo count($blog_comments); ?>)
+                        </h3>
 
-                            <!-- Comment Form -->
+<!-- Comment Form -->
                             <?php if (isset($_SESSION['user_id']) && (!isset($post['allow_comments']) || (int) $post['allow_comments'] === 1)): ?>
-                                <div class="mb-8 p-6 bg-white/5 rounded-xl border border-white/10">
+                                <div class="blog-comment-form">
                                     <?php if ($success): ?>
-                                        <div
-                                            class="mb-4 p-4 bg-green-900/30 text-green-300 rounded-lg border border-green-500/30">
+                                        <div class="mb-4 p-4 bg-green-900/30 text-green-300 rounded-lg border border-green-500/30">
                                             <?php echo $success; ?>
                                         </div>
                                     <?php endif; ?>
@@ -571,23 +513,20 @@ try {
                                     <?php endif; ?>
 
                                     <form method="POST" action="">
-                                        <textarea name="content" rows="4"
-                                            class="w-full p-4 border border-white/10 rounded-lg bg-black/40 text-white resize-none focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
-                                            placeholder="<?php _e('blog_page.write_comment'); ?>" required></textarea>
-                                        <button type="submit" name="submit_comment" class="mt-4 btn-primary">
+                                        <textarea name="content" rows="4" class="blog-comment-input" placeholder="<?php _e('blog_page.write_comment'); ?>" required></textarea>
+                                        <button type="submit" name="submit_comment" class="blog-btn-primary mt-4">
                                             <?php _e('blog_page.submit_comment'); ?>
                                         </button>
                                     </form>
                                 </div>
                             <?php elseif (isset($_SESSION['user_id']) && isset($post['allow_comments']) && (int) $post['allow_comments'] === 0): ?>
-                                <div class="mb-8 p-6 bg-white/5 rounded-xl text-center">
-                                    <p class="mb-0 text-white/70"><?php _e('blog_page.comments_disabled'); ?></p>
+                                <div class="blog-login-prompt">
+                                    <p class="text-white/70"><?php _e('blog_page.comments_disabled'); ?></p>
                                 </div>
                             <?php else: ?>
-                                <div class="mb-8 p-6 bg-white/5 rounded-xl text-center border border-white/10">
-                                    <p class="mb-4 text-white/70"><?php _e('blog_page.login_to_comment'); ?></p>
-                                    <a href="<?php echo route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]); ?>"
-                                        class="btn-primary inline-block">
+                                <div class="blog-login-prompt">
+                                    <p class="text-white/70 mb-4"><?php _e('blog_page.login_to_comment'); ?></p>
+                                    <a href="<?php echo route('dang-nhap', ['redirect' => $_SERVER['REQUEST_URI']]); ?>" class="blog-btn-primary">
                                         <?php _e('blog_page.login'); ?>
                                     </a>
                                 </div>
@@ -595,30 +534,24 @@ try {
 
                             <!-- Comments List -->
                             <?php if (!empty($blog_comments)): ?>
-                                <div class="space-y-6">
+                                <div class="space-y-4">
                                     <?php foreach ($blog_comments as $comment): ?>
-                                        <div class="comment-item">
+                                        <div class="blog-comment-item">
                                             <div class="flex gap-4">
                                                 <?php if (!empty($comment['avatar'])): ?>
-                                                    <img src="<?php echo imgUrl($comment['avatar']); ?>"
-                                                        alt="<?php echo htmlspecialchars($comment['user_name']); ?>"
-                                                        class="w-12 h-12 rounded-full object-cover">
+                                                    <img src="<?php echo imgUrl($comment['avatar']); ?>" alt="<?php echo htmlspecialchars($comment['user_name']); ?>" class="blog-comment-avatar">
                                                 <?php else: ?>
-                                                    <div
-                                                        class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                                                        <span class="material-symbols-outlined text-accent">person</span>
+                                                    <div class="blog-author-avatar-placeholder">
+                                                        <span class="material-symbols-outlined text-accent text-lg">person</span>
                                                     </div>
                                                 <?php endif; ?>
 
                                                 <div class="flex-1">
                                                     <div class="flex items-center gap-3 mb-2">
-                                                        <span
-                                                            class="font-semibold text-white"><?php echo htmlspecialchars($comment['user_name']); ?></span>
-                                                        <span class="text-sm text-white/50">
-                                                            <?php echo date('m/d/Y H:i', strtotime($comment['created_at'])); ?>
-                                                        </span>
+                                                        <span class="blog-comment-author"><?php echo htmlspecialchars($comment['user_name']); ?></span>
+                                                        <span class="blog-comment-date"><?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></span>
                                                     </div>
-                                                    <p class="text-white/80">
+                                                    <p class="blog-comment-content">
                                                         <?php echo nl2br(htmlspecialchars($comment['content'])); ?>
                                                     </p>
                                                 </div>
@@ -632,37 +565,34 @@ try {
                                 </p>
                             <?php endif; ?>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </article>
 
             <!-- Related Posts -->
             <?php if (!empty($related_posts)): ?>
-                <section class="py-16 bg-black/40">
+                <section class="blog-related-section">
                     <div class="mx-auto max-w-7xl px-4">
-                        <h2 class="text-3xl font-bold mb-8 text-center text-white">
+                        <h2 class="blog-related-title">
                             <?php _e('blog_page.related_posts'); ?>
                         </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <?php foreach ($related_posts as $related): ?>
-                                <article class="blog-card bg-white/5 border border-white/10">
-                                    <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>"
-                                        class="block h-full">
-                                        <div class="blog-card-image"
-                                            style="background-image: url('<?php echo imgUrl($related['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
-                                        </div>
-                                        <div class="blog-card-content">
-                                            <h3 class="blog-card-title text-white">
-                                                <?php echo htmlspecialchars(_f($related, 'title')); ?>
-                                            </h3>
-                                            <p class="blog-card-excerpt text-white/70">
-                                                <?php echo htmlspecialchars(_f($related, 'excerpt') ?? ''); ?>
-                                            </p>
-                                        </div>
-                                    </a>
-                                </article>
+                                <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>" class="blog-related-card">
+                                    <div class="blog-related-image"
+                                        style="background-image: url('<?php echo imgUrl($related['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
+                                    </div>
+                                    <div class="blog-related-content">
+                                        <h3 class="blog-related-title-text">
+                                            <?php echo htmlspecialchars(_f($related, 'title')); ?>
+                                        </h3>
+                                        <p class="blog-related-excerpt">
+                                            <?php echo htmlspecialchars(_f($related, 'excerpt') ?? ''); ?>
+                                        </p>
+                                    </div>
+                                </a>
                             <?php endforeach; ?>
                         </div>
                     </div>
