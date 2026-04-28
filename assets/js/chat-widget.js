@@ -607,6 +607,17 @@ const ChatWidget = {
         // Bold
         html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
+        // [IMAGE: url] - Tự động nhận diện tag ảnh từ AI
+        html = html.replace(/\[IMAGE:\s*([^\]]+)\]/gi, (match, url) => {
+            return `<div class="cw-msg-image-container" style="margin:10px 0; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.08); background:#fff;">
+                <img src="${url.trim()}" alt="Aurora Room" style="width:100%; height:auto; display:block; object-fit:cover; max-height:220px; transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size:10px; color:#d4af37; background:#fff; padding:6px 8px; text-align:center; font-weight:bold; letter-spacing:0.5px;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle; margin-right:4px;">image</span> XEM ẢNH THỰC TẾ</div>
+            </div>`;
+        });
+
+        // Ẩn tag [SAVE_CONTACT: ...] khỏi giao diện người dùng
+        html = html.replace(/\[SAVE_CONTACT:.*?\]/gi, '').trim();
+
         if (isBot) {
             // Success booking button
             const successRegex = /\[BOOK_NOW_BTN_SUCCESS:\s*booking_code=([^,\]]+),\s*booking_id=([^\]]+)\]/i;

@@ -23,64 +23,68 @@ define('GEMINI_API_BASE', 'https://generativelanguage.googleapis.com/v1beta/mode
  */
 function get_aurora_system_prompt($db, $conv_id = null)
 {
-    $days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-    $w = date('w');
-    $weekday = $days[$w];
-    $currentDateTime = date('H:i:s') . " - " . $weekday . " ngày " . date('d/m/Y');
-    $currentMonth = date('m');
-    $currentYear = date('Y');
-    
-    // Kiểm tra cuối tuần (Thứ 6, 7, CN)
-    $isWeekend = ($w == 5 || $w == 6 || $w == 0);
-    $priceNote = $isWeekend ? "LƯU Ý: Hôm nay là cuối tuần, hãy ưu tiên báo giá weekend_price nếu có." : "Hôm nay là ngày thường, hãy báo giá base_price.";
-
-    // Lấy dữ liệu phòng động từ DB
-    $rooms_info = "";
-    if ($db) {
-        try {
-            $stmt = $db->query("SELECT type_name, base_price, weekend_price, holiday_price, max_occupancy, slug FROM room_types WHERE status = 'active' ORDER BY sort_order ASC");
-            $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($rooms as $r) {
-                $rooms_info .= "- {$r['type_name']}: Giá từ " . number_format($r['base_price']) . "đ";
-                if ($r['weekend_price'] > 0) $rooms_info .= " (Cuối tuần: " . number_format($r['weekend_price']) . "đ)";
-                $rooms_info .= ". Sức chứa: {$r['max_occupancy']} người. [slug: {$r['slug']}]\n";
-            }
-            
-            // Lấy thêm kiến thức từ bot_knowledge
-            $stmtK = $db->query("SELECT topic, content FROM bot_knowledge");
-            $knowledge = $stmtK->fetchAll(PDO::FETCH_KEY_PAIR);
-        } catch (Exception $e) {
-            $rooms_info = "Lỗi truy xuất giá phòng thực tế. Hãy dùng giá tham khảo cũ.";
+    // 1. Nhận diện khách quen
+    $userInfo = "";
+    if ($conv_id && $db) {
+        $stmtU = $db->prepare("
+            SELECT u.full_name, u.phone, c.last_message_at 
+            FROM chat_conversations c 
+            JOIN users u ON c.customer_id = u.user_id 
+            WHERE c.conversation_id = ?
+        ");
+        $stmtU->execute([$conv_id]);
+        $user = $stmtU->fetch(PDO::FETCH_ASSOC);
+        if ($user) {
+            $userInfo = "KHÁCH QUEN: Tên là {$user['full_name']}, SĐT: {$user['phone']}. Lần cuối chat: {$user['last_message_at']}. Hãy chào mừng họ quay trở lại!";
         }
     }
 
-    $genInfo = $knowledge['general_info'] ?? "Aurora Hotel Plaza là khách sạn 4 sao tại Biên Hòa.";
+    // 2. Lấy dữ liệu phòng & Ảnh thumbnail
+    $rooms_info = "";
+    if ($db) {
+        try {
+            $stmt = $db->query("SELECT type_name, base_price, price_published, max_occupancy, thumbnail, slug FROM room_types WHERE status = 'active' ORDER BY sort_order ASC");
+            $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $baseUrl = "https://aurorahotelplaza.com/"; 
+            foreach ($rooms as $r) {
+                $displayPrice = $r['price_published'] > 0 ? $r['price_published'] : $r['base_price'];
+                $imgUrl = $baseUrl . "assets/img/rooms/" . $r['thumbnail'];
+                $rooms_info .= "- {$r['type_name']}: " . number_format($displayPrice) . "đ. [IMAGE: {$imgUrl}] [slug: {$r['slug']}]\n";
+            }
+            
+            $stmtK = $db->query("SELECT topic, content FROM bot_knowledge");
+            $knowledge = $stmtK->fetchAll(PDO::FETCH_KEY_PAIR);
+        } catch (Exception $e) { $rooms_info = "Lỗi dữ liệu."; }
+    }
+
+    $genInfo = $knowledge['general_info'] ?? "Aurora Hotel Plaza là khách sạn 4 sao.";
     $cancelPolicy = $knowledge['cancellation_policy'] ?? "Hủy miễn phí trước 24h.";
-    $guestPolicy = $knowledge['extra_guest_policy'] ?? "Dưới 1m free, 1m-1m3 200k, >1m3 400k.";
+    $guestPolicy = $knowledge['extra_guest_policy'] ?? "Dưới 1m free.";
 
     $prompt = "Bạn là SIÊU TRỢ LÝ QUẢN GIA của Aurora Hotel Plaza.
+{$userInfo}
+
 [DỮ LIỆU THỜI GIAN THỰC]
 - Bây giờ là: {$currentDateTime}.
 - {$priceNote}
-- Giới hạn lưu trú: Tối đa 30 ngày.
 
-[KIẾN THỨC KHÁCH SẠN (CẬP NHẬT TỪ CSDL)]
-{$genInfo}
+[KỸ NĂNG ĐẶC BIỆT]
+1. HIỂN THỊ ẢNH: Khi tư vấn một loại phòng, bạn BẮT BUỘC chèn tag [IMAGE: url_anh_trong_danh_sách] để khách xem ảnh.
+2. LƯU LIÊN HỆ/LEAD/PHÀN NÀN: Khi khách để lại SĐT hoặc phàn nàn về hư hỏng/dịch vụ, hãy dùng tag: [SAVE_CONTACT: name=Tên khách, phone=SĐT, msg=Nội dung]. Hệ thống sẽ tự ghi vào bảng liên hệ.
+3. BÁN THÊM: Chủ động gợi ý xe đưa đón (500k), Spa hoặc Rooftop Bar nếu thấy phù hợp.
 
-[DANH SÁCH PHÒNG & GIÁ HIỆN HÀNH]
+[DANH SÁCH PHÒNG & GIÁ]
 {$rooms_info}
 
-[CHÍNH SÁCH QUAN TRỌNG]
+[CHÍNH SÁCH]
+{$genInfo}
 - Trẻ em: {$guestPolicy}
-- Hủy phòng: {$cancelPolicy}
-- Giờ nhận/trả: Check-in 14:00, Check-out 12:00.
+- Hủy: {$cancelPolicy}
 
-[LOGIC NGHIỆP VỤ]
-- TRĂNG MẬT/KỶ NIỆM: Chúc mừng nồng nhiệt + gợi ý setup (Thiên nga, hoa, nến) + note vào yêu cầu. Gợi ý phòng Indochine hoặc Suite.
-- ĐẶT PHÒNG: Hỏi Ngày đến, Ngày đi, Số khách trước khi hiện nút: [BOOK_NOW_BTN: slug=xxx, name=xxx, cin=YYYY-MM-DD, cout=YYYY-MM-DD].
-
-[PHONG CÁCH]
-Sang trọng, chuyên nghiệp, tiếng Việt 100%. Luôn cập nhật giá theo danh sách trên.";
+[LOGIC PHẢN HỒI]
+- Khách phàn nàn/cần hỗ trợ kỹ thuật: Xin lỗi lịch sự + Dùng tag [SAVE_CONTACT] để báo nhân viên.
+- Khách đặt phòng: Thu thập thông tin -> Gợi ý phòng kèm ảnh [IMAGE] -> Trình bày nút [BOOK_NOW_BTN].
+- Xưng hô: Dạ, Aurora xin chào... tiếng Việt 100%.";
 
 
     // Nếu có conv_id, có thể thêm thông tin từ DB

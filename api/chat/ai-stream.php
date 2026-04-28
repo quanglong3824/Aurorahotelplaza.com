@@ -48,10 +48,31 @@ set_time_limit(120);
 // Gọi stream từ AI (Tự động định tuyến Gemini hoặc Opencode)
 $full_reply = stream_ai_reply($message, $db, $conv_id);
 
-// Sau khi stream xong, lưu vào DB nếu có kết quả
+// Sau khi stream xong, xử lý các tag đặc biệt và lưu vào DB
 $new_msg_id = 0;
 if (!empty($full_reply)) {
     try {
+        // 1. Xử lý [SAVE_CONTACT: name=xxx, phone=xxx, msg=xxx]
+        if (preg_match('/\[SAVE_CONTACT:\s*name=(.*?),?\s*phone=(.*?),?\s*msg=(.*?)\]/i', $full_reply, $matches)) {
+            $name = trim($matches[1]);
+            $phone = trim($matches[2]);
+            $msg = trim($matches[3]);
+            
+            $stmtC = $db->prepare("
+                INSERT INTO contact_submissions (name, email, phone, subject, message, status, created_at)
+                VALUES (:name, :email, :phone, 'AI Lead/Support Request', :msg, 'new', NOW())
+            ");
+            $stmtC->execute([
+                ':name' => $name,
+                ':email' => 'ai_collected@aurorahotelplaza.com',
+                ':phone' => $phone,
+                ':msg' => $msg
+            ]);
+            
+            // Xóa tag khỏi nội dung hiển thị cho khách nếu muốn sạch sẽ
+            // $full_reply = preg_replace('/\[SAVE_CONTACT:.*?\]/i', '', $full_reply);
+        }
+
         $stmt = $db->prepare("
             INSERT INTO chat_messages
                 (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
@@ -77,7 +98,7 @@ if (!empty($full_reply)) {
                     ':cid' => $conv_id
                 ]);
     } catch (Exception $e) {
-        error_log("Failed to save AI reply: " . $e->getMessage());
+        error_log("Failed to save AI reply or lead: " . $e->getMessage());
     }
 }
 
