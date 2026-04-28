@@ -1,0 +1,4 @@
+# Gallery upload folders - keep structure but ignore files
+*
+!.gitignore
+!.gitkeep

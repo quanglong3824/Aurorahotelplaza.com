@@ -106,10 +106,72 @@ include 'includes/admin-header.php';
         </button>
     </form>
     
-    <button onclick="openGalleryModal()" class="btn btn-primary">
-        <span class="material-symbols-outlined text-sm">add</span>
-        Thêm hình ảnh
-    </button>
+    <div class="flex gap-2">
+        <button onclick="openUploadModal()" class="btn btn-primary">
+            <span class="material-symbols-outlined text-sm">cloud_upload</span>
+            Upload ảnh
+        </button>
+        <button onclick="openGalleryModal()" class="btn btn-secondary">
+            <span class="material-symbols-outlined text-sm">add</span>
+            Thêm từ URL
+        </button>
+    </div>
+</div>
+
+<!-- Bulk Upload Area -->
+<div id="uploadModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 class="font-bold text-lg">Upload nhiều ảnh</h3>
+            <button onclick="closeUploadModal()" class="text-gray-500 hover:text-gray-700">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-4">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Danh mục</label>
+                <select id="uploadCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    <option value="general">General</option>
+                    <option value="room">Phòng</option>
+                    <option value="restaurant">Nhà hàng</option>
+                    <option value="spa">Spa</option>
+                    <option value="event">Sự kiện</option>
+                    <option value="facility">Tiện ích</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <!-- Drag & Drop Area -->
+            <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-colors">
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif,image/webp" multiple class="hidden" onchange="handleFiles(this.files)">
+                <div onclick="document.getElementById('fileInput').click()">
+                    <span class="material-symbols-outlined text-6xl text-gray-400 mb-4">cloud_upload</span>
+                    <p class="text-gray-600 font-medium mb-2">Kéo thả ảnh vào đây hoặc click để chọn</p>
+                    <p class="text-sm text-gray-400">JPG, PNG, GIF, WebP (tối đa 10MB mỗi file)</p>
+                    <p class="text-xs text-gray-400 mt-1">Có thể chọn nhiều ảnh cùng lúc</p>
+                </div>
+            </div>
+            
+            <!-- Progress Area -->
+            <div id="uploadProgressArea" class="mt-4 hidden">
+                <h4 class="font-medium mb-2">Tiến trình upload:</h4>
+                <div id="uploadList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+            
+            <!-- Preview Area -->
+            <div id="previewArea" class="mt-4 hidden">
+                <h4 class="font-medium mb-2">Ảnh đã upload:</h4>
+                <div id="previewGrid" class="grid grid-cols-4 gap-2"></div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 flex justify-end gap-2">
+            <button onclick="closeUploadModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                Đóng
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Gallery Grid -->
@@ -260,6 +322,175 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
+// Upload Modal
+function openUploadModal() {
+    document.getElementById('uploadModal').classList.remove('hidden');
+    document.getElementById('uploadProgressArea').classList.add('hidden');
+    document.getElementById('previewArea').classList.add('hidden');
+    document.getElementById('uploadList').innerHTML = '';
+    document.getElementById('previewGrid').innerHTML = '';
+}
+
+function closeUploadModal() {
+    document.getElementById('uploadModal').classList.add('hidden');
+}
+
+// Drag & Drop
+const dropArea = document.getElementById('dropArea');
+let uploadedCount = 0;
+let totalCount = 0;
+
+dropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropArea.classList.add('border-indigo-500', 'bg-indigo-50');
+});
+
+dropArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+});
+
+dropArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+    
+    const files = e.dataTransfer.files;
+    handleFiles(files);
+});
+
+function handleFiles(files) {
+    if (!files || files.length === 0) return;
+    
+    const category = document.getElementById('uploadCategory').value;
+    totalCount = files.length;
+    uploadedCount = 0;
+    
+    document.getElementById('uploadProgressArea').classList.remove('hidden');
+    document.getElementById('uploadList').innerHTML = '';
+    
+    Array.from(files).forEach((file, index) => {
+        if (file.type.startsWith('image/')) {
+            uploadGalleryImage(file, category, index);
+        }
+    });
+}
+
+function uploadGalleryImage(file, category, index) {
+    if (file.size > 10 * 1024 * 1024) {
+        addUploadStatus(index, file.name, 'error', 'File quá lớn (max 10MB)');
+        return;
+    }
+    
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        addUploadStatus(index, file.name, 'error', 'Không hỗ trợ định dạng này');
+        return;
+    }
+    
+    addUploadStatus(index, file.name, 'progress', '0%');
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('category', category);
+    formData.append('title', pathinfo(file.name).filename);
+    
+    const xhr = new XMLHttpRequest();
+    
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            updateUploadProgress(index, percent + '%');
+        }
+    });
+    
+    xhr.addEventListener('load', () => {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                updateUploadStatus(index, file.name, 'success', 'Done');
+                addPreviewImage(response.image_url, response.title);
+                uploadedCount++;
+                
+                if (uploadedCount === totalCount) {
+                    showNotification('Upload hoàn tất! ' + uploadedCount + ' ảnh', 'success');
+                    setTimeout(() => {
+                        closeUploadModal();
+                        location.reload();
+                    }, 1500);
+                }
+            } else {
+                updateUploadStatus(index, file.name, 'error', response.message);
+            }
+        } else {
+            updateUploadStatus(index, file.name, 'error', 'Lỗi kết nối');
+        }
+    });
+    
+    xhr.addEventListener('error', () => {
+        updateUploadStatus(index, file.name, 'error', 'Lỗi kết nối');
+    });
+    
+    xhr.open('POST', 'api/upload-gallery-image.php');
+    xhr.send(formData);
+}
+
+function pathinfo(filename) {
+    const parts = filename.split('.');
+    const ext = parts.length > 1 ? parts.pop() : '';
+    const name = parts.join('.');
+    return { filename: name, extension: ext };
+}
+
+function addUploadStatus(index, name, status, message) {
+    const list = document.getElementById('uploadList');
+    const id = 'upload-' + index;
+    const color = status === 'success' ? 'text-green-600' : status === 'error' ? 'text-red-600' : 'text-indigo-600';
+    const icon = status === 'success' ? 'check_circle' : status === 'error' ? 'error' : 'hourglass_empty';
+    
+    const html = `<div id="${id}" class="flex items-center gap-2 p-2 bg-gray-50 rounded ${color}">
+        <span class="material-symbols-outlined text-sm">${icon}</span>
+        <span class="text-sm truncate flex-1">${name}</span>
+        <span class="text-xs">${message}</span>
+    </div>`;
+    list.insertAdjacentHTML('beforeend', html);
+}
+
+function updateUploadProgress(index, progress) {
+    const el = document.getElementById('upload-' + index);
+    if (el) {
+        el.querySelector('.text-xs').textContent = progress;
+    }
+}
+
+function updateUploadStatus(index, name, status, message) {
+    const el = document.getElementById('upload-' + index);
+    if (el) {
+        const color = status === 'success' ? 'text-green-600' : 'text-red-600';
+        const icon = status === 'success' ? 'check_circle' : 'error';
+        el.className = `flex items-center gap-2 p-2 bg-gray-50 rounded ${color}`;
+        el.querySelector('.material-symbols-outlined').textContent = icon;
+        el.querySelector('.text-xs').textContent = message;
+    }
+}
+
+function addPreviewImage(url, title) {
+    document.getElementById('previewArea').classList.remove('hidden');
+    const grid = document.getElementById('previewGrid');
+    const html = `<div class="aspect-square overflow-hidden rounded-lg border border-gray-200">
+        <img src="${url}" alt="${title}" class="w-full h-full object-cover">
+    </div>`;
+    grid.insertAdjacentHTML('beforeend', html);
+}
+
+function showNotification(message, type) {
+    const div = document.createElement('div');
+    div.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-[70] ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+    div.textContent = message;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+}
+
+// Original Gallery Modal
 function openGalleryModal() {
     document.getElementById('modalTitle').textContent = 'Thêm hình ảnh';
     document.getElementById('galleryForm').reset();
