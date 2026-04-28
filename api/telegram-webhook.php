@@ -15,7 +15,7 @@ header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/telegram.php';
 
-$EXPECTED_CHAT_ID = '5513249927';
+$EXPECTED_CHAT_ID = 'xxxTELExxx';
 
 $input = file_get_contents('php://input');
 $update = json_decode($input, true);
@@ -107,7 +107,7 @@ try {
 
     if ($convId) {
         $result = sendStaffReplyToConversation($db, $convId, $text, $fromName);
-        
+
         $confirmMsg = "✅ Tin nhắn đã gửi đến khách\n"
             . "💬 Conversation #" . $convId . "\n"
             . "⏰ " . date('H:i:s');
@@ -143,10 +143,12 @@ try {
         exit;
     }
 
-    TelegramHelper::replyToChatMessage($chatId, 
+    TelegramHelper::replyToChatMessage(
+        $chatId,
         "⚠️ Không tìm thấy conversation để phản hồi.\n"
         . "Reply tin nhắn notification từ bot để phản hồi khách.",
-        $messageId);
+        $messageId
+    );
 
     echo json_encode(['ok' => true, 'handled' => true, 'action' => 'no_conversation']);
 
@@ -168,7 +170,8 @@ function logTelegramUpdate($update)
 
 function findConversationByTelegramMessageId($db, $telegramMessageId)
 {
-    if (!$telegramMessageId) return null;
+    if (!$telegramMessageId)
+        return null;
 
     try {
         $stmt = $db->prepare(
@@ -234,9 +237,9 @@ function sendStaffReplyToConversation($db, $convId, $message, $staffName)
              updated_at = NOW()
          WHERE conversation_id = :cid"
     )->execute([
-        ':preview' => mb_substr($message, 0, 100),
-        ':cid' => $convId
-    ]);
+                ':preview' => mb_substr($message, 0, 100),
+                ':cid' => $convId
+            ]);
 
     return true;
 }

@@ -8,8 +8,8 @@
 
 class TelegramHelper
 {
-    private static $botToken = '8772642373:AAG0ubAS246uCzUEZOJNimRuA5UxY6LpUrg';
-    private static $chatId = '5513249927';
+    private static $botToken = 'xxxTELExxx';
+    private static $chatId = 'xxxTELExxx';
     private static $initialized = true;
 
     public static function init()

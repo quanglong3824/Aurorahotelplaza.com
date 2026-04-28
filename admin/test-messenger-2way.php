@@ -25,13 +25,13 @@ $actionResult = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $testType = $_POST['test_type'] ?? '';
-    
+
     switch ($testType) {
         case 'email':
             $to = trim($_POST['email_to'] ?? '');
             $subject = trim($_POST['email_subject'] ?? 'Test Email - Aurora Hotel Plaza');
             $body = trim($_POST['email_body'] ?? 'Đây là email test từ Aurora Hotel Plaza Admin.');
-            
+
             if (empty($to) || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
                 $actionResult = ['type' => 'error', 'message' => 'Email không hợp lệ'];
             } else {
@@ -43,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p style="color:#666;font-size:12px;">Gửi từ Admin Test Messenger lúc ' . date('d/m/Y H:i:s') . '</p>
                 </div>';
                 $sent = $mailer->send($to, $subject, $htmlBody);
-                $actionResult = $sent 
+                $actionResult = $sent
                     ? ['type' => 'success', 'message' => 'Email đã gửi thành công đến ' . $to]
                     : ['type' => 'error', 'message' => 'Lỗi gửi email: ' . $mailer->getLastError()];
             }
             break;
-            
+
         case 'telegram':
             $message = trim($_POST['telegram_message'] ?? 'Test Telegram từ Aurora Hotel Plaza Admin');
             if (empty($message)) {
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     : ['type' => 'error', 'message' => 'Lỗi Telegram: ' . ($result['error'] ?? 'Unknown')];
             }
             break;
-            
+
         case 'telegram_booking':
             $bookingData = [
                 'booking_code' => 'TEST-' . str_pad(mt_rand(1, 9999), 6, '0', STR_PAD_LEFT),
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? ['type' => 'success', 'message' => 'Booking notification đã gửi thành công!']
                 : ['type' => 'error', 'message' => 'Lỗi: ' . ($result['error'] ?? 'Unknown')];
             break;
-            
+
         case 'telegram_chat':
             $convData = [
                 'conversation_id' => mt_rand(100, 999),
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? ['type' => 'success', 'message' => 'Chat notification đã gửi thành công!']
                 : ['type' => 'error', 'message' => 'Lỗi: ' . ($result['error'] ?? 'Unknown')];
             break;
-            
+
         case 'set_webhook':
             $webhookUrl = BASE_URL . '/api/telegram-webhook.php';
             $result = TelegramHelper::setWebhook($webhookUrl);
@@ -102,21 +102,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? ['type' => 'success', 'message' => 'Webhook đã được set: ' . $webhookUrl]
                 : ['type' => 'error', 'message' => 'Lỗi set webhook: ' . json_encode($result['data'])];
             break;
-            
+
         case 'delete_webhook':
             $result = TelegramHelper::deleteWebhook();
             $actionResult = $result['success']
                 ? ['type' => 'success', 'message' => 'Webhook đã được xóa']
                 : ['type' => 'error', 'message' => 'Lỗi delete webhook'];
             break;
-            
+
         case 'webhook_info':
             $result = TelegramHelper::getWebhookInfo();
             $actionResult = $result['success']
                 ? ['type' => 'info', 'message' => 'Webhook Info', 'data' => $result['data']]
                 : ['type' => 'error', 'message' => 'Lỗi get webhook info'];
             break;
-            
+
         case 'create_tables':
             try {
                 $db = getDB();
@@ -147,13 +147,16 @@ $webhookInfo = $webhookResult['data'] ?? null;
 ?>
 
 <?php if ($actionResult): ?>
-<div class="mb-6 p-4 rounded-lg <?php echo $actionResult['type'] === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : ($actionResult['type'] === 'info' ? 'bg-blue-100 border border-blue-400 text-blue-700' : 'bg-red-100 border border-red-400 text-red-700'); ?>">
-    <span class="material-symbols-outlined text-sm align-middle mr-2"><?php echo $actionResult['type'] === 'success' ? 'check_circle' : ($actionResult['type'] === 'info' ? 'info' : 'error'); ?></span>
-    <?php echo htmlspecialchars($actionResult['message']); ?>
-    <?php if (isset($actionResult['data'])): ?>
-    <pre class="mt-2 text-xs bg-white p-2 rounded overflow-auto"><?php echo htmlspecialchars(json_encode($actionResult['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); ?></pre>
-    <?php endif; ?>
-</div>
+    <div
+        class="mb-6 p-4 rounded-lg <?php echo $actionResult['type'] === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : ($actionResult['type'] === 'info' ? 'bg-blue-100 border border-blue-400 text-blue-700' : 'bg-red-100 border border-red-400 text-red-700'); ?>">
+        <span
+            class="material-symbols-outlined text-sm align-middle mr-2"><?php echo $actionResult['type'] === 'success' ? 'check_circle' : ($actionResult['type'] === 'info' ? 'info' : 'error'); ?></span>
+        <?php echo htmlspecialchars($actionResult['message']); ?>
+        <?php if (isset($actionResult['data'])): ?>
+            <pre
+                class="mt-2 text-xs bg-white p-2 rounded overflow-auto"><?php echo htmlspecialchars(json_encode($actionResult['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); ?></pre>
+        <?php endif; ?>
+    </div>
 <?php endif; ?>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -168,25 +171,27 @@ $webhookInfo = $webhookResult['data'] ?? null;
         <div class="card-body">
             <form method="POST" class="space-y-4">
                 <input type="hidden" name="test_type" value="email">
-                
+
                 <div class="form-group">
                     <label class="form-label">Email nhận</label>
-                    <input type="email" name="email_to" value="<?php echo htmlspecialchars($_POST['email_to'] ?? ''); ?>" 
-                           class="form-input" placeholder="email@example.com" required>
+                    <input type="email" name="email_to"
+                        value="<?php echo htmlspecialchars($_POST['email_to'] ?? ''); ?>" class="form-input"
+                        placeholder="email@example.com" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Tiêu đề</label>
-                    <input type="text" name="email_subject" value="<?php echo htmlspecialchars($_POST['email_subject'] ?? 'Test Email - Aurora Hotel Plaza'); ?>" 
-                           class="form-input">
+                    <input type="text" name="email_subject"
+                        value="<?php echo htmlspecialchars($_POST['email_subject'] ?? 'Test Email - Aurora Hotel Plaza'); ?>"
+                        class="form-input">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Nội dung</label>
-                    <textarea name="email_body" rows="4" class="form-input" 
-                              placeholder="Nội dung email test..."><?php echo htmlspecialchars($_POST['email_body'] ?? ''); ?></textarea>
+                    <textarea name="email_body" rows="4" class="form-input"
+                        placeholder="Nội dung email test..."><?php echo htmlspecialchars($_POST['email_body'] ?? ''); ?></textarea>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-full">
                     <span class="material-symbols-outlined text-sm">send</span>
                     Gửi Email Test
@@ -194,7 +199,7 @@ $webhookInfo = $webhookResult['data'] ?? null;
             </form>
         </div>
     </div>
-    
+
     <!-- Telegram Test - ALL IN ONE -->
     <div class="card">
         <div class="card-header">
@@ -220,38 +225,40 @@ $webhookInfo = $webhookResult['data'] ?? null;
                     </div>
                     <div>
                         <span class="text-gray-500">Chat ID:</span>
-                        <span class="font-mono">5513249927</span>
+                        <span class="font-mono">xxxTELExxx</span>
                     </div>
                 </div>
                 <?php if ($webhookInfo): ?>
-                <div class="mt-2 pt-2 border-t border-gray-200">
-                    <div class="text-sm">
-                        <span class="text-gray-500">Webhook:</span>
-                        <span class="font-mono truncate block text-xs"><?php echo $webhookInfo['url'] ?? 'None'; ?></span>
-                        <span class="text-xs <?php echo ($webhookInfo['url'] ?? '') ? 'text-green-600' : 'text-orange-600'; ?>">
-                            <?php echo ($webhookInfo['url'] ?? '') ? '✅ Active' : '⚠️ Click "Set Webhook" để bật 2 chiều'; ?>
-                        </span>
+                    <div class="mt-2 pt-2 border-t border-gray-200">
+                        <div class="text-sm">
+                            <span class="text-gray-500">Webhook:</span>
+                            <span
+                                class="font-mono truncate block text-xs"><?php echo $webhookInfo['url'] ?? 'None'; ?></span>
+                            <span
+                                class="text-xs <?php echo ($webhookInfo['url'] ?? '') ? 'text-green-600' : 'text-orange-600'; ?>">
+                                <?php echo ($webhookInfo['url'] ?? '') ? '✅ Active' : '⚠️ Click "Set Webhook" để bật 2 chiều'; ?>
+                            </span>
+                        </div>
                     </div>
-                </div>
                 <?php endif; ?>
             </div>
-            
+
             <!-- Telegram Message Test -->
             <form method="POST" class="space-y-4">
                 <input type="hidden" name="test_type" value="telegram">
-                
+
                 <div class="form-group">
                     <label class="form-label">Tin nhắn test</label>
-                    <textarea name="telegram_message" rows="3" class="form-input" 
-                              placeholder="Test Telegram từ Aurora Hotel Plaza..."><?php echo htmlspecialchars($_POST['telegram_message'] ?? ''); ?></textarea>
+                    <textarea name="telegram_message" rows="3" class="form-input"
+                        placeholder="Test Telegram từ Aurora Hotel Plaza..."><?php echo htmlspecialchars($_POST['telegram_message'] ?? ''); ?></textarea>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-full">
                     <span class="material-symbols-outlined text-sm">send</span>
                     Gửi Telegram Test
                 </button>
             </form>
-            
+
             <!-- Booking & Chat Notification Tests -->
             <div class="mt-4 grid grid-cols-2 gap-3">
                 <form method="POST">
@@ -261,7 +268,7 @@ $webhookInfo = $webhookResult['data'] ?? null;
                         Test Booking Notif
                     </button>
                 </form>
-                
+
                 <form method="POST">
                     <input type="hidden" name="test_type" value="telegram_chat">
                     <button type="submit" class="btn btn-secondary w-full text-sm">
@@ -270,7 +277,7 @@ $webhookInfo = $webhookResult['data'] ?? null;
                     </button>
                 </form>
             </div>
-            
+
             <!-- Webhook 2 chiều -->
             <div class="mt-4 p-3 bg-indigo-50 dark:bg-slate-700 rounded-lg">
                 <h4 class="font-medium mb-2 flex items-center gap-1">
@@ -323,18 +330,21 @@ $webhookInfo = $webhookResult['data'] ?? null;
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="p-3 bg-green-50 rounded-lg">
                 <h4 class="font-medium mb-1 text-green-700">✅ Gửi tin nhắn</h4>
-                <p class="text-sm text-gray-600">Nhập tin nhắn và click "Gửi Telegram Test" hoặc test Booking/Chat notification.</p>
+                <p class="text-sm text-gray-600">Nhập tin nhắn và click "Gửi Telegram Test" hoặc test Booking/Chat
+                    notification.</p>
             </div>
             <div class="p-3 bg-blue-50 rounded-lg">
                 <h4 class="font-medium mb-1 text-blue-700">🔄 Bật 2 chiều</h4>
-                <p class="text-sm text-gray-600">Click "Tạo bảng" → Click "Set Webhook" để nhận tin nhắn từ Telegram.</p>
+                <p class="text-sm text-gray-600">Click "Tạo bảng" → Click "Set Webhook" để nhận tin nhắn từ Telegram.
+                </p>
             </div>
             <div class="p-3 bg-purple-50 rounded-lg">
                 <h4 class="font-medium mb-1 text-purple-700">💬 Phản hồi khách</h4>
-                <p class="text-sm text-gray-600">Reply tin nhắn notification trên Telegram → Phản hồi vào hệ thống chat.</p>
+                <p class="text-sm text-gray-600">Reply tin nhắn notification trên Telegram → Phản hồi vào hệ thống chat.
+                </p>
             </div>
         </div>
-        
+
         <div class="mt-4 p-3 bg-gray-50 rounded-lg">
             <h4 class="font-medium mb-1">Cách hoạt động 2 chiều:</h4>
             <ol class="text-sm text-gray-600 space-y-1">

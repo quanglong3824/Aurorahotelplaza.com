@@ -178,8 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token && $chatId) {
             placeholder="7589180138:AAG..." autocomplete="off">
 
         <label>Telegram Chat ID (ID cá nhân của bạn)</label>
-        <input type="text" name="chat_id" value="<?php echo htmlspecialchars($_POST['chat_id'] ?? '5513249927'); ?>"
-            placeholder="5513249927">
+        <input type="text" name="chat_id" value="<?php echo htmlspecialchars($_POST['chat_id'] ?? 'xxxTELExxx'); ?>"
+            placeholder="xxxTELExxx">
 
         <button type="submit">💾 Lưu và Test Telegram</button>
     </form>

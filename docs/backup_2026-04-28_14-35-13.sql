@@ -257,16 +257,1109 @@ CREATE TABLE `blog_posts` (
 
 -- Dumping data for table `blog_posts`
 INSERT INTO `blog_posts` VALUES
-('101','Top 10 Khách sạn Biên Hòa Đáng Lưu Trú 2026 - Aurora Hotel Plaza Hàng Đầu','Top 10 Hotels in Bien Hoa Worth Staying 2026 - Aurora Hotel Plaza Tops the List','top-10-khach-san-bien-hoa-dang-luu-tru-2026','Biên Hòa có nhiều khách sạn tốt, nhưng Aurora Hotel Plaza 4 sao là lựa chọn hàng đầu với vị trí đắc địa, phòng đẹp, dịch vụ chuyên nghiệp.','Bien Hoa has many good hotels, but Aurora Hotel Plaza 4-star is the top choice with prime location, beautiful rooms, professional service.','<h2>Khách sạn Biên Hòa - Lựa chọn nghỉ dưỡng tại Đồng Nai</h2>\n\n<p><strong>Biên Hòa</strong>, thành phố đông đúc tại <strong>tỉnh Đồng Nai</strong>, là nơi tập trung nhiều khu công nghiệp lớn như KCN Amata, KCN Biên Hòa 2. Do đó, nhu cầu tìm <strong>khách sạn tại Biên Hòa</strong> ngày càng cao, từ doanh nhân công tác đến du khách nghỉ dưỡng.</p>\n\n<h3>1. Aurora Hotel Plaza - Khách sạn 4 sao Biên Hòa hàng đầu</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao nổi bật tại Biên Hòa với hơn <strong>200 phòng nghỉ và căn hộ cao cấp</strong>. Tọa lạc tại <strong>253 Phạm Văn Thuận, Phường Tam Hiệp</strong>, vị trí trung tâm, gần các khu công nghiệp và điểm du lịch.</p>\n\n<p><strong>Ưu điểm Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Phòng Deluxe, Premium Deluxe, VIP Suite với đầy đủ tiện nghi</li>\n<li>Căn hộ Indochine và Modern Studio cho thuê dài hạn</li>\n<li>Sảnh tiệc cưới sang trọng sức chứa 500 khách</li>\n<li>Phòng hội nghị hiện đại, phù hợp workshop, training</li>\n<li>Nhà hàng Aurora với ẩm thực Việt & quốc tế</li>\n<li>Hồ bơi, Gym, Spa 4 sao</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h3>2. Tiện nghi khách sạn 4 sao tại Biên Hòa</h3>\n\n<p>Aurora Hotel Plaza cung cấp đầy đủ tiện nghi khách sạn 4 sao:</p>\n<ul>\n<li>WiFi miễn phí tốc độ cao</li>\n<li>Điều hòa, TV màn hình phẳng, minibar</li>\n<li>Phòng tắm riêng với vòi sen massage</li>\n<li>Bãi đỗ xe miễn phí, an ninh 24/7</li>\n<li>Dịch vụ phòng 24/7</li>\n<li>Đưa đón sân bay Tân Sơn Nhất, Long Thành</li>\n</ul>\n\n<h3>3. Giá phòng khách sạn Biên Hòa Aurora</h3>\n\n<p><strong>Giá phòng Aurora Hotel Plaza Biên Hòa:</strong></p>\n<ul>\n<li>Phòng Deluxe: <strong>1.600.000 VND/đêm</strong></li>\n<li>Phòng Premium Deluxe: <strong>1.900.000 VND/đêm</strong></li>\n<li>Phòng VIP Suite: <strong>2.300.000 VND/đêm</strong></li>\n<li>Căn hộ Studio: <strong>800.000 VND/ngày</strong></li>\n</ul>\n\n<p>Giảm <strong>10% khi đặt phòng online</strong> qua website aurorahotelplaza.com!</p>\n\n<h3>4. Vị trí khách sạn Biên Hòa Aurora</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> nằm tại vị trí đắc địa:</p>\n<ul>\n<li>Gần KCN Amata: <strong>3km</strong></li>\n<li>Gần KCN Biên Hòa 2: <strong>5km</strong></li>\n<li>Gần Big C Biên Hòa: <strong>5km</strong></li>\n<li>Gần Bến xe Biên Hòa: <strong>3km</strong></li>\n<li>Gần Sân bay Long Thành: <strong>25km</strong></li>\n<li>Gần Sân bay Tân Sơn Nhất: <strong>40km</strong></li>\n</ul>\n\n<h3>5. So sánh khách sạn Biên Hòa</h3>\n\n<p>So với các khách sạn khác tại Biên Hòa, Aurora Hotel Plaza có ưu điểm:</p>\n<ul>\n<li>Khách sạn 4 sao với dịch vụ chuẩn quốc tế</li>\n<li>Phòng mới, sạch, trang thiết bị hiện đại</li>\n<li>Vị trí trung tâm, thuận tiện di chuyển</li>\n<li>Giá hợp lý, nhiều khuyến mãi</li>\n<li>Tích hợp căn hộ dịch vụ cho thuê dài hạn</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p>Nếu bạn đang tìm <strong>khách sạn tại Biên Hòa</strong> hoặc <strong>khách sạn tại Đồng Nai</strong>, Aurora Hotel Plaza là lựa chọn hàng đầu với chất lượng 4 sao, giá hợp lý, vị trí đắc địa. <strong>Đặt phòng ngay</strong> để nhận ưu đãi 10%!</p>\n\n<p><strong>Hotline Aurora Hotel Plaza: 0251 391.8888</strong></p>\n<p><strong>Email: info@aurorahotelplaza.com</strong></p>\n<p><strong>Website: aurorahotelplaza.com</strong></p>','<h2>Hotels in Bien Hoa - Accommodation Choice in Dong Nai</h2>\n\n<p><strong>Bien Hoa</strong>, a bustling city in <strong>Dong Nai Province</strong>, hosts major industrial parks like Amata IP, Bien Hoa 2 IP. Therefore, demand for <strong>hotels in Bien Hoa</strong> is increasing, from business travelers to tourists.</p>\n\n<h3>1. Aurora Hotel Plaza - Top 4-Star Hotel in Bien Hoa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> is the standout 4-star hotel in Bien Hoa with over <strong>200 luxury rooms and apartments</strong>. Located at <strong>253 Pham Van Thuan, Tam Hiep Ward</strong>, central location near industrial parks and tourist spots.</p>\n\n<p><strong>Aurora Hotel Plaza Highlights:</strong></p>\n<ul>\n<li>Deluxe, Premium Deluxe, VIP Suite rooms with full amenities</li>\n<li>Indochine and Modern Studio apartments for long-term rent</li>\n<li>Elegant wedding hall for 500 guests</li>\n<li>Modern conference rooms, suitable for workshop, training</li>\n<li>Aurora Restaurant with Vietnamese & international cuisine</li>\n<li>Pool, Gym, Spa 4-star</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h3>2. 4-Star Hotel Amenities in Bien Hoa</h3>\n\n<p>Aurora Hotel Plaza provides full 4-star hotel amenities:</p>\n<ul>\n<li>Free high-speed WiFi</li>\n<li>Air conditioning, flat-screen TV, minibar</li>\n<li>Private bathroom with massage shower</li>\n<li>Free parking, 24/7 security</li>\n<li>24/7 room service</li>\n<li>Tan Son Nhat, Long Thanh airport shuttle</li>\n</ul>\n\n<h3>3. Aurora Bien Hoa Hotel Room Rates</h3>\n\n<p><strong>Aurora Hotel Plaza Bien Hoa room rates:</strong></p>\n<ul>\n<li>Deluxe Room: <strong>1,600,000 VND/night</strong></li>\n<li>Premium Deluxe: <strong>1,900,000 VND/night</strong></li>\n<li>VIP Suite: <strong>2,300,000 VND/night</strong></li>\n<li>Studio Apartment: <strong>800,000 VND/day</strong></li>\n</ul>\n\n<p>Get <strong>10% off when booking online</strong> at aurorahotelplaza.com!</p>\n\n<h2>Conclusion</h2>\n\n<p>If you are looking for a <strong>hotel in Bien Hoa</strong> or <strong>hotel in Dong Nai</strong>, Aurora Hotel Plaza is the top choice with 4-star quality, reasonable rates, prime location. <strong>Book now</strong> to get 10% discount!</p>\n\n<p><strong>Aurora Hotel Plaza Hotline: 0251 391.8888</strong></p>\n<p><strong>Email: info@aurorahotelplaza.com</strong></p>\n<p><strong>Website: aurorahotelplaza.com</strong></p>','khách sạn biên hòa, khách sạn 4 sao biên hòa, aurora hotel plaza, khách sạn đồng nai, review khách sạn, top khách sạn biên hòa, đặt phòng khách sạn biên hòa, giá phòng khách sạn, khách sạn gần kcn amata','standard',NULL,NULL,'1','1','assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('102','Kinh Nghiệm Đặt Phòng Khách Sạn Biên Hòa - Aurora Hotel Plaza Giá Tốt','Booking Guide for Bien Hoa Hotels - Aurora Hotel Plaza Best Rates','kinh-nghiem-dat-phong-khach-san-bien-hoa','Kinh nghiệm đặt phòng khách sạn tại Biên Hòa, Đồng Nai. Aurora Hotel Plaza 4 sao giá tốt, đặt online giảm 10%, check-in nhanh với QR code.','Experience booking hotels in Bien Hoa, Dong Nai. Aurora Hotel Plaza 4-star best rates, 10% off online booking, quick QR code check-in.','<h2>Kinh nghiệm đặt phòng khách sạn Biên Hòa</h2>\n\n<p>Đặt phòng <strong>khách sạn tại Biên Hòa</strong> có nhiều lựa chọn, nhưng <strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao với giá hợp lý nhất. Dưới đây là kinh nghiệm đặt phòng khách sạn Biên Hòa để bạn có kỳ nghỉ trọn vẹn.</p>\n\n<h3>1. Chọn khách sạn Biên Hòa phù hợp</h3>\n\n<p>Khi chọn <strong>khách sạn tại Biên Hòa</strong>, cần xem xét:</p>\n<ul>\n<li><strong>Vị trí:</strong> Aurora Hotel Plaza tại 253 Phạm Văn Thuận, Phường Tam Hiệp, gần KCN Amata (3km), Big C (5km)</li>\n<li><strong>Chất lượng:</strong> Aurora là khách sạn 4 sao, phòng đẹp, dịch vụ chuyên nghiệp</li>\n<li><strong>Giá:</strong> Từ 1.600.000 VND/đêm, đặt online giảm 10%</li>\n<li><strong>Tiện nghi:</strong> WiFi, hồ bơi, gym, spa, nhà hàng</li>\n</ul>\n\n<h3>2. Đặt phòng online Aurora Hotel Plaza</h3>\n\n<p><strong>Đặt phòng Aurora Hotel Plaza</strong> online có nhiều ưu điểm:</p>\n<ul>\n<li>Giảm <strong>10%</strong> cho đặt phòng online</li>\n<li>Thanh toán linh hoạt: VNPay hoặc trả tại khách sạn</li>\n<li>Check-in nhanh với <strong>QR code</strong></li>\n<li>Tích điểm loyalty cho khách đăng ký</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h3>3. Thời điểm đặt phòng Biên Hòa</h3>\n\n<p>Best time to book <strong>khách sạn Biên Hòa</strong>:</p>\n<ul>\n<li>Đặt trước <strong>7-14 ngày</strong> để có giá tốt</li>\n<li>Tránh cuối tuần, lễ tết nếu muốn giá thấp</li>\n<li>Aurora có khuyến mãi quanh năm, check website</li>\n</ul>\n\n<h3>4. Giá phòng khách sạn Aurora Biên Hòa</h3>\n\n<p><strong>Giá phòng Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Deluxe: <strong>1.600.000 VND/đêm</strong> - phòng 35m², view thành phố</li>\n<li>Premium Deluxe: <strong>1.900.000 VND/đêm</strong> - phòng 45m², view đẹp</li>\n<li>VIP Suite: <strong>2.300.000 VND/đêm</strong> - phòng 80m², bồn tắm Jacuzzi</li>\n</ul>\n\n<h3>5. Thanh toán đặt phòng Aurora</h3>\n\n<p>Aurora Hotel Plaza hỗ trợ:</p>\n<ul>\n<li><strong>VNPay:</strong> Thanh toán online, QR code, ATM card</li>\n<li><strong>Pay at hotel:</strong> Trả tiền tại quầy lễ tân khi check-in</li>\n<li><strong>Promo code:</strong> Dùng mã giảm giá (check website)</li>\n</ul>\n\n<h3>6. Check-in/Check-out Aurora Hotel Plaza</h3>\n\n<p><strong>Thời gian:</strong></p>\n<ul>\n<li>Check-in: <strong>14:00</strong></li>\n<li>Check-out: <strong>12:00</strong></li>\n<li>Early check-in: Có thể (liên hệ trước)</li>\n<li>Late check-out: Phí phụ thu (liên hệ lễ tân)</li>\n</ul>\n\n<h3>7. Chính sách hủy phòng Aurora</h3>\n\n<p><strong>Chính sách hủy Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Hủy <strong>24h trước</strong> check-in: Miễn phí</li>\n<li>Hủy sau 24h: Phí hủy 1 đêm</li>\n<li>No-show: Thanh toán toàn bộ</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p>Đặt phòng <strong>Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt nhất với khách sạn 4 sao, giá hợp lý, tiện nghi đầy đủ. Đặt online qua <strong>aurorahotelplaza.com</strong> để giảm 10%!</p>\n\n<p><strong>Hotline Aurora: 0251 391.8888</strong></p>','<h2>Booking Experience for Bien Hoa Hotels</h2>\n\n<p>Booking <strong>hotels in Bien Hoa</strong> has many options, but <strong>Aurora Hotel Plaza</strong> is the 4-star hotel with best rates. Here is experience booking hotels in Bien Hoa for a perfect stay.</p>\n\n<h3>1. Choose Suitable Bien Hoa Hotel</h3>\n\n<p>When choosing <strong>hotel in Bien Hoa</strong>, consider:</p>\n<ul>\n<li><strong>Location:</strong> Aurora Hotel Plaza at 253 Pham Van Thuan, Tam Hiep Ward, near Amata IP (3km), Big C (5km)</li>\n<li><strong>Quality:</strong> Aurora is 4-star hotel, beautiful rooms, professional service</li>\n<li><strong>Price:</strong> From 1,600,000 VND/night, 10% off online booking</li>\n<li><strong>Amenities:</strong> WiFi, pool, gym, spa, restaurant</li>\n</ul>\n\n<h3>2. Book Aurora Hotel Plaza Online</h3>\n\n<p><strong>Booking Aurora Hotel Plaza</strong> online has advantages:</p>\n<ul>\n<li><strong>10% off</strong> for online booking</li>\n<li>Flexible payment: VNPay or pay at hotel</li>\n<li>Quick check-in with <strong>QR code</strong></li>\n<li>Loyalty points for registered guests</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h3>3. Best Time to Book Bien Hoa Hotel</h3>\n\n<p>Best time to book <strong>Bien Hoa hotel</strong>:</p>\n<ul>\n<li>Book <strong>7-14 days</strong> in advance for best rates</li>\n<li>Aavoid weekends, holidays for lower prices</li>\n<li>Aurora has year-round promotions, check website</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p>Booking <strong>Aurora Hotel Plaza Bien Hoa</strong> is the best choice with 4-star hotel, reasonable rates, full amenities. Book online at <strong>aurorahotelplaza.com</strong> for 10% off!</p>\n\n<p><strong>Aurora Hotline: 0251 391.8888</strong></p>','kinh nghiệm đặt phòng, đặt phòng khách sạn biên hòa, booking khách sạn, aurora hotel booking, khách sạn giá tốt biên hòa, cách đặt phòng online, thanh toán vnpay, check-in khách sạn','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('103','Căn Hộ Dịch Vụ Biên Hòa - Aurora Hotel Plaza Cho Thuê Dài Hạn','Service Apartments Bien Hoa - Aurora Hotel Plaza Long-Term Rental','can-ho-dich-vu-bien-hoa-aurora-hotel-plaza','Căn hộ dịch vụ Aurora Hotel Plaza Biên Hòa cho thuê dài hạn. Căn hộ Studio, Indochine, Modern với bếp, máy giặt. Giá từ 800.000 VND/ngày.','Service apartments Aurora Hotel Plaza Bien Hoa for long-term rental. Studio, Indochine, Modern apartments with kitchen, laundry. From 800,000 VND/day.','<h2>Căn hộ dịch vụ tại Biên Hòa</h2>\n\n<p><strong>Căn hộ dịch vụ tại Biên Hòa</strong> là lựa chọn lý tưởng cho gia đình, doanh nhân cần thuê dài hạn. <strong>Aurora Hotel Plaza</strong> cung cấp căn hộ cao cấp với đầy đủ tiện nghi như ở nhà.</p>\n\n<h3>1. Các loại căn hộ Aurora Biên Hòa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> có 3 dòng căn hộ:</p>\n\n<h4>Modern Studio</h4>\n<ul>\n<li>Diện tích: <strong>45m²</strong></li>\n<li>1 phòng ngủ, 1 phòng tắm</li>\n<li>Bếp đầy đủ: gas, tủ lạnh, máy giặt</li>\n<li>Giá: <strong>800.000 VND/ngày</strong></li>\n</ul>\n\n<h4>Indochine Studio</h4>\n<ul>\n<li>Diện tích: <strong>50m²</strong></li>\n<li>Thiết kế Indochine sang trọng</li>\n<li>Bếp đầy đủ, balcony view</li>\n<li>Giá: <strong>900.000 VND/ngày</strong></li>\n</ul>\n\n<h4>Indochine Family</h4>\n<ul>\n<li>Diện tích: <strong>80m²</strong></li>\n<li>2 phòng ngủ, 2 phòng tắm</li>\n<li>Phù hợp gia đình 4-5 người</li>\n<li>Giá: <strong>1.200.000 VND/ngày</strong></li>\n</ul>\n\n<h3>2. Tiện nghi căn hộ Aurora</h3>\n\n<p>Mỗi căn hộ Aurora có:</p>\n<ul>\n<li><strong>Bếp:</strong> Bếp gas, tủ lạnh, microwave, ấm đun</li>\n<li><strong>Giặt ủi:</strong> Máy giặt trong căn hộ</li>\n<li><strong>WiFi:</strong> Tốc độ cao miễn phí</li>\n<li><strong>TV:</strong> Màn hình phẳng 43\"</li>\n<li><strong>AC:</strong> Điều hòa nhiệt độ</li>\n<li><strong>Dịch vụ:</strong> Room service 24/7</li>\n</ul>\n\n<h3>3. Giá thuê căn hộ Biên Hòa Aurora</h3>\n\n<p><strong>Giá căn hộ Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Theo ngày: <strong>800.000 - 1.200.000 VND/ngày</strong></li>\n<li>Theo tháng: <strong>15.000.000 - 25.000.000 VND/tháng</strong></li>\n<li>Theo năm: Liên hệ báo giá - Hotline 0251 391.8888</li>\n</ul>\n\n<h3>4. Vị trí căn hộ Aurora Biên Hòa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> tại vị trí đắc địa:</p>\n<ul>\n<li>Gần <strong>KCN Amata</strong> (3km) - thuận tiện cho doanh nhân</li>\n<li>Gần <strong>KCN Biên Hòa 2</strong> (5km)</li>\n<li>Gần <strong>Big C Biên Hòa</strong> (5km) - mua sắm tiện</li>\n<li>Gần <strong>Bến xe Biên Hòa</strong> (3km)</li>\n</ul>\n\n<h3>5. Dịch vụ khách sạn 4 sao</h3>\n\n<p>Thuê căn hộ Aurora, bạn vẫn hưởng dịch vụ khách sạn:</p>\n<ul>\n<li>Hồ bơi miễn phí</li>\n<li>Gym, Fitness Center</li>\n<li>Spa massage</li>\n<li>Nhà hàng Aurora</li>\n<li>Bảo vệ 24/7</li>\n<li>Cleaning service (có phí)</li>\n</ul>\n\n<h3>6. Lợi ích thuê căn hộ Aurora</h3>\n\n<p><strong>Lợi ích:</strong></p>\n<ul>\n<li>Tiết kiệm hơn khách sạn khi thuê dài hạn</li>\n<li>Bếp riêng, tự nấu ăn</li>\n<li>Không gian gia đình</li>\n<li>Dịch vụ khách sạn 4 sao</li>\n<li>Check-in nhanh, QR code</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Căn hộ Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt cho thuê dài hạn với đầy đủ tiện nghi, dịch vụ khách sạn 4 sao. Liên hệ <strong>0251 391.8888</strong> để báo giá!</p>','<h2>Service Apartments in Bien Hoa</h2>\n\n<p><strong>Service apartments in Bien Hoa</strong> are ideal for families, business travelers needing long-term rental. <strong>Aurora Hotel Plaza</strong> provides premium apartments with full home-like amenities.</p>\n\n<h3>1. Aurora Bien Hoa Apartment Types</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> has 3 apartment lines:</p>\n\n<h4>Modern Studio</h4>\n<ul>\n<li>Area: <strong>45m²</strong></li>\n<li>1 bedroom, 1 bathroom</li>\n<li>Full kitchen: gas, fridge, washing machine</li>\n<li>Rate: <strong>800,000 VND/day</strong></li>\n</ul>\n\n<h4>Indochine Studio</h4>\n<ul>\n<li>Area: <strong>50m²</strong></li>\n<li>Elegant Indochine design</li>\n<li>Full kitchen, balcony view</li>\n<li>Rate: <strong>900,000 VND/day</strong></li>\n</ul>\n\n<h4>Indochine Family</h4>\n<ul>\n<li>Area: <strong>80m²</strong></li>\n<li>2 bedrooms, 2 bathrooms</li>\n<li>Suitable for family 4-5 people</li>\n<li>Rate: <strong>1,200,000 VND/day</strong></li>\n</ul>\n\n<h3>2. Aurora Apartment Amenities</h3>\n\n<p>Each Aurora apartment has:</p>\n<ul>\n<li><strong>Kitchen:</strong> Gas stove, fridge, microwave, kettle</li>\n<li><strong>Laundry:</strong> Washing machine in apartment</li>\n<li><strong>WiFi:</strong> High-speed free</li>\n<li><strong>TV:</strong> 43\" flat-screen</li>\n<li><strong>AC:</strong> Air conditioning</li>\n<li><strong>Service:</strong> Room service 24/7</li>\n</ul>\n\n<h3>3. Aurora Bien Hoa Apartment Rates</h3>\n\n<p><strong>Aurora Hotel Plaza apartment rates:</strong></p>\n<ul>\n<li>Daily: <strong>800,000 - 1,200,000 VND/day</strong></li>\n<li>Monthly: <strong>15,000,000 - 25,000,000 VND/month</strong></li>\n<li>Yearly: Contact for quote - Hotline 0251 391.8888</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Aurora Hotel Plaza Bien Hoa apartments</strong> are best choice for long-term rental with full amenities, 4-star hotel service. Contact <strong>0251 391.8888</strong> for quote!</p>','căn hộ dịch vụ biên hòa, căn hộ cho thuê biên hòa, apartment bien hoa, căn hộ studio, căn hộ indochine, thuê căn hộ dài hạn, căn hộ aurora, căn hộ có bếp biên hòa','standard',NULL,NULL,'0','1','assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('104','Tổ Chức Tiệc Cưới Biên Hòa - Aurora Hotel Plaza Sảnh Sang Trọng','Wedding Venue Bien Hoa - Aurora Hotel Plaza Elegant Hall','tiec-cuoi-bien-hoa-aurora-hotel-plaza','Tiệc cưới tại Aurora Hotel Plaza Biên Hòa. Sảnh sang trọng 500 khách, menu đa dạng, trọn gói. Tổ chức tiệc cưới 4 sao - Hotline 0251 391.8888!','Wedding at Aurora Hotel Plaza Bien Hoa. Elegant hall for 500 guests, diverse menu, all-inclusive. 4-star wedding venue - Hotline 0251 391.8888!','<h2>Tiệc cưới Biên Hòa - Aurora Hotel Plaza</h2>\n\n<p><strong>Tổ chức tiệc cưới tại Biên Hòa</strong> có nhiều lựa chọn, nhưng <strong>Aurora Hotel Plaza</strong> là trung tâm tiệc cưới 4 sao với sảnh sang trọng, menu đa dạng, dịch vụ chuyên nghiệp.</p>\n\n<h3>1. Sảnh tiệc cưới Aurora Biên Hòa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> có sảnh tiệc cưới:</p>\n<ul>\n<li>Sức chứa: <strong>500 khách</strong></li>\n<li>Diện tích: <strong>800m²</strong></li>\n<li>Decor sang trọng, ánh sáng chuyên nghiệp</li>\n<li>Stage lớn, màn hình LED</li>\n<li>Âm thanh, ánh sáng AV chuyên nghiệp</li>\n</ul>\n\n<h3>2. Menu tiệc cưới Aurora</h3>\n\n<p><strong>Menu tiệc cưới Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Menu Á-Âu: <strong>10 món</strong> (bàn 10 khách)</li>\n<li>Menu Việt: <strong>8 món</strong> truyền thống</li>\n<li>Menu Premium: <strong>12 món</strong> cao cấp</li>\n<li>Buffet: Theo yêu cầu</li>\n</ul>\n\n<h3>3. Giá tiệc cưới Aurora Biên Hòa</h3>\n\n<p><strong>Giá tiệc cưới Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Menu Basic: <strong>3.500.000 VND/bàn</strong></li>\n<li>Menu Standard: <strong>4.500.000 VND/bàn</strong></li>\n<li>Menu Premium: <strong>6.000.000 VND/bàn</strong></li>\n<li>Package trọn gói: Liên hệ 0251 391.8888</li>\n</ul>\n\n<h3>4. Dịch vụ tiệc cưới Aurora</h3>\n\n<p><strong>Dịch vụ trọn gói:</strong></p>\n<ul>\n<li>Decor sảnh, stage, backdrop</li>\n<li>Âm thanh, ánh sáng, MC</li>\n<li>Wedding cake, champagne</li>\n<li>Photography, video basic</li>\n<li>Phòng nghỉ VIP cho gia đình</li>\n<li>Makeup room</li>\n</ul>\n\n<h3>5. Đặt tiệc cưới Aurora</h3>\n\n<p><strong>Quy trình đặt tiệc cưới Aurora:</strong></p>\n<ul>\n<li>Đặt trước: <strong>3-6 tháng</strong></li>\n<li>Tham quan sảnh: Miễn phí</li>\n<li>Tasting menu: 1 bàn test</li>\n<li>Contract: Đặt cọc 30%</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h3>6. Vị trí tiệc cưới Aurora</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> tại:</p>\n<ul>\n<li>253 Phạm Văn Thuận, Phường Tam Hiệp, Biên Hòa</li>\n<li>Gần trung tâm Biên Hòa</li>\n<li>Bãi đỗ xe 500 chỗ</li>\n<li>Thuận tiện cho khách từ Đồng Nai, TP.HCM</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Tiệc cưới Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt nhất với sảnh sang trọng, menu đa dạng, giá hợp lý. Liên hệ <strong>0251 391.8888</strong> để tham quan!</p>','<h2>Wedding Venue Bien Hoa - Aurora Hotel Plaza</h2>\n\n<p><strong>Organizing wedding in Bien Hoa</strong> has many options, but <strong>Aurora Hotel Plaza</strong> is the 4-star wedding center with elegant hall, diverse menu, professional service.</p>\n\n<h3>1. Aurora Bien Hoa Wedding Hall</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> has wedding hall:</p>\n<ul>\n<li>Capacity: <strong>500 guests</strong></li>\n<li>Area: <strong>800m²</strong></li>\n<li>Elegant decor, professional lighting</li>\n<li>Large stage, LED screen</li>\n<li>Professional AV sound, lighting</li>\n</ul>\n\n<h3>2. Aurora Wedding Menu</h3>\n\n<p><strong>Aurora Hotel Plaza wedding menu:</strong></p>\n<ul>\n<li>Asian-European: <strong>10 dishes</strong> (table 10 guests)</li>\n<li>Vietnamese: <strong>8 dishes</strong> traditional</li>\n<li>Premium: <strong>12 dishes</strong> premium</li>\n<li>Buffet: Upon request</li>\n</ul>\n\n<h3>3. Aurora Bien Hoa Wedding Price</h3>\n\n<p><strong>Aurora Hotel Plaza wedding price:</strong></p>\n<ul>\n<li>Basic Menu: <strong>3,500,000 VND/table</strong></li>\n<li>Standard Menu: <strong>4,500,000 VND/table</strong></li>\n<li>Premium Menu: <strong>6,000,000 VND/table</strong></li>\n<li>All-inclusive package: Contact 0251 391.8888</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Wedding at Aurora Hotel Plaza Bien Hoa</strong> is the best choice with elegant hall, diverse menu, reasonable rates. Contact <strong>0251 391.8888</strong> to visit!</p>','tięc cưới biên hòa, tổ chức tiệc cưới, sảnh tiệc cưới biên hòa, wedding venue bien hoa, trung tâm tiệc cưới đồng nai, tiệc cưới khách sạn 4 sao, menu tiệc cưới, giá tiệc cưới biên hòa','standard',NULL,NULL,'1','1','assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('105','Hội Nghị Biên Hòa - Phòng Họp Aurora Hotel Plaza Thiết Bị Hiện Đại','Conference Venue Bien Hoa - Aurora Meeting Rooms Modern Equipment','hoi-nghi-bien-hoa-aurora-hotel-plaza','Hội nghị tại Aurora Hotel Plaza Biên Hòa. Phòng họp 50-500 người, thiết bị AV hiện đại, catering. Tổ chức workshop, training - Hotline 0251 391.8888!','Conference at Aurora Hotel Plaza Bien Hoa. Meeting rooms 50-500 seats, modern AV equipment, catering. Workshop, training venue - Hotline 0251 391.8888!','<h2>Hội nghị Biên Hòa - Aurora Hotel Plaza</h2>\n\n<p><strong>Tổ chức hội nghị tại Biên Hòa</strong> là nhu cầu cao của doanh nghiệp tại KCN Amata, KCN Biên Hòa 2. <strong>Aurora Hotel Plaza</strong> cung cấp phòng họp hiện đại cho workshop, training, seminar.</p>\n\n<h3>1. Phòng hội nghị Aurora</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> có:</p>\n<ul>\n<li>Phòng họp nhỏ: <strong>50 người</strong></li>\n<li>Phòng họp medium: <strong>100 người</strong></li>\n<li>Phòng hội nghị lớn: <strong>500 người</strong></li>\n<li>Sảnh tiệc kết hợp: <strong>800 khách</strong></li>\n</ul>\n\n<h3>2. Thiết bị hội nghị Aurora</h3>\n\n<p><strong>Thiết bị AV hiện đại:</strong></p>\n<ul>\n<li>Màn hình LED, Projector HD</li>\n<li>Micro wireless, âm thanh chuyên nghiệp</li>\n<li>WiFi tốc độ cao</li>\n<li>Video conferencing</li>\n<li>Air conditioning</li>\n</ul>\n\n<h3>3. Giá phòng họp Aurora</h3>\n\n<p><strong>Giá phòng họp Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Phòng 50 người: <strong>500.000 VND/h</strong></li>\n<li>Phòng 100 người: <strong>800.000 VND/h</strong></li>\n<li>Phòng 500 người: <strong>1.500.000 VND/h</strong></li>\n<li>Package full day: Liên hệ 0251 391.8888</li>\n</ul>\n\n<h3>4. Catering hội nghị Aurora</h3>\n\n<p><strong>Dịch vụ catering:</strong></p>\n<ul>\n<li>Tea break: Coffee, tea, snacks</li>\n<li>Buffet lunch: Á-Âu</li>\n<li>Set lunch: Theo yêu cầu</li>\n<li>Dinner: Tiệc kết hợp</li>\n</ul>\n\n<h3>5. Đặt phòng họp Aurora</h3>\n\n<p><strong>Quy trình đặt:</strong></p>\n<ul>\n<li>Đặt trước: <strong>7 ngày</strong></li>\n<li>Tham quan: Miễn phí</li>\n<li>Contract: Đặt cọc 50%</li>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Hội nghị Aurora Hotel Plaza Biên Hòa</strong> với phòng họp hiện đại, thiết bị AV chuyên nghiệp, catering đầy đủ. Liên hệ <strong>0251 391.8888</strong> để đặt!</p>','<h2>Conference Venue Bien Hoa - Aurora Hotel Plaza</h2>\n\n<p><strong>Organizing conference in Bien Hoa</strong> is high demand for businesses at Amata IP, Bien Hoa 2 IP. <strong>Aurora Hotel Plaza</strong> provides modern meeting rooms for workshop, training, seminar.</p>\n\n<h3>1. Aurora Conference Rooms</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> has:</p>\n<ul>\n<li>Small meeting: <strong>50 seats</strong></li>\n<li>Medium meeting: <strong>100 seats</strong></li>\n<li>Large conference: <strong>500 seats</strong></li>\n<li>Hall combined: <strong>800 guests</strong></li>\n</ul>\n\n<h3>2. Aurora Conference Equipment</h3>\n\n<p><strong>Modern AV equipment:</strong></p>\n<ul>\n<li>LED screen, HD Projector</li>\n<li>Wireless mic, professional sound</li>\n<li>High-speed WiFi</li>\n<li>Video conferencing</li>\n<li>Air conditioning</li>\n</ul>\n\n<h3>3. Aurora Meeting Room Price</h3>\n\n<p><strong>Aurora Hotel Plaza meeting room rates:</strong></p>\n<ul>\n<li>50 seats: <strong>500,000 VND/hour</strong></li>\n<li>100 seats: <strong>800,000 VND/hour</strong></li>\n<li>500 seats: <strong>1,500,000 VND/hour</strong></li>\n<li>Full day package: Contact 0251 391.8888</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Conference at Aurora Hotel Plaza Bien Hoa</strong> with modern rooms, professional AV equipment, full catering. Contact <strong>0251 391.8888</strong> to book!</p>','hội nghị biên hòa, phòng họp biên hòa, meeting room bien hoa, conference venue, workshop biên hòa, training room, hội thảo đồng nai, phòng họp khách sạn','standard',NULL,NULL,'0','1','assets/img/restaurant/nha-hang-aurora-hotel-4.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('106','Du Lịch Biên Hòa Đồng Nai - Địa Điểm Nổi Bật & Khách Sạn Aurora','Bien Hoa Dong Nai Tourism - Highlights & Aurora Hotel','du-lich-bien-hoa-dong-nai','Du lịch Biên Hòa, Đồng Nai: Khu du lịch Bửu Long, Văn Miếu Trấn Biên, khách sạn Aurora Plaza. Cẩm nang du lịch Đồng Nai - Hotline 0251 391.8888!','Bien Hoa Dong Nai tourism: Buu Long Resort, Tran Bien Temple, Aurora Plaza Hotel. Dong Nai travel guide - Hotline 0251 391.8888!','<h2>Du lịch Biên Hòa, Đồng Nai</h2>\n\n<p><strong>Biên Hòa</strong> là thành phố lớn tại <strong>tỉnh Đồng Nai</strong>, gần TP.HCM, với nhiều địa điểm du lịch hấp dẫn. <strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao lý tưởng cho du khách.</p>\n\n<h3>1. Khu du lịch Bửu Long</h3>\n\n<p><strong>Bửu Long</strong> là khu du lịch nổi tiếng:</p>\n<ul>\n<li>Ho thủy điện Trị An</li>\n<li>Chùa Bửu Long, Chùa Vàng</li>\n<li>Lake view đẹp</li>\n<li>Khoảng cách từ Aurora: <strong>15km</strong></li>\n</ul>\n\n<h3>2. Văn Miếu Trấn Biên</h3>\n\n<p><strong>Văn Miếu Trấn Biên</strong> là:</p>\n<ul>\n<li>Di tích lịch văn hóa</li>\n<li>Nơi thờ Khổng Tử</li>\n<li>Kiến trúc cổ kính</li>\n<li>Khoảng cách từ Aurora: <strong>10km</strong></li>\n</ul>\n\n<h3>3. Địa điểm khác</h3>\n\n<ul>\n<li><strong>Cây Bàng Biên Hòa:</strong> Đường Phạm Văn Thuận</li>\n<li><strong>Chùa Tấn Lộc:</strong> Phường Tân Mai</li>\n<li><strong>Sông Đồng Nai:</strong> View sunset</li>\n<li><strong>Big C Biên Hòa:</strong> Mua sắm</li>\n</ul>\n\n<h3>4. Khách sạn Aurora Plaza Biên Hòa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> - khách sạn 4 sao:</p>\n<ul>\n<li>200+ phòng, căn hộ</li>\n<li>Vị trí trung tâm</li>\n<li>Hồ bơi, gym, spa</li>\n<li>Nhà hàng Aurora</li>\n<li>Hotline: 0251 391.8888</li>\n</ul>\n\n<h3>5. Kinh nghiệm du lịch Biên Hòa</h3>\n\n<ul>\n<li>Di chuyển: Xe bus, taxi, Grab</li>\n<li>Thời điểm: Tháng 11-4 (khô)</li>\n<li>Ăn uống: Nhà hàng Aurora, quán local</li>\n<li>Lưu trú: Aurora Hotel Plaza</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Du lịch Biên Hòa, Đồng Nai</strong> có nhiều điểm hấp dẫn. Lưu trú tại <strong>Aurora Hotel Plaza</strong> 4 sao - <strong>0251 391.8888</strong>!</p>','<h2>Bien Hoa Dong Nai Tourism</h2>\n\n<p><strong>Bien Hoa</strong> is a large city in <strong>Dong Nai Province</strong>, near Ho Chi Minh City, with many attractive tourist spots. <strong>Aurora Hotel Plaza</strong> is the ideal 4-star hotel for tourists.</p>\n\n<h3>1. Buu Long Resort</h3>\n\n<p><strong>Buu Long</strong> is famous resort:</p>\n<ul>\n<li>Tri An Hydroelectric Lake</li>\n<li>Buu Long Temple, Golden Temple</li>\n<li>Beautiful lake view</li>\n<li>Distance from Aurora: <strong>15km</strong></li>\n</ul>\n\n<h3>2. Tran Bien Temple</h3>\n\n<p><strong>Tran Bien Temple</strong> is:</p>\n<ul>\n<li>Cultural heritage site</li>\n<li>Confucius worship place</li>\n<li>Ancient architecture</li>\n<li>Distance from Aurora: <strong>10km</strong></li>\n</ul>\n\n<h3>3. Other Attractions</h3>\n\n<ul>\n<li><strong>Bien Hoa Bang Tree:</strong> Pham Van Thuan street</li>\n<li><strong>Tan Loc Temple:</strong> Tan Mai Ward</li>\n<li><strong>Dong Nai River:</strong> Sunset view</li>\n<li><strong>Big C Bien Hoa:</strong> Shopping</li>\n</ul>\n\n<h3>4. Aurora Plaza Hotel Bien Hoa</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> - 4-star hotel:</p>\n<ul>\n<li>200+ rooms, apartments</li>\n<li>Central location</li>\n<li>Pool, gym, spa</li>\n<li>Aurora Restaurant</li>\n<li>Hotline: 0251 391.8888</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Bien Hoa Dong Nai tourism</strong> has many attractions. Stay at <strong>Aurora Hotel Plaza</strong> 4-star - <strong>0251 391.8888</strong>!</p>','du lịch biên hòa, du lịch đồng nai, khu du lịch bửu long, văn miếu trấn biên, địa điểm du lịch biên hòa, bien hoa tourism, dong nai travel, khách sạn aurora biên hòa','standard',NULL,NULL,'1','1','assets/img/post/khu-du-lich-buu-long.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('107','Nhà Hàng Aurora Biên Hòa - Ẩm Thực Cao Cấp Đồng Nai','Aurora Restaurant Bien Hoa - Fine Dining Dong Nai','nha-hang-aurora-bien-hoa-am-thuc-cao-cap','Nhà hàng Aurora Hotel Plaza Biên Hòa. Ẩm thực Việt & quốc tế, buffet sáng, view đẹp. Nhà hàng 4 sao Đồng Nai - Đặt bàn 0251 391.8888!','Aurora Restaurant at Hotel Plaza Bien Hoa. Vietnamese & international cuisine, breakfast buffet, beautiful view. 4-star restaurant Dong Nai - Reserve 0251 391.8888!','<h2>Nhà hàng Aurora Biên Hòa</h2>\n\n<p><strong>Nhà hàng Aurora</strong> tại Aurora Hotel Plaza Biên Hòa là nhà hàng 4 sao với ẩm thực Việt & quốc tế, buffet sáng, view thành phố đẹp.</p>\n\n<h3>1. Ẩm thực Aurora</h3>\n\n<p><strong>Menu nhà hàng Aurora:</strong></p>\n<ul>\n<li><strong>Ẩm thực Việt:</strong> Phở, bún, cơm tấm, món miền Nam</li>\n<li><strong>Ẩm thực Á:</strong> Sushi, dim sum, Thái, Hàn</li>\n<li><strong>Ẩm thực Âu:</strong> Pasta, steak, salad</li>\n<li><strong>Specialties:</strong> Món đặc sản Đồng Nai</li>\n</ul>\n\n<h3>2. Buffet sáng Aurora</h3>\n\n<p><strong>Buffet breakfast Aurora:</strong></p>\n<ul>\n<li>Thời gian: <strong>6:00 - 10:00</strong></li>\n<li>50+ món Á-Âu</li>\n<li>Giá: <strong>150.000 VND/người</strong></li>\n<li>Miễn phí cho khách lưu trú</li>\n</ul>\n\n<h3>3. Giá nhà hàng Aurora</h3>\n\n<p><strong>Giá nhà hàng Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Set lunch: <strong>200.000 - 350.000 VND</strong></li>\n<li>Dinner: <strong>300.000 - 500.000 VND</strong></li>\n<li>Buffet dinner: <strong>450.000 VND/người</strong></li>\n<li>Private dining: Liên hệ</li>\n</ul>\n\n<h3>4. Đặt bàn Aurora</h3>\n\n<p><strong>Đặt bàn nhà hàng Aurora:</strong></p>\n<ul>\n<li>Hotline: <strong>0251 391.8888</strong></li>\n<li>Email: info@aurorahotelplaza.com</li>\n<li>Website: aurorahotelplaza.com</li>\n<li>Đặt trước: Recommend 1-2 ngày</li>\n</ul>\n\n<h3>5. View nhà hàng Aurora</h3>\n\n<p>Nhà hàng Aurora có:</p>\n<ul>\n<li>View thành phố Biên Hòa</li>\n<li>View hồ bơi</li>\n<li>Outdoor terrace</li>\n<li>Private VIP room</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Nhà hàng Aurora Biên Hòa</strong> là lựa chọn ăn uống 4 sao với ẩm thực đa dạng, view đẹp. Đặt bàn <strong>0251 391.8888</strong>!</p>','<h2>Aurora Restaurant Bien Hoa</h2>\n\n<p><strong>Aurora Restaurant</strong> at Aurora Hotel Plaza Bien Hoa is a 4-star restaurant with Vietnamese & international cuisine, breakfast buffet, beautiful city view.</p>\n\n<h3>1. Aurora Cuisine</h3>\n\n<p><strong>Aurora Restaurant menu:</strong></p>\n<ul>\n<li><strong>Vietnamese:</strong> Pho, bun, com tam, Southern dishes</li>\n<li><strong>Asian:</strong> Sushi, dim sum, Thai, Korean</li>\n<li><strong>European:</strong> Pasta, steak, salad</li>\n<li><strong>Specialties:</strong> Dong Nai specialties</li>\n</ul>\n\n<h3>2. Aurora Breakfast Buffet</h3>\n\n<p><strong>Aurora breakfast buffet:</strong></p>\n<ul>\n<li>Time: <strong>6:00 - 10:00</strong></li>\n<li>50+ Asian-European dishes</li>\n<li>Rate: <strong>150,000 VND/person</strong></li>\n<li>Free for staying guests</li>\n</ul>\n\n<h3>3. Aurora Restaurant Price</h3>\n\n<p><strong>Aurora Hotel Plaza restaurant rates:</strong></p>\n<ul>\n<li>Set lunch: <strong>200,000 - 350,000 VND</strong></li>\n<li>Dinner: <strong>300,000 - 500,000 VND</strong></li>\n<li>Dinner buffet: <strong>450,000 VND/person</strong></li>\n<li>Private dining: Contact</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Aurora Restaurant Bien Hoa</strong> is the 4-star dining choice with diverse cuisine, beautiful view. Reserve <strong>0251 391.8888</strong>!</p>','nha hang bien hoa, nhà hàng aurora, ẩm thực biên hòa, restaurant bien hoa, buffet bien hoa, ăn uống đồng nai, fine dining biên hòa, nhà hàng 4 sao','standard',NULL,NULL,'0','1','assets/img/restaurant/nha-hang-aurora-hotel-6.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('108','Khách Sạn Gần KCN Amata Biên Hòa - Aurora Hotel Plaza Doanh Nhân','Hotel Near Amata Industrial Park Bien Hoa - Aurora Hotel Plaza for Business','khach-san-gan-kcn-amata-bien-hoa','Khách sạn gần KCN Amata Biên Hòa: Aurora Hotel Plaza chỉ 3km. Phù hợp doanh nhân công tác, căn hộ dài hạn. Hotline 0251 391.8888!','Hotel near Amata IP Bien Hoa: Aurora Hotel Plaza just 3km. Suitable for business travelers, long-term apartments. Hotline 0251 391.8888!','<h2>Khách sạn gần KCN Amata Biên Hòa</h2>\n\n<p><strong>KCN Amata</strong> là khu công nghiệp lớn tại Biên Hòa, tập trung nhiều doanh nghiệp. <strong>Aurora Hotel Plaza</strong> chỉ cách <strong>3km</strong>, là lựa chọn tốt nhất cho doanh nhân công tác.</p>\n\n<h3>1. Vị trí Aurora gần Amata</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> tại:</p>\n<ul>\n<li>253 Phạm Văn Thuận, Phường Tam Hiệp</li>\n<li>Khoảng cách KCN Amata: <strong>3km</strong> (5 phút drive)</li>\n<li>Khoảng cách KCN Biên Hòa 2: <strong>5km</strong></li>\n<li>Khoảng cách Big C: <strong>5km</strong></li>\n</ul>\n\n<h3>2. Phòng cho doanh nhân Aurora</h3>\n\n<p><strong>Phòng Aurora Hotel Plaza:</strong></p>\n<ul>\n<li>Deluxe: 35m², WiFi, desk, chair</li>\n<li>Premium Deluxe: 45m², view đẹp</li>\n<li>VIP Suite: 80m², phòng khách riêng</li>\n<li>Business amenities: WiFi, desk, meeting</li>\n</ul>\n\n<h3>3. Căn hộ dài hạn Aurora</h3>\n\n<p>Thuê căn hộ Aurora:</p>\n<ul>\n<li>Studio: 45m², bếp, máy giặt</li>\n<li>Indochine: 50-80m², sang trọng</li>\n<li>Giá tháng: 15-25 triệu VND</li>\n</ul>\n\n<h3>4. Dịch vụ doanh nhân Aurora</h3>\n\n<ul>\n<li>Meeting room: 50-500 người</li>\n<li>Business center: Print, copy, fax</li>\n<li>Airport shuttle: Tân Sơn Nhất, Long Thành</li>\n<li>Currency exchange</li>\n<li>Laundry service</li>\n</ul>\n\n<h3>5. Giá phòng Aurora Amata</h3>\n\n<ul>\n<li>Deluxe: <strong>1.600.000 VND/đêm</strong></li>\n<li>Premium: <strong>1.900.000 VND/đêm</strong></li>\n<li>Suite: <strong>2.300.000 VND/đêm</strong></li>\n<li>Giảm 10% online booking</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> gần KCN Amata 3km, phù hợp doanh nhân công tác. Đặt phòng <strong>0251 391.8888</strong>!</p>','<h2>Hotel Near Amata Industrial Park Bien Hoa</h2>\n\n<p><strong>Amata IP</strong> is a large industrial park in Bien Hoa, hosting many businesses. <strong>Aurora Hotel Plaza</strong> is just <strong>3km</strong> away, the best choice for business travelers.</p>\n\n<h3>1. Aurora Location Near Amata</h3>\n\n<p><strong>Aurora Hotel Plaza</strong> at:</p>\n<ul>\n<li>253 Pham Van Thuan, Tam Hiep Ward</li>\n<li>Distance to Amata IP: <strong>3km</strong> (5 min drive)</li>\n<li>Distance to Bien Hoa 2 IP: <strong>5km</strong></li>\n<li>Distance to Big C: <strong>5km</strong></li>\n</ul>\n\n<h3>2. Aurora Rooms for Business</h3>\n\n<p><strong>Aurora Hotel Plaza rooms:</strong></p>\n<ul>\n<li>Deluxe: 35m², WiFi, desk, chair</li>\n<li>Premium Deluxe: 45m², beautiful view</li>\n<li>VIP Suite: 80m², private living room</li>\n<li>Business amenities: WiFi, desk, meeting</li>\n</ul>\n\n<h3>3. Aurora Long-Term Apartments</h3>\n\n<p>Rent Aurora apartments:</p>\n<ul>\n<li>Studio: 45m², kitchen, laundry</li>\n<li>Indochine: 50-80m², elegant</li>\n<li>Monthly: 15-25 million VND</li>\n</ul>\n\n<h3>4. Aurora Business Services</h3>\n\n<ul>\n<li>Meeting room: 50-500 seats</li>\n<li>Business center: Print, copy, fax</li>\n<li>Airport shuttle: Tan Son Nhat, Long Thanh</li>\n<li>Currency exchange</li>\n<li>Laundry service</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> near Amata IP 3km, suitable for business travelers. Book <strong>0251 391.8888</strong>!</p>','khách sạn gần kcn amata, hotel near amata, khách sạn doanh nhân biên hòa, business hotel bien hoa, căn hộ dài hạn, hotel near industrial park, khách sạn công tác, aurora hotel amata','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
-('109','Khách Sạn Gần Sân Bay Biên Hòa - Aurora Hotel Plaza Long Thành Tân Sơn Nhất','Hotel Near Airport Bien Hoa - Aurora Hotel Plaza Long Thanh Tan Son Nhat','khach-san-gan-san-bay-bien-hoa','Khách sạn Aurora Plaza Biên Hòa gần sân bay Long Thành (25km), Tân Sơn Nhất (40km). Dịch vụ đưa đón sân bay - Hotline 0251 391.8888!','Aurora Plaza Hotel Bien Hoa near Long Thanh Airport (25km), Tan Son Nhat (40km). Airport shuttle service - Hotline 0251 391.8888!','<h2>Khách sạn gần sân bay Biên Hòa</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> tại Biên Hòa gần <strong>sân bay Long Thành</strong> (25km) và <strong>sân bay Tân Sơn Nhất</strong> (40km), thuận tiện cho khách bay.</p>\n\n<h3>1. Aurora gần sân bay Long Thành</h3>\n\n<ul>\n<li>Sân bay Long Thành: <strong>25km</strong> (30 phút drive)</li>\n<li>Sân bay mới lớn nhất Việt Nam</li>\n<li>Dịch vụ shuttle Aurora: 500.000 VND/trip</li>\n</ul>\n\n<h3>2. Aurora gần sân bay Tân Sơn Nhất</h3>\n\n<ul>\n<li>Sân bay Tân Sơn Nhất: <strong>40km</strong> (50 phút drive)</li>\n<li>Sân bay TP.HCM chính</li>\n<li>Dịch vụ shuttle Aurora: 700.000 VND/trip</li>\n</ul>\n\n<h3>3. Dịch vụ đưa đón Aurora</h3>\n\n<p><strong>Aurora Airport Shuttle:</strong></p>\n<ul>\n<li>Đặt trước: 1 ngày</li>\n<li>Xe 4-7 chỗ</li>\n<li>Pick-up tại sân bay</li>\n<li>Drop-off tại Aurora</li>\n<li>Hotline: 0251 391.8888</li>\n</ul>\n\n<h3>4. Ưu điểm Aurora gần sân bay</h3>\n\n<ul>\n<li>Thời gian drive short</li>\n<li>Dịch vụ shuttle 24/7</li>\n<li>Phòng sẵn sàng late check-in</li>\n<li>QR code check-in nhanh</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> gần sân bay Long Thành, Tân Sơn Nhất. Shuttle service - <strong>0251 391.8888</strong>!</p>','<h2>Hotel Near Airport Bien Hoa</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> in Bien Hoa is near <strong>Long Thanh Airport</strong> (25km) and <strong>Tan Son Nhat Airport</strong> (40km), convenient for flight guests.</p>\n\n<h3>1. Aurora Near Long Thanh Airport</h3>\n\n<ul>\n<li>Long Thanh Airport: <strong>25km</strong> (30 min drive)</li>\n<li>Vietnam\'s largest new airport</li>\n<li>Aurora shuttle: 500,000 VND/trip</li>\n</ul>\n\n<h3>2. Aurora Near Tan Son Nhat Airport</h3>\n\n<ul>\n<li>Tan Son Nhat Airport: <strong>40km</strong> (50 min drive)</li>\n<li>Ho Chi Minh main airport</li>\n<li>Aurora shuttle: 700,000 VND/trip</li>\n</ul>\n\n<h3>3. Aurora Shuttle Service</h3>\n\n<p><strong>Aurora Airport Shuttle:</strong></p>\n<ul>\n<li>Book: 1 day in advance</li>\n<li>4-7 seat vehicle</li>\n<li>Pick-up at airport</li>\n<li>Drop-off at Aurora</li>\n<li>Hotline: 0251 391.8888</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> near Long Thanh, Tan Son Nhat airports. Shuttle service - <strong>0251 391.8888</strong>!</p>','khách sạn gần sân bay, hotel near airport bien hoa, sân bay long thành, sân bay tân sơn nhất, airport shuttle, khách sạn biên hòa sân bay, aurora airport, đưa đón sân bay','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg','1','1','published','1','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:30:04'),
-('110','Aurora Hotel Plaza Biên Hòa Review - Khách Sạn 4 Sao Đáng Lưu Trú','Aurora Hotel Plaza Bien Hoa Review - 4-Star Hotel Worth Staying','aurora-hotel-plaza-bien-hoa-review','Review Aurora Hotel Plaza Biên Hòa: Khách sạn 4 sao, phòng đẹp, dịch vụ tốt, giá hợp lý. Review khách sạn Đồng Nai - Hotline 0251 391.8888!','Aurora Hotel Plaza Bien Hoa review: 4-star hotel, beautiful rooms, good service, reasonable rates. Dong Nai hotel review - Hotline 0251 391.8888!','<h2>Review Aurora Hotel Plaza Biên Hòa</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao tại Biên Hòa, Đồng Nai. Dưới đây là review chi tiết từ khách thực tế.</p>\n\n<h3>1. Review phòng Aurora</h3>\n\n<p><strong>Điểm phòng Aurora:</strong> 9/10</p>\n<ul>\n<li>Phòng Deluxe: 35m², sạch, đẹp</li>\n<li>TV 43\", minibar, AC, WiFi mạnh</li>\n<li>Bathroom: Vòi sen massage, towels mềm</li>\n<li>View thành phố đẹp</li>\n</ul>\n\n<h3>2. Review dịch vụ Aurora</h3>\n\n<p><strong>Điểm dịch vụ:</strong> 8.5/10</p>\n<ul>\n<li>Reception: Nhiệt tình, 24/7</li>\n<li>Room service: Nhanh, menu đa dạng</li>\n<li>Concierge: Support booking tour</li>\n<li>QR check-in: Tiện lợi</li>\n</ul>\n\n<h3>3. Review tiện nghi Aurora</h3>\n\n<p><strong>Điểm tiện nghi:</strong> 9/10</p>\n<ul>\n<li>Pool: Clean, view đẹp</li>\n<li>Gym: Thiết bị modern</li>\n<li>Spa: Massage tốt</li>\n<li>Restaurant: Buffet ngon</li>\n</ul>\n\n<h3>4. Review giá Aurora</h3>\n\n<p><strong>Điểm giá:</strong> 9/10</p>\n<ul>\n<li>Deluxe: 1.600.000 VND - hợp lý</li>\n<li>Premium: 1.900.000 VND - value good</li>\n<li>Suite: 2.300.000 VND - premium</li>\n<li>Giảm 10% online</li>\n</ul>\n\n<h3>5. Review vị trí Aurora</h3>\n\n<p><strong>Điểm vị trí:</strong> 9.5/10</p>\n<ul>\n<li>Trung tâm Biên Hòa</li>\n<li>Gần KCN Amata (3km)</li>\n<li>Gần Big C (5km)</li>\n<li>Gần sân bay Long Thành (25km)</li>\n</ul>\n\n<h3>6. Tổng điểm Aurora</h3>\n\n<p><strong>Tổng điểm Aurora Hotel Plaza:</strong> 9/10</p>\n\n<p><strong>Pros:</strong></p>\n<ul>\n<li>Khách sạn 4 sao chuẩn</li>\n<li>Vị trí đắc địa</li>\n<li>Phòng đẹp, sạch</li>\n<li>Dịch vụ tốt</li>\n</ul>\n\n<p><strong>Cons:</strong></p>\n<ul>\n<li>Parking có thể busy cuối tuần</li>\n<li>Pool giờ hạn chế</li>\n</ul>\n\n<h2>Kết luận</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao đáng lưu trú tại Biên Hòa. <strong>Recommend!</strong> - Hotline <strong>0251 391.8888</strong>!</p>','<h2>Aurora Hotel Plaza Bien Hoa Review</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> is a 4-star hotel in Bien Hoa, Dong Nai. Below is detailed review from actual guests.</p>\n\n<h3>1. Aurora Room Review</h3>\n\n<p><strong>Room score:</strong> 9/10</p>\n<ul>\n<li>Deluxe: 35m², clean, beautiful</li>\n<li>TV 43\", minibar, AC, strong WiFi</li>\n<li>Bathroom: Massage shower, soft towels</li>\n<li>Beautiful city view</li>\n</ul>\n\n<h3>2. Aurora Service Review</h3>\n\n<p><strong>Service score:</strong> 8.5/10</p>\n<ul>\n<li>Reception: Friendly, 24/7</li>\n<li>Room service: Fast, diverse menu</li>\n<li>Concierge: Support tour booking</li>\n<li>QR check-in: Convenient</li>\n</ul>\n\n<h3>3. Aurora Amenities Review</h3>\n\n<p><strong>Amenities score:</strong> 9/10</p>\n<ul>\n<li>Pool: Clean, beautiful view</li>\n<li>Gym: Modern equipment</li>\n<li>Spa: Good massage</li>\n<li>Restaurant: Delicious buffet</li>\n</ul>\n\n<h3>4. Aurora Price Review</h3>\n\n<p><strong>Price score:</strong> 9/10</p>\n<ul>\n<li>Deluxe: 1,600,000 VND - reasonable</li>\n<li>Premium: 1,900,000 VND - good value</li>\n<li>Suite: 2,300,000 VND - premium</li>\n<li>10% off online</li>\n</ul>\n\n<h3>5. Aurora Location Review</h3>\n\n<p><strong>Location score:</strong> 9.5/10</p>\n<ul>\n<li>Bien Hoa center</li>\n<li>Near Amata IP (3km)</li>\n<li>Near Big C (5km)</li>\n<li>Near Long Thanh Airport (25km)</li>\n</ul>\n\n<h3>6. Aurora Total Score</h3>\n\n<p><strong>Aurora Hotel Plaza total:</strong> 9/10</p>\n\n<p><strong>Pros:</strong></p>\n<ul>\n<li>Standard 4-star hotel</li>\n<li>Prime location</li>\n<li>Beautiful, clean rooms</li>\n<li>Good service</li>\n</ul>\n\n<p><strong>Cons:</strong></p>\n<ul>\n<li>Parking can be busy weekends</li>\n<li>Pool hours limited</li>\n</ul>\n\n<h2>Conclusion</h2>\n\n<p><strong>Aurora Hotel Plaza</strong> is a 4-star hotel worth staying in Bien Hoa. <strong>Recommended!</strong> - Hotline <strong>0251 391.8888</strong>!</p>','aurora hotel review, review khách sạn biên hòa, khách sạn 4 sao review, hotel review bien hoa, aurora plaza review, khách sạn đồng nai review, review phòng khách sạn, aurora hotel plaza','standard',NULL,NULL,'1','1','assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27');
+('101','Top 10 Khách sạn Biên Hòa Đáng Lưu Trú 2026 - Aurora Hotel Plaza Hàng Đầu','Top 10 Hotels in Bien Hoa Worth Staying 2026 - Aurora Hotel Plaza Tops the List','top-10-khach-san-bien-hoa-dang-luu-tru-2026','Biên Hòa có nhiều khách sạn tốt, nhưng Aurora Hotel Plaza 4 sao là lựa chọn hàng đầu với vị trí đắc địa, phòng đẹp, dịch vụ chuyên nghiệp.','Bien Hoa has many good hotels, but Aurora Hotel Plaza 4-star is the top choice with prime location, beautiful rooms, professional service.','<h2>Khách sạn Biên Hòa - Lựa chọn nghỉ dưỡng tại Đồng Nai</h2>
+\n
+\n<p><strong>Biên Hòa</strong>, thành phố đông đúc tại <strong>tỉnh Đồng Nai</strong>, là nơi tập trung nhiều khu công nghiệp lớn như KCN Amata, KCN Biên Hòa 2. Do đó, nhu cầu tìm <strong>khách sạn tại Biên Hòa</strong> ngày càng cao, từ doanh nhân công tác đến du khách nghỉ dưỡng.</p>
+\n
+\n<h3>1. Aurora Hotel Plaza - Khách sạn 4 sao Biên Hòa hàng đầu</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao nổi bật tại Biên Hòa với hơn <strong>200 phòng nghỉ và căn hộ cao cấp</strong>. Tọa lạc tại <strong>253 Phạm Văn Thuận, Phường Tam Hiệp</strong>, vị trí trung tâm, gần các khu công nghiệp và điểm du lịch.</p>
+\n
+\n<p><strong>Ưu điểm Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Phòng Deluxe, Premium Deluxe, VIP Suite với đầy đủ tiện nghi</li>
+\n<li>Căn hộ Indochine và Modern Studio cho thuê dài hạn</li>
+\n<li>Sảnh tiệc cưới sang trọng sức chứa 500 khách</li>
+\n<li>Phòng hội nghị hiện đại, phù hợp workshop, training</li>
+\n<li>Nhà hàng Aurora với ẩm thực Việt & quốc tế</li>
+\n<li>Hồ bơi, Gym, Spa 4 sao</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h3>2. Tiện nghi khách sạn 4 sao tại Biên Hòa</h3>
+\n
+\n<p>Aurora Hotel Plaza cung cấp đầy đủ tiện nghi khách sạn 4 sao:</p>
+\n<ul>
+\n<li>WiFi miễn phí tốc độ cao</li>
+\n<li>Điều hòa, TV màn hình phẳng, minibar</li>
+\n<li>Phòng tắm riêng với vòi sen massage</li>
+\n<li>Bãi đỗ xe miễn phí, an ninh 24/7</li>
+\n<li>Dịch vụ phòng 24/7</li>
+\n<li>Đưa đón sân bay Tân Sơn Nhất, Long Thành</li>
+\n</ul>
+\n
+\n<h3>3. Giá phòng khách sạn Biên Hòa Aurora</h3>
+\n
+\n<p><strong>Giá phòng Aurora Hotel Plaza Biên Hòa:</strong></p>
+\n<ul>
+\n<li>Phòng Deluxe: <strong>1.600.000 VND/đêm</strong></li>
+\n<li>Phòng Premium Deluxe: <strong>1.900.000 VND/đêm</strong></li>
+\n<li>Phòng VIP Suite: <strong>2.300.000 VND/đêm</strong></li>
+\n<li>Căn hộ Studio: <strong>800.000 VND/ngày</strong></li>
+\n</ul>
+\n
+\n<p>Giảm <strong>10% khi đặt phòng online</strong> qua website aurorahotelplaza.com!</p>
+\n
+\n<h3>4. Vị trí khách sạn Biên Hòa Aurora</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> nằm tại vị trí đắc địa:</p>
+\n<ul>
+\n<li>Gần KCN Amata: <strong>3km</strong></li>
+\n<li>Gần KCN Biên Hòa 2: <strong>5km</strong></li>
+\n<li>Gần Big C Biên Hòa: <strong>5km</strong></li>
+\n<li>Gần Bến xe Biên Hòa: <strong>3km</strong></li>
+\n<li>Gần Sân bay Long Thành: <strong>25km</strong></li>
+\n<li>Gần Sân bay Tân Sơn Nhất: <strong>40km</strong></li>
+\n</ul>
+\n
+\n<h3>5. So sánh khách sạn Biên Hòa</h3>
+\n
+\n<p>So với các khách sạn khác tại Biên Hòa, Aurora Hotel Plaza có ưu điểm:</p>
+\n<ul>
+\n<li>Khách sạn 4 sao với dịch vụ chuẩn quốc tế</li>
+\n<li>Phòng mới, sạch, trang thiết bị hiện đại</li>
+\n<li>Vị trí trung tâm, thuận tiện di chuyển</li>
+\n<li>Giá hợp lý, nhiều khuyến mãi</li>
+\n<li>Tích hợp căn hộ dịch vụ cho thuê dài hạn</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p>Nếu bạn đang tìm <strong>khách sạn tại Biên Hòa</strong> hoặc <strong>khách sạn tại Đồng Nai</strong>, Aurora Hotel Plaza là lựa chọn hàng đầu với chất lượng 4 sao, giá hợp lý, vị trí đắc địa. <strong>Đặt phòng ngay</strong> để nhận ưu đãi 10%!</p>
+\n
+\n<p><strong>Hotline Aurora Hotel Plaza: 0251 391.8888</strong></p>
+\n<p><strong>Email: info@aurorahotelplaza.com</strong></p>
+\n<p><strong>Website: aurorahotelplaza.com</strong></p>','<h2>Hotels in Bien Hoa - Accommodation Choice in Dong Nai</h2>
+\n
+\n<p><strong>Bien Hoa</strong>, a bustling city in <strong>Dong Nai Province</strong>, hosts major industrial parks like Amata IP, Bien Hoa 2 IP. Therefore, demand for <strong>hotels in Bien Hoa</strong> is increasing, from business travelers to tourists.</p>
+\n
+\n<h3>1. Aurora Hotel Plaza - Top 4-Star Hotel in Bien Hoa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> is the standout 4-star hotel in Bien Hoa with over <strong>200 luxury rooms and apartments</strong>. Located at <strong>253 Pham Van Thuan, Tam Hiep Ward</strong>, central location near industrial parks and tourist spots.</p>
+\n
+\n<p><strong>Aurora Hotel Plaza Highlights:</strong></p>
+\n<ul>
+\n<li>Deluxe, Premium Deluxe, VIP Suite rooms with full amenities</li>
+\n<li>Indochine and Modern Studio apartments for long-term rent</li>
+\n<li>Elegant wedding hall for 500 guests</li>
+\n<li>Modern conference rooms, suitable for workshop, training</li>
+\n<li>Aurora Restaurant with Vietnamese & international cuisine</li>
+\n<li>Pool, Gym, Spa 4-star</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h3>2. 4-Star Hotel Amenities in Bien Hoa</h3>
+\n
+\n<p>Aurora Hotel Plaza provides full 4-star hotel amenities:</p>
+\n<ul>
+\n<li>Free high-speed WiFi</li>
+\n<li>Air conditioning, flat-screen TV, minibar</li>
+\n<li>Private bathroom with massage shower</li>
+\n<li>Free parking, 24/7 security</li>
+\n<li>24/7 room service</li>
+\n<li>Tan Son Nhat, Long Thanh airport shuttle</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Bien Hoa Hotel Room Rates</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza Bien Hoa room rates:</strong></p>
+\n<ul>
+\n<li>Deluxe Room: <strong>1,600,000 VND/night</strong></li>
+\n<li>Premium Deluxe: <strong>1,900,000 VND/night</strong></li>
+\n<li>VIP Suite: <strong>2,300,000 VND/night</strong></li>
+\n<li>Studio Apartment: <strong>800,000 VND/day</strong></li>
+\n</ul>
+\n
+\n<p>Get <strong>10% off when booking online</strong> at aurorahotelplaza.com!</p>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p>If you are looking for a <strong>hotel in Bien Hoa</strong> or <strong>hotel in Dong Nai</strong>, Aurora Hotel Plaza is the top choice with 4-star quality, reasonable rates, prime location. <strong>Book now</strong> to get 10% discount!</p>
+\n
+\n<p><strong>Aurora Hotel Plaza Hotline: 0251 391.8888</strong></p>
+\n<p><strong>Email: info@aurorahotelplaza.com</strong></p>
+\n<p><strong>Website: aurorahotelplaza.com</strong></p>','khách sạn biên hòa, khách sạn 4 sao biên hòa, aurora hotel plaza, khách sạn đồng nai, review khách sạn, top khách sạn biên hòa, đặt phòng khách sạn biên hòa, giá phòng khách sạn, khách sạn gần kcn amata','standard',NULL,NULL,'1','1','assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('102','Kinh Nghiệm Đặt Phòng Khách Sạn Biên Hòa - Aurora Hotel Plaza Giá Tốt','Booking Guide for Bien Hoa Hotels - Aurora Hotel Plaza Best Rates','kinh-nghiem-dat-phong-khach-san-bien-hoa','Kinh nghiệm đặt phòng khách sạn tại Biên Hòa, Đồng Nai. Aurora Hotel Plaza 4 sao giá tốt, đặt online giảm 10%, check-in nhanh với QR code.','Experience booking hotels in Bien Hoa, Dong Nai. Aurora Hotel Plaza 4-star best rates, 10% off online booking, quick QR code check-in.','<h2>Kinh nghiệm đặt phòng khách sạn Biên Hòa</h2>
+\n
+\n<p>Đặt phòng <strong>khách sạn tại Biên Hòa</strong> có nhiều lựa chọn, nhưng <strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao với giá hợp lý nhất. Dưới đây là kinh nghiệm đặt phòng khách sạn Biên Hòa để bạn có kỳ nghỉ trọn vẹn.</p>
+\n
+\n<h3>1. Chọn khách sạn Biên Hòa phù hợp</h3>
+\n
+\n<p>Khi chọn <strong>khách sạn tại Biên Hòa</strong>, cần xem xét:</p>
+\n<ul>
+\n<li><strong>Vị trí:</strong> Aurora Hotel Plaza tại 253 Phạm Văn Thuận, Phường Tam Hiệp, gần KCN Amata (3km), Big C (5km)</li>
+\n<li><strong>Chất lượng:</strong> Aurora là khách sạn 4 sao, phòng đẹp, dịch vụ chuyên nghiệp</li>
+\n<li><strong>Giá:</strong> Từ 1.600.000 VND/đêm, đặt online giảm 10%</li>
+\n<li><strong>Tiện nghi:</strong> WiFi, hồ bơi, gym, spa, nhà hàng</li>
+\n</ul>
+\n
+\n<h3>2. Đặt phòng online Aurora Hotel Plaza</h3>
+\n
+\n<p><strong>Đặt phòng Aurora Hotel Plaza</strong> online có nhiều ưu điểm:</p>
+\n<ul>
+\n<li>Giảm <strong>10%</strong> cho đặt phòng online</li>
+\n<li>Thanh toán linh hoạt: VNPay hoặc trả tại khách sạn</li>
+\n<li>Check-in nhanh với <strong>QR code</strong></li>
+\n<li>Tích điểm loyalty cho khách đăng ký</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h3>3. Thời điểm đặt phòng Biên Hòa</h3>
+\n
+\n<p>Best time to book <strong>khách sạn Biên Hòa</strong>:</p>
+\n<ul>
+\n<li>Đặt trước <strong>7-14 ngày</strong> để có giá tốt</li>
+\n<li>Tránh cuối tuần, lễ tết nếu muốn giá thấp</li>
+\n<li>Aurora có khuyến mãi quanh năm, check website</li>
+\n</ul>
+\n
+\n<h3>4. Giá phòng khách sạn Aurora Biên Hòa</h3>
+\n
+\n<p><strong>Giá phòng Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Deluxe: <strong>1.600.000 VND/đêm</strong> - phòng 35m², view thành phố</li>
+\n<li>Premium Deluxe: <strong>1.900.000 VND/đêm</strong> - phòng 45m², view đẹp</li>
+\n<li>VIP Suite: <strong>2.300.000 VND/đêm</strong> - phòng 80m², bồn tắm Jacuzzi</li>
+\n</ul>
+\n
+\n<h3>5. Thanh toán đặt phòng Aurora</h3>
+\n
+\n<p>Aurora Hotel Plaza hỗ trợ:</p>
+\n<ul>
+\n<li><strong>VNPay:</strong> Thanh toán online, QR code, ATM card</li>
+\n<li><strong>Pay at hotel:</strong> Trả tiền tại quầy lễ tân khi check-in</li>
+\n<li><strong>Promo code:</strong> Dùng mã giảm giá (check website)</li>
+\n</ul>
+\n
+\n<h3>6. Check-in/Check-out Aurora Hotel Plaza</h3>
+\n
+\n<p><strong>Thời gian:</strong></p>
+\n<ul>
+\n<li>Check-in: <strong>14:00</strong></li>
+\n<li>Check-out: <strong>12:00</strong></li>
+\n<li>Early check-in: Có thể (liên hệ trước)</li>
+\n<li>Late check-out: Phí phụ thu (liên hệ lễ tân)</li>
+\n</ul>
+\n
+\n<h3>7. Chính sách hủy phòng Aurora</h3>
+\n
+\n<p><strong>Chính sách hủy Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Hủy <strong>24h trước</strong> check-in: Miễn phí</li>
+\n<li>Hủy sau 24h: Phí hủy 1 đêm</li>
+\n<li>No-show: Thanh toán toàn bộ</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p>Đặt phòng <strong>Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt nhất với khách sạn 4 sao, giá hợp lý, tiện nghi đầy đủ. Đặt online qua <strong>aurorahotelplaza.com</strong> để giảm 10%!</p>
+\n
+\n<p><strong>Hotline Aurora: 0251 391.8888</strong></p>','<h2>Booking Experience for Bien Hoa Hotels</h2>
+\n
+\n<p>Booking <strong>hotels in Bien Hoa</strong> has many options, but <strong>Aurora Hotel Plaza</strong> is the 4-star hotel with best rates. Here is experience booking hotels in Bien Hoa for a perfect stay.</p>
+\n
+\n<h3>1. Choose Suitable Bien Hoa Hotel</h3>
+\n
+\n<p>When choosing <strong>hotel in Bien Hoa</strong>, consider:</p>
+\n<ul>
+\n<li><strong>Location:</strong> Aurora Hotel Plaza at 253 Pham Van Thuan, Tam Hiep Ward, near Amata IP (3km), Big C (5km)</li>
+\n<li><strong>Quality:</strong> Aurora is 4-star hotel, beautiful rooms, professional service</li>
+\n<li><strong>Price:</strong> From 1,600,000 VND/night, 10% off online booking</li>
+\n<li><strong>Amenities:</strong> WiFi, pool, gym, spa, restaurant</li>
+\n</ul>
+\n
+\n<h3>2. Book Aurora Hotel Plaza Online</h3>
+\n
+\n<p><strong>Booking Aurora Hotel Plaza</strong> online has advantages:</p>
+\n<ul>
+\n<li><strong>10% off</strong> for online booking</li>
+\n<li>Flexible payment: VNPay or pay at hotel</li>
+\n<li>Quick check-in with <strong>QR code</strong></li>
+\n<li>Loyalty points for registered guests</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h3>3. Best Time to Book Bien Hoa Hotel</h3>
+\n
+\n<p>Best time to book <strong>Bien Hoa hotel</strong>:</p>
+\n<ul>
+\n<li>Book <strong>7-14 days</strong> in advance for best rates</li>
+\n<li>Aavoid weekends, holidays for lower prices</li>
+\n<li>Aurora has year-round promotions, check website</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p>Booking <strong>Aurora Hotel Plaza Bien Hoa</strong> is the best choice with 4-star hotel, reasonable rates, full amenities. Book online at <strong>aurorahotelplaza.com</strong> for 10% off!</p>
+\n
+\n<p><strong>Aurora Hotline: 0251 391.8888</strong></p>','kinh nghiệm đặt phòng, đặt phòng khách sạn biên hòa, booking khách sạn, aurora hotel booking, khách sạn giá tốt biên hòa, cách đặt phòng online, thanh toán vnpay, check-in khách sạn','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('103','Căn Hộ Dịch Vụ Biên Hòa - Aurora Hotel Plaza Cho Thuê Dài Hạn','Service Apartments Bien Hoa - Aurora Hotel Plaza Long-Term Rental','can-ho-dich-vu-bien-hoa-aurora-hotel-plaza','Căn hộ dịch vụ Aurora Hotel Plaza Biên Hòa cho thuê dài hạn. Căn hộ Studio, Indochine, Modern với bếp, máy giặt. Giá từ 800.000 VND/ngày.','Service apartments Aurora Hotel Plaza Bien Hoa for long-term rental. Studio, Indochine, Modern apartments with kitchen, laundry. From 800,000 VND/day.','<h2>Căn hộ dịch vụ tại Biên Hòa</h2>
+\n
+\n<p><strong>Căn hộ dịch vụ tại Biên Hòa</strong> là lựa chọn lý tưởng cho gia đình, doanh nhân cần thuê dài hạn. <strong>Aurora Hotel Plaza</strong> cung cấp căn hộ cao cấp với đầy đủ tiện nghi như ở nhà.</p>
+\n
+\n<h3>1. Các loại căn hộ Aurora Biên Hòa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> có 3 dòng căn hộ:</p>
+\n
+\n<h4>Modern Studio</h4>
+\n<ul>
+\n<li>Diện tích: <strong>45m²</strong></li>
+\n<li>1 phòng ngủ, 1 phòng tắm</li>
+\n<li>Bếp đầy đủ: gas, tủ lạnh, máy giặt</li>
+\n<li>Giá: <strong>800.000 VND/ngày</strong></li>
+\n</ul>
+\n
+\n<h4>Indochine Studio</h4>
+\n<ul>
+\n<li>Diện tích: <strong>50m²</strong></li>
+\n<li>Thiết kế Indochine sang trọng</li>
+\n<li>Bếp đầy đủ, balcony view</li>
+\n<li>Giá: <strong>900.000 VND/ngày</strong></li>
+\n</ul>
+\n
+\n<h4>Indochine Family</h4>
+\n<ul>
+\n<li>Diện tích: <strong>80m²</strong></li>
+\n<li>2 phòng ngủ, 2 phòng tắm</li>
+\n<li>Phù hợp gia đình 4-5 người</li>
+\n<li>Giá: <strong>1.200.000 VND/ngày</strong></li>
+\n</ul>
+\n
+\n<h3>2. Tiện nghi căn hộ Aurora</h3>
+\n
+\n<p>Mỗi căn hộ Aurora có:</p>
+\n<ul>
+\n<li><strong>Bếp:</strong> Bếp gas, tủ lạnh, microwave, ấm đun</li>
+\n<li><strong>Giặt ủi:</strong> Máy giặt trong căn hộ</li>
+\n<li><strong>WiFi:</strong> Tốc độ cao miễn phí</li>
+\n<li><strong>TV:</strong> Màn hình phẳng 43\"</li>
+\n<li><strong>AC:</strong> Điều hòa nhiệt độ</li>
+\n<li><strong>Dịch vụ:</strong> Room service 24/7</li>
+\n</ul>
+\n
+\n<h3>3. Giá thuê căn hộ Biên Hòa Aurora</h3>
+\n
+\n<p><strong>Giá căn hộ Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Theo ngày: <strong>800.000 - 1.200.000 VND/ngày</strong></li>
+\n<li>Theo tháng: <strong>15.000.000 - 25.000.000 VND/tháng</strong></li>
+\n<li>Theo năm: Liên hệ báo giá - Hotline 0251 391.8888</li>
+\n</ul>
+\n
+\n<h3>4. Vị trí căn hộ Aurora Biên Hòa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> tại vị trí đắc địa:</p>
+\n<ul>
+\n<li>Gần <strong>KCN Amata</strong> (3km) - thuận tiện cho doanh nhân</li>
+\n<li>Gần <strong>KCN Biên Hòa 2</strong> (5km)</li>
+\n<li>Gần <strong>Big C Biên Hòa</strong> (5km) - mua sắm tiện</li>
+\n<li>Gần <strong>Bến xe Biên Hòa</strong> (3km)</li>
+\n</ul>
+\n
+\n<h3>5. Dịch vụ khách sạn 4 sao</h3>
+\n
+\n<p>Thuê căn hộ Aurora, bạn vẫn hưởng dịch vụ khách sạn:</p>
+\n<ul>
+\n<li>Hồ bơi miễn phí</li>
+\n<li>Gym, Fitness Center</li>
+\n<li>Spa massage</li>
+\n<li>Nhà hàng Aurora</li>
+\n<li>Bảo vệ 24/7</li>
+\n<li>Cleaning service (có phí)</li>
+\n</ul>
+\n
+\n<h3>6. Lợi ích thuê căn hộ Aurora</h3>
+\n
+\n<p><strong>Lợi ích:</strong></p>
+\n<ul>
+\n<li>Tiết kiệm hơn khách sạn khi thuê dài hạn</li>
+\n<li>Bếp riêng, tự nấu ăn</li>
+\n<li>Không gian gia đình</li>
+\n<li>Dịch vụ khách sạn 4 sao</li>
+\n<li>Check-in nhanh, QR code</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Căn hộ Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt cho thuê dài hạn với đầy đủ tiện nghi, dịch vụ khách sạn 4 sao. Liên hệ <strong>0251 391.8888</strong> để báo giá!</p>','<h2>Service Apartments in Bien Hoa</h2>
+\n
+\n<p><strong>Service apartments in Bien Hoa</strong> are ideal for families, business travelers needing long-term rental. <strong>Aurora Hotel Plaza</strong> provides premium apartments with full home-like amenities.</p>
+\n
+\n<h3>1. Aurora Bien Hoa Apartment Types</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> has 3 apartment lines:</p>
+\n
+\n<h4>Modern Studio</h4>
+\n<ul>
+\n<li>Area: <strong>45m²</strong></li>
+\n<li>1 bedroom, 1 bathroom</li>
+\n<li>Full kitchen: gas, fridge, washing machine</li>
+\n<li>Rate: <strong>800,000 VND/day</strong></li>
+\n</ul>
+\n
+\n<h4>Indochine Studio</h4>
+\n<ul>
+\n<li>Area: <strong>50m²</strong></li>
+\n<li>Elegant Indochine design</li>
+\n<li>Full kitchen, balcony view</li>
+\n<li>Rate: <strong>900,000 VND/day</strong></li>
+\n</ul>
+\n
+\n<h4>Indochine Family</h4>
+\n<ul>
+\n<li>Area: <strong>80m²</strong></li>
+\n<li>2 bedrooms, 2 bathrooms</li>
+\n<li>Suitable for family 4-5 people</li>
+\n<li>Rate: <strong>1,200,000 VND/day</strong></li>
+\n</ul>
+\n
+\n<h3>2. Aurora Apartment Amenities</h3>
+\n
+\n<p>Each Aurora apartment has:</p>
+\n<ul>
+\n<li><strong>Kitchen:</strong> Gas stove, fridge, microwave, kettle</li>
+\n<li><strong>Laundry:</strong> Washing machine in apartment</li>
+\n<li><strong>WiFi:</strong> High-speed free</li>
+\n<li><strong>TV:</strong> 43\" flat-screen</li>
+\n<li><strong>AC:</strong> Air conditioning</li>
+\n<li><strong>Service:</strong> Room service 24/7</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Bien Hoa Apartment Rates</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza apartment rates:</strong></p>
+\n<ul>
+\n<li>Daily: <strong>800,000 - 1,200,000 VND/day</strong></li>
+\n<li>Monthly: <strong>15,000,000 - 25,000,000 VND/month</strong></li>
+\n<li>Yearly: Contact for quote - Hotline 0251 391.8888</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza Bien Hoa apartments</strong> are best choice for long-term rental with full amenities, 4-star hotel service. Contact <strong>0251 391.8888</strong> for quote!</p>','căn hộ dịch vụ biên hòa, căn hộ cho thuê biên hòa, apartment bien hoa, căn hộ studio, căn hộ indochine, thuê căn hộ dài hạn, căn hộ aurora, căn hộ có bếp biên hòa','standard',NULL,NULL,'0','1','assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('104','Tổ Chức Tiệc Cưới Biên Hòa - Aurora Hotel Plaza Sảnh Sang Trọng','Wedding Venue Bien Hoa - Aurora Hotel Plaza Elegant Hall','tiec-cuoi-bien-hoa-aurora-hotel-plaza','Tiệc cưới tại Aurora Hotel Plaza Biên Hòa. Sảnh sang trọng 500 khách, menu đa dạng, trọn gói. Tổ chức tiệc cưới 4 sao - Hotline 0251 391.8888!','Wedding at Aurora Hotel Plaza Bien Hoa. Elegant hall for 500 guests, diverse menu, all-inclusive. 4-star wedding venue - Hotline 0251 391.8888!','<h2>Tiệc cưới Biên Hòa - Aurora Hotel Plaza</h2>
+\n
+\n<p><strong>Tổ chức tiệc cưới tại Biên Hòa</strong> có nhiều lựa chọn, nhưng <strong>Aurora Hotel Plaza</strong> là trung tâm tiệc cưới 4 sao với sảnh sang trọng, menu đa dạng, dịch vụ chuyên nghiệp.</p>
+\n
+\n<h3>1. Sảnh tiệc cưới Aurora Biên Hòa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> có sảnh tiệc cưới:</p>
+\n<ul>
+\n<li>Sức chứa: <strong>500 khách</strong></li>
+\n<li>Diện tích: <strong>800m²</strong></li>
+\n<li>Decor sang trọng, ánh sáng chuyên nghiệp</li>
+\n<li>Stage lớn, màn hình LED</li>
+\n<li>Âm thanh, ánh sáng AV chuyên nghiệp</li>
+\n</ul>
+\n
+\n<h3>2. Menu tiệc cưới Aurora</h3>
+\n
+\n<p><strong>Menu tiệc cưới Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Menu Á-Âu: <strong>10 món</strong> (bàn 10 khách)</li>
+\n<li>Menu Việt: <strong>8 món</strong> truyền thống</li>
+\n<li>Menu Premium: <strong>12 món</strong> cao cấp</li>
+\n<li>Buffet: Theo yêu cầu</li>
+\n</ul>
+\n
+\n<h3>3. Giá tiệc cưới Aurora Biên Hòa</h3>
+\n
+\n<p><strong>Giá tiệc cưới Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Menu Basic: <strong>3.500.000 VND/bàn</strong></li>
+\n<li>Menu Standard: <strong>4.500.000 VND/bàn</strong></li>
+\n<li>Menu Premium: <strong>6.000.000 VND/bàn</strong></li>
+\n<li>Package trọn gói: Liên hệ 0251 391.8888</li>
+\n</ul>
+\n
+\n<h3>4. Dịch vụ tiệc cưới Aurora</h3>
+\n
+\n<p><strong>Dịch vụ trọn gói:</strong></p>
+\n<ul>
+\n<li>Decor sảnh, stage, backdrop</li>
+\n<li>Âm thanh, ánh sáng, MC</li>
+\n<li>Wedding cake, champagne</li>
+\n<li>Photography, video basic</li>
+\n<li>Phòng nghỉ VIP cho gia đình</li>
+\n<li>Makeup room</li>
+\n</ul>
+\n
+\n<h3>5. Đặt tiệc cưới Aurora</h3>
+\n
+\n<p><strong>Quy trình đặt tiệc cưới Aurora:</strong></p>
+\n<ul>
+\n<li>Đặt trước: <strong>3-6 tháng</strong></li>
+\n<li>Tham quan sảnh: Miễn phí</li>
+\n<li>Tasting menu: 1 bàn test</li>
+\n<li>Contract: Đặt cọc 30%</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h3>6. Vị trí tiệc cưới Aurora</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> tại:</p>
+\n<ul>
+\n<li>253 Phạm Văn Thuận, Phường Tam Hiệp, Biên Hòa</li>
+\n<li>Gần trung tâm Biên Hòa</li>
+\n<li>Bãi đỗ xe 500 chỗ</li>
+\n<li>Thuận tiện cho khách từ Đồng Nai, TP.HCM</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Tiệc cưới Aurora Hotel Plaza Biên Hòa</strong> là lựa chọn tốt nhất với sảnh sang trọng, menu đa dạng, giá hợp lý. Liên hệ <strong>0251 391.8888</strong> để tham quan!</p>','<h2>Wedding Venue Bien Hoa - Aurora Hotel Plaza</h2>
+\n
+\n<p><strong>Organizing wedding in Bien Hoa</strong> has many options, but <strong>Aurora Hotel Plaza</strong> is the 4-star wedding center with elegant hall, diverse menu, professional service.</p>
+\n
+\n<h3>1. Aurora Bien Hoa Wedding Hall</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> has wedding hall:</p>
+\n<ul>
+\n<li>Capacity: <strong>500 guests</strong></li>
+\n<li>Area: <strong>800m²</strong></li>
+\n<li>Elegant decor, professional lighting</li>
+\n<li>Large stage, LED screen</li>
+\n<li>Professional AV sound, lighting</li>
+\n</ul>
+\n
+\n<h3>2. Aurora Wedding Menu</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza wedding menu:</strong></p>
+\n<ul>
+\n<li>Asian-European: <strong>10 dishes</strong> (table 10 guests)</li>
+\n<li>Vietnamese: <strong>8 dishes</strong> traditional</li>
+\n<li>Premium: <strong>12 dishes</strong> premium</li>
+\n<li>Buffet: Upon request</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Bien Hoa Wedding Price</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza wedding price:</strong></p>
+\n<ul>
+\n<li>Basic Menu: <strong>3,500,000 VND/table</strong></li>
+\n<li>Standard Menu: <strong>4,500,000 VND/table</strong></li>
+\n<li>Premium Menu: <strong>6,000,000 VND/table</strong></li>
+\n<li>All-inclusive package: Contact 0251 391.8888</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Wedding at Aurora Hotel Plaza Bien Hoa</strong> is the best choice with elegant hall, diverse menu, reasonable rates. Contact <strong>0251 391.8888</strong> to visit!</p>','tięc cưới biên hòa, tổ chức tiệc cưới, sảnh tiệc cưới biên hòa, wedding venue bien hoa, trung tâm tiệc cưới đồng nai, tiệc cưới khách sạn 4 sao, menu tiệc cưới, giá tiệc cưới biên hòa','standard',NULL,NULL,'1','1','assets/img/post/wedding/tiec-cuoi-tai-aurora-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('105','Hội Nghị Biên Hòa - Phòng Họp Aurora Hotel Plaza Thiết Bị Hiện Đại','Conference Venue Bien Hoa - Aurora Meeting Rooms Modern Equipment','hoi-nghi-bien-hoa-aurora-hotel-plaza','Hội nghị tại Aurora Hotel Plaza Biên Hòa. Phòng họp 50-500 người, thiết bị AV hiện đại, catering. Tổ chức workshop, training - Hotline 0251 391.8888!','Conference at Aurora Hotel Plaza Bien Hoa. Meeting rooms 50-500 seats, modern AV equipment, catering. Workshop, training venue - Hotline 0251 391.8888!','<h2>Hội nghị Biên Hòa - Aurora Hotel Plaza</h2>
+\n
+\n<p><strong>Tổ chức hội nghị tại Biên Hòa</strong> là nhu cầu cao của doanh nghiệp tại KCN Amata, KCN Biên Hòa 2. <strong>Aurora Hotel Plaza</strong> cung cấp phòng họp hiện đại cho workshop, training, seminar.</p>
+\n
+\n<h3>1. Phòng hội nghị Aurora</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> có:</p>
+\n<ul>
+\n<li>Phòng họp nhỏ: <strong>50 người</strong></li>
+\n<li>Phòng họp medium: <strong>100 người</strong></li>
+\n<li>Phòng hội nghị lớn: <strong>500 người</strong></li>
+\n<li>Sảnh tiệc kết hợp: <strong>800 khách</strong></li>
+\n</ul>
+\n
+\n<h3>2. Thiết bị hội nghị Aurora</h3>
+\n
+\n<p><strong>Thiết bị AV hiện đại:</strong></p>
+\n<ul>
+\n<li>Màn hình LED, Projector HD</li>
+\n<li>Micro wireless, âm thanh chuyên nghiệp</li>
+\n<li>WiFi tốc độ cao</li>
+\n<li>Video conferencing</li>
+\n<li>Air conditioning</li>
+\n</ul>
+\n
+\n<h3>3. Giá phòng họp Aurora</h3>
+\n
+\n<p><strong>Giá phòng họp Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Phòng 50 người: <strong>500.000 VND/h</strong></li>
+\n<li>Phòng 100 người: <strong>800.000 VND/h</strong></li>
+\n<li>Phòng 500 người: <strong>1.500.000 VND/h</strong></li>
+\n<li>Package full day: Liên hệ 0251 391.8888</li>
+\n</ul>
+\n
+\n<h3>4. Catering hội nghị Aurora</h3>
+\n
+\n<p><strong>Dịch vụ catering:</strong></p>
+\n<ul>
+\n<li>Tea break: Coffee, tea, snacks</li>
+\n<li>Buffet lunch: Á-Âu</li>
+\n<li>Set lunch: Theo yêu cầu</li>
+\n<li>Dinner: Tiệc kết hợp</li>
+\n</ul>
+\n
+\n<h3>5. Đặt phòng họp Aurora</h3>
+\n
+\n<p><strong>Quy trình đặt:</strong></p>
+\n<ul>
+\n<li>Đặt trước: <strong>7 ngày</strong></li>
+\n<li>Tham quan: Miễn phí</li>
+\n<li>Contract: Đặt cọc 50%</li>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Hội nghị Aurora Hotel Plaza Biên Hòa</strong> với phòng họp hiện đại, thiết bị AV chuyên nghiệp, catering đầy đủ. Liên hệ <strong>0251 391.8888</strong> để đặt!</p>','<h2>Conference Venue Bien Hoa - Aurora Hotel Plaza</h2>
+\n
+\n<p><strong>Organizing conference in Bien Hoa</strong> is high demand for businesses at Amata IP, Bien Hoa 2 IP. <strong>Aurora Hotel Plaza</strong> provides modern meeting rooms for workshop, training, seminar.</p>
+\n
+\n<h3>1. Aurora Conference Rooms</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> has:</p>
+\n<ul>
+\n<li>Small meeting: <strong>50 seats</strong></li>
+\n<li>Medium meeting: <strong>100 seats</strong></li>
+\n<li>Large conference: <strong>500 seats</strong></li>
+\n<li>Hall combined: <strong>800 guests</strong></li>
+\n</ul>
+\n
+\n<h3>2. Aurora Conference Equipment</h3>
+\n
+\n<p><strong>Modern AV equipment:</strong></p>
+\n<ul>
+\n<li>LED screen, HD Projector</li>
+\n<li>Wireless mic, professional sound</li>
+\n<li>High-speed WiFi</li>
+\n<li>Video conferencing</li>
+\n<li>Air conditioning</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Meeting Room Price</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza meeting room rates:</strong></p>
+\n<ul>
+\n<li>50 seats: <strong>500,000 VND/hour</strong></li>
+\n<li>100 seats: <strong>800,000 VND/hour</strong></li>
+\n<li>500 seats: <strong>1,500,000 VND/hour</strong></li>
+\n<li>Full day package: Contact 0251 391.8888</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Conference at Aurora Hotel Plaza Bien Hoa</strong> with modern rooms, professional AV equipment, full catering. Contact <strong>0251 391.8888</strong> to book!</p>','hội nghị biên hòa, phòng họp biên hòa, meeting room bien hoa, conference venue, workshop biên hòa, training room, hội thảo đồng nai, phòng họp khách sạn','standard',NULL,NULL,'0','1','assets/img/restaurant/nha-hang-aurora-hotel-4.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('106','Du Lịch Biên Hòa Đồng Nai - Địa Điểm Nổi Bật & Khách Sạn Aurora','Bien Hoa Dong Nai Tourism - Highlights & Aurora Hotel','du-lich-bien-hoa-dong-nai','Du lịch Biên Hòa, Đồng Nai: Khu du lịch Bửu Long, Văn Miếu Trấn Biên, khách sạn Aurora Plaza. Cẩm nang du lịch Đồng Nai - Hotline 0251 391.8888!','Bien Hoa Dong Nai tourism: Buu Long Resort, Tran Bien Temple, Aurora Plaza Hotel. Dong Nai travel guide - Hotline 0251 391.8888!','<h2>Du lịch Biên Hòa, Đồng Nai</h2>
+\n
+\n<p><strong>Biên Hòa</strong> là thành phố lớn tại <strong>tỉnh Đồng Nai</strong>, gần TP.HCM, với nhiều địa điểm du lịch hấp dẫn. <strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao lý tưởng cho du khách.</p>
+\n
+\n<h3>1. Khu du lịch Bửu Long</h3>
+\n
+\n<p><strong>Bửu Long</strong> là khu du lịch nổi tiếng:</p>
+\n<ul>
+\n<li>Ho thủy điện Trị An</li>
+\n<li>Chùa Bửu Long, Chùa Vàng</li>
+\n<li>Lake view đẹp</li>
+\n<li>Khoảng cách từ Aurora: <strong>15km</strong></li>
+\n</ul>
+\n
+\n<h3>2. Văn Miếu Trấn Biên</h3>
+\n
+\n<p><strong>Văn Miếu Trấn Biên</strong> là:</p>
+\n<ul>
+\n<li>Di tích lịch văn hóa</li>
+\n<li>Nơi thờ Khổng Tử</li>
+\n<li>Kiến trúc cổ kính</li>
+\n<li>Khoảng cách từ Aurora: <strong>10km</strong></li>
+\n</ul>
+\n
+\n<h3>3. Địa điểm khác</h3>
+\n
+\n<ul>
+\n<li><strong>Cây Bàng Biên Hòa:</strong> Đường Phạm Văn Thuận</li>
+\n<li><strong>Chùa Tấn Lộc:</strong> Phường Tân Mai</li>
+\n<li><strong>Sông Đồng Nai:</strong> View sunset</li>
+\n<li><strong>Big C Biên Hòa:</strong> Mua sắm</li>
+\n</ul>
+\n
+\n<h3>4. Khách sạn Aurora Plaza Biên Hòa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> - khách sạn 4 sao:</p>
+\n<ul>
+\n<li>200+ phòng, căn hộ</li>
+\n<li>Vị trí trung tâm</li>
+\n<li>Hồ bơi, gym, spa</li>
+\n<li>Nhà hàng Aurora</li>
+\n<li>Hotline: 0251 391.8888</li>
+\n</ul>
+\n
+\n<h3>5. Kinh nghiệm du lịch Biên Hòa</h3>
+\n
+\n<ul>
+\n<li>Di chuyển: Xe bus, taxi, Grab</li>
+\n<li>Thời điểm: Tháng 11-4 (khô)</li>
+\n<li>Ăn uống: Nhà hàng Aurora, quán local</li>
+\n<li>Lưu trú: Aurora Hotel Plaza</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Du lịch Biên Hòa, Đồng Nai</strong> có nhiều điểm hấp dẫn. Lưu trú tại <strong>Aurora Hotel Plaza</strong> 4 sao - <strong>0251 391.8888</strong>!</p>','<h2>Bien Hoa Dong Nai Tourism</h2>
+\n
+\n<p><strong>Bien Hoa</strong> is a large city in <strong>Dong Nai Province</strong>, near Ho Chi Minh City, with many attractive tourist spots. <strong>Aurora Hotel Plaza</strong> is the ideal 4-star hotel for tourists.</p>
+\n
+\n<h3>1. Buu Long Resort</h3>
+\n
+\n<p><strong>Buu Long</strong> is famous resort:</p>
+\n<ul>
+\n<li>Tri An Hydroelectric Lake</li>
+\n<li>Buu Long Temple, Golden Temple</li>
+\n<li>Beautiful lake view</li>
+\n<li>Distance from Aurora: <strong>15km</strong></li>
+\n</ul>
+\n
+\n<h3>2. Tran Bien Temple</h3>
+\n
+\n<p><strong>Tran Bien Temple</strong> is:</p>
+\n<ul>
+\n<li>Cultural heritage site</li>
+\n<li>Confucius worship place</li>
+\n<li>Ancient architecture</li>
+\n<li>Distance from Aurora: <strong>10km</strong></li>
+\n</ul>
+\n
+\n<h3>3. Other Attractions</h3>
+\n
+\n<ul>
+\n<li><strong>Bien Hoa Bang Tree:</strong> Pham Van Thuan street</li>
+\n<li><strong>Tan Loc Temple:</strong> Tan Mai Ward</li>
+\n<li><strong>Dong Nai River:</strong> Sunset view</li>
+\n<li><strong>Big C Bien Hoa:</strong> Shopping</li>
+\n</ul>
+\n
+\n<h3>4. Aurora Plaza Hotel Bien Hoa</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> - 4-star hotel:</p>
+\n<ul>
+\n<li>200+ rooms, apartments</li>
+\n<li>Central location</li>
+\n<li>Pool, gym, spa</li>
+\n<li>Aurora Restaurant</li>
+\n<li>Hotline: 0251 391.8888</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Bien Hoa Dong Nai tourism</strong> has many attractions. Stay at <strong>Aurora Hotel Plaza</strong> 4-star - <strong>0251 391.8888</strong>!</p>','du lịch biên hòa, du lịch đồng nai, khu du lịch bửu long, văn miếu trấn biên, địa điểm du lịch biên hòa, bien hoa tourism, dong nai travel, khách sạn aurora biên hòa','standard',NULL,NULL,'1','1','assets/img/post/khu-du-lich-buu-long.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('107','Nhà Hàng Aurora Biên Hòa - Ẩm Thực Cao Cấp Đồng Nai','Aurora Restaurant Bien Hoa - Fine Dining Dong Nai','nha-hang-aurora-bien-hoa-am-thuc-cao-cap','Nhà hàng Aurora Hotel Plaza Biên Hòa. Ẩm thực Việt & quốc tế, buffet sáng, view đẹp. Nhà hàng 4 sao Đồng Nai - Đặt bàn 0251 391.8888!','Aurora Restaurant at Hotel Plaza Bien Hoa. Vietnamese & international cuisine, breakfast buffet, beautiful view. 4-star restaurant Dong Nai - Reserve 0251 391.8888!','<h2>Nhà hàng Aurora Biên Hòa</h2>
+\n
+\n<p><strong>Nhà hàng Aurora</strong> tại Aurora Hotel Plaza Biên Hòa là nhà hàng 4 sao với ẩm thực Việt & quốc tế, buffet sáng, view thành phố đẹp.</p>
+\n
+\n<h3>1. Ẩm thực Aurora</h3>
+\n
+\n<p><strong>Menu nhà hàng Aurora:</strong></p>
+\n<ul>
+\n<li><strong>Ẩm thực Việt:</strong> Phở, bún, cơm tấm, món miền Nam</li>
+\n<li><strong>Ẩm thực Á:</strong> Sushi, dim sum, Thái, Hàn</li>
+\n<li><strong>Ẩm thực Âu:</strong> Pasta, steak, salad</li>
+\n<li><strong>Specialties:</strong> Món đặc sản Đồng Nai</li>
+\n</ul>
+\n
+\n<h3>2. Buffet sáng Aurora</h3>
+\n
+\n<p><strong>Buffet breakfast Aurora:</strong></p>
+\n<ul>
+\n<li>Thời gian: <strong>6:00 - 10:00</strong></li>
+\n<li>50+ món Á-Âu</li>
+\n<li>Giá: <strong>150.000 VND/người</strong></li>
+\n<li>Miễn phí cho khách lưu trú</li>
+\n</ul>
+\n
+\n<h3>3. Giá nhà hàng Aurora</h3>
+\n
+\n<p><strong>Giá nhà hàng Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Set lunch: <strong>200.000 - 350.000 VND</strong></li>
+\n<li>Dinner: <strong>300.000 - 500.000 VND</strong></li>
+\n<li>Buffet dinner: <strong>450.000 VND/người</strong></li>
+\n<li>Private dining: Liên hệ</li>
+\n</ul>
+\n
+\n<h3>4. Đặt bàn Aurora</h3>
+\n
+\n<p><strong>Đặt bàn nhà hàng Aurora:</strong></p>
+\n<ul>
+\n<li>Hotline: <strong>0251 391.8888</strong></li>
+\n<li>Email: info@aurorahotelplaza.com</li>
+\n<li>Website: aurorahotelplaza.com</li>
+\n<li>Đặt trước: Recommend 1-2 ngày</li>
+\n</ul>
+\n
+\n<h3>5. View nhà hàng Aurora</h3>
+\n
+\n<p>Nhà hàng Aurora có:</p>
+\n<ul>
+\n<li>View thành phố Biên Hòa</li>
+\n<li>View hồ bơi</li>
+\n<li>Outdoor terrace</li>
+\n<li>Private VIP room</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Nhà hàng Aurora Biên Hòa</strong> là lựa chọn ăn uống 4 sao với ẩm thực đa dạng, view đẹp. Đặt bàn <strong>0251 391.8888</strong>!</p>','<h2>Aurora Restaurant Bien Hoa</h2>
+\n
+\n<p><strong>Aurora Restaurant</strong> at Aurora Hotel Plaza Bien Hoa is a 4-star restaurant with Vietnamese & international cuisine, breakfast buffet, beautiful city view.</p>
+\n
+\n<h3>1. Aurora Cuisine</h3>
+\n
+\n<p><strong>Aurora Restaurant menu:</strong></p>
+\n<ul>
+\n<li><strong>Vietnamese:</strong> Pho, bun, com tam, Southern dishes</li>
+\n<li><strong>Asian:</strong> Sushi, dim sum, Thai, Korean</li>
+\n<li><strong>European:</strong> Pasta, steak, salad</li>
+\n<li><strong>Specialties:</strong> Dong Nai specialties</li>
+\n</ul>
+\n
+\n<h3>2. Aurora Breakfast Buffet</h3>
+\n
+\n<p><strong>Aurora breakfast buffet:</strong></p>
+\n<ul>
+\n<li>Time: <strong>6:00 - 10:00</strong></li>
+\n<li>50+ Asian-European dishes</li>
+\n<li>Rate: <strong>150,000 VND/person</strong></li>
+\n<li>Free for staying guests</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Restaurant Price</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza restaurant rates:</strong></p>
+\n<ul>
+\n<li>Set lunch: <strong>200,000 - 350,000 VND</strong></li>
+\n<li>Dinner: <strong>300,000 - 500,000 VND</strong></li>
+\n<li>Dinner buffet: <strong>450,000 VND/person</strong></li>
+\n<li>Private dining: Contact</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Aurora Restaurant Bien Hoa</strong> is the 4-star dining choice with diverse cuisine, beautiful view. Reserve <strong>0251 391.8888</strong>!</p>','nha hang bien hoa, nhà hàng aurora, ẩm thực biên hòa, restaurant bien hoa, buffet bien hoa, ăn uống đồng nai, fine dining biên hòa, nhà hàng 4 sao','standard',NULL,NULL,'0','1','assets/img/restaurant/nha-hang-aurora-hotel-6.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('108','Khách Sạn Gần KCN Amata Biên Hòa - Aurora Hotel Plaza Doanh Nhân','Hotel Near Amata Industrial Park Bien Hoa - Aurora Hotel Plaza for Business','khach-san-gan-kcn-amata-bien-hoa','Khách sạn gần KCN Amata Biên Hòa: Aurora Hotel Plaza chỉ 3km. Phù hợp doanh nhân công tác, căn hộ dài hạn. Hotline 0251 391.8888!','Hotel near Amata IP Bien Hoa: Aurora Hotel Plaza just 3km. Suitable for business travelers, long-term apartments. Hotline 0251 391.8888!','<h2>Khách sạn gần KCN Amata Biên Hòa</h2>
+\n
+\n<p><strong>KCN Amata</strong> là khu công nghiệp lớn tại Biên Hòa, tập trung nhiều doanh nghiệp. <strong>Aurora Hotel Plaza</strong> chỉ cách <strong>3km</strong>, là lựa chọn tốt nhất cho doanh nhân công tác.</p>
+\n
+\n<h3>1. Vị trí Aurora gần Amata</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> tại:</p>
+\n<ul>
+\n<li>253 Phạm Văn Thuận, Phường Tam Hiệp</li>
+\n<li>Khoảng cách KCN Amata: <strong>3km</strong> (5 phút drive)</li>
+\n<li>Khoảng cách KCN Biên Hòa 2: <strong>5km</strong></li>
+\n<li>Khoảng cách Big C: <strong>5km</strong></li>
+\n</ul>
+\n
+\n<h3>2. Phòng cho doanh nhân Aurora</h3>
+\n
+\n<p><strong>Phòng Aurora Hotel Plaza:</strong></p>
+\n<ul>
+\n<li>Deluxe: 35m², WiFi, desk, chair</li>
+\n<li>Premium Deluxe: 45m², view đẹp</li>
+\n<li>VIP Suite: 80m², phòng khách riêng</li>
+\n<li>Business amenities: WiFi, desk, meeting</li>
+\n</ul>
+\n
+\n<h3>3. Căn hộ dài hạn Aurora</h3>
+\n
+\n<p>Thuê căn hộ Aurora:</p>
+\n<ul>
+\n<li>Studio: 45m², bếp, máy giặt</li>
+\n<li>Indochine: 50-80m², sang trọng</li>
+\n<li>Giá tháng: 15-25 triệu VND</li>
+\n</ul>
+\n
+\n<h3>4. Dịch vụ doanh nhân Aurora</h3>
+\n
+\n<ul>
+\n<li>Meeting room: 50-500 người</li>
+\n<li>Business center: Print, copy, fax</li>
+\n<li>Airport shuttle: Tân Sơn Nhất, Long Thành</li>
+\n<li>Currency exchange</li>
+\n<li>Laundry service</li>
+\n</ul>
+\n
+\n<h3>5. Giá phòng Aurora Amata</h3>
+\n
+\n<ul>
+\n<li>Deluxe: <strong>1.600.000 VND/đêm</strong></li>
+\n<li>Premium: <strong>1.900.000 VND/đêm</strong></li>
+\n<li>Suite: <strong>2.300.000 VND/đêm</strong></li>
+\n<li>Giảm 10% online booking</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> gần KCN Amata 3km, phù hợp doanh nhân công tác. Đặt phòng <strong>0251 391.8888</strong>!</p>','<h2>Hotel Near Amata Industrial Park Bien Hoa</h2>
+\n
+\n<p><strong>Amata IP</strong> is a large industrial park in Bien Hoa, hosting many businesses. <strong>Aurora Hotel Plaza</strong> is just <strong>3km</strong> away, the best choice for business travelers.</p>
+\n
+\n<h3>1. Aurora Location Near Amata</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> at:</p>
+\n<ul>
+\n<li>253 Pham Van Thuan, Tam Hiep Ward</li>
+\n<li>Distance to Amata IP: <strong>3km</strong> (5 min drive)</li>
+\n<li>Distance to Bien Hoa 2 IP: <strong>5km</strong></li>
+\n<li>Distance to Big C: <strong>5km</strong></li>
+\n</ul>
+\n
+\n<h3>2. Aurora Rooms for Business</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza rooms:</strong></p>
+\n<ul>
+\n<li>Deluxe: 35m², WiFi, desk, chair</li>
+\n<li>Premium Deluxe: 45m², beautiful view</li>
+\n<li>VIP Suite: 80m², private living room</li>
+\n<li>Business amenities: WiFi, desk, meeting</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Long-Term Apartments</h3>
+\n
+\n<p>Rent Aurora apartments:</p>
+\n<ul>
+\n<li>Studio: 45m², kitchen, laundry</li>
+\n<li>Indochine: 50-80m², elegant</li>
+\n<li>Monthly: 15-25 million VND</li>
+\n</ul>
+\n
+\n<h3>4. Aurora Business Services</h3>
+\n
+\n<ul>
+\n<li>Meeting room: 50-500 seats</li>
+\n<li>Business center: Print, copy, fax</li>
+\n<li>Airport shuttle: Tan Son Nhat, Long Thanh</li>
+\n<li>Currency exchange</li>
+\n<li>Laundry service</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> near Amata IP 3km, suitable for business travelers. Book <strong>0251 391.8888</strong>!</p>','khách sạn gần kcn amata, hotel near amata, khách sạn doanh nhân biên hòa, business hotel bien hoa, căn hộ dài hạn, hotel near industrial park, khách sạn công tác, aurora hotel amata','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-3.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27'),
+('109','Khách Sạn Gần Sân Bay Biên Hòa - Aurora Hotel Plaza Long Thành Tân Sơn Nhất','Hotel Near Airport Bien Hoa - Aurora Hotel Plaza Long Thanh Tan Son Nhat','khach-san-gan-san-bay-bien-hoa','Khách sạn Aurora Plaza Biên Hòa gần sân bay Long Thành (25km), Tân Sơn Nhất (40km). Dịch vụ đưa đón sân bay - Hotline 0251 391.8888!','Aurora Plaza Hotel Bien Hoa near Long Thanh Airport (25km), Tan Son Nhat (40km). Airport shuttle service - Hotline 0251 391.8888!','<h2>Khách sạn gần sân bay Biên Hòa</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> tại Biên Hòa gần <strong>sân bay Long Thành</strong> (25km) và <strong>sân bay Tân Sơn Nhất</strong> (40km), thuận tiện cho khách bay.</p>
+\n
+\n<h3>1. Aurora gần sân bay Long Thành</h3>
+\n
+\n<ul>
+\n<li>Sân bay Long Thành: <strong>25km</strong> (30 phút drive)</li>
+\n<li>Sân bay mới lớn nhất Việt Nam</li>
+\n<li>Dịch vụ shuttle Aurora: 500.000 VND/trip</li>
+\n</ul>
+\n
+\n<h3>2. Aurora gần sân bay Tân Sơn Nhất</h3>
+\n
+\n<ul>
+\n<li>Sân bay Tân Sơn Nhất: <strong>40km</strong> (50 phút drive)</li>
+\n<li>Sân bay TP.HCM chính</li>
+\n<li>Dịch vụ shuttle Aurora: 700.000 VND/trip</li>
+\n</ul>
+\n
+\n<h3>3. Dịch vụ đưa đón Aurora</h3>
+\n
+\n<p><strong>Aurora Airport Shuttle:</strong></p>
+\n<ul>
+\n<li>Đặt trước: 1 ngày</li>
+\n<li>Xe 4-7 chỗ</li>
+\n<li>Pick-up tại sân bay</li>
+\n<li>Drop-off tại Aurora</li>
+\n<li>Hotline: 0251 391.8888</li>
+\n</ul>
+\n
+\n<h3>4. Ưu điểm Aurora gần sân bay</h3>
+\n
+\n<ul>
+\n<li>Thời gian drive short</li>
+\n<li>Dịch vụ shuttle 24/7</li>
+\n<li>Phòng sẵn sàng late check-in</li>
+\n<li>QR code check-in nhanh</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> gần sân bay Long Thành, Tân Sơn Nhất. Shuttle service - <strong>0251 391.8888</strong>!</p>','<h2>Hotel Near Airport Bien Hoa</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> in Bien Hoa is near <strong>Long Thanh Airport</strong> (25km) and <strong>Tan Son Nhat Airport</strong> (40km), convenient for flight guests.</p>
+\n
+\n<h3>1. Aurora Near Long Thanh Airport</h3>
+\n
+\n<ul>
+\n<li>Long Thanh Airport: <strong>25km</strong> (30 min drive)</li>
+\n<li>Vietnam\'s largest new airport</li>
+\n<li>Aurora shuttle: 500,000 VND/trip</li>
+\n</ul>
+\n
+\n<h3>2. Aurora Near Tan Son Nhat Airport</h3>
+\n
+\n<ul>
+\n<li>Tan Son Nhat Airport: <strong>40km</strong> (50 min drive)</li>
+\n<li>Ho Chi Minh main airport</li>
+\n<li>Aurora shuttle: 700,000 VND/trip</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Shuttle Service</h3>
+\n
+\n<p><strong>Aurora Airport Shuttle:</strong></p>
+\n<ul>
+\n<li>Book: 1 day in advance</li>
+\n<li>4-7 seat vehicle</li>
+\n<li>Pick-up at airport</li>
+\n<li>Drop-off at Aurora</li>
+\n<li>Hotline: 0251 391.8888</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> near Long Thanh, Tan Son Nhat airports. Shuttle service - <strong>0251 391.8888</strong>!</p>','khách sạn gần sân bay, hotel near airport bien hoa, sân bay long thành, sân bay tân sơn nhất, airport shuttle, khách sạn biên hòa sân bay, aurora airport, đưa đón sân bay','standard',NULL,NULL,'0','1','assets/img/hero-banner/aurora-hotel-bien-hoa-2.jpg','1','1','published','1','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:30:04'),
+('110','Aurora Hotel Plaza Biên Hòa Review - Khách Sạn 4 Sao Đáng Lưu Trú','Aurora Hotel Plaza Bien Hoa Review - 4-Star Hotel Worth Staying','aurora-hotel-plaza-bien-hoa-review','Review Aurora Hotel Plaza Biên Hòa: Khách sạn 4 sao, phòng đẹp, dịch vụ tốt, giá hợp lý. Review khách sạn Đồng Nai - Hotline 0251 391.8888!','Aurora Hotel Plaza Bien Hoa review: 4-star hotel, beautiful rooms, good service, reasonable rates. Dong Nai hotel review - Hotline 0251 391.8888!','<h2>Review Aurora Hotel Plaza Biên Hòa</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao tại Biên Hòa, Đồng Nai. Dưới đây là review chi tiết từ khách thực tế.</p>
+\n
+\n<h3>1. Review phòng Aurora</h3>
+\n
+\n<p><strong>Điểm phòng Aurora:</strong> 9/10</p>
+\n<ul>
+\n<li>Phòng Deluxe: 35m², sạch, đẹp</li>
+\n<li>TV 43\", minibar, AC, WiFi mạnh</li>
+\n<li>Bathroom: Vòi sen massage, towels mềm</li>
+\n<li>View thành phố đẹp</li>
+\n</ul>
+\n
+\n<h3>2. Review dịch vụ Aurora</h3>
+\n
+\n<p><strong>Điểm dịch vụ:</strong> 8.5/10</p>
+\n<ul>
+\n<li>Reception: Nhiệt tình, 24/7</li>
+\n<li>Room service: Nhanh, menu đa dạng</li>
+\n<li>Concierge: Support booking tour</li>
+\n<li>QR check-in: Tiện lợi</li>
+\n</ul>
+\n
+\n<h3>3. Review tiện nghi Aurora</h3>
+\n
+\n<p><strong>Điểm tiện nghi:</strong> 9/10</p>
+\n<ul>
+\n<li>Pool: Clean, view đẹp</li>
+\n<li>Gym: Thiết bị modern</li>
+\n<li>Spa: Massage tốt</li>
+\n<li>Restaurant: Buffet ngon</li>
+\n</ul>
+\n
+\n<h3>4. Review giá Aurora</h3>
+\n
+\n<p><strong>Điểm giá:</strong> 9/10</p>
+\n<ul>
+\n<li>Deluxe: 1.600.000 VND - hợp lý</li>
+\n<li>Premium: 1.900.000 VND - value good</li>
+\n<li>Suite: 2.300.000 VND - premium</li>
+\n<li>Giảm 10% online</li>
+\n</ul>
+\n
+\n<h3>5. Review vị trí Aurora</h3>
+\n
+\n<p><strong>Điểm vị trí:</strong> 9.5/10</p>
+\n<ul>
+\n<li>Trung tâm Biên Hòa</li>
+\n<li>Gần KCN Amata (3km)</li>
+\n<li>Gần Big C (5km)</li>
+\n<li>Gần sân bay Long Thành (25km)</li>
+\n</ul>
+\n
+\n<h3>6. Tổng điểm Aurora</h3>
+\n
+\n<p><strong>Tổng điểm Aurora Hotel Plaza:</strong> 9/10</p>
+\n
+\n<p><strong>Pros:</strong></p>
+\n<ul>
+\n<li>Khách sạn 4 sao chuẩn</li>
+\n<li>Vị trí đắc địa</li>
+\n<li>Phòng đẹp, sạch</li>
+\n<li>Dịch vụ tốt</li>
+\n</ul>
+\n
+\n<p><strong>Cons:</strong></p>
+\n<ul>
+\n<li>Parking có thể busy cuối tuần</li>
+\n<li>Pool giờ hạn chế</li>
+\n</ul>
+\n
+\n<h2>Kết luận</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> là khách sạn 4 sao đáng lưu trú tại Biên Hòa. <strong>Recommend!</strong> - Hotline <strong>0251 391.8888</strong>!</p>','<h2>Aurora Hotel Plaza Bien Hoa Review</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> is a 4-star hotel in Bien Hoa, Dong Nai. Below is detailed review from actual guests.</p>
+\n
+\n<h3>1. Aurora Room Review</h3>
+\n
+\n<p><strong>Room score:</strong> 9/10</p>
+\n<ul>
+\n<li>Deluxe: 35m², clean, beautiful</li>
+\n<li>TV 43\", minibar, AC, strong WiFi</li>
+\n<li>Bathroom: Massage shower, soft towels</li>
+\n<li>Beautiful city view</li>
+\n</ul>
+\n
+\n<h3>2. Aurora Service Review</h3>
+\n
+\n<p><strong>Service score:</strong> 8.5/10</p>
+\n<ul>
+\n<li>Reception: Friendly, 24/7</li>
+\n<li>Room service: Fast, diverse menu</li>
+\n<li>Concierge: Support tour booking</li>
+\n<li>QR check-in: Convenient</li>
+\n</ul>
+\n
+\n<h3>3. Aurora Amenities Review</h3>
+\n
+\n<p><strong>Amenities score:</strong> 9/10</p>
+\n<ul>
+\n<li>Pool: Clean, beautiful view</li>
+\n<li>Gym: Modern equipment</li>
+\n<li>Spa: Good massage</li>
+\n<li>Restaurant: Delicious buffet</li>
+\n</ul>
+\n
+\n<h3>4. Aurora Price Review</h3>
+\n
+\n<p><strong>Price score:</strong> 9/10</p>
+\n<ul>
+\n<li>Deluxe: 1,600,000 VND - reasonable</li>
+\n<li>Premium: 1,900,000 VND - good value</li>
+\n<li>Suite: 2,300,000 VND - premium</li>
+\n<li>10% off online</li>
+\n</ul>
+\n
+\n<h3>5. Aurora Location Review</h3>
+\n
+\n<p><strong>Location score:</strong> 9.5/10</p>
+\n<ul>
+\n<li>Bien Hoa center</li>
+\n<li>Near Amata IP (3km)</li>
+\n<li>Near Big C (5km)</li>
+\n<li>Near Long Thanh Airport (25km)</li>
+\n</ul>
+\n
+\n<h3>6. Aurora Total Score</h3>
+\n
+\n<p><strong>Aurora Hotel Plaza total:</strong> 9/10</p>
+\n
+\n<p><strong>Pros:</strong></p>
+\n<ul>
+\n<li>Standard 4-star hotel</li>
+\n<li>Prime location</li>
+\n<li>Beautiful, clean rooms</li>
+\n<li>Good service</li>
+\n</ul>
+\n
+\n<p><strong>Cons:</strong></p>
+\n<ul>
+\n<li>Parking can be busy weekends</li>
+\n<li>Pool hours limited</li>
+\n</ul>
+\n
+\n<h2>Conclusion</h2>
+\n
+\n<p><strong>Aurora Hotel Plaza</strong> is a 4-star hotel worth staying in Bien Hoa. <strong>Recommended!</strong> - Hotline <strong>0251 391.8888</strong>!</p>','aurora hotel review, review khách sạn biên hòa, khách sạn 4 sao review, hotel review bien hoa, aurora plaza review, khách sạn đồng nai review, review phòng khách sạn, aurora hotel plaza','standard',NULL,NULL,'1','1','assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg','1','1','published','0','0','0','0.0','0','2026-04-28 21:29:27','2026-04-28 21:29:27','2026-04-28 21:29:27');
 
 -- Table structure for table `blog_ratings`
 DROP TABLE IF EXISTS `blog_ratings`;
@@ -2084,8 +3177,8 @@ INSERT INTO `system_settings` VALUES
 ('193','points_expiry_days','365','string',NULL,'7','2026-03-22 14:17:21'),
 ('194','email_notifications','1','string',NULL,'7','2026-03-22 14:17:21'),
 ('195','testing_mode','1','string',NULL,'7','2026-03-22 14:17:21'),
-('288','telegram_bot_token','8772642373:AAG0ubAS246uCzUEZOJNimRuA5UxY6LpUrg','string','telegram_bot_token',NULL,'2026-04-28 19:12:17'),
-('289','telegram_chat_id','5513249927','string','telegram_chat_id',NULL,'2026-04-28 19:12:17'),
+('288','telegram_bot_token','xxxTELExxx','string','telegram_bot_token',NULL,'2026-04-28 19:12:17'),
+('289','telegram_chat_id','xxxTELExxx','string','telegram_chat_id',NULL,'2026-04-28 19:12:17'),
 ('290','bug_tracker_enabled','1','string','bug_tracker_enabled',NULL,'2026-04-28 19:12:17'),
 ('291','bug_tracker_min_severity','error','string','bug_tracker_min_severity',NULL,'2026-04-28 19:12:17'),
 ('292','telegram_bot_token','','string','Telegram Bot Token',NULL,'2026-04-28 19:12:17'),
