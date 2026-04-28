@@ -169,7 +169,7 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
 
     $ch = curl_init();
     curl_setopt_array($ch, [
-        CURLOPT_URL => $api_url . '/services/aigc/text-generation/generation',
+        CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($request_body),
@@ -682,7 +682,7 @@ function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null
     try {
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL => $api_url . '/services/aigc/text-generation/generation',
+            CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode($request_body),

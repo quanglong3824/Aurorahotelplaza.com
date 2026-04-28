@@ -197,7 +197,7 @@ function call_alibaba_admin($api_key, $prompt)
 
     $ch = curl_init();
     curl_setopt_array($ch, [
-        CURLOPT_URL => $api_url . '/services/aigc/text-generation/generation',
+        CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($request_body),
