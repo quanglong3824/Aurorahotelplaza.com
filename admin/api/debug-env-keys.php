@@ -1,12 +1,12 @@
 <?php
 /**
- * Debug API: Check Environment & Gemini Keys
+ * Debug API: Check Environment & AI Keys
  * GET /admin/api/debug-env-keys.php
  *
  * Use this to debug:
  * - Which .env file is being loaded
- * - What Gemini keys are detected
- * - Current rate limit status
+ * - What AI keys are detected (Alibaba/Gemini)
+ * - Current provider and rate limit status
  */
 
 session_start();
@@ -22,36 +22,48 @@ if ($require_auth && (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !==
     exit;
 }
 
-// Gather debug info
-$env_paths = debug_env_path();
-$keys = get_all_valid_keys();
-$limits = get_key_rate_limits();
-$key_status = debug_key_status();
+$provider = get_active_ai_provider();
 
-// Check env values
+$env_paths = debug_env_path();
+$limits = get_key_rate_limits($provider);
+
+if ($provider === 'alibaba') {
+    $keys = get_all_valid_alibaba_keys();
+    $key_status = debug_alibaba_key_status();
+} else {
+    $keys = get_all_valid_keys();
+    $key_status = debug_key_status();
+}
+
 $env_debug = [
-    'GEMINI_API_KEYS' => env('GEMINI_API_KEYS', 'NOT FOUND'),
+    'AI_PROVIDER' => env('AI_PROVIDER', 'alibaba'),
+    'ALIBABA_API_KEY' => env('ALIBABA_API_KEY', 'NOT FOUND'),
+    'ALIBABA_API_KEYS' => env('ALIBABA_API_KEYS', 'NOT FOUND'),
+    'ALIBABA_API_URL' => env('ALIBABA_API_URL', 'https://coding-intl.dashscope.aliyuncs.com/v1'),
+    'ALIBABA_MODEL' => env('ALIBABA_MODEL', 'glm-5'),
     'GEMINI_API_KEY' => env('GEMINI_API_KEY', 'NOT FOUND'),
-    'AI_MODEL' => env('AI_MODEL', 'NOT FOUND'),
-    'AI_PROVIDER' => env('AI_PROVIDER', 'NOT FOUND'),
+    'GEMINI_API_KEYS' => env('GEMINI_API_KEYS', 'NOT FOUND'),
+    'GEMINI_MODEL' => env('AI_MODEL', 'gemini-2.0-flash'),
 ];
 
-// Mask key values for security
 foreach ($keys as $i => $key) {
-    $keys[$i] = substr($key, 0, 10) . '...' . substr($key, -4);
+    $keys[$i] = substr($key, 0, 15) . '...' . substr($key, -4);
 }
 
-if (!empty($env_debug['GEMINI_API_KEYS']) && $env_debug['GEMINI_API_KEYS'] !== 'NOT FOUND') {
-    $env_debug['GEMINI_API_KEYS'] = substr($env_debug['GEMINI_API_KEYS'], 0, 15) . '... (length: ' . strlen(env('GEMINI_API_KEYS', '')) . ')';
+foreach ($env_debug as $k => $v) {
+    if (strpos($k, 'API_KEY') !== false && $v !== 'NOT FOUND' && !empty($v)) {
+        $env_debug[$k] = substr($v, 0, 15) . '... (length: ' . strlen($v) . ')';
+    }
 }
-if (!empty($env_debug['GEMINI_API_KEY']) && $env_debug['GEMINI_API_KEY'] !== 'NOT FOUND') {
-    $env_debug['GEMINI_API_KEY'] = substr($env_debug['GEMINI_API_KEY'], 0, 15) . '...';
-}
+
+$active_key = $provider === 'alibaba' ? get_active_alibaba_key() : get_active_gemini_key();
 
 echo json_encode([
     'success' => true,
     'timestamp' => date('Y-m-d H:i:s'),
-    'ai_config_path' => defined('AI_CONFIG_PATH') ? AI_CONFIG_PATH : 'NOT DEFINED',
+    'active_provider' => $provider,
+    'active_key_preview' => !empty($active_key) ? substr($active_key, 0, 15) . '...' : 'NO KEY',
+    'ai_config_path' => defined('AI_CONFIG_PATH') ? AI_CONFIG_PATH : sys_get_temp_dir(),
     'document_root' => $_SERVER['DOCUMENT_ROOT'] ?? 'NOT SET',
     'env_file_checks' => $env_paths,
     'env_values' => $env_debug,
@@ -60,8 +72,29 @@ echo json_encode([
     'key_status' => $key_status,
     'rate_limits_raw' => $limits,
     'recommendation' => count($keys) === 0
-        ? 'No keys found! Check your .env file path and format.'
+        ? "No {$provider} keys found! Check your .env file path and format."
         : (count($limits) > 0
-            ? 'Rate limits exist. Call refresh-gemini-keys.php?action=clear_limits to reset.'
+            ? "Rate limits exist for {$provider}. Keys will auto-recover when limits expire."
             : 'All good! Keys are ready to use.')
-], JSON_PRETTY_PRINT);
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+function debug_alibaba_key_status() {
+    $keys = get_all_valid_alibaba_keys();
+    $limits = get_key_rate_limits('alibaba');
+    $current_idx = get_active_alibaba_key_index();
+    $now = time();
+
+    $status = [];
+    foreach ($keys as $i => $key) {
+        $limit_until = $limits[$i] ?? 0;
+        $status[] = [
+            'index' => $i,
+            'key_preview' => substr($key, 0, 15) . '...',
+            'is_current' => $i === $current_idx,
+            'rate_limited' => $limit_until > $now,
+            'limit_expires_in' => $limit_until > $now ? ($limit_until - $now) . 's' : 'N/A'
+        ];
+    }
+
+    return $status;
+}

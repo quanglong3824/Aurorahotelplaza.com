@@ -115,13 +115,18 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
 
     // Clear buffer và trả kết quả
     ob_clean();
+    $provider = get_active_ai_provider();
+    $model_info = $provider === 'alibaba' 
+        ? "Alibaba GLM-5" 
+        : "Gemini (" . env('AI_MODEL', 'gemini-2.0-flash') . ")";
+
     echo json_encode([
         'success' => true,
         'reply' => $bot_reply,
-        'provider' => 'gemini',
-        'key_info' => "Gemini (" . env('AI_MODEL', 'gemini-2.0-flash') . ")",
+        'provider' => $provider,
+        'key_info' => $model_info,
         'tokens' => 0,
-        'key_idx' => get_active_key_index(),
+        'key_idx' => $provider === 'alibaba' ? get_active_alibaba_key_index() : get_active_key_index(),
         'stats' => get_key_usage_stats()
     ], JSON_UNESCAPED_UNICODE);
 
@@ -143,29 +148,98 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
 }
 
 /**
- * Gọi AI đồng bộ cho Admin
+ * Gọi AI đồng bộ cho Admin - tự động chọn provider
  */
 function call_ai_admin($system_prompt, $messages)
 {
-    $api_key = get_active_gemini_key();
+    $provider = get_active_ai_provider();
+    $api_key = get_active_api_key();
 
     if (empty($api_key)) {
-        throw new Exception("Chưa cấu hình Gemini API Key. Kiểm tra file .env");
+        throw new Exception("Chưa cấu hình {$provider} API Key. Kiểm tra file .env");
     }
 
-    $model_name = env('AI_MODEL', 'gemini-2.0-flash');
-
-    // Build prompt
-    $gemini_history = "";
+    $history = "";
     foreach ($messages as $m) {
-        $gemini_history .= ($m['role'] == 'user' ? "Sếp: " : "AI: ") . $m['content'] . "\n\n";
+        $history .= ($m['role'] == 'user' ? "Sếp: " : "AI: ") . $m['content'] . "\n\n";
     }
 
-    $full_prompt = $system_prompt . "\n\n" . $gemini_history;
+    $full_prompt = $system_prompt . "\n\n" . $history;
+
+    if ($provider === 'alibaba') {
+        return call_alibaba_admin($api_key, $full_prompt);
+    }
+
+    return call_gemini_admin($api_key, $full_prompt);
+}
+
+/**
+ * Gọi Alibaba GLM cho Admin
+ */
+function call_alibaba_admin($api_key, $prompt)
+{
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+
+    $request_body = [
+        'model' => $model,
+        'messages' => [
+            ['role' => 'user', 'content' => $prompt]
+        ],
+        'stream' => false,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $api_url . '/chat/completions',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($request_body),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $api_key
+        ],
+        CURLOPT_TIMEOUT => 60
+    ]);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+
+    if ($http_code === 429) {
+        $current_idx = get_active_alibaba_key_index();
+        mark_key_rate_limited($current_idx, 60, 'alibaba');
+        if (rotate_alibaba_key()) {
+            return call_ai_admin($GLOBALS['system_prompt'], $GLOBALS['messages']);
+        }
+        throw new Exception("Alibaba API bị giới hạn (429). Vui lòng thử lại sau.");
+    }
+
+    if ($http_code >= 400 || $curl_error) {
+        throw new Exception("Alibaba API Error: HTTP {$http_code} - {$curl_error}");
+    }
+
+    $decoded = json_decode($response, true);
+    if (!isset($decoded['choices'][0]['message']['content'])) {
+        throw new Exception("Alibaba API trả về phản hồi không hợp lệ");
+    }
+
+    return $decoded['choices'][0]['message']['content'];
+}
+
+/**
+ * Gọi Gemini cho Admin (fallback)
+ */
+function call_gemini_admin($api_key, $prompt)
+{
+    $model_name = env('AI_MODEL', 'gemini-2.0-flash');
 
     try {
         $client = new \Gemini\Client($api_key);
-        $response = $client->generativeModel($model_name)->generateContent($full_prompt);
+        $response = $client->generativeModel($model_name)->generateContent($prompt);
         $text = $response->text();
 
         if (empty($text)) {
@@ -177,14 +251,11 @@ function call_ai_admin($system_prompt, $messages)
     } catch (Exception $e) {
         $errorMsg = $e->getMessage();
 
-        // Xử lý 429 Rate Limit
-        if (strpos($errorMsg, '429') !== false || strpos($errorMsg, 'quota') !== false || strpos($errorMsg, 'rate limit') !== false) {
-            // Thử rotate key
+        if (strpos($errorMsg, '429') !== false || strpos($errorMsg, 'quota') !== false) {
             if (rotate_gemini_key()) {
-                // Retry với key mới
-                return call_ai_admin($system_prompt, $messages);
+                return call_ai_admin($GLOBALS['system_prompt'], $GLOBALS['messages']);
             }
-            throw new Exception("API Key bị giới hạn (429). Đang thử key khác...");
+            throw new Exception("Gemini API bị giới hạn (429). Vui lòng thử lại sau.");
         }
 
         throw new Exception("Gemini API Error: " . $errorMsg);
