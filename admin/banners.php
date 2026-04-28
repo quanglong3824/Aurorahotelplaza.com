@@ -9,8 +9,16 @@ $page_subtitle = 'Banner trang chủ và quảng cáo';
 try {
     $db = getDB();
     
-    $stmt = $db->query("SELECT * FROM banners ORDER BY sort_order ASC, created_at DESC");
-    $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status FROM banners ORDER BY sort_order ASC, created_at DESC");
+    $banners_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Map columns for frontend compatibility
+    $banners = [];
+    foreach ($banners_raw as $b) {
+        $b['image_url'] = $b['image_desktop'];
+        $b['is_active'] = $b['status'] === 'active' ? 1 : 0;
+        $banners[] = $b;
+    }
     
     $stmt = $db->query("SELECT COUNT(*) as total FROM banners");
     $stats = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -32,7 +40,7 @@ include 'includes/admin-header.php';
     </div>
     <div class="stat-card">
         <p class="text-sm text-gray-500">Đang hoạt động</p>
-        <p class="text-2xl font-bold text-green-600"><?php echo count(array_filter($banners, fn($b) => $b['is_active'])); ?></p>
+        <p class="text-2xl font-bold text-green-600"><?php echo count(array_filter($banners, fn($b) => $b['status'] === 'active')); ?></p>
     </div>
 </div>
 

@@ -22,11 +22,15 @@ if ($banner_id <= 0) {
 try {
     $db = getDB();
     
-    $stmt = $db->prepare("SELECT * FROM banners WHERE banner_id = :id");
+    $stmt = $db->prepare("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status FROM banners WHERE banner_id = :id");
     $stmt->execute([':id' => $banner_id]);
     $banner = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($banner) {
+        // Map columns for frontend compatibility
+        $banner['image_url'] = $banner['image_desktop'];
+        $banner['is_active'] = $banner['status'] === 'active' ? 1 : 0;
+        
         echo json_encode(['success' => true, 'banner' => $banner]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Banner không tồn tại']);

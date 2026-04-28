@@ -15,8 +15,14 @@ require_once '../../config/database.php';
 try {
     $db = getDB();
     
-    $stmt = $db->query("SELECT * FROM banners ORDER BY sort_order ASC, created_at DESC");
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, position, sort_order, status FROM banners ORDER BY sort_order ASC, created_at DESC");
     $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Map columns for frontend compatibility
+    foreach ($banners as &$banner) {
+        $banner['image_url'] = $banner['image_desktop'];
+        $banner['is_active'] = $banner['status'] === 'active' ? 1 : 0;
+    }
     
     echo json_encode([
         'success' => true,

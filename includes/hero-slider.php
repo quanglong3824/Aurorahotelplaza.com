@@ -9,7 +9,7 @@ try {
         require_once __DIR__ . '/../config/database.php';
     }
     $db = getDB();
-    $stmt = $db->query("SELECT * FROM banners WHERE is_active = 1 ORDER BY sort_order ASC, created_at DESC");
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url FROM banners WHERE status = 'active' ORDER BY sort_order ASC, created_at DESC");
     $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if (empty($banners)) {
@@ -46,8 +46,9 @@ $fallbackImages = [
     <?php else: ?>
         <!-- Dynamic banners from database -->
         <?php $first = true; foreach ($banners as $banner): ?>
+            <?php $imageUrl = imgUrl($banner['image_desktop']); ?>
             <div class="hero-slide <?php echo $first ? 'active' : ''; ?>" 
-                 <?php echo $first ? 'style="background-image: url(\'' . htmlspecialchars($banner['image_url']) . '\');"' : 'data-bg="' . htmlspecialchars($banner['image_url']) . '"'; ?>
+                 <?php echo $first ? 'style="background-image: url(\'' . $imageUrl . '\');"' : 'data-bg="' . $imageUrl . '"'; ?>
                  data-title="<?php echo htmlspecialchars($banner['title']); ?>"
                  data-subtitle="<?php echo htmlspecialchars($banner['subtitle'] ?? ''); ?>"
                  data-link="<?php echo htmlspecialchars($banner['link_url'] ?? ''); ?>">
