@@ -276,7 +276,7 @@ function process_tool_call_after_stream($response, $user_message, $db, $conv_id,
             $history[] = ['role' => 'user', 'content' => "Tool {$tool_name} executed. Result: " . json_encode($result)];
 
             $final_prompt = "Dựa trên kết quả tool: " . json_encode($result) . "\n\nHãy trả lời khách hàng một cách thân thiện và hữu ích.";
-            return stream_gemini_reply($final_prompt, $db, $conv_id, $history, $turn + 1);
+            return stream_ai_reply($final_prompt, $db, $conv_id, $history, $turn + 1);
         }
         return null;
     }
@@ -559,4 +559,202 @@ function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null,
         error_log("Gemini Sync Exception: " . $e->getMessage());
         return "Lỗi hệ thống AI: " . $e->getMessage();
     }
+}
+
+/**
+ * Stream phản hồi từ Opencode (OpenRouter/OpenAI API)
+ */
+function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $turn = 1)
+{
+    $api_key = OPENCODE_API_KEY;
+    if (empty($api_key)) {
+        echo "data: " . json_encode(["error" => "Chưa cấu hình Opencode API Key."]) . "\n\n";
+        return "";
+    }
+
+    $model = OPENCODE_MODEL;
+    $url = OPENCODE_API_URL . "/chat/completions";
+    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+
+    $messages = [['role' => 'system', 'content' => $system_prompt]];
+    
+    $full_history = $history;
+    $full_history[] = ['role' => 'user', 'content' => $user_message];
+    $recent_history = array_slice($full_history, -8);
+
+    foreach ($recent_history as $msg) {
+        $role = $msg['role'] === 'user' ? 'user' : 'assistant';
+        $messages[] = ['role' => $role, 'content' => $msg['content']];
+    }
+
+    $request_body = [
+        'model' => $model,
+        'messages' => $messages,
+        'temperature' => 0.7,
+        'max_tokens' => 2048,
+        'stream' => true
+    ];
+
+    $full_response_text = "";
+    $is_tool_call = false;
+    $is_decided = false;
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($request_body),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $api_key,
+            'HTTP-Referer: https://aurorahotelplaza.com',
+            'X-Title: Aurora Hotel Plaza'
+        ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 120,
+        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
+            $lines = explode("\n", $data);
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if (empty($line)) continue;
+                if ($line === 'data: [DONE]') continue;
+                if (strpos($line, 'data: ') !== 0) continue;
+
+                $json_str = substr($line, 6);
+                $decoded = json_decode($json_str, true);
+                if (!$decoded) continue;
+
+                $text = $decoded['choices'][0]['delta']['content'] ?? null;
+                if ($text === null) continue;
+
+                $full_response_text .= $text;
+
+                if (!$is_decided) {
+                    if (strlen($full_response_text) >= 1) {
+                        if ($full_response_text[0] !== '[') {
+                            $is_decided = true;
+                            echo "data: " . json_encode(["text" => $full_response_text]) . "\n\n";
+                            if (ob_get_level() > 0) ob_flush();
+                            flush();
+                        } else if (strlen($full_response_text) >= 6) {
+                            if (strpos($full_response_text, '[TOOL_') === 0 ||
+                                strpos($full_response_text, '[BOOK_') === 0 ||
+                                strpos($full_response_text, '[VIEW_') === 0) {
+                                $is_tool_call = true;
+                            }
+                            $is_decided = true;
+                            if (!$is_tool_call) {
+                                echo "data: " . json_encode(["text" => $full_response_text]) . "\n\n";
+                                if (ob_get_level() > 0) ob_flush();
+                                flush();
+                            }
+                        }
+                    }
+                } else {
+                    if (!$is_tool_call) {
+                        echo "data: " . json_encode(["text" => $text]) . "\n\n";
+                        if (ob_get_level() > 0) ob_flush();
+                        flush();
+                    }
+                }
+            }
+            return strlen($data);
+        }
+    ]);
+
+    try {
+        curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+
+        if ($http_code >= 400 || $curl_error) {
+            error_log("Opencode API Error: HTTP $http_code - $curl_error");
+            echo "data: " . json_encode(["error" => "Xin lỗi, hệ thống AI đang bảo trì. Vui lòng thử lại sau."]) . "\n\n";
+            return "";
+        }
+
+        if ($is_tool_call && $turn <= 2) {
+            $tool_result = process_tool_call_after_stream($full_response_text, $user_message, $db, $conv_id, $history, $turn);
+            if ($tool_result !== null) {
+                return $tool_result;
+            }
+        }
+
+        return $full_response_text;
+    } catch (Exception $e) {
+        return "";
+    }
+}
+
+function call_opencode_sync($message, $db, $conv_id = null, $system_prompt = null, $retry = 0)
+{
+    $api_key = OPENCODE_API_KEY;
+    if (empty($api_key)) return "Lỗi: Chưa cấu hình Opencode API Key";
+
+    $model = OPENCODE_MODEL;
+    $url = OPENCODE_API_URL . "/chat/completions";
+    if ($system_prompt === null) $system_prompt = get_aurora_system_prompt($db, $conv_id);
+
+    $messages = [
+        ['role' => 'system', 'content' => $system_prompt],
+        ['role' => 'user', 'content' => $message]
+    ];
+
+    $request_body = [
+        'model' => $model,
+        'messages' => $messages,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($request_body),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $api_key,
+            'HTTP-Referer: https://aurorahotelplaza.com',
+            'X-Title: Aurora Hotel Plaza'
+        ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 60
+    ]);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if (in_array($http_code, [500, 502, 503]) && $retry < 3) {
+        sleep(pow(2, $retry));
+        return call_opencode_sync($message, $db, $conv_id, $system_prompt, $retry + 1);
+    }
+
+    if ($http_code >= 400) {
+        return "Lỗi kết nối Opencode: HTTP $http_code - $response";
+    }
+
+    $decoded = json_decode($response, true);
+    return $decoded['choices'][0]['message']['content'] ?? "Lỗi parse API";
+}
+
+/**
+ * AUTO ROUTER
+ */
+function stream_ai_reply($user_message, $db, $conv_id, &$history = [], $turn = 1) {
+    if (get_active_ai_provider() === 'opencode') {
+        return stream_opencode_reply($user_message, $db, $conv_id, $history, $turn);
+    }
+    return stream_gemini_reply($user_message, $db, $conv_id, $history, $turn);
+}
+
+function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null, $retry = 0) {
+    if (get_active_ai_provider() === 'opencode') {
+        return call_opencode_sync($message, $db, $conv_id, $system_prompt, $retry);
+    }
+    return call_gemini_sync($message, $db, $conv_id, $system_prompt, $retry);
 }

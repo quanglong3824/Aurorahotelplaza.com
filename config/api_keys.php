@@ -24,9 +24,25 @@ if (!empty($env_keys_str)) {
 }
 
 /**
+ * QUẢN LÝ OPENCODE KEYS (Dự phòng)
+ */
+$OPENCODE_API_KEY = env('OPENCODE_API_KEY', '');
+$OPENCODE_API_URL = env('OPENCODE_API_URL', 'https://opencode.ai/zen/go/v1');
+$OPENCODE_MODEL = env('OPENCODE_MODEL', 'gpt-4o-mini');
+
+/**
  * ĐỊNH NGHĨA HẰNG SỐ
  */
 if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', !empty($GEMINI_API_KEYS[0]) ? $GEMINI_API_KEYS[0] : '');
+}
+if (!defined('OPENCODE_API_KEY')) {
+    define('OPENCODE_API_KEY', $OPENCODE_API_KEY);
+}
+if (!defined('OPENCODE_API_URL')) {
+    define('OPENCODE_API_URL', $OPENCODE_API_URL);
+}
+if (!defined('OPENCODE_MODEL')) {
+    define('OPENCODE_MODEL', $OPENCODE_MODEL);
 }
 ?>

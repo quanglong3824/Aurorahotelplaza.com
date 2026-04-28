@@ -71,12 +71,12 @@ QUY TẮC PHẢN HỒI:
 
 TRẠNG THÁI HỆ THỐNG: $bi_context";
 
-    // Gọi Gemini lần 1
+    // Gọi AI lần 1
     $chat_history = [
         ["role" => "user", "content" => $user_message]
     ];
 
-    $bot_reply = call_gemini_admin($system_prompt, $chat_history);
+    $bot_reply = call_ai_admin($system_prompt, $chat_history);
 
     // Xử lý READ_DB multi-turn
     if (preg_match('/\[READ_DB:\s*(.*?)\]/s', $bot_reply, $matches)) {
@@ -96,13 +96,13 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
 
                 $chat_history[] = ["role" => "assistant", "content" => $bot_reply];
                 $chat_history[] = ["role" => "user", "content" => $db_result_msg];
-                $bot_reply = call_gemini_admin($system_prompt, $chat_history);
+                $bot_reply = call_ai_admin($system_prompt, $chat_history);
 
             } catch (PDOException $e) {
                 $db_result_msg = "LỖI SQL: " . $e->getMessage() . "\n\nHãy giải thích lỗi hoặc viết lại lệnh SQL.";
                 $chat_history[] = ["role" => "assistant", "content" => $bot_reply];
                 $chat_history[] = ["role" => "user", "content" => $db_result_msg];
-                $bot_reply = call_gemini_admin($system_prompt, $chat_history);
+                $bot_reply = call_ai_admin($system_prompt, $chat_history);
             }
         }
     }
@@ -220,4 +220,78 @@ function call_gemini_admin($system_prompt, $messages, $retry = 0)
     }
 
     throw new Exception("Gemini API trả về phản hồi không hợp lệ");
+/**
+ * Gọi AI đồng bộ cho Admin (Router)
+ */
+function call_ai_admin($system_prompt, $messages, $retry = 0) {
+    if (get_active_ai_provider() === 'opencode') {
+        return call_opencode_admin($system_prompt, $messages, $retry);
+    }
+    return call_gemini_admin($system_prompt, $messages, $retry);
+}
+
+function call_opencode_admin($system_prompt, $messages, $retry = 0)
+{
+    $api_key = OPENCODE_API_KEY;
+    if (empty($api_key)) {
+        throw new Exception("Chưa cấu hình Opencode API Key. Kiểm tra file .env");
+    }
+
+    $model = OPENCODE_MODEL;
+    $url = OPENCODE_API_URL . "/chat/completions";
+
+    $contents = [['role' => 'system', 'content' => $system_prompt]];
+    foreach ($messages as $m) {
+        $contents[] = [
+            'role' => $m['role'] === 'user' ? 'user' : 'assistant',
+            'content' => $m['content']
+        ];
+    }
+
+    $request_body = [
+        'model' => $model,
+        'messages' => $contents,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($request_body),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $api_key
+        ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 60
+    ]);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+
+    if (in_array($http_code, [500, 502, 503]) && $retry < 3) {
+        $wait = pow(2, $retry);
+        sleep($wait);
+        return call_opencode_admin($system_prompt, $messages, $retry + 1);
+    }
+
+    if ($http_code >= 400 || $curl_error) {
+        throw new Exception("Opencode API Error: HTTP {$http_code} - {$curl_error}");
+    }
+
+    $decoded = json_decode($response, true);
+    if (isset($decoded['choices'][0]['message']['content'])) {
+        return $decoded['choices'][0]['message']['content'];
+    }
+
+    if (isset($decoded['error'])) {
+        throw new Exception("API Error: " . $decoded['error']['message']);
+    }
+
+    throw new Exception("Opencode API trả về phản hồi không hợp lệ");
 }

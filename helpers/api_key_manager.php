@@ -81,11 +81,14 @@ function rotate_gemini_key()
         }
     }
 
-    error_log("API Key Manager: All keys exhausted after rotation");
+    error_log("API Key Manager: All keys exhausted after rotation. Auto-switching to Opencode fallback.");
+    set_active_ai_provider('opencode');
+    
+    // Vẫn clear limit và set next index cho Gemini nếu sau này quay lại
     clear_all_rate_limits();
     $next_idx = ($current_idx + 1) % $total;
     file_put_contents($index_file, $next_idx);
-    return $valid_keys[$next_idx];
+    return false; // Return false để báo hiệu Gemini đã sập
 }
 
 /**
@@ -293,17 +296,29 @@ function refresh_keys_from_env() {
 }
 
 /**
- * BACKWARD COMPATIBILITY ALIASES
- * Giữ tương thích với code cũ gọi các hàm provider
+ * Quản lý Provider (Gemini / Opencode)
  */
 function get_active_ai_provider() {
+    $file = AI_CONFIG_PATH . '/current_provider.txt';
+    if (file_exists($file)) {
+        return trim(file_get_contents($file));
+    }
     return 'gemini';
 }
 
 function set_active_ai_provider($provider) {
-    return true; // No-op, always gemini
+    if (in_array($provider, ['gemini', 'opencode'])) {
+        @file_put_contents(AI_CONFIG_PATH . '/current_provider.txt', $provider);
+        error_log("API Key Manager: Switched provider to $provider");
+        return true;
+    }
+    return false;
 }
 
 function get_active_api_key() {
+    $provider = get_active_ai_provider();
+    if ($provider === 'opencode') {
+        return defined('OPENCODE_API_KEY') ? OPENCODE_API_KEY : '';
+    }
     return get_active_gemini_key();
 }

@@ -45,8 +45,8 @@ if (ob_get_level())
 ini_set('output_buffering', 'off');
 set_time_limit(120);
 
-// Gọi stream từ Gemini API
-$full_reply = stream_gemini_reply($message, $db, $conv_id);
+// Gọi stream từ AI (Tự động định tuyến Gemini hoặc Opencode)
+$full_reply = stream_ai_reply($message, $db, $conv_id);
 
 // Sau khi stream xong, lưu vào DB nếu có kết quả
 $new_msg_id = 0;

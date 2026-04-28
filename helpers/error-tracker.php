@@ -379,8 +379,8 @@ class AuroraErrorTracker
 
             $system_prompt = "Bạn là AI chuyên gia phân tích lỗi web cho hệ thống Aurora Hotel Plaza.";
 
-            if (function_exists('call_gemini_sync')) {
-                $response = call_gemini_sync($prompt, null, null, $system_prompt);
+            if (function_exists('call_ai_sync')) {
+                $response = call_ai_sync($prompt, null, null, $system_prompt);
 
                 if ($response && strpos($response, 'Lỗi') !== 0) {
                     $db = self::getDb();
