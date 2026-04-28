@@ -676,23 +676,22 @@ const ChatWidget = {
         return { html, extra };
     },
 
-    showTyping(text = 'Nhân viên đang gõ...') {
+    showTyping(text = 'Aurora đang gõ...') {
         const el = document.getElementById('cwTyping');
         if (!el) return;
 
-        // Modern typing indicator with gradient background
         el.innerHTML = `
-            <div class="cw-typing-container" style="display:flex;align-items:center;gap:8px;background:rgba(212,175,55,0.08);padding:6px 12px;border-radius:12px;">
+            <div class="cw-typing-bubble">
                 <div class="cw-typing-dot"></div>
                 <div class="cw-typing-dot"></div>
                 <div class="cw-typing-dot"></div>
-                <span style="font-size:12px;color:#64748b;font-weight:500;">${text}</span>
+                <span style="font-size:11px; color:#64748b; margin-left:4px; font-weight:500;">${text}</span>
             </div>
         `;
         el.classList.add('show');
 
         clearTimeout(this._typingClear);
-        this._typingClear = setTimeout(() => this.hideTyping(), 8000);
+        this._typingClear = setTimeout(() => this.hideTyping(), 10000);
     },
 
     hideTyping() {

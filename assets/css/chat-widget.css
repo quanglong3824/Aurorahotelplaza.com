@@ -561,13 +561,18 @@
 
 .cw-bubble {
   max-width: 85%;
+  width: fit-content;
+  min-width: 40px;
   padding: 12px 16px;
   border-radius: 18px;
   font-size: 14px;
-  line-height: 1.55;
-  word-wrap: break-word;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
   position: relative;
+  transition: all 0.3s ease;
 }
 
 /* User Bubble */
@@ -649,8 +654,7 @@
 #cwTyping {
   display: none;
   align-items: center;
-  padding: 8px 20px 14px;
-  gap: 8px;
+  padding: 8px 16px 14px;
 }
 
 #cwTyping.show {
@@ -658,18 +662,25 @@
   animation: cwTypingFadeIn 0.3s ease-out;
 }
 
-@keyframes cwTypingFadeIn {
-  0% { opacity: 0; transform: translateY(5px); }
-  100% { opacity: 1; transform: translateY(0); }
+.cw-typing-bubble {
+  background: #fff;
+  padding: 10px 16px;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .cw-typing-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: var(--cw-gold);
   border-radius: 50%;
   animation: cwTypingBounce 1.4s infinite ease-in-out;
-  box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3);
+  opacity: 0.6;
 }
 
 .cw-typing-dot:nth-child(1) { animation-delay: -0.32s; }
@@ -677,14 +688,8 @@
 .cw-typing-dot:nth-child(3) { animation-delay: 0s; }
 
 @keyframes cwTypingBounce {
-  0%, 80%, 100% {
-    transform: scale(0.6);
-    opacity: 0.4;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1.1); opacity: 1; }
 }
 
 /* ── Input Area ─────────────────────────────────────────────── */
