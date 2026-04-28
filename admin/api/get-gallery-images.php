@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 
 }
 
 require_once '../../config/database.php';
+require_once '../../helpers/image-helper.php';
 
 try {
     $db = getDB();
@@ -32,14 +33,22 @@ try {
     }
     
     $stmt = $db->prepare("
-        SELECT image_id, title, image_url, alt_text, category, thumbnail_url
+        SELECT gallery_id, title, image_url, description as alt_text, category, thumbnail_url
         FROM gallery
         $where
-        ORDER BY created_at DESC
+        ORDER BY sort_order ASC, created_at DESC
         LIMIT 100
     ");
     $stmt->execute($params);
     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Normalize image URLs
+    foreach ($images as &$img) {
+        $img['image_url'] = imgUrl($img['image_url']);
+        if ($img['thumbnail_url']) {
+            $img['thumbnail_url'] = imgUrl($img['thumbnail_url']);
+        }
+    }
     
     $stmt = $db->query("SELECT DISTINCT category FROM gallery WHERE category IS NOT NULL AND status = 'active' ORDER BY category");
     $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);

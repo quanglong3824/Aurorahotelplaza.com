@@ -558,19 +558,40 @@ function closeGalleryPicker() {
 function loadGalleryImages() {
     const category = document.getElementById('galleryCategory').value;
     const search = document.getElementById('gallerySearch').value;
+    const grid = document.getElementById('galleryGrid');
+    
+    grid.innerHTML = '<div class="text-center py-8 text-gray-500 col-span-full">Đang tải...</div>';
     
     fetch(`api/get-gallery-images.php?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`)
-        .then(res => res.json())
+        .then(res => {
+            console.log('Gallery response status:', res.status);
+            return res.text().then(text => {
+                console.log('Gallery raw response:', text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Gallery JSON parse error:', e);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 200));
+                }
+            });
+        })
         .then(data => {
+            console.log('Gallery data:', data);
             if (data.success) {
                 galleryImages = data.images;
                 
                 const categorySelect = document.getElementById('galleryCategory');
                 categorySelect.innerHTML = '<option value="all">Tất cả danh mục</option>' + 
-                    data.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+                    (data.categories || []).map(cat => `<option value="${cat}">${cat}</option>`).join('');
                 
                 renderGalleryGrid(data.images);
+            } else {
+                grid.innerHTML = `<div class="text-center py-8 text-red-500 col-span-full">${data.message || 'Lỗi tải ảnh'}</div>`;
             }
+        })
+        .catch(err => {
+            console.error('loadGalleryImages error:', err);
+            grid.innerHTML = `<div class="text-center py-8 text-red-500 col-span-full">Lỗi: ${err.message}</div>`;
         });
 }
 
@@ -583,7 +604,7 @@ function renderGalleryGrid(images) {
     }
     
     grid.innerHTML = images.map(img => `
-        <div onclick="selectGalleryImage('${img.image_url}')" class="cursor-pointer group relative">
+        <div onclick="selectGalleryImage('${img.image_url}')" class="cursor-pointer group relative" title="${img.title || ''}">
             <img src="${img.thumbnail_url || img.image_url}" alt="${img.title || ''}" class="w-full h-24 object-cover rounded-lg border border-gray-200 group-hover:border-indigo-500 transition-colors">
             <div class="absolute inset-0 bg-indigo-600/0 group-hover:bg-indigo-600/20 transition-colors rounded-lg flex items-center justify-center">
                 <span class="material-symbols-outlined text-white opacity-0 group-hover:opacity-100 transition-opacity">check_circle</span>
