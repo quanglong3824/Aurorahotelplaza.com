@@ -469,6 +469,26 @@ try {
             if ($hotelNotified) {
                 error_log("Booking notification sent successfully to hotel for booking: $booking_code");
             }
+            
+            // 3. Send Telegram notification to admin
+            require_once '../../helpers/telegram.php';
+            $telegramData = [
+                'booking_code' => $booking_code,
+                'booking_id' => $booking_id,
+                'type_name' => $booking_data['type_name'],
+                'guest_name' => $guest_name,
+                'guest_phone' => $guest_phone,
+                'guest_email' => $guest_email,
+                'check_in' => date('d/m/Y', strtotime($check_in_date)),
+                'check_out' => date('d/m/Y', strtotime($check_out_date)),
+                'nights' => $num_nights,
+                'total_amount' => $total_amount,
+                'status' => 'pending'
+            ];
+            $telegramResult = sendTelegramBookingNotification($telegramData);
+            if ($telegramResult['success']) {
+                error_log("Telegram booking notification sent for: $booking_code");
+            }
         } else {
             error_log("Could not fetch booking data for email: $booking_code");
         }

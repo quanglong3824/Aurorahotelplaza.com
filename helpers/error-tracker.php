@@ -10,13 +10,13 @@ if (!defined('DB_NAME')) {
     require_once __DIR__ . '/../config/database.php';
 }
 
+require_once __DIR__ . '/telegram.php';
+
 class AuroraErrorTracker
 {
     private static $initialized = false;
     private static $db = null;
     private static $errorQueue = [];
-    private static $telegramBotToken = null; // Telegram Bot Token
-    private static $telegramChatId = null; // Telegram Chat ID nhận alert
 
     /**
      * Khởi tạo Error Tracker - gọi sớm nhất có thể
@@ -25,9 +25,6 @@ class AuroraErrorTracker
     {
         if (self::$initialized)
             return;
-
-        // Load cấu hình Telegram
-        self::loadTelegramConfig();
 
         // ─── PHP Error Handlers ───────────────────────────────────────
         set_error_handler([self::class, 'handlePhpError']);
@@ -40,40 +37,6 @@ class AuroraErrorTracker
         ini_set('log_errors', 1);
 
         self::$initialized = true;
-    }
-
-    /**
-     * Load cấu hình Telegram từ DB hoặc constants
-     */
-    private static function loadTelegramConfig()
-    {
-        self::$telegramBotToken = env('TELEGRAM_BOT_TOKEN');
-        self::$telegramChatId = env('TELEGRAM_CHAT_ID');
-
-        try {
-            $db = self::getDb();
-            if ($db) {
-                // Lấy giá trị mới nhất KHÔNG rỗng cho mỗi key (tránh đọc nhầm row rỗng)
-                $stmt = $db->prepare(
-                    "SELECT setting_key, setting_value FROM system_settings 
-                     WHERE setting_key IN ('telegram_bot_token', 'telegram_chat_id')
-                       AND setting_value IS NOT NULL AND setting_value != ''
-                     ORDER BY setting_id DESC"
-                );
-                $stmt->execute();
-                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    // Chỉ set lần đầu (DESC = mới nhất trước)
-                    if ($row['setting_key'] === 'telegram_bot_token' && empty(self::$telegramBotToken)) {
-                        self::$telegramBotToken = $row['setting_value'];
-                    }
-                    if ($row['setting_key'] === 'telegram_chat_id' && empty(self::$telegramChatId)) {
-                        self::$telegramChatId = $row['setting_value'];
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            // silent
-        }
     }
 
     /**
@@ -401,8 +364,8 @@ class AuroraErrorTracker
      */
     private static function sendTelegramAlert(int $errorId, array $errorData, string $aiAnalysis)
     {
-        $token = self::$telegramBotToken;
-        $chatId = self::$telegramChatId;
+        $token = TelegramHelper::getBotToken();
+        $chatId = TelegramHelper::getChatId();
 
         if (empty($token) || empty($chatId)) {
             error_log('[ErrorTracker] Telegram Bot Token or Chat ID not configured. Error #' . $errorId . ' not sent.');

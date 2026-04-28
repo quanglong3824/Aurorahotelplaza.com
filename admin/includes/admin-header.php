@@ -301,6 +301,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                             ['page' => 'activity-logs', 'icon' => 'history', 'label' => 'Nhật ký hoạt động'],
                             ['page' => 'reports', 'icon' => 'analytics', 'label' => 'Báo cáo'],
                             ['page' => 'notifications', 'icon' => 'notifications', 'label' => 'Thông báo'],
+                            ['page' => 'test-messenger-2way', 'icon' => 'outgoing_mail', 'label' => 'Test Messenger'],
                             ['page' => 'settings', 'icon' => 'settings', 'label' => 'Khởi tạo cấu hình'],
                             ['page' => 'backup-database', 'icon' => 'backup', 'label' => 'Sao lưu dữ liệu'],
                             ['page' => 'reset-database', 'icon' => 'delete_forever', 'label' => 'Dọn dẹp hệ thống']

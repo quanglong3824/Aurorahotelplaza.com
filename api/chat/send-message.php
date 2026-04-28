@@ -16,6 +16,8 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/database.php';
 
+require_once '../../helpers/telegram.php';
+
 // Hỗ trợ khách vãng lai
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
     http_response_code(401);
@@ -158,6 +160,38 @@ try {
                     ':preview' => mb_substr($message, 0, 100),
                     ':cid' => $conv_id
                 ]);
+
+        // Gửi Telegram notification cho admin khi khách gửi tin nhắn
+        try {
+            $convStmt = $db->prepare(
+                "SELECT c.conversation_id, c.customer_id, c.guest_id, 
+                        COALESCE(u.full_name, c.guest_name, 'Khách') as guest_name
+                 FROM chat_conversations c
+                 LEFT JOIN users u ON c.customer_id = u.user_id
+                 WHERE c.conversation_id = :cid"
+            );
+            $convStmt->execute([':cid' => $conv_id]);
+            $convData = $convStmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($convData) {
+                $msgData = ['message' => $message];
+                $telegramResult = sendTelegramChatNotification($convData, $msgData);
+                
+                if ($telegramResult['success'] && isset($telegramResult['message_id'])) {
+                    $db->prepare(
+                        "INSERT INTO telegram_message_mapping 
+                            (conversation_id, telegram_message_id, message_type, created_at)
+                         VALUES (:cid, :msg_id, 'notification', NOW())
+                         ON DUPLICATE KEY UPDATE telegram_message_id = :msg_id"
+                    )->execute([
+                        ':cid' => $conv_id,
+                        ':msg_id' => $telegramResult['message_id']
+                    ]);
+                }
+            }
+        } catch (Throwable $telegramErr) {
+            error_log('Telegram chat notification error: ' . $telegramErr->getMessage());
+        }
 
         // [UPGRADE] AI Trợ lý ảo hiện đã chuyển sang cơ chế Streaming (ai-stream.php)
         // để không làm nghẽn quá trình gửi tin nhắn của khách.
