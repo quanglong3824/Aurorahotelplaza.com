@@ -21,8 +21,51 @@ define('GEMINI_API_BASE', 'https://generativelanguage.googleapis.com/v1beta/mode
 /**
  * Lấy prompt hệ thống cho Aurora AI Chat
  */
-function get_aurora_system_prompt($db, $conv_id = null)
+function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
 {
+    $days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+    $w = date('w');
+    $weekday = $days[$w];
+    $currentDateTime = date('H:i:s') . " - " . $weekday . " ngày " . date('d/m/Y');
+
+    // Kiểm tra cuối tuần (Thứ 6, 7, CN)
+    $isWeekend = ($w == 5 || $w == 6 || $w == 0);
+    $priceNote = $isWeekend ? "Hôm nay là CUỐI TUẦN, hãy báo giá weekend_price nếu có." : "Hôm nay là NGÀY THƯỜNG, hãy báo giá base_price.";
+    
+    // Logic tra cứu đơn hàng tự động từ tin nhắn
+    $autoBookingInfo = "";
+    if ($db && !empty($current_message)) {
+        // Tìm mã BKG hoặc SĐT
+        $bookingCode = "";
+        if (preg_match('/(BKG|BK)[A-Z0-9]{5,}/i', $current_message, $m)) $bookingCode = strtoupper($m[0]);
+        
+        $phone = "";
+        if (preg_match('/(0|\+84)[0-9]{8,10}/', $current_message, $m)) $phone = $m[0];
+
+        if ($bookingCode || $phone) {
+            try {
+                $sql = "SELECT b.*, r.type_name FROM bookings b 
+                        LEFT JOIN room_types r ON b.room_type_id = r.room_type_id 
+                        WHERE b.booking_code = ? OR b.guest_phone = ? 
+                        ORDER BY b.created_at DESC LIMIT 1";
+                $stmtB = $db->prepare($sql);
+                $stmtB->execute([$bookingCode, $phone]);
+                $b = $stmtB->fetch(PDO::FETCH_ASSOC);
+                
+                if ($b) {
+                    $autoBookingInfo = "\n[HỆ THỐNG ĐÃ TÌM THẤY ĐƠN HÀNG]:
+- Mã: {$b['booking_code']}
+- Khách: {$b['guest_name']} ({$b['guest_phone']})
+- Loại phòng: {$b['type_name']}
+- Check-in: {$b['check_in_date']} | Check-out: {$b['check_out_date']}
+- Trạng thái: {$b['status']} | Thanh toán: {$b['payment_status']}
+- QR Code: " . ($b['qr_code'] ? $b['qr_code'] : 'Chưa có') . "
+=> HƯỚNG DẪN: Hãy xác nhận lại với khách. Nếu đơn đã confirmed, hãy dùng tag [VIEW_QR_BTN: code={$b['booking_code']}, id={$b['booking_id']}] để khách xem mã QR.";
+                }
+            } catch (Exception $e) {}
+        }
+    }
+
     // 1. Nhận diện khách quen
     $userInfo = "";
     if ($conv_id && $db) {
@@ -81,7 +124,10 @@ function get_aurora_system_prompt($db, $conv_id = null)
 - Trẻ em: {$guestPolicy}
 - Hủy: {$cancelPolicy}
 
+{$autoBookingInfo}
+
 [LOGIC PHẢN HỒI]
+- Tra cứu đơn hàng: Nếu đã có [HỆ THỐNG ĐÃ TÌM THẤY ĐƠN HÀNG], hãy trả lời chi tiết và hiện tag [VIEW_QR_BTN] nếu cần.
 - Khách phàn nàn/cần hỗ trợ kỹ thuật: Xin lỗi lịch sự + Dùng tag [SAVE_CONTACT] để báo nhân viên.
 - Khách đặt phòng: Thu thập thông tin -> Gợi ý phòng kèm ảnh [IMAGE] -> Trình bày nút [BOOK_NOW_BTN].
 - Xưng hô: Dạ, Aurora xin chào... tiếng Việt 100%.";
@@ -136,7 +182,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     }
 
     $model = env('AI_MODEL', 'gemini-2.0-flash');
-    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+    $system_prompt = get_aurora_system_prompt($db, $conv_id, $user_message);
 
     // Build contents array cho Gemini multi-turn (giới hạn tin nhắn cuối để tiết kiệm token)
     // Cực kỳ quan trọng: Gemini yêu cầu role phải xen kẽ (user -> model -> user) và bắt đầu bằng user.
