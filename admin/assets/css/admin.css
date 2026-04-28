@@ -80,30 +80,70 @@
 }
 
 .form-input {
-    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
-           bg-white dark:bg-slate-800 
-           text-gray-900 dark:text-white
-           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #1f2937;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #d4af37;
+    border-color: transparent;
+}
+
+.dark .form-input {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
 }
 
 .form-select {
-    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
-           bg-white dark:bg-slate-800 
-           text-gray-900 dark:text-white
-           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #1f2937;
+    font-size: 0.875rem;
+}
+
+.dark .form-select {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
 }
 
 .form-textarea {
-    @apply w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg 
-           bg-white dark:bg-slate-800 
-           text-gray-900 dark:text-white
-           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
-           min-h-[100px];
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #1f2937;
+    font-size: 0.875rem;
+    min-height: 100px;
+}
+
+.dark .form-textarea {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-    @apply text-gray-400 dark:text-gray-500;
+    color: #9ca3af;
+}
+
+.dark .form-input::placeholder,
+.dark .form-textarea::placeholder {
+    color: #6b7280;
 }
 
 /* Button Styles */
