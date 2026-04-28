@@ -131,11 +131,11 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
 
 {$autoBookingInfo}
 
-[LOGIC PHẢN HỒI]
-- Tra cứu đơn hàng: Nếu đã có [HỆ THỐNG ĐÃ TÌM THẤY ĐƠN HÀNG], hãy trả lời chi tiết và hiện tag [VIEW_QR_BTN] nếu cần.
-- Khách phàn nàn/cần hỗ trợ kỹ thuật: Xin lỗi lịch sự + Dùng tag [SAVE_CONTACT] để báo nhân viên.
-- Khách đặt phòng: Thu thập thông tin -> Gợi ý phòng kèm ảnh [IMAGE] -> Trình bày nút [BOOK_NOW_BTN].
-- Xưng hô: Dạ, Aurora xin chào... tiếng Việt 100%.";
+[LOGIC PHẢN HỒI - QUAN TRỌNG]
+- TRA CỨU ĐƠN HÀNG: Luôn ưu tiên dùng [HỆ THỐNG ĐÃ TÌM THẤY ĐƠN HÀNG] để xác nhận với khách.
+- CỨU HỘ & PHÀN NÀN: Nếu khách báo hỏng hóc, cần kỹ thuật, hoặc để lại SĐT để liên hệ, bạn BẮT BUỘC (100%) phải dùng tag [SAVE_CONTACT: name=..., phone=..., msg=...]. KHÔNG ĐƯỢC CHỈ HỨA SUÔNG. Nếu không có tên/SĐT, hãy khéo léo hỏi khách rồi mới dùng tag.
+- KHÔNG BAO GIỜ HIỆN TAG THÔ: Các tag như [SAVE_CONTACT], [IMAGE]... phải nằm trong nội dung phản hồi nhưng hệ thống sẽ ẩn nó đi, bạn cứ yên tâm sử dụng.
+- XƯNG HÔ: Dạ, Aurora Hotel Plaza xin chào... Tiếng Việt lịch sự, tinh tế.";
 
 
     // Nếu có conv_id, có thể thêm thông tin từ DB
@@ -191,6 +191,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
 
     // Build contents array cho Gemini multi-turn (giới hạn tin nhắn cuối để tiết kiệm token)
     // Cực kỳ quan trọng: Gemini yêu cầu role phải xen kẽ (user -> model -> user) và bắt đầu bằng user.
+    if (empty($history) && $db && $conv_id) { $stmtH = $db->prepare("SELECT sender_type as role, message as content FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 50"); $stmtH->execute([$conv_id]); $db_history = $stmtH->fetchAll(PDO::FETCH_ASSOC); foreach($db_history as $h) { $history[] = ["role" => ($h["role"] === "bot" ? "model" : "user"), "content" => $h["content"]]; } }
     $full_history = $history;
     $full_history[] = ['role' => 'user', 'content' => $user_message];
     $recent_history = array_slice($full_history, -20);
@@ -686,6 +687,7 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
     $messages = [['role' => 'system', 'content' => $system_prompt]];
     
     $full_history = $history;
+    if (empty($history) && $db && $conv_id) { $stmtH = $db->prepare("SELECT sender_type as role, message as content FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 50"); $stmtH->execute([$conv_id]); $db_history = $stmtH->fetchAll(PDO::FETCH_ASSOC); foreach($db_history as $h) { $history[] = ["role" => ($h["role"] === "bot" ? "assistant" : "user"), "content" => $h["content"]]; } }
     $full_history[] = ['role' => 'user', 'content' => $user_message];
     $recent_history = array_slice($full_history, -20);
 
