@@ -128,7 +128,7 @@ LƯU Ý:
 }
 
 /**
- * Stream phản hồi từ Alibaba DashScope API (China)
+ * Stream phản hồi từ Alibaba DashScope (coding-intl - OpenAI-compatible)
  */
 function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $turn = 1)
 {
@@ -138,8 +138,8 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
         return "";
     }
 
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/api/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen3.5-plus';
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
 
     $messages = [
@@ -157,26 +157,25 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
 
     $request_body = [
         'model' => $model,
-        'input' => [
-            'messages' => $messages
-        ],
-        'parameters' => [
-            'temperature' => 0.7,
-            'max_tokens' => 2048,
-            'result_format' => 'message'
-        ]
+        'messages' => $messages,
+        'stream' => true,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
     ];
+
+    $full_response_text = "";
+    $is_tool_call = false;
+    $is_decided = false;
 
     $ch = curl_init();
     curl_setopt_array($ch, [
-        CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
+        CURLOPT_URL => $api_url . '/chat/completions',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($request_body),
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
-            'Authorization: Bearer ' . $api_key,
-            'X-DashScope-SSE: enable'
+            'Authorization: Bearer ' . $api_key
         ],
         CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
             static $buffer = '';
@@ -187,25 +186,15 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
 
             foreach ($lines as $line) {
                 $line = trim($line);
-                if (empty($line)) continue;
+                if (empty($line) || $line === 'data: [DONE]') continue;
+                if (strpos($line, 'data: ') !== 0) continue;
 
-                if (strpos($line, 'data:') === 0) {
-                    $json_str = trim(substr($line, 5));
-                } else {
-                    $json_str = $line;
-                }
-
+                $json_str = substr($line, 6);
                 $decoded = json_decode($json_str, true);
-                if (!$decoded) continue;
 
-                $text = '';
-                if (isset($decoded['output']['choices'][0]['message']['content'])) {
-                    $text = $decoded['output']['choices'][0]['message']['content'][0] ?? $decoded['output']['choices'][0]['message']['content'];
-                } elseif (isset($decoded['output']['text'])) {
-                    $text = $decoded['output']['text'];
-                }
+                if (!$decoded || !isset($decoded['choices'][0]['delta']['content'])) continue;
 
-                if (empty($text)) continue;
+                $text = $decoded['choices'][0]['delta']['content'];
                 $full_response_text .= $text;
 
                 if (!$is_decided) {
@@ -241,10 +230,6 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
             return strlen($data);
         }
     ]);
-
-    $full_response_text = "";
-    $is_tool_call = false;
-    $is_decided = false;
 
     try {
         curl_exec($ch);
@@ -646,7 +631,7 @@ function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
 }
 
 /**
- * Gọi Alibaba DashScope đồng bộ (không stream) - China
+ * Gọi Alibaba DashScope đồng bộ (coding-intl - OpenAI-compatible)
  */
 function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null)
 {
@@ -655,8 +640,8 @@ function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null
         return "Lỗi: Chưa cấu hình Alibaba API Key";
     }
 
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/api/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen3.5-plus';
 
     if ($system_prompt === null) {
         $system_prompt = get_aurora_system_prompt($db, $conv_id);
@@ -669,20 +654,16 @@ function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null
 
     $request_body = [
         'model' => $model,
-        'input' => [
-            'messages' => $messages
-        ],
-        'parameters' => [
-            'temperature' => 0.7,
-            'max_tokens' => 2048,
-            'result_format' => 'message'
-        ]
+        'messages' => $messages,
+        'stream' => false,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
     ];
 
     try {
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
+            CURLOPT_URL => $api_url . '/chat/completions',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode($request_body),
@@ -712,18 +693,12 @@ function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null
 
         $decoded = json_decode($response, true);
         
-        // Native DashScope API response format
-        if (isset($decoded['output']['choices'][0]['message']['content'])) {
-            $content = $decoded['output']['choices'][0]['message']['content'];
-            return is_array($content) ? $content[0] : $content;
-        }
-        
-        if (isset($decoded['output']['text'])) {
-            return $decoded['output']['text'];
+        if (isset($decoded['choices'][0]['message']['content'])) {
+            return $decoded['choices'][0]['message']['content'];
         }
 
-        if (isset($decoded['code']) && $decoded['code'] !== 'Success') {
-            return "Lỗi API: " . ($decoded['message'] ?? $decoded['code']);
+        if (isset($decoded['error'])) {
+            return "Lỗi API: " . ($decoded['error']['message'] ?? $decoded['error']['code']);
         }
 
         return "Lỗi: Không thể parse phản hồi từ AI - " . substr($response, 0, 200);

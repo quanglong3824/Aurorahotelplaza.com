@@ -60,14 +60,14 @@ if (!defined('AI_PROVIDER')) {
 
 /**
  * 5. ALIBABA API CONFIG
- * DashScope API (China)
- * URL: https://dashscope.aliyuncs.com/api/v1
+ * DashScope API - Plan-Specific (coding-intl)
+ * URL: https://coding-intl.dashscope.aliyuncs.com/v1
  */
 if (!defined('ALIBABA_API_URL')) {
-    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://dashscope.aliyuncs.com/api/v1'));
+    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://coding-intl.dashscope.aliyuncs.com/v1'));
 }
 
 if (!defined('ALIBABA_MODEL')) {
-    define('ALIBABA_MODEL', env('ALIBABA_MODEL', 'qwen-plus'));
+    define('ALIBABA_MODEL', env('ALIBABA_MODEL', 'qwen3.5-plus'));
 }
 ?>

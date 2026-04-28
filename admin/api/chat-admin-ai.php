@@ -174,30 +174,26 @@ function call_ai_admin($system_prompt, $messages)
 }
 
 /**
- * Gọi Alibaba DashScope cho Admin (China)
+ * Gọi Alibaba DashScope cho Admin (coding-intl - OpenAI-compatible)
  */
 function call_alibaba_admin($api_key, $prompt)
 {
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/api/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen3.5-plus';
 
     $request_body = [
         'model' => $model,
-        'input' => [
-            'messages' => [
-                ['role' => 'user', 'content' => $prompt]
-            ]
+        'messages' => [
+            ['role' => 'user', 'content' => $prompt]
         ],
-        'parameters' => [
-            'temperature' => 0.7,
-            'max_tokens' => 2048,
-            'result_format' => 'message'
-        ]
+        'stream' => false,
+        'temperature' => 0.7,
+        'max_tokens' => 2048
     ];
 
     $ch = curl_init();
     curl_setopt_array($ch, [
-        CURLOPT_URL => 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
+        CURLOPT_URL => $api_url . '/chat/completions',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($request_body),
@@ -228,13 +224,12 @@ function call_alibaba_admin($api_key, $prompt)
 
     $decoded = json_decode($response, true);
     
-    if (isset($decoded['output']['choices'][0]['message']['content'])) {
-        $content = $decoded['output']['choices'][0]['message']['content'];
-        return is_array($content) ? $content[0] : $content;
+    if (isset($decoded['choices'][0]['message']['content'])) {
+        return $decoded['choices'][0]['message']['content'];
     }
-    
-    if (isset($decoded['output']['text'])) {
-        return $decoded['output']['text'];
+
+    if (isset($decoded['error'])) {
+        throw new Exception("API Error: " . $decoded['error']['message']);
     }
 
     throw new Exception("Alibaba API trả về phản hồi không hợp lệ");
