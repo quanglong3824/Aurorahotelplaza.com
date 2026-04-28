@@ -1,27 +1,9 @@
 <!-- Hero Slider Section -->
 <?php
-// Fetch active banners from database
-$banners = [];
-$useFallback = false;
+require_once __DIR__ . '/../helpers/image-helper.php';
 
-try {
-    if (!defined('DB_NAME')) {
-        require_once __DIR__ . '/../config/database.php';
-    }
-    $db = getDB();
-    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url FROM banners WHERE status = 'active' AND position = 'hero' ORDER BY sort_order ASC, created_at DESC");
-    $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($banners)) {
-        $useFallback = true;
-    }
-} catch (Throwable $e) {
-    $useFallback = true;
-    error_log('Hero slider banners error: ' . $e->getMessage());
-}
-
-// Fallback images if no banners in database
-$fallbackImages = [
+// Hardcoded hero images - not from banners table
+$heroImages = [
     imgUrl('assets/img/classical-family-apartment/classical-family-apartment6.jpg'),
     imgUrl('assets/img/classical-premium-apartment/classical-premium-apartment-2.jpg'),
     imgUrl('assets/img/indochine-family-apartment/indochine-family-apartment-12.jpg'),
@@ -35,32 +17,11 @@ $fallbackImages = [
 ];
 ?>
 <section class="hero-slider relative flex min-h-screen w-full items-center justify-center">
-    <!-- Slider Images -->
-    <?php if ($useFallback): ?>
-        <!-- Fallback: Hardcoded images -->
-        <div class="hero-slide active"
-            style="background-image: url('<?php echo $fallbackImages[0]; ?>');"></div>
-        <?php for ($i = 1; $i < count($fallbackImages); $i++): ?>
-            <div class="hero-slide" data-bg="<?php echo $fallbackImages[$i]; ?>"></div>
-        <?php endfor; ?>
-    <?php else: ?>
-        <!-- Dynamic banners from database -->
-        <?php $first = true; foreach ($banners as $banner): ?>
-            <?php $imageUrl = imgUrl($banner['image_desktop']); ?>
-            <div class="hero-slide <?php echo $first ? 'active' : ''; ?>" 
-                 <?php echo $first ? 'style="background-image: url(\'' . $imageUrl . '\');"' : 'data-bg="' . $imageUrl . '"'; ?>
-                 data-title="<?php echo htmlspecialchars($banner['title']); ?>"
-                 data-subtitle="<?php echo htmlspecialchars($banner['subtitle'] ?? ''); ?>"
-                 data-link="<?php echo htmlspecialchars($banner['link_url'] ?? ''); ?>">
-            </div>
-            <?php $first = false; endforeach; ?>
-        
-        <?php if (count($banners) < 3): ?>
-            <?php for ($i = count($banners); $i < 3 && $i < count($fallbackImages); $i++): ?>
-                <div class="hero-slide" data-bg="<?php echo $fallbackImages[$i]; ?>"></div>
-            <?php endfor; ?>
-        <?php endif; ?>
-    <?php endif; ?>
+    <!-- Slider Images - All loaded inline -->
+    <?php foreach ($heroImages as $i => $img): ?>
+        <div class="hero-slide <?php echo $i === 0 ? 'active' : ''; ?>" 
+             style="background-image: url('<?php echo $img; ?>');"></div>
+    <?php endforeach; ?>
 
     <!-- Previous Arrow -->
     <div class="slider-arrow prev">
@@ -167,7 +128,6 @@ $fallbackImages = [
 </section>
 
 <script>
-    // Set minimum dates for booking form
     document.addEventListener('DOMContentLoaded', function () {
         const checkinInput = document.getElementById('checkin');
         const checkoutInput = document.getElementById('checkout');
@@ -182,25 +142,6 @@ $fallbackImages = [
                 if (checkoutInput.value && checkoutInput.value <= this.value) {
                     checkoutInput.value = minCheckout;
                 }
-            });
-        }
-
-        // Lazy load slider images
-        const lazySlides = document.querySelectorAll('.hero-slide[data-bg]');
-        if ('IntersectionObserver' in window) {
-            const loadImages = () => {
-                lazySlides.forEach(slide => {
-                    slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
-                    slide.removeAttribute('data-bg');
-                });
-            };
-
-            // Load rest of images 3 seconds after load to not block initial render
-            setTimeout(loadImages, 3000);
-        } else {
-            // Fallback for older browsers
-            lazySlides.forEach(slide => {
-                slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
             });
         }
     });
