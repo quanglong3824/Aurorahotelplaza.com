@@ -307,38 +307,67 @@ class SEOManager {
     }
 
     /**
-     * Generate Hotel Schema
+     * Generate Hotel Schema with Local SEO
      */
     private static function generateHotelSchema($customData = []) {
         $baseUrl = defined('BASE_URL') ? BASE_URL : 'https://aurorahotelplaza.com';
         $starRating = self::getSetting('schema_star_rating', '4');
         $priceRange = self::getSetting('schema_price_range', '$$');
+        
+        // Get local SEO settings from database
+        $geoCity = self::getSetting('geo_city', 'Biên Hòa');
+        $geoRegion = self::getSetting('geo_region', 'Đồng Nai');
+        $geoCountry = self::getSetting('geo_country', 'Vietnam');
+        $geoLat = self::getSetting('geo_latitude', '10.957145');
+        $geoLong = self::getSetting('geo_longitude', '106.842133');
+        $geoPostal = self::getSetting('geo_postal_code', '810000');
+        $geoStreet = self::getSetting('geo_street', '253 Phạm Văn Thuận, Khu phố 2');
+        $geoWard = self::getSetting('geo_ward', 'Phường Tam Hiệp');
+        
+        // Get aggregate rating from reviews table
+        $aggregateRating = self::getAggregateRatingFromDB();
 
         $data = [
             '@context' => 'https://schema.org',
             '@type' => 'Hotel',
             'name' => 'Aurora Hotel Plaza',
-            'description' => 'Khách sạn 4 sao sang trọng tại trung tâm Biên Hòa, Đồng Nai với hơn 200 phòng nghỉ và căn hộ cao cấp.',
+            'alternateName' => ['Aurora Hotel Biên Hòa', 'Khách sạn Aurora Đồng Nai', 'Aurora Plaza Bien Hoa'],
+            'description' => 'Khách sạn 4 sao sang trọng tại trung tâm Biên Hòa, Đồng Nai với hơn 200 phòng nghỉ và căn hộ cao cấp. Vị trí đắc địa gần KCN Amata, Big C Biên Hòa.',
             'image' => [
                 $baseUrl . '/assets/img/hotel-exterior.jpg',
                 $baseUrl . '/assets/img/lobby.jpg',
-                $baseUrl . '/assets/img/room-deluxe.jpg'
+                $baseUrl . '/assets/img/room-deluxe.jpg',
+                $baseUrl . '/assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'
             ],
             'url' => $baseUrl,
             'telephone' => '+84-251-3918-888',
             'email' => 'info@aurorahotelplaza.com',
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => '253, Phạm Văn Thuận, KP2',
-                'addressLocality' => 'Biên Hòa',
-                'addressRegion' => 'Đồng Nai',
-                'postalCode' => '810000',
-                'addressCountry' => 'VN'
+                'streetAddress' => $geoStreet,
+                'addressLocality' => $geoCity,
+                'addressRegion' => $geoRegion,
+                'postalCode' => $geoPostal,
+                'addressCountry' => $geoCountry
             ],
             'geo' => [
                 '@type' => 'GeoCoordinates',
-                'latitude' => '10.9510',
-                'longitude' => '106.8340'
+                'latitude' => $geoLat,
+                'longitude' => $geoLong
+            ],
+            'areaServed' => [
+                ['@type' => 'City', 'name' => $geoCity],
+                ['@type' => 'State', 'name' => $geoRegion],
+                ['@type' => 'Country', 'name' => $geoCountry]
+            ],
+            'location' => [
+                '@type' => 'Place',
+                'name' => 'Biên Hòa, Đồng Nai',
+                'geo' => [
+                    '@type' => 'GeoCoordinates',
+                    'latitude' => $geoLat,
+                    'longitude' => $geoLong
+                ]
             ],
             'starRating' => [
                 '@type' => 'Rating',
@@ -355,19 +384,32 @@ class SEOManager {
                 ['@type' => 'LocationFeatureSpecification', 'name' => 'Restaurant', 'value' => true],
                 ['@type' => 'LocationFeatureSpecification', 'name' => 'Spa', 'value' => true],
                 ['@type' => 'LocationFeatureSpecification', 'name' => 'Conference Room', 'value' => true],
+                ['@type' => 'LocationFeatureSpecification', 'name' => 'Wedding Hall', 'value' => true],
                 ['@type' => 'LocationFeatureSpecification', 'name' => 'Free Parking', 'value' => true],
-                ['@type' => 'LocationFeatureSpecification', 'name' => '24-hour Front Desk', 'value' => true]
+                ['@type' => 'LocationFeatureSpecification', 'name' => '24-hour Front Desk', 'value' => true],
+                ['@type' => 'LocationFeatureSpecification', 'name' => 'Airport Shuttle', 'value' => true],
+                ['@type' => 'LocationFeatureSpecification', 'name' => 'Laundry Service', 'value' => true]
             ],
+            'hasMap' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0824374942376!2d106.84213347514152!3d10.957145355834111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174dc27705d362d%3A0xc1fb19ec2c2b1806!2zS2jDoWNoIHPhuqFuIEF1cm9yYQ!5e0!3m2!1svi!2s!4v1765630076897',
             'sameAs' => [
                 'https://www.facebook.com/aurorahotelplaza',
                 'https://www.instagram.com/aurorahotelplaza'
             ],
-            'aggregateRating' => [
-                '@type' => 'AggregateRating',
-                'ratingValue' => '4.5',
-                'reviewCount' => '500',
-                'bestRating' => '5',
-                'worstRating' => '1'
+            'aggregateRating' => $aggregateRating,
+            'potentialAction' => [
+                '@type' => 'ReserveAction',
+                'target' => [
+                    '@type' => 'EntryPoint',
+                    'urlTemplate' => $baseUrl . '/dat-phong',
+                    'actionPlatform' => [
+                        'http://schema.org/DesktopWebPlatform',
+                        'http://schema.org/MobileWebPlatform'
+                    ]
+                ],
+                'result' => [
+                    '@type' => 'LodgingReservation',
+                    'name' => 'Đặt phòng Aurora Hotel Plaza'
+                ]
             ]
         ];
 
@@ -377,6 +419,37 @@ class SEOManager {
         }
 
         return '<script type="application/ld+json">' . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+    }
+    
+    /**
+     * Get Aggregate Rating from Database Reviews
+     */
+    private static function getAggregateRatingFromDB() {
+        try {
+            $stmt = self::$db->query("SELECT AVG(rating) as avg_rating, COUNT(*) as total FROM reviews WHERE status = 'approved'");
+            $ratingData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($ratingData && $ratingData['total'] > 0) {
+                return [
+                    '@type' => 'AggregateRating',
+                    'ratingValue' => round($ratingData['avg_rating'], 1),
+                    'reviewCount' => $ratingData['total'],
+                    'bestRating' => '5',
+                    'worstRating' => '1'
+                ];
+            }
+        } catch (Exception $e) {
+            // Fallback to default
+        }
+        
+        // Default rating
+        return [
+            '@type' => 'AggregateRating',
+            'ratingValue' => '4.5',
+            'reviewCount' => '500',
+            'bestRating' => '5',
+            'worstRating' => '1'
+        ];
     }
 
     /**
