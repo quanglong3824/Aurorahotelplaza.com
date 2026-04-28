@@ -188,7 +188,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     // Cực kỳ quan trọng: Gemini yêu cầu role phải xen kẽ (user -> model -> user) và bắt đầu bằng user.
     $full_history = $history;
     $full_history[] = ['role' => 'user', 'content' => $user_message];
-    $recent_history = array_slice($full_history, -8);
+    $recent_history = array_slice($full_history, -20);
 
     $contents = [];
     foreach ($recent_history as $msg) {
@@ -221,7 +221,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
         'contents' => $contents,
         'generationConfig' => [
             'temperature' => 0.7,
-            'maxOutputTokens' => 2048
+            'maxOutputTokens' => 4096
         ]
     ];
 
@@ -601,7 +601,7 @@ function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null,
         'contents' => [['role' => 'user', 'parts' => [['text' => $message]]]],
         'generationConfig' => [
             'temperature' => 0.7,
-            'maxOutputTokens' => 2048
+            'maxOutputTokens' => 4096
         ]
     ];
 
@@ -676,13 +676,13 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
 
     $model = OPENCODE_MODEL;
     $url = OPENCODE_API_URL . "/chat/completions";
-    $system_prompt = get_aurora_system_prompt($db, $conv_id);
+    $system_prompt = get_aurora_system_prompt($db, $conv_id, $user_message);
 
     $messages = [['role' => 'system', 'content' => $system_prompt]];
     
     $full_history = $history;
     $full_history[] = ['role' => 'user', 'content' => $user_message];
-    $recent_history = array_slice($full_history, -8);
+    $recent_history = array_slice($full_history, -20);
 
     foreach ($recent_history as $msg) {
         $role = $msg['role'] === 'user' ? 'user' : 'assistant';
@@ -693,7 +693,7 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
         'model' => $model,
         'messages' => $messages,
         'temperature' => 0.7,
-        'max_tokens' => 2048,
+        'max_tokens' => 4096,
         'stream' => true
     ];
 
