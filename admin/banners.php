@@ -123,15 +123,35 @@ include 'includes/admin-header.php';
             <!-- Image Selection -->
             <div>
                 <label class="block text-sm font-medium mb-1">Hình ảnh *</label>
-                <div class="flex gap-2 mb-2">
-                    <input type="text" name="image_url" id="banner_image_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required placeholder="URL hình ảnh...">
-                    <button type="button" onclick="openGalleryPicker()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                
+                <!-- Upload Area -->
+                <div id="uploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-colors mb-3">
+                    <input type="file" id="imageUpload" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden" onchange="uploadBannerImage(this)">
+                    <div onclick="document.getElementById('imageUpload').click()">
+                        <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">cloud_upload</span>
+                        <p class="text-gray-500">Kéo thả ảnh hoặc click để upload</p>
+                        <p class="text-xs text-gray-400 mt-1">JPG, PNG, GIF, WebP (tối đa 5MB)</p>
+                    </div>
+                    <div id="uploadProgress" class="hidden mt-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="uploadBar" class="bg-indigo-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- URL Input -->
+                <div class="flex gap-2">
+                    <input type="text" name="image_url" id="banner_image_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required placeholder="URL hình ảnh hoặc upload...">
+                    <button type="button" onclick="openGalleryPicker()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-1">
                         <span class="material-symbols-outlined text-sm">photo_library</span>
                         Gallery
                     </button>
                 </div>
-                <div id="imagePreview" class="hidden">
-                    <img id="previewImg" class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                
+                <!-- Preview -->
+                <div id="imagePreview" class="mt-3 hidden">
+                    <img id="previewImg" class="w-full h-40 object-cover rounded-lg border border-gray-200">
+                    <p id="previewFileName" class="text-xs text-gray-500 mt-1"></p>
                 </div>
             </div>
             
@@ -193,12 +213,97 @@ include 'includes/admin-header.php';
 let galleryImages = [];
 let selectedImageUrl = '';
 
+// Drag & Drop Upload
+const uploadArea = document.getElementById('uploadArea');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('border-indigo-500', 'bg-indigo-50');
+});
+
+uploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].type.startsWith('image/')) {
+        uploadImageFile(files[0]);
+    }
+});
+
+function uploadBannerImage(input) {
+    if (input.files && input.files[0]) {
+        uploadImageFile(input.files[0]);
+    }
+}
+
+function uploadImageFile(file) {
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification('File quá lớn (tối đa 5MB)', 'error');
+        return;
+    }
+    
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        showNotification('Chỉ chấp nhận JPG, PNG, GIF, WebP', 'error');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    document.getElementById('uploadProgress').classList.remove('hidden');
+    document.getElementById('uploadBar').style.width = '0%';
+    
+    const xhr = new XMLHttpRequest();
+    
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            document.getElementById('uploadBar').style.width = percent + '%';
+        }
+    });
+    
+    xhr.addEventListener('load', () => {
+        document.getElementById('uploadProgress').classList.add('hidden');
+        
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                document.getElementById('banner_image_url').value = response.image_url;
+                document.getElementById('previewImg').src = response.image_url;
+                document.getElementById('previewFileName').textContent = response.filename;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                showNotification('Upload thành công!', 'success');
+            } else {
+                showNotification(response.message || 'Lỗi upload', 'error');
+            }
+        } else {
+            showNotification('Lỗi kết nối', 'error');
+        }
+    });
+    
+    xhr.addEventListener('error', () => {
+        document.getElementById('uploadProgress').classList.add('hidden');
+        showNotification('Lỗi kết nối', 'error');
+    });
+    
+    xhr.open('POST', 'api/upload-banner-image.php');
+    xhr.send(formData);
+}
+
 function openBannerModal(bannerId = null) {
     document.getElementById('bannerModal').classList.remove('hidden');
     document.getElementById('bannerForm').reset();
     document.getElementById('modalTitle').textContent = 'Thêm Banner';
     document.getElementById('banner_id').value = '';
     document.getElementById('imagePreview').classList.add('hidden');
+    document.getElementById('uploadProgress').classList.add('hidden');
 }
 
 function closeBannerModal() {

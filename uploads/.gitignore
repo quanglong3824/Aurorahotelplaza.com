@@ -1,0 +1,3 @@
+# Upload folders - keep structure but ignore files
+/banners/*
+!.gitkeep
