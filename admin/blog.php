@@ -96,8 +96,12 @@ include 'includes/admin-header.php';
                         <?php 
                             $img_src = $post['featured_image'];
                             // Fix path for admin display
-                            if ($img_src && strpos($img_src, 'uploads/') === 0) {
-                                $img_src = '../' . $img_src;
+                            if ($img_src) {
+                                if (strpos($img_src, 'uploads/') === 0) {
+                                    $img_src = '../' . $img_src;
+                                } elseif (strpos($img_src, 'assets/') === 0) {
+                                    $img_src = '../' . $img_src;
+                                }
                             }
                         ?>
                         <?php if ($post['featured_image']): ?>

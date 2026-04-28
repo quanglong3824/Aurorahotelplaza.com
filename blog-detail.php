@@ -3,6 +3,7 @@
 session_start();
 require_once 'config/database.php';
 require_once 'helpers/language.php';
+require_once 'helpers/image-helper.php';
 initLanguage();
 
 $slug = $_GET['slug'] ?? '';
@@ -155,7 +156,7 @@ try {
                     <div class="flex flex-wrap items-center gap-6 mb-8 text-sm text-white/70">
                         <div class="flex items-center gap-2">
                             <?php if (!empty($post['avatar'])): ?>
-                                <img src="<?php echo htmlspecialchars($post['avatar']); ?>"
+                                <img src="<?php echo imgUrl($post['avatar']); ?>"
                                     alt="<?php echo htmlspecialchars($post['author_name']); ?>"
                                     class="w-10 h-10 rounded-full object-cover border border-white/20">
                             <?php else: ?>
@@ -196,7 +197,7 @@ try {
                             <!-- HERO LAYOUT - Full width hero image with overlay -->
                             <div class="relative -mx-6 md:-mx-10 mt-[-2.5rem] mb-10 rounded-t-xl overflow-hidden">
                                 <div class="aspect-[21/9] overflow-hidden">
-                                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                    <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                         alt="<?php echo htmlspecialchars($post['title']); ?>"
                                         class="w-full h-full object-cover">
                                 </div>
@@ -207,7 +208,7 @@ try {
                         <?php elseif ($layout === 'fullwidth' && $post['featured_image']): ?>
                             <!-- FULLWIDTH LAYOUT -->
                             <div class="-mx-6 md:-mx-10 mb-12">
-                                <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                     alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-auto">
                                 <div class="h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
                             </div>
@@ -217,7 +218,7 @@ try {
                             <div class="mb-12">
                                 <?php if ($post['featured_image']): ?>
                                     <div class="mb-4 rounded-xl overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>"
                                             class="w-full h-auto cursor-pointer hover:scale-105 transition-transform duration-500"
                                             onclick="openLightbox(0)">
@@ -227,7 +228,7 @@ try {
                                     <?php foreach ($gallery_images as $index => $img): ?>
                                         <div class="aspect-square rounded-lg overflow-hidden group cursor-pointer"
                                             onclick="openLightbox(<?php echo $index + 1; ?>)">
-                                            <img src="<?php echo htmlspecialchars($img); ?>"
+                                            <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                 alt="Gallery image <?php echo $index + 1; ?>"
                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                         </div>
@@ -242,14 +243,14 @@ try {
                                     <div class="slider-track flex transition-transform duration-500" id="sliderTrack">
                                         <?php if ($post['featured_image']): ?>
                                             <div class="slider-slide min-w-full">
-                                                <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                                <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                     alt="<?php echo htmlspecialchars($post['title']); ?>"
                                                     class="w-full h-[400px] md:h-[500px] object-cover">
                                             </div>
                                         <?php endif; ?>
                                         <?php foreach ($gallery_images as $index => $img): ?>
                                             <div class="slider-slide min-w-full">
-                                                <img src="<?php echo htmlspecialchars($img); ?>"
+                                                <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                     alt="Slide <?php echo $index + 1; ?>"
                                                     class="w-full h-[400px] md:h-[500px] object-cover">
                                             </div>
@@ -287,7 +288,7 @@ try {
                                     <!-- Main Image -->
                                     <div class="lg:col-span-2 rounded-xl overflow-hidden cursor-pointer"
                                         onclick="openLightbox(0)">
-                                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>"
                                             class="w-full h-[300px] md:h-[400px] object-cover hover:scale-105 transition-transform duration-500">
                                     </div>
@@ -299,7 +300,7 @@ try {
                                             ?>
                                             <div class="rounded-xl overflow-hidden cursor-pointer"
                                                 onclick="openLightbox(<?php echo $index + 1; ?>)">
-                                                <img src="<?php echo htmlspecialchars($img); ?>"
+                                                <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                     alt="Gallery <?php echo $index + 1; ?>"
                                                     class="w-full h-[140px] md:h-[190px] object-cover hover:scale-105 transition-transform duration-500">
                                             </div>
@@ -314,7 +315,7 @@ try {
                                             ?>
                                             <div class="aspect-video rounded-lg overflow-hidden cursor-pointer relative group"
                                                 onclick="openLightbox(<?php echo $index + 3; ?>)">
-                                                <img src="<?php echo htmlspecialchars($img); ?>"
+                                                <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                     alt="Gallery <?php echo $index + 3; ?>"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                                 <?php if ($index === 3 && count($gallery_images) > 6): ?>
@@ -334,7 +335,7 @@ try {
                             <div class="mb-12">
                                 <?php if ($post['featured_image']): ?>
                                     <div class="mb-4 rounded-xl overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>"
                                             class="w-full h-auto cursor-pointer hover:brightness-110 transition-all"
                                             onclick="openLightbox(0)">
@@ -344,7 +345,7 @@ try {
                                     <?php foreach ($gallery_images as $index => $img): ?>
                                         <div class="break-inside-avoid rounded-lg overflow-hidden cursor-pointer group"
                                             onclick="openLightbox(<?php echo $index + 1; ?>)">
-                                            <img src="<?php echo htmlspecialchars($img); ?>"
+                                            <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                 alt="Gallery <?php echo $index + 1; ?>"
                                                 class="w-full h-auto group-hover:scale-105 transition-transform duration-500">
                                         </div>
@@ -356,7 +357,7 @@ try {
                             <!-- MAGAZINE LAYOUT -->
                             <div class="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                                 <div class="rounded-xl overflow-hidden">
-                                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                    <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                         alt="<?php echo htmlspecialchars($post['title']); ?>"
                                         class="w-full h-[350px] object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
                                         onclick="openLightbox(0)">
@@ -373,7 +374,7 @@ try {
                                             <?php foreach (array_slice($gallery_images, 0, 3) as $index => $img): ?>
                                                 <div class="aspect-square rounded-lg overflow-hidden cursor-pointer"
                                                     onclick="openLightbox(<?php echo $index + 1; ?>)">
-                                                    <img src="<?php echo htmlspecialchars($img); ?>"
+                                                    <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                         alt="Gallery <?php echo $index + 1; ?>"
                                                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
                                                 </div>
@@ -410,7 +411,7 @@ try {
                                 </div>
                                 <?php if ($post['featured_image']): ?>
                                     <div class="mt-4 rounded-lg overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-auto">
                                     </div>
                                 <?php endif; ?>
@@ -421,7 +422,7 @@ try {
                             <div class="mb-12">
                                 <?php if ($post['featured_image']): ?>
                                     <div class="mb-6 rounded-xl overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
+                                        <img src="<?php echo imgUrl($post['featured_image']); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                             alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-auto">
                                     </div>
                                 <?php endif; ?>
@@ -434,7 +435,7 @@ try {
                                                 </div>
                                                 <div class="rounded-xl overflow-hidden cursor-pointer"
                                                     onclick="openLightbox(<?php echo $index + 1; ?>)">
-                                                    <img src="<?php echo htmlspecialchars($img); ?>"
+                                                    <img src="<?php echo imgUrl($img); ?>" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';"
                                                         alt="Timeline <?php echo $index + 1; ?>"
                                                         class="w-full h-auto hover:brightness-110 transition-all">
                                                 </div>
@@ -448,8 +449,7 @@ try {
                             <!-- STANDARD LAYOUT -->
                             <?php if ($post['featured_image']): ?>
                                 <div class="mb-8 rounded-xl overflow-hidden">
-                                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>"
-                                        alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-auto">
+                                    <img src="<?php echo imgUrl($post['featured_image']); ?>" alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" class="w-full h-auto" onerror="this.onerror=null; this.src='<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>';">
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -600,7 +600,7 @@ try {
                                         <div class="comment-item">
                                             <div class="flex gap-4">
                                                 <?php if (!empty($comment['avatar'])): ?>
-                                                    <img src="<?php echo htmlspecialchars($comment['avatar']); ?>"
+                                                    <img src="<?php echo imgUrl($comment['avatar']); ?>"
                                                         alt="<?php echo htmlspecialchars($comment['user_name']); ?>"
                                                         class="w-12 h-12 rounded-full object-cover">
                                                 <?php else: ?>
@@ -651,7 +651,7 @@ try {
                                     <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>"
                                         class="block h-full">
                                         <div class="blog-card-image"
-                                            style="background-image: url('<?php echo htmlspecialchars($related['featured_image'] ?? 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
+                                            style="background-image: url('<?php echo imgUrl($related['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')">
                                         </div>
                                         <div class="blog-card-content">
                                             <h3 class="blog-card-title text-white">
