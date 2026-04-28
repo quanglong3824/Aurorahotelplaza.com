@@ -82,19 +82,37 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     $model = env('AI_MODEL', 'gemini-2.0-flash');
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
 
-    // Build contents array cho Gemini multi-turn (giới hạn 8 tin nhắn cuối để tiết kiệm token)
+    // Build contents array cho Gemini multi-turn (giới hạn tin nhắn cuối để tiết kiệm token)
+    // Cực kỳ quan trọng: Gemini yêu cầu role phải xen kẽ (user -> model -> user) và bắt đầu bằng user.
+    $full_history = $history;
+    $full_history[] = ['role' => 'user', 'content' => $user_message];
+    $recent_history = array_slice($full_history, -8);
+
     $contents = [];
-    $recent_history = array_slice($history, -8);
     foreach ($recent_history as $msg) {
-        $contents[] = [
-            'role' => $msg['role'] === 'user' ? 'user' : 'model',
-            'parts' => [['text' => $msg['content']]]
-        ];
+        $role = $msg['role'] === 'user' ? 'user' : 'model';
+        $content = trim($msg['content']);
+        if (empty($content)) continue;
+
+        if (empty($contents)) {
+            if ($role === 'model') continue; // Bắt buộc tin nhắn đầu tiên phải là user
+            $contents[] = [
+                'role' => $role,
+                'parts' => [['text' => $content]]
+            ];
+        } else {
+            $last_idx = count($contents) - 1;
+            if ($contents[$last_idx]['role'] === $role) {
+                // Nếu 2 tin nhắn liên tiếp cùng role (VD: khách nhắn 2 câu liên tục), ta gộp lại
+                $contents[$last_idx]['parts'][0]['text'] .= "\n" . $content;
+            } else {
+                $contents[] = [
+                    'role' => $role,
+                    'parts' => [['text' => $content]]
+                ];
+            }
+        }
     }
-    $contents[] = [
-        'role' => 'user',
-        'parts' => [['text' => $user_message]]
-    ];
 
     $request_body = [
         'system_instruction' => ['parts' => [['text' => $system_prompt]]],
