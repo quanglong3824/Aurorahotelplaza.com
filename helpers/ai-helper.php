@@ -90,7 +90,11 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
             $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $baseUrl = "https://aurorahotelplaza.com/"; 
             foreach ($rooms as $r) {
-                $displayPrice = $r['price_published'] > 0 ? $r['price_published'] : $r['base_price'];
+                $p_pub = floatval($r['price_published']);
+                $p_base = floatval($r['base_price']);
+                // Lấy giá thấp nhất hiện có để tư vấn
+                $displayPrice = ($p_pub > 0 && $p_pub < $p_base) ? $p_pub : $p_base;
+                
                 $thumb = ltrim($r['thumbnail'], '/');
                 $imgUrl = $baseUrl . $thumb;
                 $rooms_info .= "- {$r['type_name']}: " . number_format($displayPrice) . "đ. [IMAGE: {$imgUrl}] [slug: {$r['slug']}]\n";

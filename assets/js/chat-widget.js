@@ -607,19 +607,36 @@ const ChatWidget = {
         // Bold
         html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-        // [IMAGE: url] - Tự động nhận diện tag ảnh từ AI
         html = html.replace(/\[IMAGE:\s*([^\]]+)\]/gi, (match, url) => {
             const cleanUrl = url.trim();
-            return `<div class="cw-msg-image-container" style="margin:12px 0; border-radius:16px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 10px 25px rgba(0,0,0,0.1); background:#fff; max-width:280px;">
-                <div style="width:100%; height:180px; background:#f1f5f9; overflow:hidden;">
-                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover; transition:all 0.5s;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg'; this.parentElement.style.background='#f1f5f9';" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            return `<div class="cw-msg-image-container" style="margin:15px 0; border-radius:12px; overflow:hidden; border:none; box-shadow:0 10px 25px rgba(0,0,0,0.1); background:#fff; width:260px; max-width:100%;">
+                <div style="width:100%; height:160px; background:#f1f5f9; position:relative;">
+                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg';">
                 </div>
-                <div style="padding:10px; background:#fff; text-align:center;">
-                    <div style="display:inline-flex; align-items:center; gap:6px; background:#d4af37; color:#fff; padding:6px 16px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 10px rgba(212,175,55,0.3); cursor:pointer;">
-                        <span class="material-symbols-outlined" style="font-size:14px;">photo_library</span> 
-                        Xem ảnh thực tế
+                <div style="padding:12px; text-align:center; background:#fff;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#d4af37; color:#fff; padding:8px 20px; border-radius:30px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(212,175,55,0.3); border:none; outline:none; text-decoration:none;">
+                        <span class="material-symbols-outlined" style="font-size:16px; margin:0; padding:0; display:block;">photo_library</span> 
+                        <span>Xem ảnh thực tế</span>
                     </div>
                 </div>
+            </div>`;
+        });
+
+        // [BOOK_NOW_BTN] - Nút đặt phòng ngay
+        html = html.replace(/\[BOOK_NOW_BTN\]/gi, () => {
+            return `<div style="margin:12px 0;">
+                <a href="https://aurorahotelplaza.com/booking/" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #d4af37, #b48a2a); color:#fff; padding:12px 24px; border-radius:12px; font-weight:700; text-decoration:none; box-shadow:0 6px 15px rgba(212,175,55,0.4); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(212,175,55,0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 15px rgba(212,175,55,0.4)';">
+                    <span class="material-symbols-outlined">calendar_month</span> ĐẶT PHÒNG NGAY
+                </a>
+            </div>`;
+        });
+
+        // [VIEW_QR_BTN: code=..., id=...] - Nút xem mã QR đơn hàng
+        html = html.replace(/\[VIEW_QR_BTN:\s*code=([^,]+),\s*id=([^\]]+)\]/gi, (match, code, id) => {
+            return `<div style="margin:12px 0;">
+                <button onclick="window.open('https://aurorahotelplaza.com/booking/confirmation.php?id=${id.trim()}', '_blank')" style="display:inline-flex; align-items:center; gap:8px; background:#10b981; color:#fff; padding:12px 24px; border-radius:12px; font-weight:700; border:none; cursor:pointer; box-shadow:0 6px 15px rgba(16,185,129,0.3); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="material-symbols-outlined">qr_code_2</span> XEM MÃ QR TRUY CẬP
+                </button>
             </div>`;
         });
 
