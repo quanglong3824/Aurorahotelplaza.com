@@ -128,7 +128,7 @@ LƯU Ý:
 }
 
 /**
- * Stream phản hồi từ Alibaba GLM-5 API
+ * Stream phản hồi từ Alibaba GLM/Qwen API (DashScope)
  */
 function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $turn = 1)
 {
@@ -138,8 +138,8 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
         return "";
     }
 
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
     $system_prompt = get_aurora_system_prompt($db, $conv_id);
 
     $messages = [
@@ -171,7 +171,8 @@ function stream_alibaba_reply($user_message, $db, $conv_id, &$history = [], $tur
         CURLOPT_POSTFIELDS => json_encode($request_body),
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
-            'Authorization: Bearer ' . $api_key
+            'Authorization: Bearer ' . $api_key,
+            'X-DashScope-SSE: enable'
         ],
         CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
             static $buffer = '';
@@ -631,7 +632,7 @@ function call_ai_sync($message, $db, $conv_id = null, $system_prompt = null)
 }
 
 /**
- * Gọi Alibaba GLM đồng bộ (không stream)
+ * Gọi Alibaba GLM/Qwen đồng bộ (không stream)
  */
 function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null)
 {
@@ -640,8 +641,8 @@ function call_alibaba_sync($message, $db, $conv_id = null, $system_prompt = null
         return "Lỗi: Chưa cấu hình Alibaba API Key";
     }
 
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
 
     if ($system_prompt === null) {
         $system_prompt = get_aurora_system_prompt($db, $conv_id);

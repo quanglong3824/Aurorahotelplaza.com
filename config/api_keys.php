@@ -60,12 +60,14 @@ if (!defined('AI_PROVIDER')) {
 
 /**
  * 5. ALIBABA API CONFIG
+ * DashScope API (OpenAI-compatible mode)
+ * URL: https://dashscope.aliyuncs.com/compatible-mode/v1
  */
 if (!defined('ALIBABA_API_URL')) {
-    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://coding-intl.dashscope.aliyuncs.com/v1'));
+    define('ALIBABA_API_URL', env('ALIBABA_API_URL', 'https://dashscope.aliyuncs.com/compatible-mode/v1'));
 }
 
 if (!defined('ALIBABA_MODEL')) {
-    define('ALIBABA_MODEL', env('ALIBABA_MODEL', 'glm-5'));
+    define('ALIBABA_MODEL', env('ALIBABA_MODEL', 'qwen-plus'));
 }
 ?>

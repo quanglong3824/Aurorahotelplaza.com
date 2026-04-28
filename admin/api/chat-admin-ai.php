@@ -174,12 +174,12 @@ function call_ai_admin($system_prompt, $messages)
 }
 
 /**
- * Gọi Alibaba GLM cho Admin
+ * Gọi Alibaba GLM/Qwen cho Admin (DashScope API)
  */
 function call_alibaba_admin($api_key, $prompt)
 {
-    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://coding-intl.dashscope.aliyuncs.com/v1';
-    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'glm-5';
+    $api_url = defined('ALIBABA_API_URL') ? ALIBABA_API_URL : 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    $model = defined('ALIBABA_MODEL') ? ALIBABA_MODEL : 'qwen-plus';
 
     $request_body = [
         'model' => $model,
