@@ -142,7 +142,7 @@ TRẠNG THÁI HỆ THỐNG: $bi_context";
 /**
  * Gọi Gemini đồng bộ cho Admin
  */
-function call_gemini_admin($system_prompt, $messages)
+function call_gemini_admin($system_prompt, $messages, $retry = 0)
 {
     $api_key = get_active_gemini_key();
 
@@ -189,6 +189,14 @@ function call_gemini_admin($system_prompt, $messages)
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curl_error = curl_error($ch);
     curl_close($ch);
+
+    // Auto-retry cho lỗi 503/500/502 (Gemini server overload)
+    if (in_array($http_code, [500, 502, 503]) && $retry < 3) {
+        $wait = pow(2, $retry);
+        error_log("Admin AI: HTTP $http_code - Auto-retry lần " . ($retry + 1) . " sau {$wait}s...");
+        sleep($wait);
+        return call_gemini_admin($system_prompt, $messages, $retry + 1);
+    }
 
     if ($http_code === 429) {
         $current_idx = get_active_key_index();

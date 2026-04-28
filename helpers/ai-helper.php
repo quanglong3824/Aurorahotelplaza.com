@@ -227,6 +227,13 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
         $curl_error = curl_error($ch);
         curl_close($ch);
 
+        // Auto-retry cho lỗi 503/500/502 (Gemini server overload)
+        if (in_array($http_code, [500, 502, 503]) && $turn <= 2) {
+            error_log("Gemini API: HTTP $http_code - Auto-retry lần $turn sau 2 giây...");
+            sleep(2);
+            return stream_gemini_reply($user_message, $db, $conv_id, $history, $turn + 1);
+        }
+
         if ($http_code === 429 || strpos($curl_error, '429') !== false) {
             $current_idx = get_active_key_index();
             mark_key_rate_limited($current_idx, 60);
@@ -496,7 +503,7 @@ function handle_tool_get_booking_info($params, $db)
 /**
  * Gọi Gemini đồng bộ (không stream) - Dùng cho admin AI, error tracker
  */
-function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null)
+function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null, $retry = 0)
 {
     $api_key = get_active_gemini_key();
     if (empty($api_key)) {
@@ -538,6 +545,14 @@ function call_gemini_sync($message, $db, $conv_id = null, $system_prompt = null)
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_error = curl_error($ch);
         curl_close($ch);
+
+        // Auto-retry cho lỗi 503/500/502 (Gemini server overload)
+        if (in_array($http_code, [500, 502, 503]) && $retry < 3) {
+            $wait = pow(2, $retry); // 1s, 2s, 4s
+            error_log("Gemini Sync: HTTP $http_code - Auto-retry lần " . ($retry + 1) . " sau {$wait}s...");
+            sleep($wait);
+            return call_gemini_sync($message, $db, $conv_id, $system_prompt, $retry + 1);
+        }
 
         if ($http_code === 429) {
             $current_idx = get_active_key_index();
