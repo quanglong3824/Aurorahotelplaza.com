@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 
 }
 
 require_once '../../config/database.php';
+require_once '../../helpers/image-helper.php';
 
 try {
     $db = getDB();
@@ -20,7 +21,7 @@ try {
     
     // Map columns for frontend compatibility
     foreach ($banners as &$banner) {
-        $banner['image_url'] = $banner['image_desktop'];
+        $banner['image_url'] = imgUrl($banner['image_desktop']);
         $banner['is_active'] = $banner['status'] === 'active' ? 1 : 0;
     }
     

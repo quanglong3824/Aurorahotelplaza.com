@@ -5,12 +5,13 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale'])) {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale', 'receptionist'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 
 require_once '../../config/database.php';
+require_once '../../helpers/image-helper.php';
 
 $banner_id = (int) ($_GET['banner_id'] ?? 0);
 
@@ -27,8 +28,7 @@ try {
     $banner = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($banner) {
-        // Map columns for frontend compatibility
-        $banner['image_url'] = $banner['image_desktop'];
+        $banner['image_url'] = imgUrl($banner['image_desktop']);
         $banner['is_active'] = $banner['status'] === 'active' ? 1 : 0;
         
         echo json_encode(['success' => true, 'banner' => $banner]);

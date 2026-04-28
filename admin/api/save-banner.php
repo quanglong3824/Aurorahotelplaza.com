@@ -28,9 +28,18 @@ try {
     $subtitle = trim($_POST['subtitle'] ?? '');
     $image_url = trim($_POST['image_url'] ?? '');
     $link_url = trim($_POST['link_url'] ?? '');
-    $sort_order = (int) ($_POST['sort_order'] ?? 0);
-    $is_active = isset($_POST['is_active']) ? (int) $_POST['is_active'] : 1;
+    $sort_order = isset($_POST['sort_order']) ? (int) $_POST['sort_order'] : null;
+    $is_active = isset($_POST['is_active']) ? (int) $_POST['is_active'] : null;
     $position = trim($_POST['position'] ?? 'hero');
+    
+    $status = $is_active === 1 ? 'active' : 'inactive';
+    
+    if ($banner_id > 0 && empty($title) && empty($image_url) && $is_active !== null) {
+        $stmt = $db->prepare("UPDATE banners SET status = :status, updated_at = NOW() WHERE banner_id = :banner_id");
+        $stmt->execute([':status' => $status, ':banner_id' => $banner_id]);
+        echo json_encode(['success' => true, 'message' => 'Cập nhật trạng thái thành công', 'banner_id' => $banner_id]);
+        exit;
+    }
     
     if (empty($title)) {
         sendError('Tiêu đề không được trống');
@@ -39,8 +48,6 @@ try {
     if (empty($image_url)) {
         sendError('URL hình ảnh không được trống');
     }
-    
-    $status = $is_active ? 'active' : 'inactive';
     
     if ($banner_id > 0) {
         $stmt = $db->prepare("
@@ -62,7 +69,7 @@ try {
             ':image_desktop' => $image_url,
             ':image_mobile' => $image_url,
             ':link_url' => $link_url,
-            ':sort_order' => $sort_order,
+            ':sort_order' => $sort_order ?? 0,
             ':status' => $status,
             ':position' => $position,
             ':banner_id' => $banner_id

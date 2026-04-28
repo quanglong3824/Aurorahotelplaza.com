@@ -320,16 +320,19 @@ function closeBannerModal() {
 }
 
 function editBanner(bannerId) {
+    console.log('editBanner called with bannerId:', bannerId);
     fetch('api/get-banner.php?banner_id=' + bannerId)
         .then(res => res.json())
         .then(data => {
+            console.log('get-banner response:', data);
             if (data.success) {
                 const banner = data.banner;
+                console.log('Banner data:', banner);
                 document.getElementById('modalTitle').textContent = 'Sửa Banner';
                 document.getElementById('banner_id').value = banner.banner_id;
                 document.getElementById('banner_title').value = banner.title;
                 document.getElementById('banner_subtitle').value = banner.subtitle || '';
-                document.getElementById('banner_image_url').value = banner.image_url;
+                document.getElementById('banner_image_url').value = banner.image_desktop || banner.image_url;
                 document.getElementById('banner_link_url').value = banner.link_url || '';
                 document.getElementById('banner_sort_order').value = banner.sort_order;
                 document.getElementById('banner_is_active').checked = banner.is_active == 1;
