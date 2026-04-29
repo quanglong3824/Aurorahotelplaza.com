@@ -137,7 +137,7 @@ include 'includes/admin-header.php';
                     </p>
 
                     <div class="flex gap-2">
-                        <button data-service="<?php echo htmlspecialchars(json_encode($service), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-service-btn">
+                        <button type="button" data-service="<?php echo htmlspecialchars(json_encode($service, JSON_INVALID_UTF8_SUBSTITUTE), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-service-btn">
                             <span class="material-symbols-outlined text-sm">edit</span>
                             Sửa
                         </button>
@@ -227,7 +227,7 @@ include 'includes/admin-header.php';
                         </div>
 
                         <div class="flex gap-2">
-                            <button data-package="<?php echo htmlspecialchars(json_encode($package), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-package-btn">
+                            <button type="button" data-package="<?php echo htmlspecialchars(json_encode($package, JSON_INVALID_UTF8_SUBSTITUTE), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-package-btn">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                                 Sửa
                             </button>
@@ -525,13 +525,19 @@ include 'includes/admin-header.php';
     }
 
     // Close modals when clicking outside
-    document.getElementById('serviceModal')?.addEventListener('click', function (e) {
-        if (e.target === this) closeServiceModal();
-    });
+    var svcModal = document.getElementById('serviceModal');
+    if (svcModal) {
+        svcModal.addEventListener('click', function (e) {
+            if (e.target === this) closeServiceModal();
+        });
+    }
 
-    document.getElementById('packageModal')?.addEventListener('click', function (e) {
-        if (e.target === this) closePackageModal();
-    });
+    var pkgModal = document.getElementById('packageModal');
+    if (pkgModal) {
+        pkgModal.addEventListener('click', function (e) {
+            if (e.target === this) closePackageModal();
+        });
+    }
 
     // Event delegation for edit buttons (safer than inline onclick with JSON)
     document.addEventListener('click', function(e) {
