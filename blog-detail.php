@@ -160,8 +160,11 @@ $video_url = $post['video_url'] ?? '';
     <?php include 'includes/header.php'; ?>
 
     <main class="relative z-10 pt-24 pb-12 blog-detail-wrapper">
-        <div class="mx-auto max-w-4xl px-4">
-            <nav class="blog-breadcrumb mb-6 flex items-center gap-2 text-sm">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+                <!-- Left Column (Article + Comments) -->
+                <div class="lg:col-span-2">
+                    <nav class="blog-breadcrumb mb-6 flex items-center gap-2 text-sm">
                 <a href="<?php echo route(''); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
                 <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
                 <a href="<?php echo route('tin-tuc'); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.posts'); ?></a>
@@ -421,67 +424,7 @@ $video_url = $post['video_url'] ?? '';
                 </div>
             </article>
 
-            </section>
-
-            <!-- Suggested Accommodations (Room/Apartment View) -->
-            <?php if (!empty($suggested_rooms) || !empty($suggested_apartments)): ?>
-                <section class="blog-suggestions-section mt-12 pt-8 border-t border-white/10">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="material-symbols-outlined text-accent">hotel</span>
-                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.suggested_rooms'); ?></h3>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <?php foreach (array_merge($suggested_rooms, $suggested_apartments) as $sug): ?>
-                            <div class="suggestion-card-glass group">
-                                <div class="suggestion-img">
-                                    <img src="<?php echo imgUrl($sug['thumbnail'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($sug, 'type_name')); ?>">
-                                    <div class="suggestion-price">
-                                        <?php echo number_format($sug['base_price'], 0, ',', '.'); ?> VND
-                                    </div>
-                                </div>
-                                <div class="suggestion-content">
-                                    <h4 class="suggestion-name"><?php echo htmlspecialchars(_f($sug, 'type_name')); ?></h4>
-                                    <div class="flex gap-2 mt-3">
-                                        <a href="<?php echo route('dat-phong', ['room_type' => $sug['slug']]); ?>" class="suggestion-btn-book">
-                                            <span class="material-symbols-outlined">calendar_month</span>
-                                            <?php _e('home.book_now'); ?>
-                                        </a>
-                                        <a href="<?php echo route($sug['category'] === 'apartment' ? 'chi-tiet-can-ho' : 'chi-tiet-phong', ['slug' => $sug['slug']]); ?>" class="suggestion-btn-view">
-                                            <span class="material-symbols-outlined">visibility</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </section>
-            <?php endif; ?>
-
-            <!-- Recent Posts Sidebar/List -->
-            <?php if (!empty($recent_posts)): ?>
-                <section class="blog-recent-list mt-12 pt-8 border-t border-white/10">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="material-symbols-outlined text-accent">schedule</span>
-                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.recent_posts'); ?></h3>
-                    </div>
-                    <div class="space-y-4">
-                        <?php foreach ($recent_posts as $recent): ?>
-                            <a href="<?php echo route('chi-tiet-tin-tuc', ['slug' => $recent['slug']]); ?>" class="flex gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
-                                <div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden">
-                                    <img src="<?php echo imgUrl($recent['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($recent, 'title')); ?>" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="text-sm font-semibold text-white line-clamp-2 mb-1"><?php echo htmlspecialchars(_f($recent, 'title')); ?></h4>
-                                    <span class="text-xs text-white/40"><?php echo date('d/m/Y', strtotime($recent['published_at'])); ?></span>
-                                </div>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                </section>
-            <?php endif; ?>
-
-            <!-- Comments Section -->
+            <!-- Comments Section (Now directly under article in Left Column) -->
             <section class="blog-comments-section mt-12 pt-8 border-t border-white/10">
                 <h3 class="blog-comments-title"><?php _e('blog_page.comments_title'); ?> (<?php echo count($blog_comments); ?>)</h3>
 
@@ -535,6 +478,74 @@ $video_url = $post['video_url'] ?? '';
                 <?php endif; ?>
             </section>
         </div>
+        <!-- End Left Column -->
+
+        <!-- Right Column (Sidebar) -->
+        <div class="space-y-8">
+            <!-- Suggested Accommodations (Room/Apartment View) -->
+            <?php if (!empty($suggested_rooms) || !empty($suggested_apartments)): ?>
+                <section class="blog-suggestions-section bg-white/5 rounded-2xl p-6 border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-accent">hotel</span>
+                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.suggested_rooms'); ?></h3>
+                    </div>
+                    
+                    <div class="flex flex-col gap-6">
+                        <?php foreach (array_merge($suggested_rooms, $suggested_apartments) as $sug): ?>
+                            <div class="suggestion-card-glass group">
+                                <div class="suggestion-img">
+                                    <img src="<?php echo imgUrl($sug['thumbnail'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($sug, 'type_name')); ?>">
+                                    <div class="suggestion-price">
+                                        <?php echo number_format($sug['base_price'], 0, ',', '.'); ?> VND
+                                    </div>
+                                </div>
+                                <div class="suggestion-content">
+                                    <h4 class="suggestion-name"><?php echo htmlspecialchars(_f($sug, 'type_name')); ?></h4>
+                                    <div class="flex gap-2 mt-3">
+                                        <a href="<?php echo route('dat-phong', ['room_type' => $sug['slug']]); ?>" class="suggestion-btn-book">
+                                            <span class="material-symbols-outlined text-sm">calendar_month</span>
+                                            <?php _e('home.book_now'); ?>
+                                        </a>
+                                        <a href="<?php echo route($sug['category'] === 'apartment' ? 'chi-tiet-can-ho' : 'chi-tiet-phong', ['slug' => $sug['slug']]); ?>" class="suggestion-btn-view">
+                                            <span class="material-symbols-outlined text-sm">visibility</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+
+            <!-- Recent Posts Sidebar/List -->
+            <?php if (!empty($recent_posts)): ?>
+                <section class="blog-recent-list bg-white/5 rounded-2xl p-6 border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-accent">schedule</span>
+                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.recent_posts'); ?></h3>
+                    </div>
+                    <div class="space-y-4">
+                        <?php foreach ($recent_posts as $recent): ?>
+                            <a href="<?php echo route('chi-tiet-tin-tuc', ['slug' => $recent['slug']]); ?>" class="flex gap-4 group">
+                                <div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-white/10 relative">
+                                    <img src="<?php echo imgUrl($recent['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($recent, 'title')); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                </div>
+                                <div class="flex-1 py-1">
+                                    <h4 class="text-sm font-semibold text-white/90 group-hover:text-accent line-clamp-2 mb-1 transition-colors"><?php echo htmlspecialchars(_f($recent, 'title')); ?></h4>
+                                    <span class="text-xs text-white/40 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                                        <?php echo date('d/m/Y', strtotime($recent['published_at'])); ?>
+                                    </span>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+        </div>
+        <!-- End Right Column -->
+        </div>
+        <!-- End Grid -->
 
         <?php if (!empty($related_posts)): ?>
             <section class="blog-related-section mt-12">
