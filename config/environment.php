@@ -9,17 +9,22 @@ function getBaseUrl() {
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
-    // Tự động phát hiện thư mục gốc
-    $scriptName = $_SERVER['SCRIPT_NAME'];
-    $dir = dirname($scriptName);
+    // Lấy đường dẫn tuyệt đối của project root (config/.. là root)
+    $projectRoot = str_replace('\\', '/', realpath(__DIR__ . '/..'));
     
-    // Nếu ở thư mục gốc, $dir sẽ là / hoặc \
-    $rootPath = ($dir === '/' || $dir === '\\') ? '' : rtrim($dir, '/\\');
+    // Lấy đường dẫn tuyệt đối của document root
+    $docRoot = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
     
-    // Trường hợp đặc biệt: nếu đang ở trong các thư mục con như blog-detail.php (được rewrite)
-    // $_SERVER['SCRIPT_NAME'] vẫn là /blog-detail.php
+    // Tính toán subdirectory (nếu có)
+    $basePath = '';
+    if (strpos($projectRoot, $docRoot) === 0) {
+        $basePath = substr($projectRoot, strlen($docRoot));
+    }
     
-    return $protocol . '://' . $host . $rootPath;
+    // Đảm bảo dấu gạch chéo xuôi cho URL
+    $basePath = str_replace('\\', '/', $basePath);
+    
+    return $protocol . '://' . $host . rtrim($basePath, '/');
 }
 
 // Lấy site URL (với trailing slash)
