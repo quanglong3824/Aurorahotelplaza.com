@@ -410,6 +410,11 @@ include 'includes/admin-header.php';
 </div>
 
 <style>
+/* Hide TinyMCE API key and promotion notices */
+.tox-notifications-container { display: none !important; }
+.tox-promotion { display: none !important; }
+.tox-statusbar__branding { display: none !important; }
+
 .layout-option input:checked + .layout-card {
     border-color: #d4af37;
     background: rgba(212, 175, 55, 0.1);
@@ -436,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
     tinymce.init({
         selector: '#tinymceEditor',
         height: 400,
+        promotion: false,
         language: 'vi_VN',
         language_url: 'https://cdn.jsdelivr.net/npm/tinymce-lang@7.7.1/langs7/vi_VN.js',
         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount code fullscreen',
