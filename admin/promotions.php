@@ -213,7 +213,7 @@ include 'includes/admin-header.php';
                         </div>
 
                         <div class="flex gap-2 ml-4">
-                            <button onclick='editPromotion(<?php echo json_encode($promo); ?>)' class="btn btn-sm btn-primary">
+                            <button type="button" data-promo="<?php echo htmlspecialchars(json_encode($promo, JSON_INVALID_UTF8_SUBSTITUTE), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-primary edit-promo-btn">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                                 Sửa
                             </button>
@@ -445,14 +445,33 @@ include 'includes/admin-header.php';
     }
 
     // Auto uppercase promotion code
-    document.getElementById('promotion_code')?.addEventListener('input', function (e) {
-        this.value = this.value.toUpperCase();
-    });
+    var promoCodeInput = document.getElementById('promotion_code');
+    if (promoCodeInput) {
+        promoCodeInput.addEventListener('input', function (e) {
+            this.value = this.value.toUpperCase();
+        });
+    }
 
     // Close modal when clicking outside
-    document.getElementById('promotionModal')?.addEventListener('click', function (e) {
-        if (e.target === this) {
-            closePromotionModal();
+    var promoModal = document.getElementById('promotionModal');
+    if (promoModal) {
+        promoModal.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closePromotionModal();
+            }
+        });
+    }
+
+    // Event delegation for edit buttons (safer than inline onclick with JSON)
+    document.addEventListener('click', function(e) {
+        const editPromoBtn = e.target.closest('.edit-promo-btn');
+        if (editPromoBtn) {
+            try {
+                const promoData = JSON.parse(editPromoBtn.getAttribute('data-promo'));
+                editPromotion(promoData);
+            } catch (err) {
+                console.error("Error parsing promotion data", err);
+            }
         }
     });
 </script>
