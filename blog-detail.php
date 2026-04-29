@@ -126,7 +126,7 @@ $video_url = $post['video_url'] ?? '';
 <body class="blog-detail-page glass-page font-body text-white">
     <?php include 'includes/header.php'; ?>
 
-    <main class="relative z-10 pt-24 pb-12">
+    <main class="relative z-10 pt-24 pb-12 blog-detail-wrapper">
         <div class="mx-auto max-w-4xl px-4">
             <nav class="blog-breadcrumb mb-6 flex items-center gap-2 text-sm">
                 <a href="<?php echo route(''); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
@@ -136,7 +136,7 @@ $video_url = $post['video_url'] ?? '';
                 <span class="text-white/60 truncate max-w-xs"><?php echo htmlspecialchars(_f($post, 'title')); ?></span>
             </nav>
 
-            <article class="blog-article-card p-6 md:p-8">
+            <article class="blog-article-card glass-card-solid p-6 md:p-8">
                 <?php if ($post['category_name']): ?>
                     <span class="blog-category-badge"><?php echo htmlspecialchars(_f($post, 'category_name')); ?></span>
                 <?php endif; ?>
@@ -330,7 +330,7 @@ $video_url = $post['video_url'] ?? '';
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <div class="blog-detail-prose max-w-none mb-8">
+                <div class="prose blog-detail-prose max-w-none mb-8">
                     <?php echo _f($post, 'content'); ?>
                 </div>
 

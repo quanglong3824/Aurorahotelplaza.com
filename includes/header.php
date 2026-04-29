@@ -66,7 +66,7 @@ $user_role = $_SESSION['user_role'] ?? 'customer';
 
 // Detect if current page has hero banner
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
-$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog', 'confirmation'];
+$pages_with_hero = ['index', 'rooms', 'apartments', 'about', 'services', 'gallery', 'explore', 'wedding', 'conference', 'restaurant', 'office', 'contact', 'login', 'register', 'forgot-password', 'reset-password', 'blog', 'blog-detail', 'confirmation'];
 $has_hero = in_array($current_page, $pages_with_hero) || in_array($current_dir, ['room-details', 'apartment-details', 'booking']);
 
 // Pages without hero need solid header

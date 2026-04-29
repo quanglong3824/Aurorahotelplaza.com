@@ -760,7 +760,6 @@ body.blog-detail-page main {
 .group:hover .group-hover\:scale-110 { transform: scale(1.1) !important; }
 
 /* Hidden */
-.hidden { display: none !important; }
 
 /* Truncate */
 .truncate {
