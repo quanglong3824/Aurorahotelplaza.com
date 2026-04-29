@@ -162,8 +162,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit;
                 }
 
-                // Redirect to main page or intended destination
-                $redirect = $_GET['redirect'] ?? '../index.php';
+                // Redirect dựa theo role
+                $staff_roles = ['admin', 'sale', 'receptionist'];
+                if (in_array($user['user_role'], $staff_roles)) {
+                    // Nhân viên → Admin Dashboard
+                    $redirect = $_GET['redirect'] ?? '../admin/dashboard.php';
+                } else {
+                    // Khách hàng → Trang chủ
+                    $redirect = $_GET['redirect'] ?? '../index.php';
+                }
                 session_write_close();
                 header('Location: ' . $redirect);
                 exit;
