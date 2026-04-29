@@ -50,7 +50,7 @@ try {
     $stmt = $db->prepare("
         SELECT * FROM blog_posts
         WHERE status = 'published' AND post_id != ? AND category_id = ?
-        ORDER BY published_at DESC
+        ORDER BY RAND()
         LIMIT 3
     ");
     $stmt->execute([$post['post_id'], $post['category_id']]);
@@ -61,7 +61,7 @@ try {
         SELECT post_id, title, title_en, slug, featured_image, published_at
         FROM blog_posts
         WHERE status = 'published' AND post_id != ?
-        ORDER BY published_at DESC
+        ORDER BY RAND()
         LIMIT 5
     ");
     $stmt->execute([$post['post_id']]);
@@ -72,7 +72,7 @@ try {
         SELECT room_type_id, type_name, type_name_en, slug, base_price, thumbnail, category
         FROM room_types
         WHERE status = 'active' AND category = 'room'
-        ORDER BY sort_order ASC
+        ORDER BY RAND()
         LIMIT 2
     ");
     $stmt->execute();
@@ -83,7 +83,7 @@ try {
         SELECT room_type_id, type_name, type_name_en, slug, base_price, thumbnail, category
         FROM room_types
         WHERE status = 'active' AND category = 'apartment'
-        ORDER BY sort_order ASC
+        ORDER BY RAND()
         LIMIT 2
     ");
     $stmt->execute();
