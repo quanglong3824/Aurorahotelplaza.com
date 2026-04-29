@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/environment.php';
+require_once '../helpers/image-helper.php';
 
 $page_title = 'Quản lý dịch vụ & gói';
 $page_subtitle = 'Quản lý các dịch vụ lớn và gói dịch vụ chi tiết';
@@ -105,13 +107,13 @@ include 'includes/admin-header.php';
             <div class="card hover:shadow-lg transition-shadow">
                 <?php if ($service['thumbnail']): ?>
                     <div class="h-48 overflow-hidden rounded-t-xl">
-                        <img src="<?php echo htmlspecialchars($service['thumbnail']); ?>"
+                        <img src="<?php echo imgUrl($service['thumbnail']); ?>"
                             alt="<?php echo htmlspecialchars($service['service_name']); ?>" class="w-full h-full object-cover">
                     </div>
                 <?php else: ?>
                     <div class="h-48 bg-gradient-to-br from-accent/20 to-accent/40 rounded-t-xl flex items-center justify-center">
                         <span
-                            class="material-symbols-outlined text-6xl text-accent"><?php echo htmlspecialchars($service['icon']); ?></span>
+                            class="material-symbols-outlined text-6xl text-accent"><?php echo htmlspecialchars($service['icon'] ?? 'room_service'); ?></span>
                     </div>
                 <?php endif; ?>
 
@@ -135,7 +137,7 @@ include 'includes/admin-header.php';
                     </p>
 
                     <div class="flex gap-2">
-                        <button onclick='editService(<?php echo json_encode($service); ?>)' class="btn btn-primary flex-1">
+                        <button onclick='editService(<?php echo htmlspecialchars(json_encode($service), ENT_QUOTES, "UTF-8"); ?>)' class="btn btn-primary flex-1">
                             <span class="material-symbols-outlined text-sm">edit</span>
                             Sửa
                         </button>
@@ -225,7 +227,7 @@ include 'includes/admin-header.php';
                         </div>
 
                         <div class="flex gap-2">
-                            <button onclick='editPackage(<?php echo json_encode($package); ?>)' class="btn btn-primary flex-1">
+                            <button onclick='editPackage(<?php echo htmlspecialchars(json_encode($package), ENT_QUOTES, "UTF-8"); ?>)' class="btn btn-primary flex-1">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                                 Sửa
                             </button>
