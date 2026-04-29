@@ -34,8 +34,8 @@ try {
     <title><?php _e('rooms_page.title'); ?></title>
     <?php require_once 'includes/seo.php'; ?>
     <meta name="description" content="<?php echo get_meta_description(); ?>">
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
@@ -227,7 +227,7 @@ try {
                         <?php _e('rooms_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo route('dat-phong'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('home.book_now_cta'); ?>
                         </a>

@@ -56,13 +56,13 @@ if ($is_logged_in) {
     </style>
     
     <!-- Tailwind CSS -->
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
     <link href="assets/css/fonts.css" rel="stylesheet"/>
     
     <!-- Main stylesheets with versioning -->
     <?php $css_version = '1.8.2'; ?>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $css_version; ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo $css_version; ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css?v=<?php echo $css_version; ?>'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css?v=<?php echo $css_version; ?>'); ?>">
 </head>
 
 <body class="glass-page font-body text-white">

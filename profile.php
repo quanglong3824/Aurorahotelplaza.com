@@ -183,11 +183,11 @@ function getContactStatusBadge($status)
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('profile_full.title'); ?> - <?php echo htmlspecialchars($user['full_name']); ?></title>
 
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/pages-glass.css?v=<?php echo time(); ?>">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css?v=<?php echo time(); ?>'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css?v=<?php echo time(); ?>'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css?v=<?php echo time(); ?>'); ?>">
     <style>
         /* Premium Dark Glass Enhancements */
         .glass-panel {
@@ -501,12 +501,12 @@ function getContactStatusBadge($status)
                             <div class="glass-panel p-6">
                                 <h3 class="text-lg font-bold text-white mb-4">Quick Actions</h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <a href="booking/index.php"
+                                    <a href="<?php echo route('dat-phong'); ?>"
                                         class="p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition flex flex-col items-center justify-center text-center gap-2">
                                         <span class="material-symbols-outlined text-accent">calendar_add_on</span>
                                         <span class="text-xs font-semibold">New Booking</span>
                                     </a>
-                                    <a href="contact.php"
+                                    <a href="<?php echo route('lien-he'); ?>"
                                         class="p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition flex flex-col items-center justify-center text-center gap-2">
                                         <span class="material-symbols-outlined text-blue-400">support_agent</span>
                                         <span class="text-xs font-semibold">Support</span>
@@ -559,7 +559,7 @@ function getContactStatusBadge($status)
                                                     class="material-symbols-outlined text-3xl text-slate-500">calendar_today</span>
                                             </div>
                                             <p class="text-slate-400 mb-4"><?php _e('profile_full.no_bookings'); ?></p>
-                                            <a href="booking/index.php"
+                                            <a href="<?php echo route('dat-phong'); ?>"
                                                 class="px-6 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition text-sm font-medium">Book
                                                 Now</a>
                                         </div>
@@ -722,7 +722,7 @@ function getContactStatusBadge($status)
                                 <div id="tab-contacts" class="tab-content">
                                     <div class="flex justify-between items-center mb-6">
                                         <h3 class="text-lg font-bold text-white">Message History</h3>
-                                        <a href="contact.php"
+                                        <a href="<?php echo route('lien-he'); ?>"
                                             class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition flex items-center gap-2">
                                             <span class="material-symbols-outlined text-sm">edit_square</span>
                                             New Message
@@ -820,7 +820,7 @@ function getContactStatusBadge($status)
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
     <script>
         function switchTab(tabName) {
             // Hide all tabs
@@ -915,7 +915,7 @@ function getContactStatusBadge($status)
                         
                         <div class="pt-6 border-t border-white/10 flex justify-end gap-3">
                             <button onclick="closeContactModal()" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-lg transition-colors text-sm font-medium">Close</button>
-                            <a href="contact.php" class="px-5 py-2.5 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium">
+                            <a href="<?php echo route('lien-he'); ?>" class="px-5 py-2.5 bg-accent hover:bg-accent/80 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium">
                                 <span class="material-symbols-outlined text-sm">send</span>
                                 New Message
                             </a>

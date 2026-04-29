@@ -98,9 +98,9 @@ $category_names = [
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('gallery_page.title'); ?></title>
     <meta name="description" content="<?php _e('gallery_page.page_subtitle', ['count' => $total_images]); ?>">
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
@@ -162,7 +162,7 @@ $category_names = [
                             <span class="material-symbols-outlined">collections</span>
                             <?php _e('gallery_page.view_gallery'); ?>
                         </a>
-                        <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
+                        <a href="<?php echo route('dat-phong'); ?>" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                                    bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-[180%]
                                                    border border-white/[0.18] text-white font-bold text-lg
                                                    shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]
@@ -393,14 +393,14 @@ $category_names = [
                         <?php _e('gallery_page.experience_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
+                        <a href="<?php echo route('dat-phong'); ?>" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                                    bg-accent text-white font-bold text-lg
                                                    hover:bg-accent/90 transition-all duration-300
                                                    shadow-lg shadow-accent/30 hover:-translate-y-1">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('gallery_page.book_now'); ?>
                         </a>
-                        <a href="contact.php" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
+                        <a href="<?php echo route('lien-he'); ?>" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl
                                              bg-white/10 backdrop-blur-xl border border-white/30
                                              text-white font-bold text-lg
                                              hover:bg-white/20 transition-all duration-300
@@ -458,7 +458,7 @@ $category_names = [
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
     <script>
         // Gallery Lightbox
         const lightbox = document.getElementById('lightbox');

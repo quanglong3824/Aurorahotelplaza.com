@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '/../config/environment.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/performance.php';
 require_once __DIR__ . '/../helpers/language.php';
 require_once __DIR__ . '/../helpers/image-helper.php';
 initLanguage();
@@ -25,11 +27,11 @@ try {
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('apartment_detail.studio_title'); ?></title>
-    <link href="../assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="../assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="../assets/css/pages-glass.css">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
 </head>
 
 <body class="glass-page font-body text-white">
@@ -275,7 +277,7 @@ try {
 
         <?php include '../includes/footer.php'; ?>
     </div>
-    <script src="../assets/js/main.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
 </body>
 
 </html>

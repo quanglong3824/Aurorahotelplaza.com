@@ -66,8 +66,8 @@ try {
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('explore_page.title'); ?></title>
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
     <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
@@ -121,7 +121,7 @@ try {
 
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="rooms.php" class="glass-quick-link group">
+                        <a href="<?php echo route('phong-khach-san'); ?>" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">hotel</span>
                             </div>
@@ -130,7 +130,7 @@ try {
                         </a>
 
                         <!-- Căn hộ -->
-                        <a href="apartments.php" class="glass-quick-link group">
+                        <a href="<?php echo route('can-ho'); ?>" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">apartment</span>
                             </div>
@@ -139,7 +139,7 @@ try {
                         </a>
 
                         <!-- Dịch vụ -->
-                        <a href="services.php" class="glass-quick-link group">
+                        <a href="<?php echo route('dich-vu'); ?>" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">room_service</span>
                             </div>
@@ -157,7 +157,7 @@ try {
                         </a>
 
                         <!-- Blog -->
-                        <a href="blog.php" class="glass-quick-link group">
+                        <a href="<?php echo route('tin-tuc'); ?>" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">article</span>
                             </div>
@@ -166,7 +166,7 @@ try {
                         </a>
 
                         <!-- Liên hệ -->
-                        <a href="contact.php" class="glass-quick-link group">
+                        <a href="<?php echo route('lien-he'); ?>" class="glass-quick-link group">
                             <div class="glass-quick-link-icon">
                                 <span class="material-symbols-outlined text-2xl">contact_support</span>
                             </div>
@@ -193,7 +193,7 @@ try {
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Phòng nghỉ -->
-                        <a href="rooms.php" class="glass-category-card">
+                        <a href="<?php echo route('phong-khach-san'); ?>" class="glass-category-card">
                             <img src="<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.rooms'); ?>">
                             <div class="glass-category-overlay"></div>
@@ -207,7 +207,7 @@ try {
                         </a>
 
                         <!-- Căn hộ -->
-                        <a href="apartments.php" class="glass-category-card">
+                        <a href="<?php echo route('can-ho'); ?>" class="glass-category-card">
                             <img src="<?php echo imgUrl('assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg'); ?>"
                                 alt="<?php _e('explore_page.apartments'); ?>"
                                 onerror="this.src='<?php echo imgUrl('assets/img/deluxe/deluxe-room-aurora-3.jpg'); ?>'">
@@ -270,7 +270,7 @@ try {
                                 <p class="text-white/70"><?php _e('explore_page.featured_rooms_desc'); ?>
                                 </p>
                             </div>
-                            <a href="rooms.php"
+                            <a href="<?php echo route('phong-khach-san'); ?>"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_rooms'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -335,7 +335,7 @@ try {
                                     <?php _e('explore_page.apartments_section_desc'); ?>
                                 </p>
                             </div>
-                            <a href="apartments.php"
+                            <a href="<?php echo route('can-ho'); ?>"
                                 class="inline-flex items-center gap-2 text-white font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_apartments'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -403,7 +403,7 @@ try {
                                     <?php _e('explore_page.services_section_desc'); ?>
                                 </p>
                             </div>
-                            <a href="services.php"
+                            <a href="<?php echo route('dich-vu'); ?>"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_services'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -484,7 +484,7 @@ try {
                                 <p class="text-white/70"><?php _e('explore_page.latest_posts_desc'); ?>
                                 </p>
                             </div>
-                            <a href="blog.php"
+                            <a href="<?php echo route('tin-tuc'); ?>"
                                 class="inline-flex items-center gap-2 text-accent font-bold hover:underline mt-4 md:mt-0">
                                 <?php _e('explore_page.view_all_posts'); ?>
                                 <span class="material-symbols-outlined">arrow_forward</span>
@@ -553,7 +553,7 @@ try {
                         <?php _e('explore_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-liquid-primary">
+                        <a href="<?php echo route('dat-phong'); ?>" class="btn-liquid-primary">
                             <span class="material-symbols-outlined">calendar_month</span>
                             <?php _e('explore_page.book_now'); ?>
                         </a>
@@ -576,7 +576,7 @@ try {
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                        <a href="about.php"
+                        <a href="<?php echo route('gioi-thieu'); ?>"
                             class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
                             <div
                                 class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -628,7 +628,7 @@ try {
                             </div>
                         </a>
 
-                        <a href="contact.php"
+                        <a href="<?php echo route('lien-he'); ?>"
                             class="flex items-center gap-3 md:gap-4 p-4 glass-card hover:bg-white/10 transition-all group">
                             <div
                                 class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -652,7 +652,7 @@ try {
 
         <?php include 'includes/footer.php'; ?>
     </div>
-    <script src="assets/js/main.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
 </body>
 
 </html>

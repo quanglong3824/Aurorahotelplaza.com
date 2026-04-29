@@ -32,12 +32,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
     <title><?php _e('apartments_page.title'); ?></title>
     <?php require_once 'includes/seo.php'; ?>
     <meta name="description" content="<?php echo get_meta_description(); ?>">
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="assets/css/pages-glass.css">
-    <link rel="stylesheet" href="assets/css/apartments.css">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/apartments.css'); ?>">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-6.jpg'); ?>');
@@ -64,7 +64,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                         <?php _e('apartments_page.page_subtitle'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo route('dat-phong'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>
@@ -322,7 +322,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                         <?php _e('apartments_page.cta_desc'); ?>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="booking/index.php" class="btn-glass-gold">
+                        <a href="<?php echo route('dat-phong'); ?>" class="btn-glass-gold">
                             <span class="material-symbols-outlined">contact_support</span>
                             <?php _e('inquiry.contact_btn'); ?>
                         </a>
@@ -338,7 +338,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
         <?php include 'includes/footer.php'; ?>
     </div>
 
-    <script src="assets/js/apartments.js"></script>
+    <script src="<?php echo assetVersion('js/apartments.js'); ?>"></script>
 </body>
 
 </html>

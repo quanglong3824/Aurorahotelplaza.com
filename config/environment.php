@@ -6,12 +6,18 @@
 
 // Lấy base URL - Production with subdirectory support
 function getBaseUrl() {
-    // Production - Tự động phát hiện protocol và host
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'aurorahotelplaza.com';
     
-    // WEBSITE ĐANG CHẠY TRONG THƯ MỤC GỐC
-    $rootPath = '';
+    // Tự động phát hiện thư mục gốc
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $dir = dirname($scriptName);
+    
+    // Nếu ở thư mục gốc, $dir sẽ là / hoặc \
+    $rootPath = ($dir === '/' || $dir === '\\') ? '' : rtrim($dir, '/\\');
+    
+    // Trường hợp đặc biệt: nếu đang ở trong các thư mục con như blog-detail.php (được rewrite)
+    // $_SERVER['SCRIPT_NAME'] vẫn là /blog-detail.php
     
     return $protocol . '://' . $host . $rootPath;
 }

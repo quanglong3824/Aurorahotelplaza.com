@@ -1,5 +1,7 @@
 <?php
+require_once 'config/environment.php';
 require_once 'config/database.php';
+require_once 'config/performance.php';
 require_once 'helpers/language.php';
 require_once 'helpers/image-helper.php';
 initLanguage();
@@ -65,13 +67,13 @@ try {
     <title><?php _e('blog_page.title'); ?></title>
 
     <!-- Scripts & Styles -->
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/liquid-glass.css">
-    <link rel="stylesheet" href="assets/css/blog-glass.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/blog-glass.css'); ?>?v=<?php echo time(); ?>">
     <style>
         .page-header-blog,
         .blog-content-wrapper {
@@ -223,7 +225,7 @@ try {
         <?php include 'includes/footer.php'; ?>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
 </body>
 
 </html>

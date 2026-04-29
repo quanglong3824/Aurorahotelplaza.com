@@ -11,10 +11,10 @@ initLanguage();
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <title><?php _e('about_page.title'); ?></title>
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/pages-glass.css">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
     <style>
         body.glass-page::before {
             background-image: url('<?php echo imgUrl('assets/img/src/ui/horizontal/sanh-khach-san-aurora.jpg'); ?>');
@@ -229,7 +229,7 @@ initLanguage();
         <?php include 'includes/footer.php'; ?>
     </div>
 
-    <script src="assets/js/glass-pages.js"></script>
+    <script src="<?php echo assetVersion('js/glass-pages.js'); ?>"></script>
 </body>
 
 </html>

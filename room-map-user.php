@@ -71,10 +71,10 @@ $total_rooms = array_sum($stats);
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title><?php echo $page_title; ?> - Aurora Hotel Plaza</title>
-<link href="assets/css/tailwind-output.css" rel="stylesheet" />
+<link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
 <link href="assets/css/fonts.css" rel="stylesheet"/>
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/liquid-glass.css">
+<link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+<link rel="stylesheet" href="<?php echo assetVersion('css/liquid-glass.css'); ?>">
 </head>
 <body class="bg-background-light dark:bg-background-dark font-body text-text-primary-light dark:text-text-primary-dark">
 <div class="relative flex min-h-screen w-full flex-col">

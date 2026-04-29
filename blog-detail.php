@@ -1,6 +1,8 @@
 <?php
 session_start();
+require_once 'config/environment.php';
 require_once 'config/database.php';
+require_once 'config/performance.php';
 require_once 'helpers/language.php';
 require_once 'helpers/image-helper.php';
 initLanguage();
@@ -108,13 +110,17 @@ $video_url = $post['video_url'] ?? '';
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport" />
     <title><?php echo htmlspecialchars(_f($post, 'title')); ?> - Aurora Hotel Plaza</title>
     <meta name="description" content="<?php echo htmlspecialchars(_f($post, 'excerpt') ?? ''); ?>">
-    <link href="assets/css/tailwind-output.css" rel="stylesheet" />
-    <link href="assets/css/fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/pages-glass.css">
-    <link rel="stylesheet" href="assets/css/blog.css">
-    <link rel="stylesheet" href="assets/css/blog-detail.css">
-    <link rel="stylesheet" href="assets/css/blog-detail-glass.css">
+    <link href="<?php echo assetVersion('css/tailwind-output.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo assetVersion('css/fonts.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo assetVersion('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/pages-glass.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/blog.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/blog-detail.css'); ?>">
+    <link rel="stylesheet" href="<?php echo assetVersion('css/blog-detail-glass.css'); ?>">
+    <script>
+        const BASE_URL = '<?php echo BASE_URL; ?>';
+        const API_URL = '<?php echo API_URL; ?>';
+    </script>
 </head>
 
 <body class="blog-detail-page glass-page font-body text-white">
@@ -123,9 +129,9 @@ $video_url = $post['video_url'] ?? '';
     <main class="relative z-10 pt-24 pb-12">
         <div class="mx-auto max-w-4xl px-4">
             <nav class="blog-breadcrumb mb-6 flex items-center gap-2 text-sm">
-                <a href="index.php" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
+                <a href="<?php echo route(''); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
                 <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
-                <a href="blog.php" class="text-[#d4af37] hover:underline"><?php _e('blog_page.posts'); ?></a>
+                <a href="<?php echo route('tin-tuc'); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.posts'); ?></a>
                 <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
                 <span class="text-white/60 truncate max-w-xs"><?php echo htmlspecialchars(_f($post, 'title')); ?></span>
             </nav>
@@ -442,7 +448,7 @@ $video_url = $post['video_url'] ?? '';
                     <h2 class="blog-related-title"><?php _e('blog_page.related_posts'); ?></h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <?php foreach ($related_posts as $related): ?>
-                            <a href="blog-detail.php?slug=<?php echo urlencode($related['slug']); ?>" class="blog-related-card">
+                            <a href="<?php echo route('chi-tiet-tin-tuc', ['slug' => $related['slug']]); ?>" class="blog-related-card">
                                 <div class="blog-related-image" style="background-image: url('<?php echo imgUrl($related['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>')"></div>
                                 <div class="blog-related-content">
                                     <h3 class="blog-related-title-text"><?php echo htmlspecialchars(_f($related, 'title')); ?></h3>
@@ -458,8 +464,8 @@ $video_url = $post['video_url'] ?? '';
 
     <?php include 'includes/footer.php'; ?>
 
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/blog-detail.js"></script>
+    <script src="<?php echo assetVersion('js/main.js'); ?>"></script>
+    <script src="<?php echo assetVersion('js/blog-detail.js'); ?>"></script>
 
     <div class="lightbox-overlay" id="lightbox">
         <div class="lightbox-content">

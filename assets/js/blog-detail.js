@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const starBtns = starRating.querySelectorAll('.star-btn');
 
     // Load initial status
-    fetch(`api/blog-interaction.php?action=get_status&post_id=${postId}`)
+    fetch(`${API_URL}/blog-interaction.php?action=get_status&post_id=${postId}`)
         .then(r => r.json())
         .then(data => {
             if (data.success) {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         btn.addEventListener('mouseleave', () => {
             // Revert to saved rating or clear if none
-            fetch(`api/blog-interaction.php?action=get_status&post_id=${postId}`)
+            fetch(`${API_URL}/blog-interaction.php?action=get_status&post_id=${postId}`)
                 .then(r => r.json())
                 .then(data => {
                     highlightStars(data.user_rating || 0);
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('post_id', postId);
         formData.append('rating', rating);
 
-        fetch('api/blog-interaction.php?action=rate', {
+        fetch(`${API_URL}/blog-interaction.php?action=rate`, {
             method: 'POST',
             body: formData
         })
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         formData.append('post_id', postId);
 
-        fetch('api/blog-interaction.php?action=like', {
+        fetch(`${API_URL}/blog-interaction.php?action=like`, {
             method: 'POST',
             body: formData
         })
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formData = new FormData();
                 formData.append('post_id', postId);
                 formData.append('platform', platform);
-                fetch('api/blog-interaction.php?action=share', {
+                fetch(`${API_URL}/blog-interaction.php?action=share`, {
                     method: 'POST',
                     body: formData
                 }).then(r => r.json())
