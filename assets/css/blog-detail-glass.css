@@ -789,3 +789,122 @@ body.blog-detail-page main {
     .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
     .lg\:grid-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
 }
+
+/* Suggestion Card Styles */
+.suggestion-card-glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.suggestion-card-glass:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.suggestion-img {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.suggestion-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.suggestion-card-glass:hover .suggestion-img img {
+    transform: scale(1.1);
+}
+
+.suggestion-price {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(212, 175, 55, 0.9);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    backdrop-filter: blur(5px);
+}
+
+.suggestion-content {
+    padding: 1.25rem;
+}
+
+.suggestion-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1.4;
+}
+
+.suggestion-btn-book {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #d4af37;
+    color: white;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.suggestion-btn-book:hover {
+    background: #c19b2e;
+    transform: scale(1.02);
+}
+
+.suggestion-btn-view {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.suggestion-btn-view:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+/* Recent Posts List Enhancement */
+.blog-recent-list a {
+    position: relative;
+}
+
+.blog-recent-list a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+}
+
+.blog-recent-list a:last-child::after {
+    display: none;
+}
+
+.blog-recent-list .material-symbols-outlined {
+    font-size: 20px;
+}

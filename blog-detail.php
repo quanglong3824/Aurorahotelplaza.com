@@ -56,6 +56,39 @@ try {
     $stmt->execute([$post['post_id'], $post['category_id']]);
     $related_posts = $stmt->fetchAll();
 
+    // Fetch Recent Posts (Latest 5, excluding current)
+    $stmt = $db->prepare("
+        SELECT post_id, title, title_en, slug, featured_image, published_at
+        FROM blog_posts
+        WHERE status = 'published' AND post_id != ?
+        ORDER BY published_at DESC
+        LIMIT 5
+    ");
+    $stmt->execute([$post['post_id']]);
+    $recent_posts = $stmt->fetchAll();
+
+    // Fetch Featured Rooms for suggestion
+    $stmt = $db->prepare("
+        SELECT room_type_id, type_name, type_name_en, slug, base_price, thumbnail, category
+        FROM room_types
+        WHERE status = 'active' AND category = 'room'
+        ORDER BY sort_order ASC
+        LIMIT 2
+    ");
+    $stmt->execute();
+    $suggested_rooms = $stmt->fetchAll();
+
+    // Fetch Featured Apartments for suggestion
+    $stmt = $db->prepare("
+        SELECT room_type_id, type_name, type_name_en, slug, base_price, thumbnail, category
+        FROM room_types
+        WHERE status = 'active' AND category = 'apartment'
+        ORDER BY sort_order ASC
+        LIMIT 2
+    ");
+    $stmt->execute();
+    $suggested_apartments = $stmt->fetchAll();
+
     if (!empty($post['featured_image']) && strpos($post['featured_image'], '../uploads/') === 0) {
         $post['featured_image'] = str_replace('../uploads/', 'uploads/', $post['featured_image']);
     }
@@ -388,7 +421,68 @@ $video_url = $post['video_url'] ?? '';
                 </div>
             </article>
 
-            <section class="blog-comments-section mt-8">
+            </section>
+
+            <!-- Suggested Accommodations (Room/Apartment View) -->
+            <?php if (!empty($suggested_rooms) || !empty($suggested_apartments)): ?>
+                <section class="blog-suggestions-section mt-12 pt-8 border-t border-white/10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-accent">hotel</span>
+                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.suggested_rooms'); ?></h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <?php foreach (array_merge($suggested_rooms, $suggested_apartments) as $sug): ?>
+                            <div class="suggestion-card-glass group">
+                                <div class="suggestion-img">
+                                    <img src="<?php echo imgUrl($sug['thumbnail'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($sug, 'type_name')); ?>">
+                                    <div class="suggestion-price">
+                                        <?php echo number_format($sug['base_price'], 0, ',', '.'); ?> VND
+                                    </div>
+                                </div>
+                                <div class="suggestion-content">
+                                    <h4 class="suggestion-name"><?php echo htmlspecialchars(_f($sug, 'type_name')); ?></h4>
+                                    <div class="flex gap-2 mt-3">
+                                        <a href="<?php echo route('dat-phong', ['room_type' => $sug['slug']]); ?>" class="suggestion-btn-book">
+                                            <span class="material-symbols-outlined">calendar_month</span>
+                                            <?php _e('home.book_now'); ?>
+                                        </a>
+                                        <a href="<?php echo route($sug['category'] === 'apartment' ? 'chi-tiet-can-ho' : 'chi-tiet-phong', ['slug' => $sug['slug']]); ?>" class="suggestion-btn-view">
+                                            <span class="material-symbols-outlined">visibility</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+
+            <!-- Recent Posts Sidebar/List -->
+            <?php if (!empty($recent_posts)): ?>
+                <section class="blog-recent-list mt-12 pt-8 border-t border-white/10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-accent">schedule</span>
+                        <h3 class="text-xl font-bold text-white"><?php _e('blog_page.recent_posts'); ?></h3>
+                    </div>
+                    <div class="space-y-4">
+                        <?php foreach ($recent_posts as $recent): ?>
+                            <a href="<?php echo route('chi-tiet-tin-tuc', ['slug' => $recent['slug']]); ?>" class="flex gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
+                                <div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden">
+                                    <img src="<?php echo imgUrl($recent['featured_image'], 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg'); ?>" alt="<?php echo htmlspecialchars(_f($recent, 'title')); ?>" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-semibold text-white line-clamp-2 mb-1"><?php echo htmlspecialchars(_f($recent, 'title')); ?></h4>
+                                    <span class="text-xs text-white/40"><?php echo date('d/m/Y', strtotime($recent['published_at'])); ?></span>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+
+            <!-- Comments Section -->
+            <section class="blog-comments-section mt-12 pt-8 border-t border-white/10">
                 <h3 class="blog-comments-title"><?php _e('blog_page.comments_title'); ?> (<?php echo count($blog_comments); ?>)</h3>
 
                 <?php if (isset($_SESSION['user_id']) && (!isset($post['allow_comments']) || (int) $post['allow_comments'] === 1)): ?>

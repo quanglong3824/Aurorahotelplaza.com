@@ -775,9 +775,10 @@ return [
         'comment_pending' => 'Bình luận của bạn đang chờ duyệt',
         'comment_empty' => 'Vui lòng nhập nội dung bình luận',
         'login_required' => 'Vui lòng đăng nhập để bình luận',
-        'rate_post' => 'Đánh giá bài viết:',
         'ratings' => 'đánh giá',
         'shares' => 'lượt chia sẻ',
+        'suggested_rooms' => 'Gợi ý phòng nghỉ',
+        'recent_posts' => 'Bài viết mới nhất',
     ],
 
     // Booking page
