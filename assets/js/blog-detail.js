@@ -9,21 +9,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const ratingAvg = document.getElementById('ratingAvg');
     const ratingCount = document.getElementById('ratingCount');
     const sharesCount = document.getElementById('sharesCount');
-    const starBtns = starRating.querySelectorAll('.star-btn');
+    const starBtns = starRating.querySelectorAll('.blog-star-btn');
 
     // Load initial status
     fetch(`${API_URL}/blog-interaction.php?action=get_status&post_id=${postId}`)
         .then(r => r.json())
         .then(data => {
             if (data.success) {
-                if (data.is_liked) likeBtn.classList.add('liked');
+                if (data.is_liked && likeBtn) likeBtn.classList.add('liked');
                 if (data.user_rating > 0) highlightStars(data.user_rating);
-                likesCount.textContent = data.likes_count;
-                ratingAvg.textContent = data.rating_avg.toFixed(1);
-                ratingCount.textContent = data.rating_count;
-                sharesCount.textContent = data.shares_count;
+                if (likesCount) likesCount.textContent = data.likes_count;
+                if (ratingAvg) ratingAvg.textContent = data.rating_avg.toFixed(1);
+                if (ratingCount) ratingCount.textContent = data.rating_count;
+                if (sharesCount) sharesCount.textContent = data.shares_count;
             }
-        });
+        }).catch(err => console.error("Error loading interaction status:", err));
 
     // Handle Rating Hover
     starBtns.forEach(btn => {
@@ -68,14 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    ratingAvg.textContent = data.new_avg;
-                    ratingCount.textContent = data.new_count;
+                    if (ratingAvg) ratingAvg.textContent = data.rating_avg;
+                    if (ratingCount) ratingCount.textContent = data.rating_count;
                     highlightStars(rating);
                     // alert('Cảm ơn bạn đã đánh giá!');
                 } else {
                     alert(data.message || 'Có lỗi xảy ra');
                 }
-            });
+            }).catch(err => console.error("Error submitting rating:", err));
     }
 
     // Handle Like
@@ -90,22 +90,22 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    if (data.liked) {
+                    if (data.liked && likeBtn) {
                         likeBtn.classList.add('liked');
-                    } else {
+                    } else if (likeBtn) {
                         likeBtn.classList.remove('liked');
                     }
-                    likesCount.textContent = data.new_count;
+                    if (likesCount) likesCount.textContent = data.likes_count;
                 } else {
                     if (data.message === 'Login required') {
                         window.location.href = 'auth/login.php?redirect=' + encodeURIComponent(window.location.href);
                     }
                 }
-            });
+            }).catch(err => console.error("Error submitting like:", err));
     });
 
     // Handle Share
-    document.querySelectorAll('.share-btn-icon').forEach(btn => {
+    document.querySelectorAll('.blog-share-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const platform = btn.dataset.platform;
             const url = window.location.href;
@@ -142,9 +142,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }).then(r => r.json())
                     .then(data => {
                         if (data.success) {
-                            sharesCount.textContent = data.new_count;
+                            if (sharesCount) sharesCount.textContent = data.shares_count;
                         }
-                    });
+                    }).catch(err => console.error("Error submitting share:", err));
             }
         });
     });
