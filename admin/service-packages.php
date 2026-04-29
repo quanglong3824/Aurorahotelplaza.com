@@ -137,7 +137,7 @@ include 'includes/admin-header.php';
                     </p>
 
                     <div class="flex gap-2">
-                        <button onclick='editService(<?php echo htmlspecialchars(json_encode($service), ENT_QUOTES, "UTF-8"); ?>)' class="btn btn-primary flex-1">
+                        <button data-service="<?php echo htmlspecialchars(json_encode($service), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-service-btn">
                             <span class="material-symbols-outlined text-sm">edit</span>
                             Sửa
                         </button>
@@ -227,7 +227,7 @@ include 'includes/admin-header.php';
                         </div>
 
                         <div class="flex gap-2">
-                            <button onclick='editPackage(<?php echo htmlspecialchars(json_encode($package), ENT_QUOTES, "UTF-8"); ?>)' class="btn btn-primary flex-1">
+                            <button data-package="<?php echo htmlspecialchars(json_encode($package), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary flex-1 edit-package-btn">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                                 Sửa
                             </button>
@@ -531,6 +531,29 @@ include 'includes/admin-header.php';
 
     document.getElementById('packageModal')?.addEventListener('click', function (e) {
         if (e.target === this) closePackageModal();
+    });
+
+    // Event delegation for edit buttons (safer than inline onclick with JSON)
+    document.addEventListener('click', function(e) {
+        const editServiceBtn = e.target.closest('.edit-service-btn');
+        if (editServiceBtn) {
+            try {
+                const serviceData = JSON.parse(editServiceBtn.getAttribute('data-service'));
+                editService(serviceData);
+            } catch (err) {
+                console.error("Error parsing service data", err);
+            }
+        }
+
+        const editPackageBtn = e.target.closest('.edit-package-btn');
+        if (editPackageBtn) {
+            try {
+                const packageData = JSON.parse(editPackageBtn.getAttribute('data-package'));
+                editPackage(packageData);
+            } catch (err) {
+                console.error("Error parsing package data", err);
+            }
+        }
     });
 </script>
 
