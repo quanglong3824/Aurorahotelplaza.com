@@ -74,11 +74,10 @@ function normalizeImagePath($path)
     // For now, assume web paths shouldn't have spaces.
     // $path = str_replace(' ', '-', $path);
 
-    // LINUX COMPATIBILITY: Force lowercase
-    // Filesystem on Linux is case-sensitive. If we ensure all assets are lowercase, 
-    // and force requests to lowercase, we avoid broken images.
-    $path = strtolower($path);
-
+    // LINUX COMPATIBILITY: Removed strtolower as it breaks local environments 
+    // with uppercase folder names and URLs with uppercase segments.
+    // Uploaded files are already generated in lowercase.
+    
     return $path;
 }
 
