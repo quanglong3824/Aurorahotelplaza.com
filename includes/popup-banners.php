@@ -1,4 +1,4 @@
-<!-- Popup Banners -->
+<!-- Popup Banners (Redesigned) -->
 <?php
 require_once __DIR__ . '/../helpers/image-helper.php';
 
@@ -12,6 +12,7 @@ try {
         require_once __DIR__ . '/../config/environment.php';
     }
     $db = getDB();
+    // Only fetch active popup banners
     $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, link_url, link_text FROM banners WHERE status = 'active' AND position = 'popup' ORDER BY sort_order ASC, created_at DESC");
     $popupBanners = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Throwable $e) {
@@ -20,237 +21,121 @@ try {
 ?>
 
 <?php if (!empty($popupBanners)): ?>
-<div id="popupBannerOverlay" class="popup-banner-overlay">
-    <?php foreach ($popupBanners as $i => $banner): ?>
-    <div class="popup-banner-modal" data-banner-id="<?php echo $banner['banner_id']; ?>" data-index="<?php echo $i; ?>" <?php echo $i > 0 ? 'style="display:none;"' : ''; ?>>
-        <button class="popup-banner-close" onclick="closePopupBanner(<?php echo $i; ?>)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+<div id="auroraPopupOverlay" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="auroraPopupContainer" class="relative w-[90%] max-w-md md:max-w-lg bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl overflow-hidden scale-95 transition-transform duration-300">
+        
+        <!-- Close Button -->
+        <button id="auroraPopupClose" class="absolute top-4 right-4 z-[20] w-8 h-8 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white rounded-full transition-colors shadow-lg cursor-pointer">
+            <span class="material-symbols-outlined text-sm">close</span>
         </button>
-        <div class="popup-banner-content">
-            <?php if ($banner['link_url']): ?>
-                <a href="<?php echo htmlspecialchars($banner['link_url']); ?>" target="_blank" rel="noopener">
-            <?php endif; ?>
-                <img src="<?php echo imgUrl($banner['image_desktop']); ?>" 
-                     alt="<?php echo htmlspecialchars($banner['title']); ?>" 
-                     class="popup-banner-image"
-                     loading="lazy">
-            <?php if ($banner['link_url']): ?>
-                </a>
-            <?php endif; ?>
-            <div class="popup-banner-info">
-                <h3 class="popup-banner-title"><?php echo htmlspecialchars($banner['title']); ?></h3>
-                <?php if ($banner['subtitle']): ?>
-                    <p class="popup-banner-subtitle"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
-                <?php endif; ?>
-                <?php if ($banner['link_url'] && $banner['link_text']): ?>
-                    <a href="<?php echo htmlspecialchars($banner['link_url']); ?>" class="popup-banner-btn" target="_blank" rel="noopener">
-                        <?php echo htmlspecialchars($banner['link_text']); ?>
-                    </a>
-                <?php endif; ?>
-            </div>
+
+        <div id="auroraPopupSlider" class="flex transition-transform duration-500 ease-in-out h-full">
+            <?php foreach ($popupBanners as $banner): ?>
+                <div class="min-w-full flex-shrink-0 relative" data-banner-id="<?php echo $banner['banner_id']; ?>">
+                    <?php if ($banner['link_url']): ?>
+                        <a href="<?php echo htmlspecialchars($banner['link_url']); ?>" target="_blank" rel="noopener" class="block w-full h-full">
+                    <?php endif; ?>
+                    
+                    <div class="w-full aspect-[4/5] md:aspect-[4/3] bg-gray-900 relative">
+                        <img <?php echo imgSrcWithFallback($banner['image_desktop']); ?>
+                             alt="<?php echo htmlspecialchars($banner['title']); ?>" 
+                             class="w-full h-full object-cover">
+                        <!-- Gradient Overlay for text readability -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
+                    </div>
+                    
+                    <!-- Content overlaying the image -->
+                    <div class="absolute bottom-0 left-0 w-full p-6 text-white text-center z-10 flex flex-col items-center justify-end">
+                        <h3 class="text-2xl font-bold mb-2 drop-shadow-lg leading-tight"><?php echo htmlspecialchars($banner['title']); ?></h3>
+                        <?php if ($banner['subtitle']): ?>
+                            <p class="text-sm text-white/90 mb-5 drop-shadow-md max-w-[90%] mx-auto"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
+                        <?php endif; ?>
+                        
+                        <?php if ($banner['link_url'] && $banner['link_text']): ?>
+                            <div class="inline-block px-8 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e5c048] text-black font-semibold rounded-full hover:shadow-[0_0_15px_rgba(212,175,55,0.6)] hover:scale-105 transition-all duration-300 cursor-pointer">
+                                <?php echo htmlspecialchars($banner['link_text']); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <?php if ($banner['link_url']): ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
+        
+        <!-- Indicators (if more than 1) -->
+        <?php if (count($popupBanners) > 1): ?>
+        <div class="absolute top-4 left-0 right-0 flex justify-center gap-2 z-10">
+            <?php foreach ($popupBanners as $i => $banner): ?>
+                <div class="w-2 h-2 rounded-full bg-white/40 transition-colors aurora-popup-indicator <?php echo $i === 0 ? 'bg-white' : ''; ?>"></div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
     </div>
-    <?php endforeach; ?>
 </div>
 
-<style>
-.popup-banner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-}
-
-.popup-banner-modal {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    animation: popupFadeIn 0.3s ease-out;
-}
-
-@keyframes popupFadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-.popup-banner-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    transition: all 0.2s;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.popup-banner-close:hover {
-    background: #fff;
-    transform: scale(1.1);
-    color: #000;
-}
-
-.popup-banner-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.popup-banner-image {
-    width: 100%;
-    max-height: 60vh;
-    object-fit: cover;
-    display: block;
-}
-
-.popup-banner-info {
-    padding: 20px;
-    text-align: center;
-}
-
-.popup-banner-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 8px;
-}
-
-.popup-banner-subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 16px;
-}
-
-.popup-banner-btn {
-    display: inline-block;
-    padding: 12px 32px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.popup-banner-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
-
-@media (max-width: 768px) {
-    .popup-banner-modal {
-        max-width: 95vw;
-        border-radius: 12px;
-    }
-    
-    .popup-banner-image {
-        max-height: 50vh;
-    }
-    
-    .popup-banner-info {
-        padding: 16px;
-    }
-    
-    .popup-banner-title {
-        font-size: 1.25rem;
-    }
-    
-    .popup-banner-subtitle {
-        font-size: 0.9rem;
-    }
-}
-</style>
-
 <script>
-const totalPopups = <?php echo count($popupBanners); ?>;
-let currentPopup = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    const totalPopups = <?php echo count($popupBanners); ?>;
+    if (totalPopups === 0) return;
 
-function closePopupBanner(index) {
-    const modals = document.querySelectorAll('.popup-banner-modal');
-    const overlay = document.getElementById('popupBannerOverlay');
+    const overlay = document.getElementById('auroraPopupOverlay');
+    const container = document.getElementById('auroraPopupContainer');
+    const slider = document.getElementById('auroraPopupSlider');
+    const indicators = document.querySelectorAll('.aurora-popup-indicator');
+    const closeBtn = document.getElementById('auroraPopupClose');
     
-    // Save dismissed state for this session
-    sessionStorage.setItem('popup_banner_' + index + '_dismissed', 'true');
+    let currentIndex = 0;
+    let slideInterval;
+
+    // Check if user has seen popups today (once per 24 hours logic)
+    const lastSeenDate = localStorage.getItem('aurora_popup_seen_date');
+    const today = new Date().toDateString();
     
-    // Hide current popup
-    modals[index].style.display = 'none';
-    
-    // Check if there's next popup
-    const nextIndex = index + 1;
-    if (nextIndex < totalPopups) {
-        currentPopup = nextIndex;
-        modals[nextIndex].style.display = 'flex';
-    } else {
-        // No more popups, hide overlay
-        overlay.style.display = 'none';
+    if (lastSeenDate !== today) {
+        // Show popup after 1.5 seconds
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-95');
+            startSlider();
+        }, 1500);
     }
-}
 
-// Check if user already dismissed all popups in this session
-(function() {
-    const dismissed = [];
-    for (let i = 0; i < totalPopups; i++) {
-        if (sessionStorage.getItem('popup_banner_' + i + '_dismissed') === 'true') {
-            dismissed.push(i);
+    function closePopup() {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        container.classList.add('scale-95');
+        localStorage.setItem('aurora_popup_seen_date', today);
+        clearInterval(slideInterval);
+    }
+
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            closePopup();
         }
-    }
-    
-    // If all dismissed, hide overlay
-    if (dismissed.length === totalPopups) {
-        document.getElementById('popupBannerOverlay').style.display = 'none';
-    } else {
-        // Show first non-dismissed popup
-        const modals = document.querySelectorAll('.popup-banner-modal');
-        dismissed.forEach(i => modals[i].style.display = 'none');
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !overlay.classList.contains('opacity-0')) {
+            closePopup();
+        }
+    });
+
+    function startSlider() {
+        if (totalPopups <= 1) return;
         
-        const firstVisible = dismissed.length;
-        if (firstVisible < totalPopups) {
-            currentPopup = firstVisible;
-        }
-    }
-})();
-
-// Close on overlay click (outside modal)
-document.getElementById('popupBannerOverlay').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closePopupBanner(currentPopup);
-    }
-});
-
-// Close on ESC key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        const overlay = document.getElementById('popupBannerOverlay');
-        if (overlay && overlay.style.display !== 'none') {
-            closePopupBanner(currentPopup);
-        }
+        slideInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % totalPopups;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((ind, idx) => {
+                ind.classList.toggle('bg-white', idx === currentIndex);
+                ind.classList.toggle('bg-white/40', idx !== currentIndex);
+            });
+        }, 4000);
     }
 });
 </script>
