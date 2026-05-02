@@ -757,9 +757,9 @@ try {
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
-                                <div class="h-full w-full">
+                                <div class="flex flex-col">
                                     <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                        class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full w-full">
+                                        class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col grow">
                                         <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                             <?php
                                             $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
