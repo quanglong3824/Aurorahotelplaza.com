@@ -19,7 +19,9 @@ try {
             (SELECT COUNT(*) FROM rooms) as total_rooms,
             (SELECT COUNT(*) FROM bookings WHERE check_in_date = CURDATE() AND status IN ('confirmed', 'checked_in')) as checkins_today,
             (SELECT COUNT(*) FROM bookings WHERE check_out_date = CURDATE() AND status = 'checked_in') as checkouts_today,
-            (SELECT COUNT(*) FROM users WHERE user_role = 'customer' AND DATE(created_at) = CURDATE()) as new_customers_today
+            (SELECT COUNT(*) FROM users WHERE user_role = 'customer' AND DATE(created_at) = CURDATE()) as new_customers_today,
+            (SELECT COALESCE(SUM(total_hits), 0) FROM traffic_stats_daily WHERE stat_date = CURDATE()) as hits_today,
+            (SELECT COUNT(DISTINCT session_id) FROM traffic_logs WHERE visit_time > DATE_SUB(NOW(), INTERVAL 5 MINUTE)) as online_now
     ");
     $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -176,6 +178,68 @@ include 'includes/admin-header.php';
             <a href="bookings.php?status=pending" class="text-xs text-orange-600 hover:text-orange-700 font-medium">Xem
                 chi tiết →</a>
         </div>
+    </div>
+</div>
+
+<!-- Traffic & Customer Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Online Now -->
+    <div class="stat-card bg-white dark:bg-slate-800 border-l-4 border-green-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Đang trực tuyến</p>
+                <p class="text-2xl font-black text-slate-900 dark:text-white"><?php echo number_format($stats['online_now']); ?></p>
+            </div>
+            <div class="w-10 h-10 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-green-500 animate-pulse">sensors</span>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">Trong 5 phút qua</p>
+    </div>
+
+    <!-- Traffic Today -->
+    <div class="stat-card bg-white dark:bg-slate-800 border-l-4 border-indigo-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Lượt truy cập hôm nay</p>
+                <p class="text-2xl font-black text-slate-900 dark:text-white"><?php echo number_format($stats['hits_today']); ?></p>
+            </div>
+            <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-indigo-500">trending_up</span>
+            </div>
+        </div>
+        <a href="traffic-stats.php" class="text-[10px] text-indigo-500 font-bold hover:underline mt-2 inline-block">Xem chi tiết →</a>
+    </div>
+
+    <!-- New Customers -->
+    <div class="stat-card bg-white dark:bg-slate-800 border-l-4 border-purple-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Thành viên mới</p>
+                <p class="text-2xl font-black text-slate-900 dark:text-white"><?php echo number_format($stats['new_customers_today']); ?></p>
+            </div>
+            <div class="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-purple-500">person_add</span>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">Đăng ký hôm nay</p>
+    </div>
+
+    <!-- Conversion Mock (AI Insight) -->
+    <div class="stat-card bg-slate-900 text-white border-l-4 border-amber-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Tỷ lệ chuyển đổi</p>
+                <?php 
+                    $conv = $stats['hits_today'] > 0 ? ($stats['bookings_today'] / $stats['hits_today']) * 100 : 0;
+                ?>
+                <p class="text-2xl font-black text-amber-500"><?php echo number_format($conv, 1); ?>%</p>
+            </div>
+            <div class="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-amber-500 text-sm">auto_awesome</span>
+            </div>
+        </div>
+        <p class="text-[9px] text-slate-500 mt-2">AI: "Hôm nay sếp đang có phong độ tốt!"</p>
     </div>
 </div>
 

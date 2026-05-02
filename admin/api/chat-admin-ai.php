@@ -51,11 +51,17 @@ try {
         $today_revenue = (int) $db->query("SELECT SUM(total_amount) FROM bookings WHERE DATE(created_at) = CURDATE() AND status != 'cancelled'")->fetchColumn();
         $pending_bookings = (int) $db->query("SELECT COUNT(*) FROM bookings WHERE status='pending'")->fetchColumn();
         $total_users = (int) $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        
+        // Bổ sung traffic context
+        $today_hits = (int) $db->query("SELECT total_hits FROM traffic_stats_daily WHERE stat_date = CURDATE()")->fetchColumn();
+        $today_visitors = (int) $db->query("SELECT unique_visitors FROM traffic_stats_daily WHERE stat_date = CURDATE()")->fetchColumn();
+        $online_visitors = (int) $db->query("SELECT COUNT(DISTINCT session_id) FROM traffic_logs WHERE visit_time > DATE_SUB(NOW(), INTERVAL 5 MINUTE)")->fetchColumn();
     } catch (Exception $e) {
         $total_rooms = 0; $available_rooms = 0; $today_revenue = 0; $pending_bookings = 0; $total_users = 0;
+        $today_hits = 0; $today_visitors = 0; $online_visitors = 0;
     }
 
-    $bi_context = "- Tổng số phòng: {$total_rooms}\n- Phòng đang trống: {$available_rooms}\n- Doanh thu hôm nay: " . number_format($today_revenue) . " VND\n- Booking đang chờ xử lý: {$pending_bookings}\n- Tổng người dùng: {$total_users}\n";
+    $bi_context = "- Tổng số phòng: {$total_rooms}\n- Phòng đang trống: {$available_rooms}\n- Doanh thu hôm nay: " . number_format($today_revenue) . " VND\n- Booking đang chờ xử lý: {$pending_bookings}\n- Tổng người dùng: {$total_users}\n- Lượt xem hôm nay: {$today_hits}\n- Khách truy cập hôm nay: {$today_visitors}\n- Đang online: {$online_visitors}\n";
 
     // Cấu trúc DB Schema
     $db_schema = "
@@ -65,7 +71,9 @@ try {
 - users: user_id, full_name, email, phone, user_role, status, created_at
 - payments: payment_id, booking_id, payment_method, amount, status
 - chat_messages: message_id, conversation_id, sender_id, sender_type(customer,staff,bot), message, created_at
-- error_logs: id, error_type, message, file, line, url, status, created_at, occurrence_count";
+- error_logs: id, error_type, message, file, line, url, status, created_at, occurrence_count
+- traffic_logs: id, session_id, ip_address, user_id, page_url, referer, device_type(desktop,mobile,tablet,bot), is_unique, visit_time
+- traffic_stats_daily: id, stat_date, total_hits, unique_visitors, mobile_hits, desktop_hits";
 
     $system_prompt = "Bạn là Aurora AI Super Admin - Trợ lý siêu cấp của Aurora Hotel Plaza (Model: Opencode / glm-5).
 Bạn được quyền truy cập CSDL và thực thi các nghiệp vụ quản trị cao cấp.

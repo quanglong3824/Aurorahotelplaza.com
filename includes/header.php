@@ -8,6 +8,10 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../helpers/error-tracker.php';
 AuroraErrorTracker::init();
 
+// ─── Traffic Tracker ──────────────────────────────────────────────────────────
+require_once __DIR__ . '/../helpers/traffic-tracker.php';
+AuroraTrafficTracker::init();
+
 // Prevent browser caching of pages with user data
 if (isset($_SESSION['user_id'])) {
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

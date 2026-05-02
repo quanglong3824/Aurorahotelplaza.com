@@ -299,6 +299,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                             ['page' => 'users', 'icon' => 'manage_accounts', 'label' => 'Người dùng'],
                             ['page' => 'permissions', 'icon' => 'admin_panel_settings', 'label' => 'Phân quyền'],
                             ['page' => 'activity-logs', 'icon' => 'history', 'label' => 'Nhật ký hoạt động'],
+                            ['page' => 'traffic-stats', 'icon' => 'insights', 'label' => 'Quản lý lưu lượng'],
                             ['page' => 'reports', 'icon' => 'analytics', 'label' => 'Báo cáo'],
                             ['page' => 'notifications', 'icon' => 'notifications', 'label' => 'Thông báo'],
                             ['page' => 'test-messenger-2way', 'icon' => 'outgoing_mail', 'label' => 'Test Messenger'],
