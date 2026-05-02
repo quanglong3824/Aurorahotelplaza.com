@@ -78,7 +78,7 @@ include 'includes/admin-header.php';
 <!-- Stats -->
 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
     <div class="stat-card">
-        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổng nhân viên</p>
+        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Tổng người dùng</p>
         <p class="text-2xl font-bold"><?php echo $counts['total']; ?></p>
     </div>
     <div class="stat-card">

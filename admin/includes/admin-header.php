@@ -241,6 +241,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'icon' => 'group',
                         'items' => [
                             ['page' => 'customers', 'icon' => 'people', 'label' => 'Khách hàng'],
+                            ['page' => 'ai-leads', 'icon' => 'psychology_alt', 'label' => 'Khách hàng tiềm năng'],
                             ['page' => 'loyalty', 'icon' => 'loyalty', 'label' => 'Chương trình thành viên'],
                             ['page' => 'reviews', 'icon' => 'star', 'label' => 'Đánh giá'],
                             ['page' => 'contacts', 'icon' => 'contact_mail', 'label' => 'Liên hệ']

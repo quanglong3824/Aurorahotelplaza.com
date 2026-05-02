@@ -116,6 +116,9 @@ if (!empty($full_reply)) {
                     $booking_id = $bookingModel->create($bookingData);
 
                     if ($booking_id) {
+                        // Mark lead as converted
+                        $db->prepare("UPDATE ai_extracted_leads SET is_converted = 1 WHERE conversation_id = ?")->execute([$conv_id]);
+
                         // 2.4 Gửi email xác nhận
                         $mailer = getMailer();
                         $fullBooking = $bookingModel->getById($booking_id);
@@ -129,11 +132,45 @@ if (!empty($full_reply)) {
                     $full_reply .= "\n\n❌ [HỆ THỐNG]: Rất tiếc, loại phòng này vừa hết chỗ trong khoảng thời gian sếp chọn. Sếp vui lòng chọn loại phòng khác nhé.";
                 }
             }
-        }
+            }
 
-        $stmt = $db->prepare("
-            INSERT INTO chat_messages
-...
+            // 3. Xử lý [EXTRACT_LEAD: {json}]
+            if (preg_match('/\[EXTRACT_LEAD:\s*(\{.*?\})\]/is', $full_reply, $matches)) {
+            $leadData = json_decode($matches[1], true);
+            if ($leadData) {
+                try {
+                    $stmtL = $db->prepare("
+                        INSERT INTO ai_extracted_leads 
+                        (conversation_id, full_name, phone, email, room_interests, intended_dates, potential_score, ai_learned_summary, updated_at)
+                        VALUES (:cid, :name, :phone, :email, :interests, :dates, :potential, :learned, NOW())
+                        ON DUPLICATE KEY UPDATE 
+                        full_name = VALUES(full_name),
+                        phone = VALUES(phone),
+                        email = VALUES(email),
+                        room_interests = VALUES(room_interests),
+                        intended_dates = VALUES(intended_dates),
+                        potential_score = VALUES(potential_score),
+                        ai_learned_summary = VALUES(ai_learned_summary),
+                        updated_at = NOW()
+                    ");
+                    $stmtL->execute([
+                        ':cid' => $conv_id,
+                        ':name' => $leadData['name'] ?? null,
+                        ':phone' => $leadData['phone'] ?? null,
+                        ':email' => $leadData['email'] ?? null,
+                        ':interests' => $leadData['interests'] ?? null,
+                        ':dates' => $leadData['dates'] ?? null,
+                        ':potential' => $leadData['potential'] ?? 'medium',
+                        ':learned' => $leadData['learned_summary'] ?? null
+                    ]);
+                } catch (Exception $e) {
+                    error_log("Lead Extraction error: " . $e->getMessage());
+                }
+            }
+            }
+
+            $stmt = $db->prepare("
+            INSERT INTO chat_messages...
                 (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
             VALUES
                 (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
