@@ -1123,7 +1123,3 @@ try {
 </body>
 
 </html>
-    </script>
-</body>
-
-</html>
