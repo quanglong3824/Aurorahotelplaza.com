@@ -269,7 +269,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         'role' => 'admin',
                         'items' => [
                             ['page' => 'ai-assistant', 'icon' => 'generating_tokens', 'label' => 'Trợ Lý Admin AI'],
-                            ['page' => 'ai-stats', 'icon' => 'query_stats', 'label' => 'Thống Kê API Gemini'],
+                            ['page' => 'ai-stats', 'icon' => 'query_stats', 'label' => 'Thống Kê API Opencode'],
                             ['page' => 'ai-bug', 'icon' => 'bug_report', 'label' => 'AI Bug Tracker', 'badge' => 'aiBugBadge'],
                         ]
                     ],
