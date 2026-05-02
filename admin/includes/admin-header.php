@@ -36,7 +36,7 @@ if (time() - $last_verify > 300) {
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!DOCTYPE html>
-<html translate="no" class="light" lang="vi">
+<html translate="no" class="dark" lang="vi">
 
 <head>
     <meta name="google" content="notranslate" />
