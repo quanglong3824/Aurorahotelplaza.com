@@ -41,6 +41,6 @@
 
 <!-- AI Beta Notice -->
 <div id="cwAiNotice" style="font-size: 10px; color: #94a3b8; text-align: center; padding: 5px 12px 10px; font-style: italic; line-height: 1.4; border-top: 1px solid rgba(0,0,0,0.03);">
-    Aurora AI đang trong quá trình phát triển. Nếu có sai sót sếp hãy góp ý, và nếu cần thiết hãy 
-    <a href="<?php echo url('booking/'); ?>" style="color:#d4af37; font-weight:700; text-decoration:underline;">đặt phòng thủ công tại đây</a>.
+    Aurora AI is currently in beta. We appreciate your feedback as we continue to improve. You can also 
+    <a href="<?php echo url('booking/'); ?>" style="color:#d4af37; font-weight:700; text-decoration:underline;">book manually here</a>.
 </div>
