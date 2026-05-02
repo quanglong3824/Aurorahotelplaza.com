@@ -164,9 +164,9 @@ $bi_context";
     // Nếu AI không trả về READ_DB, nó có thể là ACTION hoặc trả lời text thông thường.
     // Lẽ ra nên stream ngay từ đầu, nhưng vì đã gọi đồng bộ nên ta "chế" lại stream để client khỏi bỡ ngỡ.
     if (!empty($bot_reply)) {
-        $chunks = str_split($bot_reply, 10);
+        $chunks = mb_str_split($bot_reply, 2);
         foreach ($chunks as $chunk) {
-            echo "data: " . json_encode(["text" => $chunk]) . "\n\n";
+            echo "data: " . json_encode(["text" => $chunk], JSON_UNESCAPED_UNICODE) . "\n\n";
             ob_flush(); flush();
             usleep(10000); // Mượt mà
         }
