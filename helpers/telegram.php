@@ -8,31 +8,52 @@
 
 class TelegramHelper
 {
-    private static $botToken = 'xxxTELExxx';
-    private static $chatId = 'xxxTELExxx';
-    private static $initialized = true;
+    private static $botToken = null;
+    private static $chatId = null;
+    private static $enabled = null;
+    private static $initialized = false;
 
     public static function init()
     {
-        // Already hardcoded - no init needed
+        if (self::$initialized) return;
+
+        try {
+            require_once __DIR__ . '/../config/database.php';
+            $db = getDB();
+            if ($db) {
+                $stmt = $db->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('telegram_bot_token', 'telegram_chat_id', 'telegram_notifications')");
+                $settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                
+                self::$botToken = $settings['telegram_bot_token'] ?? '';
+                self::$chatId = $settings['telegram_chat_id'] ?? '';
+                self::$enabled = ($settings['telegram_notifications'] ?? '0') === '1';
+                self::$initialized = true;
+            }
+        } catch (Exception $e) {
+            error_log('[TELEGRAM] DB Init Error: ' . $e->getMessage());
+        }
     }
 
     public static function getConfig()
     {
+        self::init();
         return [
             'bot_token' => self::$botToken,
             'chat_id' => self::$chatId,
+            'enabled' => self::$enabled,
             'is_configured' => !empty(self::$botToken) && !empty(self::$chatId)
         ];
     }
 
     public static function getBotToken()
     {
+        self::init();
         return self::$botToken;
     }
 
     public static function getChatId()
     {
+        self::init();
         return self::$chatId;
     }
 
@@ -40,9 +61,9 @@ class TelegramHelper
     {
         self::init();
 
-        if (empty(self::$botToken) || empty(self::$chatId)) {
-            error_log('[TELEGRAM] Not configured - token or chatId empty');
-            return ['success' => false, 'error' => 'Telegram not configured'];
+        if (!self::$enabled || empty(self::$botToken) || empty(self::$chatId)) {
+            // error_log('[TELEGRAM] Skip sending: Disabled or not configured');
+            return ['success' => false, 'error' => 'Telegram disabled or not configured'];
         }
 
         $payload = json_encode([
@@ -51,9 +72,6 @@ class TelegramHelper
             'parse_mode' => $parseMode,
             'disable_web_page_preview' => $disablePreview
         ]);
-
-        error_log('[TELEGRAM] Sending message to chat_id: ' . self::$chatId);
-        error_log('[TELEGRAM] Payload length: ' . strlen($payload));
 
         $ch = curl_init("https://api.telegram.org/bot" . self::$botToken . "/sendMessage");
         curl_setopt_array($ch, [

@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkbox_settings = [
             'email_notifications',
             'sms_notifications',
+            'telegram_notifications',
             'maintenance_mode',
             'testing_mode',
             'allow_guest_booking',
@@ -86,6 +87,9 @@ try {
         'points_expiry_days' => '365',
         'email_notifications' => '1',
         'sms_notifications' => '0',
+        'telegram_notifications' => '0',
+        'telegram_bot_token' => '',
+        'telegram_chat_id' => '',
         'maintenance_mode' => '0',
         'testing_mode' => '0',
         'allow_guest_booking' => '1',
@@ -360,6 +364,50 @@ include 'includes/admin-header.php';
                         ⚠️ Xóa toàn bộ dữ liệu, chỉ giữ lại tài khoản admin
                     </p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telegram Settings -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="font-semibold flex items-center gap-2">
+                <span class="material-symbols-outlined">send</span>
+                Cấu hình Telegram Bot
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="settings[telegram_notifications]" value="1" 
+                           <?php echo ($settings['telegram_notifications'] ?? '0') === '1' ? 'checked' : ''; ?>>
+                    <span class="font-medium">Bật thông báo qua Telegram</span>
+                </label>
+                <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1 ml-6">
+                    Gửi thông báo booking và tin nhắn chat mới tới nhóm/kênh Telegram
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label">Telegram Bot Token</label>
+                    <input type="password" name="settings[telegram_bot_token]" 
+                           value="<?php echo htmlspecialchars($settings['telegram_bot_token'] ?? ''); ?>" 
+                           class="form-input" placeholder="Nhập Token bot của bạn">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Telegram Chat ID</label>
+                    <input type="text" name="settings[telegram_chat_id]" 
+                           value="<?php echo htmlspecialchars($settings['telegram_chat_id'] ?? ''); ?>" 
+                           class="form-input" placeholder="Nhập ID nhóm hoặc cá nhân">
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                <p class="text-xs text-slate-500 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">info</span>
+                    Cách lấy ID: Chat với <strong>@userinfobot</strong> hoặc thêm bot vào nhóm rồi lấy ID của nhóm đó.
+                </p>
             </div>
         </div>
     </div>
