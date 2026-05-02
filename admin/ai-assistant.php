@@ -132,7 +132,7 @@ require_once 'includes/admin-header.php';
     const btn = document.getElementById('aiBtnSend');
     const terminal = document.getElementById('aiTerminal');
 
-    // ── Lịch sử trò chuyện (localStorage) ──────────────────────────────────
+    // ── Lịch sử trò chuyện (Đồng bộ Cloud & localStorage) ──────────────────────────────────
     const HISTORY_KEY = 'aurora_admin_ai_history';
 
     function saveHistory(user, content) {
@@ -141,16 +141,43 @@ require_once 'includes/admin-header.php';
         // Giới hạn 200 tin nhắn gần nhất
         if (arr.length > 200) arr.splice(0, arr.length - 200);
         localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+        
+        // Sync to Server in background
+        fetch('api/sync-ai-history.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ history: arr })
+        }).catch(() => {});
     }
 
     function restoreHistory() {
-        const arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-        if (arr.length === 0) return;
-        appendTerminal(`Loaded ${arr.length} messages from local history.`, 'INFO');
-        arr.forEach(({ user, content }) => {
-            // Khi restore, các action box đã phê duyệt/hủy sẽ được đánh dấu là đã xử lý
-            renderMessage(user, content, true);
-        });
+        // Fetch from server first for cross-device sync
+        fetch('api/sync-ai-history.php')
+            .then(res => res.json())
+            .then(data => {
+                let arr = [];
+                if (data.success && data.history && data.history.length > 0) {
+                    arr = data.history;
+                    localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+                } else {
+                    arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                }
+                
+                if (arr.length === 0) return;
+                appendTerminal(`Loaded ${arr.length} messages from synchronized history.`, 'INFO');
+                arr.forEach(({ user, content }) => {
+                    renderMessage(user, content, true);
+                });
+            })
+            .catch(() => {
+                // Fallback to local
+                const arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                if (arr.length === 0) return;
+                appendTerminal(`Loaded ${arr.length} messages from local history (offline mode).`, 'INFO');
+                arr.forEach(({ user, content }) => {
+                    renderMessage(user, content, true);
+                });
+            });
     }
 
     // Chặn enter vô duyên
@@ -558,6 +585,14 @@ require_once 'includes/admin-header.php';
         const childs = windowChat.querySelectorAll(':scope > div:not(.system-banner)');
         childs.forEach(c => c.remove());
         localStorage.removeItem(HISTORY_KEY);
+        
+        // Sync clear to Server
+        fetch('api/sync-ai-history.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'clear' })
+        }).catch(() => {});
+        
         appendTerminal(`Chat history cleared.`, 'INFO');
     }
 
