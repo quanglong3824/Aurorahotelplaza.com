@@ -139,8 +139,15 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(slideInterval);
     }
 
+    // Prevent click inside container from closing popup
+    container.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
     closeBtn.addEventListener('click', closePopup);
-    overlay.addEventListener('click', (e) => e.target === overlay && closePopup());
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closePopup();
+    });
     document.addEventListener('keydown', (e) => e.key === 'Escape' && closePopup());
 
     function goToSlide(index) {
