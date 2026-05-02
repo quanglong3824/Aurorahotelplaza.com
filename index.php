@@ -758,7 +758,7 @@ try {
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
                                 <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full">
+                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col">
                                     <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
                                         <?php
                                         $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
@@ -1009,28 +1009,28 @@ try {
     </div>
 
     <style>
-        /* Fix Blog Cards - No excessive whitespace */
-        #blog a.glass-card {
-            display: flex;
-            flex-direction: column;
+        /* Blog Cards Responsive Fix */
+        #blog .grid {
+            align-items: stretch;
         }
         #blog .aspect-video {
             aspect-ratio: 16 / 9;
             flex-shrink: 0;
             overflow: hidden;
+            width: 100%;
         }
         #blog .aspect-video img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        #blog h3.font-bold {
+        #blog .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        #blog p.line-clamp-3 {
+        #blog .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
