@@ -1008,6 +1008,33 @@ try {
 
     </div>
 
+    <style>
+        /* Fix News & Events Layout */
+        #blog .glass-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        #blog .aspect-video {
+            aspect-ratio: 16 / 9;
+            height: auto !important;
+        }
+        #blog h3.line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 3.5rem; /* Ensure consistent height for 2 lines */
+        }
+        #blog p.line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 4.5rem; /* Ensure consistent height for 3 lines */
+        }
+    </style>
+
     <!--  JavaScript -->
     <script src="<?php echo assetVersion('js/main.js'); ?>" defer></script>
     <script>
