@@ -16,7 +16,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db = getDB();
         
-        foreach ($_POST['settings'] as $key => $value) {
+        $submitted_settings = $_POST['settings'] ?? [];
+        
+        // Define settings that are checkboxes (they won't be sent if unchecked)
+        $checkbox_settings = [
+            'email_notifications',
+            'sms_notifications',
+            'maintenance_mode',
+            'testing_mode',
+            'allow_guest_booking',
+            'require_payment_upfront',
+            'auto_confirm_booking'
+        ];
+
+        // Ensure all checkbox settings are present
+        foreach ($checkbox_settings as $checkbox) {
+            if (!isset($submitted_settings[$checkbox])) {
+                $submitted_settings[$checkbox] = '0';
+            }
+        }
+        
+        foreach ($submitted_settings as $key => $value) {
             $stmt = $db->prepare("
                 INSERT INTO system_settings (setting_key, setting_value, updated_by, updated_at)
                 VALUES (:key, :value, :user_id, NOW())
@@ -33,6 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $success_message = 'Cập nhật cài đặt thành công!';
+        
+        // Refresh local settings array
+        $settings_raw = $submitted_settings;
     } catch (Exception $e) {
         error_log("Settings update error: " . $e->getMessage());
         $error_message = 'Có lỗi xảy ra khi cập nhật cài đặt';

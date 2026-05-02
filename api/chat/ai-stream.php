@@ -12,6 +12,9 @@ header('X-Accel-Buffering: no');
 
 require_once '../../config/database.php';
 require_once '../../helpers/ai-helper.php';
+require_once '../../helpers/mailer.php';
+require_once '../../helpers/pricing_calculator.php';
+require_once '../../models/Booking.php';
 
 // Auth check
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['chat_guest_id'])) {
@@ -39,14 +42,12 @@ if (!$message) {
     exit;
 }
 
-require_once '../../config/database.php';
-require_once '../../helpers/ai-helper.php';
-require_once '../../helpers/mailer.php';
-require_once '../../helpers/pricing_calculator.php';
-require_once '../../models/Booking.php';
+// Tắt buffering
+if (ob_get_level())
+    ob_end_clean();
+ini_set('output_buffering', 'off');
+set_time_limit(120);
 
-// Auth check
-...
 // Gọi stream từ AI (Tự động định tuyến Gemini hoặc Opencode)
 $full_reply = stream_ai_reply($message, $db, $conv_id);
 
@@ -59,7 +60,7 @@ if (!empty($full_reply)) {
             $name = trim($matches[1]);
             $phone = trim($matches[2]);
             $msg = trim($matches[3]);
-
+            
             $stmtC = $db->prepare("
                 INSERT INTO contact_submissions (name, email, phone, subject, message, status, created_at)
                 VALUES (:name, :email, :phone, 'AI Lead/Support Request', :msg, 'new', NOW())
@@ -86,7 +87,7 @@ if (!empty($full_reply)) {
                 if ($room) {
                     // 2.2 Tính toán tiền
                     $nights = Booking::calculateNights($check_in, $check_out);
-
+                    
                     $stmtRT = $db->prepare("SELECT * FROM room_types WHERE room_type_id = ?");
                     $stmtRT->execute([$room_type_id]);
                     $room_type = $stmtRT->fetch(PDO::FETCH_ASSOC);
@@ -102,8 +103,9 @@ if (!empty($full_reply)) {
                         'room_type_id' => $room_type_id,
                         'check_in_date' => $check_in,
                         'check_out_date' => $check_out,
-                        'num_guests' => 1,
-                        'num_nights' => $nights,
+                        'num_adults' => 1,
+                        'num_children' => 0,
+                        'total_nights' => $nights,
                         'room_price' => $basePrice,
                         'total_amount' => $total_amount,
                         'guest_name' => $jsonData['name'],
@@ -123,7 +125,7 @@ if (!empty($full_reply)) {
                         $mailer = getMailer();
                         $fullBooking = $bookingModel->getById($booking_id);
                         $mailer->sendBookingConfirmation($jsonData['email'], $fullBooking);
-
+                        
                         // Cập nhật câu trả lời của AI để báo thành công kèm link
                         $success_tag = "[BOOK_NOW_BTN_SUCCESS: booking_code={$bookingData['booking_code']}, booking_id={$booking_id}]";
                         $full_reply .= "\n\n✅ [HỆ THỐNG]: Đã đặt phòng thành công! " . $success_tag;
@@ -132,10 +134,10 @@ if (!empty($full_reply)) {
                     $full_reply .= "\n\n❌ [HỆ THỐNG]: Rất tiếc, loại phòng này vừa hết chỗ trong khoảng thời gian sếp chọn. Sếp vui lòng chọn loại phòng khác nhé.";
                 }
             }
-            }
+        }
 
-            // 3. Xử lý [EXTRACT_LEAD: {json}]
-            if (preg_match('/\[EXTRACT_LEAD:\s*(\{.*?\})\]/is', $full_reply, $matches)) {
+        // 3. Xử lý [EXTRACT_LEAD: {json}]
+        if (preg_match('/\[EXTRACT_LEAD:\s*(\{.*?\})\]/is', $full_reply, $matches)) {
             $leadData = json_decode($matches[1], true);
             if ($leadData) {
                 try {
@@ -167,10 +169,10 @@ if (!empty($full_reply)) {
                     error_log("Lead Extraction error: " . $e->getMessage());
                 }
             }
-            }
+        }
 
-            $stmt = $db->prepare("
-            INSERT INTO chat_messages...
+        $stmt = $db->prepare("
+            INSERT INTO chat_messages
                 (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
             VALUES
                 (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
