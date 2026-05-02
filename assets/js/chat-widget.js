@@ -355,39 +355,45 @@ const ChatWidget = {
         this.sseConn = null;
     },
 
-    sendMessage() {
+    sendMessage(customMsg = null) {
         if (this.isSending) return;
         if (!this.convId) {
             this.isSending = true;
             this.createOrGetConversation().then(() => {
                 this.isSending = false;
-                this._doSend();
+                this._doSend(customMsg);
             }).catch(() => { this.isSending = false; });
             return;
         }
-        this._doSend();
+        this._doSend(customMsg);
     },
 
-    _doSend() {
+    _doSend(customMsg = null) {
         if (this.isSending) return;
         const input = document.getElementById('cwInput');
         const sendBtn = document.getElementById('cwSendBtn');
-        const msg = input?.value.trim();
+        const msg = customMsg || input?.value.trim();
         if (!msg || !this.convId) return;
 
         this.isSending = true;
         sendBtn.disabled = true;
         const tempId = 'pending_' + Date.now();
 
+        // Nếu là lệnh kỹ thuật, chỉ hiện text sạch cho khách
+        const displayMsg = msg.includes('[EXECUTE_BOOKING') ? 'Xác nhận đặt phòng và gửi email cho tôi.' : msg;
+
         this.appendMessage({
             message_id: tempId,
             sender_type: 'customer',
-            message: msg,
+            message: displayMsg,
             created_at: new Date().toISOString(),
             pending: true
         });
-        input.value = '';
-        input.style.height = 'auto';
+        
+        if (!customMsg && input) {
+            input.value = '';
+            input.style.height = 'auto';
+        }
 
         fetch(this._url('api/chat/send-message.php'), {
             method: 'POST',
@@ -554,15 +560,7 @@ const ChatWidget = {
 
         // Gửi tin nhắn xác nhận ảo để trigger backend execution
         const msg = `Tôi xác nhận đặt phòng: ${data.name}, ${data.phone}, ${data.email}, Check-in ${data.check_in}, Check-out ${data.check_out}. [EXECUTE_BOOKING: ${JSON.stringify(data)}]`;
-        
-        const input = document.getElementById('cwInput');
-        if (input) {
-            input.value = 'Xác nhận đặt phòng và gửi email cho tôi.';
-            this.sendMessage();
-            // Xóa nội dung lệnh kỹ thuật để khách không thấy
-            const pendingMsg = document.querySelector(`.cw-bubble-row.user[data-msg-id^="pending_"] .cw-bubble`);
-            if (pendingMsg) pendingMsg.textContent = 'Xác nhận đặt phòng và gửi email cho tôi.';
-        }
+        this.sendMessage(msg);
     },
 
     appendMessage(msg) {
