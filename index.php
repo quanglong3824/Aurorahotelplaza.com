@@ -752,7 +752,7 @@ try {
                             <?php _e('home.news_events_desc'); ?>
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         <?php if (!empty($latest_posts)): ?>
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
@@ -1009,46 +1009,32 @@ try {
     </div>
 
     <style>
-        /* Fix News & Events Layout - Equal height cards */
-        #blog .grid {
-            align-items: stretch;
-        }
+        /* Fix Blog Cards - No excessive whitespace */
         #blog a.glass-card {
             display: flex;
             flex-direction: column;
-            height: 100%;
-            min-height: 420px;
         }
         #blog .aspect-video {
             aspect-ratio: 16 / 9;
             flex-shrink: 0;
+            overflow: hidden;
         }
         #blog .aspect-video img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        #blog .p-5.flex.flex-col.grow {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
         #blog h3.font-bold {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            min-height: 3.5rem;
         }
         #blog p.line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            min-height: 4.5rem;
-        }
-        #blog .mt-auto {
-            margin-top: auto;
         }
     </style>
 
