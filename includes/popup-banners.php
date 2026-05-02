@@ -38,6 +38,16 @@ $isPreview = isset($_GET['preview_popup']) && $_GET['preview_popup'] == '1';
             <span class="material-symbols-outlined text-sm">close</span>
         </button>
 
+        <!-- Navigation Arrows (If more than 1) -->
+        <?php if (count($displayBanners) > 1): ?>
+        <button id="auroraPopupPrev" class="absolute left-4 top-1/2 -translate-y-1/2 z-[30] w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full transition-all cursor-pointer backdrop-blur-sm">
+            <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button id="auroraPopupNext" class="absolute right-4 top-1/2 -translate-y-1/2 z-[30] w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full transition-all cursor-pointer backdrop-blur-sm">
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+        <?php endif; ?>
+
         <div id="auroraPopupSlider" class="flex transition-transform duration-700 ease-in-out h-full">
             <?php 
             $displayBanners = !empty($popupBanners) ? $popupBanners : [
@@ -116,6 +126,8 @@ $isPreview = isset($_GET['preview_popup']) && $_GET['preview_popup'] == '1';
         const slider = document.getElementById('auroraPopupSlider');
         const indicators = document.querySelectorAll('.aurora-popup-indicator');
         const closeBtn = document.getElementById('auroraPopupClose');
+        const prevBtn = document.getElementById('auroraPopupPrev');
+        const nextBtn = document.getElementById('auroraPopupNext');
         
         if (!overlay || !container) return;
 
@@ -150,6 +162,22 @@ $isPreview = isset($_GET['preview_popup']) && $_GET['preview_popup'] == '1';
         container.addEventListener('click', (e) => {
             e.stopPropagation();
         });
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                goToSlide((currentIndex - 1 + totalPopups) % totalPopups);
+                startSlider();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                goToSlide((currentIndex + 1) % totalPopups);
+                startSlider();
+            });
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !overlay.classList.contains('opacity-0')) closePopup();
