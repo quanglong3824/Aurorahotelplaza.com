@@ -425,7 +425,7 @@ const ChatWidget = {
         wrapper.innerHTML = this.renderBubble({
             message_id: streamId,
             sender_type: 'bot',
-            message: '<div class="cw-thinking-bubble"><span class="material-symbols-outlined cw-thinking-sparkle">auto_awesome</span><span class="cw-thinking-text">Aurora đang suy nghĩ...</span></div>',
+            message: '<div class="cw-thinking-bubble"><span class="material-symbols-outlined cw-thinking-sparkle">auto_awesome</span><span class="cw-thinking-text">Aurora thinking...</span></div>',
             created_at: new Date().toISOString()
         });
         container.appendChild(wrapper.firstElementChild);
