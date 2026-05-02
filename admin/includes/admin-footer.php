@@ -33,14 +33,8 @@
     });
 
     // Load theme from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        html.classList.remove('dark');
-        html.classList.add('light');
-    } else {
+    if (localStorage.getItem('theme') === 'dark') {
         html.classList.add('dark');
-        html.classList.remove('light');
-        localStorage.setItem('theme', 'dark');
     }
 
     // Auto-hide mobile sidebar on navigation
