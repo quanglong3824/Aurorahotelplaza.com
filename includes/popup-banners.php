@@ -21,12 +21,17 @@ try {
         AND (end_date IS NULL OR end_date >= NOW()) 
         ORDER BY sort_order ASC, created_at DESC
     ");
-    $popupBanners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $popupBanners = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 } catch (Throwable $e) {
     error_log('Popup banners error: ' . $e->getMessage());
 }
 
 $isPreview = isset($_GET['preview_popup']) && $_GET['preview_popup'] == '1';
+
+// Prepare display banners (use sample if in preview and no banners found)
+$displayBanners = !empty($popupBanners) ? $popupBanners : [
+    ['banner_id' => 0, 'title' => 'Popup Preview', 'subtitle' => 'Đây là nội dung hiển thị mẫu của popup sự kiện.', 'image_desktop' => '', 'link_url' => '#', 'link_text' => 'Xem chi tiết']
+];
 ?>
 
 <?php if (!empty($popupBanners) || $isPreview): ?>
@@ -50,9 +55,6 @@ $isPreview = isset($_GET['preview_popup']) && $_GET['preview_popup'] == '1';
 
         <div id="auroraPopupSlider" class="flex transition-transform duration-700 ease-in-out h-full">
             <?php 
-            $displayBanners = !empty($popupBanners) ? $popupBanners : [
-                ['banner_id' => 0, 'title' => 'Popup Preview', 'subtitle' => 'Đây là nội dung hiển thị mẫu của popup sự kiện.', 'image_desktop' => '', 'link_url' => '#', 'link_text' => 'Xem chi tiết']
-            ];
             foreach ($displayBanners as $banner): 
             ?>
                 <div class="min-w-full flex-shrink-0 relative group" data-banner-id="<?php echo $banner['banner_id']; ?>">
