@@ -64,7 +64,8 @@ try {
 - room_types: room_type_id, type_name, max_occupancy, base_price
 - users: user_id, full_name, email, phone, user_role, status, created_at
 - payments: payment_id, booking_id, payment_method, amount, status
-- chat_messages: message_id, conversation_id, sender_id, sender_type(customer,staff,bot), message, created_at";
+- chat_messages: message_id, conversation_id, sender_id, sender_type(customer,staff,bot), message, created_at
+- error_logs: id, error_type, message, file, line, url, status, created_at, occurrence_count";
 
     $system_prompt = "Bạn là Aurora AI Super Admin - Trợ lý siêu cấp của Aurora Hotel Plaza (Model: Opencode / glm-5).
 Bạn được quyền truy cập CSDL và thực thi các nghiệp vụ quản trị cao cấp.
@@ -77,9 +78,12 @@ QUY TẮC PHẢN HỒI:
 2. Nếu admin yêu cầu thao tác CSDL (Thêm, Sửa, Xóa): 
    - Trả về: [ACTION: {\"table\":\"TÊN_BẢNG\",\"action\":\"RAPID_CRUD\",\"level\":\"C\",\"data\":{\"query\":\"CÂU_LỆNH_SQL_ĐỂ_THAY_ĐỔI\"}}]
 3. Nếu admin yêu cầu thao tác hệ thống:
-   - Trả về: [ACTION: {\"action\":\"SYSTEM_CMD\",\"level\":\"A\",\"data\":{\"command\":\"CLEAR_CACHE\"}}] (Các lệnh hợp lệ: CLEAR_CACHE, READ_LOGS)
-4. BÁO CÁO DỮ LIỆU: Khi nhận được kết quả SQL trả về ở lượt kế tiếp, bạn HÃY FORMAT bảng dữ liệu (HTML Table hoặc Markdown Table) đẹp mắt để hiển thị trực quan cho Admin.
-5. KHÔNG BAO GIỜ hiển thị chuỗi [READ_DB:...] ra cho người dùng thấy ở kết quả cuối cùng.
+   - Trả về: [ACTION: {\"action\":\"SYSTEM_CMD\",\"level\":\"A\",\"data\":{\"command\":\"CLEAR_CACHE\"}}] (Các lệnh hợp lệ: CLEAR_CACHE)
+4. NẾU CẦN ĐỌC CODE MÃ NGUỒN ĐỂ SỬA LỖI (SELF-HEALING): 
+   - Khi bạn thấy thông tin tệp tin (file) và dòng (line) từ CSDL error_logs, hãy trả về DUY NHẤT thẻ: [READ_FILE: <đường_dẫn_tệp> | LINE: <số_dòng>]
+   - Ví dụ: [READ_FILE: /Applications/XAMPP/xamppfiles/htdocs/Github/AURORA HOTEL PLAZA/DOANH NGHIỆP/Aurorahotelplaza.com/helpers/mailer.php | LINE: 25]
+5. BÁO CÁO DỮ LIỆU: Khi nhận được kết quả (SQL hoặc FILE CODE) trả về ở lượt kế tiếp, bạn HÃY FORMAT báo cáo đẹp mắt để hiển thị trực quan cho Admin. Đối với Code Fix, hãy sử dụng khối ```php ... ```.
+6. KHÔNG BAO GIỜ hiển thị chuỗi [READ_DB:...] hay [READ_FILE:...] ra cho người dùng thấy ở kết quả cuối cùng.
 
 TRẠNG THÁI HỆ THỐNG HIỆN TẠI (Không cần SQL để hỏi những thông số này): 
 $bi_context";
@@ -89,7 +93,7 @@ $bi_context";
         ["role" => "user", "content" => $user_message]
     ];
 
-    // B1: GỌI ĐỒNG BỘ ĐỂ KIỂM TRA ACTION/READ_DB
+    // B1: GỌI ĐỒNG BỘ ĐỂ KIỂM TRA ACTION/READ_DB/READ_FILE
     $bot_reply = call_opencode_admin($system_prompt, $chat_history);
 
     // Xử lý READ_DB multi-turn
@@ -125,6 +129,37 @@ $bi_context";
             }
         }
     } 
+    // Xử lý READ_FILE multi-turn
+    elseif (preg_match('/\[READ_FILE:\s*(.*?)\s*\|\s*LINE:\s*(\d+)\]/i', $bot_reply, $matches)) {
+        $file_path = trim($matches[1]);
+        $line_num = (int)$matches[2];
+        
+        // Chống hack directory traversal, chỉ cho phép đọc trong thư mục project
+        $real_path = realpath($file_path);
+        $project_root = realpath(__DIR__ . '/../../');
+        
+        if ($real_path && strpos($real_path, $project_root) === 0 && file_exists($real_path)) {
+            $lines = file($real_path);
+            $start = max(0, $line_num - 25);
+            $end = min(count($lines), $line_num + 25);
+            
+            $code_snippet = "";
+            for ($i = $start; $i < $end; $i++) {
+                $prefix = ($i + 1 == $line_num) ? ">> " : "   ";
+                $code_snippet .= $prefix . ($i + 1) . ": " . $lines[$i];
+            }
+            
+            $db_result_msg = "HỆ THỐNG GỬI MÃ NGUỒN TẠI TỆP: $file_path (Xung quanh dòng $line_num):\n\n```php\n$code_snippet\n```\n\nHãy phân tích đoạn mã lỗi này, giải thích nguyên nhân và ĐỀ XUẤT ĐOẠN MÃ SỬA LỖI (Code Fix).";
+        } else {
+            $db_result_msg = "LỖI ĐỌC TỆP: Không tìm thấy tệp hoặc tệp không nằm trong phạm vi dự án. Hãy trả lời báo lỗi cho Admin.";
+        }
+        
+        $chat_history[] = ["role" => "assistant", "content" => $bot_reply];
+        $chat_history[] = ["role" => "user", "content" => $db_result_msg];
+        
+        stream_opencode_admin_reply($system_prompt, $chat_history);
+        exit;
+    }
 
     // Nếu AI không trả về READ_DB, nó có thể là ACTION hoặc trả lời text thông thường.
     // Lẽ ra nên stream ngay từ đầu, nhưng vì đã gọi đồng bộ nên ta "chế" lại stream để client khỏi bỡ ngỡ.

@@ -37,10 +37,6 @@ try {
             foreach ($cache_files as $f) { @unlink($f); }
             $affected = count($cache_files);
             $system_message = "Đã xóa $affected tệp tin cache thành công.";
-        } elseif ($cmd === 'READ_LOGS') {
-            // Mock reading logs
-            $affected = 1;
-            $system_message = "Hệ thống hoạt động ổn định. Không phát hiện lỗi Fatal Error trong 24h qua.";
         } else {
             throw new Exception("Lệnh hệ thống không hợp lệ: $cmd");
         }
