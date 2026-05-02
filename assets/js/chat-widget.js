@@ -677,52 +677,37 @@ const ChatWidget = {
             </div>`;
         });
 
-        // [BOOKING_CARD: name=..., phone=..., email=..., room=..., id=..., cin=..., cout=..., price=...]
-        html = html.replace(/\[BOOKING_CARD:\s*name=([^,]+),\s*phone=([^,]+),\s*email=([^,]+),\s*room=([^,]+),\s*id=([^,]+),\s*cin=([^,]+),\s*cout=([^,]+),\s*price=([^\]]+)\]/gi, (match, name, phone, email, room, id, cin, cout, price) => {
+        // [BOOKING_CARD: ...] - Xử lý thông minh và linh hoạt hơn
+        // Regex này bắt cả định dạng chuẩn và các biến thể AI có thể hallucinate
+        const cardRegex = /\[BOOKING_CARD:\s*([^\]]+)\]/gi;
+        html = html.replace(cardRegex, (match, content) => {
+            const pairs = content.split(',').reduce((acc, pair) => {
+                const [key, ...val] = pair.split(/[=:]/);
+                if (key) acc[key.trim().toLowerCase()] = val.join('=').trim();
+                return acc;
+            }, {});
+
             const bookingData = {
-                name: name.trim(),
-                phone: phone.trim(),
-                email: email.trim(),
-                room_type_id: id.trim(),
-                check_in: cin.trim(),
-                check_out: cout.trim()
+                name: pairs.name || 'Chưa có',
+                phone: pairs.phone || 'Chưa có',
+                email: pairs.email || 'Chưa có',
+                room_type_id: pairs.id || pairs.room_id || '',
+                check_in: pairs.cin || pairs.check_in || '',
+                check_out: pairs.cout || pairs.check_out || ''
             };
+            
+            const roomName = pairs.room || pairs.room_name || 'Phòng nghỉ';
+            const price = pairs.price || pairs.total_price || '0';
             const base64Data = btoa(unescape(encodeURIComponent(JSON.stringify(bookingData))));
             
-            return `<div class="cw-ai-card booking-summary" style="margin-top:12px; padding:18px; background:linear-gradient(135deg, #fff, #f8fafc); border:2px solid #d4af37; border-radius:20px; box-shadow:0 12px 30px rgba(212,175,55,0.15);">
-                <div style="font-weight:900; color:#d4af37; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
-                    <span class="material-symbols-outlined" style="font-size:16px;">verified_user</span> Xác nhận đặt phòng
-                </div>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
-                        <span style="font-size:12px; color:#64748b;">Hạng phòng:</span>
-                        <span style="font-size:13px; font-weight:800; color:#1e293b;">${room.trim()}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
-                        <span style="font-size:12px; color:#64748b;">Thời gian:</span>
-                        <span style="font-size:12px; font-weight:700; color:#1e293b;">${cin.trim()} ➔ ${cout.trim()}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
-                        <span style="font-size:12px; color:#64748b;">Khách hàng:</span>
-                        <span style="font-size:12px; font-weight:700; color:#1e293b;">${name.trim()}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;">
-                        <span style="font-size:13px; font-weight:800; color:#1e293b;">TỔNG TIỀN:</span>
-                        <span style="font-size:18px; font-weight:900; color:#b8941f;">${price.trim()} VNĐ</span>
-                    </div>
-                </div>
-                <button onclick="ChatWidget.executeBookingAction('${base64Data}', this)" style="margin-top:18px; width:100%; border:none; padding:14px; background:linear-gradient(135deg, #d4af37, #b8941f); color:#fff; border-radius:14px; font-weight:900; font-size:13px; cursor:pointer; box-shadow:0 8px 20px rgba(212,175,55,0.3); transition:all 0.3s; letter-spacing:0.5px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 25px rgba(212,175,55,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(212,175,55,0.3)'">
-                    XÁC NHẬN & ĐẶT NGAY
-                </button>
-                <p style="text-align:center; font-size:10px; color:#94a3b8; margin-top:10px;">Bằng cách nhấn nút, sếp đồng ý với chính sách của khách sạn.</p>
-            </div>`;
+            return `<div class="cw-ai-card booking-summary" style="margin-top:12px; padding:18px; background:linear-gradient(135deg, #fff, #f8fafc); border:2px solid #d4af37; border-radius:20px; box-shadow:0 12px 30px rgba(212,175,55,0.15);"><div style="font-weight:900; color:#d4af37; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:6px;"><span class="material-symbols-outlined" style="font-size:16px;">verified_user</span> Xác nhận đặt phòng</div><div style="display:flex; flex-direction:column; gap:10px;"><div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;"><span style="font-size:12px; color:#64748b;">Hạng phòng:</span><span style="font-size:13px; font-weight:800; color:#1e293b;">${roomName}</span></div><div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;"><span style="font-size:12px; color:#64748b;">Thời gian:</span><span style="font-size:12px; font-weight:700; color:#1e293b;">${bookingData.check_in} ➔ ${bookingData.check_out}</span></div><div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;"><span style="font-size:12px; color:#64748b;">Khách hàng:</span><span style="font-size:12px; font-weight:700; color:#1e293b;">${bookingData.name}</span></div><div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;"><span style="font-size:13px; font-weight:800; color:#1e293b;">TỔNG TIỀN:</span><span style="font-size:18px; font-weight:900; color:#b8941f;">${price} VNĐ</span></div></div><button onclick="ChatWidget.executeBookingAction('${base64Data}', this)" style="margin-top:18px; width:100%; border:none; padding:14px; background:linear-gradient(135deg, #d4af37, #b8941f); color:#fff; border-radius:14px; font-weight:900; font-size:13px; cursor:pointer; box-shadow:0 8px 20px rgba(212,175,55,0.3); transition:all 0.3s; letter-spacing:0.5px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 25px rgba(212,175,55,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(212,175,55,0.3)'">XÁC NHẬN & ĐẶT NGAY</button></div>`;
         });
 
-        // Ẩn tag [SAVE_CONTACT: ...] khỏi giao diện người dùng
+        // Ẩn triệt để mọi tag kỹ thuật rác (Xử lý trường hợp AI tự chế tag hoặc xuống dòng)
+        html = html.replace(/\[BOOKING_CARD\][\s\S]*?\[END_BOOKING_CARD\]/gi, '');
+        html = html.replace(/\[BOOKING_CARD\][\s\S]*?$/gi, ''); // Xóa nếu AI quên tag đóng
         html = html.replace(/\[SAVE_CONTACT:.*?\]/gi, '').trim();
-        // Ẩn tag [EXECUTE_BOOKING: ...] - Backend sẽ xử lý, không hiện frontend
         html = html.replace(/\[EXECUTE_BOOKING:.*?\]/gi, '').trim();
-        // Ẩn tag [EXTRACT_LEAD: ...] - Tuyệt đối không cho khách thấy
         html = html.replace(/\[EXTRACT_LEAD:.*?\]/gi, '').trim();
 
         if (isBot) {
