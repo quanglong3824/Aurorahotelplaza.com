@@ -238,7 +238,7 @@ function stream_opencode_admin_reply($system_prompt, $chat_history) {
                 if ($text === null) continue;
 
                 $full_response_text .= $text;
-                echo "data: " . json_encode(["text" => $text]) . "\n\n";
+                echo "data: " . json_encode(["text" => $text], JSON_UNESCAPED_UNICODE) . "\n\n";
                 if (ob_get_level() > 0) ob_flush();
                 flush();
             }
