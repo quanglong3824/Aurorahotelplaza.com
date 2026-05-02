@@ -757,48 +757,50 @@ try {
                             <?php foreach ($latest_posts as $post):
                                 $post_image = !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
                                 ?>
-                                <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                    class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col">
-                                    <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
-                                        <?php
-                                        $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
-                                        $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
-                                        ?>
-                                        <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
-                                            alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" loading="lazy"
-                                            onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                        <div class="absolute top-3 left-3 glass-badge text-xs">
-                                            <span class="material-symbols-outlined text-accent text-sm">article</span>
-                                            <?php _e('home.news'); ?>
+                                <div class="h-full w-full">
+                                    <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
+                                        class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col h-full w-full">
+                                        <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
+                                            <?php
+                                            $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
+                                            $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
+                                            ?>
+                                            <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
+                                                alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" loading="lazy"
+                                                onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
+                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                            <div class="absolute top-3 left-3 glass-badge text-xs">
+                                                <span class="material-symbols-outlined text-accent text-sm">article</span>
+                                                <?php _e('home.news'); ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="p-5 flex flex-col grow">
-                                        <div class="flex items-center gap-3 text-xs text-white/60 mb-3">
-                                            <span class="flex items-center gap-1">
-                                                <span
-                                                    class="material-symbols-outlined text-accent text-sm">calendar_today</span>
-                                                <?php echo date('m/d/Y', strtotime($post['published_at'])); ?>
-                                            </span>
-                                            <span class="flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-accent text-sm">person</span>
-                                                <?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?>
-                                            </span>
+                                        <div class="p-5 flex flex-col grow">
+                                            <div class="flex items-center gap-3 text-xs text-white/60 mb-3">
+                                                <span class="flex items-center gap-1">
+                                                    <span
+                                                        class="material-symbols-outlined text-accent text-sm">calendar_today</span>
+                                                    <?php echo date('m/d/Y', strtotime($post['published_at'])); ?>
+                                                </span>
+                                                <span class="flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-accent text-sm">person</span>
+                                                    <?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?>
+                                                </span>
+                                            </div>
+                                            <h3
+                                                class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
+                                                <?php echo htmlspecialchars(_f($post, 'title')); ?>
+                                            </h3>
+                                            <p class="text-sm text-white/70 line-clamp-3 mb-4">
+                                                <?php echo htmlspecialchars(_f($post, 'excerpt')); ?>
+                                            </p>
+                                            <div
+                                                class="mt-auto pt-4 border-t border-white/10 flex items-center text-accent text-sm font-semibold group-hover:translate-x-1 transition-transform">
+                                                <?php _e('home.read_more'); ?>
+                                                <span class="material-symbols-outlined text-lg ml-1">arrow_forward</span>
+                                            </div>
                                         </div>
-                                        <h3
-                                            class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
-                                            <?php echo htmlspecialchars(_f($post, 'title')); ?>
-                                        </h3>
-                                        <p class="text-sm text-white/70 line-clamp-3 mb-4">
-                                            <?php echo htmlspecialchars(_f($post, 'excerpt')); ?>
-                                        </p>
-                                        <div
-                                            class="mt-auto pt-4 border-t border-white/10 flex items-center text-accent text-sm font-semibold group-hover:translate-x-1 transition-transform">
-                                            <?php _e('home.read_more'); ?>
-                                            <span class="material-symbols-outlined text-lg ml-1">arrow_forward</span>
-                                        </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="col-span-full text-center py-12">
