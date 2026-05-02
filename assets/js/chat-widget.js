@@ -610,14 +610,17 @@ const ChatWidget = {
         // [IMAGE: url] - Tinh tế hơn, gọn gàng hơn
         html = html.replace(/\[IMAGE:\s*([^\]]+)\]/gi, (match, url) => {
             const cleanUrl = url.trim();
-            return `<div class="cw-msg-image-card" style="margin:12px 0; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); background:#fff; width:250px; max-width:100%; border:1px solid #f1f5f9;">
-                <div style="width:100%; height:140px; background:#f8fafc; position:relative;">
-                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg';">
+            return `<div class="cw-msg-image-card" style="margin:16px 0; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.12); background:#fff; width:100%; max-width:280px; border:1px solid #f1f5f9; transition:transform 0.3s ease;">
+                <div style="width:100%; aspect-ratio: 16/10; background:#f8fafc; position:relative; overflow:hidden; cursor:pointer;" onclick="window.open('${cleanUrl}', '_blank')">
+                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover; transition:transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg';">
+                    <div style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.4); backdrop-filter:blur(4px); color:#fff; padding:4px; border-radius:8px; display:flex;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">zoom_in</span>
+                    </div>
                 </div>
-                <div style="padding:10px; text-align:center; background:#fff;">
-                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#d4af37; color:#fff; padding:6px 16px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 10px rgba(212,175,55,0.2); cursor:pointer; transition:all 0.3s;" onmouseover="this.style.background='#b48a2a'" onmouseout="this.style.background='#d4af37'">
-                        <span class="material-symbols-outlined" style="font-size:14px;">photo_library</span> 
-                        <span>Xem ảnh</span>
+                <div style="padding:12px; text-align:center; background:#fff; border-top:1px solid #f8fafc;">
+                    <div onclick="window.open('${cleanUrl}', '_blank')" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg, #d4af37, #b8941f); color:#fff; padding:8px 20px; border-radius:24px; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; box-shadow:0 4px 15px rgba(212,175,55,0.3); cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(212,175,55,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(212,175,55,0.3)'">
+                        <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> 
+                        <span>Phóng to ảnh</span>
                     </div>
                 </div>
             </div>`;
