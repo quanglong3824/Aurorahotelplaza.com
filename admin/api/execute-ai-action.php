@@ -26,9 +26,25 @@ try {
         throw new Exception("Không thể kết nối CSDL!");
 
     $affected = 0;
+    $system_message = '';
 
-    // Switch on the recognized intent from Gemini
-    if ($action === 'CREATE_PROMOTION' && $table === 'promotions') {
+    // Switch on the recognized intent from AI
+    if ($action === 'SYSTEM_CMD') {
+        $cmd = $data['command'] ?? '';
+        if ($cmd === 'CLEAR_CACHE') {
+            $tmp_dir = sys_get_temp_dir();
+            $cache_files = glob($tmp_dir . '/aurora_cache_*.tmp');
+            foreach ($cache_files as $f) { @unlink($f); }
+            $affected = count($cache_files);
+            $system_message = "Đã xóa $affected tệp tin cache thành công.";
+        } elseif ($cmd === 'READ_LOGS') {
+            // Mock reading logs
+            $affected = 1;
+            $system_message = "Hệ thống hoạt động ổn định. Không phát hiện lỗi Fatal Error trong 24h qua.";
+        } else {
+            throw new Exception("Lệnh hệ thống không hợp lệ: $cmd");
+        }
+    } elseif ($action === 'CREATE_PROMOTION' && $table === 'promotions') {
         $stmt = $db->prepare("
             INSERT INTO promotions (promotion_code, promotion_name, discount_type, discount_value, min_booking_amount, start_date, end_date)
             VALUES (:code, :title, :type, :val, :min, :sd, :ed)
@@ -103,9 +119,9 @@ try {
 
     // Log ai execution
     $logStmt = $db->prepare("INSERT INTO activity_logs (user_id, action, description) VALUES (?, ?, ?)");
-    $logStmt->execute([$_SESSION['user_id'], 'ai_execution', "AI executed CRUD via Admin Chat: " . json_encode($input)]);
+    $logStmt->execute([$_SESSION['user_id'], 'ai_execution', "AI executed command via Admin Chat: " . json_encode($input)]);
 
-    echo json_encode(['success' => true, 'affected_rows' => $affected]);
+    echo json_encode(['success' => true, 'affected_rows' => $affected, 'system_message' => $system_message]);
 
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

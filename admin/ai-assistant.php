@@ -195,15 +195,17 @@ require_once 'includes/admin-header.php';
             .then(r => r.json())
             .then(res => {
                 if (res.success) {
-                    appendTerminal(`Query executed perfectly. Affected rows: ${res.affected_rows || 1}`, 'SUCCESS');
+                    appendTerminal(`Action executed perfectly. Affected rows: ${res.affected_rows || 0}`, 'SUCCESS');
+                    let extraMsg = res.system_message ? `<div class="text-xs mt-2 font-mono bg-white p-2 rounded text-green-700 text-left">${res.system_message}</div>` : '';
                     box.innerHTML = `
                     <div class="text-center p-3 text-green-700 bg-green-50 rounded-xl border border-green-200">
                         <div class="font-bold mb-1 flex justify-center items-center gap-1"><span class="material-symbols-outlined">check_circle</span> ĐÃ PHÊ DUYỆT & THỰC THI!</div>
-                        <div class="text-xs">Dữ liệu đã được ghi vào Database.</div>
+                        <div class="text-xs">Lệnh đã được hệ thống ghi nhận và xử lý.</div>
+                        ${extraMsg}
                     </div>
                 `;
                 } else {
-                    appendTerminal(`SQL Execution Error: ${res.message}`, 'ERROR');
+                    appendTerminal(`Action Execution Error: ${res.message}`, 'ERROR');
                     btnElement.innerHTML = 'Thử lại';
                     btnElement.disabled = false;
                     alert('Lỗi: ' + res.message);
@@ -226,9 +228,10 @@ require_once 'includes/admin-header.php';
         `;
     }
 
-    function renderMessage(user, content, isRestore = false) {
+    function renderMessage(user, content, isRestore = false, msgId = null, skipSave = false) {
         const div = document.createElement('div');
         div.className = 'flex items-start gap-4';
+        if (msgId) div.id = msgId;
 
         if (user === 'admin') {
             div.innerHTML = `
@@ -268,6 +271,11 @@ require_once 'includes/admin-header.php';
                             actionPreviewHtml = `<div class="bg-gray-900 shadow-inner p-3 overflow-x-auto text-xs font-mono text-green-400 border border-gray-700 rounded-lg">
                                 <span class="text-gray-500 block mb-2 select-none">-- RAW SQL PREVIEW --</span>
                                 ${actionData.data.query}
+                            </div>`;
+                        } else if (actionData.action === 'SYSTEM_CMD') {
+                            actionPreviewHtml = `<div class="bg-red-900 shadow-inner p-3 overflow-x-auto text-xs font-mono text-yellow-400 border border-red-700 rounded-lg">
+                                <span class="text-red-300 block mb-2 select-none">-- SYSTEM COMMAND --</span>
+                                EXECUTE: ${actionData.data.command}
                             </div>`;
                         } else if (actionData.table === 'promotions') {
                             const pCode = actionData.data.promotion_code || actionData.data.code || '???';
@@ -310,7 +318,7 @@ require_once 'includes/admin-header.php';
                         // Layout HTML
                         let actionHtml = `
                             <div class="action-box mt-4 p-4 border-2 border-indigo-200 bg-indigo-50/50 rounded-xl">
-                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">database</span> NẮM BẮT Ý ĐỊNH: [${actionData.action}]${tagHtml}</h5>
+                                <h5 class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">settings_suggest</span> Ý ĐỊNH: [${actionData.action}]${tagHtml}</h5>
                                 ${actionPreviewHtml}
                                 ${autoHtml}
                                 ${btnHtml}
@@ -320,7 +328,7 @@ require_once 'includes/admin-header.php';
                         actionBoxesHtml += actionHtml;
 
                         // Chạy tự động luôn nếu là lệnh Cấp C
-                        if (isAutoExecute) {
+                        if (isAutoExecute && !isRestore && !skipSave) {
                             setTimeout(() => {
                                 const executeButton = div.querySelector(`#${uniqueId}`);
                                 if (executeButton) {
@@ -333,16 +341,53 @@ require_once 'includes/admin-header.php';
                     }
                 });
             } else {
-                displayHtml = displayHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+                
+                // Parse markdown table 
+                if (displayHtml.includes('|')) {
+                    const rows = displayHtml.split('\\n');
+                    let inTable = false;
+                    let tableHtml = '';
+                    let formattedHtml = '';
+                    
+                    rows.forEach(r => {
+                        if (r.trim().startsWith('|')) {
+                            if (!inTable) {
+                                inTable = true;
+                                tableHtml = '<div class="overflow-x-auto mt-2 mb-2"><table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs border border-gray-200 dark:border-gray-700 rounded-lg"><tbody>';
+                            }
+                            if (!r.includes('---')) { // Skip separator
+                                const cols = r.split('|').filter(c => c.trim() !== '');
+                                tableHtml += '<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">';
+                                cols.forEach(c => tableHtml += `<td class="px-3 py-2 whitespace-nowrap border-b border-gray-200 dark:border-gray-700">${c.trim()}</td>`);
+                                tableHtml += '</tr>';
+                            }
+                        } else {
+                            if (inTable) {
+                                inTable = false;
+                                tableHtml += '</tbody></table></div>';
+                                formattedHtml += tableHtml;
+                                tableHtml = '';
+                            }
+                            formattedHtml += escapeHtml(r) + '<br>';
+                        }
+                    });
+                    if (inTable) {
+                        tableHtml += '</tbody></table></div>';
+                        formattedHtml += tableHtml;
+                    }
+                    displayHtml = formattedHtml.replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>');
+                } else {
+                    displayHtml = displayHtml.replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>').replace(/\\n/g, '<br>');
+                }
             }
 
             div.innerHTML = `
                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md flex-shrink-0 mt-1">
                     <span class="material-symbols-outlined text-white text-sm">smart_toy</span>
                 </div>
-                <div class="flex-1">
-                    <div class="bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 dark:border-slate-700 text-sm leading-relaxed inline-block">
-                        ${displayHtml}
+                <div class="flex-1 w-full overflow-hidden">
+                    <div class="bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 dark:border-slate-700 text-sm leading-relaxed inline-block max-w-full">
+                        <div class="ai-text-content">${displayHtml}</div>
                         ${isRestore ? restoreActionBoxesHtml(actionBoxesHtml) : actionBoxesHtml}
                     </div>
                 </div>
@@ -353,7 +398,7 @@ require_once 'includes/admin-header.php';
         windowChat.scrollTo({ top: windowChat.scrollHeight, behavior: 'smooth' });
 
         // Lưu vào lịch sử (trừ khi đang restore)
-        if (!isRestore) {
+        if (!isRestore && !skipSave) {
             saveHistory(user, content);
         }
     }
@@ -368,69 +413,129 @@ require_once 'includes/admin-header.php';
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span>...';
 
-        appendTerminal(`Sending parsing request to Gemini Vision: ContentLength=${msg.length}`, 'INFO');
+        appendTerminal(`Sending parsing request to Opencode Vision: ContentLength=${msg.length}`, 'INFO');
+
+        // Khởi tạo luồng EventSource hoặc Fetch Reader
+        const aiMessageId = 'msg_' + Math.random().toString(36).substr(2, 9);
+        renderMessage('ai', '', false, aiMessageId);
+        
+        // Disable input
+        btn.disabled = true;
+        input.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span>...';
 
         fetch('api/chat-admin-ai.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: msg })
         })
-            .then(r => r.json())
-            .then(data => {
-                if (data.blocked_keys && Object.keys(data.blocked_keys).length > 0) {
-                    Object.keys(data.blocked_keys).forEach(idx => {
-                        appendTerminal(`[RATE LIMIT] API Key #${idx} đang bị Block Quota, chờ mở khóa sau ${data.blocked_keys[idx]}s`, 'ERROR');
+        .then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let fullText = '';
+            
+            const agentName = 'Opencode Agent';
+            appendTerminal(`[AGENT] ${agentName} is responding via Stream...`, 'INFO');
+            appendTerminal(`Received Opencode Stream Payload. Parsing...`, 'SUCCESS');
+
+            function pushData() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        btn.disabled = false;
+                        input.disabled = false;
+                        input.focus();
+                        btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
+                        saveHistory('ai', fullText);
+                        
+                        // Xử lý re-render sau khi xong để bắt các action box (nếu có)
+                        const finalDiv = windowChat.querySelector(`#${aiMessageId}`);
+                        if(finalDiv && fullText.includes('[ACTION:')) {
+                            // Tạo tạm nội dung content để renderMessage vẽ lại chuẩn
+                            finalDiv.remove();
+                            renderMessage('ai', fullText, false, null, true);
+                        }
+                        return;
+                    }
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\\n');
+                    lines.forEach(line => {
+                        if (line.startsWith('data: ')) {
+                            const dataStr = line.replace('data: ', '').trim();
+                            if (dataStr === '[DONE]') return;
+                            try {
+                                const data = JSON.parse(dataStr);
+                                if (data.error) {
+                                    appendTerminal(`[ERROR] AI Core: ${data.error}`, 'ERROR');
+                                    fullText += " \\n**Lỗi:** " + data.error;
+                                } else if (data.text) {
+                                    fullText += data.text;
+                                }
+                            } catch (e) {}
+                        }
                     });
-                }
-
-                if (data.success) {
-                    const agentName = 'Gemini Agent';
-                    appendTerminal(`[AGENT] ${agentName} is responding...`, 'INFO');
-                    appendTerminal(`[QUOTA REPORT] System is running on Active ${data.key_info}.`, 'INFO');
-
-                    // Render Tracking Usage of Key
-                    if (data.stats && data.stats[data.key_idx]) {
-                        const s = data.stats[data.key_idx];
-                        const budget = 1000000;
-                        const percent = ((s.tokens / budget) * 100).toFixed(2);
-                        appendTerminal(`[USAGE LIMIT] Tokens: ${s.tokens}/${budget} (${percent}%) | Request: ${s.requests}/1500 limit/day`, 'CMD');
+                    
+                    // Render tạm
+                    const targetDiv = windowChat.querySelector(`#${aiMessageId} .ai-text-content`);
+                    if (targetDiv) {
+                        let displayHtml = escapeHtml(fullText).replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>').replace(/\\n/g, '<br>');
+                        
+                        // Parse markdown table (basic implementation for display)
+                        if (displayHtml.includes('|')) {
+                            const rows = displayHtml.split('<br>');
+                            let inTable = false;
+                            let tableHtml = '';
+                            let formattedHtml = '';
+                            
+                            rows.forEach(r => {
+                                if (r.trim().startsWith('|')) {
+                                    if (!inTable) {
+                                        inTable = true;
+                                        tableHtml = '<div class="overflow-x-auto mt-2 mb-2"><table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs border border-gray-200 dark:border-gray-700 rounded-lg"><tbody>';
+                                    }
+                                    if (!r.includes('---')) { // Skip separator
+                                        const cols = r.split('|').filter(c => c.trim() !== '');
+                                        tableHtml += '<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">';
+                                        cols.forEach(c => tableHtml += `<td class="px-3 py-2 whitespace-nowrap">${c.trim()}</td>`);
+                                        tableHtml += '</tr>';
+                                    }
+                                } else {
+                                    if (inTable) {
+                                        inTable = false;
+                                        tableHtml += '</tbody></table></div>';
+                                        formattedHtml += tableHtml;
+                                        tableHtml = '';
+                                    }
+                                    formattedHtml += r + '<br>';
+                                }
+                            });
+                            if (inTable) {
+                                tableHtml += '</tbody></table></div>';
+                                formattedHtml += tableHtml;
+                            }
+                            displayHtml = formattedHtml;
+                        }
+                        
+                        targetDiv.innerHTML = displayHtml;
+                        windowChat.scrollTo({ top: windowChat.scrollHeight, behavior: 'smooth' });
                     }
-
-                    appendTerminal(`[PERFORMANCE] API Request cost: ${data.tokens} Total Tokens used.`, 'SUCCESS');
-                    appendTerminal(`Received Gemini Payload Response. Parsing JSON structure.`, 'SUCCESS');
-                    renderMessage('ai', data.reply);
-                } else if (data.error_type === 'QUOTA_EXCEEDED') {
-                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-                    appendTerminal(`[API QUOTA] Hệ thống đã thử luân chuyển toàn bộ API Key!`, 'ERROR');
-                    appendTerminal(`[SYSTEM] Báo động: TẤT CẢ các API Key hiện tại đều đang bị cấm do quá tải.`, 'ERROR');
-                    if (data.retry_after) {
-                        appendTerminal(`[DETAIL] ${data.message}`, 'INFO');
-                    }
-                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-
-                    // Render tạm để Admin biết mà bấm lại
-                    renderMessage('ai', 'Dạ, toàn bộ băng thông API Key dự phòng của chúng ta đều đã cạn kiệt do quá tải cục bộ. Sếp đợi vài chục giây nữa (như báo cáo ở trên) rồi bấm gửi lại giúp em nhé!');
-
-                } else {
-                    // Lỗi khác: chỉ log terminal, không hiện chat
-                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-                    appendTerminal(`[ERROR] AI Core: ${data.message}`, 'ERROR');
-                    appendTerminal(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ERROR');
-                    renderMessage('ai', 'Dạ hệ thống AI đang gặp sự cố nhỏ: ' + data.message);
-                }
-            })
-            .catch(er => {
-                appendTerminal(`[ERROR] Network/Connection failed: ${er.message}`, 'ERROR');
-            })
-            .finally(() => {
-                // Chỉ mở lại nút nếu không phải đang cooldown 429
-                if (!input.disabled) {
+                    
+                    pushData();
+                }).catch(err => {
+                    appendTerminal(`[ERROR] Stream failed: ${err.message}`, 'ERROR');
                     btn.disabled = false;
+                    input.disabled = false;
                     btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
-                }
-                btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
-                if (!input.disabled) input.focus();
-            });
+                });
+            }
+            pushData();
+        })
+        .catch(er => {
+            appendTerminal(`[ERROR] Network/Connection failed: ${er.message}`, 'ERROR');
+            btn.disabled = false;
+            input.disabled = false;
+            btn.innerHTML = '<span>Thực thi</span><span class="material-symbols-outlined text-sm">send</span>';
+        });
     }
 
     // Action box khi restore: chuyển nút thành trạng thái "đã xử lý trong phiên trước"
