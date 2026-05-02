@@ -97,7 +97,7 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
                 
                 $thumb = ltrim($r['thumbnail'], '/');
                 $imgUrl = $baseUrl . $thumb;
-                $rooms_info .= "- {$r['type_name']}: " . number_format($displayPrice) . "đ. [IMAGE: {$imgUrl}] [slug: {$r['slug']}]\n";
+                $rooms_info .= "- {$r['type_name']} (ID: {$r['room_type_id']}): " . number_format($displayPrice) . "đ. [IMAGE: {$imgUrl}] [slug: {$r['slug']}]\n";
             }
             
             $stmtK = $db->query("SELECT topic, content FROM bot_knowledge");
@@ -109,22 +109,30 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
     $cancelPolicy = $knowledge['cancellation_policy'] ?? "Hủy miễn phí trước 24h.";
     $guestPolicy = $knowledge['extra_guest_policy'] ?? "Dưới 1m free.";
 
-    $prompt = "Bạn là SIÊU TRỢ LÝ QUẢN GIA (Virtual Concierge) của Aurora Hotel Plaza.
+    $prompt = "Bạn là SIÊU TRỢ LÝ QUẢN GIA (Virtual Concierge 5.0) của Aurora Hotel Plaza.
+Bạn là nhân viên kinh doanh chuyên nghiệp, có quyền thực thi đặt phòng trực tiếp cho khách.
+
 {$userInfo}
 
-[LANGUAGE & TONE - VERY IMPORTANT]
-1. INITIAL GREETING: Always start the very first message of a new conversation in English.
-2. LANGUAGE DETECTION: Detect the user's language from their response. If they speak Vietnamese, respond in professional and polite Vietnamese. If they speak English or any other language, respond in that language (defaulting to English for international guests).
-3. MULTI-LANGUAGE SUPPORT: You are fluent in English and Vietnamese. Prioritize English as the international standard while maintaining local warmth in Vietnamese.
+[SALES PIPELINE - QUY TRÌNH 5 BƯỚC]
+1. CHÀO HỎI & KHÁM PHÁ: Chào bằng tiếng Anh (lần đầu), xác định nhu cầu (đi công tác/nghỉ dưỡng).
+2. TƯ VẤN & KHAN HIẾM: Giới thiệu phòng phù hợp kèm [IMAGE]. Nhấn mạnh nếu chỉ còn ít phòng.
+3. THU THẬP THÔNG TIN: Để đặt phòng, bạn CẦN: Họ tên, SĐT, Email, Ngày Check-in/out.
+4. XÁC NHẬN (BOOKING_CARD): Khi đủ thông tin, hãy hiện thẻ xác nhận bằng tag: [BOOKING_CARD: name=..., phone=..., email=..., room=TÊN_PHÒNG, id=ID_PHÒNG, cin=YYYY-MM-DD, cout=YYYY-MM-DD, price=TỔNG_TIỀN]
+5. THỰC THI (EXECUTE): Sau khi khách nói 'Xác nhận' hoặc 'Đồng ý', hãy xuất tag: [EXECUTE_BOOKING: {\"name\":\"...\",\"phone\":\"...\",\"email\":\"...\",\"room_type_id\":...,\"check_in\":\"...\",\"check_out\":\"...\"}]
+
+[LANGUAGE & TONE]
+- INITIAL GREETING: Luôn chào câu đầu tiên bằng tiếng Anh.
+- DETECTION: Phản hồi theo ngôn ngữ của khách ngay sau đó. Ưu tiên sự tinh tế, sang trọng.
 
 [DỮ LIỆU THỜI GIAN THỰC]
 - Bây giờ là: {$currentDateTime}.
 - {$priceNote}
 
 [KỸ NĂNG ĐẶC BIỆT]
-1. HIỂN THỊ ẢNH: Khi tư vấn một loại phòng, bạn BẮT BUỘC chèn tag [IMAGE: url_anh_trong_danh_sách] để khách xem ảnh.
-2. LƯU LIÊN HỆ/LEAD/PHÀN NÀN: Khi khách để lại SĐT hoặc phàn nàn về hư hỏng/dịch vụ, hãy dùng tag: [SAVE_CONTACT: name=Tên khách, phone=SĐT, msg=Nội dung]. Hệ thống sẽ tự ghi vào bảng liên hệ.
-3. BÁN THÊM: Chủ động gợi ý xe đưa đón (500k), Spa hoặc Rooftop Bar nếu thấy phù hợp.
+1. HIỂN THỊ ẢNH: Sử dụng [IMAGE: url] để khách xem ảnh phòng/dịch vụ.
+2. LƯU LIÊN HỆ: Nếu khách chưa sẵn sàng đặt nhưng muốn để lại thông tin: [SAVE_CONTACT: name=..., phone=..., msg=...].
+3. TỰ ĐỘNG ĐẶT PHÒNG: Đây là kỹ năng quan trọng nhất. Luôn hướng khách tới việc chốt đơn qua [BOOKING_CARD] và [EXECUTE_BOOKING].
 
 [DANH SÁCH PHÒNG & GIÁ]
 {$rooms_info}
@@ -136,11 +144,9 @@ function get_aurora_system_prompt($db, $conv_id = null, $current_message = "")
 
 {$autoBookingInfo}
 
-[LOGIC PHẢN HỒI - QUAN TRỌNG]
-- TRA CỨU ĐƠN HÀNG: Luôn ưu tiên dùng [HỆ THỐNG ĐÃ TÌM THẤY ĐƠN HÀNG] để xác nhận với khách.
-- CỨU HỘ & PHÀN NÀN: Nếu khách báo hỏng hóc, cần kỹ thuật, hoặc để lại SĐT để liên hệ, bạn BẮT BUỘC (100%) phải dùng tag [SAVE_CONTACT: name=..., phone=..., msg=...]. KHÔNG ĐƯỢC CHỈ HỨA SUÔNG. Nếu không có tên/SĐT, hãy khéo léo hỏi khách rồi mới dùng tag.
-- KHÔNG BAO GIỜ HIỆN TAG THÔ: Các tag như [SAVE_CONTACT], [IMAGE]... phải nằm trong nội dung phản hồi nhưng hệ thống sẽ ẩn nó đi, bạn cứ yên tâm sử dụng.
-- XƯNG HÔ: Lịch sự, tinh tế, chuyên nghiệp theo tiêu chuẩn khách sạn 4 sao.";
+[LOGIC PHẢN HỒI]
+- Tuyệt đối không hiển thị các tag [BOOKING_CARD], [EXECUTE_BOOKING]... thô ra màn hình.
+- Nếu khách hỏi 'Giá bao nhiêu', hãy tính tổng tiền (số đêm x giá phòng) và báo cho khách trước khi hiện thẻ xác nhận.";
 
 
     // Nếu có conv_id, có thể thêm thông tin từ DB
@@ -199,7 +205,7 @@ function stream_gemini_reply($user_message, $db, $conv_id, &$history = [], $turn
     if (empty($history) && $db && $conv_id) { $stmtH = $db->prepare("SELECT sender_type as role, message as content FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 50"); $stmtH->execute([$conv_id]); $db_history = $stmtH->fetchAll(PDO::FETCH_ASSOC); foreach($db_history as $h) { $history[] = ["role" => ($h["role"] === "bot" ? "model" : "user"), "content" => $h["content"]]; } }
     $full_history = $history;
     $full_history[] = ['role' => 'user', 'content' => $user_message];
-    $recent_history = array_slice($full_history, -20);
+    $recent_history = array_slice($full_history, -50);
 
     $contents = [];
     foreach ($recent_history as $msg) {
@@ -694,7 +700,7 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
     $full_history = $history;
     if (empty($history) && $db && $conv_id) { $stmtH = $db->prepare("SELECT sender_type as role, message as content FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 50"); $stmtH->execute([$conv_id]); $db_history = $stmtH->fetchAll(PDO::FETCH_ASSOC); foreach($db_history as $h) { $history[] = ["role" => ($h["role"] === "bot" ? "assistant" : "user"), "content" => $h["content"]]; } }
     $full_history[] = ['role' => 'user', 'content' => $user_message];
-    $recent_history = array_slice($full_history, -20);
+    $recent_history = array_slice($full_history, -50);
 
     foreach ($recent_history as $msg) {
         $role = $msg['role'] === 'user' ? 'user' : 'assistant';

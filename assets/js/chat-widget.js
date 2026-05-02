@@ -493,15 +493,15 @@ const ChatWidget = {
             container.innerHTML = `
                 <div data-empty style="text-align:center;padding:40px 20px;color:#64748b;">
                     <div style="font-size:48px;margin-bottom:16px;opacity:0.8;">
-                        <span class="material-symbols-outlined" style="font-size:48px;color:#d4af37;">chat_bubble</span>
+                        <span class="material-symbols-outlined" style="font-size:48px;color:#d4af37;">auto_awesome</span>
                     </div>
-                    <p style="font-size:14px;line-height:1.7;font-weight:500;color:#334155;">
-                        Xin chào! 👋<br>
-                        Aurora Hotel Plaza sẵn sàng hỗ trợ bạn.<br>
-                        <span style="font-size:12px;color:#94a3b8;display:block;margin-top:8px;">Hãy nhập tin nhắn để bắt đầu...</span>
+                    <p style="font-size:14px;line-height:1.7;font-weight:700;color:#1e3a5f;">
+                        Welcome! I am Aurora AI. 👋<br>
+                        <span style="font-size:12px;color:#94a3b8;font-weight:500;">How can I assist you today?</span>
                     </p>
                 </div>
             `;
+            this.setSuggestions(['Tôi muốn xem phòng', 'Giá phòng hôm nay', 'Đặt xe đưa đón']);
             return;
         }
 
@@ -517,6 +517,52 @@ const ChatWidget = {
         }).join('');
 
         this.scrollToBottom(true);
+        this.setSuggestions([]); // Clear on existing conversation
+    },
+
+    setSuggestions(suggestions = []) {
+        const container = document.getElementById('cwSuggestions');
+        if (!container) return;
+        
+        if (suggestions.length === 0) {
+            container.innerHTML = '';
+            container.style.display = 'none';
+            return;
+        }
+
+        container.style.display = 'flex';
+        container.innerHTML = suggestions.map(s => `
+            <div class="cw-suggestion-chip" onclick="ChatWidget.handleSuggestionClick('${s}')">${s}</div>
+        `).join('');
+    },
+
+    handleSuggestionClick(text) {
+        const input = document.getElementById('cwInput');
+        if (input) {
+            input.value = text;
+            this.sendMessage();
+            this.setSuggestions([]);
+        }
+    },
+
+    executeBookingAction(base64Data, btnElement) {
+        const data = JSON.parse(decodeURIComponent(escape(atob(base64Data))));
+        if (btnElement) {
+            btnElement.disabled = true;
+            btnElement.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm" style="margin-right:8px;">refresh</span> ĐANG XỬ LÝ...';
+        }
+
+        // Gửi tin nhắn xác nhận ảo để trigger backend execution
+        const msg = `Tôi xác nhận đặt phòng: ${data.name}, ${data.phone}, ${data.email}, Check-in ${data.check_in}, Check-out ${data.check_out}. [EXECUTE_BOOKING: ${JSON.stringify(data)}]`;
+        
+        const input = document.getElementById('cwInput');
+        if (input) {
+            input.value = 'Xác nhận đặt phòng và gửi email cho tôi.';
+            this.sendMessage();
+            // Xóa nội dung lệnh kỹ thuật để khách không thấy
+            const pendingMsg = document.querySelector(`.cw-bubble-row.user[data-msg-id^="pending_"] .cw-bubble`);
+            if (pendingMsg) pendingMsg.textContent = 'Xác nhận đặt phòng và gửi email cho tôi.';
+        }
     },
 
     appendMessage(msg) {
@@ -644,8 +690,51 @@ const ChatWidget = {
             </div>`;
         });
 
+        // [BOOKING_CARD: name=..., phone=..., email=..., room=..., id=..., cin=..., cout=..., price=...]
+        html = html.replace(/\[BOOKING_CARD:\s*name=([^,]+),\s*phone=([^,]+),\s*email=([^,]+),\s*room=([^,]+),\s*id=([^,]+),\s*cin=([^,]+),\s*cout=([^,]+),\s*price=([^\]]+)\]/gi, (match, name, phone, email, room, id, cin, cout, price) => {
+            const bookingData = {
+                name: name.trim(),
+                phone: phone.trim(),
+                email: email.trim(),
+                room_type_id: id.trim(),
+                check_in: cin.trim(),
+                check_out: cout.trim()
+            };
+            const base64Data = btoa(unescape(encodeURIComponent(JSON.stringify(bookingData))));
+            
+            return `<div class="cw-ai-card booking-summary" style="margin-top:12px; padding:18px; background:linear-gradient(135deg, #fff, #f8fafc); border:2px solid #d4af37; border-radius:20px; box-shadow:0 12px 30px rgba(212,175,55,0.15);">
+                <div style="font-weight:900; color:#d4af37; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:16px;">verified_user</span> Xác nhận đặt phòng
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
+                        <span style="font-size:12px; color:#64748b;">Hạng phòng:</span>
+                        <span style="font-size:13px; font-weight:800; color:#1e293b;">${room.trim()}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
+                        <span style="font-size:12px; color:#64748b;">Thời gian:</span>
+                        <span style="font-size:12px; font-weight:700; color:#1e293b;">${cin.trim()} ➔ ${cout.trim()}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e2e8f0; padding-bottom:8px;">
+                        <span style="font-size:12px; color:#64748b;">Khách hàng:</span>
+                        <span style="font-size:12px; font-weight:700; color:#1e293b;">${name.trim()}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:5px;">
+                        <span style="font-size:13px; font-weight:800; color:#1e293b;">TỔNG TIỀN:</span>
+                        <span style="font-size:18px; font-weight:900; color:#b8941f;">${price.trim()} VNĐ</span>
+                    </div>
+                </div>
+                <button onclick="ChatWidget.executeBookingAction('${base64Data}', this)" style="margin-top:18px; width:100%; border:none; padding:14px; background:linear-gradient(135deg, #d4af37, #b8941f); color:#fff; border-radius:14px; font-weight:900; font-size:13px; cursor:pointer; box-shadow:0 8px 20px rgba(212,175,55,0.3); transition:all 0.3s; letter-spacing:0.5px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 25px rgba(212,175,55,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(212,175,55,0.3)'">
+                    XÁC NHẬN & ĐẶT NGAY
+                </button>
+                <p style="text-align:center; font-size:10px; color:#94a3b8; margin-top:10px;">Bằng cách nhấn nút, sếp đồng ý với chính sách của khách sạn.</p>
+            </div>`;
+        });
+
         // Ẩn tag [SAVE_CONTACT: ...] khỏi giao diện người dùng
         html = html.replace(/\[SAVE_CONTACT:.*?\]/gi, '').trim();
+        // Ẩn tag [EXECUTE_BOOKING: ...] - Backend sẽ xử lý, không hiện frontend
+        html = html.replace(/\[EXECUTE_BOOKING:.*?\]/gi, '').trim();
 
         if (isBot) {
             // Success booking button

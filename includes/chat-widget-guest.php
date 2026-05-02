@@ -24,6 +24,9 @@
     <?php _e('chat.offline_msg'); ?>
 </div>
 
+<!-- Suggestions chips -->
+<div id="cwSuggestions" class="cw-suggestions"></div>
+
 <!-- Input area -->
 <div id="cwInputArea">
     <div id="cwInputRow">

@@ -39,12 +39,14 @@ if (!$message) {
     exit;
 }
 
-// Tắt buffering
-if (ob_get_level())
-    ob_end_clean();
-ini_set('output_buffering', 'off');
-set_time_limit(120);
+require_once '../../config/database.php';
+require_once '../../helpers/ai-helper.php';
+require_once '../../helpers/mailer.php';
+require_once '../../helpers/pricing_calculator.php';
+require_once '../../models/Booking.php';
 
+// Auth check
+...
 // Gọi stream từ AI (Tự động định tuyến Gemini hoặc Opencode)
 $full_reply = stream_ai_reply($message, $db, $conv_id);
 
@@ -57,7 +59,7 @@ if (!empty($full_reply)) {
             $name = trim($matches[1]);
             $phone = trim($matches[2]);
             $msg = trim($matches[3]);
-            
+
             $stmtC = $db->prepare("
                 INSERT INTO contact_submissions (name, email, phone, subject, message, status, created_at)
                 VALUES (:name, :email, :phone, 'AI Lead/Support Request', :msg, 'new', NOW())
@@ -68,13 +70,70 @@ if (!empty($full_reply)) {
                 ':phone' => $phone,
                 ':msg' => $msg
             ]);
-            
-            // Xóa tag khỏi nội dung hiển thị cho khách nếu muốn sạch sẽ
-            // $full_reply = preg_replace('/\[SAVE_CONTACT:.*?\]/i', '', $full_reply);
+        }
+
+        // 2. Xử lý [EXECUTE_BOOKING: {json}]
+        if (preg_match('/\[EXECUTE_BOOKING:\s*(\{.*?\})\]/is', $full_reply, $matches)) {
+            $jsonData = json_decode($matches[1], true);
+            if ($jsonData) {
+                $bookingModel = new Booking($db);
+                $check_in = $jsonData['check_in'];
+                $check_out = $jsonData['check_out'];
+                $room_type_id = (int)$jsonData['room_type_id'];
+
+                // 2.1 Kiểm tra phòng trống
+                $room = $bookingModel->getAvailableRoom($room_type_id, $check_in, $check_out);
+                if ($room) {
+                    // 2.2 Tính toán tiền
+                    $nights = Booking::calculateNights($check_in, $check_out);
+
+                    $stmtRT = $db->prepare("SELECT * FROM room_types WHERE room_type_id = ?");
+                    $stmtRT->execute([$room_type_id]);
+                    $room_type = $stmtRT->fetch(PDO::FETCH_ASSOC);
+
+                    $basePrice = (float)$room_type['base_price'];
+                    $total_amount = $basePrice * $nights;
+
+                    // 2.3 Tạo đơn đặt phòng
+                    $bookingData = [
+                        'booking_code' => Booking::generateBookingCode(),
+                        'user_id' => $_SESSION['user_id'] ?? null,
+                        'room_id' => $room['room_id'],
+                        'room_type_id' => $room_type_id,
+                        'check_in_date' => $check_in,
+                        'check_out_date' => $check_out,
+                        'num_guests' => 1,
+                        'num_nights' => $nights,
+                        'room_price' => $basePrice,
+                        'total_amount' => $total_amount,
+                        'guest_name' => $jsonData['name'],
+                        'guest_email' => $jsonData['email'],
+                        'guest_phone' => $jsonData['phone'],
+                        'status' => 'confirmed',
+                        'payment_status' => 'unpaid'
+                    ];
+
+                    $booking_id = $bookingModel->create($bookingData);
+
+                    if ($booking_id) {
+                        // 2.4 Gửi email xác nhận
+                        $mailer = getMailer();
+                        $fullBooking = $bookingModel->getById($booking_id);
+                        $mailer->sendBookingConfirmation($jsonData['email'], $fullBooking);
+
+                        // Cập nhật câu trả lời của AI để báo thành công kèm link
+                        $success_tag = "[BOOK_NOW_BTN_SUCCESS: booking_code={$bookingData['booking_code']}, booking_id={$booking_id}]";
+                        $full_reply .= "\n\n✅ [HỆ THỐNG]: Đã đặt phòng thành công! " . $success_tag;
+                    }
+                } else {
+                    $full_reply .= "\n\n❌ [HỆ THỐNG]: Rất tiếc, loại phòng này vừa hết chỗ trong khoảng thời gian sếp chọn. Sếp vui lòng chọn loại phòng khác nhé.";
+                }
+            }
         }
 
         $stmt = $db->prepare("
             INSERT INTO chat_messages
+...
                 (conversation_id, sender_id, sender_type, message, message_type, is_internal, is_read, created_at)
             VALUES
                 (:cid, 0, 'bot', :msg, 'text', 0, 0, NOW())
