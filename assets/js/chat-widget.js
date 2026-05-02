@@ -735,6 +735,8 @@ const ChatWidget = {
         html = html.replace(/\[SAVE_CONTACT:.*?\]/gi, '').trim();
         // Ẩn tag [EXECUTE_BOOKING: ...] - Backend sẽ xử lý, không hiện frontend
         html = html.replace(/\[EXECUTE_BOOKING:.*?\]/gi, '').trim();
+        // Ẩn tag [EXTRACT_LEAD: ...] - Tuyệt đối không cho khách thấy
+        html = html.replace(/\[EXTRACT_LEAD:.*?\]/gi, '').trim();
 
         if (isBot) {
             // Success booking button
