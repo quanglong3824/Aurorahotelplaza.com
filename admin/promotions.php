@@ -163,7 +163,7 @@ include 'includes/admin-header.php';
                                 <div>
                                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Đã sử dụng</p>
                                     <p class="font-bold text-lg">
-                                        <?php echo $promo['used_count']; ?>
+                                        <?php echo $promo['usage_count']; ?>
                                         <?php if ($promo['usage_limit']): ?>
                                             / <?php echo $promo['usage_limit']; ?>
                                         <?php endif; ?>
@@ -338,141 +338,173 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
-    function updateDiscountLabel() {
-        const type = document.getElementById('discount_type').value;
-        const label = document.getElementById('discount_label');
-        const input = document.getElementById('discount_value');
+    document.addEventListener('DOMContentLoaded', function() {
+        const promoModal = document.getElementById('promotionModal');
+        const promoForm = document.getElementById('promotionForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const promoIdInput = document.getElementById('promotion_id');
+        const promoCodeInput = document.getElementById('promotion_code');
+        const discountType = document.getElementById('discount_type');
+        const discountLabel = document.getElementById('discount_label');
+        const discountValue = document.getElementById('discount_value');
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
 
-        if (type === 'percentage') {
-            label.textContent = 'Giá trị giảm (%) *';
-            input.max = '100';
-            input.step = '0.01';
-        } else {
-            label.textContent = 'Giá trị giảm (VND) *';
-            input.removeAttribute('max');
-            input.step = '1000';
+        // Toggle Modal Function
+        window.openPromotionModal = function() {
+            modalTitle.textContent = 'Thêm khuyến mãi mới';
+            promoForm.reset();
+            promoIdInput.value = '';
+
+            // Set default dates (local time)
+            const now = new Date();
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            const nextMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+            startDate.value = formatDateForInput(tomorrow);
+            endDate.value = formatDateForInput(nextMonth);
+
+            updateDiscountLabel();
+            promoModal.classList.add('active');
+        };
+
+        window.closePromotionModal = function() {
+            promoModal.classList.remove('active');
+        };
+
+        function formatDateForInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
         }
-    }
 
-    function openPromotionModal() {
-        document.getElementById('modalTitle').textContent = 'Thêm khuyến mãi mới';
-        document.getElementById('promotionForm').reset();
-        document.getElementById('promotion_id').value = '';
+        window.updateDiscountLabel = function() {
+            const type = discountType.value;
+            if (type === 'percentage') {
+                discountLabel.textContent = 'Giá trị giảm (%) *';
+                discountValue.max = '100';
+                discountValue.step = '0.01';
+            } else {
+                discountLabel.textContent = 'Giá trị giảm (VND) *';
+                discountValue.removeAttribute('max');
+                discountValue.step = '1000';
+            }
+        };
 
-        // Set default dates
-        const now = new Date();
-        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-        const nextMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        window.editPromotion = function(promo) {
+            modalTitle.textContent = 'Sửa khuyến mãi';
+            promoIdInput.value = promo.promotion_id;
+            promoCodeInput.value = promo.promotion_code;
+            document.getElementById('promotion_name').value = promo.promotion_name;
+            discountType.value = promo.discount_type;
+            discountValue.value = promo.discount_value;
+            document.getElementById('min_booking_amount').value = promo.min_booking_amount || '';
+            document.getElementById('max_discount').value = promo.max_discount || '';
+            document.getElementById('usage_limit').value = promo.usage_limit || '';
+            document.getElementById('usage_per_user').value = promo.usage_per_user;
+            
+            // Format dates from MySQL (YYYY-MM-DD HH:MM:SS) to datetime-local (YYYY-MM-DDTHH:MM)
+            if (promo.start_date) startDate.value = promo.start_date.replace(' ', 'T').slice(0, 16);
+            if (promo.end_date) endDate.value = promo.end_date.replace(' ', 'T').slice(0, 16);
+            
+            document.getElementById('applicable_to').value = promo.applicable_to;
+            document.getElementById('status').value = promo.status;
+            document.getElementById('description').value = promo.description || '';
 
-        document.getElementById('start_date').value = tomorrow.toISOString().slice(0, 16);
-        document.getElementById('end_date').value = nextMonth.toISOString().slice(0, 16);
+            updateDiscountLabel();
+            promoModal.classList.add('active');
+        };
 
-        document.getElementById('promotionModal').classList.add('active');
-    }
+        window.submitPromotion = function() {
+            const formData = new FormData(promoForm);
+            const submitBtn = document.querySelector('button[onclick="submitPromotion()"]');
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-sm"></span> Đang lưu...';
+            }
 
-    function closePromotionModal() {
-        document.getElementById('promotionModal').classList.remove('active');
-    }
-
-    function editPromotion(promo) {
-        document.getElementById('modalTitle').textContent = 'Sửa khuyến mãi';
-        document.getElementById('promotion_id').value = promo.promotion_id;
-        document.getElementById('promotion_code').value = promo.promotion_code;
-        document.getElementById('promotion_name').value = promo.promotion_name;
-        document.getElementById('discount_type').value = promo.discount_type;
-        document.getElementById('discount_value').value = promo.discount_value;
-        document.getElementById('min_booking_amount').value = promo.min_booking_amount || '';
-        document.getElementById('max_discount').value = promo.max_discount || '';
-        document.getElementById('usage_limit').value = promo.usage_limit || '';
-        document.getElementById('usage_per_user').value = promo.usage_per_user;
-        document.getElementById('start_date').value = promo.start_date.replace(' ', 'T').slice(0, 16);
-        document.getElementById('end_date').value = promo.end_date.replace(' ', 'T').slice(0, 16);
-        document.getElementById('applicable_to').value = promo.applicable_to;
-        document.getElementById('status').value = promo.status;
-        document.getElementById('description').value = promo.description || '';
-
-        updateDiscountLabel();
-        document.getElementById('promotionModal').classList.add('active');
-    }
-
-    function submitPromotion() {
-        const form = document.getElementById('promotionForm');
-        const formData = new FormData(form);
-
-        fetch('api/save-promotion.php', {
-            method: 'POST',
-            body: formData
-        })
+            fetch('api/save-promotion.php', {
+                method: 'POST',
+                body: formData
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Lưu khuyến mãi thành công!', 'success');
+                    showToast(data.message || 'Thành công!', 'success');
                     closePromotionModal();
-                    setTimeout(() => location.reload(), 1000);
+                    setTimeout(() => location.reload(), 800);
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Lưu khuyến mãi';
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Có lỗi xảy ra', 'error');
+                showToast('Lỗi kết nối server', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Lưu khuyến mãi';
+                }
             });
-    }
+        };
 
-    function deletePromotion(id) {
-        if (!confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?')) return;
+        window.deletePromotion = function(id) {
+            if (!confirm('Sếp có chắc chắn muốn xóa khuyến mãi này?')) return;
 
-        fetch('api/delete-promotion.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'promotion_id=' + id
-        })
+            fetch('api/delete-promotion.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'promotion_id=' + id
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     showToast('Xóa thành công!', 'success');
-                    setTimeout(() => location.reload(), 1000);
+                    setTimeout(() => location.reload(), 800);
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Có lỗi xảy ra', 'error');
+                showToast('Lỗi kết nối server', 'error');
             });
-    }
+        };
 
-    // Auto uppercase promotion code
-    var promoCodeInput = document.getElementById('promotion_code');
-    if (promoCodeInput) {
-        promoCodeInput.addEventListener('input', function (e) {
-            this.value = this.value.toUpperCase();
-        });
-    }
-
-    // Close modal when clicking outside
-    var promoModal = document.getElementById('promotionModal');
-    if (promoModal) {
-        promoModal.addEventListener('click', function (e) {
-            if (e.target === this) {
-                closePromotionModal();
-            }
-        });
-    }
-
-    // Event delegation for edit buttons (safer than inline onclick with JSON)
-    document.addEventListener('click', function(e) {
-        const editPromoBtn = e.target.closest('.edit-promo-btn');
-        if (editPromoBtn) {
-            try {
-                const promoData = JSON.parse(editPromoBtn.getAttribute('data-promo'));
-                editPromotion(promoData);
-            } catch (err) {
-                console.error("Error parsing promotion data", err);
-            }
+        // Auto uppercase
+        if (promoCodeInput) {
+            promoCodeInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
         }
+
+        // Close modal clicking outside
+        if (promoModal) {
+            promoModal.addEventListener('click', function(e) {
+                if (e.target === this) closePromotionModal();
+            });
+        }
+
+        // Event delegation for edit
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.edit-promo-btn');
+            if (btn) {
+                try {
+                    const data = JSON.parse(btn.getAttribute('data-promo'));
+                    if (data) editPromotion(data);
+                } catch (err) {
+                    console.error("Promo data parse error", err);
+                    showToast('Lỗi dữ liệu khuyến mãi', 'error');
+                }
+            }
+        });
     });
 </script>
 
