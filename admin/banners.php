@@ -47,6 +47,10 @@ include 'includes/admin-header.php';
 
 <!-- Action Bar -->
 <div class="mb-6 flex justify-end gap-3">
+    <a href="../index.php?preview_popup=1" target="_blank" class="btn btn-secondary bg-white border border-gray-300">
+        <span class="material-symbols-outlined text-sm">visibility</span>
+        Xem thử Popup
+    </a>
     <button onclick="openBannerModal()" class="btn btn-primary">
         <span class="material-symbols-outlined text-sm">add</span>
         Thêm Banner
@@ -185,6 +189,17 @@ include 'includes/admin-header.php';
                 </select>
             </div>
             
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Ngày bắt đầu</label>
+                    <input type="datetime-local" name="start_date" id="banner_start_date" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Ngày kết thúc</label>
+                    <input type="datetime-local" name="end_date" id="banner_end_date" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Thứ tự hiển thị</label>
@@ -371,6 +386,13 @@ function editBanner(bannerId) {
                 document.getElementById('banner_position').value = banner.position || 'popup';
                 document.getElementById('banner_sort_order').value = banner.sort_order || 0;
                 document.getElementById('banner_is_active').checked = banner.is_active == 1;
+                
+                if (banner.start_date) {
+                    document.getElementById('banner_start_date').value = banner.start_date.replace(' ', 'T').slice(0, 16);
+                }
+                if (banner.end_date) {
+                    document.getElementById('banner_end_date').value = banner.end_date.replace(' ', 'T').slice(0, 16);
+                }
                 
                 console.log('Preview image URL:', banner.image_url);
                 document.getElementById('previewImg').src = banner.image_url;

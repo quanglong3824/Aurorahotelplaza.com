@@ -32,6 +32,8 @@ try {
     $sort_order = isset($_POST['sort_order']) ? (int) $_POST['sort_order'] : null;
     $is_active = isset($_POST['is_active']) ? (int) $_POST['is_active'] : null;
     $position = trim($_POST['position'] ?? 'popup');
+    $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null;
+    $end_date = !empty($_POST['end_date']) ? $_POST['end_date'] : null;
     
     $status = $is_active === 1 ? 'active' : 'inactive';
     
@@ -62,6 +64,8 @@ try {
                 sort_order = :sort_order,
                 status = :status,
                 position = :position,
+                start_date = :start_date,
+                end_date = :end_date,
                 updated_at = NOW()
             WHERE banner_id = :banner_id
         ");
@@ -75,14 +79,16 @@ try {
             ':sort_order' => $sort_order ?? 0,
             ':status' => $status,
             ':position' => $position,
+            ':start_date' => $start_date,
+            ':end_date' => $end_date,
             ':banner_id' => $banner_id
         ]);
         
         echo json_encode(['success' => true, 'message' => 'Cập nhật banner thành công', 'banner_id' => $banner_id]);
     } else {
         $stmt = $db->prepare("
-            INSERT INTO banners (title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status, created_at, updated_at)
-            VALUES (:title, :subtitle, :image_desktop, :image_mobile, :link_url, :link_text, :position, :sort_order, :status, NOW(), NOW())
+            INSERT INTO banners (title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, start_date, end_date, status, created_at, updated_at)
+            VALUES (:title, :subtitle, :image_desktop, :image_mobile, :link_url, :link_text, :position, :sort_order, :start_date, :end_date, :status, NOW(), NOW())
         ");
         $stmt->execute([
             ':title' => $title,
@@ -93,6 +99,8 @@ try {
             ':link_text' => $link_text,
             ':position' => $position,
             ':sort_order' => $sort_order ?? 0,
+            ':start_date' => $start_date,
+            ':end_date' => $end_date,
             ':status' => $status
         ]);
         

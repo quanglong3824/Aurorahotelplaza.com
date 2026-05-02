@@ -17,7 +17,7 @@ require_once '../../helpers/image-helper.php';
 try {
     $db = getDB();
     
-    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status FROM banners ORDER BY sort_order ASC, created_at DESC");
+    $stmt = $db->query("SELECT banner_id, title, subtitle, image_desktop, image_mobile, link_url, link_text, position, sort_order, status, start_date, end_date FROM banners ORDER BY sort_order ASC, created_at DESC");
     $banners = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Map columns for frontend compatibility
