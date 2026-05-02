@@ -653,20 +653,20 @@ const ChatWidget = {
         // Bold
         html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-        // [IMAGE: url] - Thu gọn, tinh tế, không chiếm dụng không gian thừa
+        // [IMAGE: url] - SIÊU THU GỌN, tối ưu diện tích màn hình
         html = html.replace(/\[IMAGE:\s*([^\]]+)\]/gi, (match, url) => {
             const cleanUrl = url.trim();
-            return `<div class="cw-msg-image-card" style="margin:10px 0 5px; width:220px; max-width:100%; transition:transform 0.2s ease;">
-                <div style="width:100%; aspect-ratio: 16/10; border-radius:12px; overflow:hidden; background:#f8fafc; position:relative; cursor:pointer; border:1px solid rgba(0,0,0,0.08);" onclick="window.open('${cleanUrl}', '_blank')">
-                    <img src="${cleanUrl}" alt="Aurora Room" style="width:100%; height:100%; display:block; object-fit:cover;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg';">
-                    <div style="position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.3); backdrop-filter:blur(4px); color:#fff; padding:3px; border-radius:6px; display:flex;">
-                        <span class="material-symbols-outlined" style="font-size:14px;">zoom_in</span>
+            return `<div class="cw-msg-image-card" style="margin:6px 0 2px; width:180px; max-width:100%;">
+                <div style="width:100%; aspect-ratio: 16/10; border-radius:10px; overflow:hidden; background:#f1f5f9; position:relative; cursor:pointer; border:1px solid rgba(0,0,0,0.05);" onclick="window.open('${cleanUrl}', '_blank')">
+                    <img src="${cleanUrl}" alt="Aurora" style="width:100%; height:100%; display:block; object-fit:cover;" onerror="this.src='https://aurorahotelplaza.com/assets/img/deluxe/deluxe-room-aurora-1.jpg';">
+                    <div style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.2); backdrop-filter:blur(4px); color:#fff; padding:2px; border-radius:4px; display:flex;">
+                        <span class="material-symbols-outlined" style="font-size:12px;">zoom_in</span>
                     </div>
                 </div>
-                <div style="margin-top:8px; text-align:center;">
-                    <div onclick="window.open('${cleanUrl}', '_blank')" style="display:inline-flex; align-items:center; gap:6px; background:rgba(212,175,55,0.1); color:#b8941f; padding:5px 14px; border-radius:20px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(212,175,55,0.25); cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.2)'" onmouseout="this.style.background='rgba(212,175,55,0.1)'">
-                        <span class="material-symbols-outlined" style="font-size:14px;">visibility</span> 
-                        <span>Xem ảnh lớn</span>
+                <div style="margin-top:4px; text-align:center;">
+                    <div onclick="window.open('${cleanUrl}', '_blank')" style="display:inline-flex; align-items:center; gap:4px; background:rgba(212,175,55,0.08); color:#b8941f; padding:3px 10px; border-radius:15px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.3px; border:1px solid rgba(212,175,55,0.2); cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.15)'" onmouseout="this.style.background='rgba(212,175,55,0.08)'">
+                        <span class="material-symbols-outlined" style="font-size:12px;">visibility</span> 
+                        <span>Xem ảnh</span>
                     </div>
                 </div>
             </div>`;
