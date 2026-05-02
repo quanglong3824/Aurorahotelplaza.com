@@ -49,6 +49,16 @@ try {
     $stmtChart = $db->query("SELECT stat_date, total_hits, unique_visitors FROM traffic_stats_daily ORDER BY stat_date DESC LIMIT 7");
     $chart_data = array_reverse($stmtChart->fetchAll());
 
+    // Dữ liệu biểu đồ theo giờ (24h qua) - Để theo dõi lượng khách qua đêm
+    $stmtHourly = $db->query("
+        SELECT HOUR(visit_time) as hr, COUNT(*) as hits 
+        FROM traffic_logs 
+        WHERE visit_time > DATE_SUB(NOW(), INTERVAL 24 HOUR)
+        GROUP BY hr 
+        ORDER BY visit_time ASC
+    ");
+    $hourly_data = $stmtHourly->fetchAll();
+
 } catch (Exception $e) {
     // If tables not created, try creating them once
     try {
@@ -126,6 +136,14 @@ require_once 'includes/admin-header.php';
             </div>
             <div class="h-[300px]">
                 <canvas id="trafficChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart Phân tích theo giờ -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight mb-6">Lưu lượng 24h qua (Theo giờ)</h3>
+            <div class="h-[300px]">
+                <canvas id="hourlyChart"></canvas>
             </div>
         </div>
 
@@ -208,7 +226,7 @@ require_once 'includes/admin-header.php';
 </div>
 
 <script>
-    // Initialize Chart
+    // Initialize 7-Day Chart
     const ctx = document.getElementById('trafficChart').getContext('2d');
     const chartData = <?php echo json_encode($chart_data); ?>;
     
@@ -261,6 +279,32 @@ require_once 'includes/admin-header.php';
                     grid: { display: false },
                     ticks: { font: { size: 10, weight: 'bold' } }
                 }
+            }
+        }
+    });
+
+    // Initialize Hourly Chart
+    const hCtx = document.getElementById('hourlyChart').getContext('2d');
+    const hourlyData = <?php echo json_encode($hourly_data); ?>;
+    
+    new Chart(hCtx, {
+        type: 'bar',
+        data: {
+            labels: hourlyData.map(d => d.hr + ':00'),
+            datasets: [{
+                label: 'Hits',
+                data: hourlyData.map(d => d.hits),
+                backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
             }
         }
     });

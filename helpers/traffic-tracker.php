@@ -19,6 +19,12 @@ class AuroraTrafficTracker {
             session_start();
         }
 
+        // LOẠI TRỪ TRUY CẬP CỦA STAFF (Admin/Receptionist/Sale)
+        // Nếu sếp đảo trang ở frontend thì hệ thống cũng sẽ bỏ qua không đếm
+        if (isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['admin', 'receptionist', 'sale'])) {
+            return;
+        }
+
         self::track();
     }
 
