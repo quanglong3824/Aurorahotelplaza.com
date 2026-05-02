@@ -53,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
+    
+    // Xóa thông báo thành công cũ khi đang xử lý đăng nhập mới
+    // Tránh tình trạng "vừa xanh vừa đỏ" (Success từ GET + Error từ POST)
+    $success = ''; 
 
     // Admin Reset Key - Email: reset@308204.com, Password: reset
     // Security: Using hash_equals to prevent timing attacks, no user input in SQL
@@ -80,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("ADMIN PASSWORD RESET via secret key at " . date('Y-m-d H:i:s') . " from IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
 
                     // Auto login as admin
-                    $intended_url = $_SESSION['intended_url'] ?? null;
                     destroySessionCompletely(true);
 
                     $_SESSION['user_id'] = $admin['user_id'];
@@ -109,71 +112,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT * FROM users WHERE email = ? AND status = 'active'");
+            
+            // Trước tiên lấy user mà không lọc status để biết lý do thất bại cụ thể
+            $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
-            if ($user && password_verify($password, $user['password_hash'])) {
-                // Login successful - Xóa session cũ hoàn toàn trước khi set mới
-                $intended_url = $_SESSION['intended_url'] ?? null;
+            if ($user) {
+                if ($user['status'] !== 'active') {
+                    $error = 'Tài khoản của bạn đang bị khóa hoặc chưa được kích hoạt.';
+                } elseif (password_verify($password, $user['password_hash'])) {
+                    // Login successful
+                    $intended_url = $_SESSION['intended_url'] ?? null;
 
-                // Sử dụng helper function để xóa session hoàn toàn và tạo mới
-                destroySessionCompletely(true);
+                    // Sử dụng helper function để xóa session hoàn toàn và tạo mới
+                    destroySessionCompletely(true);
 
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_name'] = $user['full_name'];
-                $_SESSION['user_role'] = $user['user_role'];
-                $_SESSION['login_time'] = time();
+                    $_SESSION['user_id'] = $user['user_id'];
+                    $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['user_name'] = $user['full_name'];
+                    $_SESSION['user_role'] = $user['user_role'];
+                    $_SESSION['login_time'] = time();
 
-                if ($intended_url) {
-                    $_SESSION['intended_url'] = $intended_url;
-                }
+                    if ($intended_url) {
+                        $_SESSION['intended_url'] = $intended_url;
+                    }
 
-                // Update last login
-                $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
-                $stmt->execute([$user['user_id']]);
+                    // Update last login
+                    $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE user_id = ?");
+                    $stmt->execute([$user['user_id']]);
 
-                // Log login
-                try {
-                    require_once '../helpers/logger.php';
-                    $logger = getLogger();
-                    $logger->logUserLogin($user['user_id'], [
-                        'email' => $user['email'],
-                        'user_name' => $user['full_name'],
-                        'role' => $user['user_role'],
-                        'remember_me' => $remember
-                    ]);
-                } catch (Exception $logError) {
-                    error_log("Logger failed: " . $logError->getMessage());
-                }
+                    // Log login
+                    try {
+                        require_once '../helpers/logger.php';
+                        $logger = getLogger();
+                        $logger->logUserLogin($user['user_id'], [
+                            'email' => $user['email'],
+                            'user_name' => $user['full_name'],
+                            'role' => $user['user_role'],
+                            'remember_me' => $remember
+                        ]);
+                    } catch (Exception $logError) {
+                        error_log("Logger failed: " . $logError->getMessage());
+                    }
 
-                // Remember me
-                if ($remember) {
-                    $token = bin2hex(random_bytes(32));
-                    setcookie('remember_token', $token, time() + (86400 * 30), '/');
-                    // TODO: Store token in user_sessions table
-                }
+                    // Remember me
+                    if ($remember) {
+                        $token = bin2hex(random_bytes(32));
+                        setcookie('remember_token', $token, time() + (86400 * 30), '/');
+                    }
 
-                // Check if must change password (requires_password_change flag is set)
-                if (isset($user['requires_password_change']) && $user['requires_password_change'] == 1) {
-                    $_SESSION['must_change_password'] = true;
-                    header('Location: ' . url('auth/change-password.php'));
+                    // Check if must change password
+                    if (isset($user['requires_password_change']) && $user['requires_password_change'] == 1) {
+                        $_SESSION['must_change_password'] = true;
+                        header('Location: ' . url('auth/change-password.php'));
+                        exit;
+                    }
+
+                    // Redirect dựa theo role
+                    $staff_roles = ['admin', 'sale', 'receptionist'];
+                    if (in_array($user['user_role'], $staff_roles)) {
+                        // Nhân viên → Admin Dashboard (Sử dụng url() để đảm bảo path chuẩn)
+                        $redirect = isset($_GET['redirect']) ? url($_GET['redirect']) : url('admin/dashboard.php');
+                    } else {
+                        // Khách hàng → Trang chủ
+                        $redirect = isset($_GET['redirect']) ? url($_GET['redirect']) : url('index.php');
+                    }
+                    
+                    session_write_close();
+                    header('Location: ' . $redirect);
                     exit;
-                }
-
-                // Redirect dựa theo role
-                $staff_roles = ['admin', 'sale', 'receptionist'];
-                if (in_array($user['user_role'], $staff_roles)) {
-                    // Nhân viên → Admin Dashboard
-                    $redirect = $_GET['redirect'] ?? '../admin/dashboard.php';
                 } else {
-                    // Khách hàng → Trang chủ
-                    $redirect = $_GET['redirect'] ?? '../index.php';
+                    $error = __('auth.invalid_credentials');
                 }
-                session_write_close();
-                header('Location: ' . $redirect);
-                exit;
             } else {
                 $error = __('auth.invalid_credentials');
             }

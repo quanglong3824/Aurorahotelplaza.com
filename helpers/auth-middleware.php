@@ -18,7 +18,7 @@ class AuthMiddleware {
                 echo json_encode(['success' => false, 'message' => 'Vui lòng đăng nhập']);
                 exit;
             } else {
-                header('Location: /auth/login.php');
+                header('Location: ' . url('auth/login.php'));
                 exit;
             }
         }
@@ -28,10 +28,10 @@ class AuthMiddleware {
             if (self::isAjax()) {
                 http_response_code(403);
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Bạn phải đổi mật khẩu trước', 'redirect' => '/auth/change-password.php']);
+                echo json_encode(['success' => false, 'message' => 'Bạn phải đổi mật khẩu trước', 'redirect' => url('auth/change-password.php')]);
                 exit;
             } else {
-                header('Location: /auth/change-password.php');
+                header('Location: ' . url('auth/change-password.php'));
                 exit;
             }
         }
