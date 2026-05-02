@@ -299,24 +299,7 @@ function refresh_keys_from_env() {
  * Quản lý Provider (Gemini / Opencode)
  */
 function get_active_ai_provider() {
-    $file = AI_CONFIG_PATH . '/current_provider.txt';
-    $provider = 'gemini';
-    
-    if (file_exists($file)) {
-        $provider = trim(file_get_contents($file));
-    }
-    
-    // Auto-detect: if gemini has no keys but opencode has a key, auto switch to opencode
-    if ($provider === 'gemini') {
-        global $GEMINI_API_KEYS;
-        $has_gemini = defined('GEMINI_API_KEY') && !empty(GEMINI_API_KEY) || !empty($GEMINI_API_KEYS);
-        if (!$has_gemini && defined('OPENCODE_API_KEY') && !empty(OPENCODE_API_KEY)) {
-            $provider = 'opencode';
-            set_active_ai_provider('opencode');
-        }
-    }
-    
-    return $provider;
+    return 'opencode';
 }
 
 function set_active_ai_provider($provider) {
