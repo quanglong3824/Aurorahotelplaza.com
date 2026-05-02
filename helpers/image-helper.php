@@ -39,10 +39,15 @@ function normalizeImagePath($path)
         return '';
     }
 
-    // Remove /2025 prefix if exists
+    // Skip absolute URLs immediately
+    if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
+        return $path;
+    }
+
+    // Remove /2025 prefix if exists (legacy)
     $path = str_replace('/2025', '', $path);
 
-    // Fix common double slashes
+    // Fix common double slashes for relative paths
     $path = str_replace('//', '/', $path);
 
     // Decode URL encoded characters if any
