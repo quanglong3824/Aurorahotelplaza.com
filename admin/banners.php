@@ -337,7 +337,7 @@ function uploadImageFile(file) {
     xhr.send(formData);
 }
 
-function openBannerModal(bannerId = null) {
+function openBannerModal() {
     document.getElementById('bannerModal').classList.remove('hidden');
     document.getElementById('bannerForm').reset();
     document.getElementById('modalTitle').textContent = 'Thêm Banner';
@@ -358,23 +358,14 @@ function editBanner(bannerId) {
     }
     
     fetch('api/get-banner.php?banner_id=' + bannerId)
-        .then(res => {
-            console.log('get-banner HTTP status:', res.status);
-            return res.text().then(text => {
-                console.log('get-banner raw response:', text);
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('JSON parse error:', e);
-                    throw new Error('Invalid JSON: ' + text.substring(0, 200));
-                }
-            });
-        })
+        .then(res => res.json())
         .then(data => {
-            console.log('get-banner parsed data:', data);
             if (data.success) {
                 const banner = data.banner;
-                console.log('Banner object:', banner);
+                
+                // Hiển thị modal trước khi gán dữ liệu
+                document.getElementById('bannerModal').classList.remove('hidden');
+                document.getElementById('bannerForm').reset(); // Reset để dọn dẹp ảnh cũ
                 
                 document.getElementById('modalTitle').textContent = 'Sửa Banner';
                 document.getElementById('banner_id').value = banner.banner_id;
@@ -394,11 +385,8 @@ function editBanner(bannerId) {
                     document.getElementById('banner_end_date').value = banner.end_date.replace(' ', 'T').slice(0, 16);
                 }
                 
-                console.log('Preview image URL:', banner.image_url);
                 document.getElementById('previewImg').src = banner.image_url;
                 document.getElementById('imagePreview').classList.remove('hidden');
-                
-                openBannerModal();
             } else {
                 alert(data.message || 'Không tìm thấy banner');
             }
