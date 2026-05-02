@@ -701,12 +701,14 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
         'messages' => $messages,
         'temperature' => 0.7,
         'max_tokens' => 4096,
-        'stream' => true
+        'stream' => true,
+        'stream_options' => ['include_usage' => true]
     ];
 
     $full_response_text = "";
     $is_tool_call = false;
     $is_decided = false;
+    $total_tokens = 0;
 
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -722,7 +724,7 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
         ],
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_TIMEOUT => 120,
-        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided) {
+        CURLOPT_WRITEFUNCTION => function($curl, $data) use (&$full_response_text, &$is_tool_call, &$is_decided, &$total_tokens) {
             static $stream_buffer = '';
             $stream_buffer .= $data;
 
@@ -737,6 +739,11 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
                 $json_str = substr($line, 6);
                 $decoded = json_decode($json_str, true);
                 if (!$decoded) continue;
+                
+                // Trích xuất token usage nếu có
+                if (isset($decoded['usage'])) {
+                    $total_tokens = $decoded['usage']['total_tokens'] ?? 0;
+                }
 
                 // Ưu tiên content, bỏ qua reasoning_content để tăng tốc hiển thị
                 $text = $decoded['choices'][0]['delta']['content'] ?? null;
@@ -785,9 +792,42 @@ function stream_opencode_reply($user_message, $db, $conv_id, &$history = [], $tu
 
         if ($http_code >= 400 || $curl_error) {
             error_log("Opencode API Error: HTTP $http_code - $curl_error");
+            
+            try {
+                if ($db) {
+                    $stmt = $db->prepare("INSERT INTO ai_logs (ai_type, user_id, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code) VALUES ('client', 0, :cid, :prompt, '', :model, 0, 'error', :error, :http_code)");
+                    $stmt->execute([
+                        ':cid' => $conv_id,
+                        ':prompt' => mb_substr($user_message, 0, 1000),
+                        ':model' => $model,
+                        ':error' => substr($curl_error, 0, 500),
+                        ':http_code' => $http_code
+                    ]);
+                }
+            } catch (Exception $e) {}
+            
             echo "data: " . json_encode(["error" => "Xin lỗi, hệ thống AI đang bảo trì. Vui lòng thử lại sau."]) . "\n\n";
             return "";
         }
+
+        try {
+            if ($db && !$is_tool_call) {
+                // If usage not returned in stream, estimate it (approx 4 chars per token)
+                if ($total_tokens == 0) {
+                    $total_tokens = ceil((mb_strlen($user_message) + mb_strlen($full_response_text)) / 4);
+                }
+                
+                $stmt = $db->prepare("INSERT INTO ai_logs (ai_type, user_id, conv_id, prompt_text, reply_text, model_name, tokens_used, status, http_code) VALUES ('client', 0, :cid, :prompt, :reply, :model, :tokens, 'success', :http_code)");
+                $stmt->execute([
+                    ':cid' => $conv_id,
+                    ':prompt' => mb_substr($user_message, 0, 1000),
+                    ':reply' => mb_substr($full_response_text, 0, 1000),
+                    ':model' => $model,
+                    ':tokens' => $total_tokens,
+                    ':http_code' => $http_code
+                ]);
+            }
+        } catch (Exception $e) {}
 
         if ($is_tool_call && $turn <= 2) {
             $tool_result = process_tool_call_after_stream($full_response_text, $user_message, $db, $conv_id, $history, $turn);
@@ -841,12 +881,40 @@ function call_opencode_sync($message, $db, $conv_id = null, $system_prompt = nul
 
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
     curl_close($ch);
 
     if (in_array($http_code, [500, 502, 503]) && $retry < 3) {
         sleep(pow(2, $retry));
         return call_opencode_sync($message, $db, $conv_id, $system_prompt, $retry + 1);
     }
+    
+    $decoded = json_decode($response, true);
+    
+    // Log to ai_logs
+    try {
+        if ($db) {
+            $tokens = $decoded['usage']['total_tokens'] ?? ceil((mb_strlen($message) + mb_strlen($response)) / 4);
+            $reply_text = $decoded['choices'][0]['message']['content'] ?? '';
+            $status = ($http_code >= 400 || $curl_error) ? 'error' : 'success';
+            
+            $stmt = $db->prepare("
+                INSERT INTO ai_logs 
+                (ai_type, user_id, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code)
+                VALUES ('client', 0, :cid, :prompt, :reply, :model, :tokens, :status, :error, :http_code)
+            ");
+            $stmt->execute([
+                ':cid' => $conv_id ?? 0,
+                ':prompt' => mb_substr($message, 0, 1000),
+                ':reply' => mb_substr($reply_text, 0, 1000),
+                ':model' => $model,
+                ':tokens' => $tokens,
+                ':status' => $status,
+                ':error' => $curl_error ?: ($decoded['error']['message'] ?? ''),
+                ':http_code' => $http_code
+            ]);
+        }
+    } catch (Exception $e) {}
 
     if ($http_code >= 400) {
         return "Lỗi kết nối Opencode: HTTP $http_code - $response";

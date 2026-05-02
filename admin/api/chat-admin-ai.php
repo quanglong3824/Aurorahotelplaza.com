@@ -285,6 +285,33 @@ function call_opencode_admin($system_prompt, $messages, $retry = 0)
     }
 
     $decoded = json_decode($response, true);
+    
+    // Log to ai_logs
+    try {
+        global $db;
+        if ($db) {
+            $tokens = $decoded['usage']['total_tokens'] ?? 0;
+            $reply_text = $decoded['choices'][0]['message']['content'] ?? '';
+            $status = ($http_code >= 400 || $curl_error) ? 'error' : 'success';
+            
+            $stmt = $db->prepare("
+                INSERT INTO ai_logs 
+                (ai_type, user_id, conv_id, prompt_text, reply_text, model_name, tokens_used, status, error_message, http_code)
+                VALUES ('admin', :uid, 0, :prompt, :reply, :model, :tokens, :status, :error, :http_code)
+            ");
+            $stmt->execute([
+                ':uid' => $_SESSION['user_id'] ?? 0,
+                ':prompt' => $messages[count($messages)-1]['content'] ?? 'Admin Request',
+                ':reply' => $reply_text,
+                ':model' => $model,
+                ':tokens' => $tokens,
+                ':status' => $status,
+                ':error' => $curl_error ?: ($decoded['error']['message'] ?? ''),
+                ':http_code' => $http_code
+            ]);
+        }
+    } catch (Exception $e) {}
+
     if (isset($decoded['choices'][0]['message']['content'])) {
         return $decoded['choices'][0]['message']['content'];
     }
