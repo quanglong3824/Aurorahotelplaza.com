@@ -53,8 +53,8 @@ try {
 
     $conversation_id = $db->lastInsertId();
 
-    // Tạo message welcome từ AI
-    $welcomeMsg = "Xin chào! Tôi là trợ lý ảo của Aurora Hotel Plaza. Tôi có thể giúp gì cho bạn về đặt phòng, dịch vụ hoặc thông tin khách sạn?";
+    // Tạo message welcome từ AI (Chào bằng tiếng Anh trước theo yêu cầu)
+    $welcomeMsg = "Welcome to Aurora Hotel Plaza! I am your virtual concierge. How can I assist you with room bookings, services, or hotel information today?";
 
     $msgStmt = $db->prepare("
         INSERT INTO chat_messages
