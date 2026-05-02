@@ -734,98 +734,39 @@ $msg = $_GET['msg'] ?? '';
         </div>
     <?php endif; ?>
 
-    <!-- Settings Card -->
-    <div id="settingsCard"
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
-        <button onclick="document.getElementById('settingsBody').classList.toggle('hidden')"
-            class="w-full flex items-center justify-between text-left">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-gray-500">settings</span>
-                <span class="font-bold text-gray-800 dark:text-white">Cài đặt Bug Tracker &amp; Telegram</span>
+    <!-- Settings Section (Consolidated) -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
+                    <span class="material-symbols-outlined">settings</span>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white">Cấu hình Bug Tracker & Telegram</h4>
+                    <p class="text-xs text-gray-500">Quản lý việc gửi thông báo lỗi tự động</p>
+                </div>
             </div>
-            <span class="material-symbols-outlined text-gray-400">expand_more</span>
-        </button>
-        <div id="settingsBody" class="mt-4 hidden">
-            <form method="POST" action="api/save-bug-tracker-settings.php" class="space-y-4">
-                <?php
-                $settingsKeys = ['telegram_bot_token', 'telegram_chat_id', 'bug_tracker_enabled', 'bug_tracker_min_severity'];
-                $settingsValues = [];
-                try {
-                    $sStmt = $db->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('telegram_bot_token','telegram_chat_id','bug_tracker_enabled','bug_tracker_min_severity')");
-                    foreach ($sStmt->fetchAll(PDO::FETCH_ASSOC) as $s) {
-                        $settingsValues[$s['setting_key']] = $s['setting_value'];
-                    }
-                } catch (\Throwable $e) {
-                }
-                ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                            Telegram Bot Token
-                            <span class="text-xs text-gray-400 font-normal ml-1">(lấy từ @BotFather)</span>
-                        </label>
-                        <input type="text" name="telegram_bot_token"
-                            value="<?php echo htmlspecialchars($settingsValues['telegram_bot_token'] ?? ''); ?>"
-                            placeholder="1234567890:AAF..." autocomplete="off"
-                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                            Telegram Chat ID
-                            <span class="text-xs text-gray-400 font-normal ml-1">(ID cá nhân hoặc group)</span>
-                        </label>
-                        <input type="text" name="telegram_chat_id"
-                            value="<?php echo htmlspecialchars($settingsValues['telegram_chat_id'] ?? ''); ?>"
-                            placeholder="123456789 hoặc -1001234567890"
-                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Mức độ tối
-                            thiểu gửi Telegram</label>
-                        <select name="bug_tracker_min_severity"
-                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="critical" <?php echo ($settingsValues['bug_tracker_min_severity'] ?? '') === 'critical' ? 'selected' : ''; ?>>Critical only</option>
-                            <option value="error" <?php echo ($settingsValues['bug_tracker_min_severity'] ?? 'error') === 'error' ? 'selected' : ''; ?>>Error + Critical</option>
-                            <option value="warning" <?php echo ($settingsValues['bug_tracker_min_severity'] ?? '') === 'warning' ? 'selected' : ''; ?>>Warning + above</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Trạng thái hệ
-                            thống</label>
-                        <select name="bug_tracker_enabled"
-                            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="1" <?php echo ($settingsValues['bug_tracker_enabled'] ?? '1') === '1' ? 'selected' : ''; ?>>Bật</option>
-                            <option value="0" <?php echo ($settingsValues['bug_tracker_enabled'] ?? '1') === '0' ? 'selected' : ''; ?>>Tắt</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 pt-2">
-                    <button type="submit"
-                        class="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
-                        Lưu cài đặt
-                    </button>
-                    <a href="api/test-messenger.php" target="_blank"
-                        class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-xl hover:bg-gray-200 transition-colors">
-                        Test gửi Telegram
-                    </a>
-                </div>
-
-                <div
-                    class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300 space-y-1.5">
-                    <p class="font-bold">Hướng dẫn lấy Bot Token &amp; Chat ID (mất 2 phút):</p>
-                    <p>1. Mở Telegram, tìm <strong>@BotFather</strong> &rarr; gõ <code
-                            class="bg-blue-100 px-1 rounded">/newbot</code></p>
-                    <p>2. Đặt tên bot &rarr; BotFather sẽ trả về <strong>Bot Token</strong> dạng <code
-                            class="bg-blue-100 px-1 rounded">1234567890:AAF...</code></p>
-                    <p>3. Nhắn tin cho bot của bạn vừa tạo (gửi chữ gì cũng được)</p>
-                    <p>4. Mở URL: <code
-                            class="bg-blue-100 px-1 rounded font-mono">https://api.telegram.org/bot<b>TOKEN</b>/getUpdates</code>
-                    </p>
-                    <p>5. Tìm <strong>"id"</strong> trong <code>message.from</code> &rarr; đó là <strong>Chat
-                            ID</strong> của bạn</p>
-                </div>
-            </form>
+            <div class="flex items-center gap-3">
+                <a href="test-messenger-2way.php" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg hover:bg-gray-200 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">send</span>
+                    Test Gửi
+                </a>
+                <a href="settings.php" class="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">tune</span>
+                    Đi đến Cài đặt
+                </a>
+            </div>
         </div>
+        
+        <?php 
+        $teleConfig = TelegramHelper::getConfig(); 
+        if (!$teleConfig['enabled'] || !$teleConfig['is_configured']):
+        ?>
+            <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800/30 flex items-center gap-3">
+                <span class="material-symbols-outlined text-amber-600">warning</span>
+                <p class="text-xs text-amber-700 dark:text-amber-400"><strong>Cảnh báo:</strong> Thông báo Telegram hiện đang tắt hoặc chưa cấu hình đầy đủ. Sếp vui lòng vào trang Cài đặt để thiết lập.</p>
+            </div>
+        <?php endif; ?>
     </div>
 
 </div>

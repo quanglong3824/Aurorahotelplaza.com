@@ -15,7 +15,8 @@ header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/telegram.php';
 
-$EXPECTED_CHAT_ID = 'xxxTELExxx';
+$teleConfig = TelegramHelper::getConfig();
+$EXPECTED_CHAT_ID = $teleConfig['chat_id'];
 
 $input = file_get_contents('php://input');
 $update = json_decode($input, true);

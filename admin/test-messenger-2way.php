@@ -200,43 +200,64 @@ $webhookInfo = $webhookResult['data'] ?? null;
         </div>
     </div>
 
-    <!-- Telegram Test - ALL IN ONE -->
+    <!-- Telegram Test - DB Driven -->
     <div class="card">
         <div class="card-header">
             <h3 class="font-semibold flex items-center gap-2">
                 <span class="material-symbols-outlined">chat</span>
-                Test Telegram (All in One)
+                Test Telegram (Dynamic Config)
             </h3>
             <div class="ml-auto">
-                <span class="badge badge-success">✅ Sẵn sàng</span>
+                <?php 
+                $teleConfig = TelegramHelper::getConfig();
+                if ($teleConfig['enabled'] && $teleConfig['is_configured']): 
+                ?>
+                    <span class="badge badge-success">✅ Sẵn sàng</span>
+                <?php else: ?>
+                    <span class="badge badge-danger">❌ Chưa bật</span>
+                <?php endif; ?>
             </div>
         </div>
         <div class="card-body">
             <!-- Telegram Config Info -->
-            <div class="mb-4 p-3 bg-green-50 dark:bg-slate-800 rounded-lg border border-green-200">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="material-symbols-outlined text-green-600">check_circle</span>
-                    <span class="font-medium text-green-700">Telegram Bot đã cấu hình sẵn</span>
+            <div class="mb-4 p-3 <?php echo ($teleConfig['enabled'] && $teleConfig['is_configured']) ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'; ?> dark:bg-slate-800 rounded-lg border">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined <?php echo $teleConfig['enabled'] ? 'text-green-600' : 'text-red-600'; ?>">
+                            <?php echo $teleConfig['enabled'] ? 'check_circle' : 'cancel'; ?>
+                        </span>
+                        <span class="font-medium <?php echo $teleConfig['enabled'] ? 'text-green-700' : 'text-red-700'; ?>">
+                            Cấu hình Telegram: <?php echo $teleConfig['enabled'] ? 'Đã bật' : 'Đang tắt'; ?>
+                        </span>
+                    </div>
+                    <a href="settings.php" class="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">settings</span>
+                        Cài đặt
+                    </a>
                 </div>
-                <div class="grid grid-cols-2 gap-2 text-sm">
+                
+                <div class="grid grid-cols-2 gap-2 text-xs">
                     <div>
                         <span class="text-gray-500">Bot Token:</span>
-                        <span class="font-mono text-xs">8772642373:AAG...</span>
+                        <span class="font-mono"><?php 
+                            echo $teleConfig['bot_token'] ? substr($teleConfig['bot_token'], 0, 10) . '...' : '<em class="text-red-400">Trống</em>'; 
+                        ?></span>
                     </div>
                     <div>
                         <span class="text-gray-500">Chat ID:</span>
-                        <span class="font-mono">xxxTELExxx</span>
+                        <span class="font-mono"><?php 
+                            echo $teleConfig['chat_id'] ?: '<em class="text-red-400">Trống</em>'; 
+                        ?></span>
                     </div>
                 </div>
+
                 <?php if ($webhookInfo): ?>
                     <div class="mt-2 pt-2 border-t border-gray-200">
                         <div class="text-sm">
                             <span class="text-gray-500">Webhook:</span>
-                            <span
-                                class="font-mono truncate block text-xs"><?php echo $webhookInfo['url'] ?? 'None'; ?></span>
-                            <span
-                                class="text-xs <?php echo ($webhookInfo['url'] ?? '') ? 'text-green-600' : 'text-orange-600'; ?>">
-                                <?php echo ($webhookInfo['url'] ?? '') ? '✅ Active' : '⚠️ Click "Set Webhook" để bật 2 chiều'; ?>
+                            <span class="font-mono truncate block text-xs"><?php echo $webhookInfo['url'] ?? 'None'; ?></span>
+                            <span class="text-[10px] font-bold <?php echo ($webhookInfo['url'] ?? '') ? 'text-green-600' : 'text-orange-600'; ?>">
+                                <?php echo ($webhookInfo['url'] ?? '') ? '● ACTIVE' : '○ INACTIVE'; ?>
                             </span>
                         </div>
                     </div>
