@@ -31,7 +31,14 @@ class BotDetector {
         'HubSpot',
         'GPTBot',
         'PetalBot',
-        'Amazonbot'
+        'Amazonbot',
+        'Scrapy',
+        'HeadlessChrome',
+        'axios',
+        'PostmanRuntime',
+        'GuzzleHttp',
+        'Nimbustools',
+        'AdsBot-Google'
     ];
 
     /**
@@ -41,13 +48,10 @@ class BotDetector {
     public static function detect() {
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        $accept_lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
 
         if (empty($user_agent)) {
-            return [
-                'is_bot' => true,
-                'type' => 'bad',
-                'name' => 'Empty User-Agent'
-            ];
+            return ['is_bot' => true, 'type' => 'bad', 'name' => 'Empty User-Agent'];
         }
 
         // 1. Kiểm tra cache trước
@@ -56,32 +60,26 @@ class BotDetector {
             return $cache_result;
         }
 
-        $result = [
-            'is_bot' => false,
-            'type' => 'none',
-            'name' => ''
-        ];
+        $result = ['is_bot' => false, 'type' => 'none', 'name' => ''];
 
-        // 2. Nhận diện Good Bots
+        // 2. Nhận diện Good Bots (Search Engines & Social)
         foreach (self::$good_bots as $bot_name => $domains) {
             if (stripos($user_agent, $bot_name) !== false) {
-                // Xác thực Reverse DNS cho Google và Bing
-                if (in_array($bot_name, ['Googlebot', 'Bingbot'])) {
+                // Xác thực Reverse DNS cho các bot quan trọng
+                if (in_array($bot_name, ['Googlebot', 'Bingbot', 'Applebot'])) {
                     if (self::verifyReverseDNS($ip, $domains)) {
                         $result = ['is_bot' => true, 'type' => 'good', 'name' => $bot_name];
                     } else {
-                        // Fake bot
                         $result = ['is_bot' => true, 'type' => 'bad', 'name' => 'Fake ' . $bot_name];
                     }
                 } else {
-                    // Applebot, Facebook, etc. (tạm thời tin tưởng UA hoặc có thể thêm verify sau)
                     $result = ['is_bot' => true, 'type' => 'good', 'name' => $bot_name];
                 }
                 break;
             }
         }
 
-        // 3. Nhận diện Bad Bots / Scrapers nếu chưa là Good Bot
+        // 3. Nhận diện Bad Bots / Scrapers theo tên cụ thể
         if (!$result['is_bot']) {
             foreach (self::$bad_bots as $bot_pattern) {
                 if (stripos($user_agent, $bot_pattern) !== false) {
@@ -91,7 +89,27 @@ class BotDetector {
             }
         }
 
-        // 4. Lưu cache và trả về
+        // 4. Nhận diện theo từ khóa chung (bot, spider, crawl, v.v.)
+        if (!$result['is_bot']) {
+            $generic_bot_patterns = ['bot', 'spider', 'crawl', 'slurp', 'mediapartners', 'preview'];
+            foreach ($generic_bot_patterns as $pattern) {
+                if (stripos($user_agent, $pattern) !== false) {
+                    $result = ['is_bot' => true, 'type' => 'bad', 'name' => 'Generic Bot (' . $pattern . ')'];
+                    break;
+                }
+            }
+        }
+
+        // 5. Kiểm tra dấu hiệu bất thường (Heuristic Detection)
+        if (!$result['is_bot']) {
+            // Trình duyệt thật luôn gửi Accept-Language, script thường thì không
+            // Ngoại trừ các tool preview hoặc bot mới chưa có trong list
+            if (empty($accept_lang)) {
+                $result = ['is_bot' => true, 'type' => 'bad', 'name' => 'Suspicious (No Accept-Lang)'];
+            }
+        }
+
+        // 6. Lưu cache và trả về
         self::setCache($ip, $user_agent, $result);
         return $result;
     }
