@@ -50,10 +50,16 @@ include 'includes/admin-header.php';
 <div class="card mb-6">
     <div class="card-header flex items-center justify-between">
         <h3 class="font-bold text-lg">Giá cơ bản theo loại phòng</h3>
-        <a href="room-type-form.php" class="btn btn-primary btn-sm">
-            <span class="material-symbols-outlined text-sm">add</span>
-            Thêm loại phòng
-        </a>
+        <div class="flex gap-2">
+            <a href="ai-pricing-insight.php" class="btn btn-primary btn-sm !bg-indigo-600 hover:!bg-indigo-700 !border-indigo-600">
+                <span class="material-symbols-outlined text-sm">smart_toy</span>
+                AI Đề xuất giá
+            </a>
+            <a href="room-type-form.php" class="btn btn-primary btn-sm">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Thêm loại phòng
+            </a>
+        </div>
     </div>
     <div class="card-body">
         <div class="overflow-x-auto">
