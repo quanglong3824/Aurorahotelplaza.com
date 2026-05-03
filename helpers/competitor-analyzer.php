@@ -43,16 +43,20 @@ class CompetitorAnalyzer {
     /**
      * Phân tích nội dung Markdown bằng Gemini 1.5 Pro
      */
-    public static function analyze($markdown_content) {
+    public static function analyze($markdown_content, $custom_instruction = '') {
         $db = getDB();
         
         $system_instruction = "Bạn là một chuyên gia phân tích dữ liệu và chiến lược gia bất động sản/kinh doanh cấp cao. 
 Nhiệm vụ của bạn là tiếp nhận dữ liệu Markdown từ website đối thủ và thực hiện phân tích đa tầng:
 - Tầng 1 (Dữ liệu): Trích xuất chính xác các thông số kỹ thuật, giá cả, và các ưu đãi.
 - Tầng 2 (Tri thức): So sánh dữ liệu này với xu hướng thị trường chung, đánh giá tâm lý khách hàng mà đối thủ đang nhắm tới.
-- Tầng 3 (Trí tuệ): Dự báo bước đi tiếp theo của đối thủ và đề xuất hành động cụ thể để chúng ta chiếm ưu thế cạnh tranh. 
+- Tầng 3 (Trí tuệ): Dự báo bước đi tiếp theo của đối thủ và đề xuất hành động cụ thể để chúng ta chiếm ưu thế cạnh tranh. ";
 
-YÊU CẦU PHẢN HỒI: Chỉ trả về JSON duy nhất, không kèm giải thích. Cấu trúc JSON:
+        if (!empty($custom_instruction)) {
+            $system_instruction .= "\n\nYÊU CẦU ĐẶC BIỆT TỪ NGƯỜI DÙNG: " . $custom_instruction;
+        }
+
+        $system_instruction .= "\n\nYÊU CẦU PHẢN HỒI: Chỉ trả về JSON duy nhất, không kèm giải thích. Cấu trúc JSON:
 {
     \"summary\": { \"name\": \"string\", \"price_range\": \"string\", \"usp\": [\"string\"] },
     \"structural_extraction\": { \"specs\": [], \"pricing_details\": [], \"promotions\": [] },
@@ -86,7 +90,7 @@ YÊU CẦU PHẢN HỒI: Chỉ trả về JSON duy nhất, không kèm giải th
             // Cập nhật trạng thái sang processing
             $db->prepare("UPDATE competitor_intelligence SET status = 'processing' WHERE id = ?")->execute([$competitor_id]);
             
-            $stmt = $db->prepare("SELECT url FROM competitor_intelligence WHERE id = ?");
+            $stmt = $db->prepare("SELECT url, instruction FROM competitor_intelligence WHERE id = ?");
             $stmt->execute([$competitor_id]);
             $comp = $stmt->fetch();
             
@@ -96,7 +100,7 @@ YÊU CẦU PHẢN HỒI: Chỉ trả về JSON duy nhất, không kèm giải th
             $markdown = self::fetchMarkdown($comp['url']);
             
             // 2. Analyze
-            $analysis = self::analyze($markdown);
+            $analysis = self::analyze($markdown, $comp['instruction'] ?? '');
             
             // 3. Save result
             $stmtUpdate = $db->prepare("

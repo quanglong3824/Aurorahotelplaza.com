@@ -20,6 +20,7 @@ try {
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         url VARCHAR(255) NOT NULL,
+        instruction TEXT DEFAULT NULL,
         raw_markdown LONGTEXT DEFAULT NULL,
         analysis_data JSON DEFAULT NULL,
         status ENUM('pending', 'processing', 'completed', 'error') DEFAULT 'pending',
@@ -31,7 +32,13 @@ try {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     $db->exec($sql_competitors);
-    echo "<p>✔️ Đã tạo bảng <strong>competitor_intelligence</strong>.</p>";
+    
+    // Đảm bảo cột instruction tồn tại (cho trường hợp bảng đã có sẵn)
+    try {
+        $db->exec("ALTER TABLE competitor_intelligence ADD COLUMN IF NOT EXISTS instruction TEXT AFTER url");
+    } catch (Exception $e) {}
+    
+    echo "<p>✔️ Đã tạo/cập nhật bảng <strong>competitor_intelligence</strong>.</p>";
 
     // 2. Bảng lưu trữ USP và thông số trích xuất nhanh (để search/filter)
     $sql_usp = "CREATE TABLE IF NOT EXISTS competitor_usp (

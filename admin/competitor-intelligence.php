@@ -15,10 +15,11 @@ $page_subtitle = 'Phân tích đối thủ đa tầng bằng AI (Structural, Sem
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_competitor'])) {
     $name = trim($_POST['name']);
     $url = trim($_POST['url']);
+    $instruction = trim($_POST['instruction'] ?? '');
     
     if ($name && $url) {
-        $stmt = $db->prepare("INSERT INTO competitor_intelligence (name, url, status) VALUES (?, ?, 'pending')");
-        $stmt->execute([$name, $url]);
+        $stmt = $db->prepare("INSERT INTO competitor_intelligence (name, url, instruction, status) VALUES (?, ?, ?, 'pending')");
+        $stmt->execute([$name, $url, $instruction]);
         header('Location: competitor-intelligence.php?success=1');
         exit;
     }
@@ -33,20 +34,22 @@ require_once 'includes/admin-header.php';
 <div class="space-y-6">
     <!-- Form thêm đối thủ -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-        <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight mb-4">Thêm đối thủ cần phân tích</h3>
-        <form method="POST" class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-                <input type="text" name="name" placeholder="Tên đối thủ (VD: Mường Thanh Bien Hoa)" required
+        <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight mb-4">Ra lệnh cho AI quét đối thủ</h3>
+        <form method="POST" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" name="name" placeholder="Tên đối thủ (VD: Mường Thanh)" required
+                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
+                <input type="url" name="url" placeholder="URL cần quét (VD: https://abc.com/rooms)" required
                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
             </div>
-            <div class="flex-[2]">
-                <input type="url" name="url" placeholder="URL trang chủ hoặc trang giá (VD: https://competitor.com/rooms)" required
-                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
+            <div>
+                <textarea name="instruction" placeholder="Ra lệnh cho AI (VD: Hãy phân tích các gói tiệc cưới của họ và so sánh với giá bên mình...)" rows="2"
+                          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"></textarea>
             </div>
             <button type="submit" name="add_competitor" 
-                    class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all text-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">add</span>
-                Thêm vào hàng đợi
+                    class="w-full md:w-auto px-8 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 dark:shadow-none">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                Gửi AI đi quét & Phân tích
             </button>
         </form>
     </div>
@@ -152,10 +155,17 @@ function viewDetails(comp) {
     title.innerText = "Báo cáo Tình báo: " + comp.name;
     const data = JSON.parse(comp.analysis_data);
     
+    let instructionHtml = comp.instruction ? `
+        <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl mb-6 border border-indigo-100 dark:border-indigo-900/30">
+            <p class="text-[10px] font-bold text-indigo-500 uppercase mb-1">Mệnh lệnh đã giao:</p>
+            <p class="text-xs text-indigo-700 dark:text-indigo-300 italic font-medium">"${comp.instruction}"</p>
+        </div>
+    ` : '';
+    
     if (!data) {
-        content.innerHTML = "<p class='text-center py-12 text-slate-400 italic'>Chưa có dữ liệu phân tích sâu.</p>";
+        content.innerHTML = instructionHtml + "<p class='text-center py-12 text-slate-400 italic'>Chưa có dữ liệu phân tích sâu.</p>";
     } else {
-        content.innerHTML = `
+        content.innerHTML = instructionHtml + `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Cấp độ 1 -->
                 <div class="space-y-4">
