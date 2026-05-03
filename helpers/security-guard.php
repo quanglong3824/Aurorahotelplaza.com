@@ -17,16 +17,17 @@ class SecurityGuard {
     public static function protect() {
         $ip = Security::getClientIP();
         $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
 
-        // 1. Kiểm tra Honeypot (Bẫy)
+        // 1. Kiểm tra danh sách đen (Blacklist) - Ưu tiên hàng đầu để tiết kiệm tài nguyên
+        if (self::isIPBlacklisted($ip)) {
+            self::terminateRequest("Your IP ($ip) has been permanently blocked due to repeated security violations.");
+        }
+
+        // 2. Kiểm tra Honeypot (Bẫy)
         if (str_contains($uri, self::$honeypot_path)) {
             self::blacklistIP($ip, "HoneyPot Trap Triggered: " . $uri, true);
             self::terminateRequest("Access Denied (Security Violation)");
-        }
-
-        // 2. Kiểm tra danh sách đen (Blacklist)
-        if (self::isIPBlacklisted($ip)) {
-            self::terminateRequest("Your IP ($ip) has been blocked due to suspicious activity.");
         }
 
         // 3. Kiểm tra Rate Limit
@@ -35,11 +36,23 @@ class SecurityGuard {
             self::terminateRequest("Too many requests. Please slow down.");
         }
 
-        // 4. Kiểm tra Bot chuyên sâu (Dùng BotDetector hiện có)
+        // 4. Kiểm tra Bot chuyên sâu (BotDetector)
         $botInfo = BotDetector::detect();
         if ($botInfo['is_bot'] && $botInfo['type'] === 'bad') {
-            // Nếu là bot xấu hoặc fake bot, chặn ngay
+            // TỰ ĐỘNG BLACKLIST VĨNH VIỄN các Bad Bot đã được xác nhận (như DotBot, Generic Bot, Fake Bots)
+            self::blacklistIP($ip, "Confirmed Malicious Bot: " . $botInfo['name'], true);
             self::terminateRequest("Bot access denied: " . $botInfo['name']);
+        }
+
+        // 5. Phát hiện "Silent Attack" (Truy cập thẳng trang nhạy cảm không qua trang chủ/referer)
+        $sensitive_paths = ['/auth/login', '/dat-phong', '/booking', '/admin'];
+        foreach ($sensitive_paths as $path) {
+            if (str_contains($uri, $path) && empty($referer) && !isset($_SESSION['user_id'])) {
+                // Đây là hành vi quét link tự động của script
+                self::blacklistIP($ip, "Suspicious Direct Access to Sensitive Path: " . $path);
+                // Với vi phạm này, tạm thời chặn request hiện tại
+                self::terminateRequest("Access Denied: Suspicious browsing pattern detected.");
+            }
         }
     }
 
