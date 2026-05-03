@@ -30,78 +30,96 @@ class AITrafficAnalyzer {
         $score = 0;
         $category = "General";
 
-        // Logic phân tích ý định chuyên sâu
+        // Logic phân tích ý định cực kỳ chuyên sâu
         $indicators = [
-            'stay' => 0,      // Quan tâm lưu trú (phòng/căn hộ)
+            'stay' => 0,      // Quan tâm lưu trú
             'booking' => 0,   // Ý định đặt phòng
-            'event' => 0,     // Quan tâm sự kiện/tiệc cưới/hội nghị
-            'promo' => 0,     // Tìm kiếm ưu đãi
-            'logistics' => 0, // Tìm đường/liên hệ/vị trí
-            'trust' => 0,      // Kiểm tra uy tín (về chúng tôi/chính sách)
-            'engagement' => count($paths) // Mức độ tương tác
+            'event' => 0,     // Sự kiện/Tiệc cưới
+            'promo' => 0,     // Ưu đãi
+            'logistics' => 0, // Vị trí/Liên hệ
+            'trust' => 0,     // Chính sách/Uy tín
+            'dining' => 0,    // Nhà hàng/Ẩm thực
+            'wellness' => 0,  // Spa/Gym/Hồ bơi
+            'family' => 0,    // Khách gia đình (căn hộ to)
+            'business' => 0,  // Khách công vụ (phòng đơn/hội nghị)
+            'engagement' => count($paths)
         ];
+
+        // Đếm số lần xem cùng một trang để phát hiện phân vân
+        $path_counts = array_count_values($paths);
+        $max_repeats = !empty($path_counts) ? max($path_counts) : 0;
 
         foreach ($paths as $path) {
             $path = strtolower($path);
             
-            // 1. Lưu trú
-            if (str_contains($path, '/rooms') || str_contains($path, '/phong/') || str_contains($path, 'rooms.php')) {
+            // 1. Lưu trú & Phân loại Persona
+            if (str_contains($path, 'family') || str_contains($path, 'apartment') || str_contains($path, 'can-ho')) {
                 $indicators['stay'] += 10;
+                $indicators['family'] += 15;
             }
-            if (str_contains($path, '/apartments') || str_contains($path, '/can-ho/') || str_contains($path, 'apartments.php')) {
+            if (str_contains($path, 'premium') || str_contains($path, 'suite') || str_contains($path, 'deluxe')) {
                 $indicators['stay'] += 10;
+                $indicators['business'] += 10;
+            }
+            if (str_contains($path, 'studio') || str_contains($path, 'standard')) {
+                $indicators['stay'] += 10;
+                $indicators['business'] += 5;
             }
 
             // 2. Đặt phòng
-            if (str_contains($path, '/booking') || str_contains($path, '/dat-phong') || str_contains($path, 'confirmation.php')) {
-                $indicators['booking'] += 30;
+            if (str_contains($path, '/booking') || str_contains($path, '/dat-phong')) {
+                $indicators['booking'] += 35;
             }
 
-            // 3. Sự kiện & Tiệc cưới
+            // 3. Sự kiện
             if (str_contains($path, 'wedding') || str_contains($path, 'conference') || str_contains($path, 'tiec-cuoi') || str_contains($path, 'hoi-nghi')) {
-                $indicators['event'] += 20;
+                $indicators['event'] += 25;
             }
 
-            // 4. Ưu đãi
-            if (str_contains($path, 'promotion') || str_contains($path, 'khuyen-mai') || str_contains($path, 'offers')) {
-                $indicators['promo'] += 15;
+            // 4. Ẩm thực & Thư giãn
+            if (str_contains($path, 'restaurant') || str_contains($path, 'cuisine') || str_contains($path, 'nha-hang')) {
+                $indicators['dining'] += 20;
+            }
+            if (str_contains($path, 'spa') || str_contains($path, 'gym') || str_contains($path, 'pool') || str_contains($path, 'ho-boi')) {
+                $indicators['wellness'] += 20;
             }
 
-            // 5. Logistics & Liên hệ
-            if (str_contains($path, 'contact') || str_contains($path, 'lien-he') || str_contains($path, 'map') || str_contains($path, 'location')) {
-                $indicators['logistics'] += 10;
-            }
-
-            // 6. Chính sách & Uy tín
-            if (str_contains($path, 'about') || str_contains($path, 'policy') || str_contains($path, 'terms') || str_contains($path, 'chinh-sach')) {
-                $indicators['trust'] += 5;
-            }
+            // 5. Khác
+            if (str_contains($path, 'promotion') || str_contains($path, 'khuyen-mai')) $indicators['promo'] += 15;
+            if (str_contains($path, 'contact') || str_contains($path, 'map')) $indicators['logistics'] += 10;
+            if (str_contains($path, 'policy') || str_contains($path, 'about')) $indicators['trust'] += 5;
         }
 
-        // PHÂN LOẠI CHI TIẾT
+        // PHÂN LOẠI PERSONA & Ý ĐỊNH CHI TIẾT
         $score = array_sum($indicators);
 
         if ($indicators['booking'] > 0) {
-            $intent = "Khách hàng mục tiêu: Đang thực hiện quy trình đặt phòng";
+            $intent = "KHÁCH MỤC TIÊU: Đang chốt đơn đặt phòng";
             $category = "Hot Lead (Booking)";
-        } elseif ($indicators['event'] >= 20) {
-            $intent = "Khách hàng sự kiện: Quan tâm đến dịch vụ tiệc cưới/hội nghị";
-            $category = "Event Lead";
-        } elseif ($indicators['stay'] >= 20 && $indicators['promo'] > 0) {
-            $intent = "Khách hàng săn deal: Đang tìm phòng với giá ưu đãi";
-            $category = "Promotion Seeker";
-        } elseif ($indicators['stay'] >= 30) {
-            $intent = "Khách hàng tiềm năng: Đang xem xét kỹ các hạng phòng/căn hộ";
-            $category = "Strong Interest";
+        } elseif ($indicators['event'] >= 25) {
+            $intent = "KHÁCH SỰ KIỆN: Đang lên kế hoạch tổ chức tiệc/hội nghị";
+            $category = "Event Planner";
+        } elseif ($max_repeats >= 3) {
+            $intent = "KHÁCH PHÂN VÂN: Đang xem đi xem lại một hạng phòng nhất định";
+            $category = "Indecisive Lead";
+        } elseif ($indicators['family'] >= 30) {
+            $intent = "KHÁCH GIA ĐÌNH: Quan tâm không gian lưu trú rộng rãi/căn hộ";
+            $category = "Family Traveler";
+        } elseif ($indicators['business'] >= 30 && $indicators['event'] > 0) {
+            $intent = "KHÁCH DOANH NGHIỆP: Tìm phòng cao cấp kết hợp hội họp";
+            $category = "Business/Corporate";
+        } elseif ($indicators['dining'] >= 20 && $indicators['wellness'] >= 20) {
+            $intent = "KHÁCH NGHỈ DƯỠNG: Tập trung vào ẩm thực và dịch vụ thư giãn";
+            $category = "Leisure/Relax";
+        } elseif ($indicators['promo'] >= 15 && $indicators['stay'] >= 10) {
+            $intent = "KHÁCH SĂN DEAL: Đang chờ giá tốt để đặt phòng";
+            $category = "Price Sensitive";
         } elseif ($indicators['logistics'] >= 20) {
-            $intent = "Khách sắp đến hoặc đối tác: Đang tìm vị trí và cách thức liên hệ";
-            $category = "Logistics/Contact";
-        } elseif ($indicators['stay'] > 0 && $indicators['trust'] > 0) {
-            $intent = "Khách hàng cẩn trọng: Đang tìm hiểu kỹ uy tín và chính sách";
-            $category = "Consideration";
-        } elseif ($indicators['engagement'] > 8) {
-            $intent = "Người xem nhiệt tình: Đang dạo quanh xem rất nhiều nội dung";
-            $category = "Highly Engaged";
+            $intent = "KHÁCH SẮP ĐẾN: Kiểm tra vị trí và cách liên hệ cuối cùng";
+            $category = "Imminent Arrival";
+        } elseif ($indicators['engagement'] >= 12) {
+            $intent = "FAN CỨNG: Đang nghiên cứu cực kỳ kỹ mọi ngóc ngách website";
+            $category = "Super Engaged";
         }
 
         return [
@@ -109,7 +127,8 @@ class AITrafficAnalyzer {
             'score' => $score,
             'category' => $category,
             'path_count' => count($paths),
-            'indicators' => $indicators
+            'indicators' => $indicators,
+            'is_indecisive' => ($max_repeats >= 3)
         ];
     }
 
