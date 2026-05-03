@@ -30,6 +30,13 @@ if (isset($_GET['discover']) && $_GET['discover'] == '1') {
     echo "<p>Đã tìm thấy <strong>$count</strong> đối thủ mới lân cận.</p>";
 }
 
+// Chế độ trinh sát du kích (Guerrilla Recon)
+if (isset($_GET['guerrilla']) && $_GET['guerrilla'] == '1') {
+    echo "<p>🚀 Đang kích hoạt TRINH SÁT DU KÍCH (Cào danh bạ & Google Maps)...</p>";
+    $count = CompetitorAnalyzer::runGuerrillaRecon();
+    echo "<p>Đã tìm thấy và thêm <strong>$count</strong> đối thủ mới vào hàng đợi.</p>";
+}
+
 try {
     // Lấy danh sách hàng đợi (pending hoặc lỗi mạng để retry)
     $stmt = $db->prepare("SELECT id, name FROM competitor_intelligence WHERE status IN ('pending', 'error') AND (error_message NOT LIKE '[BỎ QUA]%' OR error_message IS NULL) ORDER BY created_at ASC LIMIT :limit");

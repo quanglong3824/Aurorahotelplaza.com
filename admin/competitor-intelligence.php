@@ -62,6 +62,9 @@ require_once 'includes/admin-header.php';
                 <a href="massive-scout.php" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition-all flex items-center gap-2 shadow-lg shadow-rose-200 dark:shadow-none">
                     <span class="material-symbols-outlined text-sm">rocket_launch</span> CHIẾN DỊCH CÀN QUÉT (MASSIVE SCOUT)
                 </a>
+                <a href="cron-competitor-intel.php?guerrilla=1" target="_blank" class="px-4 py-2 bg-amber-600 text-white rounded-lg text-xs font-bold hover:bg-amber-700 transition-all flex items-center gap-2 shadow-lg shadow-amber-200 dark:shadow-none">
+                    <span class="material-symbols-outlined text-sm">radar</span> TRINH SÁT DU KÍCH
+                </a>
                 <a href="cron-competitor-intel.php?discover=1" target="_blank" class="px-4 py-2 bg-purple-500/10 text-purple-600 rounded-lg text-xs font-bold hover:bg-purple-500/20 transition-all flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">explore</span> Kích hoạt AI khám phá
                 </a>

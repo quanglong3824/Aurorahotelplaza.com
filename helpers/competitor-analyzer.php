@@ -214,6 +214,88 @@ YÊU CẦU PHẢN HỒI JSON DUY NHẤT:
     }
 
     /**
+     * TRINH SÁT DU KÍCH (Guerrilla Recon)
+     * Cào dữ liệu từ các danh bạ lớn và Google Maps để tìm đối thủ
+     */
+    public static function runGuerrillaRecon() {
+        $db = getDB();
+        $sources = [
+            'https://vntrip.vn/khach-san/bien-hoa',
+            'https://mytour.vn/khach-san/bien-hoa',
+            'https://www.traveloka.com/vi-vn/hotel/vietnam/city/bien-hoa-city-10010165'
+        ];
+
+        $all_discovered_text = "";
+        
+        // 1. Cào từ các danh bạ lớn qua Jina (Bypass Cloudflare)
+        foreach ($sources as $source_url) {
+            try {
+                $markdown = self::fetchMarkdown($source_url);
+                $all_discovered_text .= "\n--- Dữ liệu từ: $source_url ---\n" . mb_substr($markdown, 0, 5000);
+            } catch (Throwable $e) {
+                error_log("Guerrilla Scrape Error ($source_url): " . $e->getMessage());
+            }
+        }
+
+        // 2. Tích hợp SerpApi (Tìm qua Google Maps) - Nếu có Key
+        $serp_key = defined('SERP_API_KEY') ? SERP_API_KEY : '';
+        if ($serp_key) {
+            $serp_url = "https://serpapi.com/search.json?engine=google_maps&q=khach+san+bien+hoa&api_key=" . $serp_key;
+            $ch = curl_init($serp_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $serp_response = curl_exec($ch);
+            curl_close($ch);
+            $serp_data = json_decode($serp_response, true);
+            if (isset($serp_data['local_results'])) {
+                $all_discovered_text .= "\n--- Dữ liệu từ Google Maps ---\n";
+                foreach ($serp_data['local_results'] as $res) {
+                    $all_discovered_text .= "- " . ($res['title'] ?? '') . " | Website: " . ($res['website'] ?? 'N/A') . "\n";
+                }
+            }
+        }
+
+        // 3. Sử dụng AI để bóc tách danh sách từ mớ dữ liệu thô
+        $extract_prompt = "Dưới đây là mớ dữ liệu thô thu thập được từ Google Maps và các danh bạ khách sạn tại Biên Hòa. 
+Nhiệm vụ của bạn là LỌC và TRÍCH XUẤT ra danh sách ít nhất 15 đối thủ thực sự.
+
+YÊU CẦU JSON:
+{
+    \"discovered\": [
+        { \"name\": \"Tên cơ sở\", \"url\": \"URL chính thức hoặc URL trang đặt phòng\" }
+    ]
+}
+
+DỮ LIỆU THÔ:\n" . $all_discovered_text;
+
+        try {
+            $response_text = call_ai_sync($extract_prompt, $db, null, "Bạn là chuyên gia bóc tách dữ liệu tình báo.");
+            $clean_json = preg_replace('/^.*?\{/s', '{', $response_text);
+            $clean_json = preg_replace('/\}.*?$/s', '}', $clean_json);
+            $data = json_decode($clean_json, true);
+
+            if (!$data || empty($data['discovered'])) return 0;
+
+            $new_count = 0;
+            foreach ($data['discovered'] as $item) {
+                $url = trim($item['url'] ?? '');
+                if (empty($url) || $url === 'N/A') continue;
+
+                $check = $db->prepare("SELECT id FROM competitor_intelligence WHERE url = ?");
+                $check->execute([$url]);
+                if (!$check->fetch()) {
+                    $stmt = $db->prepare("INSERT INTO competitor_intelligence (name, url, instruction, status) VALUES (?, ?, ?, 'pending')");
+                    $stmt->execute([$item['name'], $url, 'Phân tích dịch vụ từ trang danh bạ/website.']);
+                    $new_count++;
+                }
+            }
+            return $new_count;
+        } catch (Throwable $t) {
+            error_log("Guerrilla Extraction Error: " . $t->getMessage());
+            return 0;
+        }
+    }
+
+    /**
      * Xử lý 1 đối thủ trong hàng đợi
      */
     public static function processOne($competitor_id) {
