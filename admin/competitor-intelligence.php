@@ -92,7 +92,10 @@ require_once 'includes/admin-header.php';
                             <?php elseif ($comp['status'] === 'processing'): ?>
                                 <span class="badge badge-info animate-pulse">Đang xử lý...</span>
                             <?php elseif ($comp['status'] === 'error'): ?>
-                                <span class="badge badge-danger" title="<?php echo htmlspecialchars($comp['error_message']); ?>">Lỗi API</span>
+                                <div class="flex flex-col gap-1">
+                                    <span class="badge badge-danger">Lỗi quét</span>
+                                    <p class="text-[10px] text-rose-400 italic max-w-[150px] truncate" title="<?php echo htmlspecialchars($comp['error_message']); ?>"><?php echo htmlspecialchars($comp['error_message']); ?></p>
+                                </div>
                             <?php else: ?>
                                 <span class="badge badge-secondary">Đang chờ</span>
                             <?php endif; ?>
@@ -163,7 +166,15 @@ function viewDetails(comp) {
     ` : '';
     
     if (!data) {
-        content.innerHTML = instructionHtml + "<p class='text-center py-12 text-slate-400 italic'>Chưa có dữ liệu phân tích sâu.</p>";
+        let errorHtml = comp.status === 'error' ? `
+            <div class="bg-rose-50 dark:bg-rose-900/20 p-6 rounded-xl border border-rose-100 dark:border-rose-900/30 text-center">
+                <span class="material-symbols-outlined text-rose-500 text-4xl mb-2">error</span>
+                <p class="text-sm font-bold text-rose-700 dark:text-rose-400">Quá trình phân tích thất bại</p>
+                <p class="text-xs text-rose-600 dark:text-rose-500 mt-2 italic">"${comp.error_message}"</p>
+            </div>
+        ` : "<p class='text-center py-12 text-slate-400 italic'>Chưa có dữ liệu phân tích sâu.</p>";
+        
+        content.innerHTML = instructionHtml + errorHtml;
     } else {
         content.innerHTML = instructionHtml + `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
