@@ -26,51 +26,90 @@ class AITrafficAnalyzer {
         if (count($history) < 2) return null;
 
         $paths = array_column($history, 'page_url');
-        $intent = "Đang tìm hiểu";
+        $intent = "Đang tìm hiểu chung";
         $score = 0;
         $category = "General";
 
-        // Logic phân tích ý định (Heuristic AI)
-        $has_rooms = false;
-        $has_apartments = false;
-        $has_booking = false;
-        $has_contact = false;
+        // Logic phân tích ý định chuyên sâu
+        $indicators = [
+            'stay' => 0,      // Quan tâm lưu trú (phòng/căn hộ)
+            'booking' => 0,   // Ý định đặt phòng
+            'event' => 0,     // Quan tâm sự kiện/tiệc cưới/hội nghị
+            'promo' => 0,     // Tìm kiếm ưu đãi
+            'logistics' => 0, // Tìm đường/liên hệ/vị trí
+            'trust' => 0,      // Kiểm tra uy tín (về chúng tôi/chính sách)
+            'engagement' => count($paths) // Mức độ tương tác
+        ];
 
         foreach ($paths as $path) {
-            if (str_contains($path, '/rooms') || str_contains($path, '/phong/')) {
-                $has_rooms = true;
-                $score += 10;
+            $path = strtolower($path);
+            
+            // 1. Lưu trú
+            if (str_contains($path, '/rooms') || str_contains($path, '/phong/') || str_contains($path, 'rooms.php')) {
+                $indicators['stay'] += 10;
             }
-            if (str_contains($path, '/apartments') || str_contains($path, '/can-ho/')) {
-                $has_apartments = true;
-                $score += 10;
+            if (str_contains($path, '/apartments') || str_contains($path, '/can-ho/') || str_contains($path, 'apartments.php')) {
+                $indicators['stay'] += 10;
             }
-            if (str_contains($path, '/booking') || str_contains($path, '/dat-phong')) {
-                $has_booking = true;
-                $score += 30;
+
+            // 2. Đặt phòng
+            if (str_contains($path, '/booking') || str_contains($path, '/dat-phong') || str_contains($path, 'confirmation.php')) {
+                $indicators['booking'] += 30;
             }
-            if (str_contains($path, 'contact.php')) {
-                $has_contact = true;
-                $score += 20;
+
+            // 3. Sự kiện & Tiệc cưới
+            if (str_contains($path, 'wedding') || str_contains($path, 'conference') || str_contains($path, 'tiec-cuoi') || str_contains($path, 'hoi-nghi')) {
+                $indicators['event'] += 20;
+            }
+
+            // 4. Ưu đãi
+            if (str_contains($path, 'promotion') || str_contains($path, 'khuyen-mai') || str_contains($path, 'offers')) {
+                $indicators['promo'] += 15;
+            }
+
+            // 5. Logistics & Liên hệ
+            if (str_contains($path, 'contact') || str_contains($path, 'lien-he') || str_contains($path, 'map') || str_contains($path, 'location')) {
+                $indicators['logistics'] += 10;
+            }
+
+            // 6. Chính sách & Uy tín
+            if (str_contains($path, 'about') || str_contains($path, 'policy') || str_contains($path, 'terms') || str_contains($path, 'chinh-sach')) {
+                $indicators['trust'] += 5;
             }
         }
 
-        if ($has_booking) {
-            $intent = "Ý định đặt phòng rất cao";
-            $category = "Hot Lead";
-        } elseif ($has_rooms && $has_apartments) {
-            $intent = "Đang so sánh phòng và căn hộ";
-            $category = "Evaluating";
-        } elseif ($has_rooms || $has_apartments) {
-            $intent = "Quan tâm sâu đến dịch vụ lưu trú";
-            $category = "Interested";
+        // PHÂN LOẠI CHI TIẾT
+        $score = array_sum($indicators);
+
+        if ($indicators['booking'] > 0) {
+            $intent = "Khách hàng mục tiêu: Đang thực hiện quy trình đặt phòng";
+            $category = "Hot Lead (Booking)";
+        } elseif ($indicators['event'] >= 20) {
+            $intent = "Khách hàng sự kiện: Quan tâm đến dịch vụ tiệc cưới/hội nghị";
+            $category = "Event Lead";
+        } elseif ($indicators['stay'] >= 20 && $indicators['promo'] > 0) {
+            $intent = "Khách hàng săn deal: Đang tìm phòng với giá ưu đãi";
+            $category = "Promotion Seeker";
+        } elseif ($indicators['stay'] >= 30) {
+            $intent = "Khách hàng tiềm năng: Đang xem xét kỹ các hạng phòng/căn hộ";
+            $category = "Strong Interest";
+        } elseif ($indicators['logistics'] >= 20) {
+            $intent = "Khách sắp đến hoặc đối tác: Đang tìm vị trí và cách thức liên hệ";
+            $category = "Logistics/Contact";
+        } elseif ($indicators['stay'] > 0 && $indicators['trust'] > 0) {
+            $intent = "Khách hàng cẩn trọng: Đang tìm hiểu kỹ uy tín và chính sách";
+            $category = "Consideration";
+        } elseif ($indicators['engagement'] > 8) {
+            $intent = "Người xem nhiệt tình: Đang dạo quanh xem rất nhiều nội dung";
+            $category = "Highly Engaged";
         }
 
         return [
             'intent' => $intent,
             'score' => $score,
             'category' => $category,
-            'path_count' => count($paths)
+            'path_count' => count($paths),
+            'indicators' => $indicators
         ];
     }
 
