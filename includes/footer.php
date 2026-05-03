@@ -182,7 +182,7 @@ if (!function_exists('__')) {
                     <p class="text-[10px] text-white/30 tracking-wider uppercase">
                         Developed by <span class="font-bold text-white/40">LongDev</span> •
                         Version <span class="text-white/40">v2.0.0 Beta</span> •
-                        <span class="text-white/20 font-mono" id="commit-id">ID : 3062f032af82774c44ce765eaf2deb1cd69e49e0</span>                    </p>
+                        <span class="text-white/20 font-mono" id="commit-id">ID : 3062f03</span>                    </p>
                 </div>
                 <div class="flex gap-6 text-sm">
                     <a href="<?php echo route('chinh-sach-bao-mat'); ?>"
