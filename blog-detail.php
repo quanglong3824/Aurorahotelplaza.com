@@ -159,25 +159,52 @@ $video_url = $post['video_url'] ?? '';
 <body class="blog-detail-page glass-page font-body text-white">
     <?php include 'includes/header.php'; ?>
 
-    <main class="relative z-10 pt-24 pb-12 blog-detail-wrapper">
-        <div class="mx-auto max-w-7xl px-4">
+    <main class="relative z-10 blog-detail-wrapper">
+
+        <!-- Hero Section with Featured Image -->
+        <div class="blog-detail-hero">
+            <?php
+            $heroImg = !empty($post['featured_image']) ? imgUrl($post['featured_image']) : imgUrl('assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg');
+            ?>
+            <div class="blog-hero-bg" style="background-image: url('<?php echo $heroImg; ?>')"></div>
+            <div class="blog-hero-overlay"></div>
+            <div class="blog-hero-content">
+                <nav class="blog-breadcrumb mb-4 flex items-center gap-2 text-sm">
+                    <a href="<?php echo route(''); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
+                    <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
+                    <a href="<?php echo route('tin-tuc'); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.posts'); ?></a>
+                    <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
+                    <span class="text-white/70 truncate max-w-xs"><?php echo htmlspecialchars(_f($post, 'title')); ?></span>
+                </nav>
+                <h1 class="blog-hero-title"><?php echo htmlspecialchars(_f($post, 'title')); ?></h1>
+                <div class="blog-hero-meta">
+                    <span class="blog-hero-meta-item">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                    </span>
+                    <span class="blog-hero-meta-item">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <?php echo number_format($post['views']); ?> <?php _e('blog_page.views'); ?>
+                    </span>
+                    <?php if ($post['category_name']): ?>
+                    <span class="blog-category-badge"><?php echo htmlspecialchars(_f($post, 'category_name')); ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="mx-auto max-w-7xl px-4 py-10">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 <!-- Left Column (Article + Comments) -->
                 <div class="lg:col-span-2">
-                    <nav class="blog-breadcrumb mb-6 flex items-center gap-2 text-sm">
-                <a href="<?php echo route(''); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.home'); ?></a>
-                <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
-                <a href="<?php echo route('tin-tuc'); ?>" class="text-[#d4af37] hover:underline"><?php _e('blog_page.posts'); ?></a>
-                <span class="material-symbols-outlined text-xs text-white/40">chevron_right</span>
-                <span class="text-white/60 truncate max-w-xs"><?php echo htmlspecialchars(_f($post, 'title')); ?></span>
-            </nav>
+
 
             <article class="blog-article-card glass-card-solid p-6 md:p-8">
                 <?php if ($post['category_name']): ?>
-                    <span class="blog-category-badge"><?php echo htmlspecialchars(_f($post, 'category_name')); ?></span>
+                    <!-- Category badge now shown in hero, hide here on mobile only -->
                 <?php endif; ?>
 
-                <h1 class="blog-detail-title mt-4"><?php echo htmlspecialchars(_f($post, 'title')); ?></h1>
+                <h2 class="blog-detail-subtitle mt-0 mb-4 hidden-on-hero"><?php echo htmlspecialchars(_f($post, 'title')); ?></h2>
 
                 <div class="blog-meta-info flex-wrap">
                     <div class="blog-meta-item">
