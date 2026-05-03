@@ -333,8 +333,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 
                     <?php if ($group['label'] === false): ?>
                         <!-- Items đơn (Ví dụ: Dashboard) -->
-                        <?php foreach ($group['items'] as $item): ?>
-                            <a href="<?php echo $item['page']; ?>.php"
+                        <?php foreach ($group['items'] as $item): 
+                            $page_hash = Security::hashAdminPage($item['page']);
+                        ?>
+                            <a href="index.php?p=<?php echo $page_hash; ?>"
                                 class="sidebar-link <?php echo $current_page === $item['page'] ? 'active bg-indigo-50 dark:bg-slate-800' : 'hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'; ?>">
                                 <span class="material-symbols-outlined"><?php echo $item['icon']; ?></span>
                                 <span><?php echo $item['label']; ?></span>
@@ -360,8 +362,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                                 class="sidebar-group-items overflow-hidden transition-all duration-300 <?php echo $isOpened ? 'max-h-[800px] opacity-100 mt-1' : 'max-h-0 opacity-0'; ?>">
                                 <div
                                     class="pl-[18px] pr-2 space-y-0.5 border-l-[1.5px] border-gray-200 dark:border-slate-700 ml-6 py-1">
-                                    <?php foreach ($group['items'] as $item): ?>
-                                        <a href="<?php echo $item['page']; ?>.php"
+                                    <?php foreach ($group['items'] as $item): 
+                                        $page_hash = Security::hashAdminPage($item['page']);
+                                    ?>
+                                        <a href="index.php?p=<?php echo $page_hash; ?>"
                                             class="flex items-center gap-3 py-2 px-3 rounded-lg text-sm transition-all text-gray-600 dark:text-gray-400 <?php echo $current_page === $item['page'] ? 'active font-bold !text-indigo-600 bg-indigo-50 dark:bg-slate-700/50' : 'hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'; ?>">
                                             <?php if ($current_page === $item['page']): ?>
                                                 <div class="w-1 h-4 bg-indigo-600 rounded-full absolute -ml-[23.5px]"></div>

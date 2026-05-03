@@ -348,6 +348,14 @@ class Security {
     }
     
     /**
+     * Băm nhỏ và mã hóa tên trang Admin để bảo mật đường dẫn
+     */
+    public static function hashAdminPage($page) {
+        $salt = 'AURORA_SECURE_GATE_2026'; // Mã muối bí mật
+        return substr(hash_hmac('sha256', $page, $salt), 0, 16);
+    }
+
+    /**
      * Log Security Event
      * @param string $event
      * @param string $details

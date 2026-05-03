@@ -9,6 +9,10 @@ require_once '../config/database.php';
 require_once '../helpers/security.php';
 $db = getDB();
 
+if (!$db) {
+    die("Lỗi: Không thể kết nối cơ sở dữ liệu. Vui lòng kiểm tra lại cấu hình.");
+}
+
 $page_title = 'Trung Tâm Bảo Mật';
 $page_subtitle = 'Quản lý Anti-Bot, Blacklist và bảo vệ dữ liệu toàn diện.';
 
