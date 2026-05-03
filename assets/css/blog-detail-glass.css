@@ -31,7 +31,6 @@ body.blog-detail-page::after {
     transform: translateZ(0) !important;
 }
 
-body.blog-detail-page > div,
 body.blog-detail-page main {
     position: relative !important;
     z-index: 10 !important;
@@ -43,6 +42,12 @@ body.blog-detail-page main {
     padding-bottom: 60px !important;
     display: block !important;
     width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .blog-detail-page main {
+        padding-top: 100px !important;
+    }
 }
 
 /* Container */
