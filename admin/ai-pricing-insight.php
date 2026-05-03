@@ -75,12 +75,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['analyze_pricing'])) {
     - Mùa thấp điểm: 2026-09-01 đến 2026-11-30";
     
     // Call AI
+    $active_provider = get_active_ai_provider();
     $ai_response = call_ai_sync($prompt, $db);
     
-    // Check if the response is an error from the helper
-    if (strpos($ai_response, 'Lỗi:') === 0 || strpos($ai_response, 'Hệ thống đang quá tải') !== false) {
+    // Check if the response is empty or an error from the helper
+    if (empty(trim($ai_response))) {
         $ai_results = null;
-        $json_error = $ai_response;
+        $json_error = "AI không trả về dữ liệu (Rỗng). Có thể do lỗi kết nối hoặc API Key hết hạn. (Provider: $active_provider)";
+    } else if (strpos($ai_response, 'Lỗi:') === 0 || strpos($ai_response, 'Hệ thống đang quá tải') !== false) {
+        $ai_results = null;
+        $json_error = $ai_response . " (Provider: $active_provider)";
     } else {
         // Improved JSON extraction: Find the first [ and the last ]
         $json_start = strpos($ai_response, '[');
@@ -96,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['analyze_pricing'])) {
             $json_error = ($ai_results === null) ? json_last_error_msg() : '';
         } else {
             $ai_results = null;
-            $json_error = "Không tìm thấy định dạng mảng JSON [ ] trong phản hồi.";
+            $json_error = "Không tìm thấy định dạng mảng JSON [ ] trong phản hồi. (Provider: $active_provider)";
         }
     }
     

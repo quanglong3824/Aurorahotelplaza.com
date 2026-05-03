@@ -299,7 +299,14 @@ function refresh_keys_from_env() {
  * Quản lý Provider (Gemini / Opencode)
  */
 function get_active_ai_provider() {
-    return 'opencode';
+    $path = AI_CONFIG_PATH . '/current_provider.txt';
+    if (file_exists($path)) {
+        $provider = trim(file_get_contents($path));
+        if (in_array($provider, ['gemini', 'opencode'])) {
+            return $provider;
+        }
+    }
+    return 'gemini';
 }
 
 function set_active_ai_provider($provider) {
