@@ -76,14 +76,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['analyze_pricing'])) {
     // Call AI
     $ai_response = call_ai_sync($prompt, $db);
     
-    // Cleanup markdown if present
-    $ai_response = preg_replace('/```json\s*/i', '', $ai_response);
-    $ai_response = preg_replace('/```\s*/', '', $ai_response);
-    $ai_response = trim($ai_response);
+    // Improved JSON extraction: Find the first [ and the last ]
+    $json_start = strpos($ai_response, '[');
+    $json_end = strrpos($ai_response, ']');
     
-    $ai_results = json_decode($ai_response, true);
+    if ($json_start !== false && $json_end !== false && $json_end > $json_start) {
+        $json_str = substr($ai_response, $json_start, $json_end - $json_start + 1);
+        $ai_results = json_decode($json_str, true);
+    } else {
+        $ai_results = null;
+    }
+    
     if (!$ai_results || !is_array($ai_results)) {
-        $error_msg = "Không thể lấy dữ liệu phân tích từ AI hợp lệ. Vui lòng thử lại. Dữ liệu nhận được: " . htmlspecialchars(substr($ai_response, 0, 200)) . "...";
+        $error_msg = "Không thể lấy dữ liệu phân tích từ AI hợp lệ. Vui lòng thử lại. Dữ liệu nhận được: " . htmlspecialchars(substr($ai_response, 0, 300)) . "...";
     }
 }
 
