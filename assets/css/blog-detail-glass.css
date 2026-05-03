@@ -2,9 +2,7 @@
 
 /* Override pages-glass.css for blog-detail-page */
 body.blog-detail-page {
-    position: relative !important;
     min-height: 100vh !important;
-    overflow-x: hidden !important;
     background: #111827 !important;
 }
 
@@ -38,7 +36,7 @@ body.blog-detail-page main {
 
 /* Main container */
 .blog-detail-page main {
-    padding-top: 90px !important;
+    padding-top: 100px !important;
     padding-bottom: 60px !important;
     display: block !important;
     width: 100% !important;
