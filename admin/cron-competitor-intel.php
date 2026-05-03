@@ -23,14 +23,28 @@ $limit = 2;
 
 echo "<h2>Cronjob: Bắt đầu phân tích đối thủ...</h2>";
 
+// Tính năng khám phá mới (Discovery)
+if (isset($_GET['discover']) && $_GET['discover'] == '1') {
+    echo "<p>Đang kích hoạt AI khám phá đối thủ mới...</p>";
+    $count = CompetitorAnalyzer::discoverNearbyCompetitors();
+    echo "<p>Đã tìm thấy <strong>$count</strong> đối thủ mới lân cận.</p>";
+}
+
 try {
-    $stmt = $db->prepare("SELECT id, name FROM competitor_intelligence WHERE status IN ('pending', 'error') ORDER BY created_at ASC LIMIT :limit");
+    // Lấy danh sách hàng đợi (pending hoặc lỗi mạng để retry)
+    $stmt = $db->prepare("SELECT id, name FROM competitor_intelligence WHERE status IN ('pending', 'error') AND (error_message NOT LIKE '[BỎ QUA]%' OR error_message IS NULL) ORDER BY created_at ASC LIMIT :limit");
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
     $queue = $stmt->fetchAll();
 
     if (empty($queue)) {
-        echo "<p>Không có đối thủ nào trong hàng đợi.</p>";
+        echo "<p>Hàng đợi trống. AI đang tự động tìm kiếm đối thủ tiềm năng...</p>";
+        $count = CompetitorAnalyzer::discoverNearbyCompetitors();
+        if ($count > 0) {
+            echo "<p>Đã tự động bổ sung <strong>$count</strong> đối thủ mới vào hàng đợi. Vui lòng chạy lại Cron hoặc đợi phiên tiếp theo.</p>";
+        } else {
+            echo "<p>Không tìm thấy thêm đối thủ nào mới.</p>";
+        }
         exit;
     }
 

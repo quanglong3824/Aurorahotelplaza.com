@@ -59,6 +59,9 @@ require_once 'includes/admin-header.php';
         <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight">Danh sách tình báo đối thủ</h3>
             <div class="flex gap-2">
+                <a href="cron-competitor-intel.php?discover=1" target="_blank" class="px-4 py-2 bg-purple-500/10 text-purple-600 rounded-lg text-xs font-bold hover:bg-purple-500/20 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">explore</span> Kích hoạt AI khám phá
+                </a>
                 <a href="cron-competitor-intel.php" target="_blank" class="px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-lg text-xs font-bold hover:bg-emerald-500/20 transition-all flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">play_arrow</span> Chạy Cron thủ công
                 </a>
