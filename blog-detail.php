@@ -244,7 +244,7 @@ $bgImage = !empty($post['featured_image']) ? imgUrl($post['featured_image']) : a
     <?php include 'includes/header.php'; ?>
 
     <!-- Hero Section -->
-    <header class="hero-section w-full h-[65vh] min-h-[500px] flex items-center justify-center pt-20">
+    <header class="hero-section w-full h-[65vh] min-h-[500px] flex items-center justify-center pt-20 pb-24">
         <div class="hero-overlay"></div>
         <div class="relative z-10 w-full max-w-5xl mx-auto px-4 text-center text-white mt-8">
             <nav class="flex justify-center items-center gap-2 text-[13px] font-semibold text-white/80 mb-6 tracking-widest uppercase">
