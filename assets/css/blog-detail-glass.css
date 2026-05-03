@@ -38,7 +38,7 @@ body.blog-detail-page main {
 
 /* Main container */
 .blog-detail-page main {
-    padding-top: 140px !important;
+    padding-top: 90px !important;
     padding-bottom: 60px !important;
     display: block !important;
     width: 100% !important;
@@ -46,7 +46,7 @@ body.blog-detail-page main {
 
 @media (max-width: 768px) {
     .blog-detail-page main {
-        padding-top: 100px !important;
+        padding-top: 80px !important;
     }
 }
 

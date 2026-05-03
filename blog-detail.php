@@ -159,7 +159,7 @@ $video_url = $post['video_url'] ?? '';
 <body class="blog-detail-page glass-page font-body text-white">
     <?php include 'includes/header.php'; ?>
 
-    <main class="relative z-10 pt-24 pb-12 blog-detail-wrapper">
+    <main class="relative z-10 blog-detail-wrapper">
         <div class="mx-auto max-w-7xl px-4">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 <!-- Left Column (Article + Comments) -->

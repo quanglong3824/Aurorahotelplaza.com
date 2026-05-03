@@ -175,8 +175,8 @@
 
 /* Glass Page Wrapper Adjustments */
 .blog-detail-wrapper {
-    padding-top: 180px;
-    /* Spacing for fixed header */
+    padding-top: 0;
+    /* Padding handled by blog-detail-glass.css main rule */
     min-height: 100vh;
 }
 
