@@ -281,7 +281,7 @@ try {
                     <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-white text-sm">
                         <a href="tel:+842513918888" class="glass-tag hover:bg-white/20 transition-all">
                             <span class="material-symbols-outlined text-accent text-base">phone</span>
-                            <span class="font-medium">(+84-251) 391.8888</span>
+                            <span class="font-medium"><?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?></span>
                         </a>
                         <a href="mailto:booking@aurorahotelplaza.com"
                             class="glass-tag hover:bg-white/20 transition-all">
@@ -892,8 +892,8 @@ try {
                                             <?php _e('home.phone_label'); ?>
                                         </h4>
                                         <p class="text-sm text-white/70">
-                                            (+84-251) 391.8888<br>
-                                            Hotline: 0909.123.456
+                                            <?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?><br>
+                                            Hotline: <?php echo SecurityGuard::obfuscate('0909.123.456'); ?>
                                         </p>
                                     </div>
                                 </a>
@@ -991,7 +991,7 @@ try {
                         <a href="tel:+842513918888"
                             class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold transition-all hover:-translate-y-1 backdrop-blur-md">
                             <span class="material-symbols-outlined">phone</span>
-                            <?php _e('home.call_now'); ?>
+                            <?php echo SecurityGuard::obfuscate(__('home.call_now')); ?>: <?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?>
                         </a>
                     </div>
 

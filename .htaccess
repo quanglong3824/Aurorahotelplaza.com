@@ -179,6 +179,12 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
+# ── Anti-Bot / Anti-Crawl (Lazy Bots) ────────
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (libwww-perl|python|nikto|curl|wget|java|go-http|nmap|sqlmap|masscan|zgrab) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
 # Block access to config directory
 <IfModule mod_rewrite.c>
     RewriteRule ^config/ - [F,L]

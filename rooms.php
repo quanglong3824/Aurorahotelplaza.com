@@ -148,10 +148,12 @@ try {
 
                                         <!-- Price Badge -->
                                         <div class="price-badge">
-                                            <span
-                                                class="price"><?php echo number_format($room['base_price'], 0, ',', '.'); ?> VND</span>
+                                            <span class="price">
+                                                <?php echo SecurityGuard::obfuscate(number_format($room['base_price'], 0, ',', '.')); ?> VND
+                                            </span>
                                             <span class="unit"><?php _e('common.per_night'); ?></span>
                                         </div>
+
                                     </div>
 
                                     <!-- Room Info -->

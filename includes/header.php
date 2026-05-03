@@ -1,8 +1,18 @@
 <?php
-// Start session if not started
+// Determine base path for config
+$current_dir = basename(dirname($_SERVER['PHP_SELF']));
+$subdirs = ['room-details', 'apartment-details', 'auth', 'booking', 'profile', 'admin', 'services-pages', 'payment'];
+$config_prefix = in_array($current_dir, $subdirs) ? '../' : '';
+
+// 1. Load Essential Configs & Session
+require_once __DIR__ . '/' . $config_prefix . 'config/database.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// 2. Security Shield Initialization (MUST be after DB and Session)
+require_once __DIR__ . '/../helpers/security-guard.php';
+SecurityGuard::protect();
 
 // ─── AI Error Tracker ─────────────────────────────────────────────────────────
 require_once __DIR__ . '/../helpers/error-tracker.php';

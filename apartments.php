@@ -145,10 +145,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                 </div>
 
                                                 <div class="price-badge">
-                                                    <span
-                                                        class="price"><?php echo number_format($apt['base_price'], 0, ',', '.'); ?> VND</span>
+                                                    <span class="price">
+                                                        <?php echo SecurityGuard::obfuscate(number_format($apt['base_price'], 0, ',', '.')); ?> VND
+                                                    </span>
                                                     <span class="unit"><?php _e('common.per_night'); ?></span>
                                                 </div>
+
                                             </div>
 
                                             <div class="apt-info">
@@ -245,10 +247,12 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                 </div>
 
                                                 <div class="price-badge">
-                                                    <span
-                                                        class="price"><?php echo number_format($apt['base_price'], 0, ',', '.'); ?> VND</span>
+                                                    <span class="price">
+                                                        <?php echo SecurityGuard::obfuscate(number_format($apt['base_price'], 0, ',', '.')); ?> VND
+                                                    </span>
                                                     <span class="unit"><?php _e('common.per_night'); ?></span>
                                                 </div>
+
                                             </div>
 
                                             <div class="apt-info">

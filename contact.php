@@ -90,7 +90,7 @@ if ($is_logged_in) {
                     <div class="flex flex-wrap gap-4 justify-center">
                         <a href="tel:+842513918888" class="btn-glass-gold">
                             <span class="material-symbols-outlined">phone</span>
-                            <?php _e('contact_page.call_now'); ?>
+                            <?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?>
                         </a>
                         <a href="#contact-form" class="btn-glass-outline">
                             <span class="material-symbols-outlined">arrow_downward</span>
@@ -127,7 +127,11 @@ if ($is_logged_in) {
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-white mb-1"><?php _e('contact_page.phone'); ?></h3>
-                                        <p class="text-white/70 text-sm"><a href="tel:+842513918888" class="hover:text-accent transition-colors">(+84-251) 391.8888</a></p>
+                                        <p class="text-white/70 text-sm">
+                                            <a href="tel:+842513918888" class="hover:text-accent transition-colors">
+                                                <?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?>
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                                 
