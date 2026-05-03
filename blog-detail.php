@@ -159,6 +159,24 @@ $video_url = $post['video_url'] ?? '';
 <body class="blog-detail-page glass-page font-body text-white">
     <?php include 'includes/header.php'; ?>
 
+    <style>
+        /* CHỐNG CACHE TRÌNH DUYỆT (Zalo/Facebook In-app Browser) */
+        body.blog-detail-page {
+            overflow-x: visible !important;
+            position: static !important;
+        }
+        .blog-detail-page main {
+            padding-top: 100px !important;
+        }
+        @media (max-width: 768px) {
+            .blog-detail-page main {
+                padding-top: 80px !important;
+            }
+        }
+        .blog-detail-wrapper {
+            padding-top: 0 !important;
+        }
+    </style>
     <main class="relative z-10 blog-detail-wrapper">
         <div class="mx-auto max-w-7xl px-4">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
