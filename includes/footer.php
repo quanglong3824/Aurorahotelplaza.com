@@ -151,8 +151,9 @@ if (!function_exists('__')) {
                     </li>
                     <li class="flex items-start gap-3">
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">phone</span>
-                        <a href="tel:+842513918888" class="text-white/70 hover:text-accent transition-colors">(+84-251)
-                            391.8888</a>
+                        <a href="tel:+842513918888" class="text-white/70 hover:text-accent transition-colors">
+                            <?php echo SecurityGuard::obfuscate('(+84-251) 391.8888'); ?>
+                        </a>
                     </li>
                     <li class="flex items-start gap-3">
                         <span class="material-symbols-outlined mt-0.5 text-accent text-xl">email</span>
@@ -179,10 +180,9 @@ if (!function_exists('__')) {
                         <?php _e('footer.copyright', ['year' => '2026']); ?>
                     </p>
                     <p class="text-[10px] text-white/30 tracking-wider uppercase">
-                        Developed by <span class="font-bold text-white/40">LongDev</span> • 
-                        Version <span class="text-white/40">v1.8.2 Rel Test</span> • 
-                        <span class="text-white/20 font-mono" id="commit-id">ID : c06bdb19cbaf91f7ec92d2c00ad1bd19e6258dff</span>
-                    </p>
+                        Developed by <span class="font-bold text-white/40">LongDev</span> •
+                        Version <span class="text-white/40">v2.0.0 Beta</span> •
+                        <span class="text-white/20 font-mono" id="commit-id">ID : 3062f032af82774c44ce765eaf2deb1cd69e49e0</span>                    </p>
                 </div>
                 <div class="flex gap-6 text-sm">
                     <a href="<?php echo route('chinh-sach-bao-mat'); ?>"
@@ -191,6 +191,8 @@ if (!function_exists('__')) {
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.terms_of_service'); ?></a>
                     <a href="<?php echo route('chinh-sach-huy'); ?>"
                         class="text-white/60 hover:text-accent transition-colors"><?php _e('footer.cancellation_policy'); ?></a>
+                    <!-- Security Honeypot -->
+                    <a href="/system-admin-trap-hidden" rel="nofollow" style="display:none; width:0; height:0;" aria-hidden="true">System Admin</a>
                 </div>
             </div>
         </div>
