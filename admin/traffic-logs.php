@@ -41,8 +41,8 @@ require_once 'includes/admin-header.php';
                 <tr class="bg-slate-50 dark:bg-slate-900/50 text-[10px] font-black text-slate-400 uppercase tracking-[2px]">
                     <th class="px-6 py-4">ID</th>
                     <th class="px-6 py-4">Thời gian</th>
-                    <th class="px-6 py-4">IP Address</th>
-                    <th class="px-6 py-4">Phiên (Session)</th>
+                    <th class="px-6 py-4">IP / Đối tượng</th>
+                    <th class="px-6 py-4">Loại Bot</th>
                     <th class="px-6 py-4">Thiết bị</th>
                     <th class="px-6 py-4">Trang đích</th>
                     <th class="px-6 py-4">Nguồn (Referer)</th>
@@ -54,16 +54,35 @@ require_once 'includes/admin-header.php';
                     <td class="px-6 py-4 text-slate-400 text-xs font-mono">#<?php echo $log['id']; ?></td>
                     <td class="px-6 py-4 text-slate-500 whitespace-nowrap"><?php echo date('H:i:s d/m/Y', strtotime($log['visit_time'])); ?></td>
                     <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono font-bold text-slate-700 dark:text-slate-300"><?php echo $log['ip_address']; ?></span>
-                            <?php if ($log['is_unique']): ?>
-                                <span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-black uppercase">Mới</span>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono font-bold text-slate-700 dark:text-slate-300"><?php echo $log['ip_address']; ?></span>
+                                <?php if ($log['is_unique']): ?>
+                                    <span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-black uppercase">Mới</span>
+                                <?php endif; ?>
+                            </div>
+                            <?php if ($log['bot_name']): ?>
+                                <span class="text-[10px] text-slate-400 font-medium italic"><?php echo htmlspecialchars($log['bot_name']); ?></span>
                             <?php endif; ?>
                         </div>
                     </td>
-                    <td class="px-6 py-4 text-[10px] font-mono text-slate-400 truncate max-w-[100px]"><?php echo $log['session_id']; ?></td>
                     <td class="px-6 py-4">
-                        <span class="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-900 rounded-lg text-slate-600 dark:text-slate-400 font-bold"><?php echo strtoupper($log['device_type']); ?></span>
+                        <?php if ($log['bot_type'] === 'good'): ?>
+                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                Good Bot
+                            </span>
+                        <?php elseif ($log['bot_type'] === 'bad'): ?>
+                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                Bad Bot
+                            </span>
+                        <?php else: ?>
+                            <span class="text-slate-400 text-xs">—</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-900 rounded-lg text-slate-600 dark:text-slate-400 font-bold uppercase"><?php echo $log['device_type']; ?></span>
                     </td>
                     <td class="px-6 py-4">
                         <p class="max-w-[250px] truncate text-xs text-indigo-600 font-medium"><?php echo htmlspecialchars($log['page_url']); ?></p>
