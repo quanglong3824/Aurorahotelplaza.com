@@ -16,12 +16,14 @@ if (!$db) {
 $page_title = 'Trung Tâm Bảo Mật';
 $page_subtitle = 'Quản lý Anti-Bot, Blacklist và bảo vệ dữ liệu toàn diện.';
 
+$page_hash = Security::hashAdminPage('security-center');
+
 // Xử lý Gỡ bỏ IP khỏi Blacklist
 if (isset($_GET['remove_ip'])) {
     $ip = $_GET['remove_ip'];
     $stmt = $db->prepare("DELETE FROM security_blacklist WHERE ip_address = ?");
     $stmt->execute([$ip]);
-    header('Location: security-center.php?success=1');
+    header("Location: index.php?p=$page_hash&success=1");
     exit;
 }
 
@@ -105,7 +107,7 @@ require_once 'includes/admin-header.php';
                         </td>
                         <td class="px-6 py-4 text-center font-bold text-slate-400"><?php echo $item['attempts']; ?></td>
                         <td class="px-6 py-4">
-                            <a href="?remove_ip=<?php echo $item['ip_address']; ?>" 
+                            <a href="index.php?p=<?php echo $page_hash; ?>&remove_ip=<?php echo $item['ip_address']; ?>" 
                                onclick="return confirm('Bạn có chắc muốn gỡ chặn IP này?')"
                                class="text-xs font-bold text-indigo-600 hover:underline">Gỡ chặn</a>
                         </td>
