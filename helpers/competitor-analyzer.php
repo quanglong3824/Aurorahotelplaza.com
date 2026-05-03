@@ -153,6 +153,67 @@ YÊU CẦU PHẢN HỒI: Chỉ trả về JSON duy nhất. Cấu trúc JSON:
     }
 
     /**
+     * CHIẾN DỊCH QUÉT QUY MÔ LỚN (Massive Strategic Scout)
+     * Tận dụng tối đa mô hình AI cao cấp (GLM-5/Gemini Pro) để càn quét thị trường
+     */
+    public static function runMassiveStrategicScout() {
+        $db = getDB();
+        
+        $scout_prompt = "Bạn là một CHUYÊN GIA TÌNH BÁO CẠNH TRANH cấp cao. 
+Nhiệm vụ của bạn là thực hiện một cuộc càn quét (Massive Recon) toàn bộ thị trường lưu trú tại Biên Hòa.
+
+BƯỚC 1: Xác định 10 đối thủ đáng gờm nhất của Aurora Hotel Plaza (khách sạn, căn hộ, đơn vị phá giá).
+BƯỚC 2: Phân tích chiến thuật của họ (điểm mạnh, điểm yếu).
+BƯỚC 3: Tổng hợp một 'Hồ sơ Tình báo Thị trường' (Market Intelligence Dossier).
+
+YÊU CẦU PHẢN HỒI JSON DUY NHẤT:
+{
+    \"market_overview\": \"Tóm tắt tình hình thị trường Biên Hòa hiện tại\",
+    \"targets\": [
+        {
+            \"name\": \"Tên đối thủ\",
+            \"url\": \"URL khả thi nhất\",
+            \"threat_level\": \"high|medium|low\",
+            \"usp_discovery\": \"Điểm đặc biệt nhất của họ\",
+            \"weakness_to_exploit\": \"Điểm yếu chúng ta có thể tận dụng\"
+        }
+    ],
+    \"strategic_recommendations\": [\"Khuyến nghị 1\", \"Khuyến nghị 2\"]
+}";
+
+        try {
+            require_once __DIR__ . '/ai-helper.php';
+            $response_text = call_ai_sync($scout_prompt, $db, null, "Bạn là Tổng tư lệnh Tình báo Thị trường.");
+            
+            $clean_json = preg_replace('/^.*?\{/s', '{', $response_text);
+            $clean_json = preg_replace('/\}.*?$/s', '}', $clean_json);
+            $data = json_decode($clean_json, true);
+
+            if (!$data) return null;
+
+            foreach ($data['targets'] as $target) {
+                $url = trim($target['url'] ?? '');
+                if (empty($url)) continue;
+
+                $check = $db->prepare("SELECT id FROM competitor_intelligence WHERE url = ?");
+                $check->execute([$url]);
+                if (!$check->fetch()) {
+                    $stmt = $db->prepare("INSERT INTO competitor_intelligence (name, url, instruction, status) VALUES (?, ?, ?, 'pending')");
+                    $stmt->execute([$target['name'], $url, "AI RECON: " . ($target['weakness_to_exploit'] ?? 'Phân tích dịch vụ')]);
+                }
+            }
+
+            require_once __DIR__ . '/activity-logger.php';
+            ActivityLogger::log(null, 'ai_recon', 'massive_report', 0, "AI MASSIVE SCOUT HOÀN TẤT: " . $data['market_overview']);
+
+            return $data;
+        } catch (Throwable $t) {
+            error_log("Massive Recon Error: " . $t->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Xử lý 1 đối thủ trong hàng đợi
      */
     public static function processOne($competitor_id) {
