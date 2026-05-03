@@ -52,49 +52,56 @@ $room_types = $db->query("SELECT room_type_id, type_name, category, base_price F
 
 $ai_results = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['analyze_pricing'])) {
-    $prompt = "Tôi cần bạn đóng vai trò là một chuyên gia dữ liệu thị trường khách sạn tại khu vực xung quanh khách sạn Aurora Hotel Plaza.
-    Dưới đây là danh sách các loại phòng hiện tại của chúng tôi (kèm giá cơ sở): " . json_encode($room_types) . ".
-    Vui lòng phân tích dữ liệu thị trường lân cận, cung cấp ước tính giá phòng trung bình theo mùa (VND) cho từng loại phòng dựa trên các mùa: 
-    1. Mùa cao điểm (01/06/2026 - 31/08/2026) 
-    2. Mùa thấp điểm (01/09/2026 - 30/11/2026)
+    $prompt = "Bạn là chuyên gia phân tích giá khách sạn. Hãy phân tích giá phòng trung bình theo mùa của các khu vực lân cận Aurora Hotel Plaza.
+    Dữ liệu phòng hiện tại: " . json_encode($room_types) . ".
     
-    Lưu ý: Giá đề xuất nên hợp lý dựa trên giá cơ sở.
+    YÊU CẦU BẮT BUỘC:
+    1. Chỉ trả về một MẢNG JSON duy nhất.
+    2. Không có văn bản giải thích trước hoặc sau JSON.
+    3. Không sử dụng dấu ngoặc khối code (```json).
+    4. Cấu trúc mỗi đối tượng:
+    {
+        \"room_type_id\": (ID số),
+        \"room_name\": \"(Tên phòng)\",
+        \"season\": \"(Tên mùa)\",
+        \"start_date\": \"YYYY-MM-DD\",
+        \"end_date\": \"YYYY-MM-DD\",
+        \"suggested_price\": (Số nguyên),
+        \"pricing_type\": \"seasonal\"
+    }
     
-    Chỉ trả về MẢNG JSON thuần túy (không bọc trong markdown block, không giải thích thêm) theo cấu trúc chính xác sau:
-    [
-        {
-            \"room_type_id\": \"(ID loại phòng)\",
-            \"room_name\": \"(Tên loại phòng)\",
-            \"season\": \"Mùa cao điểm\",
-            \"start_date\": \"2026-06-01\",
-            \"end_date\": \"2026-08-31\",
-            \"suggested_price\": 2500000,
-            \"pricing_type\": \"seasonal\"
-        }
-    ]";
+    Các mùa cần phân tích:
+    - Mùa cao điểm: 2026-06-01 đến 2026-08-31
+    - Mùa thấp điểm: 2026-09-01 đến 2026-11-30";
     
     // Call AI
     $ai_response = call_ai_sync($prompt, $db);
     
-    // Improved JSON extraction: Find the first [ and the last ]
-    $json_start = strpos($ai_response, '[');
-    $json_end = strrpos($ai_response, ']');
-    
-    if ($json_start !== false && $json_end !== false && $json_end > $json_start) {
-        $json_str = substr($ai_response, $json_start, $json_end - $json_start + 1);
-        
-        // Clean up common AI-generated JSON issues
-        $json_str = preg_replace('/,\s*([\]\}])/', '$1', $json_str); // Remove trailing commas
-        
-        $ai_results = json_decode($json_str, true);
-        $json_error = json_last_error_msg();
-    } else {
+    // Check if the response is an error from the helper
+    if (strpos($ai_response, 'Lỗi:') === 0 || strpos($ai_response, 'Hệ thống đang quá tải') !== false) {
         $ai_results = null;
-        $json_error = "Không tìm thấy định dạng JSON (thiếu [ hoặc ])";
+        $json_error = $ai_response;
+    } else {
+        // Improved JSON extraction: Find the first [ and the last ]
+        $json_start = strpos($ai_response, '[');
+        $json_end = strrpos($ai_response, ']');
+        
+        if ($json_start !== false && $json_end !== false && $json_end > $json_start) {
+            $json_str = substr($ai_response, $json_start, $json_end - $json_start + 1);
+            
+            // Clean up common AI-generated JSON issues
+            $json_str = preg_replace('/,\s*([\]\}])/', '$1', $json_str); // Remove trailing commas
+            
+            $ai_results = json_decode($json_str, true);
+            $json_error = ($ai_results === null) ? json_last_error_msg() : '';
+        } else {
+            $ai_results = null;
+            $json_error = "Không tìm thấy định dạng mảng JSON [ ] trong phản hồi.";
+        }
     }
     
     if (!$ai_results || !is_array($ai_results)) {
-        $error_msg = "Lỗi xử lý dữ liệu AI: " . $json_error . ". <br>Dữ liệu nhận được: " . htmlspecialchars(substr($ai_response, 0, 500)) . "...";
+        $error_msg = "Lỗi xử lý dữ liệu AI: " . $json_error . ". <br>Độ dài phản hồi: " . strlen($ai_response) . " ký tự. <br>Nội dung nhận được: <pre class='text-[10px] mt-2 p-2 bg-slate-100 dark:bg-slate-900 rounded overflow-x-auto'>" . htmlspecialchars(substr($ai_response, 0, 1000)) . "</pre>";
     }
 }
 
