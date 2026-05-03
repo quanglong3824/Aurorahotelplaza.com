@@ -82,13 +82,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['analyze_pricing'])) {
     
     if ($json_start !== false && $json_end !== false && $json_end > $json_start) {
         $json_str = substr($ai_response, $json_start, $json_end - $json_start + 1);
+        
+        // Clean up common AI-generated JSON issues
+        $json_str = preg_replace('/,\s*([\]\}])/', '$1', $json_str); // Remove trailing commas
+        
         $ai_results = json_decode($json_str, true);
+        $json_error = json_last_error_msg();
     } else {
         $ai_results = null;
+        $json_error = "Không tìm thấy định dạng JSON (thiếu [ hoặc ])";
     }
     
     if (!$ai_results || !is_array($ai_results)) {
-        $error_msg = "Không thể lấy dữ liệu phân tích từ AI hợp lệ. Vui lòng thử lại. Dữ liệu nhận được: " . htmlspecialchars(substr($ai_response, 0, 300)) . "...";
+        $error_msg = "Lỗi xử lý dữ liệu AI: " . $json_error . ". <br>Dữ liệu nhận được: " . htmlspecialchars(substr($ai_response, 0, 500)) . "...";
     }
 }
 
