@@ -105,20 +105,22 @@ class AuroraTrafficTracker {
         $unique_inc = $is_unique ? 1 : 0;
         $mobile_inc = ($device === 'mobile' || $device === 'tablet') ? 1 : 0;
         $desktop_inc = ($device === 'desktop') ? 1 : 0;
+        $bot_inc = ($device === 'bot') ? 1 : 0;
 
         $sql = "INSERT INTO traffic_stats_daily 
-                (stat_date, total_hits, unique_visitors, mobile_hits, desktop_hits) 
-                VALUES (?, 1, ?, ?, ?)
+                (stat_date, total_hits, unique_visitors, mobile_hits, desktop_hits, bot_hits) 
+                VALUES (?, 1, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE 
                 total_hits = total_hits + 1,
                 unique_visitors = unique_visitors + ?,
                 mobile_hits = mobile_hits + ?,
-                desktop_hits = desktop_hits + ?";
+                desktop_hits = desktop_hits + ?,
+                bot_hits = bot_hits + ?";
         
         $stmt = $db->prepare($sql);
         $stmt->execute([
-            $today, $unique_inc, $mobile_inc, $desktop_inc,
-            $unique_inc, $mobile_inc, $desktop_inc
+            $today, $unique_inc, $mobile_inc, $desktop_inc, $bot_inc,
+            $unique_inc, $mobile_inc, $desktop_inc, $bot_inc
         ]);
     }
 }

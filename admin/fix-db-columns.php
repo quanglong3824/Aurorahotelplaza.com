@@ -18,6 +18,10 @@ try {
     $db->exec("ALTER TABLE traffic_logs ADD COLUMN IF NOT EXISTS bot_name VARCHAR(255) DEFAULT NULL AFTER bot_type");
     echo "<p>Đã kiểm tra/thêm cột <strong>bot_name</strong>.</p>";
 
+    // Thêm cột bot_hits vào bảng thống kê hàng ngày
+    $db->exec("ALTER TABLE traffic_stats_daily ADD COLUMN IF NOT EXISTS bot_hits INT DEFAULT 0 AFTER desktop_hits");
+    echo "<p>Đã kiểm tra/thêm cột <strong>bot_hits</strong> trong traffic_stats_daily.</p>";
+
     echo "<p><strong>Thành công!</strong> Bây giờ bạn có thể chạy <a href='sync-bot-history.php'>Đồng bộ lịch sử</a>.</p>";
 
 } catch (Exception $e) {
