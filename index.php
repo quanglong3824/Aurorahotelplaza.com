@@ -759,44 +759,56 @@ try {
                                 ?>
                                 <div class="flex flex-col">
                                     <a href="blog-detail.php?slug=<?php echo urlencode($post['slug']); ?>"
-                                        class="group glass-card overflow-hidden hover:-translate-y-2 transition-all duration-300 p-0 flex flex-col grow">
-                                        <div class="relative aspect-video overflow-hidden bg-slate-800 shrink-0">
-                                            <?php
-                                            $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
-                                            $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
-                                            ?>
-                                            <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
-                                                alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" loading="lazy"
-                                                onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
-                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                            <div class="absolute top-3 left-3 glass-badge text-xs">
-                                                <span class="material-symbols-outlined text-accent text-sm">article</span>
+                                        class="group relative block overflow-hidden rounded-[2rem] h-[420px] sm:h-[450px] w-full transform transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-white/5 hover:border-accent/30 bg-slate-800">
+                                        <!-- Background Image -->
+                                        <?php
+                                        $fallback_img = 'assets/img/hero-banner/aurora-hotel-bien-hoa-1.jpg';
+                                        $display_img = !empty($post['featured_image']) ? $post['featured_image'] : $fallback_img;
+                                        ?>
+                                        <img src="<?php echo imgUrl($display_img, $fallback_img); ?>"
+                                            alt="<?php echo htmlspecialchars(_f($post, 'title')); ?>" loading="lazy"
+                                            onerror="this.onerror=null; this.src='<?php echo imgUrl($fallback_img); ?>'"
+                                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/10 opacity-90 transition-opacity duration-500 group-hover:opacity-95"></div>
+
+                                        <!-- Badge -->
+                                        <div class="absolute top-5 left-5 z-20">
+                                            <span class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white bg-white/10 backdrop-blur-md rounded-full border border-white/20 group-hover:bg-accent group-hover:border-accent group-hover:text-slate-900 transition-all duration-300">
                                                 <?php _e('home.news'); ?>
-                                            </div>
+                                            </span>
                                         </div>
-                                        <div class="p-5 flex flex-col grow">
-                                            <div class="flex items-center gap-3 text-xs text-white/60 mb-3">
+
+                                        <!-- Content Area -->
+                                        <div class="absolute bottom-0 left-0 w-full p-6 sm:p-8 z-20 flex flex-col justify-end">
+                                            <!-- Meta Data -->
+                                            <div class="flex items-center gap-4 text-xs text-white/60 mb-3 opacity-0 translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
                                                 <span class="flex items-center gap-1">
-                                                    <span
-                                                        class="material-symbols-outlined text-accent text-sm">calendar_today</span>
+                                                    <span class="material-symbols-outlined text-[14px] text-accent">calendar_today</span>
                                                     <?php echo date('m/d/Y', strtotime($post['published_at'])); ?>
                                                 </span>
                                                 <span class="flex items-center gap-1">
-                                                    <span class="material-symbols-outlined text-accent text-sm">person</span>
+                                                    <span class="material-symbols-outlined text-[14px] text-accent">person</span>
                                                     <?php echo htmlspecialchars($post['author_name'] ?? 'Admin'); ?>
                                                 </span>
                                             </div>
-                                            <h3
-                                                class="font-bold text-lg mb-2 text-white group-hover:text-accent transition-colors line-clamp-2">
+                                            
+                                            <!-- Title -->
+                                            <h3 class="text-xl sm:text-2xl font-display font-bold text-white mb-1 leading-snug line-clamp-2 group-hover:text-accent transition-colors duration-300 drop-shadow-md">
                                                 <?php echo htmlspecialchars(_f($post, 'title')); ?>
                                             </h3>
-                                            <p class="text-sm text-white/70 line-clamp-3 mb-4">
-                                                <?php echo htmlspecialchars(_f($post, 'excerpt')); ?>
-                                            </p>
-                                            <div
-                                                class="mt-auto pt-4 border-t border-white/10 flex items-center text-accent text-sm font-semibold group-hover:translate-x-1 transition-transform">
-                                                <?php _e('home.read_more'); ?>
-                                                <span class="material-symbols-outlined text-lg ml-1">arrow_forward</span>
+                                            
+                                            <!-- Excerpt (Expands on hover) -->
+                                            <div class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-24 group-hover:opacity-100 group-hover:mt-3">
+                                                <p class="text-sm text-white/70 line-clamp-2 leading-relaxed">
+                                                    <?php echo htmlspecialchars(_f($post, 'excerpt')); ?>
+                                                </p>
+                                            </div>
+
+                                            <!-- Read More -->
+                                            <div class="mt-4 flex items-center gap-2 text-accent font-medium text-sm group-hover:translate-x-2 transition-transform duration-300">
+                                                <?php _e('home.read_more'); ?> <span class="material-symbols-outlined text-sm">arrow_forward</span>
                                             </div>
                                         </div>
                                     </a>
@@ -1011,21 +1023,7 @@ try {
     </div>
 
     <style>
-        /* Blog Cards Responsive Fix */
-        #blog .grid {
-            align-items: stretch;
-        }
-        #blog .aspect-video {
-            aspect-ratio: 16 / 9;
-            flex-shrink: 0;
-            overflow: hidden;
-            width: 100%;
-        }
-        #blog .aspect-video img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        /* Blog Cards Line Clamp Fallback */
         #blog .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
