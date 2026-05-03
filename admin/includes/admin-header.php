@@ -1,7 +1,14 @@
 <?php
 // Admin Header with Sidebar Navigation
 
-// ── Đảm bảo session luôn được start trước mọi thứ ──────────────────────────
+// ── 1. Khởi động Cấu hình & Bảo mật ──────────────────────────────────────────
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../helpers/security.php';
+require_once __DIR__ . '/../../helpers/security-guard.php';
+
+// Kích hoạt bảo mật (Rate Limit, Bot Check)
+SecurityGuard::protect();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

@@ -4,14 +4,15 @@
  * Cửa ngõ duy nhất truy cập trang quản trị
  */
 
-// 1. Khởi động bảo mật cơ bản
-require_once __DIR__ . '/../helpers/security-guard.php';
-SecurityGuard::protect();
-
+// 1. Khởi động cấu hình & CSDL trước tiên
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/security.php';
+require_once __DIR__ . '/../helpers/security-guard.php';
 
-// 2. Xác định trang cần truy cập
+// 2. Kích hoạt bảo mật (Cần CSDL để kiểm tra Blacklist)
+SecurityGuard::protect();
+
+// 3. Xác định trang cần truy cập
 $hashed_page = $_GET['p'] ?? '';
 
 // Nếu truy cập root admin mà không có tham số, mặc định vào dashboard
