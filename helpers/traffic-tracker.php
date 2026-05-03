@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/bot-detector.php';
 
 class AuroraTrafficTracker {
     private static $db = null;
@@ -40,14 +41,20 @@ class AuroraTrafficTracker {
             $referer = $_SERVER['HTTP_REFERER'] ?? null;
             $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
+            // Nhận diện Bot chuyên sâu
+            $botInfo = BotDetector::detect();
+            $is_bot = $botInfo['is_bot'];
+            $bot_type = $botInfo['type']; // good|bad|none
+            $bot_name = $botInfo['name'];
+
             // Xác định thiết bị
             $device = 'desktop';
-            if (preg_match('/(tablet|ipad|playbook)|(android(?!.*(mobi|opera mini)))/i', strtolower($user_agent))) {
+            if ($is_bot) {
+                $device = 'bot';
+            } else if (preg_match('/(tablet|ipad|playbook)|(android(?!.*(mobi|opera mini)))/i', strtolower($user_agent))) {
                 $device = 'tablet';
             } else if (preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|android|iemobile)/i', strtolower($user_agent))) {
                 $device = 'mobile';
-            } else if (preg_match('/(bot|crawl|slurp|spider|mediapartners)/i', strtolower($user_agent))) {
-                $device = 'bot';
             }
 
             // Kiểm tra xem đã track page view này trong 5 phút qua chưa (tránh spam F5)
@@ -77,11 +84,12 @@ class AuroraTrafficTracker {
             // Ghi log chi tiết
             $stmtInsert = $db->prepare("
                 INSERT INTO traffic_logs 
-                (session_id, ip_address, user_id, page_url, referer, user_agent, device_type, is_unique)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (session_id, ip_address, user_id, page_url, referer, user_agent, device_type, is_unique, bot_type, bot_name)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmtInsert->execute([
-                $session_id, $ip, $user_id, $page_url, $referer, $user_agent, $device, $is_unique
+                $session_id, $ip, $user_id, $page_url, $referer, $user_agent, $device, $is_unique,
+                ($is_bot ? $bot_type : null), ($is_bot ? $bot_name : null)
             ]);
 
             // Cập nhật bảng thống kê nhanh theo ngày
