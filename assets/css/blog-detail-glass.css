@@ -25,7 +25,7 @@ body.blog-detail-page::after {
     content: '' !important;
     position: fixed !important;
     inset: 0 !important;
-    background: linear-gradient(135deg, rgba(10, 15, 30, 0.80), rgba(17, 24, 39, 0.72)) !important;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.92), rgba(17, 24, 39, 0.85)) !important;
     z-index: -1 !important;
     pointer-events: none !important;
     transform: translateZ(0) !important;
@@ -38,7 +38,7 @@ body.blog-detail-page main {
 
 /* Main container */
 .blog-detail-page main {
-    padding-top: 0 !important;
+    padding-top: 140px !important;
     padding-bottom: 60px !important;
     display: block !important;
     width: 100% !important;
@@ -46,123 +46,8 @@ body.blog-detail-page main {
 
 @media (max-width: 768px) {
     .blog-detail-page main {
-        padding-top: 0 !important;
+        padding-top: 100px !important;
     }
-}
-
-/* =============================================
-   BLOG DETAIL HERO SECTION
-   ============================================= */
-.blog-detail-hero {
-    position: relative !important;
-    width: 100% !important;
-    min-height: 420px !important;
-    display: flex !important;
-    align-items: flex-end !important;
-    overflow: hidden !important;
-    padding-top: 80px !important; /* header height */
-}
-
-@media (max-width: 768px) {
-    .blog-detail-hero {
-        min-height: 320px !important;
-        padding-top: 72px !important;
-    }
-}
-
-.blog-hero-bg {
-    position: absolute !important;
-    inset: 0 !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    transform: scale(1.05) !important;
-    transition: transform 8s ease !important;
-    z-index: 0 !important;
-}
-
-.blog-detail-hero:hover .blog-hero-bg {
-    transform: scale(1.0) !important;
-}
-
-.blog-hero-overlay {
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(
-        to bottom,
-        rgba(10, 15, 30, 0.35) 0%,
-        rgba(10, 15, 30, 0.55) 50%,
-        rgba(10, 15, 30, 0.88) 100%
-    ) !important;
-    z-index: 1 !important;
-}
-
-.blog-hero-content {
-    position: relative !important;
-    z-index: 2 !important;
-    width: 100% !important;
-    max-width: 1280px !important;
-    margin: 0 auto !important;
-    padding: 40px 24px 48px !important;
-}
-
-@media (max-width: 768px) {
-    .blog-hero-content {
-        padding: 24px 16px 36px !important;
-    }
-}
-
-.blog-hero-title {
-    font-family: 'Montserrat', 'Be Vietnam Pro', sans-serif !important;
-    font-size: 38px !important;
-    font-weight: 800 !important;
-    color: #ffffff !important;
-    line-height: 1.25 !important;
-    margin: 0 0 16px 0 !important;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6) !important;
-    max-width: 860px !important;
-}
-
-@media (max-width: 768px) {
-    .blog-hero-title {
-        font-size: 24px !important;
-    }
-}
-
-@media (min-width: 1024px) {
-    .blog-hero-title {
-        font-size: 46px !important;
-    }
-}
-
-.blog-hero-meta {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 16px !important;
-}
-
-.blog-hero-meta-item {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    font-size: 14px !important;
-    color: rgba(255, 255, 255, 0.85) !important;
-    background: rgba(0, 0, 0, 0.35) !important;
-    padding: 5px 12px !important;
-    border-radius: 999px !important;
-    backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-}
-
-.blog-hero-meta-item .material-symbols-outlined {
-    font-size: 15px !important;
-    color: #d4af37 !important;
-}
-
-/* Hide duplicate title in article card (since it's shown in hero) */
-.blog-detail-subtitle.hidden-on-hero {
-    display: none !important;
 }
 
 /* Container */
