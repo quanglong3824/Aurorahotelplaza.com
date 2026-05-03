@@ -12,18 +12,21 @@ if (!$db) die('Database connection failed');
 
 $batch_size = 500;
 $total_rows_to_check = 0;
+$force = isset($_GET['force']) && $_GET['force'] == '1';
 
 try {
-    $total_stmt = $db->query("SELECT COUNT(*) FROM traffic_logs WHERE bot_type IS NULL OR bot_name IS NULL");
+    $where_clause = $force ? "1=1" : "(bot_type IS NULL OR bot_name IS NULL OR bot_type = 'none')";
+    $total_stmt = $db->query("SELECT COUNT(*) FROM traffic_logs WHERE $where_clause");
     $total_rows_to_check = $total_stmt->fetchColumn();
 } catch (Exception $e) {}
 
 echo "<h2>Đang đồng bộ dữ liệu Bot...</h2>";
-echo "<p>Tổng số dòng còn lại cần xử lý: <strong>$total_rows_to_check</strong></p>";
+if ($force) echo "<p style='color:orange'><strong>Chế độ: Ép buộc đồng bộ lại toàn bộ dữ liệu.</strong></p>";
+echo "<p>Tổng số dòng cần xử lý: <strong>$total_rows_to_check</strong></p>";
 
 try {
-    // Lấy batch tiếp theo
-    $stmt = $db->prepare("SELECT id, ip_address, user_agent FROM traffic_logs WHERE bot_type IS NULL OR bot_name IS NULL LIMIT :limit");
+    // Lấy batch tiếp theo (ưu tiên các dòng chưa xử lý bao giờ)
+    $stmt = $db->prepare("SELECT id, ip_address, user_agent FROM traffic_logs WHERE $where_clause ORDER BY (bot_type IS NULL) DESC, id DESC LIMIT :limit");
     $stmt->bindValue(':limit', $batch_size, PDO::PARAM_INT);
     $stmt->execute();
     $logs = $stmt->fetchAll();
@@ -61,8 +64,9 @@ try {
     echo "<p>Vừa xử lý: $processed dòng (Bots: $bots_found, Human: $humans_found).</p>";
     
     if ($total_rows_to_check > $batch_size) {
+        $next_url = "sync-bot-history.php" . ($force ? "?force=1" : "");
         echo "<p>Đang chuyển hướng để xử lý batch tiếp theo sau 2 giây...</p>";
-        echo "<script>setTimeout(() => { window.location.reload(); }, 2000);</script>";
+        echo "<script>setTimeout(() => { window.location.href = '$next_url'; }, 2000);</script>";
     } else {
         echo "<p style='color:green; font-weight:bold;'>Tất cả dữ liệu đã được xử lý xong!</p>";
         echo "<p><a href='traffic-logs.php'>Quay lại Nhật ký lưu lượng</a></p>";

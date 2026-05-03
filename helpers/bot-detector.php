@@ -9,7 +9,12 @@ class BotDetector {
         'Googlebot' => ['googlebot.com', 'google.com'],
         'Bingbot' => ['search.msn.com'],
         'Applebot' => ['apple.com'],
-        'FacebookExternalHit' => ['facebook.com']
+        'FacebookExternalHit' => ['facebook.com'],
+        'meta-externalagent' => ['facebook.com'],
+        'ClaudeBot' => ['anthropic.com'],
+        'Coccocbot' => ['coccoc.com'],
+        'Twitterbot' => ['twitter.com'],
+        'LinkedInBot' => ['linkedin.com']
     ];
 
     private static $bad_bots = [
@@ -22,7 +27,11 @@ class BotDetector {
         'AhrefsBot',
         'SemrushBot',
         'DotBot',
-        'MJ12bot'
+        'MJ12bot',
+        'HubSpot',
+        'GPTBot',
+        'PetalBot',
+        'Amazonbot'
     ];
 
     /**
