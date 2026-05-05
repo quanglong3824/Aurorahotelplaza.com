@@ -41,6 +41,48 @@ if (time() - $last_verify > 300) {
 }
 
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
+
+// ── Mapping: trang con → nhóm cha ──────────────────────────────────────────
+// Khi đang ở các trang phụ, sidebar vẫn giữ đúng nhóm đang mở
+$sub_page_map = [
+    // Đặt phòng
+    'booking-detail'      => 'bookings',
+    'create-booking'      => 'bookings',
+    'calendar-timeline'   => 'bookings',
+
+    // Phòng
+    'room-form'           => 'rooms',
+    'room-type-form'      => 'room-types',
+    'pricing-detailed'    => 'rooms',
+
+    // Khách hàng
+    'customer-detail'     => 'customers',
+    'members'             => 'customers',
+
+    // Nội dung
+    'blog-form'           => 'blog',
+    'blog-comments'       => 'blog',
+
+    // Dịch vụ
+    'service-bookings'    => 'service-packages',
+
+    // Hệ thống
+    'activity-logs'       => 'users',
+    'permissions'         => 'users',
+    'traffic-logs'        => 'traffic-stats',
+    'refunds'             => 'reports',
+
+    // AI
+    'ai-logs'             => 'ai-assistant',
+    'ai-pricing-insight'  => 'ai-assistant',
+
+    // Marketing
+    'view-qrcode'         => 'bookings',
+    'room-map'            => 'rooms',
+];
+
+// Nếu trang hiện tại là sub-page, dùng group key tương ứng để xác định nhóm mở
+$active_group_page = $sub_page_map[$current_page] ?? $current_page;
 ?>
 <!DOCTYPE html>
 <html translate="no" class="light" lang="vi">
@@ -329,9 +371,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     }
 
                     // Kiểm tra trạng thái collapse đóng/mở
+                    // Dùng $active_group_page để xác định nhóm cha của trang hiện tại
                     $isOpened = false;
                     foreach ($group['items'] as $item) {
-                        if ($current_page === $item['page']) {
+                        if ($active_group_page === $item['page']) {
                             $isOpened = true;
                             break;
                         }
@@ -373,8 +416,8 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                                         $page_hash = Security::hashAdminPage($item['page']);
                                     ?>
                                         <a href="index.php?p=<?php echo $page_hash; ?>"
-                                            class="flex items-center gap-3 py-2 px-3 rounded-lg text-sm transition-all text-gray-600 dark:text-gray-400 <?php echo $current_page === $item['page'] ? 'active font-bold !text-indigo-600 bg-indigo-50 dark:bg-slate-700/50' : 'hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'; ?>">
-                                            <?php if ($current_page === $item['page']): ?>
+                                            class="flex items-center gap-3 py-2 px-3 rounded-lg text-sm transition-all text-gray-600 dark:text-gray-400 <?php echo ($current_page === $item['page'] || $active_group_page === $item['page']) ? 'active font-bold !text-indigo-600 bg-indigo-50 dark:bg-slate-700/50' : 'hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'; ?>">
+                                            <?php if ($current_page === $item['page'] || $active_group_page === $item['page']): ?>
                                                 <div class="w-1 h-4 bg-indigo-600 rounded-full absolute -ml-[23.5px]"></div>
                                             <?php endif; ?>
                                             <span class="material-symbols-outlined !text-[18px]"><?php echo $item['icon']; ?></span>
