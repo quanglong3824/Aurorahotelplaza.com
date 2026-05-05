@@ -36,22 +36,19 @@ class SecurityGuard {
             self::terminateRequest("Too many requests. Please slow down.");
         }
 
-        // 4. Kiểm tra Bot chuyên sâu (BotDetector)
+        // 4. Ghi nhận Bot chuyên sâu (BotDetector) - Đã bỏ tính năng chặn để tránh chặn nhầm khách
         $botInfo = BotDetector::detect();
         if ($botInfo['is_bot'] && $botInfo['type'] === 'bad') {
-            // TỰ ĐỘNG BLACKLIST VĨNH VIỄN các Bad Bot đã được xác nhận (như DotBot, Generic Bot, Fake Bots)
-            self::blacklistIP($ip, "Confirmed Malicious Bot: " . $botInfo['name'], true);
-            self::terminateRequest("Bot access denied: " . $botInfo['name']);
+            // Chỉ ghi log, không chặn IP
+            self::logViolation($ip, "Detected Malicious Bot: " . $botInfo['name']);
         }
 
         // 5. Phát hiện "Silent Attack" (Truy cập thẳng trang nhạy cảm không qua trang chủ/referer)
         $sensitive_paths = ['/auth/login', '/dat-phong', '/booking', '/admin'];
         foreach ($sensitive_paths as $path) {
             if (str_contains($uri, $path) && empty($referer) && !isset($_SESSION['user_id'])) {
-                // Đây là hành vi quét link tự động của script
-                self::blacklistIP($ip, "Suspicious Direct Access to Sensitive Path: " . $path);
-                // Với vi phạm này, tạm thời chặn request hiện tại
-                self::terminateRequest("Access Denied: Suspicious browsing pattern detected.");
+                // Chỉ ghi log hành vi đáng ngờ, không chặn
+                self::logViolation($ip, "Suspicious Direct Access to Sensitive Path: " . $path);
             }
         }
     }
