@@ -50,10 +50,12 @@ $sub_page_map = [
     'create-booking'      => 'bookings',
     'calendar-timeline'   => 'bookings',
 
-    // Phòng
-    'room-form'           => 'rooms',
-    'room-type-form'      => 'room-types',
-    'pricing-detailed'    => 'rooms',
+    // Phòng - tất cả map về room-map (trang chính của nhóm Phòng)
+    'room-form'           => 'room-map',
+    'room-type-form'      => 'room-map',
+    'room-types'          => 'room-map',
+    'rooms'               => 'room-map',
+    'pricing-detailed'    => 'pricing',
 
     // Khách hàng
     'customer-detail'     => 'customers',
@@ -78,7 +80,6 @@ $sub_page_map = [
 
     // Marketing
     'view-qrcode'         => 'bookings',
-    'room-map'            => 'rooms',
 ];
 
 // Nếu trang hiện tại là sub-page, dùng group key tương ứng để xác định nhóm mở
@@ -278,11 +279,8 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                         'label' => 'Phòng',
                         'icon' => 'meeting_room',
                         'items' => [
-                            ['page' => 'room-types', 'icon' => 'local_offer', 'label' => 'Loại phòng'],
-                            ['page' => 'rooms', 'icon' => 'hotel', 'label' => 'Danh sách phòng'],
                             ['page' => 'room-map', 'icon' => 'map', 'label' => 'Sơ đồ phòng'],
-                            ['page' => 'pricing', 'icon' => 'attach_money', 'label' => 'Quản lý giá'],
-                            ['page' => 'pricing-detailed', 'icon' => 'receipt_long', 'label' => 'Bảng giá chi tiết']
+                            ['page' => 'pricing', 'icon' => 'attach_money', 'label' => 'Giá phòng']
                         ]
                     ],
                     [
@@ -435,25 +433,26 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                 <?php endforeach; ?>
 
                 <script>
+                    // ── Sidebar Persistence via localStorage ────────────────────
+                    const NAV_STORAGE_KEY = 'aurora_admin_nav_open';
+
+                    function getSavedNavState() {
+                        try { return JSON.parse(localStorage.getItem(NAV_STORAGE_KEY) || '{}'); }
+                        catch(e) { return {}; }
+                    }
+
+                    function saveNavState(label, isOpen) {
+                        const state = getSavedNavState();
+                        state[label] = isOpen;
+                        try { localStorage.setItem(NAV_STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+                    }
+
                     function toggleMenuGroup(button) {
                         const group = button.closest('.sidebar-group');
                         const items = group.querySelector('.sidebar-group-items');
-                        const icon = button.querySelector('.material-symbols-outlined:last-child');
-
+                        const icon  = button.querySelector('.material-symbols-outlined:last-child');
+                        const label = button.querySelector('span:not(.material-symbols-outlined)')?.textContent?.trim();
                         const isOpened = group.classList.contains('opened');
-
-                        // Accordion Behavior (Đóng các menu khác đi nếu muốn - Optional)
-                        /*
-                        document.querySelectorAll('.sidebar-group.opened').forEach(g => {
-                            if (g !== group) {
-                                g.classList.remove('opened');
-                                g.querySelector('button').classList.remove('text-indigo-600', 'bg-indigo-50');
-                                g.querySelector('.sidebar-group-items').classList.replace('max-h-[800px]', 'max-h-0');
-                                g.querySelector('.sidebar-group-items').classList.replace('opacity-100', 'opacity-0');
-                                g.querySelector('.material-symbols-outlined:last-child').classList.remove('rotate-180');
-                            }
-                        });
-                        */
 
                         if (isOpened) {
                             group.classList.remove('opened');
@@ -461,14 +460,41 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                             items.classList.remove('max-h-[800px]', 'opacity-100', 'mt-1');
                             items.classList.add('max-h-0', 'opacity-0');
                             icon.classList.remove('rotate-180');
+                            saveNavState(label, false);
                         } else {
                             group.classList.add('opened');
                             button.classList.add('text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'dark:text-indigo-400');
                             items.classList.remove('max-h-0', 'opacity-0');
                             items.classList.add('max-h-[800px]', 'opacity-100', 'mt-1');
                             icon.classList.add('rotate-180');
+                            saveNavState(label, true);
                         }
                     }
+
+                    // Khôi phục trạng thái các nhóm đã mở từ localStorage
+                    // (nhóm của trang hiện tại luôn mở - đã xử lý bằng PHP)
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const saved = getSavedNavState();
+                        document.querySelectorAll('.sidebar-group').forEach(group => {
+                            // Nếu PHP đã đánh dấu opened → bỏ qua (giữ nguyên)
+                            if (group.classList.contains('opened')) return;
+
+                            const button = group.querySelector('button');
+                            const label  = button?.querySelector('span:not(.material-symbols-outlined)')?.textContent?.trim();
+                            if (!label) return;
+
+                            if (saved[label] === true) {
+                                // Mở lại từ localStorage
+                                const items = group.querySelector('.sidebar-group-items');
+                                const icon  = button.querySelector('.material-symbols-outlined:last-child');
+                                group.classList.add('opened');
+                                button.classList.add('text-indigo-600', 'bg-indigo-50', 'dark:bg-slate-800', 'dark:text-indigo-400');
+                                items.classList.remove('max-h-0', 'opacity-0');
+                                items.classList.add('max-h-[800px]', 'opacity-100', 'mt-1');
+                                icon.classList.add('rotate-180');
+                            }
+                        });
+                    });
                 </script>
 
                 <!-- Logout -->
