@@ -370,6 +370,12 @@ include 'includes/admin-header.php';
                                             <span class="material-symbols-outlined text-sm">cancel</span>
                                         </button>
                                     <?php endif; ?>
+
+                                    <!-- Nút xóa cứng - chỉ admin -->
+                                    <button onclick="deleteBooking(<?php echo $booking['booking_id']; ?>, '<?php echo htmlspecialchars(addslashes($booking['booking_code'])); ?>')"
+                                        class="action-btn text-gray-400 hover:text-red-700" title="Xóa vĩnh viễn">
+                                        <span class="material-symbols-outlined text-sm">delete_forever</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -712,6 +718,32 @@ include 'includes/admin-header.php';
         if (reason !== null) {
             updateBookingStatus(id, 'cancelled', reason);
         }
+    }
+
+    function deleteBooking(id, code) {
+        if (!confirm(`⚠️ XÓA VĨNH VIỄN đặt phòng #${code}?\n\nHành động này KHÔNG THỂ HOÀN TÁC. Tất cả dữ liệu liên quan (thanh toán, lịch sử...) sẽ bị xóa.`)) return;
+        if (!confirm(`Xác nhận lần 2: Bạn thực sự muốn XÓA VĨNH VIỄN #${code}?`)) return;
+
+        const formData = new FormData();
+        formData.append('booking_id', id);
+
+        fetch('api/delete-booking.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast(data.message || 'Có lỗi xảy ra', 'error');
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            showToast('Có lỗi xảy ra', 'error');
+        });
     }
 
     function updateBookingStatus(id, status, reason = '') {
