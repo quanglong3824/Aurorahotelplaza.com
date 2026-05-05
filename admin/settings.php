@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'testing_mode',
             'allow_guest_booking',
             'require_payment_upfront',
-            'auto_confirm_booking'
+            'auto_confirm_booking',
+            'show_prices'
         ];
 
         // Ensure all checkbox settings are present
@@ -95,6 +96,7 @@ try {
         'allow_guest_booking' => '1',
         'require_payment_upfront' => '0',
         'auto_confirm_booking' => '0',
+        'show_prices' => '0',
     ], $settings_raw);
     
 } catch (Exception $e) {
@@ -353,6 +355,25 @@ include 'includes/admin-header.php';
                     <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark ml-6">
                         Khi bật, trang đặt phòng sẽ hiển thị tùy chọn tự động điền thông tin mẫu để test nhanh
                     </p>
+                </div>
+
+                <!-- Toggle giá frontend -->
+                <div class="pt-3 border-t border-gray-100 dark:border-slate-700">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="settings[show_prices]" value="1" id="show_prices_toggle"
+                               <?php echo ($settings['show_prices'] ?? '0') === '1' ? 'checked' : ''; ?>
+                               class="w-5 h-5 rounded">
+                        <div>
+                            <span class="font-semibold text-green-600 dark:text-green-400 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-lg">sell</span>
+                                Hiển thị giá trên website
+                            </span>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                                Khi <strong>tắt</strong>: Tất cả giá phòng trên frontend sẽ hiển thị <strong class="text-amber-600">"Liên hệ"</strong> thay vì số tiền cụ thể.<br>
+                                Khi <strong>bật</strong>: Hiển thị giá thực tế trên toàn bộ website.
+                            </p>
+                        </div>
+                    </label>
                 </div>
                 
                 <div class="pt-4 border-t border-gray-200 dark:border-slate-700">

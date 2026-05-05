@@ -5,6 +5,7 @@ require_once '../config/performance.php';
 require_once '../config/database.php';
 require_once '../helpers/language.php';
 require_once '../helpers/booking-validator.php'; // Anti-spam validation
+require_once '../helpers/settings-helper.php';
 initLanguage();
 
 // Get user information if logged in
@@ -148,6 +149,7 @@ foreach ($room_types as $room) {
 <body class="booking-page">
     <script>
         const IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        const SHOW_PRICES  = <?php echo showPrices() ? 'true' : 'false'; ?>;
     </script>
     <div class="relative flex min-h-screen w-full flex-col">
 
@@ -596,6 +598,7 @@ foreach ($room_types as $room) {
                                 </div>
 
                                 <!-- Enhanced Price Summary -->
+                                <?php if (showPrices()): ?>
                                 <div class="mt-6 p-4 bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-gray-700 dark:to-gray-800 rounded-xl border border-amber-500/20 dark:border-gray-600 transition-all duration-300"
                                     id="price_summary_box">
                                     <!-- Room Info Header -->
@@ -681,6 +684,15 @@ foreach ($room_types as $room) {
                                         </p>
                                     </div>
                                 </div>
+                                <!-- Contact note when prices hidden -->
+                                <?php else: ?>
+                                <div class="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center" id="price_summary_box">
+                                    <span class="material-symbols-outlined text-amber-400 text-3xl mb-2 block">phone</span>
+                                    <p class="text-amber-300 font-semibold mb-1"><?php _e('room_detail.or_call'); ?></p>
+                                    <a href="tel:+842513918888" class="text-xl font-bold text-white hover:text-amber-400 transition-colors">(+84-251) 391.8888</a>
+                                    <p class="text-xs text-gray-400 mt-2"><?php _e('booking_form.price_estimate_note'); ?></p>
+                                </div>
+                                <?php endif; ?>
                             </div>
 
                             <!-- ========== APARTMENT INQUIRY FIELDS (inquiry) ========== -->

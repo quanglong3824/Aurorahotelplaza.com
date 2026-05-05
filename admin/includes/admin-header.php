@@ -5,6 +5,7 @@
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../helpers/security.php';
 require_once __DIR__ . '/../../helpers/security-guard.php';
+require_once __DIR__ . '/../../helpers/settings-helper.php';
 
 // Kích hoạt bảo mật (Rate Limit, Bot Check)
 SecurityGuard::protect();
@@ -279,8 +280,9 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                         'label' => 'Phòng',
                         'icon' => 'meeting_room',
                         'items' => [
-                            ['page' => 'room-map', 'icon' => 'map', 'label' => 'Sơ đồ phòng'],
-                            ['page' => 'pricing', 'icon' => 'attach_money', 'label' => 'Giá phòng']
+                            ['page' => 'room-map',        'icon' => 'map',          'label' => 'Sơ đồ phòng'],
+                            ['page' => 'pricing',         'icon' => 'attach_money', 'label' => 'Giá phòng'],
+                            ['page' => 'pricing-detailed','icon' => 'receipt_long', 'label' => 'Bảng giá chi tiết']
                         ]
                     ],
                     [
@@ -524,6 +526,42 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     <?php endif; ?>
                 </div>
                 <div class="flex items-center gap-3">
+                    <!-- Price Toggle Quick Button -->
+                    <?php
+                    $show_prices_now = showPrices();
+                    ?>
+                    <button id="priceToggleBtn"
+                        onclick="toggleShowPrices()"
+                        title="<?php echo $show_prices_now ? 'Giá đang hiển thị - Click để ẩn' : 'Giá đang ẩn - Click để hiển'; ?>"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold <?php echo $show_prices_now ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100' : 'bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-100'; ?>">
+                        <span class="material-symbols-outlined text-base"><?php echo $show_prices_now ? 'sell' : 'money_off'; ?></span>
+                        <span class="hidden sm:inline"><?php echo $show_prices_now ? 'Giá ON' : 'Liên hệ'; ?></span>
+                    </button>
+                    <script>
+                    function toggleShowPrices() {
+                        const btn = document.getElementById('priceToggleBtn');
+                        btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        fetch('<?php echo rtrim(BASE_URL, "/"); ?>/admin/api/toggle-show-prices.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({})
+                        })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.success) {
+                                showToast(d.message, 'success');
+                                setTimeout(() => location.reload(), 800);
+                            } else {
+                                showToast(d.message || 'Lỗi', 'error');
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                            }
+                        })
+                        .catch(() => { btn.disabled = false; btn.style.opacity = '1'; });
+                    }
+                    </script>
+
                     <!-- Chat quick access -->
                     <a href="chat.php" id="chatHeaderBtn"
                         class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/environment.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../helpers/settings-helper.php';
 require_once __DIR__ . '/../config/performance.php';
 require_once __DIR__ . '/../helpers/language.php';
 require_once __DIR__ . '/../helpers/image-helper.php';
@@ -181,7 +182,11 @@ try {
                                         <span class="text-white/60"><?php _e('room_detail.from_price'); ?></span>
                                         <div class="text-right">
                                             <div class="text-3xl font-bold text-accent">
+                                                <?php if (showPrices()): ?>
                                                 <?php echo number_format($room_price, 0, ',', '.'); ?> VND</div>
+                                                <?php else: ?>
+                                                Liên hệ</div>
+                                                <?php endif; ?>
                                             <div class="text-sm text-white/60"><?php _e('room_detail.per_night'); ?></div>
                                         </div>
                                     </div>

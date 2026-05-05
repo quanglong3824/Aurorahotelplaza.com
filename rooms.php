@@ -4,6 +4,7 @@ require_once 'config/database.php';
 require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
+require_once 'helpers/settings-helper.php';
 initLanguage();
 
 try {
@@ -148,10 +149,14 @@ try {
 
                                         <!-- Price Badge -->
                                         <div class="price-badge">
-                                            <span class="price">
-                                                <?php echo SecurityGuard::obfuscate(number_format($room['base_price'], 0, ',', '.')); ?> VND
-                                            </span>
-                                            <span class="unit"><?php _e('common.per_night'); ?></span>
+                                            <?php if (showPrices()): ?>
+                                                <span class="price">
+                                                    <?php echo SecurityGuard::obfuscate(number_format($room['base_price'], 0, ',', '.')); ?> VND
+                                                </span>
+                                                <span class="unit"><?php _e('common.per_night'); ?></span>
+                                            <?php else: ?>
+                                                <span class="price" style="font-size:13px;letter-spacing:.5px;">Liên hệ</span>
+                                            <?php endif; ?>
                                         </div>
 
                                     </div>

@@ -8,6 +8,7 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/performance.php';
 require_once __DIR__ . '/helpers/image-helper.php';
 require_once __DIR__ . '/helpers/language.php';
+require_once __DIR__ . '/helpers/settings-helper.php';
 initLanguage();
 
 // Fetch featured rooms from database
@@ -455,9 +456,13 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($room['base_price'], 0, ',', '.'); ?>
-                                            <?php _e('common.currency'); ?>
-                                            <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                            <?php if (showPrices()): ?>
+                                                <?php echo number_format($room['base_price'], 0, ',', '.'); ?>
+                                                <?php _e('common.currency'); ?>
+                                                <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                            <?php else: ?>
+                                                <span style="font-size:14px;font-weight:600;">Liên hệ</span>
+                                            <?php endif; ?>
                                         </div>
 
                                         <!-- Title -->
@@ -538,9 +543,13 @@ try {
                                     <div class="card-content">
                                         <!-- Price -->
                                         <div class="price-display">
-                                            <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>
-                                            <?php _e('common.currency'); ?>
-                                            <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                            <?php if (showPrices()): ?>
+                                                <?php echo number_format($apartment['base_price'], 0, ',', '.'); ?>
+                                                <?php _e('common.currency'); ?>
+                                                <span class="price-unit">/<?php _e('common.night'); ?></span>
+                                            <?php else: ?>
+                                                <span style="font-size:14px;font-weight:600;">Liên hệ</span>
+                                            <?php endif; ?>
                                         </div>
 
                                         <!-- Title -->
