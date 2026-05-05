@@ -58,6 +58,15 @@ class Mailer {
             $this->mail->Port = SMTP_PORT;
             $this->mail->CharSet = MAIL_CHARSET;
             
+            // Bypass SSL Verification for local environments
+            $this->mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+            
             // Timeout settings for faster response
             $this->mail->Timeout = 10; // 10 seconds timeout
             $this->mail->SMTPKeepAlive = false; // Don't keep connection alive

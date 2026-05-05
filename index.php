@@ -9,6 +9,7 @@ require_once __DIR__ . '/config/performance.php';
 require_once __DIR__ . '/helpers/image-helper.php';
 require_once __DIR__ . '/helpers/language.php';
 require_once __DIR__ . '/helpers/settings-helper.php';
+require_once __DIR__ . '/helpers/room-helper.php';
 initLanguage();
 
 // Fetch featured rooms from database
@@ -438,7 +439,7 @@ try {
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php"
+                                <a href="<?php echo htmlspecialchars(getRoomDetailUrl($room['slug'], 'room')); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->
@@ -525,7 +526,7 @@ try {
                             <?php foreach ($featured_apartments as $apartment):
                                 $imageUrl = imgUrl($apartment['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-3.jpg');
                                 ?>
-                                <a href="apartment-details/<?php echo htmlspecialchars($apartment['slug']); ?>.php"
+                                <a href="<?php echo htmlspecialchars(getRoomDetailUrl($apartment['slug'], 'apartment')); ?>"
                                     class="liquid-glass-card group">
 
                                     <!-- Image Layer -->

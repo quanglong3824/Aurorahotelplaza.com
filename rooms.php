@@ -5,6 +5,7 @@ require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
 require_once 'helpers/settings-helper.php';
+require_once 'helpers/room-helper.php';
 initLanguage();
 
 try {
@@ -207,7 +208,7 @@ try {
                                                     style="font-size: 18px;">calendar_month</span>
                                                 <?php _e('rooms_page.book'); ?>
                                             </a>
-                                            <a href="room-details/<?php echo $room['slug']; ?>.php" class="btn-detail">
+                                            <a href="<?php echo htmlspecialchars(getRoomDetailUrl($room['slug'], 'room')); ?>" class="btn-detail">
                                                 <?php _e('rooms_page.view_details'); ?>
                                                 <span class="material-symbols-outlined">arrow_forward</span>
                                             </a>

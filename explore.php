@@ -5,6 +5,7 @@ require_once 'config/database.php';
 require_once 'config/performance.php';
 require_once 'helpers/image-helper.php';
 require_once 'helpers/language.php';
+require_once 'helpers/room-helper.php';
 initLanguage();
 
 // Fetch featured rooms
@@ -281,7 +282,7 @@ try {
                             <?php foreach ($featured_rooms as $room):
                                 $imageUrl = imgUrl($room['thumbnail'], 'assets/img/deluxe/deluxe-room-aurora-1.jpg');
                                 ?>
-                                <a href="room-details/<?php echo htmlspecialchars($room['slug']); ?>.php" class="group">
+                                <a href="<?php echo htmlspecialchars(getRoomDetailUrl($room['slug'], 'room')); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
@@ -346,7 +347,7 @@ try {
                             <?php foreach ($featured_apartments as $apt):
                                 $imageUrl = imgUrl($apt['thumbnail'], 'assets/img/studio-apartment/can-ho-studio-aurora-hotel-1.jpg');
                                 ?>
-                                <a href="apartment-details/<?php echo htmlspecialchars($apt['slug']); ?>.php" class="group">
+                                <a href="<?php echo htmlspecialchars(getRoomDetailUrl($apt['slug'], 'apartment')); ?>" class="group">
                                     <div class="explore-card">
                                         <div class="relative h-48 overflow-hidden">
                                             <img src="<?php echo htmlspecialchars($imageUrl); ?>"
