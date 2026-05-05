@@ -52,11 +52,12 @@ $sub_page_map = [
     'calendar-timeline'   => 'bookings',
 
     // Phòng - tất cả map về room-map (trang chính của nhóm Phòng)
-    'room-form'           => 'room-map',
-    'room-type-form'      => 'room-map',
-    'room-types'          => 'room-map',
-    'rooms'               => 'room-map',
-    'pricing-detailed'    => 'pricing',
+    'room-form'         => 'room-map',
+    'room-types'         => 'room-map',
+    'room-type-form'     => 'room-map',
+    'pricing'            => 'room-map',
+    'pricing-detailed'   => 'room-map',
+    'ai-pricing-insight' => 'room-map',
 
     // Khách hàng
     'customer-detail'     => 'customers',
@@ -280,9 +281,10 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                         'label' => 'Phòng',
                         'icon' => 'meeting_room',
                         'items' => [
-                            ['page' => 'room-map',        'icon' => 'map',          'label' => 'Sơ đồ phòng'],
-                            ['page' => 'pricing',         'icon' => 'attach_money', 'label' => 'Giá phòng'],
-                            ['page' => 'pricing-detailed','icon' => 'receipt_long', 'label' => 'Bảng giá chi tiết']
+                            ['page' => 'room-map',        'icon' => 'map',           'label' => 'Sơ đồ phòng'],
+                            ['page' => 'pricing',         'icon' => 'attach_money',  'label' => 'Giá phòng'],
+                            ['page' => 'pricing-detailed','icon' => 'receipt_long',  'label' => 'Bảng giá chi tiết'],
+                            ['page' => 'room-types',      'icon' => 'category',      'label' => 'Loại phòng']
                         ]
                     ],
                     [

@@ -12,6 +12,9 @@
  */
 
 require_once __DIR__ . '/../helpers/room-helper.php';
+if (!function_exists('showPrices')) {
+    require_once __DIR__ . '/../helpers/settings-helper.php';
+}
 
 // Lấy biến từ file gọi (nếu có)
 $currentRoomTypeId = $currentRoomTypeId ?? null;
@@ -38,10 +41,16 @@ $relatedRooms = getRandomRooms($currentRoomTypeId, 3, $category);
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
 
                             <!-- Price Tag -->
+                            <?php if (showPrices()): ?>
                             <div class="absolute bottom-4 left-4 glass-price-overlay">
                                 <span class="price"><?php echo formatPrice($room['base_price']); ?></span>
                                 <span class="unit text-xs text-white/80"><?php _e('apartment_detail.per_night'); ?></span>
                             </div>
+                            <?php else: ?>
+                            <div class="absolute bottom-4 left-4 glass-price-overlay">
+                                <span class="price" style="font-size:13px;letter-spacing:.5px;">Liên hệ</span>
+                            </div>
+                            <?php endif; ?>
                         </div>
 
                         <div class="p-6 flex flex-col flex-grow">
