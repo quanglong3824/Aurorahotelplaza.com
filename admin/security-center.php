@@ -41,6 +41,8 @@ $blacklist = $db->query("SELECT * FROM security_blacklist ORDER BY created_at DE
 $honeypot_logs = $db->query("SELECT * FROM security_honeypot_logs ORDER BY created_at DESC LIMIT 10")->fetchAll();
 
 require_once 'includes/admin-header.php';
+// Khôi phục lại biến $page_hash vì admin-header.php có vòng lặp menu ghi đè mất biến này
+$page_hash = Security::hashAdminPage('security-center');
 ?>
 
 <div class="space-y-6">
