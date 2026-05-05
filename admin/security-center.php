@@ -27,6 +27,13 @@ if (isset($_GET['remove_ip'])) {
     exit;
 }
 
+// Xử lý Gỡ bỏ TẤT CẢ IP khỏi Blacklist
+if (isset($_GET['remove_all_ips'])) {
+    $db->query("DELETE FROM security_blacklist");
+    header("Location: index.php?p=$page_hash&success=1");
+    exit;
+}
+
 // Lấy danh sách Blacklist
 $blacklist = $db->query("SELECT * FROM security_blacklist ORDER BY created_at DESC")->fetchAll();
 
@@ -75,8 +82,13 @@ require_once 'includes/admin-header.php';
 
     <!-- Danh sách Blacklist -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div class="p-6 border-b border-slate-100 dark:border-slate-700">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
             <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight">Danh sách đen (Blacklist)</h3>
+            <a href="index.php?p=<?php echo $page_hash; ?>&remove_all_ips=1" 
+               onclick="return confirm('Bạn có chắc chắn muốn gỡ chặn TẤT CẢ các IP không?')"
+               class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">delete_sweep</span> Gỡ chặn toàn bộ
+            </a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
