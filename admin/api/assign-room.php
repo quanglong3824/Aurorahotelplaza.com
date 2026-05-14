@@ -105,11 +105,10 @@ try {
         throw new Exception('Phòng đã được đặt trong khoảng thời gian này');
     }
     
-    // Assign room to booking
+    // Assign room to booking (giữ nguyên trạng thái, không tự xác nhận)
     $stmt = $db->prepare("
         UPDATE bookings 
         SET room_id = :room_id,
-            status = 'confirmed',
             updated_at = NOW()
         WHERE booking_id = :booking_id
     ");
@@ -135,7 +134,7 @@ try {
             booking_id, old_status, new_status,
             changed_by, notes, created_at
         ) VALUES (
-            :booking_id, :old_status, 'confirmed',
+            :booking_id, :old_status, :old_status,
             :changed_by, :notes, NOW()
         )
     ");
