@@ -554,33 +554,63 @@ include 'includes/admin-header.php';
 </div>
 
 <script>
+    // Loading overlay
+    function showAdminLoading(message) {
+        let overlay = document.getElementById('adminLoadingOverlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'adminLoadingOverlay';
+            overlay.innerHTML = `
+                <div style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                    <div style="background:#fff;border-radius:12px;padding:32px 40px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+                        <div style="width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#d4af37;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
+                        <h3 style="font-size:16px;font-weight:600;color:#1f2937;margin-bottom:4px;" id="adminLoadingMsg">${message}</h3>
+                        <p style="font-size:13px;color:#6b7280;">Processing, please wait...</p>
+                    </div>
+                </div>
+                <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+            `;
+            document.body.appendChild(overlay);
+        } else {
+            document.getElementById('adminLoadingMsg').textContent = message;
+            overlay.style.display = 'flex';
+        }
+    }
+
+    function hideAdminLoading() {
+        const overlay = document.getElementById('adminLoadingOverlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
     function confirmBooking(id) {
         if (confirm('Xác nhận đơn đặt phòng này? Sau khi xác nhận sẽ chuyển đến trang báo cáo để in.')) {
+            showAdminLoading('Đang xác nhận đơn đặt phòng...');
             updateBookingStatus(id, 'confirmed');
         }
     }
 
     function checkinBooking(id) {
-        // Load booking data and available rooms for check-in
+        showAdminLoading('Đang tải thông tin phòng...');
         fetch(`api/get-available-rooms.php?booking_id=${id}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success && data.booking) {
-                    // Check if room is already assigned
+                    hideAdminLoading();
                     if (data.booking.room_id) {
-                        // Room already assigned, just do check-in
                         if (confirm('Xác nhận khách đã check-in?')) {
+                            showAdminLoading('Đang xác nhận check-in...');
                             updateBookingStatus(id, 'checked_in');
                         }
                     } else {
-                        // No room assigned, show room selection modal
                         loadAvailableRoomsForCheckin(id, data.booking);
                     }
                 } else {
+                    hideAdminLoading();
                     showToast('Không thể tải thông tin đơn đặt phòng', 'error');
                 }
             })
             .catch(error => {
+                hideAdminLoading();
                 console.error('Error:', error);
                 showToast('Có lỗi xảy ra', 'error');
             });
@@ -588,6 +618,7 @@ include 'includes/admin-header.php';
 
     function checkoutBooking(id) {
         if (confirm('Xác nhận khách đã check-out?')) {
+            showAdminLoading('Đang xác nhận check-out...');
             updateBookingStatus(id, 'checked_out');
         }
     }
@@ -595,6 +626,7 @@ include 'includes/admin-header.php';
     function cancelBooking(id) {
         const reason = prompt('Lý do hủy đơn / Cancellation reason:');
         if (reason !== null) {
+            showAdminLoading('Đang hủy đơn đặt phòng...');
             updateBookingStatus(id, 'cancelled', reason);
         }
     }
@@ -621,20 +653,23 @@ include 'includes/admin-header.php';
                         setTimeout(() => location.reload(), 1000);
                     }
                 } else {
+                    hideAdminLoading();
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }
             })
             .catch(error => {
+                hideAdminLoading();
                 console.error('Error:', error);
                 showToast('Có lỗi xảy ra', 'error');
             });
     }
 
     function assignRoom(bookingId) {
-        // Load available rooms
+        showAdminLoading('Đang tải danh sách phòng khả dụng...');
         fetch(`api/get-available-rooms.php?booking_id=${bookingId}`)
             .then(res => res.json())
             .then(data => {
+                hideAdminLoading();
                 if (data.success) {
                     showAssignRoomModal(bookingId, data.booking, data.rooms);
                 } else {
@@ -642,6 +677,7 @@ include 'includes/admin-header.php';
                 }
             })
             .catch(error => {
+                hideAdminLoading();
                 console.error('Error:', error);
                 showToast('Có lỗi xảy ra', 'error');
             });
@@ -751,6 +787,9 @@ include 'includes/admin-header.php';
             return;
         }
 
+        closeAssignRoomModal();
+        showAdminLoading('Đang phân phòng...');
+
         const formData = new FormData();
         formData.append('booking_id', bookingId);
         formData.append('room_id', roomId);
@@ -762,14 +801,15 @@ include 'includes/admin-header.php';
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    closeAssignRoomModal();
                     showToast('Phân phòng thành công!', 'success');
                     setTimeout(() => location.reload(), 1000);
                 } else {
+                    hideAdminLoading();
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }
             })
             .catch(error => {
+                hideAdminLoading();
                 console.error('Error:', error);
                 showToast('Có lỗi xảy ra', 'error');
             });
@@ -782,6 +822,8 @@ include 'includes/admin-header.php';
 
         if (!confirm('Xác nhận đổi loại phòng?')) return;
 
+        showAdminLoading('Đang cập nhật loại phòng...');
+
         fetch('api/update-booking-field.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -793,10 +835,11 @@ include 'includes/admin-header.php';
                     showToast('Đã cập nhật loại phòng!', 'success');
                     setTimeout(() => location.reload(), 800);
                 } else {
+                    hideAdminLoading();
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }
             })
-            .catch(() => showToast('Có lỗi xảy ra', 'error'));
+            .catch(() => { hideAdminLoading(); showToast('Có lỗi xảy ra', 'error'); });
     }
 
     // Update room price (per night)
@@ -813,6 +856,8 @@ include 'includes/admin-header.php';
         const perNight = parseInt(inputVal);
         const totalAmount = perNight * nights;
 
+        showAdminLoading('Đang cập nhật đơn giá...');
+
         fetch('api/update-booking-field.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -824,10 +869,11 @@ include 'includes/admin-header.php';
                     showToast('Đã cập nhật đơn giá!', 'success');
                     setTimeout(() => location.reload(), 800);
                 } else {
+                    hideAdminLoading();
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }
             })
-            .catch(() => showToast('Có lỗi xảy ra', 'error'));
+            .catch(() => { hideAdminLoading(); showToast('Có lỗi xảy ra', 'error'); });
     }
 
     // Format number input for room price
