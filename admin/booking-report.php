@@ -70,70 +70,71 @@ try {
         .no-print a, .no-print button { color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid #555; background: #333; }
         .no-print button:hover { background: #555; }
 
-        .page { max-width: 210mm; margin: 0 auto; padding: 20mm; }
+        .page { max-width: 210mm; margin: 0 auto; padding: 12mm; }
 
         /* Header */
-        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 16px; margin-bottom: 24px; }
-        .logo { width: 160px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 14px; }
+        .logo { width: 120px; }
         .logo img { width: 100%; height: auto; }
         .header-right { text-align: right; }
-        .doc-title { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .doc-subtitle { font-size: 12px; color: #555; margin-top: 2px; }
-        .doc-date { font-size: 11px; color: #666; margin-top: 6px; }
+        .doc-title { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .doc-subtitle { font-size: 11px; color: #555; margin-top: 1px; }
+        .doc-date { font-size: 10px; color: #666; margin-top: 4px; }
 
         /* Booking code bar */
-        .code-bar { display: flex; justify-content: space-between; align-items: center; border: 1px solid #000; padding: 12px 20px; margin-bottom: 24px; }
-        .code-bar .label { font-size: 11px; text-transform: uppercase; color: #555; letter-spacing: 1px; }
-        .code-bar .code { font-size: 22px; font-weight: 700; letter-spacing: 3px; }
-        .code-bar .status { font-size: 12px; font-weight: 600; border: 1px solid #000; padding: 3px 10px; text-transform: uppercase; }
+        .code-bar { display: flex; justify-content: space-between; align-items: center; border: 1px solid #000; padding: 8px 16px; margin-bottom: 14px; }
+        .code-bar .label { font-size: 10px; text-transform: uppercase; color: #555; letter-spacing: 1px; }
+        .code-bar .code { font-size: 18px; font-weight: 700; letter-spacing: 3px; }
+        .code-bar .status { font-size: 11px; font-weight: 600; border: 1px solid #000; padding: 2px 8px; text-transform: uppercase; }
 
         /* Two column */
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #ccc; }
-        .col { padding: 16px 0; }
-        .col:first-child { padding-right: 20px; border-right: 1px solid #ccc; }
-        .col:last-child { padding-left: 20px; }
-        .col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #000; }
-        .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 14px; border-bottom: 1px solid #ccc; }
+        .col { padding: 10px 0; }
+        .col:first-child { padding-right: 16px; border-right: 1px solid #ccc; }
+        .col:last-child { padding-left: 16px; }
+        .col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #000; }
+        .row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 11px; }
         .row .label { color: #555; }
         .row .value { font-weight: 500; text-align: right; }
 
         /* Stay strip */
-        .stay-strip { display: grid; grid-template-columns: 1fr auto 1fr; border: 1px solid #000; margin-bottom: 24px; }
-        .stay-box { padding: 14px 20px; text-align: center; }
-        .stay-box .label { font-size: 10px; text-transform: uppercase; color: #555; letter-spacing: 1px; }
-        .stay-box .date { font-size: 18px; font-weight: 700; margin-top: 4px; }
-        .stay-box .time { font-size: 10px; color: #666; margin-top: 2px; }
-        .stay-divider { display: flex; align-items: center; justify-content: center; border-left: 1px solid #000; border-right: 1px solid #000; padding: 0 16px; }
-        .stay-divider .nights { font-size: 14px; font-weight: 700; }
-        .stay-divider .nights-label { font-size: 10px; color: #555; text-transform: uppercase; }
+        .stay-strip { display: grid; grid-template-columns: 1fr auto 1fr; border: 1px solid #000; margin-bottom: 14px; }
+        .stay-box { padding: 10px 16px; text-align: center; }
+        .stay-box .label { font-size: 9px; text-transform: uppercase; color: #555; letter-spacing: 1px; }
+        .stay-box .date { font-size: 15px; font-weight: 700; margin-top: 2px; }
+        .stay-box .time { font-size: 9px; color: #666; margin-top: 1px; }
+        .stay-divider { display: flex; align-items: center; justify-content: center; border-left: 1px solid #000; border-right: 1px solid #000; padding: 0 12px; }
+        .stay-divider .nights { font-size: 13px; font-weight: 700; }
+        .stay-divider .nights-label { font-size: 9px; color: #555; text-transform: uppercase; }
 
         /* Pricing */
-        .pricing { border: 1px solid #000; margin-bottom: 24px; }
-        .pricing-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 10px 20px; border-bottom: 1px solid #000; }
-        .pricing-row { display: flex; justify-content: space-between; padding: 6px 20px; font-size: 12px; border-bottom: 1px dotted #ccc; }
+        .pricing { border: 1px solid #000; margin-bottom: 14px; }
+        .pricing-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 6px 16px; border-bottom: 1px solid #000; }
+        .pricing-row { display: flex; justify-content: space-between; padding: 4px 16px; font-size: 11px; border-bottom: 1px dotted #ccc; }
         .pricing-row:last-child { border-bottom: none; }
-        .pricing-row.total { border-top: 2px solid #000; padding-top: 10px; margin-top: 4px; }
-        .pricing-row.total .label { font-weight: 700; font-size: 13px; text-transform: uppercase; }
-        .pricing-row.total .value { font-weight: 700; font-size: 16px; }
+        .pricing-row.total { border-top: 2px solid #000; padding-top: 6px; margin-top: 2px; }
+        .pricing-row.total .label { font-weight: 700; font-size: 12px; text-transform: uppercase; }
+        .pricing-row.total .value { font-weight: 700; font-size: 14px; }
 
         /* Notes */
-        .notes { border: 1px solid #000; padding: 12px 20px; margin-bottom: 24px; }
-        .notes-title { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
-        .notes-text { font-size: 12px; white-space: pre-wrap; color: #333; }
+        .notes { border: 1px solid #000; padding: 8px 16px; margin-bottom: 14px; }
+        .notes-title { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .notes-text { font-size: 11px; white-space: pre-wrap; color: #333; }
 
         /* Signatures */
-        .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+        .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
         .sig { text-align: center; }
-        .sig .role { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 50px; }
-        .sig .name { border-top: 1px solid #000; display: inline-block; padding-top: 4px; font-size: 12px; min-width: 150px; }
+        .sig .role { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 35px; }
+        .sig .name { border-top: 1px solid #000; display: inline-block; padding-top: 4px; font-size: 11px; min-width: 140px; }
 
         /* Footer */
-        .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #ccc; text-align: center; font-size: 10px; color: #555; }
-        .footer .hotel { font-size: 12px; font-weight: 700; color: #000; margin-bottom: 2px; }
+        .footer { margin-top: 16px; padding-top: 8px; border-top: 1px solid #ccc; text-align: center; font-size: 9px; color: #555; }
+        .footer .hotel { font-size: 11px; font-weight: 700; color: #000; margin-bottom: 2px; }
 
         @media print {
             .no-print { display: none !important; }
-            .page { padding: 15mm; }
+            .page { padding: 10mm; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
