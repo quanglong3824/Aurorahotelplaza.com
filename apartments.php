@@ -152,7 +152,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                         </span>
                                                         <span class="unit"><?php _e('common.per_night'); ?></span>
                                                     <?php else: ?>
-                                                        <span class="price" style="font-size:13px;letter-spacing:.5px;">Liên hệ</span>
+                                                        <span class="price" style="font-size:13px;letter-spacing:.5px;"><?php _e('common.price_contact'); ?></span>
                                                     <?php endif; ?>
                                                 </div>
 
@@ -258,7 +258,7 @@ $old_apartments = array_filter($apartments, fn($apt) => $apt['sort_order'] > 10)
                                                         </span>
                                                         <span class="unit"><?php _e('common.per_night'); ?></span>
                                                     <?php else: ?>
-                                                        <span class="price" style="font-size:13px;letter-spacing:.5px;">Liên hệ</span>
+                                                        <span class="price" style="font-size:13px;letter-spacing:.5px;"><?php _e('common.price_contact'); ?></span>
                                                     <?php endif; ?>
                                                 </div>
 

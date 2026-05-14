@@ -462,7 +462,7 @@ try {
                                                 <?php _e('common.currency'); ?>
                                                 <span class="price-unit">/<?php _e('common.night'); ?></span>
                                             <?php else: ?>
-                                                <span style="font-size:14px;font-weight:600;">Liên hệ</span>
+                                                <span style="font-size:14px;font-weight:600;"><?php _e('common.price_contact'); ?></span>
                                             <?php endif; ?>
                                         </div>
 
@@ -549,7 +549,7 @@ try {
                                                 <?php _e('common.currency'); ?>
                                                 <span class="price-unit">/<?php _e('common.night'); ?></span>
                                             <?php else: ?>
-                                                <span style="font-size:14px;font-weight:600;">Liên hệ</span>
+                                                <span style="font-size:14px;font-weight:600;"><?php _e('common.price_contact'); ?></span>
                                             <?php endif; ?>
                                         </div>
 

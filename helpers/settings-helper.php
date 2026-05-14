@@ -47,5 +47,5 @@ function renderPrice($price, string $suffix = 'VND', string $cssClass = ''): str
         $cls = $cssClass ? " class=\"{$cssClass}\"" : '';
         return "<span{$cls}>{$formatted} {$suffix}</span>";
     }
-    return '<span class="price-contact">Liên hệ</span>';
+    return '<span class="price-contact">' . __('common.price_contact') . '</span>';
 }

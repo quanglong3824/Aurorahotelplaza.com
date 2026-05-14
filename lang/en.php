@@ -76,6 +76,7 @@ return [
         'guest_add' => 'extra guest',
         'processing' => 'Processing...',
         'help' => 'Help',
+        'price_contact' => 'Contact',
     ],
 
     // Booking

@@ -48,7 +48,7 @@ $relatedRooms = getRandomRooms($currentRoomTypeId, 3, $category);
                             </div>
                             <?php else: ?>
                             <div class="absolute bottom-4 left-4 glass-price-overlay">
-                                <span class="price" style="font-size:13px;letter-spacing:.5px;">Liên hệ</span>
+                                <span class="price" style="font-size:13px;letter-spacing:.5px;"><?php _e('common.price_contact'); ?></span>
                             </div>
                             <?php endif; ?>
                         </div>

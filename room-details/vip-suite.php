@@ -193,7 +193,7 @@ try {
                                                 <?php if (showPrices()): ?>
                                                 <?php echo number_format($room_price, 0, ',', '.'); ?> VND</div>
                                                 <?php else: ?>
-                                                Liên hệ</div>
+                                                <?php _e('common.price_contact'); ?></div>
                                                 <?php endif; ?>
                                             <div class="text-sm text-white/60"><?php _e('room_detail.per_night'); ?></div>
                                         </div>

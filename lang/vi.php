@@ -75,6 +75,7 @@ return [
         'currency' => 'VND',
         'guest_add' => 'khách thêm',
         'processing' => 'Đang xử lý...',
+        'price_contact' => 'Liên hệ',
     ],
 
     // Booking
