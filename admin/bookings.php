@@ -643,6 +643,11 @@ include 'includes/admin-header.php';
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-gray-600">email</span>
                             <span>${customer.email}</span>
+                            <a href="mailto:${customer.email}?subject=Re:%20Đặt%20phòng%20${booking.booking_code}%20-%20Aurora%20Hotel%20Plaza"
+                                class="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors text-xs font-medium"
+                                title="Reply email">
+                                <span class="material-symbols-outlined" style="font-size:14px">reply</span>
+                            </a>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-gray-600">phone</span>

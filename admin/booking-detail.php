@@ -340,9 +340,9 @@ include 'includes/admin-header.php';
                                 class="flex-1 btn btn-success text-center">
                                 <span class="material-symbols-outlined text-sm mr-1">call</span> Gọi điện
                             </a>
-                            <a href="mailto:<?php echo htmlspecialchars($booking['guest_email']); ?>"
+                            <a href="mailto:<?php echo htmlspecialchars($booking['guest_email']); ?>?subject=Re:%20Đặt%20phòng%20<?php echo urlencode($booking['booking_code']); ?>%20-%20Aurora%20Hotel%20Plaza"
                                 class="flex-1 btn btn-primary text-center">
-                                <span class="material-symbols-outlined text-sm mr-1">mail</span> Gửi email
+                                <span class="material-symbols-outlined text-sm mr-1">reply</span> Reply email
                             </a>
                         </div>
                     </div>
@@ -375,7 +375,15 @@ include 'includes/admin-header.php';
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Email</p>
-                        <p class="font-medium"><?php echo htmlspecialchars($booking['guest_email']); ?></p>
+                        <div class="flex items-center gap-2">
+                            <p class="font-medium"><?php echo htmlspecialchars($booking['guest_email']); ?></p>
+                            <a href="mailto:<?php echo htmlspecialchars($booking['guest_email']); ?>?subject=Re:%20Đặt%20phòng%20<?php echo urlencode($booking['booking_code']); ?>%20-%20Aurora%20Hotel%20Plaza"
+                                class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors text-xs font-medium"
+                                title="Reply email khách hàng">
+                                <span class="material-symbols-outlined text-sm">reply</span>
+                                Reply
+                            </a>
+                        </div>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Số điện thoại
