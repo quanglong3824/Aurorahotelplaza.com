@@ -123,10 +123,10 @@ include 'includes/admin-header.php';
             </button>
         <?php endif; ?>
 
-        <button onclick="window.print()" class="btn btn-secondary">
+        <a href="booking-report.php?id=<?php echo $booking_id; ?>" target="_blank" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">print</span>
-            In
-        </button>
+            In biên bản
+        </a>
 
         <a href="view-qrcode.php?id=<?php echo $booking_id; ?>" class="btn btn-secondary">
             <span class="material-symbols-outlined text-sm">qr_code</span>

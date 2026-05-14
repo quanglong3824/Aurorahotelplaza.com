@@ -340,3 +340,11 @@ echo json_encode([
 - Admin pages: `include 'includes/admin-header.php'` và `include 'includes/admin-footer.php'`
 - Config files: `require_once 'config/database.php'`
 - Helpers: `require_once 'helpers/function-name.php'`
+
+## Workflow Rules — Commit & Push
+- **LUÔN commit + push ngay sau khi hoàn thành một task** (edit file, fix bug, thêm tính năng)
+- Mỗi commit phải có message rõ ràng, mô tả "what" và "why"
+- Sau khi commit, luôn chạy `git status` để xác nhận không còn file nào bị bỏ sót
+- Nếu user yêu cầu commit/push, thực hiện ngay — KHÔNG hỏi lại
+- Nếu có nhiều file thay đổi, gom thành 1 commit duy nhất nếu chúng thuộc cùng 1 task
+- Sau khi push, thông báo ngắn gọn cho user: "Đã commit + push xong"

@@ -722,98 +722,223 @@ $status_labels = [
                     <title>Booking Confirmation - <?php echo $booking['booking_code']; ?></title>
                     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Roboto', sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; line-height: 1.5; }
-                        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
-                        .hotel-name { font-size: 28px; font-weight: 700; color: #d4af37; margin-bottom: 5px; text-transform: uppercase; }
-                        .doc-title { font-size: 16px; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body { font-family: 'Roboto', Arial, sans-serif; padding: 0; color: #222; font-size: 13px; line-height: 1.5; }
+                        .page { max-width: 210mm; margin: 0 auto; padding: 20mm; }
                         
-                        .booking-code-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
-                        .booking-code-content { text-align: left; }
-                        .booking-code-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
-                        .booking-code { font-size: 32px; font-weight: 700; color: #333; letter-spacing: 1px; }
+                        /* Header */
+                        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #d4af37; padding-bottom: 15px; margin-bottom: 20px; }
+                        .header-left { flex: 1; }
+                        .logo-text { font-size: 24px; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; }
+                        .hotel-address { font-size: 11px; color: #666; margin-top: 4px; }
+                        .header-right { text-align: right; }
+                        .doc-title { font-size: 16px; font-weight: 700; text-transform: uppercase; color: #333; letter-spacing: 1px; }
+                        .doc-subtitle { font-size: 11px; color: #888; margin-top: 2px; }
+                        .doc-date { font-size: 11px; color: #666; margin-top: 8px; }
                         
-                        .qr-code img { width: 100px; height: 100px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                        /* Booking Code */
+                        .booking-code-strip { background: #f8f8f8; border: 1px solid #ddd; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+                        .booking-code-strip .label { font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 1px; }
+                        .booking-code-strip .code { font-size: 22px; font-weight: 700; color: #333; letter-spacing: 3px; }
+                        .booking-code-strip .status { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 4px; text-transform: uppercase; }
+                        .status-pending { background: #fef3c7; color: #92400e; }
+                        .status-confirmed { background: #dcfce7; color: #166534; }
+                        .status-checked_in { background: #dbeafe; color: #1e40af; }
+                        .status-checked_out { background: #f3f4f6; color: #374151; }
+                        .status-cancelled { background: #fee2e2; color: #991b1b; }
                         
-                        .section { margin-bottom: 30px; }
-                        .section-title { font-size: 16px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: #d4af37; text-transform: uppercase; }
+                        /* Two Column Layout */
+                        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 0; }
+                        .col { padding: 15px 20px; }
+                        .col-left { border-right: 1px solid #e5e5e5; }
+                        .col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #d4af37; letter-spacing: 1px; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px; }
+                        .info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dotted #eee; font-size: 12px; }
+                        .info-row:last-child { border-bottom: none; }
+                        .info-label { color: #888; font-weight: 400; }
+                        .info-value { font-weight: 500; text-align: right; color: #333; }
                         
-                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-                        .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-                        .label { color: #666; }
-                        .value { font-weight: 500; text-align: right; }
+                        /* Stay Duration */
+                        .stay-strip { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; margin: 20px 0; border: 1px solid #e5e5e5; }
+                        .stay-box { padding: 15px 20px; text-align: center; }
+                        .stay-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; margin-bottom: 4px; }
+                        .stay-date { font-size: 18px; font-weight: 700; color: #333; }
+                        .stay-time { font-size: 10px; color: #888; margin-top: 2px; }
+                        .stay-divider { display: flex; align-items: center; justify-content: center; background: #f8f8f8; border-left: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 0 15px; }
+                        .stay-divider .nights { font-size: 14px; font-weight: 700; color: #d4af37; }
+                        .stay-divider .nights-label { font-size: 10px; color: #888; text-transform: uppercase; }
                         
-                        .dates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-                        .date-box { padding: 15px; background: #f5f5f5; border-radius: 8px; text-align: center; }
-                        .date-label { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
-                        .date-val { font-size: 18px; font-weight: 700; color: #333; }
+                        /* Room Details */
+                        .room-strip { border: 1px solid #e5e5e5; padding: 15px 20px; margin-bottom: 20px; }
+                        .room-strip .col-title { margin-bottom: 10px; }
                         
-                        .total-section { background: #1a1a1a; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; }
-                        .total-row { display: flex; justify-content: space-between; align-items: center; }
-                        .total-label { font-size: 16px; font-weight: 500; }
-                        .total-amount { font-size: 24px; font-weight: 700; color: #d4af37; }
+                        /* Pricing */
+                        .pricing-strip { border: 1px solid #e5e5e5; padding: 15px 20px; margin-bottom: 20px; }
+                        .pricing-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; }
+                        .pricing-row.total { border-top: 2px solid #333; padding-top: 10px; margin-top: 8px; }
+                        .pricing-row.total .label { font-weight: 700; font-size: 14px; text-transform: uppercase; }
+                        .pricing-row.total .value { font-weight: 700; font-size: 18px; color: #d4af37; }
                         
-                        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
+                        /* Signatures */
+                        .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; padding-top: 20px; }
+                        .sig-box { text-align: center; }
+                        .sig-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 50px; }
+                        .sig-name { font-size: 12px; font-weight: 500; border-top: 1px solid #333; display: inline-block; padding-top: 4px; min-width: 150px; }
+                        
+                        /* Footer */
+                        .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e5e5; text-align: center; font-size: 10px; color: #888; }
+                        .footer .hotel-name { font-size: 12px; font-weight: 700; color: #d4af37; margin-bottom: 2px; }
+                        
+                        /* Notes */
+                        .notes { border: 1px solid #e5e5e5; padding: 12px 20px; margin-bottom: 20px; background: #fafafa; }
+                        .notes-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 6px; }
+                        .notes-text { font-size: 12px; color: #555; white-space: pre-wrap; }
                         
                         @media print {
                             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            .page { padding: 15mm; }
                         }
                     </style>
                 </head>
                 <body>
-                    <div class="header">
-                        <div class="hotel-name">Aurora Hotel Plaza</div>
-                        <div class="doc-title">Xác nhận đặt phòng / Booking Confirmation</div>
-                    </div>
-                    
-                    <div class="booking-code-box">
-                        <div class="booking-code-content">
-                            <div class="booking-code-label">Mã đặt phòng / Booking Code</div>
-                            <div class="booking-code"><?php echo $booking['booking_code']; ?></div>
-                            <div style="margin-top: 10px; font-size: 14px; font-weight: bold; color: <?php echo ($booking['status'] == 'confirmed') ? '#2e7d32' : 'orange'; ?>">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="header">
+                            <div class="header-left">
+                                <div class="logo-text">Aurora Hotel Plaza</div>
+                                <div class="hotel-address">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai</div>
+                                <div class="hotel-address">Hotline: 0251 3511 888 | info@aurorahotelplaza.com</div>
+                            </div>
+                            <div class="header-right">
+                                <div class="doc-title">Xác nhận đặt phòng</div>
+                                <div class="doc-subtitle">Booking Confirmation</div>
+                                <div class="doc-date">Ngày in/Printed: <?php echo date('H:i d/m/Y'); ?></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Booking Code Strip -->
+                        <div class="booking-code-strip">
+                            <div>
+                                <div class="label">Mã đặt phòng / Booking Code</div>
+                                <div class="code"><?php echo $booking['booking_code']; ?></div>
+                            </div>
+                            <div class="status status-<?php echo $booking['status']; ?>">
                                 <?php echo $status_labels[$booking['status']]['label']; ?>
                             </div>
                         </div>
-                        <div class="qr-code">
-                             <img src="api/get-qrcode.php?booking_id=<?php echo $booking['booking_id']; ?>" alt="QR Code" />
-                        </div>
-                    </div>
-                    
-                    <div class="dates-grid">
-                        <div class="date-box">
-                            <div class="date-label">Check-in</div>
-                            <div class="date-val"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></div>
-                            <div style="font-size: 12px; margin-top: 5px;">Từ/From 14:00</div>
-                        </div>
-                        <div class="date-box">
-                            <div class="date-label">Check-out</div>
-                            <div class="date-val"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></div>
-                            <div style="font-size: 12px; margin-top: 5px;">Trước/Before 12:00</div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid">
-                        <div class="section">
-                            <div class="section-title">Khách hàng / Guest</div>
-                            <div class="row"><span class="label">Họ tên:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_name']); ?></span></div>
-                            <div class="row"><span class="label">SĐT:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_phone']); ?></span></div>
-                            <div class="row"><span class="label">Email:</span> <span class="value"><?php echo htmlspecialchars($booking['guest_email']); ?></span></div>
+                        
+                        <!-- Two Column: Guest & Hotel -->
+                        <div class="two-col">
+                            <div class="col col-left">
+                                <div class="col-title">Thông tin khách hàng / Guest Information</div>
+                                <div class="info-row"><span class="info-label">Họ tên / Name:</span><span class="info-value"><?php echo htmlspecialchars($booking['guest_name']); ?></span></div>
+                                <div class="info-row"><span class="info-label">SĐT / Phone:</span><span class="info-value"><?php echo htmlspecialchars($booking['guest_phone']); ?></span></div>
+                                <div class="info-row"><span class="info-label">Email:</span><span class="info-value"><?php echo htmlspecialchars($booking['guest_email']); ?></span></div>
+                                <?php if ($booking['guest_id_number']): ?>
+                                <div class="info-row"><span class="info-label">CMND/CCCD / ID:</span><span class="info-value"><?php echo htmlspecialchars($booking['guest_id_number']); ?></span></div>
+                                <?php endif; ?>
+                                <div class="info-row"><span class="info-label">Ngày đặt / Booked:</span><span class="info-value"><?php echo date('H:i d/m/Y', strtotime($booking['created_at'])); ?></span></div>
+                            </div>
+                            <div class="col">
+                                <div class="col-title">Thông tin khách sạn / Hotel Information</div>
+                                <div class="info-row"><span class="info-label">Tên / Name:</span><span class="info-value">Aurora Hotel Plaza</span></div>
+                                <div class="info-row"><span class="info-label">Địa chỉ / Address:</span><span class="info-value">253 Phạm Văn Thuận</span></div>
+                                <div class="info-row"><span class="info-label">Điện thoại / Phone:</span><span class="info-value">0251 3511 888</span></div>
+                                <div class="info-row"><span class="info-label">Email:</span><span class="info-value">info@aurorahotelplaza.com</span></div>
+                                <div class="info-row"><span class="info-label">Website:</span><span class="info-value">aurorahotelplaza.com</span></div>
+                            </div>
                         </div>
                         
-                        <div class="section">
-                            <div class="section-title">Phòng / Room</div>
-                            <div class="row"><span class="label">Loại phòng:</span> <span class="value"><?php echo htmlspecialchars($booking['type_name']); ?></span></div>
-                            <?php if ($booking['room_number']): ?>
-                            <div class="row"><span class="label">Số phòng:</span> <span class="value"><?php echo $booking['room_number']; ?></span></div>
-                            <?php endif; ?>
-                            <div class="row"><span class="label">Số khách:</span> <span class="value"><?php echo $booking['num_adults']; ?> người lớn, <?php echo $booking['num_children']; ?> trẻ em</span></div>
-                            <div class="row"><span class="label">Thời gian:</span> <span class="value"><?php echo $booking['total_nights']; ?> đêm / nights</span></div>
+                        <!-- Stay Duration Strip -->
+                        <div class="stay-strip">
+                            <div class="stay-box">
+                                <div class="stay-label">Nhận phòng / Check-in</div>
+                                <div class="stay-date"><?php echo date('d/m/Y', strtotime($booking['check_in_date'])); ?></div>
+                                <div class="stay-time">Từ 14:00 / From 14:00</div>
+                            </div>
+                            <div class="stay-divider">
+                                <div>
+                                    <div class="nights"><?php echo $booking['total_nights']; ?> đêm</div>
+                                    <div class="nights-label">nights</div>
+                                </div>
+                            </div>
+                            <div class="stay-box">
+                                <div class="stay-label">Trả phòng / Check-out</div>
+                                <div class="stay-date"><?php echo date('d/m/Y', strtotime($booking['check_out_date'])); ?></div>
+                                <div class="stay-time">Trước 12:00 / Before 12:00</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="footer">
-                        <p>Cảm ơn quý khách đã lựa chọn Aurora Hotel Plaza!</p>
-                        <p>Thank you for choosing Aurora Hotel Plaza!</p>
-                        <p style="margin-top: 10px;">Hotline: 0251 3511 888 | info@aurorahotelplaza.com</p>
+                        
+                        <!-- Room Details -->
+                        <div class="room-strip">
+                            <div class="col-title">Thông tin phòng / Room Information</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 20px;">
+                                <div class="info-row"><span class="info-label">Loại phòng:</span><span class="info-value"><?php echo htmlspecialchars($booking['type_name']); ?></span></div>
+                                <div class="info-row"><span class="info-label">Giường / Bed:</span><span class="info-value"><?php echo htmlspecialchars($booking['bed_type']); ?></span></div>
+                                <div class="info-row"><span class="info-label">Số khách / Guests:</span><span class="info-value"><?php echo $booking['num_adults']; ?> người lớn<?php if ($booking['num_children'] > 0) echo ', ' . $booking['num_children'] . ' trẻ em'; ?></span></div>
+                                <?php if ($booking['room_number']): ?>
+                                <div class="info-row"><span class="info-label">Số phòng / Room:</span><span class="info-value" style="font-weight:700;color:#16a34a;"><?php echo $booking['room_number']; ?></span></div>
+                                <div class="info-row"><span class="info-label">Tầng / Floor:</span><span class="info-value"><?php echo $booking['floor']; ?><?php if ($booking['building']) echo ' - ' . htmlspecialchars($booking['building']); ?></span></div>
+                                <?php else: ?>
+                                <div class="info-row" style="grid-column: span 3;"><span class="info-label">Phòng / Room:</span><span class="info-value" style="color:#b45309;">Chưa phân / Not assigned</span></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <?php if (!empty($booking['special_requests'])): ?>
+                        <div class="notes">
+                            <div class="notes-title">Yêu cầu đặc biệt / Special Requests</div>
+                            <div class="notes-text"><?php echo htmlspecialchars($booking['special_requests']); ?></div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <!-- Pricing -->
+                        <div class="pricing-strip">
+                            <div class="col-title">Chi phí / Pricing</div>
+                            <div class="pricing-row">
+                                <span class="label">Đơn giá phòng / đêm × <?php echo $booking['total_nights']; ?> đêm</span>
+                                <span class="value"><?php echo number_format($booking['room_price'] / max(1, $booking['total_nights']), 0, ',', '.'); ?> VND</span>
+                            </div>
+                            <?php if (($booking['extra_beds'] ?? 0) > 0): ?>
+                            <div class="pricing-row">
+                                <span class="label">Giường phụ / Extra beds (<?php echo $booking['extra_beds']; ?>)</span>
+                                <span class="value"><?php echo number_format($booking['extra_bed_fee'] ?? 0, 0, ',', '.'); ?> VND</span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($booking['service_fee'] > 0): ?>
+                            <div class="pricing-row">
+                                <span class="label">Phí dịch vụ / Service fee</span>
+                                <span class="value"><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?> VND</span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($booking['discount_amount'] > 0): ?>
+                            <div class="pricing-row">
+                                <span class="label">Giảm giá / Discount</span>
+                                <span class="value" style="color:#dc2626;">-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?> VND</span>
+                            </div>
+                            <?php endif; ?>
+                            <div class="pricing-row total">
+                                <span class="label">Tổng cộng / Total</span>
+                                <span class="value"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?> VND</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Signatures -->
+                        <div class="signatures">
+                            <div class="sig-box">
+                                <div class="sig-title">Khách hàng / Guest</div>
+                                <div class="sig-name"><?php echo htmlspecialchars($booking['guest_name']); ?></div>
+                            </div>
+                            <div class="sig-box">
+                                <div class="sig-title">Đại diện khách sạn / Hotel Representative</div>
+                                <div class="sig-name">Aurora Hotel Plaza</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="footer">
+                            <div class="hotel-name">Aurora Hotel Plaza</div>
+                            253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai | Hotline: 0251 3511 888 | info@aurorahotelplaza.com | aurorahotelplaza.com
+                        </div>
                     </div>
                 </body>
                 </html>
