@@ -216,9 +216,13 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                             <div class="w-3 h-3 rounded-full bg-green-400"></div>
                             <span class="ml-3 text-xs text-gray-500 dark:text-gray-400">Email Preview</span>
                         </div>
-                        <div style="max-height: 700px; overflow-y: auto;">
-                            <?php echo $preview_html; ?>
-                        </div>
+                        <iframe
+                            id="email-preview-frame"
+                            srcdoc="<?php echo htmlspecialchars($preview_html, ENT_QUOTES, 'UTF-8'); ?>"
+                            style="width: 100%; min-height: 700px; border: none; display: block; background: #fff;"
+                            sandbox="allow-same-origin"
+                            onload="this.style.minHeight = (this.contentWindow.document.body.scrollHeight + 40) + 'px';"
+                        ></iframe>
                     </div>
                 </div>
             </div>
