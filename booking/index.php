@@ -561,12 +561,6 @@ foreach ($room_types as $room) {
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <div class="text-right">
-                                                <div class="text-orange-400 font-bold">
-                                                    650.000<?php _e('common.currency'); ?></div>
-                                                <div class="text-xs text-gray-400"><?php _e('common.per_night'); ?>
-                                                </div>
-                                            </div>
                                             <div class="flex items-center gap-2">
                                                 <button type="button" onclick="adjustValue('extra_beds', -1)"
                                                     class="w-9 h-9 rounded-lg bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors shadow-md hover:shadow-lg">
@@ -597,102 +591,13 @@ foreach ($room_types as $room) {
                                     </p>
                                 </div>
 
-                                <!-- Enhanced Price Summary -->
-                                <?php if (showPrices()): ?>
-                                <div class="mt-6 p-4 bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-gray-700 dark:to-gray-800 rounded-xl border border-amber-500/20 dark:border-gray-600 transition-all duration-300"
-                                    id="price_summary_box">
-                                    <!-- Room Info Header -->
-                                    <div
-                                        class="flex items-center justify-between mb-3 pb-3 border-b border-gray-600/50">
-                                        <div class="flex items-center gap-2">
-                                            <span id="price_type_badge"
-                                                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
-                                                <span class="material-symbols-outlined text-sm">hotel</span>
-                                                <span
-                                                    id="price_type_label"><?php _e('booking_form.price_for_2'); ?></span>
-                                            </span>
-                                        </div>
-                                        <span id="original_price_display"
-                                            class="text-sm text-gray-500 line-through hidden">0
-                                            <?php _e('common.currency'); ?></span>
-                                    </div>
-
-                                    <!-- Price Breakdown -->
-                                    <div class="space-y-2 text-sm">
-                                        <!-- Room Rate -->
-                                        <div class="flex justify-between items-center">
-                                            <span
-                                                class="text-gray-400"><?php _e('booking_page.price_per_night'); ?>:</span>
-                                            <span id="room_price_display" class="font-bold" style="color: #d4af37;">0
-                                                <?php _e('common.currency'); ?></span>
-                                        </div>
-
-                                        <!-- Number of nights -->
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-gray-400"><?php _e('booking_page.num_nights'); ?>:</span>
-                                            <span id="num_nights">0 <?php _e('common.per_night'); ?></span>
-                                        </div>
-
-                                        <!-- Room Subtotal -->
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-gray-400"><?php _e('booking_form.room_charge'); ?>:</span>
-                                            <span id="room_subtotal_display">0 <?php _e('common.currency'); ?></span>
-                                        </div>
-
-                                        <!-- Extra Guest Fee -->
-                                        <div class="flex justify-between items-center hidden" id="extra_guest_fee_row">
-                                            <span
-                                                class="text-gray-400"><?php _e('booking_form.extra_guest_charge'); ?>:</span>
-                                            <span id="extra_guest_fee_display" class="text-blue-400">0
-                                                <?php _e('common.currency'); ?></span>
-                                        </div>
-
-                                        <!-- Extra Bed Fee -->
-                                        <div class="flex justify-between items-center hidden" id="extra_bed_fee_row">
-                                            <span
-                                                class="text-gray-400"><?php _e('booking_form.extra_bed_charge'); ?>:</span>
-                                            <span id="extra_bed_fee_display" class="text-orange-400">0
-                                                <?php _e('common.currency'); ?></span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Total -->
-                                    <div
-                                        class="flex justify-between items-center mt-3 pt-3 border-t border-gray-300/50 dark:border-gray-600">
-                                        <span class="font-semibold"><?php _e('booking_page.estimated_total'); ?>:</span>
-                                        <span id="estimated_total_display" class="text-2xl font-bold text-accent">0
-                                            <?php _e('common.currency'); ?></span>
-                                        <input type="hidden" id="estimated_total" name="estimated_total" value="0">
-                                        <input type="hidden" id="price_type_used" name="price_type_used" value="double">
-                                        <input type="hidden" id="extra_guest_fee" name="extra_guest_fee" value="0">
-                                        <input type="hidden" id="extra_bed_fee" name="extra_bed_fee" value="0">
-                                        <input type="hidden" id="num_guests" name="num_guests" value="2">
-                                        <input type="hidden" id="extra_guests_data" name="extra_guests_data" value="[]">
-                                    </div>
-
-                                    <!-- Tax Info Note -->
-                                    <div class="mt-3 pt-3 border-t border-gray-300/30 dark:border-gray-600">
-                                        <p
-                                            class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-2">
-                                            <span
-                                                class="material-symbols-outlined text-sm text-green-500">check_circle</span>
-                                            <?php _e('booking_form.included_tax_service'); ?>
-                                        </p>
-                                        <p class="text-xs text-amber-500 dark:text-amber-400 flex items-start gap-1">
-                                            <span class="material-symbols-outlined text-sm mt-0.5">info</span>
-                                            <span><?php _e('booking_form.price_estimate_note'); ?></span>
-                                        </p>
-                                    </div>
-                                </div>
                                 <!-- Contact note when prices hidden -->
-                                <?php else: ?>
                                 <div class="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center" id="price_summary_box">
                                     <span class="material-symbols-outlined text-amber-400 text-3xl mb-2 block">phone</span>
                                     <p class="text-amber-300 font-semibold mb-1"><?php _e('room_detail.or_call'); ?></p>
                                     <a href="tel:+842513918888" class="text-xl font-bold text-white hover:text-amber-400 transition-colors">(+84-251) 391.8888</a>
                                     <p class="text-xs text-gray-400 mt-2"><?php _e('booking_form.price_estimate_note'); ?></p>
                                 </div>
-                                <?php endif; ?>
                             </div>
 
                             <!-- ========== APARTMENT INQUIRY FIELDS (inquiry) ========== -->
@@ -975,7 +880,7 @@ foreach ($room_types as $room) {
                                     <hr class="my-3 border-gray-300 dark:border-gray-600">
 
                                     <!-- PAYMENT SPECIFIC SUMMARY -->
-                                    <div id="payment_summary_rows">
+                                    <div id="payment_summary_rows" class="hidden">
                                         <div class="flex justify-between">
                                             <span><?php _e('booking_form.room_charge'); ?>:</span>
                                             <span id="summary_subtotal" class="font-semibold"></span>
@@ -1016,6 +921,12 @@ foreach ($room_types as $room) {
                                                 * <?php _e('booking_page.price_estimate_note_final'); ?>
                                             </p>
                                         </div>
+                                    </div>
+                                    <!-- Contact for pricing -->
+                                    <div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center">
+                                        <span class="material-symbols-outlined text-amber-400 text-2xl mb-1 block">phone</span>
+                                        <p class="text-amber-300 font-semibold mb-1"><?php _e('booking_form.contact_for_quote'); ?></p>
+                                        <a href="tel:+842513918888" class="text-lg font-bold text-white hover:text-amber-400 transition-colors">(+84-251) 391.8888</a>
                                     </div>
                                 </div>
                             </div>

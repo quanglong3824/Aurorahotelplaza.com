@@ -210,12 +210,38 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                     }
                     ?>
                     <div class="bg-gray-100 dark:bg-slate-800 rounded-xl overflow-hidden">
-                        <div class="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-700">
+                        <div class="flex items-center gap-2 px-4 py-2.5 bg-gray-200 dark:bg-slate-700 border-b border-gray-300 dark:border-slate-600">
                             <div class="w-3 h-3 rounded-full bg-red-400"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
                             <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                            <span class="ml-3 text-xs text-gray-500 dark:text-gray-400">Email Preview</span>
+                            <span class="ml-3 text-xs text-gray-500 dark:text-gray-400 font-medium">Email Preview</span>
                         </div>
+                        <div class="p-3 bg-gray-50 dark:bg-slate-900">
+                            <iframe
+                                id="email-preview-frame"
+                                srcdoc="<?php echo htmlspecialchars($preview_html, ENT_QUOTES, 'UTF-8'); ?>"
+                                style="width: 100%; min-height: 900px; border: none; display: block; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);"
+                                sandbox="allow-same-origin"
+                                onload="resizePreviewIframe(this);"
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function resizePreviewIframe(iframe) {
+    try {
+        const height = iframe.contentWindow.document.body.scrollHeight;
+        iframe.style.minHeight = Math.max(height + 60, 900) + 'px';
+    } catch(e) {
+        iframe.style.minHeight = '900px';
+    }
+}
+</script>
                         <iframe
                             id="email-preview-frame"
                             srcdoc="<?php echo htmlspecialchars($preview_html, ENT_QUOTES, 'UTF-8'); ?>"
