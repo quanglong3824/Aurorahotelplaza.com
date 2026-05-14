@@ -1,15 +1,14 @@
 <?php
 /**
- * Helper: Reset toàn bộ điểm thưởng về 0 + Xoá Deluxe Single khỏi hệ thống
- * Chạy 1 lần trên production rồi xoá file này đi.
+ * Helper: Ẩn Deluxe Single khỏi form booking + Reset điểm thưởng về 0
+ * Chạy 1 lần trên production rồi XOÁ FILE NÀY ĐI.
  * URL: https://aurorahotelplaza.com/helpers/reset-loyalty-and-remove-deluxe-single.php
  */
 
 require_once __DIR__ . '/../config/database.php';
 
-// === BẢO MẬT: Chỉ cho chạy nếu có ?confirm=1 ===
 if (!isset($_GET['confirm']) || $_GET['confirm'] !== '1') {
-    die('<h1>⚠️ Helper: Reset điểm thưởng & Xoá Deluxe Single</h1>
+    die('<h1>⚠️ Helper: Ẩn Deluxe Single & Reset điểm thưởng</h1>
          <p>Thêm <code>?confirm=1</code> vào URL để thực thi.</p>
          <p><a href="?confirm=1">Nhấn vào đây để xác nhận</a></p>');
 }
@@ -52,11 +51,11 @@ try {
 }
 
 // =============================================
-// 3. TÌM & VÔ HIỆU HOÁ "DELUXE SINGLE"
+// 3. ẨN DELUXE SINGLE KHỎI FORM BOOKING
+//    (Set status = 'inactive' → query booking tự lọc ra)
 // =============================================
 try {
-    // Tìm room_type có tên chứa "deluxe single" (case-insensitive)
-    $stmt = $db->prepare("SELECT room_type_id, type_name, slug FROM room_types WHERE LOWER(type_name) LIKE '%deluxe single%' OR LOWER(slug) LIKE '%deluxe-single%'");
+    $stmt = $db->prepare("SELECT room_type_id, type_name, slug, status FROM room_types WHERE LOWER(type_name) LIKE '%deluxe single%' OR LOWER(slug) LIKE '%deluxe-single%'");
     $stmt->execute();
     $deluxeSingleTypes = $stmt->fetchAll();
 
@@ -67,15 +66,15 @@ try {
         }
         $idList = implode(',', $ids);
 
-        // Đánh dấu inactive thay vì xoá hẳn (để giữ lịch sử booking)
+        // Chỉ set inactive, KHÔNG XOÁ dữ liệu
         $stmt = $db->prepare("UPDATE room_types SET status = 'inactive' WHERE room_type_id IN ($idList)");
         $stmt->execute();
 
-        $results['deluxe_single'] = "✅ Đã vô hiệu hoá <strong>" . count($deluxeSingleTypes) . "</strong> loại phòng Deluxe Single:<br>";
+        $results['deluxe_single'] = "✅ Đã ẩn <strong>" . count($deluxeSingleTypes) . "</strong> loại phòng Deluxe Single khỏi form booking (set status = 'inactive'):<br>";
         foreach ($deluxeSingleTypes as $rt) {
-            $results['deluxe_single'] .= "&nbsp;&nbsp;• ID {$rt['room_type_id']}: <strong>{$rt['type_name']}</strong> (slug: {$rt['slug']})<br>";
+            $results['deluxe_single'] .= "&nbsp;&nbsp;• ID {$rt['room_type_id']}: <strong>{$rt['type_name']}</strong> (slug: {$rt['slug']}, status cũ: {$rt['status']})<br>";
         }
-        $results['deluxe_single'] .= "<br><em>⚠️ Phòng đã inactive sẽ không hiện trong form booking nữa. Lịch sử booking cũ vẫn giữ nguyên.</em>";
+        $results['deluxe_single'] .= "<br><em>⚠️ Dữ liệu room_types và rooms vẫn giữ nguyên. Chỉ ẩn khỏi form booking. Có thể khôi phục bằng cách set status = 'active'.</em>";
     } else {
         $results['deluxe_single'] = "ℹ️ Không tìm thấy loại phòng nào tên 'Deluxe Single' trong CSDL.";
     }
@@ -84,34 +83,14 @@ try {
 }
 
 // =============================================
-// 4. XOÁ ROOM THUỘC DELUXE SINGLE (nếu có)
+// 4. VÔ HIỆU HOÁ TÍCH ĐIỂM (set points_per_vnd = 0)
 // =============================================
 try {
-    $stmt = $db->query("SELECT room_type_id FROM room_types WHERE LOWER(type_name) LIKE '%deluxe single%' OR LOWER(slug) LIKE '%deluxe-single%'");
-    $inactiveTypeIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-    if (count($inactiveTypeIds) > 0) {
-        $idList = implode(',', $inactiveTypeIds);
-        $stmt = $db->prepare("UPDATE rooms SET status = 'maintenance' WHERE room_type_id IN ($idList)");
-        $stmt->execute();
-        $roomCount = $stmt->rowCount();
-        $results['rooms_updated'] = "✅ Đã chuyển <strong>{$roomCount}</strong> phòng thuộc Deluxe Single sang trạng thái 'maintenance'.";
-    } else {
-        $results['rooms_updated'] = "ℹ️ Không có phòng nào thuộc Deluxe Single.";
-    }
-} catch (PDOException $e) {
-    $results['rooms_updated'] = "❌ Lỗi xử lý phòng: " . htmlspecialchars($e->getMessage());
-}
-
-// =============================================
-// 5. VÔ HIỆU HOÁ TÍNH NĂNG ĐIỂM THƯỞNG (settings)
-// =============================================
-try {
-    $stmt = $db->prepare("UPDATE settings SET setting_value = '0' WHERE setting_key = 'points_per_vnd'");
+    $stmt = $db->prepare("UPDATE system_settings SET setting_value = '0' WHERE setting_key = 'points_per_vnd'");
     $stmt->execute();
     $results['points_disabled'] = "✅ Đã set points_per_vnd = 0 (không tích điểm nữa).";
 } catch (PDOException $e) {
-    $results['points_disabled'] = "ℹ️ Không tìm thấy setting points_per_vnd: " . htmlspecialchars($e->getMessage());
+    $results['points_disabled'] = "ℹ️ Lỗi hoặc không tìm thấy setting points_per_vnd: " . htmlspecialchars($e->getMessage());
 }
 
 // =============================================
@@ -122,7 +101,7 @@ try {
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Reset điểm thưởng & Xoá Deluxe Single</title>
+    <title>Ẩn Deluxe Single & Reset điểm thưởng</title>
     <style>
         body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
         .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
