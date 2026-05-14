@@ -563,6 +563,42 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     }
                     </script>
 
+                    <!-- Booking Toggle Quick Button -->
+                    <?php
+                    $booking_disabled = getSystemSetting('booking_disabled', '0') === '1';
+                    ?>
+                    <button id="bookingToggleBtn"
+                        onclick="toggleBooking()"
+                        title="<?php echo $booking_disabled ? 'Đang chặn booking - Click để mở' : 'Đang mở booking - Click để chặn'; ?>"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold <?php echo $booking_disabled ? 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 hover:bg-red-100' : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100'; ?>">
+                        <span class="material-symbols-outlined text-base"><?php echo $booking_disabled ? 'event_busy' : 'event_available'; ?></span>
+                        <span class="hidden sm:inline"><?php echo $booking_disabled ? 'Chặn ON' : 'Booking'; ?></span>
+                    </button>
+                    <script>
+                    function toggleBooking() {
+                        const btn = document.getElementById('bookingToggleBtn');
+                        btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        fetch('<?php echo rtrim(BASE_URL, "/"); ?>/admin/api/toggle-booking.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({})
+                        })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.success) {
+                                showToast(d.message, d.disabled ? 'warning' : 'success');
+                                setTimeout(() => location.reload(), 800);
+                            } else {
+                                showToast(d.message || 'Lỗi', 'error');
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                            }
+                        })
+                        .catch(() => { btn.disabled = false; btn.style.opacity = '1'; });
+                    }
+                    </script>
+
                     <!-- Chat quick access -->
                     <a href="chat.php" id="chatHeaderBtn"
                         class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"

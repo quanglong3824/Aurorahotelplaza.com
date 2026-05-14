@@ -290,6 +290,32 @@ if (!function_exists('__')) {
     }, { passive: true });
 
     // ============================================
+    // BOOKING DISABLED CHECK
+    // ============================================
+    let bookingDisabled = false;
+    let bookingDisabledMessage = '';
+
+    fetch('/api/booking-status.php')
+        .then(r => r.json())
+        .then(data => {
+            bookingDisabled = data.disabled;
+            bookingDisabledMessage = data.message || '';
+            if (bookingDisabled) {
+                disableAllBookingButtons();
+            }
+        })
+        .catch(() => {});
+
+    function disableAllBookingButtons() {
+        document.querySelectorAll('a[href*="/dat-phong"], a[href*="booking/index.php"], a[href*="booking/"], form[action*="dat-phong"] button[type="submit"], .btn-book, .btn-glass-gold[href*="dat-phong"]').forEach(el => {
+            if (el.closest('.hero-slider') || el.classList.contains('booking-bypass')) return;
+            el.classList.add('booking-disabled');
+            el.style.pointerEvents = 'auto';
+            el.style.cursor = 'pointer';
+        });
+    }
+
+    // ============================================
     // BOOKING TYPE SELECTION
     // ============================================
     document.addEventListener('DOMContentLoaded', function () {
@@ -299,8 +325,16 @@ if (!function_exists('__')) {
 
         // Intercept booking links (skip hero-slider)
         document.addEventListener('click', function (e) {
-            const link = e.target.closest('a[href*="/dat-phong"], a[href*="booking/index.php"], a[href*="booking/"]');
+            const link = e.target.closest('a[href*="/dat-phong"], a[href*="booking/index.php"], a[href*="booking/"], .btn-book, form[action*="dat-phong"] button[type="submit"]');
             if (!link || link.closest('.hero-slider') || link.classList.contains('booking-bypass')) return;
+
+            // Check if booking is disabled
+            if (bookingDisabled) {
+                e.preventDefault();
+                show('bookingDisabledModal');
+                return;
+            }
+
             const href = link.getAttribute('href');
             if (!href || (!href.includes('/dat-phong') && !href.includes('booking/index.php') && !href.endsWith('/booking/'))) return;
             e.preventDefault();
@@ -312,8 +346,9 @@ if (!function_exists('__')) {
         document.getElementById('btn-group')?.addEventListener('click', () => { hide('bookingTypeModal'); show('groupContactModal'); });
         document.getElementById('close-type-modal')?.addEventListener('click', () => hide('bookingTypeModal'));
         document.getElementById('close-group-modal')?.addEventListener('click', () => hide('groupContactModal'));
+        document.getElementById('close-disabled-modal')?.addEventListener('click', () => hide('bookingDisabledModal'));
 
-        ['bookingTypeModal', 'groupContactModal'].forEach(id => {
+        ['bookingTypeModal', 'groupContactModal', 'bookingDisabledModal'].forEach(id => {
             document.getElementById(id)?.addEventListener('click', function (e) { if (e.target === this) hide(id); });
         });
     });
@@ -380,6 +415,73 @@ if (!function_exists('__')) {
         </div>
     </div>
 </div>
+
+<!-- Booking Disabled Modal -->
+<div id="bookingDisabledModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4"
+    style="background:rgba(0,0,0,0.75);">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-500/30">
+        <div
+            class="px-6 py-4 border-b border-red-500/20 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700">
+            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                <span class="material-symbols-outlined">info</span>
+                Tạm dừng đặt phòng
+            </h3>
+            <button id="close-disabled-modal" class="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-red-400 text-3xl">event_busy</span>
+                </div>
+                <div>
+                    <p id="bookingDisabledMsg" class="text-white/90 leading-relaxed">
+                        Do lưu lượng đặt phòng tăng cao, hệ thống tạm thời không nhận đặt phòng mới.
+                    </p>
+                    <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                        <a href="tel:02513918888"
+                            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:shadow-lg transition-all text-sm">
+                            <span class="material-symbols-outlined text-lg">call</span>
+                            0251 3918 888
+                        </a>
+                        <a href="mailto:info@aurorahotelplaza.com"
+                            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all text-sm">
+                            <span class="material-symbols-outlined text-lg">mail</span>
+                            Gửi email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update modal message from API
+    if (typeof bookingDisabledMessage !== 'undefined' && bookingDisabledMessage) {
+        const msgEl = document.getElementById('bookingDisabledMsg');
+        if (msgEl) msgEl.textContent = bookingDisabledMessage;
+    }
+</script>
+
+<style>
+    .booking-disabled {
+        opacity: 0.5 !important;
+        filter: grayscale(80%) !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        position: relative !important;
+    }
+    .booking-disabled::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.15);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+</style>
 
 <!-- ── Aurora AI Error Tracker (JS) ──────────────── -->
 <?php if (!defined('DISABLE_ERROR_TRACKER')): ?>

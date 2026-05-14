@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'allow_guest_booking',
             'require_payment_upfront',
             'auto_confirm_booking',
-            'show_prices'
+            'show_prices',
+            'booking_disabled'
         ];
 
         // Ensure all checkbox settings are present
@@ -97,6 +98,8 @@ try {
         'require_payment_upfront' => '0',
         'auto_confirm_booking' => '0',
         'show_prices' => '0',
+        'booking_disabled' => '0',
+        'booking_disabled_message' => 'Do lưu lượng đặt phòng tăng cao, hệ thống tạm thời không nhận đặt phòng mới. Quý khách vui lòng liên hệ hotline 0251 3918 888 để được hỗ trợ. Chúng tôi rất mong nhận được sự thông cảm từ quý khách.',
     ], $settings_raw);
     
 } catch (Exception $e) {
@@ -219,6 +222,28 @@ include 'includes/admin-header.php';
             </div>
             
             <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark space-y-3">
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="settings[booking_disabled]" value="1" 
+                               id="booking_disabled_toggle"
+                               <?php echo $settings['booking_disabled'] ? 'checked' : ''; ?>>
+                        <span class="font-medium text-red-600">Tạm dừng nhận đặt phòng</span>
+                    </label>
+                    <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1 ml-6">
+                        Khi bật, tất cả nút "Đặt phòng" trên website sẽ bị xám đi và hiển thị thông báo cho khách hàng
+                    </p>
+                </div>
+
+                <div class="ml-6">
+                    <label class="form-label">Lý do tạm dừng (hiển thị cho khách)</label>
+                    <textarea name="settings[booking_disabled_message]" rows="3"
+                              class="form-input w-full"
+                              placeholder="Nhập lý do tạm dừng đặt phòng..."><?php echo htmlspecialchars($settings['booking_disabled_message'] ?? ''); ?></textarea>
+                    <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+                        Thông báo này sẽ hiển thị trong modal khi khách nhấn nút "Đặt phòng"
+                    </p>
+                </div>
+                
                 <label class="flex items-center gap-2">
                     <input type="checkbox" name="settings[allow_guest_booking]" value="1" 
                            <?php echo $settings['allow_guest_booking'] ? 'checked' : ''; ?>>
