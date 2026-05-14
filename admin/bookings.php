@@ -236,7 +236,7 @@ include 'includes/admin-header.php';
                     <th>Số đêm</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Thanh toán</th>
+                    <!-- <th>Thanh toán</th> -->
                     <th class="no-print">Hành động</th>
                 </tr>
             </thead>
@@ -316,7 +316,8 @@ include 'includes/admin-header.php';
                                     <?php echo $status_labels[$booking['status']] ?? $booking['status']; ?>
                                 </span>
                             </td>
-                            <td>
+                            <!-- Payment status hidden -->
+                            <!-- <td>
                                 <?php
                                 $payment_classes = [
                                     'unpaid' => 'badge-danger',
@@ -335,7 +336,7 @@ include 'includes/admin-header.php';
                                     class="badge <?php echo $payment_classes[$booking['payment_status']] ?? 'badge-secondary'; ?>">
                                     <?php echo $payment_labels[$booking['payment_status']] ?? $booking['payment_status']; ?>
                                 </span>
-                            </td>
+                            </td> -->
                             <td class="no-print">
                                 <div class="action-buttons">
                                     <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" class="action-btn"
