@@ -25,7 +25,7 @@ try {
     }
 
     // Chỉ cho phép cập nhật các field này
-    $allowed_fields = ['room_type_id', 'total_amount'];
+    $allowed_fields = ['room_type_id', 'total_amount', 'check_in_date', 'check_out_date'];
     if (!in_array($field, $allowed_fields)) {
         echo json_encode(['success' => false, 'message' => 'Field không được phép']);
         exit;
@@ -69,12 +69,47 @@ try {
         }
     }
 
+    // Validate dates
+    if (in_array($field, ['check_in_date', 'check_out_date'])) {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            echo json_encode(['success' => false, 'message' => 'Định dạng ngày không hợp lệ']);
+            exit;
+        }
+
+        // Lấy booking đầy đủ để kiểm tra logic ngày
+        $stmt = $db->prepare("SELECT check_in_date, check_out_date FROM bookings WHERE booking_id = ?");
+        $stmt->execute([$booking_id]);
+        $dates = $stmt->fetch();
+
+        $currentCheckIn = $dates['check_in_date'];
+        $currentCheckOut = $dates['check_out_date'];
+
+        if ($field === 'check_in_date') {
+            $newCheckIn = $value;
+            $newCheckOut = $currentCheckOut;
+        } else {
+            $newCheckIn = $currentCheckIn;
+            $newCheckOut = $value;
+        }
+
+        if (strtotime($newCheckIn) >= strtotime($newCheckOut)) {
+            echo json_encode(['success' => false, 'message' => 'Ngày check-in phải trước ngày check-out']);
+            exit;
+        }
+    }
+
     // Cập nhật
     $stmt = $db->prepare("UPDATE bookings SET $field = ?, updated_at = NOW() WHERE booking_id = ?");
     $stmt->execute([$value, $booking_id]);
 
     // Log history
-    $label = $field === 'room_type_id' ? 'Loại phòng' : 'Tổng tiền';
+    $labels = [
+        'room_type_id' => 'Loại phòng',
+        'total_amount' => 'Tổng tiền',
+        'check_in_date' => 'Ngày check-in',
+        'check_out_date' => 'Ngày check-out'
+    ];
+    $label = $labels[$field] ?? $field;
     $stmt = $db->prepare("
         INSERT INTO booking_history (booking_id, old_status, new_status, changed_by, notes, created_at)
         VALUES (?, ?, ?, ?, ?, NOW())

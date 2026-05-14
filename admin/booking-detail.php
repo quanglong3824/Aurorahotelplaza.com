@@ -220,25 +220,43 @@ include 'includes/admin-header.php';
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-in</p>
-                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></p>
+                        <div class="flex items-center gap-2">
+                            <input type="date" id="editCheckInDate" class="form-select text-sm py-1 px-2"
+                                value="<?php echo date('Y-m-d', strtotime($booking['check_in_date'])); ?>"
+                                <?php echo in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
+                            <?php if (!in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled'])): ?>
+                                <button onclick="updateCheckInDate()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
+                                    Cập nhật
+                                </button>
+                            <?php endif; ?>
+                        </div>
                         <?php if ($booking['checked_in_at']): ?>
-                            <p class="text-sm text-green-600">
+                            <p class="text-sm text-green-600 mt-1">
                                 Đã check-in: <?php echo date('m/d/Y H:i', strtotime($booking['checked_in_at'])); ?>
                             </p>
                         <?php endif; ?>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-out</p>
-                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></p>
+                        <div class="flex items-center gap-2">
+                            <input type="date" id="editCheckOutDate" class="form-select text-sm py-1 px-2"
+                                value="<?php echo date('Y-m-d', strtotime($booking['check_out_date'])); ?>"
+                                <?php echo in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
+                            <?php if (!in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled'])): ?>
+                                <button onclick="updateCheckOutDate()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
+                                    Cập nhật
+                                </button>
+                            <?php endif; ?>
+                        </div>
                         <?php if ($booking['checked_out_at']): ?>
-                            <p class="text-sm text-green-600">
+                            <p class="text-sm text-green-600 mt-1">
                                 Đã check-out: <?php echo date('m/d/Y H:i', strtotime($booking['checked_out_at'])); ?>
                             </p>
                         <?php endif; ?>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Số đêm</p>
-                        <p class="font-medium"><?php echo $booking['total_nights']; ?> đêm</p>
+                        <p class="font-medium" id="totalNightsDisplay"><?php echo $booking['total_nights']; ?> đêm</p>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Số phòng</p>
@@ -763,6 +781,60 @@ include 'includes/admin-header.php';
             .then(data => {
                 if (data.success) {
                     showToast('Đã cập nhật giá!', 'success');
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(() => showToast('Có lỗi xảy ra', 'error'));
+    }
+
+    // Update check-in date
+    function updateCheckInDate() {
+        const newDate = document.getElementById('editCheckInDate').value;
+        const bookingId = <?php echo $booking_id; ?>;
+
+        if (!newDate) {
+            showToast('Vui lòng chọn ngày', 'error');
+            return;
+        }
+
+        fetch('api/update-booking-field.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_id: bookingId, field: 'check_in_date', value: newDate })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Đã cập nhật ngày check-in!', 'success');
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(() => showToast('Có lỗi xảy ra', 'error'));
+    }
+
+    // Update check-out date
+    function updateCheckOutDate() {
+        const newDate = document.getElementById('editCheckOutDate').value;
+        const bookingId = <?php echo $booking_id; ?>;
+
+        if (!newDate) {
+            showToast('Vui lòng chọn ngày', 'error');
+            return;
+        }
+
+        fetch('api/update-booking-field.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_id: bookingId, field: 'check_out_date', value: newDate })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Đã cập nhật ngày check-out!', 'success');
                     setTimeout(() => location.reload(), 800);
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
