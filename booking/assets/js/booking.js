@@ -1849,6 +1849,9 @@ async function handleSubmit(e) {
         return;
     }
 
+    // Show loading overlay immediately
+    showBookingLoadingOverlay();
+
     // Get form data
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData);
@@ -1961,6 +1964,7 @@ async function handleSubmit(e) {
 
         if (!validation.allowed) {
             // Show error modal with existing bookings
+            hideBookingLoadingOverlay();
             showBookingConflictModal(validation);
             submitBtn.disabled = false;
             submitBtnText.textContent = originalText;
@@ -1976,9 +1980,6 @@ async function handleSubmit(e) {
     // Disable submit button
     submitBtn.disabled = true;
     submitBtnText.textContent = translations.common.processing;
-
-    // Show loading overlay
-    showBookingLoadingOverlay();
 
     try {
         // Always use create_booking.php - it handles both instant and inquiry bookings

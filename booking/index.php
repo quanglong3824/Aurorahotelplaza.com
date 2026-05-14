@@ -142,7 +142,7 @@ foreach ($room_types as $room) {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/liquid-glass.css'); ?>">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/booking/assets/css/booking.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/booking/assets/css/booking.css?v=<?php echo time(); ?>">
 
 </head>
 
@@ -1062,7 +1062,7 @@ foreach ($room_types as $room) {
         };
     </script>
     <script src="<?php echo asset('js/main.js'); ?>"></script>
-    <script src="<?php echo BASE_URL; ?>/booking/assets/js/booking.js"></script>
+    <script src="<?php echo BASE_URL; ?>/booking/assets/js/booking.js?v=<?php echo time(); ?>"></script>
 
 </body>
 
