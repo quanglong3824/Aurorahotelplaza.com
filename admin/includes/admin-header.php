@@ -82,6 +82,7 @@ $sub_page_map = [
 
     // Marketing
     'view-qrcode'         => 'bookings',
+    'email-templates'     => 'settings',
 ];
 
 // Nếu trang hiện tại là sub-page, dùng group key tương ứng để xác định nhóm mở
@@ -356,6 +357,7 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                             ['page' => 'traffic-stats', 'icon' => 'insights', 'label' => 'Quản lý lưu lượng'],
                             ['page' => 'reports', 'icon' => 'analytics', 'label' => 'Báo cáo'],
                             ['page' => 'notifications', 'icon' => 'notifications', 'label' => 'Thông báo'],
+                            ['page' => 'email-templates', 'icon' => 'mail', 'label' => 'Template Email'],
                             ['page' => 'test-messenger-2way', 'icon' => 'outgoing_mail', 'label' => 'Test Messenger'],
                             ['page' => 'settings', 'icon' => 'settings', 'label' => 'Khởi tạo cấu hình'],
                             ['page' => 'backup-database', 'icon' => 'backup', 'label' => 'Sao lưu dữ liệu'],

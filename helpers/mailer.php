@@ -208,10 +208,8 @@ class Mailer {
      */
     public function sendBookingConfirmation($userEmail, $bookingData) {
         try {
-            // Load the detailed booking confirmation template
-            require_once __DIR__ . '/../includes/email-templates/booking-confirmation.php';
+            require_once __DIR__ . '/../includes/email-templates/booking-confirmation-noprice.php';
             
-            // Prepare hotel info
             $hotel_info = [
                 'name' => 'Aurora Hotel Plaza',
                 'address' => 'KP2, Phường Tân Hiệp, Thủ Đông Nai',
@@ -220,12 +218,11 @@ class Mailer {
                 'website' => 'https://aurorahotelplaza.com'
             ];
             
-            // Format total amount for display
             $bookingData['total_amount_formatted'] = number_format($bookingData['total_amount'], 0, ',', '.');
             
-            $subject = "Xác nhận đặt phòng #{$bookingData['booking_code']} - Aurora Hotel Plaza";
-            $body = getBookingConfirmationEmailHTML($bookingData, $hotel_info);
-            $altBody = getBookingConfirmationEmailText($bookingData, $hotel_info);
+            $subject = "Đã gửi yêu cầu đặt phòng #{$bookingData['booking_code']} - Aurora Hotel Plaza";
+            $body = getBookingConfirmationNoPriceEmailHTML($bookingData, $hotel_info);
+            $altBody = getBookingConfirmationNoPriceEmailText($bookingData, $hotel_info);
             
             return $this->send($userEmail, $subject, $body, $altBody);
             

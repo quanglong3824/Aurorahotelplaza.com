@@ -99,23 +99,22 @@ function sendEmailFallback($to, $subject, $htmlBody, $textBody = '', $fromName =
  * Send booking confirmation email
  */
 function sendBookingConfirmationEmail($booking) {
-    require_once __DIR__ . '/email-templates/booking-confirmation.php';
+    require_once __DIR__ . '/email-templates/booking-confirmation-noprice.php';
     
     $hotel_info = [
         'name' => 'Aurora Hotel Plaza',
-        'address' => '123 Đường ABC, Quận 1, TP.HCM',
-        'phone' => '(028) 1234 5678',
+        'address' => 'KP2, Phường Tân Hiệp, Thủ Đông Nai',
+        'phone' => '(+84-251) 391 8888',
         'email' => 'info@aurorahotelplaza.com',
         'website' => 'https://aurorahotelplaza.com'
     ];
     
-    // Format total amount
     $booking['total_amount_formatted'] = number_format($booking['total_amount'], 0, ',', '.');
     
-    $htmlBody = getBookingConfirmationEmailHTML($booking, $hotel_info);
-    $textBody = getBookingConfirmationEmailText($booking, $hotel_info);
+    $htmlBody = getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info);
+    $textBody = getBookingConfirmationNoPriceEmailText($booking, $hotel_info);
     
-    $subject = "Xác nhận đặt phòng #{$booking['booking_code']} - Aurora Hotel Plaza";
+    $subject = "Đã gửi yêu cầu đặt phòng #{$booking['booking_code']} - Aurora Hotel Plaza";
     
     return sendEmail($booking['guest_email'], $subject, $htmlBody, $textBody);
 }
@@ -170,7 +169,6 @@ function sendBookingStatusUpdateEmail($booking, $old_status, $new_status) {
 HTML;
     }
     
-    // Get translated labels
     $dear = __('email.dear');
     $booking_code_label = __('email.booking_code');
     $booking_info_label = __('email.booking_info');
@@ -179,7 +177,6 @@ HTML;
     $check_out_label = __('email.check_out_date');
     $nights_label = __('email.num_nights');
     $night_unit = __('email.night');
-    $total_label = __('email.total_cost');
     $contact_note = __('email.contact_note');
     $regards = __('email.regards');
     $team = __('email.team');
@@ -198,7 +195,7 @@ HTML;
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4;">
     <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center;">
-            <h1 style="margin: 0; font-size: 28px; font-weight: 600;">🏨 Aurora Hotel Plaza</h1>
+            <h1 style="margin: 0; font-size: 28px; font-weight: 600;">Aurora Hotel Plaza</h1>
             <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">{$info['subject']}</p>
         </div>
         
@@ -220,7 +217,6 @@ HTML;
                 <p style="margin: 5px 0;"><strong>{$check_in_label}:</strong> {$check_in}</p>
                 <p style="margin: 5px 0;"><strong>{$check_out_label}:</strong> {$check_out}</p>
                 <p style="margin: 5px 0;"><strong>{$nights_label}:</strong> {$booking['total_nights']} {$night_unit}</p>
-                <p style="margin: 5px 0;"><strong>{$total_label}:</strong> {$booking['total_amount_formatted']} VND</p>
             </div>
             
             {$qr_section}
@@ -232,7 +228,7 @@ HTML;
         
         <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px;">
             <p>{$auto_note}</p>
-            <p>© 2025 {$copyright}</p>
+            <p>&copy; 2025 {$copyright}</p>
         </div>
     </div>
 </body>

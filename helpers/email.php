@@ -79,7 +79,7 @@ class EmailHelper {
         <html>
         <head>
             <meta charset='utf-8'>
-            <title>Xác nhận đặt phòng</title>
+            <title>Đã gửi yêu cầu đặt phòng</title>
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -90,7 +90,7 @@ class EmailHelper {
                 .info-row:last-child { border-bottom: none; }
                 .label { font-weight: bold; color: #666; }
                 .value { color: #333; }
-                .total { background: #d4af37; color: white; padding: 15px; text-align: center; border-radius: 8px; font-size: 18px; font-weight: bold; }
+                .status-box { background: #ecfdf5; border-left: 4px solid #059669; padding: 15px; border-radius: 8px; margin: 20px 0; }
                 .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
                 .button { display: inline-block; background: #d4af37; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
             </style>
@@ -99,13 +99,13 @@ class EmailHelper {
             <div class='container'>
                 <div class='header'>
                     <h1>Aurora Hotel Plaza</h1>
-                    <h2>Xác nhận đặt phòng</h2>
+                    <h2>Đã gửi yêu cầu đặt phòng</h2>
                 </div>
                 
                 <div class='content'>
                     <p>Kính chào <strong>{$booking['guest_name']}</strong>,</p>
                     
-                    <p>Cảm ơn bạn đã chọn Aurora Hotel Plaza. Chúng tôi xác nhận đã nhận được đặt phòng của bạn với thông tin như sau:</p>
+                    <p>Yêu cầu đặt phòng của quý khách đã được <strong style='color: #059669;'>gửi thành công</strong> tới Aurora Hotel Plaza. Đội ngũ lễ tân sẽ xác nhận trong thời gian sớm nhất.</p>
                     
                     <div class='booking-info'>
                         <h3 style='color: #d4af37; margin-top: 0;'>Thông tin đặt phòng</h3>
@@ -146,8 +146,9 @@ class EmailHelper {
                         </div>
                     </div>
                     
-                    <div class='total'>
-                        Tổng tiền: " . number_format($booking['total_amount']) . " VND
+                    <div class='status-box'>
+                        <strong style='color: #059669;'>Trạng thái: Đang chờ xác nhận</strong>
+                        <p style='margin: 8px 0 0; font-size: 14px; color: #475569;'>Nhân viên khách sạn sẽ liên hệ xác nhận qua số điện thoại hoặc email của quý khách. Chi tiết giá và thanh toán sẽ được thông báo sau khi xác nhận.</p>
                     </div>
                     
                     <p><strong>Thông tin liên hệ:</strong></p>
@@ -167,10 +168,11 @@ class EmailHelper {
                     
                     <p><strong>Lưu ý quan trọng:</strong></p>
                     <ul>
+                        <li>Quý khách sẽ nhận được email xác nhận khi khách sạn duyệt yêu cầu.</li>
                         <li>Vui lòng mang theo CMND/CCCD khi nhận phòng</li>
                         <li>Thời gian nhận phòng: 14:00 - 22:00</li>
                         <li>Thời gian trả phòng: 06:00 - 12:00</li>
-                        <li>Liên hệ: +84 123 456 789 nếu cần hỗ trợ</li>
+                        <li>Liên hệ: (+84-251) 391 8888 nếu cần hỗ trợ</li>
                     </ul>
                     
                     <p>Chúng tôi rất mong được phục vụ bạn tại Aurora Hotel Plaza!</p>
@@ -181,7 +183,7 @@ class EmailHelper {
                 
                 <div class='footer'>
                     <p>Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa</p>
-                    <p>Email: info@aurorahotel.com | Hotline: +84 123 456 789</p>
+                    <p>Email: info@aurorahotelplaza.com | Hotline: (+84-251) 391 8888</p>
                 </div>
             </div>
         </body>
@@ -198,11 +200,12 @@ class EmailHelper {
         $booking_date = date('m/d/Y H:i', strtotime($booking['created_at']));
         
         return "
-AURORA HOTEL PLAZA - XÁC NHẬN ĐẶT PHÒNG
+AURORA HOTEL PLAZA - ĐÃ GỬI YÊU CẦU ĐẶT PHÒNG
 
 Kính chào {$booking['guest_name']},
 
-Cảm ơn bạn đã chọn Aurora Hotel Plaza. Chúng tôi xác nhận đã nhận được đặt phòng của bạn:
+Yêu cầu đặt phòng của quý khách đã được gửi thành công tới Aurora Hotel Plaza.
+Đội ngũ lễ tân sẽ xác nhận trong thời gian sớm nhất.
 
 THÔNG TIN ĐẶT PHÒNG:
 - Mã đặt phòng: {$booking['booking_code']}
@@ -213,7 +216,8 @@ THÔNG TIN ĐẶT PHÒNG:
 - Số khách: {$booking['num_adults']} người
 - Ngày đặt: {$booking_date}
 
-TỔNG TIỀN: " . number_format($booking['total_amount']) . " VND
+TRẠNG THÁI: Đang chờ xác nhận
+Chi tiết giá và thanh toán sẽ được thông báo sau khi xác nhận.
 
 THÔNG TIN LIÊN HỆ:
 - Họ tên: {$booking['guest_name']}
@@ -223,10 +227,11 @@ THÔNG TIN LIÊN HỆ:
 " . ($booking['special_requests'] ? "YÊU CẦU ĐẶC BIỆT: {$booking['special_requests']}\n\n" : "") . "
 
 LƯU Ý QUAN TRỌNG:
+- Quý khách sẽ nhận được email xác nhận khi khách sạn duyệt yêu cầu
 - Vui lòng mang theo CMND/CCCD khi nhận phòng
 - Thời gian nhận phòng: 14:00 - 22:00
 - Thời gian trả phòng: 06:00 - 12:00
-- Liên hệ: +84 123 456 789 nếu cần hỗ trợ
+- Liên hệ: (+84-251) 391 8888 nếu cần hỗ trợ
 
 Tra cứu đặt phòng: " . url("profile/booking-detail.php?code={$booking['booking_code']}") . "
 
@@ -302,9 +307,9 @@ Trân trọng,
                 <span class='value'>{$payment_date}</span>
             </div>
             
-            <div class='info-row'>
-                <span class='label'>Số tiền:</span>
-                <span class='value'><strong>" . number_format($payment['amount']) . " VND</strong></span>
+            <div class='status-box' style='background: #ecfdf5; border-left: 4px solid #059669; padding: 15px; border-radius: 8px; margin: 10px 0;'>
+                <strong style='color: #059669;'>Thanh toán thành công</strong>
+                <p style='margin: 5px 0 0; font-size: 14px; color: #475569;'>Quý khách đã thanh toán thành công. Cảm ơn quý khách!</p>
             </div>
         </div>
         ";
@@ -327,10 +332,10 @@ Trân trọng,
             - Phương thức: " . ucfirst($payment['payment_method']) . "
             - Mã giao dịch: {$payment['transaction_id']}
             - Thời gian: {$payment_date}
-            - Số tiền: " . number_format($payment['amount']) . " VND";
+            - Trạng thái: Thanh toán thành công";
         
         return str_replace(
-            ['XÁC NHẬN ĐẶT PHÒNG', 'Cảm ơn bạn đã chọn Aurora Hotel Plaza. Chúng tôi xác nhận đã nhận được đặt phòng của bạn:', 'THÔNG TIN ĐẶT PHÒNG:'],
+            ['ĐÃ GỬI YÊU CẦU ĐẶT PHÒNG', 'Yêu cầu đặt phòng của quý khách đã được gửi thành công tới Aurora Hotel Plaza.', 'THÔNG TIN ĐẶT PHÒNG:'],
             ['XÁC NHẬN THANH TOÁN', 'Thanh toán của bạn đã được xử lý thành công! Thông tin chi tiết:', $payment_text . 'THÔNG TIN ĐẶT PHÒNG:'],
             $this->getBookingConfirmationText($booking)
         );

@@ -31,7 +31,7 @@ $admin_pages = [
     'ai-assistant', 'competitor-intelligence', 'ai-stats', 'ai-bug',
     'promotions', 'banners', 'blog', 'blog-form', 'blog-comments', 'gallery', 'faqs', 'seo',
     'users', 'permissions', 'activity-logs', 'security-center', 'traffic-stats', 'traffic-logs',
-    'reports', 'notifications', 'test-messenger-2way', 'settings', 'backup-database', 'reset-database'
+    'reports', 'notifications', 'test-messenger-2way', 'email-templates', 'settings', 'backup-database', 'reset-database'
 ];
 
 $target_file = '';

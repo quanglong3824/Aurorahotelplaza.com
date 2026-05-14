@@ -238,16 +238,13 @@ HTML;
     public static function getBookingConfirmationTemplate($bookingData) {
         $checkIn = date('m/d/Y', strtotime($bookingData['check_in_date']));
         $checkOut = date('m/d/Y', strtotime($bookingData['check_out_date']));
-        $totalAmount = number_format($bookingData['total_amount']);
         $hotelUrl = self::getBaseUrl();
 
-        // Tách mã booking để tô sáng 6 ký tự cuối
         $full_code = $bookingData['booking_code'];
         $prefix = substr($full_code, 0, -6);
         $suffix = substr($full_code, -6);
         $highlighted_code = htmlspecialchars($prefix) . '<span style="background-color: #d4af37; color: #000; padding: 2px 4px; border-radius: 4px; font-weight: bold;">' . htmlspecialchars($suffix) . '</span>';
         
-        // Load CSS
         $css = file_get_contents(__DIR__ . '/../includes/email-templates/email-styles.css');
         
         return <<<HTML
@@ -256,19 +253,19 @@ HTML;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt phòng thành công</title>
+    <title>Đã gửi yêu cầu đặt phòng</title>
     <style>{$css}</style>
 </head>
 <body>
     <div class="email-wrapper">
         <div class="email-container">
             <div class="email-header">
-                <h1>Đặt phòng thành công</h1>
+                <h1>Đã gửi yêu cầu đặt phòng</h1>
                 <p>Aurora Hotel Plaza</p>
             </div>
             
             <div class="email-content">
-                <p class="email-text">Cảm ơn bạn đã đặt phòng tại <strong>Aurora Hotel Plaza</strong>!</p>
+                <p class="email-text">Yêu cầu đặt phòng của bạn đã được <strong style="color: #059669;">gửi thành công</strong> tới <strong>Aurora Hotel Plaza</strong>. Đội ngũ lễ tân sẽ xác nhận trong thời gian sớm nhất.</p>
                 
                 <div class="info-box">
                     <div class="info-box-title">Thông tin đặt phòng</div>
@@ -300,9 +297,9 @@ HTML;
                     </div>
                 </div>
                 
-                <div class="total-amount-box">
-                    <div class="total-label">Tổng chi phí</div>
-                    <div class="total-amount">{$totalAmount} VND</div>
+                <div class="alert-box" style="background-color: #ecfdf5; border-left-color: #059669;">
+                    <div class="alert-box-title" style="color: #059669;">Trạng thái: Đang chờ xác nhận</div>
+                    <p style="font-size: 14px; color: #475569; margin: 8px 0;">Nhân viên khách sạn sẽ liên hệ xác nhận qua số điện thoại hoặc email của bạn. Chi tiết giá và thanh toán sẽ được thông báo sau khi xác nhận.</p>
                 </div>
                 
                 <div class="button-wrapper">
