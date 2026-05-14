@@ -325,9 +325,9 @@ include 'includes/admin-header.php';
                                     'refunded' => 'badge-secondary'
                                 ];
                                 $payment_labels = [
-                                    'unpaid' => 'Chưa thanh toán',
+                                    'unpaid' => 'Chờ xác nhận',
                                     'partial' => 'Thanh toán 1 phần',
-                                    'paid' => 'Đã thanh toán',
+                                    'paid' => 'Đã xác nhận',
                                     'refunded' => 'Đã hoàn tiền'
                                 ];
                                 ?>
@@ -714,7 +714,7 @@ include 'includes/admin-header.php';
     }
 
     function cancelBooking(id) {
-        const reason = prompt('Lý do hủy đơn:');
+        const reason = prompt('Lý do hủy đơn / Cancellation reason:');
         if (reason !== null) {
             updateBookingStatus(id, 'cancelled', reason);
         }

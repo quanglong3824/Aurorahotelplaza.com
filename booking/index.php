@@ -832,9 +832,9 @@ foreach ($room_types as $room) {
                             </div>
                         </div>
 
-                        <!-- Step 3: Payment -->
+                        <!-- Step 3: Confirmation -->
                         <div class="form-step" id="step3">
-                            <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.confirm_payment'); ?></h3>
+                            <h3 class="text-xl font-bold mb-4"><?php _e('booking_page.confirm_booking'); ?></h3>
 
                             <!-- Booking Summary -->
                             <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
@@ -904,7 +904,7 @@ foreach ($room_types as $room) {
                                         </div>
                                         <hr class="my-3 border-gray-300 dark:border-gray-600">
                                         <div class="flex justify-between text-lg font-bold text-accent">
-                                            <span><?php _e('booking_page.total_payment'); ?>:</span>
+                                            <span><?php _e('booking_page.total'); ?>:</span>
                                             <span id="summary_total"></span>
                                         </div>
                                         <div class="mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
@@ -927,7 +927,7 @@ foreach ($room_types as $room) {
                                 </div>
                             </div>
 
-                            <!-- BOOKING PAYMENT SECTION (Hidden if Inquiry) -->
+                            <!-- BOOKING CONFIRM SECTION (Hidden if Inquiry) -->
                             <div id="booking_payment_section">
                                 <!-- Promotion Code -->
                                 <div class="p-6 bg-surface-light dark:bg-gray-700 rounded-lg mb-6">
@@ -946,11 +946,10 @@ foreach ($room_types as $room) {
                                     <input type="hidden" name="discount_amount" id="discount_amount_input" value="0">
                                 </div>
 
-                                <!-- Payment Method -->
+                                <!-- Method -->
                                 <div class="form-group mb-6">
                                     <label class="form-label"><?php _e('booking_page.payment_method'); ?> *</label>
                                     <div class="space-y-3">
-                                        <!-- VNPay Payment Disabled -->
                                         <label class="payment-option">
                                             <input type="radio" name="payment_method" value="cash" checked>
                                             <div class="payment-option-content">

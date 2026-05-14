@@ -453,7 +453,7 @@ include 'includes/admin-header.php';
                             class="font-bold text-accent"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>Trạng thái thanh toán</span>
+                        <span>Trạng thái</span>
                         <?php
                         $payment_classes = [
                             'unpaid' => 'badge-danger',
@@ -462,9 +462,9 @@ include 'includes/admin-header.php';
                             'refunded' => 'badge-secondary'
                         ];
                         $payment_labels = [
-                            'unpaid' => 'Chưa thanh toán',
+                            'unpaid' => 'Chờ xác nhận',
                             'partial' => 'Thanh toán 1 phần',
-                            'paid' => 'Đã thanh toán',
+                            'paid' => 'Đã xác nhận',
                             'refunded' => 'Đã hoàn tiền'
                         ];
                         ?>
@@ -475,17 +475,13 @@ include 'includes/admin-header.php';
                     </div>
                 </div>
 
-                <!-- Confirm Payment Button -->
+                <!-- Confirm Booking Button (replaces payment) -->
                 <?php if ($booking['payment_status'] === 'unpaid' && !in_array($booking['status'], ['cancelled', 'checked_out'])): ?>
                     <div class="mt-4 pt-4 border-t border-border-light dark:border-border-dark">
                         <button onclick="showConfirmPaymentModal()" class="btn btn-success w-full">
-                            <span class="material-symbols-outlined text-sm">payments</span>
-                            Xác nhận thanh toán & Cộng điểm thưởng
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            Xác nhận đơn & Cộng điểm thưởng
                         </button>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-2 text-center">
-                            Khách hàng sẽ nhận được
-                            <strong><?php echo number_format(floor($booking['total_amount'] / 100)); ?> điểm</strong> thưởng
-                        </p>
                     </div>
                 <?php endif; ?>
 
@@ -650,7 +646,7 @@ include 'includes/admin-header.php';
     }
 
     function cancelBooking(id) {
-        const reason = prompt('Lý do hủy đơn:');
+        const reason = prompt('Lý do hủy đơn / Cancellation reason:');
         if (reason !== null) {
             updateBookingStatus(id, 'cancelled', reason);
         }
@@ -793,7 +789,7 @@ include 'includes/admin-header.php';
             });
     }
 
-    // Confirm Payment Modal
+    // Confirm Booking Modal (replaces payment modal)
     function showConfirmPaymentModal() {
         const modal = document.getElementById('confirmPaymentModal');
         modal.classList.remove('hidden');
@@ -812,7 +808,7 @@ include 'includes/admin-header.php';
         const bookingId = <?php echo $booking_id; ?>;
 
         if (!paymentMethod) {
-            showToast('Vui lòng chọn phương thức thanh toán', 'error');
+            showToast('Vui lòng chọn phương thức', 'error');
             return;
         }
 
@@ -837,7 +833,7 @@ include 'includes/admin-header.php';
                     closeConfirmPaymentModal();
 
                     // Show success message with points info
-                    const message = `Xác nhận thanh toán thành công!\n\n` +
+                    const message = `Xác nhận đơn thành công!\n\n` +
                         `Khách hàng: ${data.data.customer_name}\n` +
                         `Số tiền: ${new Intl.NumberFormat('vi-VN').format(data.data.amount)} VND\n` +
                         `Điểm thưởng: +${new Intl.NumberFormat('vi-VN').format(data.data.points_earned)} điểm\n` +
@@ -850,14 +846,14 @@ include 'includes/admin-header.php';
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận thanh toán';
+                    submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận đơn';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Có lỗi xảy ra khi xử lý thanh toán', 'error');
+                showToast('Có lỗi xảy ra khi xử lý', 'error');
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận thanh toán';
+                submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span> Xác nhận đơn';
             });
     }
 </script>
@@ -921,14 +917,14 @@ include 'includes/admin-header.php';
     </div>
 </div>
 
-<!-- Confirm Payment Modal -->
+<!-- Confirm Booking Modal -->
 <div id="confirmPaymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    <span class="material-symbols-outlined text-2xl align-middle mr-2">payments</span>
-                    Xác nhận thanh toán
+                    <span class="material-symbols-outlined text-2xl align-middle mr-2">check_circle</span>
+                    Xác nhận đơn đặt phòng
                 </h3>
                 <button onclick="closeConfirmPaymentModal()"
                     class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -972,7 +968,7 @@ include 'includes/admin-header.php';
             <!-- Payment Method -->
             <div>
                 <label for="paymentMethod" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Phương thức thanh toán <span class="text-red-500">*</span>
+                    Phương thức <span class="text-red-500">*</span>
                 </label>
                 <select id="paymentMethod"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
@@ -980,7 +976,6 @@ include 'includes/admin-header.php';
                     <option value="cash">Tiền mặt</option>
                     <option value="bank_transfer">Chuyển khoản</option>
                     <option value="credit_card">Thẻ tín dụng</option>
-                    <!-- <option value="vnpay">VNPay</option> -->
                 </select>
             </div>
 
@@ -991,7 +986,7 @@ include 'includes/admin-header.php';
                 </label>
                 <textarea id="paymentNotes" rows="3"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
-                    placeholder="Nhập ghi chú về thanh toán..."></textarea>
+                    placeholder="Nhập ghi chú..."></textarea>
             </div>
         </div>
 
@@ -1003,7 +998,7 @@ include 'includes/admin-header.php';
             <button id="confirmPaymentBtn" onclick="confirmPayment()"
                 class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                Xác nhận thanh toán
+                Xác nhận đơn
             </button>
         </div>
     </div>

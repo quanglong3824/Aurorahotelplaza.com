@@ -771,10 +771,10 @@ $payment_labels = [
                 
                 <!-- Reason Input -->
                 <div class="mb-6">
-                    <label class="block text-sm font-bold text-white mb-2">Lý do hủy phòng <span class="text-white/40 font-normal">(không bắt buộc)</span></label>
+                    <label class="block text-sm font-bold text-white mb-2">Lý do hủy / Cancellation reason <span class="text-white/40 font-normal">(không bắt buộc / optional)</span></label>
                     <textarea id="cancelReason" rows="3" 
                               class="w-full px-4 py-3 border border-white/10 rounded-xl bg-white/5 text-white placeholder-white/30 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
-                              placeholder="VD: Thay đổi kế hoạch, có việc đột xuất..."></textarea>
+                              placeholder="VD: Thay đổi kế hoạch / e.g. Change of plans..."></textarea>
                 </div>
                 
                 <!-- Confirmation Checkbox -->
@@ -787,7 +787,7 @@ $payment_labels = [
                             </span>
                         </div>
                         <span class="text-sm text-white/70 group-hover:text-white transition-colors">
-                            Tôi đã đọc và đồng ý với chính sách hủy phòng của Aurora Hotel Plaza.
+                            Tôi đã đọc và đồng ý với chính sách hủy phòng / I agree to the cancellation policy.
                         </span>
                     </label>
                 </div>

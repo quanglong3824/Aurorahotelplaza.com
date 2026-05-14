@@ -215,10 +215,9 @@ include 'includes/admin-header.php';
 
                 <!-- Payment Status -->
                 <div class="form-group">
-                    <label class="form-label">Trạng thái thanh toán</label>
-                    <select name="payment_status" class="form-select">
-                        <option value="unpaid">Chưa thanh toán</option>
-                        <option value="paid">Đã thanh toán</option>
+                    <label class="form-label">Trạng thái</label>
+                        <option value="unpaid">Chờ xác nhận</option>
+                        <option value="paid">Đã xác nhận</option>
                         <option value="partial">Thanh toán 1 phần</option>
                     </select>
                 </div>
