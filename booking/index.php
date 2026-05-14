@@ -335,10 +335,6 @@ foreach ($room_types as $room) {
                                         if ($is_inquiry)
                                             $is_available = true;
 
-                                        $availability_text = $is_available
-                                            ? ($is_inquiry ? "" : "({$room['available_rooms']} " . __('booking_form.room_available') . ")")
-                                            : "(" . __('booking_form.out_of_stock') . ")";
-
                                         // Get display price based on category
                                         $display_price = $room['category'] === 'room'
                                             ? ($room['price_double_occupancy'] ?? $room['base_price'])
@@ -362,9 +358,9 @@ foreach ($room_types as $room) {
                                             data-available="<?php echo $room['available_rooms']; ?>"
                                             data-category="<?php echo $room['category']; ?>"
                                             data-size="<?php echo $room['size_sqm'] ?? 0; ?>"
-                                            data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo !$is_available ? 'disabled' : ''; ?>     <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id'] && $is_available) ? 'selected' : ''; ?>>
-                                            <?php echo _f($room, 'type_name'); ?> 
-                                            <?php echo $is_inquiry ? '- ' . __('inquiry.contact_btn') : $availability_text; ?>
+                                            data-booking-type="<?php echo $room['booking_type'] ?? 'instant'; ?>" <?php echo ($selected_room_type_id !== null && (int) $selected_room_type_id === (int) $room['room_type_id']) ? 'selected' : ''; ?>>
+                                            <?php echo _f($room, 'type_name'); ?>
+                                            <?php echo $is_inquiry ? '- ' . __('inquiry.contact_btn') : ''; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
