@@ -778,18 +778,6 @@ include 'includes/admin-header.php';
             this.value = new Intl.NumberFormat('vi-VN').format(parseInt(val));
         }
     });
-
-    // Assign room - uses current selected room type
-    function assignRoom(bookingId) {
-        const currentRoomTypeId = document.getElementById('editRoomType').value;
-        const booking = {
-            booking_id: bookingId,
-            room_type_id: currentRoomTypeId
-        };
-
-        fetch(`api/get-available-rooms.php?room_type_id=${currentRoomTypeId}&booking_id=${bookingId}`)
-            .then(res => res.json())
-            .then(data => {
 </script>
 
 <!-- Assign Room Modal -->
