@@ -6,110 +6,32 @@
  * Include vào includes/footer.php (trước </body>).
  *
  * Thay thế chat AI bằng nút gọi điện thoại tổng đài.
+ *
+ * - CSS: assets/css/phone-btn.css
+ * - Languages: lang/vi.php, lang/en.php  (chat.phone_btn_*)
  */
 
 // Không hiện widget trong trang admin
 $current_path = $_SERVER['PHP_SELF'] ?? '';
 if (strpos($current_path, '/admin/') !== false)
     return;
+
+// Load language helper if not loaded
+if (!function_exists('__')) {
+    require_once __DIR__ . '/../helpers/language.php';
+    initLanguage();
+}
 ?>
 
 <!-- ══════════════════════════════════════════════════════════════
      FLOATING PHONE CALL BUTTON
 ══════════════════════════════════════════════════════════════ -->
-<style>
-:root {
-  --cw-gold: #d4af37;
-  --cw-gold-dark: #b8941f;
-  --cw-z: 10005;
-  --cw-transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+<link rel="stylesheet" href="<?php echo asset('css/phone-btn.css'); ?>?v=<?php echo time(); ?>">
 
-#cwPhoneBtn {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: var(--cw-z);
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--cw-gold) 0%, var(--cw-gold-dark) 100%);
-  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.5), inset 0 2px 0 rgba(255,255,255,0.2);
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--cw-transition);
-  color: #fff;
-  will-change: transform;
-  animation: cwPhonePulse 2s ease-in-out infinite;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-#cwPhoneBtn:hover {
-  transform: scale(1.15);
-  box-shadow: 0 12px 48px rgba(212, 175, 55, 0.7);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-#cwPhoneBtn:active {
-  transform: scale(0.95);
-  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
-  animation: none;
-}
-
-#cwPhoneBtn .cw-phone-icon {
-  font-size: 28px;
-  transition: transform 0.3s ease;
-}
-
-#cwPhoneBtn:hover .cw-phone-icon {
-  transform: rotate(-15deg);
-}
-
-#cwPhoneTooltip {
-  position: fixed;
-  bottom: 44px;
-  right: 100px;
-  z-index: var(--cw-z);
-  background: linear-gradient(135deg, var(--cw-gold) 0%, var(--cw-gold-dark) 100%);
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateX(10px);
-  transition: all 0.3s ease;
-  pointer-events: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-#cwPhoneTooltip::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -6px;
-  transform: translateY(-50%);
-  border-left: 6px solid var(--cw-gold-dark);
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-}
-
-#cwPhoneBtn:hover + #cwPhoneTooltip {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-@keyframes cwPhonePulse {
-  0%, 100% { box-shadow: 0 8px 32px rgba(212, 175, 55, 0.5); }
-  50% { box-shadow: 0 8px 32px rgba(212, 175, 55, 0.7), 0 0 0 8px rgba(212, 175, 55, 0.1); }
-}
-</style>
-
-<a id="cwPhoneBtn" href="tel:+842513918888" aria-label="Gọi tổng đài Aurora Hotel Plaza">
+<a id="cwPhoneBtn" href="tel:+842513918888" aria-label="<?php _e('chat.phone_btn_call_now'); ?> Aurora Hotel Plaza">
     <span class="cw-phone-icon material-symbols-outlined">call</span>
 </a>
-<div id="cwPhoneTooltip">Gọi ngay: (0251) 391 8888</div>
+<div id="cwPhoneTooltip">
+    <?php _e('chat.phone_btn_call_now'); ?>: (0251) 391 8888<br>
+    <span style="font-size:11px;font-weight:400;opacity:.8"><?php _e('chat.phone_btn_hotline'); ?></span>
+</div>

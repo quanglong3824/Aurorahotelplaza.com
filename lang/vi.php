@@ -134,6 +134,8 @@ return [
         'login_prompt' => 'Đăng nhập để nhắn tin trực tiếp với nhân viên hỗ trợ của Aurora Hotel Plaza.',
         'login_to_chat' => 'Đăng nhập để chat',
         'call_hotline' => 'Gọi hotline:',
+        'phone_btn_call_now' => 'Gọi ngay',
+        'phone_btn_hotline' => 'Tổng đài',
     ],
 
     // Booking Form

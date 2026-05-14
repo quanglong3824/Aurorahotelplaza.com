@@ -1567,6 +1567,8 @@ return [
         'login_prompt' => 'Login to chat directly with Aurora Hotel Plaza support staff.',
         'login_to_chat' => 'Login to chat',
         'call_hotline' => 'Call Hotline:',
+        'phone_btn_call_now' => 'Call Now',
+        'phone_btn_hotline' => 'Hotline',
     ],
 
     // Booking Form
