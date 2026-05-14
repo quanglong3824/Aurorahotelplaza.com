@@ -103,7 +103,7 @@ function sendBookingConfirmationEmail($booking) {
     
     $hotel_info = [
         'name' => 'Aurora Hotel Plaza',
-        'address' => 'KP2, Phường Tân Hiệp, Thủ Đông Nai',
+        'address' => '253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai',
         'phone' => '(+84-251) 391 8888',
         'email' => 'info@aurorahotelplaza.com',
         'website' => 'https://aurorahotelplaza.com'

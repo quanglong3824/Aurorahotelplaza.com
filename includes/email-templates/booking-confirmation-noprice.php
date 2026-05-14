@@ -7,7 +7,7 @@
 
 function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
     $hotel_name = $hotel_info['name'] ?? 'Aurora Hotel Plaza';
-    $hotel_address = $hotel_info['address'] ?? 'KP2, Phường Tân Hiệp, Thủ Đông Nai';
+    $hotel_address = $hotel_info['address'] ?? '253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai';
     $hotel_phone = $hotel_info['phone'] ?? '(+84-251) 391 8888';
     $hotel_email = $hotel_info['email'] ?? 'info@aurorahotelplaza.com';
     $hotel_website = $hotel_info['website'] ?? 'https://aurorahotelplaza.com';

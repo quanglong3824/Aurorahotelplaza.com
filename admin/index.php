@@ -26,7 +26,7 @@ if (empty($hashed_page)) {
 $admin_pages = [
     'dashboard', 'bookings', 'booking-detail', 'create-booking', 'apartment-inquiries',
     'room-types', 'room-type-form', 'rooms', 'room-form', 'room-map', 'pricing', 'pricing-detailed',
-    'customers', 'customer-detail', 'ai-leads', 'loyalty', 'reviews', 'contacts',
+    'customers', 'customer-detail', 'ai-leads', 'reviews', 'contacts',
     'chat', 'chat-settings', 'service-packages', 'services', 'service-bookings',
     'ai-assistant', 'competitor-intelligence', 'ai-stats', 'ai-bug',
     'promotions', 'banners', 'blog', 'blog-form', 'blog-comments', 'gallery', 'faqs', 'seo',

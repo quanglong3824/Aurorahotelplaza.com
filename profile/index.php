@@ -165,32 +165,7 @@ function getContactStatusBadge($status)
                         </div>
 
                         <!-- Stats Cards -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                            <div class="glass-card p-6 text-center hover:-translate-y-1 transition-all">
-                                <div
-                                    class="w-12 h-12 mx-auto rounded-xl bg-accent/20 flex items-center justify-center mb-3">
-                                    <span class="material-symbols-outlined text-accent text-2xl">stars</span>
-                                </div>
-                                <p class="text-white/60 text-xs uppercase tracking-wider mb-1">
-                                    <?php _e('profile_page.current_points'); ?>
-                                </p>
-                                <p class="text-2xl font-bold text-white">
-                                    <?php echo number_format($user['current_points'] ?? 0); ?>
-                                </p>
-                            </div>
-                            <div class="glass-card p-6 text-center hover:-translate-y-1 transition-all">
-                                <div
-                                    class="w-12 h-12 mx-auto rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
-                                    <span
-                                        class="material-symbols-outlined text-purple-400 text-2xl">military_tech</span>
-                                </div>
-                                <p class="text-white/60 text-xs uppercase tracking-wider mb-1">
-                                    <?php _e('profile_page.total_points'); ?>
-                                </p>
-                                <p class="text-2xl font-bold text-white">
-                                    <?php echo number_format($user['lifetime_points'] ?? 0); ?>
-                                </p>
-                            </div>
+                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-8">
                             <div class="glass-card p-6 text-center hover:-translate-y-1 transition-all">
                                 <div
                                     class="w-12 h-12 mx-auto rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
@@ -228,11 +203,6 @@ function getContactStatusBadge($status)
                                     onclick="switchTab('bookings')">
                                     <span class="material-symbols-outlined align-middle text-lg mr-2">hotel</span>
                                     <?php _e('profile_page.tab_bookings'); ?>
-                                </button>
-                                <button class="profile-tab-btn <?php echo $active_tab == 'points' ? 'active' : ''; ?>"
-                                    onclick="switchTab('points')">
-                                    <span class="material-symbols-outlined align-middle text-lg mr-2">stars</span>
-                                    <?php _e('profile_page.tab_points'); ?>
                                 </button>
                                 <button class="profile-tab-btn <?php echo $active_tab == 'contacts' ? 'active' : ''; ?>"
                                     onclick="switchTab('contacts')">
@@ -380,7 +350,8 @@ function getContactStatusBadge($status)
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Tab: Điểm thưởng -->
+                            <!-- Tab: Điểm thưởng (ĐÃ ẨN) -->
+                            <!--
                             <div id="tab-points"
                                 class="tab-content <?php echo $active_tab == 'points' ? 'active' : ''; ?> p-8">
                                 <div class="flex justify-between items-center mb-6">
@@ -428,6 +399,7 @@ function getContactStatusBadge($status)
                                     </div>
                                 <?php endif; ?>
                             </div>
+                            -->
 
                             <!-- Tab: Lịch sử liên hệ -->
                             <div id="tab-contacts"

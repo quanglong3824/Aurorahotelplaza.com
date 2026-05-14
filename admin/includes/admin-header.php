@@ -293,7 +293,6 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                         'items' => [
                             ['page' => 'customers', 'icon' => 'people', 'label' => 'Khách hàng'],
                             ['page' => 'ai-leads', 'icon' => 'psychology_alt', 'label' => 'Khách hàng tiềm năng'],
-                            ['page' => 'loyalty', 'icon' => 'loyalty', 'label' => 'Chương trình thành viên'],
                             ['page' => 'reviews', 'icon' => 'star', 'label' => 'Đánh giá'],
                             ['page' => 'contacts', 'icon' => 'contact_mail', 'label' => 'Liên hệ']
                         ]
