@@ -305,25 +305,34 @@ $status_labels = [
                                                      </span>
                                                  </div>
                                                  <?php if ($booking['room_number']): ?>
-                                                    <div
-                                                        class="md:col-span-2 grid grid-cols-2 gap-6 pt-4 border-t border-white/10 mt-2">
-                                                        <div>
-                                                            <span
-                                                                class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.room_number'); ?></span>
-                                                            <p class="text-xl font-bold text-accent">
-                                                                <?php echo $booking['room_number']; ?>
-                                                            </p>
-                                                        </div>
-                                                        <div>
-                                                            <span
-                                                                class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.floor'); ?></span>
-                                                            <p class="text-white"><?php _e('booking_detail.floor'); ?>
-                                                                <?php echo $booking['floor']; ?>,
-                                                                <?php echo $booking['building']; ?>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                <?php endif; ?>
+                                                     <div
+                                                         class="md:col-span-2 grid grid-cols-2 gap-6 pt-4 border-t border-white/10 mt-2">
+                                                         <div>
+                                                             <span
+                                                                 class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.room_number'); ?></span>
+                                                             <p class="text-xl font-bold text-accent">
+                                                                 <?php echo $booking['room_number']; ?>
+                                                             </p>
+                                                         </div>
+                                                         <div>
+                                                             <span
+                                                                 class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.floor'); ?></span>
+                                                             <p class="text-white"><?php _e('booking_detail.floor'); ?>
+                                                                 <?php echo $booking['floor']; ?>,
+                                                                 <?php echo $booking['building']; ?>
+                                                             </p>
+                                                         </div>
+                                                     </div>
+                                                 <?php else: ?>
+                                                     <div class="md:col-span-2 pt-4 border-t border-white/10 mt-2">
+                                                         <p class="text-white/50 text-xs uppercase tracking-wider mb-2">Số phòng</p>
+                                                         <p class="text-yellow-400 flex items-center gap-2">
+                                                             <span class="material-symbols-outlined text-yellow-400">info</span>
+                                                             Chưa phân phòng - Sẽ được cập nhật khi nhận phòng
+                                                         </p>
+                                                         <p class="text-white/40 text-xs mt-1">Room not assigned yet - Will be updated at check-in</p>
+                                                     </div>
+                                                 <?php endif; ?>
                                             </div>
 
                                             <?php if ($booking['amenities']): ?>
@@ -406,14 +415,6 @@ $status_labels = [
                                         </h3>
 
                                         <div class="space-y-3">
-                                            <?php if ($booking['status'] === 'pending'): ?>
-                                                <a href="../booking/confirmation.php?booking_code=<?php echo urlencode($booking['booking_code']); ?>"
-                                                    class="w-full px-4 py-3 bg-gradient-to-r from-accent to-yellow-600 text-white rounded-xl hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] transition-all flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
-                                                    <span class="material-symbols-outlined">check_circle</span>
-                                                    <?php _e('booking_detail.confirm_booking'); ?>
-                                                </a>
-                                            <?php endif; ?>
-
                                             <button onclick="printBookingDetail()"
                                                 class="w-full px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all font-semibold flex items-center justify-center gap-2">
                                                 <span class="material-symbols-outlined text-accent">print</span>

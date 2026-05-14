@@ -348,12 +348,8 @@ try {
                             <div class="space-y-3">
                                 <a href="../profile/booking-detail.php?code=<?php echo $booking['booking_code']; ?>" class="btn-primary w-full justify-center">
                                     <span class="material-symbols-outlined">visibility</span>
-                                    <span>Xem biên bản xác nhận / View Confirmation</span>
+                                    <span>Xem chi tiết đặt phòng / View Booking Details</span>
                                 </a>
-                                <button type="button" id="confirmBookingBtn" class="btn-primary w-full justify-center" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                                    <span class="material-symbols-outlined">check_circle</span>
-                                    <span><?php _e('booking_confirmation.confirm_btn'); ?></span>
-                                </button>
                                 <a href="../index.php" class="btn-secondary text-center justify-center">
                                     <?php _e('booking_confirmation.back_to_home'); ?>
                                 </a>
@@ -368,7 +364,7 @@ try {
                             <div class="space-y-3">
                                 <a href="../profile/booking-detail.php?code=<?php echo $booking['booking_code']; ?>" class="btn-primary w-full justify-center">
                                     <span class="material-symbols-outlined">visibility</span>
-                                    <span>Xem biên bản xác nhận / View Confirmation</span>
+                                    <span>Xem chi tiết đặt phòng / View Booking Details</span>
                                 </a>
                                 <a href="../index.php" class="btn-secondary text-center justify-center">
                                     <?php _e('booking_confirmation.back_to_home'); ?>
@@ -392,100 +388,6 @@ try {
                 setTimeout(() => toast.remove(), 2000);
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const confirmBtn = document.getElementById('confirmBookingBtn');
-            const messageDiv = document.getElementById('confirmationMessage');
-            const statusSpan = document.getElementById('bookingStatus');
-
-            if (confirmBtn) {
-                confirmBtn.addEventListener('click', async function () {
-                    // Disable button and show loading
-                    confirmBtn.disabled = true;
-                    confirmBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span><span><?php _e('booking_confirmation.confirming'); ?></span>';
-
-                    try {
-                        const response = await fetch('./api/confirm-booking-user.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                booking_code: '<?php echo $booking['booking_code']; ?>'
-                            })
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            // Show success message
-                            messageDiv.className = 'mb-6 p-4 rounded-lg bg-green-500/15 border border-green-500/30 text-green-400';
-                            messageDiv.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined">check_circle</span>
-                            <span>${result.message}</span>
-                        </div>
-                    `;
-                            messageDiv.classList.remove('hidden');
-
-                            // Update status badge
-                            statusSpan.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-500/20 text-green-400 border border-green-500/30';
-                            statusSpan.textContent = '<?php echo addslashes(__('booking_confirmation.confirmed')); ?>';
-
-                            // Hide button and show success state
-                            setTimeout(() => {
-                                confirmBtn.parentElement.innerHTML = `
-                            <div class="bg-green-500/15 border border-green-500/30 rounded-lg p-4 mb-4">
-                                <p class="text-green-400 flex items-center gap-2">
-                                    <span class="material-symbols-outlined">check_circle</span>
-                                    <span><?php echo addslashes(__('booking_confirmation.confirmed_mail_sent')); ?></span>
-                                </p>
-                            </div>
-                            <?php if (!isset($_SESSION['user_id'])): ?>
-                            <a href="../index.php?action=track_booking" class="btn-primary w-full justify-center">
-                                Xem danh sách
-                            </a>
-                            <?php else: ?>
-                            <a href="../profile/bookings.php" class="btn-primary w-full justify-center">
-                                <?php echo addslashes(__('booking_confirmation.view_my_bookings')); ?>
-                            </a>
-                            <?php endif; ?>
-                        `;
-                            }, 1500);
-                        } else {
-                            const message = result.message || "<?php echo addslashes(__('booking_confirmation.error_occurred')); ?>";
-                            // Show error message
-                            messageDiv.className = 'mb-6 p-4 rounded-lg bg-red-500/15 border border-red-500/30 text-red-400';
-                            messageDiv.innerHTML = `
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined">error</span>
-                                    <span>${message}</span>
-                                </div>
-                            `;
-                            messageDiv.classList.remove('hidden');
-
-                            // Re-enable button
-                            confirmBtn.disabled = false;
-                            confirmBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span><span><?php _e('booking_confirmation.confirm_btn'); ?></span>';
-                        }
-                    } catch (error) {
-                        // Show error message
-                        messageDiv.className = 'mb-6 p-4 rounded-lg bg-red-500/15 border border-red-500/30 text-red-400';
-                        messageDiv.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined">error</span>
-                        <span>${error.message}</span>
-                    </div>
-                `;
-                        messageDiv.classList.remove('hidden');
-
-                        // Re-enable button
-                        confirmBtn.disabled = false;
-                        confirmBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span><span><?php _e('booking_confirmation.confirm_btn'); ?></span>';
-                    }
-                });
-            }
-        });
     </script>
 
 </body>
