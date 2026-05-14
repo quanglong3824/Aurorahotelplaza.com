@@ -1,4 +1,4 @@
-<?php
+,<?php
 /**
  * Helper: Ẩn Deluxe Single khỏi form booking + Reset điểm thưởng về 0
  * Chạy 1 lần trên production rồi XOÁ FILE NÀY ĐI.

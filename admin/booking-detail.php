@@ -220,36 +220,18 @@ include 'includes/admin-header.php';
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-in</p>
-                        <div class="flex items-center gap-2">
-                            <input type="date" id="editCheckInDate" class="form-select text-sm py-1 px-2"
-                                value="<?php echo date('Y-m-d', strtotime($booking['check_in_date'])); ?>"
-                                <?php echo in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
-                            <?php if (!in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled'])): ?>
-                                <button onclick="updateCheckInDate()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                                    Cập nhật
-                                </button>
-                            <?php endif; ?>
-                        </div>
+                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_in_date'])); ?></p>
                         <?php if ($booking['checked_in_at']): ?>
-                            <p class="text-sm text-green-600 mt-1">
+                            <p class="text-sm text-green-600">
                                 Đã check-in: <?php echo date('m/d/Y H:i', strtotime($booking['checked_in_at'])); ?>
                             </p>
                         <?php endif; ?>
                     </div>
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Check-out</p>
-                        <div class="flex items-center gap-2">
-                            <input type="date" id="editCheckOutDate" class="form-select text-sm py-1 px-2"
-                                value="<?php echo date('Y-m-d', strtotime($booking['check_out_date'])); ?>"
-                                <?php echo in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
-                            <?php if (!in_array($booking['status'], ['checked_in', 'checked_out', 'cancelled'])): ?>
-                                <button onclick="updateCheckOutDate()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                                    Cập nhật
-                                </button>
-                            <?php endif; ?>
-                        </div>
+                        <p class="font-medium"><?php echo date('m/d/Y', strtotime($booking['check_out_date'])); ?></p>
                         <?php if ($booking['checked_out_at']): ?>
-                            <p class="text-sm text-green-600 mt-1">
+                            <p class="text-sm text-green-600">
                                 Đã check-out: <?php echo date('m/d/Y H:i', strtotime($booking['checked_out_at'])); ?>
                             </p>
                         <?php endif; ?>
@@ -453,19 +435,32 @@ include 'includes/admin-header.php';
             </div>
             <div class="card-body">
                 <div class="space-y-3">
+                    <?php
+                    $current_nights = max(1, (int)$booking['total_nights']);
+                    $current_room_price = (float)$booking['room_price'];
+                    $current_per_night = $current_nights > 0 ? $current_room_price / $current_nights : $current_room_price;
+                    ?>
                     <div class="flex justify-between items-center">
-                        <span>Tổng tiền đơn</span>
+                        <span>Đơn giá/đêm</span>
                         <?php if (!in_array($booking['status'], ['checked_out', 'cancelled'])): ?>
                             <div class="flex items-center gap-2">
-                                <input type="text" id="editTotalAmount" value="<?php echo $booking['total_amount']; ?>"
-                                    class="form-input text-right w-40 py-1 px-2 font-bold text-accent">
-                                <button onclick="updateBookingPrice()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
+                                <input type="text" id="editRoomPrice" value="<?php echo number_format($current_per_night, 0, ',', '.'); ?>"
+                                    class="form-input text-right w-40 py-1 px-2 font-medium">
+                                <button onclick="updateRoomPrice()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                     Cập nhật
                                 </button>
                             </div>
                         <?php else: ?>
-                            <span class="font-bold text-accent text-lg"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND</span>
+                            <span class="font-medium"><?php echo number_format($current_per_night, 0, ',', '.'); ?> VND</span>
                         <?php endif; ?>
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                        <span>Số đêm</span>
+                        <span id="displayNights"><?php echo $current_nights; ?> đêm</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <span class="font-bold">Tổng tiền đơn</span>
+                        <span id="displayTotalAmount" class="font-bold text-accent text-lg"><?php echo number_format($booking['total_amount'], 0, ',', '.'); ?> VND</span>
                     </div>
                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
                         Giá này sẽ được dùng cho báo cáo thống kê doanh thu
@@ -762,25 +757,29 @@ include 'includes/admin-header.php';
             .catch(() => showToast('Có lỗi xảy ra', 'error'));
     }
 
-    // Update booking price
-    function updateBookingPrice() {
-        const newAmount = document.getElementById('editTotalAmount').value.replace(/[.,]/g, '');
+    // Update room price (per night)
+    function updateRoomPrice() {
+        const inputVal = document.getElementById('editRoomPrice').value.replace(/[.,]/g, '');
         const bookingId = <?php echo $booking_id; ?>;
+        const nights = <?php echo $current_nights; ?>;
 
-        if (!newAmount || isNaN(newAmount) || parseInt(newAmount) < 0) {
-            showToast('Giá không hợp lệ', 'error');
+        if (!inputVal || isNaN(inputVal) || parseInt(inputVal) < 0) {
+            showToast('Đơn giá không hợp lệ', 'error');
             return;
         }
+
+        const perNight = parseInt(inputVal);
+        const totalAmount = perNight * nights;
 
         fetch('api/update-booking-field.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ booking_id: bookingId, field: 'total_amount', value: parseInt(newAmount) })
+            body: JSON.stringify({ booking_id: bookingId, field: 'room_price', value: totalAmount })
         })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Đã cập nhật giá!', 'success');
+                    showToast('Đã cập nhật đơn giá!', 'success');
                     setTimeout(() => location.reload(), 800);
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
@@ -789,62 +788,8 @@ include 'includes/admin-header.php';
             .catch(() => showToast('Có lỗi xảy ra', 'error'));
     }
 
-    // Update check-in date
-    function updateCheckInDate() {
-        const newDate = document.getElementById('editCheckInDate').value;
-        const bookingId = <?php echo $booking_id; ?>;
-
-        if (!newDate) {
-            showToast('Vui lòng chọn ngày', 'error');
-            return;
-        }
-
-        fetch('api/update-booking-field.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ booking_id: bookingId, field: 'check_in_date', value: newDate })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Đã cập nhật ngày check-in!', 'success');
-                    setTimeout(() => location.reload(), 800);
-                } else {
-                    showToast(data.message || 'Có lỗi xảy ra', 'error');
-                }
-            })
-            .catch(() => showToast('Có lỗi xảy ra', 'error'));
-    }
-
-    // Update check-out date
-    function updateCheckOutDate() {
-        const newDate = document.getElementById('editCheckOutDate').value;
-        const bookingId = <?php echo $booking_id; ?>;
-
-        if (!newDate) {
-            showToast('Vui lòng chọn ngày', 'error');
-            return;
-        }
-
-        fetch('api/update-booking-field.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ booking_id: bookingId, field: 'check_out_date', value: newDate })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Đã cập nhật ngày check-out!', 'success');
-                    setTimeout(() => location.reload(), 800);
-                } else {
-                    showToast(data.message || 'Có lỗi xảy ra', 'error');
-                }
-            })
-            .catch(() => showToast('Có lỗi xảy ra', 'error'));
-    }
-
-    // Format number input for price
-    document.getElementById('editTotalAmount')?.addEventListener('input', function() {
+    // Format number input for room price
+    document.getElementById('editRoomPrice')?.addEventListener('input', function() {
         let val = this.value.replace(/[^\d]/g, '');
         if (val) {
             this.value = new Intl.NumberFormat('vi-VN').format(parseInt(val));

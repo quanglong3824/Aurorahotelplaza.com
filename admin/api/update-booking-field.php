@@ -25,7 +25,7 @@ try {
     }
 
     // Chỉ cho phép cập nhật các field này
-    $allowed_fields = ['room_type_id', 'total_amount', 'check_in_date', 'check_out_date'];
+    $allowed_fields = ['room_type_id', 'room_price'];
     if (!in_array($field, $allowed_fields)) {
         echo json_encode(['success' => false, 'message' => 'Field không được phép']);
         exit;
@@ -60,8 +60,8 @@ try {
         }
     }
 
-    // Validate total_amount
-    if ($field === 'total_amount') {
+    // Validate room_price
+    if ($field === 'room_price') {
         $value = (int)$value;
         if ($value < 0) {
             echo json_encode(['success' => false, 'message' => 'Giá không hợp lệ']);
@@ -69,45 +69,20 @@ try {
         }
     }
 
-    // Validate dates
-    if (in_array($field, ['check_in_date', 'check_out_date'])) {
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
-            echo json_encode(['success' => false, 'message' => 'Định dạng ngày không hợp lệ']);
-            exit;
-        }
-
-        // Lấy booking đầy đủ để kiểm tra logic ngày
-        $stmt = $db->prepare("SELECT check_in_date, check_out_date FROM bookings WHERE booking_id = ?");
-        $stmt->execute([$booking_id]);
-        $dates = $stmt->fetch();
-
-        $currentCheckIn = $dates['check_in_date'];
-        $currentCheckOut = $dates['check_out_date'];
-
-        if ($field === 'check_in_date') {
-            $newCheckIn = $value;
-            $newCheckOut = $currentCheckOut;
-        } else {
-            $newCheckIn = $currentCheckIn;
-            $newCheckOut = $value;
-        }
-
-        if (strtotime($newCheckIn) >= strtotime($newCheckOut)) {
-            echo json_encode(['success' => false, 'message' => 'Ngày check-in phải trước ngày check-out']);
-            exit;
-        }
-    }
-
     // Cập nhật
-    $stmt = $db->prepare("UPDATE bookings SET $field = ?, updated_at = NOW() WHERE booking_id = ?");
-    $stmt->execute([$value, $booking_id]);
+    if ($field === 'room_price') {
+        // Khi cập nhật room_price, cũng cập nhật total_amount bằng giá trị tương tự
+        $stmt = $db->prepare("UPDATE bookings SET room_price = ?, total_amount = ?, updated_at = NOW() WHERE booking_id = ?");
+        $stmt->execute([$value, $value, $booking_id]);
+    } else {
+        $stmt = $db->prepare("UPDATE bookings SET $field = ?, updated_at = NOW() WHERE booking_id = ?");
+        $stmt->execute([$value, $booking_id]);
+    }
 
     // Log history
     $labels = [
         'room_type_id' => 'Loại phòng',
-        'total_amount' => 'Tổng tiền',
-        'check_in_date' => 'Ngày check-in',
-        'check_out_date' => 'Ngày check-out'
+        'room_price' => 'Đơn giá phòng'
     ];
     $label = $labels[$field] ?? $field;
     $stmt = $db->prepare("
