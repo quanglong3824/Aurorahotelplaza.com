@@ -95,11 +95,14 @@ include 'includes/admin-header.php';
             </button>
         <?php endif; ?>
 
-        <?php if ($booking['status'] === 'confirmed'): ?>
+        <?php if (in_array($booking['status'], ['pending', 'confirmed'])): ?>
             <button onclick="assignRoom(<?php echo $booking_id; ?>)" class="btn btn-primary">
                 <span class="material-symbols-outlined text-sm">meeting_room</span>
                 Phân phòng
             </button>
+        <?php endif; ?>
+
+        <?php if ($booking['status'] === 'confirmed'): ?>
             <button onclick="checkinBooking(<?php echo $booking_id; ?>)" class="btn btn-success">
                 <span class="material-symbols-outlined text-sm">login</span>
                 Check-in
