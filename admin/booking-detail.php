@@ -665,6 +665,8 @@ include 'includes/admin-header.php';
             currentRoomInfo.classList.add('hidden');
         }
 
+        const currentRoomId = <?php echo $booking['room_id'] ?? 'null'; ?>;
+
         // Populate rooms list
         const roomsList = document.getElementById('rooms_list');
         roomsList.innerHTML = '';
@@ -674,21 +676,37 @@ include 'includes/admin-header.php';
         } else {
             rooms.forEach(room => {
                 const isAvailable = room.is_available == 1;
-                const roomCard = document.createElement('div');
-                roomCard.className = `p-4 border rounded-lg cursor-pointer transition-all ${isAvailable
-                    ? 'border-green-300 hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20'
-                    : 'border-gray-300 bg-gray-100 dark:bg-gray-700 opacity-60 cursor-not-allowed'
-                    }`;
+                const isCurrentRoom = room.room_id == currentRoomId;
 
-                if (isAvailable) {
+                let cardClass, iconBg, iconColor, statusColor, badgeText;
+                if (isCurrentRoom) {
+                    cardClass = 'border-amber-400 bg-amber-50 dark:bg-amber-900/20 cursor-pointer ring-2 ring-amber-400';
+                    iconBg = 'bg-amber-100 text-amber-600';
+                    statusColor = 'text-amber-600';
+                    badgeText = '🔑 Đang phân';
+                } else if (isAvailable) {
+                    cardClass = 'border-green-300 hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 cursor-pointer';
+                    iconBg = 'bg-green-100 text-green-600';
+                    statusColor = 'text-green-600';
+                    badgeText = '✓ Khả dụng';
+                } else {
+                    cardClass = 'border-gray-300 bg-gray-100 dark:bg-gray-700 opacity-60 cursor-not-allowed';
+                    iconBg = 'bg-gray-200 text-gray-500';
+                    statusColor = 'text-red-600';
+                    badgeText = '✗ Đã được đặt';
+                }
+
+                const roomCard = document.createElement('div');
+                roomCard.className = `p-4 border rounded-lg transition-all ${cardClass}`;
+
+                if (isAvailable || isCurrentRoom) {
                     roomCard.onclick = () => selectRoom(bookingId, room.room_id, room.room_number);
                 }
 
                 roomCard.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center ${isAvailable ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-500'
-                    }">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center ${iconBg}">
                             <span class="material-symbols-outlined">meeting_room</span>
                         </div>
                         <div>
@@ -697,12 +715,12 @@ include 'includes/admin-header.php';
                                 ${room.floor ? `Tầng ${room.floor}` : ''}
                                 ${room.building ? ` - ${room.building}` : ''}
                             </p>
-                            <p class="text-xs ${isAvailable ? 'text-green-600' : 'text-red-600'}">
-                                ${isAvailable ? '✓ Khả dụng' : '✗ Đã được đặt'}
+                            <p class="text-xs font-medium ${statusColor}">
+                                ${badgeText}
                             </p>
                         </div>
                     </div>
-                    ${isAvailable ? `
+                    ${isAvailable && !isCurrentRoom ? `
                         <span class="material-symbols-outlined text-green-600">arrow_forward</span>
                     ` : ''}
                 </div>
