@@ -17,27 +17,30 @@ try {
     $db = getDB();
 
     // Lấy trạng thái hiện tại
-    $stmt = $db->query("SELECT setting_value FROM system_settings WHERE setting_key = 'booking_disabled'");
-    $current = $stmt->fetchColumn();
-    $new_value = ($current === '1') ? '0' : '1';
-
-    // Cập nhật
-    $stmt = $db->prepare("
-        INSERT INTO system_settings (setting_key, setting_value, updated_by, updated_at)
-        VALUES ('booking_disabled', :value, :user_id, NOW())
-        ON DUPLICATE KEY UPDATE 
-            setting_value = :value,
-            updated_by = :user_id,
-            updated_at = NOW()
-    ");
-    $stmt->execute([':value' => $new_value, ':user_id' => $_SESSION['user_id']]);
+    $stmt = $db->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'booking_disabled'");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($row) {
+        $current = $row['setting_value'];
+        $new_value = ($current === '1') ? '0' : '1';
+        
+        // Update existing row
+        $stmt = $db->prepare("UPDATE system_settings SET setting_value = :value, updated_by = :user_id, updated_at = NOW() WHERE setting_key = 'booking_disabled'");
+        $stmt->execute([':value' => $new_value, ':user_id' => $_SESSION['user_id']]);
+    } else {
+        // Insert new row
+        $new_value = '1';
+        $stmt = $db->prepare("INSERT INTO system_settings (setting_key, setting_value, updated_by, updated_at) VALUES ('booking_disabled', :value, :user_id, NOW())");
+        $stmt->execute([':value' => $new_value, ':user_id' => $_SESSION['user_id']]);
+    }
 
     echo json_encode([
         'success' => true,
         'disabled' => $new_value === '1',
         'message' => $new_value === '1'
-            ? '⛔ Đã chặn đặt phòng. Nút booking trên website sẽ bị xám đi.'
-            : '✅ Đã mở lại đặt phòng.'
+            ? '⛔ Đã chặn đặt phòng.'
+            : '✅ Đã mở đặt phòng.'
     ]);
 } catch (Exception $e) {
     http_response_code(500);

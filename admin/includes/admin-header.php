@@ -570,6 +570,7 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     <button id="bookingToggleBtn"
                         onclick="toggleBooking()"
                         title="<?php echo $booking_disabled ? 'Đang CHẶN đặt phòng - Click để MỞ' : 'Đang MỞ đặt phòng - Click để CHẶN'; ?>"
+                        data-disabled="<?php echo $booking_disabled ? '1' : '0'; ?>"
                         class="flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold <?php echo $booking_disabled ? 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600' : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'; ?>">
                         <span class="material-symbols-outlined text-base"><?php echo $booking_disabled ? 'block' : 'check_circle'; ?></span>
                         <span class="hidden sm:inline"><?php echo $booking_disabled ? 'Đang chặn' : 'Cho phép đặt'; ?></span>
@@ -577,6 +578,7 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     <script>
                     function toggleBooking() {
                         const btn = document.getElementById('bookingToggleBtn');
+                        const isDisabled = btn.getAttribute('data-disabled') === '1';
                         btn.disabled = true;
                         btn.style.opacity = '0.6';
                         fetch('<?php echo rtrim(BASE_URL, "/"); ?>/admin/api/toggle-booking.php', {
@@ -586,16 +588,28 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                         })
                         .then(r => r.json())
                         .then(d => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
                             if (d.success) {
                                 showToast(d.message, d.disabled ? 'warning' : 'success');
-                                setTimeout(() => location.reload(), 800);
+                                // Update button immediately
+                                btn.setAttribute('data-disabled', d.disabled ? '1' : '0');
+                                if (d.disabled) {
+                                    btn.className = 'flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600';
+                                    btn.querySelector('.material-symbols-outlined').textContent = 'block';
+                                    btn.querySelector('.hidden').textContent = 'Đang chặn';
+                                    btn.title = 'Đang CHẶN đặt phòng - Click để MỞ';
+                                } else {
+                                    btn.className = 'flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30';
+                                    btn.querySelector('.material-symbols-outlined').textContent = 'check_circle';
+                                    btn.querySelector('.hidden').textContent = 'Cho phép đặt';
+                                    btn.title = 'Đang MỞ đặt phòng - Click để CHẶN';
+                                }
                             } else {
                                 showToast(d.message || 'Lỗi', 'error');
-                                btn.disabled = false;
-                                btn.style.opacity = '1';
                             }
                         })
-                        .catch(() => { btn.disabled = false; btn.style.opacity = '1'; });
+                        .catch(() => { btn.disabled = false; btn.style.opacity = '1'; showToast('Lỗi kết nối', 'error'); });
                     }
                     </script>
 
