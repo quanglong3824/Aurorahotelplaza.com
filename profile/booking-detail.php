@@ -127,7 +127,7 @@ $status_labels = [
                                     $display_code = $booking['booking_code'] ?? $booking_code;
                                     $prefix = substr($display_code, 0, -6);
                                     $suffix = substr($display_code, -6);
-                                    echo htmlspecialchars($prefix); ?><span class="bg-accent text-black px-1.5 rounded"><?php echo htmlspecialchars($suffix); ?></span>
+                                    echo htmlspecialchars($prefix); ?><span class="bg-white text-black px-1.5 rounded font-bold shadow-sm"><?php echo htmlspecialchars($suffix); ?></span>
                                 </span>
                                 <span class="text-[10px] text-accent/70 italic flex items-center gap-1 bg-accent/5 px-2 py-1 rounded border border-accent/10">
                                     <span class="material-symbols-outlined text-[12px]">info</span>
@@ -288,40 +288,23 @@ $status_labels = [
                                                         <?php _e('profile_bookings.nights'); ?>
                                                     </p>
                                                 </div>
-                                                <?php
-                                                $booking_type_val = $booking['booking_type'] ?? 'standard';
-                                                $is_short_stay = $booking_type_val === 'short_stay';
-                                                $price_type = $booking['price_type_used'] ?? 'double';
-                                                $price_type_labels = [
-                                                    'single' => 'Giá 1 người',
-                                                    'double' => 'Giá 2 người',
-                                                    'short_stay' => 'Nghỉ ngắn hạn',
-                                                    'weekly' => 'Giá tuần',
-                                                    'daily' => 'Giá ngày'
-                                                ];
-                                                ?>
-                                                <div>
-                                                    <span
-                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1">Loại
-                                                        hình</span>
-                                                    <span
-                                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
-                                                        <?php echo $is_short_stay ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300'; ?>">
-                                                        <span
-                                                            class="material-symbols-outlined text-xs"><?php echo $is_short_stay ? 'schedule' : 'hotel'; ?></span>
-                                                        <?php echo $is_short_stay ? 'Nghỉ ngắn hạn' : 'Nghỉ qua đêm'; ?>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span
-                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1">Loại
-                                                        giá</span>
-                                                    <span
-                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-medium">
-                                                        <?php echo $price_type_labels[$price_type] ?? $price_type; ?>
-                                                    </span>
-                                                </div>
-                                                <?php if ($booking['room_number']): ?>
+                                                 <?php
+                                                 $booking_type_val = $booking['booking_type'] ?? 'standard';
+                                                 $is_short_stay = $booking_type_val === 'short_stay';
+                                                 ?>
+                                                 <div>
+                                                     <span
+                                                         class="text-white/50 text-xs uppercase tracking-wider block mb-1">Loại
+                                                         hình</span>
+                                                     <span
+                                                         class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                                                         <?php echo $is_short_stay ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300'; ?>">
+                                                         <span
+                                                             class="material-symbols-outlined text-xs"><?php echo $is_short_stay ? 'schedule' : 'hotel'; ?></span>
+                                                         <?php echo $is_short_stay ? 'Nghỉ ngắn hạn' : 'Nghỉ qua đêm'; ?>
+                                                     </span>
+                                                 </div>
+                                                 <?php if ($booking['room_number']): ?>
                                                     <div
                                                         class="md:col-span-2 grid grid-cols-2 gap-6 pt-4 border-t border-white/10 mt-2">
                                                         <div>
@@ -415,21 +398,6 @@ $status_labels = [
 
                                 <!-- Sidebar -->
                                 <div class="space-y-8">
-
-                                    <!-- Price Summary (Simplified) -->
-                                    <div class="glass-card p-6">
-                                        <h3
-                                            class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
-                                            <span class="material-symbols-outlined text-accent">receipt</span>
-                                            <?php _e('booking_detail.total'); ?>
-                                        </h3>
-
-                                        <div class="text-center py-4">
-                                            <p class="text-3xl font-bold text-accent font-mono">
-                                                <?php echo number_format($booking['total_amount']); ?> VND
-                                            </p>
-                                        </div>
-                                    </div>
 
                                     <!-- Actions -->
                                     <div class="glass-card p-6">
@@ -838,16 +806,6 @@ $status_labels = [
                             <?php endif; ?>
                             <div class="row"><span class="label">Số khách:</span> <span class="value"><?php echo $booking['num_adults']; ?> người lớn, <?php echo $booking['num_children']; ?> trẻ em</span></div>
                             <div class="row"><span class="label">Thời gian:</span> <span class="value"><?php echo $booking['total_nights']; ?> đêm / nights</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="section">
-                        <div class="section-title">Tổng tiền / Total Amount</div>
-                        <div class="total-section">
-                            <div class="total-row">
-                                <span class="total-label">TỔNG CỘNG / TOTAL</span>
-                                <span class="total-amount"><?php echo number_format($booking['total_amount']); ?> VND</span>
-                            </div>
                         </div>
                     </div>
                     
