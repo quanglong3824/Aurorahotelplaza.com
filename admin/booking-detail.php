@@ -552,7 +552,7 @@ include 'includes/admin-header.php';
 
 <script>
     function confirmBooking(id) {
-        if (confirm('Xác nhận đơn đặt phòng này?')) {
+        if (confirm('Xác nhận đơn đặt phòng này? Sau khi xác nhận sẽ chuyển đến trang báo cáo để in.')) {
             updateBookingStatus(id, 'confirmed');
         }
     }
@@ -610,7 +610,13 @@ include 'includes/admin-header.php';
             .then(data => {
                 if (data.success) {
                     showToast('Cập nhật thành công!', 'success');
-                    setTimeout(() => location.reload(), 1000);
+                    if (status === 'confirmed') {
+                        setTimeout(() => {
+                            window.location.href = 'booking-report.php?id=<?php echo $booking_id; ?>';
+                        }, 1000);
+                    } else {
+                        setTimeout(() => location.reload(), 1000);
+                    }
                 } else {
                     showToast(data.message || 'Có lỗi xảy ra', 'error');
                 }

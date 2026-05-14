@@ -105,7 +105,73 @@ try {
     ]);
     
     $db->commit();
-    
+
+    // Send confirmation emails when booking is confirmed
+    if ($new_status === 'confirmed') {
+        try {
+            require_once __DIR__ . '/../../helpers/mailer.php';
+            $mailer = getMailer();
+
+            // Get full booking details for email
+            $stmt = $db->prepare("
+                SELECT b.*, rt.type_name, rt.category, rt.bed_type, rt.size_sqm,
+                       r.room_number, r.floor, r.building
+                FROM bookings b
+                JOIN room_types rt ON b.room_type_id = rt.room_type_id
+                LEFT JOIN rooms r ON b.room_id = r.room_id
+                WHERE b.booking_id = :booking_id
+            ");
+            $stmt->execute([':booking_id' => $booking_id]);
+            $fullBooking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $nights = $fullBooking['total_nights'];
+            $perNight = $nights > 0 ? $fullBooking['room_price'] / $nights : $fullBooking['room_price'];
+
+            $emailData = [
+                'booking_id' => $booking_id,
+                'booking_code' => $fullBooking['booking_code'],
+                'guest_name' => $fullBooking['guest_name'],
+                'guest_email' => $fullBooking['guest_email'],
+                'guest_phone' => $fullBooking['guest_phone'],
+                'type_name' => $fullBooking['type_name'],
+                'category' => $fullBooking['category'],
+                'bed_type' => $fullBooking['bed_type'],
+                'room_number' => $fullBooking['room_number'],
+                'floor' => $fullBooking['floor'],
+                'building' => $fullBooking['building'],
+                'check_in_date' => $fullBooking['check_in_date'],
+                'check_out_date' => $fullBooking['check_out_date'],
+                'total_nights' => $nights,
+                'num_adults' => $fullBooking['num_adults'],
+                'num_children' => $fullBooking['num_children'],
+                'num_rooms' => $fullBooking['num_rooms'],
+                'per_night' => number_format($perNight, 0, ',', '.'),
+                'total_amount' => number_format($fullBooking['total_amount'], 0, ',', '.'),
+                'special_requests' => $fullBooking['special_requests'],
+                'created_at' => $fullBooking['created_at'],
+                'booking_type' => $fullBooking['booking_type'] ?? 'instant'
+            ];
+
+            // Send to customer
+            if (!empty($fullBooking['guest_email'])) {
+                $customerSubject = "Xác nhận đặt phòng #{$fullBooking['booking_code']} - Aurora Hotel Plaza";
+                require_once __DIR__ . '/../../includes/email-templates/booking-confirmed-customer.php';
+                $customerBody = getBookingConfirmedCustomerEmail($emailData);
+                $mailer->send($fullBooking['guest_email'], $customerSubject, $customerBody);
+            }
+
+            // Send to staff
+            $staffEmail = defined('HOTEL_RECEIVE_EMAIL') ? HOTEL_RECEIVE_EMAIL : 'info@aurorahotelplaza.com';
+            $staffSubject = "[ĐÃ XÁC NHẬN #{$fullBooking['booking_code']}] {$fullBooking['type_name']} - Khách: {$fullBooking['guest_name']}";
+            require_once __DIR__ . '/../../includes/email-templates/booking-confirmed-staff.php';
+            $staffBody = getBookingConfirmedStaffEmail($emailData);
+            $mailer->send($staffEmail, $staffSubject, $staffBody);
+
+        } catch (Exception $emailErr) {
+            error_log("Confirmation email error: " . $emailErr->getMessage());
+        }
+    }
+
     echo json_encode([
         'success' => true,
         'message' => 'Cập nhật trạng thái thành công',
