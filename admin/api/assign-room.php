@@ -12,7 +12,7 @@ require_once '../../helpers/activity-logger.php';
 header('Content-Type: application/json');
 
 // Check authentication
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'receptionist'])) {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['admin', 'sale', 'receptionist'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit;
@@ -44,14 +44,14 @@ try {
         throw new Exception('Đơn đặt phòng không tồn tại');
     }
     
-    // Check if booking already has a room
-    if ($booking['room_id']) {
-        throw new Exception('Đơn này đã được phân phòng');
-    }
-    
     // Check booking status
     if (!in_array($booking['status'], ['confirmed', 'pending'])) {
         throw new Exception('Chỉ có thể phân phòng cho đơn đã xác nhận hoặc chờ xác nhận');
+    }
+    
+    // Nếu đã phân phòng rồi, chỉ cho đổi khi chưa xác nhận
+    if ($booking['room_id'] && $booking['status'] !== 'pending') {
+        throw new Exception('Đơn này đã được phân phòng và xác nhận. Vui lòng hủy đơn để phân lại.');
     }
     
     // Get room info
@@ -103,6 +103,12 @@ try {
     
     if ($conflict > 0) {
         throw new Exception('Phòng đã được đặt trong khoảng thời gian này');
+    }
+    
+    // Nếu đã có phòng cũ (pending), giải phóng phòng cũ trước
+    if ($booking['room_id']) {
+        $stmt = $db->prepare("UPDATE rooms SET status = 'available', updated_at = NOW() WHERE room_id = ?");
+        $stmt->execute([$booking['room_id']]);
     }
     
     // Assign room to booking (giữ nguyên trạng thái, không tự xác nhận)

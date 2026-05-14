@@ -656,6 +656,15 @@ include 'includes/admin-header.php';
         document.getElementById('assign_check_in').textContent = new Date(booking.check_in_date).toLocaleDateString('vi-VN');
         document.getElementById('assign_check_out').textContent = new Date(booking.check_out_date).toLocaleDateString('vi-VN');
 
+        // Show current room info if already assigned
+        const currentRoomInfo = document.getElementById('assign_current_room');
+        if (booking.room_number) {
+            currentRoomInfo.innerHTML = `<p class="text-sm text-amber-600 font-medium">⚠ Đang phân phòng: <strong>Phòng ${booking.room_number}</strong> - Chọn phòng mới để thay thế</p>`;
+            currentRoomInfo.classList.remove('hidden');
+        } else {
+            currentRoomInfo.classList.add('hidden');
+        }
+
         // Populate rooms list
         const roomsList = document.getElementById('rooms_list');
         roomsList.innerHTML = '';
@@ -714,7 +723,13 @@ include 'includes/admin-header.php';
     }
 
     function selectRoom(bookingId, roomId, roomNumber) {
-        if (!confirm(`Xác nhận phân phòng ${roomNumber} cho đơn này?`)) {
+        const currentRoom = document.getElementById('assign_current_room');
+        const isReassign = !currentRoom.classList.contains('hidden');
+        const message = isReassign
+            ? `Xác nhận đổi sang phòng ${roomNumber}? Phòng cũ sẽ được giải phóng.`
+            : `Xác nhận phân phòng ${roomNumber} cho đơn này?`;
+
+        if (!confirm(message)) {
             return;
         }
 
@@ -845,6 +860,10 @@ include 'includes/admin-header.php';
                         <span class="font-semibold ml-2" id="assign_check_out"></span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Current Room Warning -->
+            <div id="assign_current_room" class="hidden bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-700">
             </div>
 
             <!-- Rooms List -->

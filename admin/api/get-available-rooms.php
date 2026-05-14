@@ -28,9 +28,10 @@ try {
     
     // Get booking info
     $stmt = $db->prepare("
-        SELECT b.*, rt.type_name
+        SELECT b.*, rt.type_name, r.room_number
         FROM bookings b
         JOIN room_types rt ON b.room_type_id = rt.room_type_id
+        LEFT JOIN rooms r ON b.room_id = r.room_id
         WHERE b.booking_id = :booking_id
     ");
     $stmt->execute([':booking_id' => $booking_id]);
@@ -79,7 +80,8 @@ try {
             'booking_code' => $booking['booking_code'],
             'type_name' => $booking['type_name'],
             'check_in_date' => $booking['check_in_date'],
-            'check_out_date' => $booking['check_out_date']
+            'check_out_date' => $booking['check_out_date'],
+            'room_number' => $booking['room_number'] ?? null
         ],
         'rooms' => $rooms
     ]);
