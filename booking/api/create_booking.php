@@ -315,40 +315,8 @@ try {
         $booking_type = 'inquiry';
     }
 
-    // For inquiry bookings (apartments), skip room availability check
+    // Không tự động phân phòng - Admin sẽ phân phòng sau
     $room_id = null;
-    if ($booking_type === 'instant') {
-        // Check room availability only for instant bookings
-        $stmt = $db->prepare("
-            SELECT r.room_id 
-            FROM rooms r
-            WHERE r.room_type_id = ? 
-            AND r.status = 'available'
-            AND r.room_id NOT IN (
-                SELECT room_id 
-                FROM bookings 
-                WHERE room_id IS NOT NULL
-                AND status NOT IN ('cancelled', 'checked_out')
-                AND (
-                    (check_in_date <= ? AND check_out_date > ?)
-                    OR (check_in_date < ? AND check_out_date >= ?)
-                    OR (check_in_date >= ? AND check_out_date <= ?)
-                )
-            )
-            LIMIT 1
-        ");
-        $stmt->execute([
-            $room_type_id,
-            $check_in_date,
-            $check_in_date,
-            $check_out_date,
-            $check_out_date,
-            $check_in_date,
-            $check_out_date
-        ]);
-        $available_room = $stmt->fetch();
-        $room_id = $available_room['room_id'] ?? null;
-    }
 
     // Determine initial status based on booking type
     $initial_status = $booking_type === 'inquiry' ? 'pending' : 'pending';
@@ -409,12 +377,6 @@ try {
     ]);
 
     $booking_id = $db->lastInsertId();
-
-    // Update room status if assigned (only for instant bookings)
-    if ($room_id && $booking_type === 'instant') {
-        $stmt = $db->prepare("UPDATE rooms SET status = 'occupied' WHERE room_id = ?");
-        $stmt->execute([$room_id]);
-    }
 
     // Store booking info in session
     $_SESSION['pending_booking_id'] = $booking_id;
