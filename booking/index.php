@@ -1038,7 +1038,8 @@ foreach ($room_types as $room) {
                 short_stay_label: "<?php echo addslashes(__('booking_form.short_stay_label')); ?>",
                 agree_terms_alert: "<?php echo addslashes(__('booking_form.agree_terms_alert')); ?>",
                 guest_promo_lock: "<?php echo addslashes(__('booking_form.guest_promo_lock')); ?>",
-                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>"
+                guest_promo_lock_end: "<?php echo addslashes(__('booking_form.guest_promo_lock_end')); ?>",
+                booking_success: "Đặt phòng thành công! / Booking successful!"
             },
             common: {
                 night: "<?php echo addslashes(__('common.night')); ?>",

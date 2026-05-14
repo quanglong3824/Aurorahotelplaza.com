@@ -1977,6 +1977,9 @@ async function handleSubmit(e) {
     submitBtn.disabled = true;
     submitBtnText.textContent = translations.common.processing;
 
+    // Show loading overlay
+    showBookingLoadingOverlay();
+
     try {
         // Always use create_booking.php - it handles both instant and inquiry bookings
         const apiUrl = basePath + '/booking/api/create_booking.php';
@@ -1995,22 +1998,27 @@ async function handleSubmit(e) {
         if (result.success) {
             // Check booking type from response (more reliable than front-end state)
             if (result.booking_type === 'inquiry') {
-                // Success for inquiry - Show alert and redirect home
-                alert(result.message || 'Yêu cầu tư vấn của bạn đã được gửi thành công!');
-                window.location.href = basePath + '/';
+                // Success for inquiry - Show loading then redirect to confirmation
+                updateBookingLoadingMessage(translations.booking_form.booking_success);
+                setTimeout(() => {
+                    hideBookingLoadingOverlay();
+                    window.location.href = basePath + '/booking/confirmation.php?booking_code=' + result.booking_code;
+                }, 1500);
             } else {
                 // Success for instant booking
                 if (data.payment_method === 'vnpay' && result.payment_url) {
+                    hideBookingLoadingOverlay();
                     window.location.href = result.payment_url;
                 } else {
-                    if (result.is_guest) {
+                    updateBookingLoadingMessage(translations.booking_form.booking_success);
+                    setTimeout(() => {
+                        hideBookingLoadingOverlay();
                         window.location.href = basePath + '/booking/confirmation.php?booking_code=' + result.booking_code;
-                    } else {
-                        window.location.href = basePath + '/ho-so/dat-phong';
-                    }
+                    }, 1500);
                 }
             }
         } else {
+            hideBookingLoadingOverlay();
             // Handle specific error types from backend
             if (result.existing_bookings || result.overlapping_bookings) {
                 showBookingConflictModal(result);
@@ -2029,10 +2037,45 @@ async function handleSubmit(e) {
             submitBtnText.textContent = originalText;
         }
     } catch (error) {
+        hideBookingLoadingOverlay();
         console.error('Error:', error);
         alert('Có lỗi xảy ra. Vui lòng thử lại.');
         submitBtn.disabled = false;
         submitBtnText.textContent = originalText;
+    }
+}
+
+// Loading overlay functions
+function showBookingLoadingOverlay() {
+    let overlay = document.getElementById('bookingLoadingOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'bookingLoadingOverlay';
+        overlay.innerHTML = `
+            <div class="booking-loading-content">
+                <div class="booking-loading-spinner"></div>
+                <h3>Đang xử lý đặt phòng...</h3>
+                <p>Processing your booking, please wait.</p>
+                <p class="booking-loading-note">Dữ liệu đang được gửi đi, vui lòng đợi.<br>Your data is being sent, please wait.</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+    overlay.classList.add('show');
+}
+
+function hideBookingLoadingOverlay() {
+    const overlay = document.getElementById('bookingLoadingOverlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
+}
+
+function updateBookingLoadingMessage(message) {
+    const overlay = document.getElementById('bookingLoadingOverlay');
+    if (overlay) {
+        const h3 = overlay.querySelector('h3');
+        if (h3) h3.textContent = message;
     }
 }
 

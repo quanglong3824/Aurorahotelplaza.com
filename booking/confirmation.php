@@ -199,23 +199,31 @@ try {
                     <div class="booking-card">
                         <div id="confirmationMessage" class="hidden mb-6 p-4 rounded-lg"></div>
 
-                        <div class="space-y-4 mb-8">
-                            <div class="flex flex-col py-2 border-b border-white/10">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-white/70"><?php _e('booking_confirmation.booking_code'); ?>:</span>
-                                    <span class="font-semibold text-accent text-lg tracking-wider">
-                                        <?php 
-                                        $full_code = $booking['booking_code'];
-                                        $prefix = substr($full_code, 0, -6);
-                                        $suffix = substr($full_code, -6);
-                                        echo htmlspecialchars($prefix); ?><span class="bg-accent text-black px-1 rounded-md shadow-sm font-bold"><?php echo htmlspecialchars($suffix); ?></span>
-                                    </span>
-                                </div>
-                                <div class="flex items-start gap-1.5 text-[10px] text-accent/80 italic mt-0.5">
-                                    <span class="material-symbols-outlined text-[12px] mt-0.5">info</span>
-                                    <span>Ghi chú: 6 ký tự tô sáng cuối là mã rút gọn để tra cứu nhanh hoặc cung cấp cho lễ tân.</span>
-                                </div>
+                        <!-- Booking Code with Copy -->
+                        <div class="bg-accent/10 border border-accent/30 rounded-xl p-6 mb-6 text-center">
+                            <p class="text-white/70 text-sm mb-2"><?php _e('booking_confirmation.booking_code'); ?></p>
+                            <div class="flex items-center justify-center gap-3 mb-3">
+                                <span class="font-mono text-3xl font-bold text-accent tracking-wider">
+                                    <?php 
+                                    $full_code = $booking['booking_code'];
+                                    $prefix = substr($full_code, 0, -6);
+                                    $suffix = substr($full_code, -6);
+                                    echo htmlspecialchars($prefix); ?><span class="bg-accent text-black px-2 rounded-md shadow-sm font-bold"><?php echo htmlspecialchars($suffix); ?></span>
+                                </span>
+                                <button onclick="copyBookingCode('<?php echo $booking['booking_code']; ?>')" class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors" title="Sao chép mã">
+                                    <span class="material-symbols-outlined text-accent">content_copy</span>
+                                </button>
                             </div>
+                            <p class="text-xs text-white/50 flex items-center justify-center gap-1">
+                                <span class="material-symbols-outlined text-sm">info</span>
+                                Lưu mã này hoặc dùng email đã đặt để tra cứu thông tin
+                            </p>
+                            <p class="text-xs text-white/50 mt-1">
+                                Save this code or use your booking email to look up information.
+                            </p>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
                             <div class="flex justify-between items-center py-2 border-b border-white/10">
                                 <span class="text-white/70"><?php _e('booking_confirmation.room_type'); ?>:</span>
                                 <span class="font-semibold"><?php echo $booking['room_type_name']; ?></span>
@@ -337,8 +345,12 @@ try {
                         </div>
 
                         <?php if ($booking['status'] === 'pending'): ?>
-                            <div class="grid grid-cols-2 gap-3">
-                                <button type="button" id="confirmBookingBtn" class="btn-primary">
+                            <div class="space-y-3">
+                                <a href="../profile/booking-detail.php?code=<?php echo $booking['booking_code']; ?>" class="btn-primary w-full justify-center">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    <span>Xem biên bản xác nhận / View Confirmation</span>
+                                </a>
+                                <button type="button" id="confirmBookingBtn" class="btn-primary w-full justify-center" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
                                     <span class="material-symbols-outlined">check_circle</span>
                                     <span><?php _e('booking_confirmation.confirm_btn'); ?></span>
                                 </button>
@@ -353,9 +365,15 @@ try {
                                     <span><?php _e('booking_confirmation.success_message'); ?></span>
                                 </p>
                             </div>
-                            <a href="../index.php" class="btn-primary w-full justify-center">
-                                <?php _e('booking_confirmation.back_to_home'); ?>
-                            </a>
+                            <div class="space-y-3">
+                                <a href="../profile/booking-detail.php?code=<?php echo $booking['booking_code']; ?>" class="btn-primary w-full justify-center">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    <span>Xem biên bản xác nhận / View Confirmation</span>
+                                </a>
+                                <a href="../index.php" class="btn-secondary text-center justify-center">
+                                    <?php _e('booking_confirmation.back_to_home'); ?>
+                                </a>
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
@@ -365,6 +383,16 @@ try {
     <?php include '../includes/footer.php'; ?>
 
     <script>
+        function copyBookingCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg z-50 font-medium';
+                toast.textContent = 'Đã sao chép mã đặt phòng! / Booking code copied!';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2000);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const confirmBtn = document.getElementById('confirmBookingBtn');
             const messageDiv = document.getElementById('confirmationMessage');
