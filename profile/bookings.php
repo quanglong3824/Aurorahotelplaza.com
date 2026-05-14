@@ -60,8 +60,7 @@ $status_labels = [
     'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
     'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
 ];
-
-// Status labels and colors
+?>
 <!DOCTYPE html>
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
