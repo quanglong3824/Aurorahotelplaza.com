@@ -569,10 +569,10 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     ?>
                     <button id="bookingToggleBtn"
                         onclick="toggleBooking()"
-                        title="<?php echo $booking_disabled ? 'Đang chặn booking - Click để mở' : 'Đang mở booking - Click để chặn'; ?>"
-                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold <?php echo $booking_disabled ? 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 hover:bg-red-100' : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100'; ?>">
-                        <span class="material-symbols-outlined text-base"><?php echo $booking_disabled ? 'event_busy' : 'event_available'; ?></span>
-                        <span class="hidden sm:inline"><?php echo $booking_disabled ? 'Chặn ON' : 'Booking'; ?></span>
+                        title="<?php echo $booking_disabled ? 'Đang CHẶN đặt phòng - Click để MỞ' : 'Đang MỞ đặt phòng - Click để CHẶN'; ?>"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 text-sm font-semibold <?php echo $booking_disabled ? 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600' : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'; ?>">
+                        <span class="material-symbols-outlined text-base"><?php echo $booking_disabled ? 'block' : 'check_circle'; ?></span>
+                        <span class="hidden sm:inline"><?php echo $booking_disabled ? 'Đang chặn' : 'Cho phép đặt'; ?></span>
                     </button>
                     <script>
                     function toggleBooking() {
