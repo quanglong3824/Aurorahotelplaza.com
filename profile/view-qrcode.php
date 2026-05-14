@@ -23,12 +23,10 @@ try {
     // Get booking details with full information - only for current user
     $stmt = $db->prepare("
         SELECT b.*, rt.type_name, rt.type_name_en, rt.category, rt.bed_type, rt.size_sqm,
-               r.room_number, r.floor,
-               p.payment_method, p.transaction_id, p.paid_at
+               r.room_number, r.floor
         FROM bookings b
         JOIN room_types rt ON b.room_type_id = rt.room_type_id
         LEFT JOIN rooms r ON b.room_id = r.room_id
-        LEFT JOIN payments p ON b.booking_id = p.booking_id AND p.status = 'completed'
         WHERE b.booking_id = :booking_id AND b.user_id = :user_id
     ");
     $stmt->execute([
@@ -58,13 +56,6 @@ try {
         'checked_out' => ['label' => __('booking_status.checked_out'), 'class' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300', 'icon' => 'door_front'],
         'cancelled' => ['label' => __('booking_status.cancelled'), 'class' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300', 'icon' => 'cancel'],
         'no_show' => ['label' => __('booking_status.no_show') ?? 'Không đến', 'class' => 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300', 'icon' => 'person_off']
-    ];
-
-    $payment_status_config = [
-        'unpaid' => ['label' => __('payment_status.unpaid') ?? 'Chưa thanh toán', 'class' => 'bg-red-100 text-red-800'],
-        'partial' => ['label' => __('payment_status.partial') ?? 'Thanh toán một phần', 'class' => 'bg-yellow-100 text-yellow-800'],
-        'paid' => ['label' => __('payment_status.paid') ?? 'Đã thanh toán', 'class' => 'bg-green-100 text-green-800'],
-        'refunded' => ['label' => __('payment_status.refunded') ?? 'Đã hoàn tiền', 'class' => 'bg-purple-100 text-purple-800']
     ];
 
 } catch (Exception $e) {
@@ -172,17 +163,13 @@ try {
                                 </p>
                             </div>
 
-                            <!-- Status Badges -->
+                            <!-- Status Badge -->
                             <div class="flex flex-wrap gap-2 justify-center">
                                 <span
                                     class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold <?php echo $status_config[$booking['status']]['class'] ?? 'bg-gray-100 text-gray-800'; ?>">
                                     <span
                                         class="material-symbols-outlined text-base"><?php echo $status_config[$booking['status']]['icon'] ?? 'info'; ?></span>
                                     <?php echo $status_config[$booking['status']]['label'] ?? $booking['status']; ?>
-                                </span>
-                                <span
-                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold <?php echo $payment_status_config[$booking['payment_status']]['class'] ?? 'bg-gray-100 text-gray-800'; ?>">
-                                    <?php echo $payment_status_config[$booking['payment_status']]['label'] ?? $booking['payment_status']; ?>
                                 </span>
                             </div>
 
@@ -287,78 +274,6 @@ try {
                                     <span class="material-symbols-outlined text-sm">dark_mode</span>
                                     <?php echo $nights; ?> đêm
                                 </span>
-                            </div>
-
-                            <!-- Payment Details -->
-                            <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
-                                <h3 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[#d4af37]">payments</span>
-                                    Chi tiết thanh toán
-                                </h3>
-                                <div class="space-y-2 text-sm">
-                                    <?php
-                                    // room_price in DB stores total (per_night × nights)
-                                    $room_total_qr = (float) $booking['room_price'];
-                                    $nights_qr = max(1, (int) $nights);
-                                    $room_per_night_qr = $room_total_qr / $nights_qr;
-                                    ?>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500 dark:text-gray-400">Giá phòng/đêm</span>
-                                        <span
-                                            class="text-gray-900 dark:text-white"><?php echo number_format($room_per_night_qr, 0, ',', '.'); ?>VND</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500 dark:text-gray-400">Tiền phòng
-                                            (<?php echo $nights; ?> đêm × <?php echo $booking['num_rooms']; ?>
-                                            phòng)</span>
-                                        <span
-                                            class="text-gray-900 dark:text-white"><?php echo number_format($room_total_qr, 0, ',', '.'); ?>VND</span>
-                                    </div>
-                                    <?php if ($booking['discount_amount'] > 0): ?>
-                                        <div class="flex justify-between text-green-600">
-                                            <span>Giảm giá</span>
-                                            <span>-<?php echo number_format($booking['discount_amount'], 0, ',', '.'); ?>VND</span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if ($booking['service_fee'] > 0): ?>
-                                        <div class="flex justify-between">
-                                            <span class="text-gray-500 dark:text-gray-400">Phí dịch vụ</span>
-                                            <span
-                                                class="text-gray-900 dark:text-white"><?php echo number_format($booking['service_fee'], 0, ',', '.'); ?>VND</span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
-                                        <div class="flex justify-between items-center">
-                                            <span class="font-semibold text-gray-900 dark:text-white">Tổng cộng</span>
-                                            <span class="font-bold text-2xl" style="color: #d4af37;">
-                                                <?php echo number_format($booking['total_amount'], 0, ',', '.'); ?>VND
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <?php if ($booking['payment_method']): ?>
-                                        <div class="flex justify-between text-sm mt-2">
-                                            <span class="text-gray-500 dark:text-gray-400">Phương thức</span>
-                                            <span class="text-gray-900 dark:text-white">
-                                                <?php
-                                                $payment_methods = [
-                                                    // 'vnpay' => 'VNPay',
-                                                    'cash' => 'Tiền mặt',
-                                                    'bank_transfer' => 'Chuyển khoản',
-                                                    'credit_card' => 'Thẻ tín dụng'
-                                                ];
-                                                echo $payment_methods[$booking['payment_method']] ?? $booking['payment_method'];
-                                                ?>
-                                            </span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if ($booking['transaction_id']): ?>
-                                        <div class="flex justify-between text-sm">
-                                            <span class="text-gray-500 dark:text-gray-400">Mã giao dịch</span>
-                                            <span
-                                                class="text-gray-900 dark:text-white font-mono"><?php echo $booking['transaction_id']; ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
                             </div>
 
                             <!-- Special Requests -->
@@ -641,9 +556,7 @@ try {
                     font-weight: 600;
                 }
                 .badge-confirmed { background: #e3f2fd; color: #1565c0; }
-                .badge-paid { background: #e8f5e9; color: #2e7d32; }
                 .badge-pending { background: #fff3e0; color: #e65100; }
-                .badge-unpaid { background: #ffebee; color: #c62828; }
                 .footer {
                     text-align: center;
                     margin-top: 25px;
@@ -666,9 +579,6 @@ try {
                 <div class="status-badges">
                     <span class="badge badge-<?php echo $booking['status'] === 'confirmed' ? 'confirmed' : 'pending'; ?>">
                         <?php echo $status_config[$booking['status']]['label'] ?? $booking['status']; ?>
-                    </span>
-                    <span class="badge badge-<?php echo $booking['payment_status'] === 'paid' ? 'paid' : 'unpaid'; ?>">
-                        <?php echo $payment_status_config[$booking['payment_status']]['label'] ?? $booking['payment_status']; ?>
                     </span>
                 </div>
             </div>

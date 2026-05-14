@@ -72,13 +72,6 @@ $status_labels = [
     'cancelled' => ['label' => __('booking_status.cancelled'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'],
     'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
 ];
-
-$payment_labels = [
-    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-red-100 text-red-800'],
-    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-yellow-100 text-yellow-800'],
-    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-green-100 text-green-800'],
-    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-gray-100 text-gray-800']
-];
 ?>
 <!DOCTYPE html>
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
@@ -187,16 +180,6 @@ $payment_labels = [
                                         ?>">
                                             <?php echo $status_labels[$status]['label']; ?>
                                         </span>
-                                        <?php if ($booking['payment_status']): ?>
-                                            <span class="px-4 py-1.5 text-sm font-bold rounded-full border <?php
-                                            $p_status = $booking['payment_status'];
-                                            echo ($p_status == 'paid') ? 'bg-green-500/20 text-green-400 border-green-500/30' :
-                                                (($p_status == 'unpaid') ? 'bg-red-500/20 text-red-400 border-red-500/30' :
-                                                    'bg-yellow-500/20 text-yellow-400 border-yellow-500/30');
-                                            ?>">
-                                                <?php echo $payment_labels[$p_status]['label']; ?>
-                                            </span>
-                                        <?php endif; ?>
                                     </div>
                                 </div>
 
@@ -433,121 +416,20 @@ $payment_labels = [
                                 <!-- Sidebar -->
                                 <div class="space-y-8">
 
-                                    <!-- Price Breakdown -->
+                                    <!-- Price Summary (Simplified) -->
                                     <div class="glass-card p-6">
                                         <h3
                                             class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
                                             <span class="material-symbols-outlined text-accent">receipt</span>
-                                            <?php _e('booking_detail.price_detail'); ?>
+                                            <?php _e('booking_detail.total'); ?>
                                         </h3>
 
-                                        <?php
-                                        // room_price in DB already stores total (per_night × nights)
-                                        $room_total = (float) $booking['room_price'];
-                                        $total_nights_display = max(1, (int) $booking['total_nights']);
-                                        ?>
-                                        <div class="space-y-4">
-                                            <div class="flex justify-between text-white/80">
-                                                <span><?php _e('booking_detail.room_price'); ?> <br><span
-                                                        class="text-xs text-white/40">(<?php echo $total_nights_display; ?>
-                                                        <?php _e('profile_bookings.nights'); ?>)</span></span>
-                                                <span class="font-mono"><?php echo number_format($room_total); ?>
-                                                   đ</span>
-                                            </div>
-
-                                            <?php if (($booking['extra_guest_fee'] ?? 0) > 0): ?>
-                                                <div class="flex justify-between items-center text-sm text-blue-300">
-                                                    <span>Phụ thu khách thêm</span>
-                                                    <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_guest_fee'], 0, ',', '.'); ?>VND</span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if (($booking['extra_bed_fee'] ?? 0) > 0): ?>
-                                                <div class="flex justify-between items-center text-sm text-orange-300">
-                                                    <span>Phí giường phụ (<?php echo $booking['extra_beds'] ?? 0; ?>
-                                                        giường)</span>
-                                                    <span
-                                                        class="font-mono"><?php echo number_format($booking['extra_bed_fee'], 0, ',', '.'); ?>VND</span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if ($booking['service_fee'] > 0): ?>
-                                                <div class="flex justify-between text-white/80">
-                                                    <span><?php _e('booking_detail.service_charges'); ?></span>
-                                                    <span
-                                                        class="font-mono"><?php echo number_format($booking['service_fee']); ?>
-                                                       đ</span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if ($booking['discount_amount'] > 0): ?>
-                                                <div class="flex justify-between text-green-400">
-                                                    <span><?php _e('booking_detail.discount'); ?></span>
-                                                    <span
-                                                        class="font-mono">-<?php echo number_format($booking['discount_amount']); ?>
-                                                       đ</span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if ($booking['points_used'] > 0): ?>
-                                                <div class="flex justify-between text-accent">
-                                                    <span><?php _e('booking_detail.points_used'); ?></span>
-                                                    <span class="font-mono">-<?php echo $booking['points_used']; ?>
-                                                        <?php _e('profile_loyalty.points'); ?></span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <div class="border-t border-white/10 pt-4 mt-2">
-                                                <div class="flex justify-between text-lg font-bold text-white">
-                                                    <span><?php _e('booking_detail.total'); ?></span>
-                                                    <span
-                                                        class="text-accent font-mono"><?php echo number_format($booking['total_amount']); ?>
-                                                        VND</span>
-                                                </div>
-                                            </div>
+                                        <div class="text-center py-4">
+                                            <p class="text-3xl font-bold text-accent font-mono">
+                                                <?php echo number_format($booking['total_amount']); ?> VND
+                                            </p>
                                         </div>
                                     </div>
-
-                                    <!-- Payment Information -->
-                                    <?php if ($booking['payment_method']): ?>
-                                        <div class="glass-card p-6">
-                                            <h3
-                                                class="text-xl font-bold mb-6 flex items-center gap-3 text-white border-b border-white/10 pb-4">
-                                                <span class="material-symbols-outlined text-accent">payment</span>
-                                                <?php _e('booking_detail.payment_info'); ?>
-                                            </h3>
-
-                                            <div class="space-y-4">
-                                                <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                    <span
-                                                        class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.payment_method'); ?></span>
-                                                    <p class="text-white capitalize"><?php echo $booking['payment_method']; ?>
-                                                    </p>
-                                                </div>
-
-                                                <?php if ($booking['transaction_id']): ?>
-                                                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                        <span
-                                                            class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.transaction_id'); ?></span>
-                                                        <p class="font-mono text-sm text-white break-all">
-                                                            <?php echo htmlspecialchars($booking['transaction_id']); ?>
-                                                        </p>
-                                                    </div>
-                                                <?php endif; ?>
-
-                                                <?php if ($booking['paid_at']): ?>
-                                                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                        <span
-                                                            class="text-white/50 text-xs uppercase tracking-wider block mb-1"><?php _e('booking_detail.paid_at'); ?></span>
-                                                        <p class="text-white font-mono">
-                                                            <?php echo date('m/d/Y H:i', strtotime($booking['paid_at'])); ?>
-                                                        </p>
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
 
                                     <!-- Actions -->
                                     <div class="glass-card p-6">
@@ -960,30 +842,11 @@ $payment_labels = [
                     </div>
                     
                     <div class="section">
-                        <div class="section-title">Chi tiết thanh toán / Payment Details</div>
-                        <div class="row"><span class="label">Giá phòng (<?php echo $booking['total_nights']; ?> đêm x <?php echo $booking['num_rooms']; ?> phòng):</span> <span class="value"><?php echo number_format($booking['room_price']); ?> VND</span></div>
-                        
-                        <?php if ($booking['service_fee'] > 0): ?>
-                        <div class="row"><span class="label">Phí dịch vụ:</span> <span class="value"><?php echo number_format($booking['service_fee']); ?> VND</span></div>
-                        <?php endif; ?>
-                        
-                        <?php if ($booking['discount_amount'] > 0): ?>
-                        <div class="row"><span class="label">Giảm giá:</span> <span class="value">-<?php echo number_format($booking['discount_amount']); ?> VND</span></div>
-                        <?php endif; ?>
-                        
-                        <?php if ($booking['points_used'] > 0): ?>
-                        <div class="row"><span class="label">Điểm thưởng sử dụng:</span> <span class="value"><?php echo number_format($booking['points_used']); ?> điểm</span></div>
-                        <?php endif; ?>
-                        
+                        <div class="section-title">Tổng tiền / Total Amount</div>
                         <div class="total-section">
                             <div class="total-row">
                                 <span class="total-label">TỔNG CỘNG / TOTAL</span>
                                 <span class="total-amount"><?php echo number_format($booking['total_amount']); ?> VND</span>
-                            </div>
-                            <div style="text-align: right; font-size: 12px; margin-top: 5px; opacity: 0.8;">
-                                <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
-                                <?php if ($booking['payment_method'])
-                                    echo ' - ' . ucfirst($booking['payment_method']); ?>
                             </div>
                         </div>
                     </div>

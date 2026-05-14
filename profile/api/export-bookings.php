@@ -51,8 +51,6 @@ try {
         'Số trẻ em',
         'Tổng tiền (VND)',
         'Trạng thái',
-        'Trạng thái thanh toán',
-        'Phương thức thanh toán',
         'Tên khách',
         'Số điện thoại',
         'Email'
@@ -68,21 +66,6 @@ try {
         'no_show' => 'Không đến'
     ];
     
-    $payment_labels = [
-        'unpaid' => 'Chưa thanh toán',
-        'partial' => 'Thanh toán một phần',
-        'paid' => 'Đã thanh toán',
-        'completed' => 'Đã thanh toán',
-        'refunded' => 'Đã hoàn tiền'
-    ];
-    
-    $payment_methods = [
-        'vnpay' => 'VNPay',
-        'cash' => 'Tiền mặt',
-        'bank_transfer' => 'Chuyển khoản',
-        'credit_card' => 'Thẻ tín dụng'
-    ];
-    
     // Add data rows
     foreach ($bookings as $booking) {
         fputcsv($output, [
@@ -96,8 +79,6 @@ try {
             $booking['num_children'],
             number_format($booking['total_amount'], 0, ',', '.'),
             $status_labels[$booking['status']] ?? $booking['status'],
-            $payment_labels[$booking['payment_status']] ?? $booking['payment_status'] ?? 'N/A',
-            $payment_methods[$booking['payment_method']] ?? $booking['payment_method'] ?? 'N/A',
             $booking['guest_name'],
             $booking['guest_phone'],
             $booking['guest_email']

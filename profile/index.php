@@ -38,8 +38,7 @@ try {
     // Get booking stats
     $stmt = $db->prepare("
         SELECT COUNT(*) as total, 
-               SUM(CASE WHEN status IN ('confirmed','checked_in') THEN 1 ELSE 0 END) as active,
-               SUM(CASE WHEN payment_status = 'paid' THEN total_amount ELSE 0 END) as spent
+               SUM(CASE WHEN status IN ('confirmed','checked_in') THEN 1 ELSE 0 END) as active
         FROM bookings WHERE user_id = ?
     ");
     $stmt->execute([$user_id]);
@@ -338,8 +337,6 @@ function getContactStatusBadge($status)
                                                         <div class="text-right">
                                                             <p class="text-accent font-bold text-lg">
                                                                 <?php echo number_format($b['total_amount']); ?>VND
-                                                            </p>
-                                                            <p class="text-xs text-white/40"><?php echo $b['payment_status']; ?>
                                                             </p>
                                                         </div>
                                                     </div>

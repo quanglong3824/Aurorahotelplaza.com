@@ -17,7 +17,6 @@ initLanguage();
 // Get filter parameters
 $filters = [
     'status' => $_GET['status'] ?? '',
-    'payment_status' => $_GET['payment_status'] ?? '',
     'date_from' => $_GET['date_from'] ?? '',
     'date_to' => $_GET['date_to'] ?? '',
     'search' => trim($_GET['search'] ?? '')
@@ -62,13 +61,7 @@ $status_labels = [
     'no_show' => ['label' => __('booking_status.no_show'), 'color' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200']
 ];
 
-$payment_labels = [
-    'unpaid' => ['label' => __('payment_status.unpaid'), 'color' => 'bg-red-100 text-red-800'],
-    'partial' => ['label' => __('payment_status.partial'), 'color' => 'bg-yellow-100 text-yellow-800'],
-    'paid' => ['label' => __('payment_status.paid'), 'color' => 'bg-green-100 text-green-800'],
-    'refunded' => ['label' => __('payment_status.refunded'), 'color' => 'bg-gray-100 text-gray-800']
-];
-?>
+// Status labels and colors
 <!DOCTYPE html>
 <html translate="no" class="light" lang="<?php echo getLang(); ?>">
 
@@ -263,21 +256,6 @@ $payment_labels = [
                                         </select>
                                     </div>
 
-                                    <!-- Payment Status Filter -->
-                                    <div>
-                                        <label
-                                            class="block text-xs font-medium mb-2 text-white/70 uppercase tracking-wider"><?php _e('profile_bookings.payment'); ?></label>
-                                        <select name="payment_status"
-                                            class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all [&>option]:bg-slate-800 [&>option]:text-white">
-                                            <option value=""><?php _e('profile_bookings.all'); ?></option>
-                                            <?php foreach ($payment_labels as $status => $info): ?>
-                                                <option value="<?php echo $status; ?>" <?php echo $filters['payment_status'] === $status ? 'selected' : ''; ?>>
-                                                    <?php echo strip_tags($info['label']); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-
                                     <!-- Date From -->
                                     <div>
                                         <label
@@ -349,34 +327,8 @@ $payment_labels = [
                                                                     $statusColor = 'bg-green-500/20 text-green-300';
                                                                 if ($booking['status'] == 'cancelled')
                                                                     $statusColor = 'bg-red-500/20 text-red-300';
-                                                                ?>
+                                                                 ?>
 
-                                                                <?php if (!empty($booking['payment_status'])): ?>
-                                                                    <?php
-                                                                    // Check if this is an inquiry booking (apartment)
-                                                                    $isInquiry = ($booking['booking_type'] ?? 'instant') === 'inquiry';
-
-                                                                    if ($isInquiry):
-                                                                        ?>
-                                                                        <span
-                                                                            class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider bg-purple-500/20 text-purple-300">
-                                                                            <span
-                                                                                class="material-symbols-outlined text-xs mr-1 align-middle">contact_support</span>
-                                                                            <?php _e('booking_form.contact_for_quote'); ?>
-                                                                        </span>
-                                                                    <?php else:
-                                                                        $payColor = 'bg-gray-500/20 text-gray-300';
-                                                                        if ($booking['payment_status'] == 'paid')
-                                                                            $payColor = 'bg-green-500/20 text-green-300';
-                                                                        if ($booking['payment_status'] == 'unpaid')
-                                                                            $payColor = 'bg-red-500/20 text-red-300';
-                                                                        ?>
-                                                                        <span
-                                                                            class="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider <?php echo $payColor; ?>">
-                                                                            <?php echo $payment_labels[$booking['payment_status']]['label']; ?>
-                                                                        </span>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
                                                             </div>
 
                                                             <div

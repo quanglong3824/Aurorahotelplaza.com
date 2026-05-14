@@ -183,7 +183,7 @@ include 'includes/admin-header.php';
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Loại phòng</p>
                         <div class="flex items-center gap-2">
                             <select id="editRoomType" class="form-select text-sm py-1 px-2"
-                                <?php echo in_array($booking['status'], ['confirmed', 'checked_in', 'checked_out']) ? 'disabled' : ''; ?>>
+                                <?php echo in_array($booking['status'], ['checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
                                 <?php foreach ($all_room_types as $rt): ?>
                                     <option value="<?php echo $rt['room_type_id']; ?>"
                                         data-category="<?php echo htmlspecialchars($rt['category']); ?>"
@@ -192,7 +192,7 @@ include 'includes/admin-header.php';
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                            <?php if (!in_array($booking['status'], ['confirmed', 'checked_in', 'checked_out'])): ?>
+                            <?php if (!in_array($booking['status'], ['checked_out', 'cancelled'])): ?>
                                 <button onclick="updateRoomType()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                     Cập nhật
                                 </button>
