@@ -457,6 +457,10 @@ include 'includes/admin-header.php';
                                             class="action-btn text-blue-600" title="Check-in">
                                             <span class="material-symbols-outlined text-sm">login</span>
                                         </button>
+                                        <button onclick="unconfirmBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="action-btn text-amber-600" title="Hủy xác nhận">
+                                            <span class="material-symbols-outlined text-sm">undo</span>
+                                        </button>
                                     <?php endif; ?>
 
                                     <?php if ($booking['status'] === 'checked_in'): ?>
@@ -984,6 +988,35 @@ include 'includes/admin-header.php';
         const reason = prompt('Lý do hủy đơn / Cancellation reason:');
         if (reason !== null) {
             updateBookingStatus(id, 'cancelled', reason);
+        }
+    }
+
+    function unconfirmBooking(id) {
+        const reason = prompt('Lý do hủy xác nhận / Reason for unconfirming:');
+        if (reason !== null) {
+            if (!confirm('⚠️ Xác nhận hủy xác nhận đơn này?\n\nHệ thống sẽ gửi email xin lỗi đến khách hàng và đưa đơn về trạng thái "Chờ xác nhận".')) return;
+
+            const formData = new FormData();
+            formData.append('booking_id', id);
+            formData.append('reason', reason);
+
+            fetch('api/unconfirm-booking.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                showToast('Có lỗi xảy ra', 'error');
+            });
         }
     }
 

@@ -158,6 +158,10 @@ $no_room_assigned = ($booking['status'] === 'pending' && !$booking['room_id']);
                 <span class="material-symbols-outlined text-sm">login</span>
                 Check-in
             </button>
+            <button onclick="unconfirmBooking(<?php echo $booking_id; ?>)" class="btn btn-warning" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                <span class="material-symbols-outlined text-sm">undo</span>
+                Hủy xác nhận
+            </button>
         <?php endif; ?>
 
         <?php if ($booking['status'] === 'checked_in'): ?>
@@ -791,6 +795,39 @@ $no_room_assigned = ($booking['status'] === 'pending' && !$booking['room_id']);
         if (reason !== null) {
             showAdminLoading('Đang hủy đơn đặt phòng...');
             updateBookingStatus(id, 'cancelled', reason);
+        }
+    }
+
+    function unconfirmBooking(id) {
+        const reason = prompt('Lý do hủy xác nhận / Reason for unconfirming:');
+        if (reason !== null) {
+            if (!confirm('⚠️ Xác nhận hủy xác nhận đơn này?\n\nHệ thống sẽ gửi email xin lỗi đến khách hàng và đưa đơn về trạng thái "Chờ xác nhận".')) return;
+
+            showAdminLoading('Đang hủy xác nhận và gửi email...');
+
+            const formData = new FormData();
+            formData.append('booking_id', id);
+            formData.append('reason', reason);
+
+            fetch('api/unconfirm-booking.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                hideAdminLoading();
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                hideAdminLoading();
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            });
         }
     }
 
