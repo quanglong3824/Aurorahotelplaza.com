@@ -34,11 +34,13 @@ try {
         exit;
     }
     
-    // Get current booking
+    // Get current booking with full guest info
     $stmt = $db->prepare("
-        SELECT b.*, u.full_name as guest_name, u.email, u.phone
+        SELECT b.*, u.full_name as guest_name, u.email, u.phone, u.id_number, u.address, u.date_of_birth, u.gender, u.nationality,
+               u.created_at as member_since, rt.type_name as room_type_name
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
+        LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
         WHERE b.room_id = :room_id
         AND b.check_in_date <= CURDATE()
         AND b.check_out_date > CURDATE()
@@ -51,22 +53,54 @@ try {
     
     // Get booking history (last 10 bookings)
     $stmt = $db->prepare("
-        SELECT b.*, u.full_name as guest_name
+        SELECT b.*, u.full_name as guest_name, u.phone, u.email, rt.type_name as room_type_name
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
+        LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
         WHERE b.room_id = :room_id
-        AND b.status IN ('completed', 'checked_out')
+        AND b.status IN ('completed', 'checked_out', 'cancelled')
         ORDER BY b.check_out_date DESC
         LIMIT 10
     ");
     $stmt->execute([':room_id' => $room_id]);
     $booking_history = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    // Get activity logs for this room's bookings
+    $stmt = $db->prepare("
+        SELECT al.*, u.full_name as admin_name
+        FROM activity_logs al
+        LEFT JOIN users u ON al.user_id = u.user_id
+        WHERE al.entity_type = 'booking'
+        AND al.entity_id IN (
+            SELECT booking_id FROM bookings WHERE room_id = :room_id
+        )
+        ORDER BY al.created_at DESC
+        LIMIT 20
+    ");
+    $stmt->execute([':room_id' => $room_id]);
+    $activity_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Get booking history for this room
+    $stmt = $db->prepare("
+        SELECT bh.*, u.full_name as admin_name
+        FROM booking_history bh
+        LEFT JOIN users u ON bh.changed_by = u.user_id
+        WHERE bh.booking_id IN (
+            SELECT booking_id FROM bookings WHERE room_id = :room_id
+        )
+        ORDER BY bh.created_at DESC
+        LIMIT 20
+    ");
+    $stmt->execute([':room_id' => $room_id]);
+    $booking_history_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
     echo json_encode([
         'success' => true,
         'room' => $room,
         'current_booking' => $current_booking ?: null,
-        'booking_history' => $booking_history
+        'booking_history' => $booking_history,
+        'activity_logs' => $activity_logs,
+        'booking_history_logs' => $booking_history_logs
     ]);
     
 } catch (Exception $e) {

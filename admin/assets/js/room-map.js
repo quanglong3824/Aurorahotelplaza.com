@@ -20,7 +20,7 @@ function viewRoom(roomId) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                displayRoomDetail(data.room, data.current_booking, data.booking_history);
+                displayRoomDetail(data.room, data.current_booking, data.booking_history, data.activity_logs, data.booking_history_logs);
             } else {
                 document.getElementById('roomModalContent').innerHTML =
                     '<div class="text-center py-8 text-red-600">Không thể tải thông tin phòng</div>';
@@ -33,7 +33,7 @@ function viewRoom(roomId) {
 }
 
 // Display room detail in modal - with Info & Edit tabs
-function displayRoomDetail(room, currentBooking, history) {
+function displayRoomDetail(room, currentBooking, history, activityLogs, bookingHistoryLogs) {
     const statusColors = {
         'available':   'bg-green-100 text-green-800',
         'occupied':    'bg-red-100 text-red-800',
@@ -53,6 +53,9 @@ function displayRoomDetail(room, currentBooking, history) {
 
     const esc = (v) => String(v || '').replace(/"/g, '&quot;').replace(/\'/g, '&#39;');
     const lastCleaned = room.last_cleaned ? room.last_cleaned.split(' ')[0] : '';
+    const formatDate = (d) => d ? new Date(d).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+    const formatDateTime = (d) => d ? new Date(d).toLocaleString('vi-VN') : '—';
+    const formatMoney = (v) => v ? parseInt(v).toLocaleString() + ' VND' : '—';
 
     let html = `
         <div class="flex gap-1 mb-5 bg-gray-100 dark:bg-slate-800 rounded-xl p-1">
@@ -60,9 +63,17 @@ function displayRoomDetail(room, currentBooking, history) {
                 class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all bg-white dark:bg-slate-700 shadow text-gray-800 dark:text-white flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-base">info</span> Thông tin
             </button>
+            <button onclick="switchRoomTab('guest')" id="tab-guest"
+                class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-base">person</span> Khách
+            </button>
+            <button onclick="switchRoomTab('logs')" id="tab-logs"
+                class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-base">history</span> Nhật ký
+            </button>
             <button onclick="switchRoomTab('edit')" id="tab-edit"
                 class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-base">edit</span> Chỉnh sửa
+                <span class="material-symbols-outlined text-base">edit</span> Sửa
             </button>
         </div>
 
@@ -96,19 +107,30 @@ function displayRoomDetail(room, currentBooking, history) {
                         <h5 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined">person</span> Khách đang ở</h5>
                     </div>
                     <div class="card-body">
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-4">
                             <div>
-                                <p class="font-semibold text-lg">${currentBooking.guest_name}</p>
-                                <p class="text-sm text-gray-500">${currentBooking.email || ''}</p>
-                                <p class="text-sm text-gray-500">${currentBooking.phone || ''}</p>
+                                <p class="font-semibold text-lg">${esc(currentBooking.guest_name)}</p>
+                                <p class="text-sm text-gray-500">${esc(currentBooking.email || '')}</p>
+                                <p class="text-sm text-gray-500">${esc(currentBooking.phone || '')}</p>
                             </div>
                             <a href="booking-detail.php?id=${currentBooking.booking_id}" class="btn btn-primary btn-sm">Xem chi tiết</a>
                         </div>
-                        <div class="grid grid-cols-3 gap-3 text-sm">
-                            <div><span class="text-gray-500">Check-in:</span><p class="font-semibold">${new Date(currentBooking.check_in_date).toLocaleDateString('vi-VN')}</p></div>
-                            <div><span class="text-gray-500">Check-out:</span><p class="font-semibold">${new Date(currentBooking.check_out_date).toLocaleDateString('vi-VN')}</p></div>
-                            <div><span class="text-gray-500">Tổng:</span><p class="font-semibold" style="color:#d4af37;">${parseInt(currentBooking.total_amount).toLocaleString()} VND</p></div>
+                        <div class="grid grid-cols-3 gap-3 text-sm mb-3">
+                            <div><span class="text-gray-500">Check-in:</span><p class="font-semibold">${formatDate(currentBooking.check_in_date)}</p></div>
+                            <div><span class="text-gray-500">Check-out:</span><p class="font-semibold">${formatDate(currentBooking.check_out_date)}</p></div>
+                            <div><span class="text-gray-500">Tổng:</span><p class="font-semibold" style="color:#d4af37;">${formatMoney(currentBooking.total_amount)}</p></div>
                         </div>
+                        <div class="grid grid-cols-3 gap-3 text-sm">
+                            <div><span class="text-gray-500">Trạng thái:</span><p class="font-semibold">${currentBooking.status === 'checked_in' ? '🟢 Đang ở' : '🟡 Đã xác nhận'}</p></div>
+                            <div><span class="text-gray-500">Người lớn / Trẻ em:</span><p class="font-semibold">${currentBooking.num_adults} / ${currentBooking.num_children || 0}</p></div>
+                            <div><span class="text-gray-500">Giường phụ:</span><p class="font-semibold">${currentBooking.extra_beds || 0}</p></div>
+                        </div>
+                        ${currentBooking.special_requests ? `
+                            <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200">
+                                <p class="text-xs font-semibold text-amber-700 mb-1">Yêu cầu đặc biệt:</p>
+                                <p class="text-sm text-amber-800">${esc(currentBooking.special_requests)}</p>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             ` : '<div class="text-center py-3 text-gray-400 text-sm">Phòng hiện đang trống</div>'}
@@ -123,12 +145,12 @@ function displayRoomDetail(room, currentBooking, history) {
                             ${history.map(b => `
                                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
                                     <div class="flex-1">
-                                        <p class="font-semibold">${b.guest_name}</p>
-                                        <p class="text-sm text-gray-500">${new Date(b.check_in_date).toLocaleDateString('vi-VN')} – ${new Date(b.check_out_date).toLocaleDateString('vi-VN')}</p>
+                                        <p class="font-semibold">${esc(b.guest_name)}</p>
+                                        <p class="text-sm text-gray-500">${formatDate(b.check_in_date)} – ${formatDate(b.check_out_date)}</p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-semibold" style="color:#d4af37;">${parseInt(b.total_amount).toLocaleString()} VND</p>
-                                        <span class="badge badge-${b.status === 'completed' ? 'success' : 'secondary'} text-xs">${b.status === 'completed' ? 'Hoàn thành' : b.status}</span>
+                                        <p class="font-semibold" style="color:#d4af37;">${formatMoney(b.total_amount)}</p>
+                                        <span class="badge badge-${b.status === 'completed' ? 'success' : b.status === 'cancelled' ? 'danger' : 'secondary'} text-xs">${b.status === 'completed' ? 'Hoàn thành' : b.status === 'cancelled' ? 'Đã hủy' : b.status}</span>
                                     </div>
                                 </div>
                             `).join('')}
@@ -150,6 +172,179 @@ function displayRoomDetail(room, currentBooking, history) {
                         <span class="material-symbols-outlined text-sm">toggle_on</span> Đổi trạng thái
                     </button>
                 `}
+            </div>
+        </div>
+
+        <!-- GUEST TAB -->
+        <div id="tab-panel-guest" class="hidden space-y-5">
+            ${currentBooking ? `
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-5 border border-blue-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl font-bold">
+                            ${(currentBooking.guest_name || '?').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold">${esc(currentBooking.guest_name)}</h4>
+                            <p class="text-sm text-gray-500">Mã đơn: <strong>${esc(currentBooking.booking_code)}</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Email</div>
+                            <div class="font-semibold text-sm">${esc(currentBooking.email || '—')}</div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Điện thoại</div>
+                            <div class="font-semibold text-sm">${esc(currentBooking.phone || '—')}</div>
+                        </div>
+                        ${currentBooking.id_number ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">CMND/CCCD</div>
+                            <div class="font-semibold text-sm">${esc(currentBooking.id_number)}</div>
+                        </div>` : ''}
+                        ${currentBooking.date_of_birth ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Ngày sinh</div>
+                            <div class="font-semibold text-sm">${formatDate(currentBooking.date_of_birth)}</div>
+                        </div>` : ''}
+                        ${currentBooking.gender ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Giới tính</div>
+                            <div class="font-semibold text-sm">${currentBooking.gender === 'male' ? 'Nam' : currentBooking.gender === 'female' ? 'Nữ' : 'Khác'}</div>
+                        </div>` : ''}
+                        ${currentBooking.nationality ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Quốc tịch</div>
+                            <div class="font-semibold text-sm">${esc(currentBooking.nationality)}</div>
+                        </div>` : ''}
+                        ${currentBooking.address ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3 col-span-2">
+                            <div class="text-xs text-gray-500 mb-1">Địa chỉ</div>
+                            <div class="font-semibold text-sm">${esc(currentBooking.address)}</div>
+                        </div>` : ''}
+                        ${currentBooking.member_since ? `
+                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">Thành viên từ</div>
+                            <div class="font-semibold text-sm">${formatDate(currentBooking.member_since)}</div>
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined">receipt_long</span> Chi tiết lưu trú</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500 block mb-1">Loại phòng đặt</span>
+                                <p class="font-semibold">${esc(currentBooking.room_type_name || currentBooking.type_name)}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Mã đặt phòng</span>
+                                <p class="font-semibold font-mono">${esc(currentBooking.booking_code)}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Nhận phòng</span>
+                                <p class="font-semibold">${formatDateTime(currentBooking.check_in_date)}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Trả phòng</span>
+                                <p class="font-semibold">${formatDateTime(currentBooking.check_out_date)}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Số đêm</span>
+                                <p class="font-semibold">${currentBooking.total_nights || Math.ceil((new Date(currentBooking.check_out_date) - new Date(currentBooking.check_in_date)) / 86400000)} đêm</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Số khách</span>
+                                <p class="font-semibold">${currentBooking.num_adults} người lớn, ${currentBooking.num_children || 0} trẻ em</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Giường phụ</span>
+                                <p class="font-semibold">${currentBooking.extra_beds || 0}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Phương thức thanh toán</span>
+                                <p class="font-semibold">${currentBooking.payment_method === 'vnpay' ? 'VNPay' : currentBooking.payment_method === 'cash' ? 'Tiền mặt' : currentBooking.payment_method || '—'}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Trạng thái thanh toán</span>
+                                <p class="font-semibold">${currentBooking.payment_status === 'paid' ? '✅ Đã thanh toán' : currentBooking.payment_status === 'partial' ? '🟡 Thanh toán một phần' : currentBooking.payment_status === 'pending' ? '⏳ Chưa thanh toán' : '—'}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 block mb-1">Tổng chi phí</span>
+                                <p class="font-bold text-lg" style="color:#d4af37;">${formatMoney(currentBooking.total_amount)}</p>
+                            </div>
+                        </div>
+                        ${currentBooking.special_requests ? `
+                            <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200">
+                                <p class="text-xs font-semibold text-amber-700 mb-1">Yêu cầu đặc biệt:</p>
+                                <p class="text-sm text-amber-800">${esc(currentBooking.special_requests)}</p>
+                            </div>
+                        ` : ''}
+                        <div class="mt-4 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
+                            <p class="text-xs text-gray-500 mb-1">Ngày đặt</p>
+                            <p class="font-semibold text-sm">${formatDateTime(currentBooking.created_at)}</p>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div class="text-center py-12">
+                    <span class="material-symbols-outlined text-6xl text-gray-300">person_off</span>
+                    <p class="text-gray-400 mt-4">Không có khách đang ở phòng này</p>
+                </div>
+            `}
+        </div>
+
+        <!-- LOGS TAB -->
+        <div id="tab-panel-logs" class="hidden space-y-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined">history_toggle_off</span> Lịch sử thay đổi đơn phòng</h5>
+                </div>
+                <div class="card-body">
+                    ${bookingHistoryLogs && bookingHistoryLogs.length > 0 ? `
+                        <div class="space-y-2">
+                            ${bookingHistoryLogs.map(log => `
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="material-symbols-outlined text-blue-600 text-sm">event_note</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold">${esc(log.notes || log.new_status)}</p>
+                                        <p class="text-xs text-gray-500">${formatDateTime(log.created_at)} · ${esc(log.admin_name || 'Hệ thống')}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<p class="text-center text-gray-400 py-4 text-sm">Chưa có lịch sử thay đổi</p>'}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined">track_changes</span> Nhật ký hoạt động</h5>
+                </div>
+                <div class="card-body">
+                    ${activityLogs && activityLogs.length > 0 ? `
+                        <div class="space-y-2">
+                            ${activityLogs.map(log => `
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="material-symbols-outlined text-purple-600 text-sm">${log.action === 'assign_room' ? 'meeting_room' : log.action === 'check_in' ? 'login' : log.action === 'check_out' ? 'logout' : 'info'}</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold">${esc(log.action || '').replace(/_/g, ' ').toUpperCase()}</p>
+                                        <p class="text-xs text-gray-500">${esc(log.description || log.message || '')}</p>
+                                        <p class="text-xs text-gray-400 mt-1">${formatDateTime(log.created_at)} · ${esc(log.admin_name || 'Hệ thống')}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<p class="text-center text-gray-400 py-4 text-sm">Chưa có nhật ký hoạt động</p>'}
+                </div>
             </div>
         </div>
 
@@ -219,7 +414,7 @@ function displayRoomDetail(room, currentBooking, history) {
 }
 
 function switchRoomTab(tab) {
-    ['info', 'edit'].forEach(t => {
+    ['info', 'guest', 'logs', 'edit'].forEach(t => {
         const btn   = document.getElementById('tab-' + t);
         const panel = document.getElementById('tab-panel-' + t);
         if (!btn || !panel) return;
