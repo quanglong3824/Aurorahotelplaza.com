@@ -49,6 +49,12 @@ try {
         exit;
     }
 
+    // Không cho đổi loại phòng khi đã xác nhận hoặc check-in
+    if ($field === 'room_type_id' && in_array($booking['status'], ['confirmed', 'checked_in'])) {
+        echo json_encode(['success' => false, 'message' => 'Đơn đã xác nhận/check-in không được đổi loại phòng. Chỉ được phân lại phòng cùng loại.']);
+        exit;
+    }
+
     // Validate room_type_id
     if ($field === 'room_type_id') {
         $value = (int)$value;

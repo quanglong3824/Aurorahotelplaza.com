@@ -185,8 +185,11 @@ include 'includes/admin-header.php';
                     <div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">Loại phòng</p>
                         <div class="flex items-center gap-2">
+                            <?php
+                            $can_change_room_type = !in_array($booking['status'], ['checked_out', 'cancelled', 'confirmed', 'checked_in']);
+                            ?>
                             <select id="editRoomType" class="form-select text-sm py-1 px-2"
-                                <?php echo in_array($booking['status'], ['checked_out', 'cancelled']) ? 'disabled' : ''; ?>>
+                                <?php echo !$can_change_room_type ? 'disabled' : ''; ?>>
                                 <?php foreach ($all_room_types as $rt): ?>
                                     <option value="<?php echo $rt['room_type_id']; ?>"
                                         data-category="<?php echo htmlspecialchars($rt['category']); ?>"
@@ -195,10 +198,15 @@ include 'includes/admin-header.php';
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                            <?php if (!in_array($booking['status'], ['checked_out', 'cancelled'])): ?>
+                            <?php if ($can_change_room_type): ?>
                                 <button onclick="updateRoomType()" class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
                                     Cập nhật
                                 </button>
+                            <?php elseif (in_array($booking['status'], ['confirmed', 'checked_in'])): ?>
+                                <span class="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded flex items-center gap-1" title="Đơn đã xác nhận/check-in chỉ được đổi phòng cùng loại, không được đổi loại phòng">
+                                    <span class="material-symbols-outlined text-xs">lock</span>
+                                    Đã khóa
+                                </span>
                             <?php endif; ?>
                         </div>
                         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
