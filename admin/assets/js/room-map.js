@@ -20,20 +20,21 @@ function viewRoom(roomId) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                displayRoomDetail(data.room, data.current_booking, data.booking_history, data.activity_logs, data.booking_history_logs);
+                displayRoomDetail(data.room, data.current_booking, data.booking_history, data.activity_logs);
             } else {
                 document.getElementById('roomModalContent').innerHTML =
-                    '<div class="text-center py-8 text-red-600">Không thể tải thông tin phòng</div>';
+                    '<div class="text-center py-8 text-red-600">' + (data.message || 'Không thể tải thông tin phòng') + '</div>';
             }
         })
         .catch(err => {
+            console.error(err);
             document.getElementById('roomModalContent').innerHTML =
-                '<div class="text-center py-8 text-red-600">Có lỗi xảy ra</div>';
+                '<div class="text-center py-8 text-red-600">Có lỗi xảy ra khi tải thông tin phòng</div>';
         });
 }
 
 // Display room detail in modal - with Info & Edit tabs
-function displayRoomDetail(room, currentBooking, history, activityLogs, bookingHistoryLogs) {
+function displayRoomDetail(room, currentBooking, history, activityLogs) {
     const statusColors = {
         'available':   'bg-green-100 text-green-800',
         'occupied':    'bg-red-100 text-red-800',
@@ -213,11 +214,6 @@ function displayRoomDetail(room, currentBooking, history, activityLogs, bookingH
                             <div class="text-xs text-gray-500 mb-1">Giới tính</div>
                             <div class="font-semibold text-sm">${currentBooking.gender === 'male' ? 'Nam' : currentBooking.gender === 'female' ? 'Nữ' : 'Khác'}</div>
                         </div>` : ''}
-                        ${currentBooking.nationality ? `
-                        <div class="bg-white dark:bg-slate-800 rounded-lg p-3">
-                            <div class="text-xs text-gray-500 mb-1">Quốc tịch</div>
-                            <div class="font-semibold text-sm">${esc(currentBooking.nationality)}</div>
-                        </div>` : ''}
                         ${currentBooking.address ? `
                         <div class="bg-white dark:bg-slate-800 rounded-lg p-3 col-span-2">
                             <div class="text-xs text-gray-500 mb-1">Địa chỉ</div>
@@ -305,16 +301,17 @@ function displayRoomDetail(room, currentBooking, history, activityLogs, bookingH
                     <h5 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined">history_toggle_off</span> Lịch sử thay đổi đơn phòng</h5>
                 </div>
                 <div class="card-body">
-                    ${bookingHistoryLogs && bookingHistoryLogs.length > 0 ? `
+                    ${history && history.length > 0 ? `
                         <div class="space-y-2">
-                            ${bookingHistoryLogs.map(log => `
+                            ${history.map(b => `
                                 <div class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
                                     <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                                         <span class="material-symbols-outlined text-blue-600 text-sm">event_note</span>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold">${esc(log.notes || log.new_status)}</p>
-                                        <p class="text-xs text-gray-500">${formatDateTime(log.created_at)} · ${esc(log.admin_name || 'Hệ thống')}</p>
+                                        <p class="text-sm font-semibold">${esc(b.guest_name)} — ${formatDate(b.check_in_date)} → ${formatDate(b.check_out_date)}</p>
+                                        <p class="text-xs text-gray-500">${formatMoney(b.total_amount)}</p>
+                                        <span class="badge badge-${b.status === 'completed' ? 'success' : b.status === 'cancelled' ? 'danger' : 'secondary'} text-xs">${b.status === 'completed' ? 'Hoàn thành' : b.status === 'cancelled' ? 'Đã hủy' : b.status}</span>
                                     </div>
                                 </div>
                             `).join('')}
@@ -337,7 +334,7 @@ function displayRoomDetail(room, currentBooking, history, activityLogs, bookingH
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-semibold">${esc(log.action || '').replace(/_/g, ' ').toUpperCase()}</p>
-                                        <p class="text-xs text-gray-500">${esc(log.description || log.message || '')}</p>
+                                        <p class="text-xs text-gray-500">${esc(log.description || '')}</p>
                                         <p class="text-xs text-gray-400 mt-1">${formatDateTime(log.created_at)} · ${esc(log.admin_name || 'Hệ thống')}</p>
                                     </div>
                                 </div>

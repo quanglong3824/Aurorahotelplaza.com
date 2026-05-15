@@ -36,7 +36,12 @@ try {
     
     // Get current booking with full guest info
     $stmt = $db->prepare("
-        SELECT b.*, u.full_name as guest_name, u.email, u.phone, u.id_number, u.address, u.date_of_birth, u.gender, u.nationality,
+        SELECT b.*, 
+               COALESCE(u.full_name, b.guest_name) as guest_name, 
+               COALESCE(u.email, b.guest_email) as email, 
+               COALESCE(u.phone, b.guest_phone) as phone,
+               b.guest_id_number as id_number,
+               u.address, u.date_of_birth, u.gender,
                u.created_at as member_since, rt.type_name as room_type_name
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
@@ -53,7 +58,11 @@ try {
     
     // Get booking history (last 10 bookings)
     $stmt = $db->prepare("
-        SELECT b.*, u.full_name as guest_name, u.phone, u.email, rt.type_name as room_type_name
+        SELECT b.*, 
+               COALESCE(u.full_name, b.guest_name) as guest_name,
+               COALESCE(u.phone, b.guest_phone) as phone,
+               COALESCE(u.email, b.guest_email) as email,
+               rt.type_name as room_type_name
         FROM bookings b
         LEFT JOIN users u ON b.user_id = u.user_id
         LEFT JOIN room_types rt ON b.room_type_id = rt.room_type_id
@@ -80,27 +89,12 @@ try {
     $stmt->execute([':room_id' => $room_id]);
     $activity_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Get booking history for this room
-    $stmt = $db->prepare("
-        SELECT bh.*, u.full_name as admin_name
-        FROM booking_history bh
-        LEFT JOIN users u ON bh.changed_by = u.user_id
-        WHERE bh.booking_id IN (
-            SELECT booking_id FROM bookings WHERE room_id = :room_id
-        )
-        ORDER BY bh.created_at DESC
-        LIMIT 20
-    ");
-    $stmt->execute([':room_id' => $room_id]);
-    $booking_history_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
     echo json_encode([
         'success' => true,
         'room' => $room,
         'current_booking' => $current_booking ?: null,
         'booking_history' => $booking_history,
-        'activity_logs' => $activity_logs,
-        'booking_history_logs' => $booking_history_logs
+        'activity_logs' => $activity_logs
     ]);
     
 } catch (Exception $e) {
