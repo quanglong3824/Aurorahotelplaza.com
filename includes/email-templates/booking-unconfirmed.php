@@ -89,7 +89,7 @@ function getBookingUnconfirmedEmail($data) {
                 <div class='info-box'>
                     <h4>✓ What Happens Next?</h4>
                     <p>
-                        Our team will contact you via phone or email within the next 24 hours to confirm your booking details and provide you with an official confirmation. 
+                        Our team will contact you again to confirm your booking details and provide you with an official confirmation. 
                         You do not need to take any action at this time.
                     </p>
                 </div>
