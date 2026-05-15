@@ -7,7 +7,12 @@
  * WITHOUT affecting existing booking data.
  */
 
-require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/../config/database.php';
+
+// Bật hiển thị lỗi để debug
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 header('Content-Type: text/html; charset=utf-8');
 ?>
