@@ -39,10 +39,10 @@ try {
         throw new Exception('Chỉ có thể hủy xác nhận đơn đã xác nhận');
     }
 
-    // Update status back to pending
+    // Update status back to pending and clear room assignment
     $stmt = $db->prepare("
         UPDATE bookings 
-        SET status = 'pending', updated_at = NOW()
+        SET status = 'pending', room_id = NULL, updated_at = NOW()
         WHERE booking_id = ?
     ");
     $stmt->execute([$booking_id]);
