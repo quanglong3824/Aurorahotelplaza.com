@@ -439,10 +439,17 @@ include 'includes/admin-header.php';
                                     </a>
 
                                     <?php if ($booking['status'] === 'pending' && !$is_pending_unassigned): ?>
-                                        <button onclick="confirmBooking(<?php echo $booking['booking_id']; ?>)"
-                                            class="action-btn text-green-600" title="Xác nhận">
-                                            <span class="material-symbols-outlined text-sm">check_circle</span>
-                                        </button>
+                                        <?php if ($booking['room_id']): ?>
+                                            <button onclick="confirmBooking(<?php echo $booking['booking_id']; ?>)"
+                                                class="action-btn text-green-600" title="Xác nhận">
+                                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                            </button>
+                                        <?php else: ?>
+                                            <button disabled
+                                                class="action-btn text-gray-400 cursor-not-allowed" title="Cần phân phòng trước khi xác nhận">
+                                                <span class="material-symbols-outlined text-sm">lock</span>
+                                            </button>
+                                        <?php endif; ?>
                                     <?php endif; ?>
 
                                     <?php if ($booking['status'] === 'confirmed'): ?>

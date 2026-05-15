@@ -125,6 +125,7 @@ include 'includes/admin-header.php';
 <!-- Action Bar -->
 <?php
 $is_pending_unassigned = ($booking['status'] === 'pending' && !$assignment);
+$no_room_assigned = ($booking['status'] === 'pending' && !$booking['room_id']);
 ?>
 <div class="flex items-center justify-between mb-6 no-print">
     <a href="bookings.php" class="btn btn-secondary">
@@ -133,9 +134,14 @@ $is_pending_unassigned = ($booking['status'] === 'pending' && !$assignment);
     </a>
 
     <div class="flex gap-2 <?php echo $is_pending_unassigned ? 'opacity-40 pointer-events-none' : ''; ?>">
-        <?php if ($booking['status'] === 'pending' && $assignment): ?>
+        <?php if ($booking['status'] === 'pending' && $assignment && !$no_room_assigned): ?>
             <button onclick="confirmBooking(<?php echo $booking_id; ?>)" class="btn btn-success">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
+                Xác nhận đơn
+            </button>
+        <?php elseif ($booking['status'] === 'pending' && $assignment && $no_room_assigned): ?>
+            <button disabled class="btn btn-success opacity-50 cursor-not-allowed" title="Cần phân phòng trước khi xác nhận">
+                <span class="material-symbols-outlined text-sm">lock</span>
                 Xác nhận đơn
             </button>
         <?php endif; ?>
@@ -193,6 +199,20 @@ $is_pending_unassigned = ($booking['status'] === 'pending' && !$assignment);
     <button onclick="acceptBooking(<?php echo $booking_id; ?>)" class="btn btn-success">
         <span class="material-symbols-outlined text-sm">handshake</span>
         Tiếp nhận đơn
+    </button>
+</div>
+<?php elseif ($no_room_assigned): ?>
+<div class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg flex items-center justify-between no-print">
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-blue-600 text-2xl">meeting_room</span>
+        <div>
+            <p class="font-semibold text-blue-800 dark:text-blue-300">Chưa phân phòng</p>
+            <p class="text-sm text-blue-600 dark:text-blue-400">Cần phân phòng trước khi xác nhận đơn để tránh gửi email trống cho khách</p>
+        </div>
+    </div>
+    <button onclick="assignRoom(<?php echo $booking_id; ?>)" class="btn btn-primary">
+        <span class="material-symbols-outlined text-sm">meeting_room</span>
+        Phân phòng ngay
     </button>
 </div>
 <?php endif; ?>
@@ -620,11 +640,19 @@ $is_pending_unassigned = ($booking['status'] === 'pending' && !$assignment);
                         $is_admin = ($_SESSION['user_role'] === 'admin');
                         if ($is_mine || $is_admin):
                         ?>
-                            <button onclick="openTransferModal(<?php echo $booking_id; ?>, '<?php echo htmlspecialchars($booking['booking_code']); ?>')"
-                                class="btn btn-secondary w-full text-sm">
-                                <span class="material-symbols-outlined text-sm">swap_horiz</span>
-                                Chuyển tiếp nhận
-                            </button>
+                            <div class="flex gap-2">
+                                <?php if (!$booking['room_id'] && $booking['status'] === 'pending'): ?>
+                                    <button onclick="assignRoom(<?php echo $booking_id; ?>)" class="btn btn-primary flex-1 text-sm">
+                                        <span class="material-symbols-outlined text-sm">meeting_room</span>
+                                        Phân phòng
+                                    </button>
+                                <?php endif; ?>
+                                <button onclick="openTransferModal(<?php echo $booking_id; ?>, '<?php echo htmlspecialchars($booking['booking_code']); ?>')"
+                                    class="btn btn-secondary flex-1 text-sm">
+                                    <span class="material-symbols-outlined text-sm">swap_horiz</span>
+                                    Chuyển tiếp nhận
+                                </button>
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php else: ?>

@@ -59,6 +59,11 @@ try {
         }
     }
     
+    // Check if room is assigned before confirming
+    if ($new_status === 'confirmed' && empty($booking['room_id'])) {
+        throw new Exception('Chưa phân phòng cho đơn này. Vui lòng phân phòng trước khi xác nhận để tránh gửi email trống cho khách.');
+    }
+    
     // Update booking status
     $update_data = [
         'status' => $new_status,
