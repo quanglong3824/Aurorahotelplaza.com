@@ -133,7 +133,7 @@ function getBookingConfirmedCustomerEmail($data) {
             </div>
             <div class='footer'>
                 <div class='hotel-name'>Aurora Hotel Plaza</div>
-                253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai<br>
+                253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai<br>
                 Hotline: 0251 3511 888 | info@aurorahotelplaza.com
             </div>
         </div>

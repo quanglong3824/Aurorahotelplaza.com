@@ -84,7 +84,7 @@ class EmailTemplates {
             
             <div class="email-footer">
                 <p class="footer-text" style="font-weight: 600; color: #b8941f; font-size: 14px;">Aurora Hotel Plaza</p>
-                <p class="footer-text">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai</p>
+                <p class="footer-text">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai</p>
                 <p class="footer-text">(+84-251) 391 8888 | info@aurorahotelplaza.com</p>
                 <p class="footer-text" style="margin-top: 12px; color: #94a3b8;">© 2025 Aurora Hotel Plaza. All rights reserved.</p>
             </div>

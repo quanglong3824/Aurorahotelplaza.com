@@ -805,7 +805,7 @@ $status_labels = [
                         <div class="header">
                             <div class="header-left">
                                 <div class="logo-text">Aurora Hotel Plaza</div>
-                                <div class="hotel-address">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai</div>
+                                <div class="hotel-address">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai</div>
                                 <div class="hotel-address">Hotline: 0251 3511 888 | info@aurorahotelplaza.com</div>
                             </div>
                             <div class="header-right">
@@ -841,7 +841,7 @@ $status_labels = [
                             <div class="col">
                                 <div class="col-title">Thông tin khách sạn / Hotel Information</div>
                                 <div class="info-row"><span class="info-label">Tên / Name:</span><span class="info-value">Aurora Hotel Plaza</span></div>
-                                <div class="info-row"><span class="info-label">Địa chỉ / Address:</span><span class="info-value">253 Phạm Văn Thuận</span></div>
+                                <div class="info-row"><span class="info-label">Địa chỉ / Address:</span><span class="info-value">253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai</span></div>
                                 <div class="info-row"><span class="info-label">Điện thoại / Phone:</span><span class="info-value">0251 3511 888</span></div>
                                 <div class="info-row"><span class="info-label">Email:</span><span class="info-value">info@aurorahotelplaza.com</span></div>
                                 <div class="info-row"><span class="info-label">Website:</span><span class="info-value">aurorahotelplaza.com</span></div>
@@ -937,7 +937,7 @@ $status_labels = [
                         <!-- Footer -->
                         <div class="footer">
                             <div class="hotel-name">Aurora Hotel Plaza</div>
-                            253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai | Hotline: 0251 3511 888 | info@aurorahotelplaza.com | aurorahotelplaza.com
+                            253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai | Hotline: 0251 3511 888 | info@aurorahotelplaza.com | aurorahotelplaza.com
                         </div>
                     </div>
                 </body>

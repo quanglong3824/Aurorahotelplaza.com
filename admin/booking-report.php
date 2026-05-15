@@ -257,7 +257,7 @@ try {
         <!-- Footer -->
         <div class="footer">
             <div class="hotel">Aurora Hotel Plaza</div>
-            253 Phạm Văn Thuận, KP2, Tam Hiệp, TP.Đồng Nai | Hotline: 0251 3511 888 | info@aurorahotelplaza.com
+            253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai | Hotline: 0251 3511 888 | info@aurorahotelplaza.com
         </div>
     </div>
 </body>

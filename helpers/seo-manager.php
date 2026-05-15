@@ -321,7 +321,7 @@ class SEOManager {
         $geoLat = self::getSetting('geo_latitude', '10.957145');
         $geoLong = self::getSetting('geo_longitude', '106.842133');
         $geoPostal = self::getSetting('geo_postal_code', '810000');
-        $geoStreet = self::getSetting('geo_street', '253 Phạm Văn Thuận, Khu phố 2');
+        $geoStreet = self::getSetting('geo_street', '253 Phạm Văn Thuận, KP2, Tam Hiệp, TP. Đồng Nai');
         $geoWard = self::getSetting('geo_ward', 'Phường Tam Hiệp');
         
         // Get aggregate rating from reviews table
