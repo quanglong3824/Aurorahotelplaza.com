@@ -624,6 +624,18 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                             0
                         </span>
                     </a>
+
+                    <!-- Pending Bookings Bell -->
+                    <a href="bookings.php?status=pending" id="pendingBookingBtn"
+                        class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Đơn chờ tiếp nhận">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300">pending_actions</span>
+                        <span id="pendingBookingBadge" class="absolute top-1.5 right-1.5 w-5 h-5 bg-amber-500 text-white
+                                     text-[10px] font-bold rounded-full hidden items-center
+                                     justify-center ring-2 ring-white dark:ring-slate-900 leading-none">
+                            0
+                        </span>
+                    </a>
                     <div class="relative notification-dropdown">
                         <button onclick="toggleNotifications()"
                             class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
@@ -882,5 +894,33 @@ $active_group_page = $sub_page_map[$current_page] ?? $current_page;
                     }
                     document.addEventListener('DOMContentLoaded', refreshAiBugBadge);
                     setInterval(refreshAiBugBadge, 60000);
+                })();
+            </script>
+
+            <!-- Pending Booking Badge: đơn chờ tiếp nhận -->
+            <script>
+                (function () {
+                    function refreshPendingBadge() {
+                        fetch(window.siteBase + '/admin/api/get-pending-bookings.php')
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.success) {
+                                    const badge = document.getElementById('pendingBookingBadge');
+                                    if (badge) {
+                                        if (data.unassigned_count > 0) {
+                                            badge.textContent = data.unassigned_count > 9 ? '9+' : data.unassigned_count;
+                                            badge.classList.remove('hidden');
+                                            badge.classList.add('flex');
+                                        } else {
+                                            badge.classList.add('hidden');
+                                            badge.classList.remove('flex');
+                                        }
+                                    }
+                                }
+                            })
+                            .catch(() => {});
+                    }
+                    document.addEventListener('DOMContentLoaded', refreshPendingBadge);
+                    setInterval(refreshPendingBadge, 15000);
                 })();
             </script>

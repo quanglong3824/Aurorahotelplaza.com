@@ -104,6 +104,36 @@ try {
     ");
     $status_counts = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Get assignment info for pending bookings
+    $stmt = $db->prepare("
+        SELECT ba.booking_id, ba.assigned_to, ba.accepted_at, ba.transfer_reason,
+               u.full_name as assigned_name, u.user_role as assigned_role
+        FROM booking_assignments ba
+        LEFT JOIN users u ON ba.assigned_to = u.user_id
+        WHERE ba.status = 'active'
+        AND ba.booking_id IN (SELECT booking_id FROM bookings WHERE status = 'pending')
+    ");
+    $stmt->execute();
+    $assignments = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $assignments[$row['booking_id']] = $row;
+    }
+
+    // Get online staff
+    $stmt = $db->prepare("
+        SELECT u.user_id, u.full_name, u.user_role,
+               MAX(s.last_seen) as last_seen
+        FROM users u
+        LEFT JOIN staff_online s ON u.user_id = s.user_id
+        WHERE u.user_role IN ('admin', 'sale', 'receptionist')
+          AND u.status = 'active'
+          AND u.user_id != ?
+        GROUP BY u.user_id
+        ORDER BY u.full_name
+    ");
+    $stmt->execute([$_SESSION['user_id']]);
+    $online_staff = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (Exception $e) {
     error_log("Bookings page error: " . $e->getMessage());
     $bookings = [];
@@ -236,6 +266,7 @@ include 'includes/admin-header.php';
                     <th>Số đêm</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
+                    <th>Tiếp nhận</th>
                     <!-- <th>Thanh toán</th> -->
                     <th class="no-print">Hành động</th>
                 </tr>
@@ -243,7 +274,7 @@ include 'includes/admin-header.php';
             <tbody>
                 <?php if (empty($bookings)): ?>
                     <tr>
-                        <td colspan="11" class="text-center py-8">
+                        <td colspan="12" class="text-center py-8">
                             <div class="empty-state">
                                 <span class="empty-state-icon material-symbols-outlined">inbox</span>
                                 <p class="empty-state-title">Không tìm thấy đặt phòng</p>
@@ -315,6 +346,40 @@ include 'includes/admin-header.php';
                                 <span class="badge <?php echo $status_classes[$booking['status']] ?? 'badge-secondary'; ?>">
                                     <?php echo $status_labels[$booking['status']] ?? $booking['status']; ?>
                                 </span>
+                            </td>
+                            <td>
+                                <?php if ($booking['status'] === 'pending'): ?>
+                                    <?php
+                                    $assignment = $assignments[$booking['booking_id']] ?? null;
+                                    if ($assignment):
+                                        $is_mine = ($assignment['assigned_to'] == $_SESSION['user_id']);
+                                    ?>
+                                        <?php if ($is_mine): ?>
+                                            <div class="flex items-center gap-1">
+                                                <span class="badge badge-success text-xs">✓ Tôi</span>
+                                                <button onclick="openTransferModal(<?php echo $booking['booking_id']; ?>, '<?php echo htmlspecialchars($booking['booking_code']); ?>')"
+                                                    class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Chuyển cho người khác">
+                                                    <span class="material-symbols-outlined text-sm text-gray-500">swap_horiz</span>
+                                                </button>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="flex items-center gap-1 opacity-60">
+                                                <span class="badge badge-secondary text-xs">
+                                                    👤 <?php echo htmlspecialchars($assignment['assigned_name']); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <button onclick="acceptBooking(<?php echo $booking['booking_id']; ?>)"
+                                            class="btn btn-sm btn-primary whitespace-nowrap">
+                                            <span class="material-symbols-outlined text-sm">handshake</span>
+                                            Tiếp nhận
+                                        </button>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <span class="text-gray-400 text-sm">—</span>
+                                <?php endif; ?>
                             </td>
                             <!-- Payment status hidden -->
                             <!-- <td>
@@ -446,8 +511,158 @@ include 'includes/admin-header.php';
     </div>
 </div>
 
+<!-- Transfer Booking Modal -->
+<div id="transferModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500">swap_horiz</span>
+                Chuyển tiếp nhận đơn
+            </h3>
+            <button onclick="closeTransferModal()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <input type="hidden" id="transferBookingId">
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                <p class="text-sm text-blue-700 dark:text-blue-300">
+                    Đơn: <strong id="transferBookingCode"></strong>
+                </p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Chuyển cho nhân viên:
+                </label>
+                <select id="transferToSelect" class="form-select w-full">
+                    <option value="">-- Chọn nhân viên --</option>
+                    <?php foreach ($online_staff as $staff): ?>
+                        <option value="<?php echo $staff['user_id']; ?>">
+                            <?php echo htmlspecialchars($staff['full_name']); ?>
+                            (<?php
+                            $role_labels = ['admin' => 'Admin', 'sale' => 'Sale', 'receptionist' => 'Lễ tân'];
+                            echo $role_labels[$staff['user_role']] ?? $staff['user_role'];
+                            ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Lý do chuyển (tùy chọn):
+                </label>
+                <textarea id="transferReason" rows="2" class="form-input w-full" placeholder="VD: Bàn giao ca, nghỉ phép..."></textarea>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+            <button onclick="closeTransferModal()" class="btn btn-secondary flex-1">Hủy</button>
+            <button onclick="submitTransfer()" class="btn btn-primary flex-1">
+                <span class="material-symbols-outlined text-sm">swap_horiz</span>
+                Xác nhận chuyển
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Quick View Function
+    // ── Accept / Transfer Booking ──────────────────────────────────────────
+    function acceptBooking(bookingId) {
+        if (!confirm('Tiếp nhận đơn đặt phòng này? Bạn sẽ là người phụ trách xử lý.')) return;
+
+        fetch('api/accept-booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_id: bookingId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                setTimeout(() => location.reload(), 800);
+            } else if (data.already_assigned) {
+                showToast(data.message, 'warning');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast(data.message || 'Có lỗi xảy ra', 'error');
+            }
+        })
+        .catch(() => showToast('Lỗi kết nối', 'error'));
+    }
+
+    function openTransferModal(bookingId, bookingCode) {
+        document.getElementById('transferBookingId').value = bookingId;
+        document.getElementById('transferBookingCode').textContent = '#' + bookingCode;
+        document.getElementById('transferToSelect').value = '';
+        document.getElementById('transferReason').value = '';
+        document.getElementById('transferModal').classList.remove('hidden');
+    }
+
+    function closeTransferModal() {
+        document.getElementById('transferModal').classList.add('hidden');
+    }
+
+    function submitTransfer() {
+        const bookingId = document.getElementById('transferBookingId').value;
+        const transferTo = document.getElementById('transferToSelect').value;
+        const reason = document.getElementById('transferReason').value;
+
+        if (!transferTo) {
+            showToast('Vui lòng chọn nhân viên để chuyển', 'warning');
+            return;
+        }
+
+        fetch('api/transfer-booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ booking_id: bookingId, transfer_to: transferTo, reason: reason })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                closeTransferModal();
+                setTimeout(() => location.reload(), 800);
+            } else {
+                showToast(data.message || 'Có lỗi xảy ra', 'error');
+            }
+        })
+        .catch(() => showToast('Lỗi kết nối', 'error'));
+    }
+
+    // ── Auto-refresh pending bookings every 15s ────────────────────────────
+    let pendingRefreshInterval = null;
+    function startPendingRefresh() {
+        if (pendingRefreshInterval) return;
+        pendingRefreshInterval = setInterval(() => {
+            // Only refresh if user is on pending tab or all tab
+            const statusFilter = new URLSearchParams(window.location.search).get('status');
+            if (!statusFilter || statusFilter === 'all' || statusFilter === 'pending') {
+                fetch('api/get-pending-bookings.php')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.unassigned_count > 0) {
+                            // Update pending tab badge if exists
+                            const pendingTab = document.querySelector('a[href*="status=pending"]');
+                            if (pendingTab) {
+                                const currentText = pendingTab.textContent;
+                                const match = currentText.match(/\((\d+)\)/);
+                                if (match) {
+                                    const currentCount = parseInt(match[1]);
+                                    if (data.unassigned_count > currentCount) {
+                                        // New pending booking appeared
+                                        showToast(`🔔 Có ${data.unassigned_count} đơn chờ tiếp nhận`, 'info');
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(() => {});
+            }
+        }, 15000);
+    }
+    document.addEventListener('DOMContentLoaded', startPendingRefresh);
+
+    // ── Quick View Function ────────────────────────────────────────────────
     function quickView(bookingId) {
         const modal = document.getElementById('quickViewModal');
         const content = document.getElementById('quickViewContent');
