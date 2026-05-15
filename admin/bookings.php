@@ -60,6 +60,9 @@ if (!empty($date_to)) {
 
 $where_sql = !empty($where_clauses) ? 'WHERE ' . implode(' AND ', $where_clauses) : '';
 
+$assignments = [];
+$online_staff = [];
+
 try {
     $db = getDB();
 
@@ -104,35 +107,56 @@ try {
     ");
     $status_counts = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Get assignment info for pending bookings
-    $stmt = $db->prepare("
-        SELECT ba.booking_id, ba.assigned_to, ba.accepted_at, ba.transfer_reason,
-               u.full_name as assigned_name, u.user_role as assigned_role
-        FROM booking_assignments ba
-        LEFT JOIN users u ON ba.assigned_to = u.user_id
-        WHERE ba.status = 'active'
-        AND ba.booking_id IN (SELECT booking_id FROM bookings WHERE status = 'pending')
-    ");
-    $stmt->execute();
+    // Get assignment info for pending bookings (safe: separate try/catch)
     $assignments = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $assignments[$row['booking_id']] = $row;
+    try {
+        $stmt = $db->prepare("
+            SELECT ba.booking_id, ba.assigned_to, ba.accepted_at, ba.transfer_reason,
+                   u.full_name as assigned_name, u.user_role as assigned_role
+            FROM booking_assignments ba
+            LEFT JOIN users u ON ba.assigned_to = u.user_id
+            WHERE ba.status = 'active'
+            AND ba.booking_id IN (SELECT booking_id FROM bookings WHERE status = 'pending')
+        ");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $assignments[$row['booking_id']] = $row;
+        }
+    } catch (Exception $e) {
+        // Table may not exist yet — skip assignments
+        $assignments = [];
     }
 
-    // Get online staff
-    $stmt = $db->prepare("
-        SELECT u.user_id, u.full_name, u.user_role,
-               MAX(s.last_seen) as last_seen
-        FROM users u
-        LEFT JOIN staff_online s ON u.user_id = s.user_id
-        WHERE u.user_role IN ('admin', 'sale', 'receptionist')
-          AND u.status = 'active'
-          AND u.user_id != ?
-        GROUP BY u.user_id
-        ORDER BY u.full_name
-    ");
-    $stmt->execute([$_SESSION['user_id']]);
-    $online_staff = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Get online staff (safe: separate try/catch)
+    $online_staff = [];
+    try {
+        $stmt = $db->prepare("
+            SELECT u.user_id, u.full_name, u.user_role,
+                   MAX(s.last_seen) as last_seen
+            FROM users u
+            LEFT JOIN staff_online s ON u.user_id = s.user_id
+            WHERE u.user_role IN ('admin', 'sale', 'receptionist')
+              AND u.status = 'active'
+              AND u.user_id != ?
+            GROUP BY u.user_id
+            ORDER BY u.full_name
+        ");
+        $stmt->execute([$_SESSION['user_id']]);
+        $online_staff = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        // staff_online table may not exist — skip online status
+        $stmt = $db->prepare("
+            SELECT u.user_id, u.full_name, u.user_role,
+                   NULL as last_seen
+            FROM users u
+            WHERE u.user_role IN ('admin', 'sale', 'receptionist')
+              AND u.status = 'active'
+              AND u.user_id != ?
+            ORDER BY u.full_name
+        ");
+        $stmt->execute([$_SESSION['user_id']]);
+        $online_staff = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 } catch (Exception $e) {
     error_log("Bookings page error: " . $e->getMessage());
@@ -140,6 +164,8 @@ try {
     $total_records = 0;
     $total_pages = 0;
     $status_counts = ['total' => 0, 'pending' => 0, 'confirmed' => 0, 'checked_in' => 0, 'checked_out' => 0, 'cancelled' => 0];
+    $assignments = [];
+    $online_staff = [];
 }
 
 include 'includes/admin-header.php';
