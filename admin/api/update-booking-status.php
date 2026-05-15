@@ -45,6 +45,20 @@ try {
     
     $old_status = $booking['status'];
     
+    // Check if pending booking has been accepted
+    if ($old_status === 'pending' && $new_status !== 'cancelled') {
+        $stmt = $db->prepare("
+            SELECT assignment_id FROM booking_assignments
+            WHERE booking_id = ? AND status = 'active'
+        ");
+        $stmt->execute([$booking_id]);
+        $assignment = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$assignment) {
+            throw new Exception('Đơn đặt phòng chưa được tiếp nhận. Vui lòng tiếp nhận đơn trước khi thay đổi trạng thái.');
+        }
+    }
+    
     // Update booking status
     $update_data = [
         'status' => $new_status,

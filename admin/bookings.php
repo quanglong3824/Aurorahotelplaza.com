@@ -429,13 +429,16 @@ include 'includes/admin-header.php';
                                 </span>
                             </td> -->
                             <td class="no-print">
-                                <div class="action-buttons">
+                                <?php
+                                $is_pending_unassigned = ($booking['status'] === 'pending' && !isset($assignments[$booking['booking_id']]));
+                                ?>
+                                <div class="action-buttons <?php echo $is_pending_unassigned ? 'opacity-40 pointer-events-none' : ''; ?>">
                                     <a href="booking-detail.php?id=<?php echo $booking['booking_id']; ?>" class="action-btn"
                                         title="Xem chi tiết">
                                         <span class="material-symbols-outlined text-sm">visibility</span>
                                     </a>
 
-                                    <?php if ($booking['status'] === 'pending'): ?>
+                                    <?php if ($booking['status'] === 'pending' && !$is_pending_unassigned): ?>
                                         <button onclick="confirmBooking(<?php echo $booking['booking_id']; ?>)"
                                             class="action-btn text-green-600" title="Xác nhận">
                                             <span class="material-symbols-outlined text-sm">check_circle</span>
@@ -458,17 +461,27 @@ include 'includes/admin-header.php';
 
                                     <?php if (in_array($booking['status'], ['pending', 'confirmed'])): ?>
                                         <button onclick="cancelBooking(<?php echo $booking['booking_id']; ?>)"
-                                            class="action-btn text-red-600" title="Hủy đơn">
+                                            class="action-btn text-red-600" title="Hủy đơn"
+                                            <?php echo $is_pending_unassigned ? 'disabled' : ''; ?>>
                                             <span class="material-symbols-outlined text-sm">cancel</span>
                                         </button>
                                     <?php endif; ?>
 
                                     <!-- Nút xóa cứng - chỉ admin -->
                                     <button onclick="deleteBooking(<?php echo $booking['booking_id']; ?>, '<?php echo htmlspecialchars(addslashes($booking['booking_code'])); ?>')"
-                                        class="action-btn text-gray-400 hover:text-red-700" title="Xóa vĩnh viễn">
+                                        class="action-btn text-gray-400 hover:text-red-700" title="Xóa vĩnh viễn"
+                                        <?php echo $is_pending_unassigned ? 'disabled' : ''; ?>>
                                         <span class="material-symbols-outlined text-sm">delete_forever</span>
                                     </button>
                                 </div>
+                                <?php if ($is_pending_unassigned): ?>
+                                    <div class="text-center mt-1">
+                                        <span class="text-xs text-gray-400 flex items-center justify-center gap-1" title="Cần tiếp nhận đơn trước khi thao tác">
+                                            <span class="material-symbols-outlined text-sm">lock</span>
+                                            Chưa tiếp nhận
+                                        </span>
+                                    </div>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
