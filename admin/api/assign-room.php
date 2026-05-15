@@ -73,11 +73,6 @@ try {
         throw new Exception('Loại phòng không khớp với đơn đặt phòng');
     }
     
-    // Check room availability
-    if ($room['status'] !== 'available') {
-        throw new Exception('Phòng không khả dụng. Trạng thái hiện tại: ' . $room['status']);
-    }
-    
     // Check if room is already booked for these dates
     $stmt = $db->prepare("
         SELECT COUNT(*) as count
