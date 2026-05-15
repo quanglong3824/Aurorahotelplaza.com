@@ -114,7 +114,7 @@ function sendBookingConfirmationEmail($booking) {
     $htmlBody = getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info);
     $textBody = getBookingConfirmationNoPriceEmailText($booking, $hotel_info);
     
-    $subject = "Đã gửi yêu cầu đặt phòng #{$booking['booking_code']} - Aurora Hotel Plaza";
+    $subject = "Booking Request Submitted #{$booking['booking_code']} - Aurora Hotel Plaza";
     
     return sendEmail($booking['guest_email'], $subject, $htmlBody, $textBody);
 }
@@ -235,7 +235,7 @@ HTML;
 </html>
 HTML;
     
-    $subject = "{$info['subject']} - Mã đặt phòng #{$booking['booking_code']}";
+    $subject = "{$info['subject']} - Booking Code #{$booking['booking_code']}";
     
     return sendEmail($booking['guest_email'], $subject, $htmlBody);
 }

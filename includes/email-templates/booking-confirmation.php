@@ -21,11 +21,11 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
     
     $html = <<<HTML
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác nhận đặt phòng - {$hotel_name}</title>
+    <title>Booking Confirmation - {$hotel_name}</title>
     <style>{$css}</style>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f1f5f9;">
@@ -34,56 +34,56 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
             <!-- Header -->
             <div class="email-header">
                 <h1>{$hotel_name}</h1>
-                <p>Xác nhận đặt phòng thành công</p>
+                <p>Booking Confirmed Successfully</p>
             </div>
             
             <!-- Content -->
             <div class="email-content">
-                <p class="email-greeting">Kính gửi <strong>{$booking['guest_name']}</strong>,</p>
+                <p class="email-greeting">Dear <strong>{$booking['guest_name']}</strong>,</p>
                 
-                <p class="email-text">Cảm ơn quý khách đã chọn {$hotel_name}. Chúng tôi đã nhận được yêu cầu đặt phòng của quý khách và đang xử lý.</p>
+                <p class="email-text">Thank you for choosing {$hotel_name}. We have received your booking request and are processing it.</p>
                 
                 <!-- Booking Code -->
                 <div class="booking-code-box">
-                    <div class="booking-code-label">Mã đặt phòng</div>
+                    <div class="booking-code-label">Booking Code</div>
                     <div class="booking-code">{$booking['booking_code']}</div>
                 </div>
                 
                 <!-- Status -->
                 <div style="text-align: center;">
-                    <span class="status-badge status-pending">Chờ xác nhận</span>
+                    <span class="status-badge status-pending">Pending Confirmation</span>
                 </div>
                 
                 <!-- Booking Info -->
                 <div class="info-box">
-                    <div class="info-box-title">Thông tin đặt phòng</div>
+                    <div class="info-box-title">Booking Information</div>
                     <div class="info-row">
-                        <span class="info-label">Loại phòng</span>
+                        <span class="info-label">Room Type</span>
                         <span class="info-value">{$booking['type_name']}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Ngày nhận phòng</span>
+                        <span class="info-label">Check-in Date</span>
                         <span class="info-value">{$check_in}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Ngày trả phòng</span>
+                        <span class="info-label">Check-out Date</span>
                         <span class="info-value">{$check_out}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Số đêm</span>
-                        <span class="info-value">{$booking['total_nights']} đêm</span>
+                        <span class="info-label">Number of Nights</span>
+                        <span class="info-value">{$booking['total_nights']} nights</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Số khách</span>
-                        <span class="info-value">{$booking['num_adults']} người</span>
+                        <span class="info-label">Number of Guests</span>
+                        <span class="info-value">{$booking['num_adults']} guests</span>
                     </div>
                 </div>
                 
                 <!-- Guest Info -->
                 <div class="info-box">
-                    <div class="info-box-title">Thông tin khách hàng</div>
+                    <div class="info-box-title">Guest Information</div>
                     <div class="info-row">
-                        <span class="info-label">Họ tên</span>
+                        <span class="info-label">Full Name</span>
                         <span class="info-value">{$booking['guest_name']}</span>
                     </div>
                     <div class="info-row">
@@ -91,26 +91,26 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
                         <span class="info-value">{$booking['guest_email']}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Điện thoại</span>
+                        <span class="info-label">Phone</span>
                         <span class="info-value">{$booking['guest_phone']}</span>
                     </div>
                 </div>
                 
                 <!-- Total Amount -->
                 <div class="total-amount-box">
-                    <div class="total-label">Tổng chi phí dự kiến</div>
+                    <div class="total-label">Estimated Total Cost</div>
                     <div class="total-amount">{$booking['total_amount_formatted']} VND</div>
                 </div>
                 
                 <!-- Important Notes -->
                 <div class="alert-box">
-                    <div class="alert-box-title">Lưu ý quan trọng</div>
+                    <div class="alert-box-title">Important Notes</div>
                     <ul>
-                        <li>Đặt phòng đang ở trạng thái "Chờ xác nhận". Nhân viên sẽ kiểm tra và xác nhận trong thời gian sớm nhất.</li>
-                        <li>Quý khách sẽ nhận được email xác nhận trong vòng 24 giờ.</li>
-                        <li>Sau khi xác nhận, quý khách có thể tải mã QR để check-in nhanh chóng.</li>
-                        <li>Có thể thanh toán trực tuyến hoặc tại khách sạn khi nhận phòng.</li>
-                        <li>Hủy miễn phí trước 24 giờ so với thời gian nhận phòng.</li>
+                        <li>Your booking is currently "Pending Confirmation". Our staff will review and confirm as soon as possible.</li>
+                        <li>You will receive a confirmation email within 24 hours.</li>
+                        <li>After confirmation, you can download a QR code for quick check-in.</li>
+                        <li>Payment can be made online or at the hotel upon check-in.</li>
+                        <li>Free cancellation up to 24 hours before check-in time.</li>
                     </ul>
                 </div>
                 
@@ -118,21 +118,21 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
                 
                 <!-- Contact Info -->
                 <div class="contact-info">
-                    <div class="contact-info-title">Liên hệ với chúng tôi</div>
-                    <div class="contact-item">Điện thoại: <strong><a href="tel:{$hotel_phone_clean}" style="color: #b8941f; text-decoration: none;">{$hotel_phone}</a></strong></div>
+                    <div class="contact-info-title">Contact Us</div>
+                    <div class="contact-item">Phone: <strong><a href="tel:{$hotel_phone_clean}" style="color: #b8941f; text-decoration: none;">{$hotel_phone}</a></strong></div>
                     <div class="contact-item">Email: <strong><a href="mailto:{$hotel_email}" style="color: #b8941f; text-decoration: none;">{$hotel_email}</a></strong></div>
                     <div class="contact-item">Website: <strong><a href="{$hotel_website}" style="color: #b8941f; text-decoration: none;">{$hotel_website}</a></strong></div>
-                    <div class="contact-item">Địa chỉ: <strong>{$hotel_address}</strong></div>
+                    <div class="contact-item">Address: <strong>{$hotel_address}</strong></div>
                 </div>
                 
-                <p class="email-text">Chúng tôi rất mong được phục vụ quý khách!</p>
+                <p class="email-text">We look forward to serving you!</p>
                 
-                <p class="email-text">Trân trọng,<br><strong>Đội ngũ {$hotel_name}</strong></p>
+                <p class="email-text">Best regards,<br><strong>The {$hotel_name} Team</strong></p>
             </div>
             
             <!-- Footer -->
             <div class="email-footer">
-                <p class="footer-text" style="color: #64748b; font-size: 12px; margin-bottom: 8px;">Email này được gửi tự động, vui lòng không trả lời trực tiếp.</p>
+                <p class="footer-text" style="color: #64748b; font-size: 12px; margin-bottom: 8px;">This is an automated email, please do not reply directly.</p>
                 <p class="footer-text" style="font-weight: 600; color: #b8941f; font-size: 14px;">{$hotel_name}</p>
                 <p class="footer-text">{$hotel_address}</p>
                 <p class="footer-text">{$hotel_phone} | {$hotel_email}</p>
@@ -157,43 +157,43 @@ function getBookingConfirmationEmailText($booking, $hotel_info = []) {
     
     $text = <<<TEXT
 {$hotel_name}
-XÁC NHẬN ĐẶT PHÒNG
+BOOKING CONFIRMATION
 
-Kính gửi {$booking['guest_name']},
+Dear {$booking['guest_name']},
 
-Cảm ơn quý khách đã chọn {$hotel_name}. Chúng tôi đã nhận được yêu cầu đặt phòng của quý khách.
+Thank you for choosing {$hotel_name}. We have received your booking request.
 
-MÃ ĐẶT PHÒNG: {$booking['booking_code']}
-TRẠNG THÁI: Chờ xác nhận
+BOOKING CODE: {$booking['booking_code']}
+STATUS: Pending Confirmation
 
-THÔNG TIN ĐẶT PHÒNG:
-- Loại phòng: {$booking['type_name']}
-- Ngày nhận phòng: {$check_in}
-- Ngày trả phòng: {$check_out}
-- Số đêm: {$booking['total_nights']} đêm
-- Số khách: {$booking['num_adults']} người lớn
+BOOKING INFORMATION:
+- Room Type: {$booking['type_name']}
+- Check-in Date: {$check_in}
+- Check-out Date: {$check_out}
+- Number of Nights: {$booking['total_nights']} nights
+- Number of Guests: {$booking['num_adults']} adults
 
-THÔNG TIN KHÁCH HÀNG:
-- Họ tên: {$booking['guest_name']}
+GUEST INFORMATION:
+- Full Name: {$booking['guest_name']}
 - Email: {$booking['guest_email']}
-- Điện thoại: {$booking['guest_phone']}
+- Phone: {$booking['guest_phone']}
 
-TỔNG CHI PHÍ DỰ KIẾN: {$booking['total_amount_formatted']} VND
+ESTIMATED TOTAL COST: {$booking['total_amount_formatted']} VND
 
-LƯU Ý QUAN TRỌNG:
-- Đặt phòng của quý khách đang ở trạng thái "Chờ xác nhận"
-- Nhân viên sẽ xác nhận trong vòng 24 giờ
-- Sau khi xác nhận, quý khách có thể tải mã QR để check-in
-- Có thể hủy miễn phí trước 24 giờ so với thời gian nhận phòng
+IMPORTANT NOTES:
+- Your booking is currently "Pending Confirmation"
+- Staff will confirm within 24 hours
+- After confirmation, you can download a QR code for check-in
+- Free cancellation up to 24 hours before check-in time
 
-LIÊN HỆ:
-Điện thoại: {$hotel_phone}
+CONTACT:
+Phone: {$hotel_phone}
 Email: {$hotel_email}
 
-Chúng tôi rất mong được phục vụ quý khách!
+We look forward to serving you!
 
-Trân trọng,
-Đội ngũ {$hotel_name}
+Best regards,
+The {$hotel_name} Team
 TEXT;
     
     return $text;

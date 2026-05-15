@@ -45,89 +45,89 @@ function getBookingConfirmedCustomerEmail($data) {
         <div class='container'>
             <div class='header'>
                 <h1>Aurora Hotel Plaza</h1>
-                <div class='subtitle'>Xác Nhận Đặt Phòng / Booking Confirmation</div>
+                <div class='subtitle'>Booking Confirmation</div>
             </div>
             <div class='content'>
                 <div class='greeting'>
-                    Kính gửi <strong>{$data['guest_name']}</strong>,
+                    Dear <strong>{$data['guest_name']}</strong>,
                 </div>
                 <p>
-                    Chúng tôi xin xác nhận đơn đặt phòng của Quý khách tại Aurora Hotel Plaza đã được phê duyệt.
-                    Dưới đây là thông tin chi tiết:
+                    We are pleased to confirm your booking at Aurora Hotel Plaza has been approved.
+                    Below are the details:
                 </p>
 
                 <div class='booking-code'>
-                    <div class='label'>Mã đặt phòng</div>
+                    <div class='label'>Booking Code</div>
                     <div class='code'>{$data['booking_code']}</div>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Thông tin phòng</div>
+                    <div class='section-title'>Room Information</div>
                     <div class='info-row'>
-                        <span class='info-label'>Loại phòng:</span>
+                        <span class='info-label'>Room Type:</span>
                         <span class='info-value'>{$data['type_name']}</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>Loại giường:</span>
+                        <span class='info-label'>Bed Type:</span>
                         <span class='info-value'>{$data['bed_type']}</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>Số khách:</span>
-                        <span class='info-value'>{$data['num_adults']} người lớn" . ($data['num_children'] > 0 ? ", {$data['num_children']} trẻ em" : "") . "</span>
+                        <span class='info-label'>Guests:</span>
+                        <span class='info-value'>{$data['num_adults']} adults" . ($data['num_children'] > 0 ? ", {$data['num_children']} children" : "") . "</span>
                     </div>
                     " . ($data['room_number'] ? "
                     <div class='info-row'>
-                        <span class='info-label'>Số phòng:</span>
+                        <span class='info-label'>Room Number:</span>
                         <span class='info-value' style='color:#16a34a;font-weight:700;'>{$data['room_number']}</span>
                     </div>" : "
                     <div class='info-row'>
-                        <span class='info-label'>Phòng:</span>
-                        <span class='info-value'>Sẽ được phân khi check-in</span>
+                        <span class='info-label'>Room:</span>
+                        <span class='info-value'>Will be assigned at check-in</span>
                     </div>") . "
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Thời gian lưu trú</div>
+                    <div class='section-title'>Stay Duration</div>
                     <div class='dates'>
                         <div class='date-box checkin'>
                             <div class='label'>Check-in</div>
                             <div class='date'>$checkIn</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>Sau 14:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>After 14:00</div>
                         </div>
                         <div class='date-box checkout'>
                             <div class='label'>Check-out</div>
                             <div class='date'>$checkOut</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>Trước 12:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>Before 12:00</div>
                         </div>
                     </div>
-                    <p style='text-align:center;font-size:14px;font-weight:600;'>Tổng thời gian: {$data['total_nights']} đêm</p>
+                    <p style='text-align:center;font-size:14px;font-weight:600;'>Total stay: {$data['total_nights']} nights</p>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Chi phí</div>
+                    <div class='section-title'>Cost</div>
                     <div class='info-row'>
-                        <span class='info-label'>Đơn giá/đêm:</span>
+                        <span class='info-label'>Rate/Night:</span>
                         <span class='info-value'>{$data['per_night']} VND</span>
                     </div>
                     <div class='total-box'>
-                        <div class='label'>TỔNG CỘNG</div>
+                        <div class='label'>TOTAL</div>
                         <div class='amount'>{$data['total_amount']} VND</div>
                     </div>
                 </div>
 
                 " . ($data['special_requests'] ? "
                 <div class='section'>
-                    <div class='section-title'>Yêu cầu đặc biệt</div>
+                    <div class='section-title'>Special Requests</div>
                     <p style='background:#f8f9fa;padding:12px;border-radius:8px;'>" . nl2br(htmlspecialchars($data['special_requests'])) . "</p>
                 </div>" : "") . "
 
                 <p style='margin-top:24px;'>
-                    Quý khách vui lòng xuất trình mã đặt phòng khi check-in tại quầy lễ tân.
-                    Nếu có bất kỳ thắc mắc nào, xin vui lòng liên hệ với chúng tôi.
+                    Please present your booking code at check-in at the front desk.
+                    If you have any questions, please feel free to contact us.
                 </p>
 
                 <p style='margin-top:20px;'>
-                    Trân trọng,<br>
+                    Best regards,<br>
                     <strong>Aurora Hotel Plaza</strong>
                 </p>
             </div>

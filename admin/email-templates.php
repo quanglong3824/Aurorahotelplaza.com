@@ -1,56 +1,56 @@
 <?php
-$page_title = 'Template Email';
-$page_subtitle = 'Xem trước các mẫu email hệ thống';
+$page_title = 'Email Templates';
+$page_subtitle = 'Preview system email templates';
 
 require_once __DIR__ . '/includes/admin-header.php';
 
 $templates = [
     [
         'id' => 'booking-customer',
-        'name' => 'Xác nhận đặt phòng (Gửi khách)',
-        'desc' => 'Email gửi cho khách hàng sau khi đặt phòng thành công',
+        'name' => 'Booking Confirmation (To Customer)',
+        'desc' => 'Email sent to customer after successful booking',
         'file' => 'booking-confirmation.php',
         'type' => 'booking'
     ],
     [
         'id' => 'booking-customer-noprice',
-        'name' => 'Xác nhận đặt phòng - Ẩn giá (Gửi khách)',
-        'desc' => 'Email gửi khách - không hiển thị giá, chỉ xác nhận đã gửi yêu cầu',
+        'name' => 'Booking Confirmation - No Price (To Customer)',
+        'desc' => 'Email to customer - no pricing shown, only confirms request submitted',
         'file' => 'booking-confirmation-noprice.php',
         'type' => 'booking'
     ],
     [
         'id' => 'contact-customer',
-        'name' => 'Xác nhận liên hệ (Gửi khách)',
-        'desc' => 'Email xác nhận gửi cho khách hàng khi họ gửi form liên hệ',
+        'name' => 'Contact Confirmation (To Customer)',
+        'desc' => 'Confirmation email sent to customer when they submit contact form',
         'file' => 'contact-templates.php',
         'type' => 'contact'
     ],
     [
         'id' => 'contact-hotel',
-        'name' => 'Thông báo liên hệ (Gửi khách sạn)',
-        'desc' => 'Email thông báo gửi cho nhân viên khi có liên hệ mới',
+        'name' => 'Contact Notification (To Hotel)',
+        'desc' => 'Notification email sent to staff when there is a new contact',
         'file' => 'contact-templates.php',
         'type' => 'contact'
     ],
     [
         'id' => 'welcome',
-        'name' => 'Chào mừng thành viên',
-        'desc' => 'Email gửi cho khách hàng khi đăng ký tài khoản mới',
+        'name' => 'Welcome Member',
+        'desc' => 'Email sent to customer when they register a new account',
         'file' => 'email-templates.php',
         'type' => 'auth'
     ],
     [
         'id' => 'password-reset',
-        'name' => 'Đặt lại mật khẩu',
-        'desc' => 'Email gửi link đặt lại mật khẩu',
+        'name' => 'Reset Password',
+        'desc' => 'Email with password reset link',
         'file' => 'email-templates.php',
         'type' => 'auth'
     ],
     [
         'id' => 'temp-password',
-        'name' => 'Mật khẩu tạm thời',
-        'desc' => 'Email gửi mật khẩu tạm thời',
+        'name' => 'Temporary Password',
+        'desc' => 'Email with temporary password',
         'file' => 'email-templates.php',
         'type' => 'auth'
     ],
@@ -66,9 +66,9 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                 <div class="p-4 border-b border-gray-200 dark:border-slate-700">
                     <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#d4af37]">mail</span>
-                        Danh sách template
+                        Template List
                     </h3>
-                    <p class="text-xs text-gray-500 mt-1">Click để xem trước</p>
+                    <p class="text-xs text-gray-500 mt-1">Click to preview</p>
                 </div>
                 <div class="p-2">
                     <?php foreach ($templates as $tpl): ?>
@@ -105,7 +105,7 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                     <div>
                         <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
                             <span class="material-symbols-outlined text-[#d4af37]">preview</span>
-                            Xem trước email
+                            Email Preview
                         </h3>
                         <p class="text-xs text-gray-500 mt-1">
                             <?php foreach ($templates as $tpl): ?>
@@ -124,7 +124,7 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                     $preview_html = '';
                     $sample_booking = [
                         'booking_code' => 'AUR-2025-ABC123',
-                        'guest_name' => 'Nguyễn Văn A',
+                        'guest_name' => 'Nguyen Van A',
                         'guest_email' => 'nguyenvana@email.com',
                         'guest_phone' => '0901234567',
                         'type_name' => 'Deluxe Double Room',
@@ -136,7 +136,7 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                         'num_adults' => 2,
                         'total_amount' => 3500000,
                         'total_amount_formatted' => '3.500.000',
-                        'special_requests' => 'Phòng tầng cao, view thành phố',
+                        'special_requests' => 'High floor room, city view',
                         'created_at' => date('Y-m-d H:i:s'),
                     ];
                     $hotel_info = [
@@ -162,11 +162,11 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                             case 'contact-customer':
                                 require_once __DIR__ . '/../includes/email-templates/contact-templates.php';
                                 $preview_html = ContactEmailTemplates::getCustomerConfirmationTemplate([
-                                    'name' => 'Nguyễn Văn A',
+                                    'name' => 'Nguyen Van A',
                                     'email' => 'nguyenvana@email.com',
                                     'phone' => '0901234567',
-                                    'subject' => 'Đặt phòng',
-                                    'message' => 'Tôi muốn đặt phòng Deluxe cho 2 người vào cuối tuần này.',
+                                    'subject' => 'Booking',
+                                    'message' => 'I would like to book a Deluxe room for 2 people this weekend.',
                                     'submission_id' => 'CT-2025-001',
                                     'created_at' => date('d/m/Y H:i'),
                                     'user_id' => 1
@@ -176,11 +176,11 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
                             case 'contact-hotel':
                                 require_once __DIR__ . '/../includes/email-templates/contact-templates.php';
                                 $preview_html = ContactEmailTemplates::getHotelNotificationTemplate([
-                                    'name' => 'Nguyễn Văn A',
+                                    'name' => 'Nguyen Van A',
                                     'email' => 'nguyenvana@email.com',
                                     'phone' => '0901234567',
-                                    'subject' => 'Đặt phòng',
-                                    'message' => 'Tôi muốn đặt phòng Deluxe cho 2 người vào cuối tuần này.',
+                                    'subject' => 'Booking',
+                                    'message' => 'I would like to book a Deluxe room for 2 people this weekend.',
                                     'submission_id' => 'CT-2025-001',
                                     'created_at' => date('d/m/Y H:i'),
                                     'user_id' => 1
@@ -189,24 +189,24 @@ $selected = $_GET['template'] ?? 'booking-customer-noprice';
 
                             case 'welcome':
                                 require_once __DIR__ . '/../helpers/email-templates.php';
-                                $preview_html = EmailTemplates::getWelcomeTemplate('Nguyễn Văn A', 'nguyenvana@email.com', 1);
+                                $preview_html = EmailTemplates::getWelcomeTemplate('Nguyen Van A', 'nguyenvana@email.com', 1);
                                 break;
 
                             case 'password-reset':
                                 require_once __DIR__ . '/../helpers/email-templates.php';
-                                $preview_html = EmailTemplates::getPasswordResetTemplate('Nguyễn Văn A', 'https://aurorahotelplaza.com/auth/reset-password.php?token=sample_token_123');
+                                $preview_html = EmailTemplates::getPasswordResetTemplate('Nguyen Van A', 'https://aurorahotelplaza.com/auth/reset-password.php?token=sample_token_123');
                                 break;
 
                             case 'temp-password':
                                 require_once __DIR__ . '/../helpers/email-templates.php';
-                                $preview_html = EmailTemplates::getTemporaryPasswordTemplate('Nguyễn Văn A', 'TEMP-ABC123');
+                                $preview_html = EmailTemplates::getTemporaryPasswordTemplate('Nguyen Van A', 'TEMP-ABC123');
                                 break;
 
                             default:
-                                $preview_html = '<div class="text-center p-8 text-gray-500">Chọn template để xem trước</div>';
+                                $preview_html = '<div class="text-center p-8 text-gray-500">Select a template to preview</div>';
                         }
                     } catch (Exception $e) {
-                        $preview_html = '<div class="text-center p-8 text-red-500">Lỗi render template: ' . htmlspecialchars($e->getMessage()) . '</div>';
+                        $preview_html = '<div class="text-center p-8 text-red-500">Template render error: ' . htmlspecialchars($e->getMessage()) . '</div>';
                     }
                     ?>
                     <div class="bg-gray-100 dark:bg-slate-800 rounded-xl overflow-hidden">
@@ -257,12 +257,12 @@ function resizePreviewIframe(iframe) {
                 <div class="flex items-start gap-3">
                     <span class="material-symbols-outlined text-amber-500 text-2xl">info</span>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">Lưu ý về Template Email</h4>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">Email Template Notes</h4>
                         <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1.5">
-                            <li>Template <strong>"Ẩn giá"</strong> được gửi cho khách hàng — không tiết lộ bất kỳ thông tin giá cả nào.</li>
-                            <li>Template đầy đủ (có giá) chỉ được gửi cho nội bộ khách sạn để xử lý booking.</li>
-                            <li>Để chỉnh sửa template, vui lòng liên hệ bộ phận IT hoặc chỉnh trực tiếp file PHP.</li>
-                            <li>Thư mục template: <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-xs">includes/email-templates/</code> và <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-xs">helpers/email-templates.php</code></li>
+                            <li>The <strong>"No Price"</strong> template is sent to customers — it does not reveal any pricing information.</li>
+                            <li>The full template (with pricing) is only sent internally to the hotel for booking processing.</li>
+                            <li>To edit templates, please contact the IT department or edit the PHP files directly.</li>
+                            <li>Template directory: <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-xs">includes/email-templates/</code> and <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-xs">helpers/email-templates.php</code></li>
                         </ul>
                     </div>
                 </div>

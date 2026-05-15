@@ -46,27 +46,27 @@ function getBookingConfirmedStaffEmail($data) {
         <div class='container'>
             <div class='header'>
                 <h1>Aurora Hotel Plaza</h1>
-                <div class='subtitle'>Thông Báo Xác Nhận Đặt Phòng</div>
-                <div class='badge'>✓ ĐÃ XÁC NHẬN</div>
+                <div class='subtitle'>Booking Confirmation Notification</div>
+                <div class='badge'>✓ CONFIRMED</div>
             </div>
             <div class='content'>
                 <p>
-                    Đơn đặt phòng sau đã được <strong>xác nhận</strong>. Vui lòng kiểm tra thông tin và chuẩn bị đón khách.
+                    The following booking has been <strong>confirmed</strong>. Please verify the information and prepare for guest arrival.
                 </p>
 
                 <div class='booking-code'>
-                    <div class='label'>Mã đặt phòng</div>
+                    <div class='label'>Booking Code</div>
                     <div class='code'>{$data['booking_code']}</div>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Thông tin khách hàng</div>
+                    <div class='section-title'>Guest Information</div>
                     <div class='info-row'>
-                        <span class='info-label'>Họ tên:</span>
+                        <span class='info-label'>Full Name:</span>
                         <span class='info-value'>{$data['guest_name']}</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>Số điện thoại:</span>
+                        <span class='info-label'>Phone:</span>
                         <span class='info-value'>{$data['guest_phone']}</span>
                     </div>
                     <div class='info-row'>
@@ -76,76 +76,76 @@ function getBookingConfirmedStaffEmail($data) {
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Thông tin phòng</div>
+                    <div class='section-title'>Room Information</div>
                     <div class='info-row'>
-                        <span class='info-label'>Loại phòng:</span>
+                        <span class='info-label'>Room Type:</span>
                         <span class='info-value'>{$data['type_name']}</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>Danh mục:</span>
+                        <span class='info-label'>Category:</span>
                         <span class='info-value'>" . ucfirst($data['category']) . "</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>Loại giường:</span>
+                        <span class='info-label'>Bed Type:</span>
                         <span class='info-value'>{$data['bed_type']}</span>
                     </div>
                     " . ($data['room_number'] ? "
                     <div class='info-row'>
-                        <span class='info-label'>Số phòng:</span>
+                        <span class='info-label'>Room Number:</span>
                         <span class='info-value' style='color:#16a34a;font-weight:700;'>{$data['room_number']}</span>
                     </div>" : "
                     <div class='info-row'>
-                        <span class='info-label'>Phòng:</span>
-                        <span class='info-value' style='color:#b45309;'>⚠ Chưa phân phòng</span>
+                        <span class='info-label'>Room:</span>
+                        <span class='info-value' style='color:#b45309;'>⚠ Not yet assigned</span>
                     </div>") . "
                     <div class='info-row'>
-                        <span class='info-label'>Số khách:</span>
-                        <span class='info-value'>{$data['num_adults']} người lớn" . ($data['num_children'] > 0 ? ", {$data['num_children']} trẻ em" : "") . "</span>
+                        <span class='info-label'>Guests:</span>
+                        <span class='info-value'>{$data['num_adults']} adults" . ($data['num_children'] > 0 ? ", {$data['num_children']} children" : "") . "</span>
                     </div>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Thời gian lưu trú</div>
+                    <div class='section-title'>Stay Duration</div>
                     <div class='dates'>
                         <div class='date-box checkin'>
                             <div class='label'>Check-in</div>
                             <div class='date'>$checkIn</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>Sau 14:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>After 14:00</div>
                         </div>
                         <div class='date-box checkout'>
                             <div class='label'>Check-out</div>
                             <div class='date'>$checkOut</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>Trước 12:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>Before 12:00</div>
                         </div>
                     </div>
-                    <p style='text-align:center;font-size:14px;font-weight:600;'>Tổng: {$data['total_nights']} đêm</p>
+                    <p style='text-align:center;font-size:14px;font-weight:600;'>Total: {$data['total_nights']} nights</p>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Chi phí</div>
+                    <div class='section-title'>Cost</div>
                     <div class='info-row'>
-                        <span class='info-label'>Đơn giá/đêm:</span>
+                        <span class='info-label'>Rate/Night:</span>
                         <span class='info-value'>{$data['per_night']} VND</span>
                     </div>
                     <div class='total-box'>
-                        <div class='label'>TỔNG CỘNG</div>
+                        <div class='label'>TOTAL</div>
                         <div class='amount'>{$data['total_amount']} VND</div>
                     </div>
                 </div>
 
                 " . ($data['special_requests'] ? "
                 <div class='section'>
-                    <div class='section-title'>Yêu cầu đặc biệt</div>
+                    <div class='section-title'>Special Requests</div>
                     <p style='background:#fffbeb;padding:12px;border-radius:8px;border:1px solid #fde68a;'>" . nl2br(htmlspecialchars($data['special_requests'])) . "</p>
                 </div>" : "") . "
 
                 <div style='text-align:center;margin-top:24px;'>
-                    <a href='" . (defined('BASE_URL') ? BASE_URL : 'https://aurorahotelplaza.com') . "/admin/booking-report.php?id={$data['booking_id']}' class='action-btn'>📄 Xem báo cáo đầy đủ</a>
+                    <a href='" . (defined('BASE_URL') ? BASE_URL : 'https://aurorahotelplaza.com') . "/admin/booking-report.php?id={$data['booking_id']}' class='action-btn'>📄 View Full Report</a>
                 </div>
             </div>
             <div class='footer'>
-                <div class='hotel-name'>Aurora Hotel Plaza - Hệ thống quản lý đặt phòng</div>
-                Email tự động - Vui lòng không trả lời email này
+                <div class='hotel-name'>Aurora Hotel Plaza - Booking Management System</div>
+                Automated email - Please do not reply to this email
             </div>
         </div>
     </body>

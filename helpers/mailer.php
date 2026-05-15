@@ -1,7 +1,7 @@
 <?php
 /**
  * Email Helper using PHPMailer
- * Sử dụng thư viện PHPMailer từ config/PHPMailler
+ * Uses PHPMailer library from config/PHPMailler
  */
 
 require_once __DIR__ . '/../config/environment.php';
@@ -163,7 +163,7 @@ class Mailer {
      */
     public function sendWelcomeEmail($userEmail, $userName, $userId) {
         try {
-            $subject = "Chào mừng đến với Aurora Hotel Plaza! 🎉";
+            $subject = "Welcome to Aurora Hotel Plaza!";
             $body = EmailTemplates::getWelcomeTemplate($userName, $userEmail, $userId);
             
             return $this->send($userEmail, $subject, $body);
@@ -184,9 +184,9 @@ class Mailer {
      */
     public function sendPasswordReset($userEmail, $userName, $resetToken) {
         try {
-            $subject = "Đặt lại mật khẩu - Aurora Hotel Plaza";
+            $subject = "Reset Password - Aurora Hotel Plaza";
             
-            // Build reset link - Sử dụng hàm url() từ environment.php
+            // Build reset link - Uses url() function from environment.php
             $resetLink = url("auth/reset-password.php?token=" . urlencode($resetToken));
             
             $body = EmailTemplates::getPasswordResetTemplate($userName, $resetLink);
@@ -220,7 +220,7 @@ class Mailer {
             
             $bookingData['total_amount_formatted'] = number_format($bookingData['total_amount'], 0, ',', '.');
             
-            $subject = "Đã gửi yêu cầu đặt phòng #{$bookingData['booking_code']} - Aurora Hotel Plaza";
+            $subject = "Booking Request Submitted #{$bookingData['booking_code']} - Aurora Hotel Plaza";
             $body = getBookingConfirmationNoPriceEmailHTML($bookingData, $hotel_info);
             $altBody = getBookingConfirmationNoPriceEmailText($bookingData, $hotel_info);
             
@@ -257,7 +257,7 @@ class Mailer {
             $bookingData['total_amount_formatted'] = number_format($bookingData['total_amount'], 0, ',', '.');
             
             $hotelEmail = defined('HOTEL_RECEIVE_EMAIL') ? HOTEL_RECEIVE_EMAIL : 'info@aurorahotelplaza.com';
-            $subject = "[Booking Mới #{$bookingData['booking_code']}] {$bookingData['type_name']} - Khách: {$guestName}";
+            $subject = "[New Booking #{$bookingData['booking_code']}] {$bookingData['type_name']} - Guest: {$guestName}";
             
             // Re-use the same beautiful template but send to hotel
             $body = getBookingConfirmationEmailHTML($bookingData, $hotel_info);
@@ -290,7 +290,7 @@ class Mailer {
      */
     public function sendTemporaryPassword($userEmail, $userName, $tempPassword) {
         try {
-            $subject = "Mật khẩu tạm thời - Aurora Hotel Plaza";
+            $subject = "Temporary Password - Aurora Hotel Plaza";
             
             // Try to get template, fallback to simple HTML if fails
             try {
@@ -300,11 +300,11 @@ class Mailer {
                 // Simple fallback template
                 $body = "
                 <html><body style='font-family: Arial, sans-serif; padding: 20px;'>
-                <h2>Mật khẩu tạm thời - Aurora Hotel Plaza</h2>
-                <p>Xin chào <strong>" . htmlspecialchars($userName) . "</strong>,</p>
-                <p>Mật khẩu tạm thời của bạn là: <strong style='font-size: 18px; color: #2196f3;'>" . htmlspecialchars($tempPassword) . "</strong></p>
-                <p>Mật khẩu này có hiệu lực trong 30 phút.</p>
-                <p>Vui lòng đăng nhập và đổi mật khẩu ngay.</p>
+                <h2>Temporary Password - Aurora Hotel Plaza</h2>
+                <p>Hello <strong>" . htmlspecialchars($userName) . "</strong>,</p>
+                <p>Your temporary password is: <strong style='font-size: 18px; color: #2196f3;'>" . htmlspecialchars($tempPassword) . "</strong></p>
+                <p>This password is valid for 30 minutes.</p>
+                <p>Please log in and change your password immediately.</p>
                 <hr><p style='color: #666; font-size: 12px;'>Aurora Hotel Plaza</p>
                 </body></html>";
             }
