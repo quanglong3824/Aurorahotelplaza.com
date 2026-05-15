@@ -713,29 +713,56 @@ include 'includes/admin-header.php';
             rooms.forEach(room => {
                 const isAvailable = room.is_available == 1;
                 const isCurrentRoom = room.room_id == currentRoomId;
+                const bookingStatus = room.booking_status || null;
+                const guestName = room.guest_name || null;
 
-                let cardClass, iconBg, iconColor, statusColor, badgeText;
+                let cardClass, iconBg, iconColor, statusColor, badgeText, canSelect;
+
                 if (isCurrentRoom) {
                     cardClass = 'border-amber-400 bg-amber-50 dark:bg-amber-900/20 cursor-pointer ring-2 ring-amber-400';
                     iconBg = 'bg-amber-100 text-amber-600';
                     statusColor = 'text-amber-600';
                     badgeText = '🔑 Đang phân';
+                    canSelect = true;
                 } else if (isAvailable) {
                     cardClass = 'border-green-300 hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 cursor-pointer';
                     iconBg = 'bg-green-100 text-green-600';
                     statusColor = 'text-green-600';
                     badgeText = '✓ Khả dụng';
+                    canSelect = true;
                 } else {
-                    cardClass = 'border-gray-300 bg-gray-100 dark:bg-gray-700 opacity-60 cursor-not-allowed';
-                    iconBg = 'bg-gray-200 text-gray-500';
-                    statusColor = 'text-red-600';
-                    badgeText = '✗ Đã được đặt';
+                    // Room is occupied or has a booking
+                    canSelect = false;
+                    if (bookingStatus === 'checked_in') {
+                        cardClass = 'border-red-400 bg-red-50 dark:bg-red-900/20 cursor-not-allowed';
+                        iconBg = 'bg-red-100 text-red-600';
+                        statusColor = 'text-red-600';
+                        badgeText = '🔴 Đang ở';
+                    } else if (bookingStatus === 'confirmed') {
+                        cardClass = 'border-orange-400 bg-orange-50 dark:bg-orange-900/20 cursor-not-allowed';
+                        iconBg = 'bg-orange-100 text-orange-600';
+                        statusColor = 'text-orange-600';
+                        badgeText = '🟠 Đã xác nhận';
+                    } else if (bookingStatus === 'pending') {
+                        cardClass = 'border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 cursor-not-allowed';
+                        iconBg = 'bg-yellow-100 text-yellow-600';
+                        statusColor = 'text-yellow-600';
+                        badgeText = '🟡 Chờ xác nhận';
+                    } else {
+                        cardClass = 'border-gray-300 bg-gray-100 dark:bg-gray-700 opacity-60 cursor-not-allowed';
+                        iconBg = 'bg-gray-200 text-gray-500';
+                        statusColor = 'text-red-600';
+                        badgeText = '✗ Đã được đặt';
+                    }
+                    if (guestName) {
+                        badgeText += ` — ${guestName}`;
+                    }
                 }
 
                 const roomCard = document.createElement('div');
                 roomCard.className = `p-4 border rounded-lg transition-all ${cardClass}`;
 
-                if (isAvailable || isCurrentRoom) {
+                if (canSelect) {
                     roomCard.onclick = () => selectRoom(bookingId, room.room_id, room.room_number);
                 }
 

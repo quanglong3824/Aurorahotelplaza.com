@@ -58,7 +58,33 @@ try {
                     AND b2.booking_id != :booking_id
                 ) THEN 0
                 ELSE 1
-            END as is_available
+            END as is_available,
+            (
+                SELECT b2.status 
+                FROM bookings b2
+                WHERE b2.room_id = r.room_id
+                AND b2.status IN ('confirmed', 'checked_in', 'pending')
+                AND (
+                    (b2.check_in_date <= :check_in AND b2.check_out_date > :check_in)
+                    OR (b2.check_in_date < :check_out AND b2.check_out_date >= :check_out)
+                    OR (b2.check_in_date >= :check_in AND b2.check_out_date <= :check_out)
+                )
+                AND b2.booking_id != :booking_id
+                LIMIT 1
+            ) as booking_status,
+            (
+                SELECT b2.guest_name 
+                FROM bookings b2
+                WHERE b2.room_id = r.room_id
+                AND b2.status IN ('confirmed', 'checked_in', 'pending')
+                AND (
+                    (b2.check_in_date <= :check_in AND b2.check_out_date > :check_in)
+                    OR (b2.check_in_date < :check_out AND b2.check_out_date >= :check_out)
+                    OR (b2.check_in_date >= :check_in AND b2.check_out_date <= :check_out)
+                )
+                AND b2.booking_id != :booking_id
+                LIMIT 1
+            ) as guest_name
         FROM rooms r
         WHERE r.room_type_id = :room_type_id
         AND r.status IN ('available', 'occupied')
