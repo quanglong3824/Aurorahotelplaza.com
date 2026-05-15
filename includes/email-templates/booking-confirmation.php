@@ -34,14 +34,14 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
             <!-- Header -->
             <div class="email-header">
                 <h1>{$hotel_name}</h1>
-                <p>Booking Confirmed Successfully</p>
+                <p>Booking Received — Pending Confirmation</p>
             </div>
             
             <!-- Content -->
             <div class="email-content">
                 <p class="email-greeting">Dear <strong>{$booking['guest_name']}</strong>,</p>
                 
-                <p class="email-text">Thank you for choosing {$hotel_name}. We have received your booking request and are processing it.</p>
+                <p class="email-text">Thank you for choosing {$hotel_name}. We have received your booking request and our team is reviewing it now. You will receive a confirmation email once your booking is approved.</p>
                 
                 <!-- Booking Code -->
                 <div class="booking-code-box">
@@ -104,10 +104,10 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
                 
                 <!-- Important Notes -->
                 <div class="alert-box">
-                    <div class="alert-box-title">Important Notes</div>
+                    <div class="alert-box-title">What Happens Next?</div>
                     <ul>
-                        <li>Your booking is currently "Pending Confirmation". Our staff will review and confirm as soon as possible.</li>
-                        <li>You will receive a confirmation email within 24 hours.</li>
+                        <li>Our staff will review your request and confirm within 24 hours.</li>
+                        <li>You will receive a confirmation email with full details once approved.</li>
                         <li>After confirmation, you can download a QR code for quick check-in.</li>
                         <li>Payment can be made online or at the hotel upon check-in.</li>
                         <li>Free cancellation up to 24 hours before check-in time.</li>
@@ -118,16 +118,16 @@ function getBookingConfirmationEmailHTML($booking, $hotel_info = []) {
                 
                 <!-- Contact Info -->
                 <div class="contact-info">
-                    <div class="contact-info-title">Contact Us</div>
+                    <div class="contact-info-title">Need Help?</div>
                     <div class="contact-item">Phone: <strong><a href="tel:{$hotel_phone_clean}" style="color: #b8941f; text-decoration: none;">{$hotel_phone}</a></strong></div>
                     <div class="contact-item">Email: <strong><a href="mailto:{$hotel_email}" style="color: #b8941f; text-decoration: none;">{$hotel_email}</a></strong></div>
                     <div class="contact-item">Website: <strong><a href="{$hotel_website}" style="color: #b8941f; text-decoration: none;">{$hotel_website}</a></strong></div>
                     <div class="contact-item">Address: <strong>{$hotel_address}</strong></div>
                 </div>
                 
-                <p class="email-text">We look forward to serving you!</p>
+                <p class="email-text">We look forward to welcoming you!</p>
                 
-                <p class="email-text">Best regards,<br><strong>The {$hotel_name} Team</strong></p>
+                <p class="email-text">Warm regards,<br><strong>The {$hotel_name} Team</strong></p>
             </div>
             
             <!-- Footer -->
@@ -157,11 +157,11 @@ function getBookingConfirmationEmailText($booking, $hotel_info = []) {
     
     $text = <<<TEXT
 {$hotel_name}
-BOOKING CONFIRMATION
+BOOKING RECEIVED — PENDING CONFIRMATION
 
 Dear {$booking['guest_name']},
 
-Thank you for choosing {$hotel_name}. We have received your booking request.
+Thank you for choosing {$hotel_name}. We have received your booking request and our team is reviewing it now.
 
 BOOKING CODE: {$booking['booking_code']}
 STATUS: Pending Confirmation
@@ -180,19 +180,18 @@ GUEST INFORMATION:
 
 ESTIMATED TOTAL COST: {$booking['total_amount_formatted']} VND
 
-IMPORTANT NOTES:
-- Your booking is currently "Pending Confirmation"
-- Staff will confirm within 24 hours
-- After confirmation, you can download a QR code for check-in
+WHAT HAPPENS NEXT?
+- Staff will review and confirm within 24 hours
+- You will receive a confirmation email once approved
 - Free cancellation up to 24 hours before check-in time
 
 CONTACT:
 Phone: {$hotel_phone}
 Email: {$hotel_email}
 
-We look forward to serving you!
+We look forward to welcoming you!
 
-Best regards,
+Warm regards,
 The {$hotel_name} Team
 TEXT;
     

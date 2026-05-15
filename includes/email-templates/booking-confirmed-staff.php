@@ -4,7 +4,8 @@ function getBookingConfirmedStaffEmail($data) {
     $checkOut = date('d/m/Y', strtotime($data['check_out_date']));
     $bookingDate = date('H:i d/m/Y', strtotime($data['created_at']));
 
-    $isInquiry = ($data['booking_type'] ?? 'instant') === 'inquiry';
+    $replySubject = rawurlencode("Re: Booking Confirmation #{$data['booking_code']} - {$data['guest_name']}");
+    $replyBody = rawurlencode("Dear {$data['guest_name']},\n\nThank you for your booking at Aurora Hotel Plaza.\n\n");
 
     return "
     <html>
@@ -40,18 +41,20 @@ function getBookingConfirmedStaffEmail($data) {
             .footer { background: #f8f9fa; padding: 24px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; }
             .footer .hotel-name { font-size: 14px; font-weight: 700; color: #d4af37; margin-bottom: 4px; }
             .action-btn { display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 16px; }
+            .reply-btn { display: inline-block; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+            .reply-btn:hover { background: linear-gradient(135deg, #1d4ed8, #1e40af); }
         </style>
     </head>
     <body>
         <div class='container'>
             <div class='header'>
                 <h1>Aurora Hotel Plaza</h1>
-                <div class='subtitle'>Booking Confirmation Notification</div>
-                <div class='badge'>✓ CONFIRMED</div>
+                <div class='subtitle'>Booking Confirmed — Staff Notification</div>
+                <div class='badge'>CONFIRMED</div>
             </div>
             <div class='content'>
                 <p>
-                    The following booking has been <strong>confirmed</strong>. Please verify the information and prepare for guest arrival.
+                    A new booking has been <strong>confirmed</strong>. Please review the details below and prepare for the guest's arrival.
                 </p>
 
                 <div class='booking-code'>
@@ -67,16 +70,16 @@ function getBookingConfirmedStaffEmail($data) {
                     </div>
                     <div class='info-row'>
                         <span class='info-label'>Phone:</span>
-                        <span class='info-value'>{$data['guest_phone']}</span>
+                        <span class='info-value'><a href='tel:{$data['guest_phone']}' style='color:#2563eb;text-decoration:none;'>{$data['guest_phone']}</a></span>
                     </div>
                     <div class='info-row'>
                         <span class='info-label'>Email:</span>
-                        <span class='info-value'>{$data['guest_email']}</span>
+                        <span class='info-value'><a href='mailto:{$data['guest_email']}' style='color:#2563eb;text-decoration:none;'>{$data['guest_email']}</a></span>
                     </div>
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Room Information</div>
+                    <div class='section-title'>Room Assignment</div>
                     <div class='info-row'>
                         <span class='info-label'>Room Type:</span>
                         <span class='info-value'>{$data['type_name']}</span>
@@ -96,11 +99,25 @@ function getBookingConfirmedStaffEmail($data) {
                     </div>" : "
                     <div class='info-row'>
                         <span class='info-label'>Room:</span>
-                        <span class='info-value' style='color:#b45309;'>⚠ Not yet assigned</span>
+                        <span class='info-value' style='color:#b45309;font-weight:600;'>Not yet assigned — please assign before check-in</span>
                     </div>") . "
+                    " . ($data['floor'] ? "
+                    <div class='info-row'>
+                        <span class='info-label'>Floor:</span>
+                        <span class='info-value'>{$data['floor']}</span>
+                    </div>" : "") . "
+                    " . ($data['building'] ? "
+                    <div class='info-row'>
+                        <span class='info-label'>Building:</span>
+                        <span class='info-value'>{$data['building']}</span>
+                    </div>" : "") . "
                     <div class='info-row'>
                         <span class='info-label'>Guests:</span>
                         <span class='info-value'>{$data['num_adults']} adults" . ($data['num_children'] > 0 ? ", {$data['num_children']} children" : "") . "</span>
+                    </div>
+                    <div class='info-row'>
+                        <span class='info-label'>Rooms:</span>
+                        <span class='info-value'>{$data['num_rooms']}</span>
                     </div>
                 </div>
 
@@ -110,7 +127,7 @@ function getBookingConfirmedStaffEmail($data) {
                         <div class='date-box checkin'>
                             <div class='label'>Check-in</div>
                             <div class='date'>$checkIn</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>After 14:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>From 14:00</div>
                         </div>
                         <div class='date-box checkout'>
                             <div class='label'>Check-out</div>
@@ -122,13 +139,17 @@ function getBookingConfirmedStaffEmail($data) {
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Cost</div>
+                    <div class='section-title'>Revenue</div>
                     <div class='info-row'>
                         <span class='info-label'>Rate/Night:</span>
                         <span class='info-value'>{$data['per_night']} VND</span>
                     </div>
+                    <div class='info-row'>
+                        <span class='info-label'>Number of Rooms:</span>
+                        <span class='info-value'>{$data['num_rooms']}</span>
+                    </div>
                     <div class='total-box'>
-                        <div class='label'>TOTAL</div>
+                        <div class='label'>TOTAL REVENUE</div>
                         <div class='amount'>{$data['total_amount']} VND</div>
                     </div>
                 </div>
@@ -139,13 +160,27 @@ function getBookingConfirmedStaffEmail($data) {
                     <p style='background:#fffbeb;padding:12px;border-radius:8px;border:1px solid #fde68a;'>" . nl2br(htmlspecialchars($data['special_requests'])) . "</p>
                 </div>" : "") . "
 
-                <div style='text-align:center;margin-top:24px;'>
-                    <a href='" . (defined('BASE_URL') ? BASE_URL : 'https://aurorahotelplaza.com') . "/admin/booking-report.php?id={$data['booking_id']}' class='action-btn'>📄 View Full Report</a>
+                <div class='section'>
+                    <div class='section-title'>Booking Timeline</div>
+                    <div class='info-row'>
+                        <span class='info-label'>Booked At:</span>
+                        <span class='info-value'>{$bookingDate}</span>
+                    </div>
+                    <div class='info-row'>
+                        <span class='info-label'>Booking Type:</span>
+                        <span class='info-value'>" . (($data['booking_type'] ?? 'instant') === 'inquiry' ? 'Inquiry' : 'Instant') . "</span>
+                    </div>
+                </div>
+
+                <div style='text-align:center;margin-top:28px;padding-top:24px;border-top:2px solid #e2e8f0;'>
+                    <a href='mailto:{$data['guest_email']}?subject={$replySubject}&body={$replyBody}' class='reply-btn'>Reply to Guest</a>
+                    <br><br>
+                    <a href='" . (defined('BASE_URL') ? BASE_URL : 'https://aurorahotelplaza.com') . "/admin/booking-report.php?id={$data['booking_id']}' class='action-btn'>View Full Report</a>
                 </div>
             </div>
             <div class='footer'>
-                <div class='hotel-name'>Aurora Hotel Plaza - Booking Management System</div>
-                Automated email - Please do not reply to this email
+                <div class='hotel-name'>Aurora Hotel Plaza — Booking Management System</div>
+                Internal notification — Handle guest information with care
             </div>
         </div>
     </body>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Email Template: Booking Confirmation (No Price)
- * Sent to customers - no pricing information
+ * Sent to customers for inquiry bookings — no pricing information
  * Style: Clean white background, Gold brand colors
  */
 
@@ -34,7 +34,7 @@ function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
             <!-- Header -->
             <div style="background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%); padding: 40px 30px; text-align: center;">
                 <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.15);">{$hotel_name}</h1>
-                <p style="margin: 10px 0 0; color: rgba(255, 255, 255, 0.92); font-size: 14px; font-weight: 500;">Booking Request Submitted</p>
+                <p style="margin: 10px 0 0; color: rgba(255, 255, 255, 0.92); font-size: 14px; font-weight: 500;">Booking Request Received</p>
             </div>
             
             <!-- Content -->
@@ -43,8 +43,8 @@ function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
                 <p style="font-size: 16px; color: #1e293b; margin: 0 0 18px;">Dear <strong>{$booking['guest_name']}</strong>,</p>
                 
                 <p style="font-size: 15px; color: #475569; margin: 0 0 24px; line-height: 1.7;">
-                    Your booking request has been <span style="color: #b8941f; font-weight: 600;">successfully submitted</span> to {$hotel_name}.<br>
-                    Our reception team will <span style="color: #059669; font-weight: 600;">confirm as soon as possible</span>.
+                    Thank you for your interest in staying at {$hotel_name}. Your booking request has been <span style="color: #b8941f; font-weight: 600;">successfully received</span> and our team will review it shortly.<br>
+                    We will contact you with <span style="color: #059669; font-weight: 600;">pricing details and confirmation</span> as soon as possible.
                 </p>
                 
                 <!-- Booking Code -->
@@ -56,12 +56,12 @@ function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
                 
                 <!-- Status Badge -->
                 <div style="text-align: center; margin: 20px 0;">
-                    <span style="display: inline-block; padding: 7px 18px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background-color: #fef3c7; color: #92400e; border-radius: 20px;">Pending Confirmation</span>
+                    <span style="display: inline-block; padding: 7px 18px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background-color: #fef3c7; color: #92400e; border-radius: 20px;">Pending Review</span>
                 </div>
                 
                 <!-- Booking Info -->
                 <div style="background-color: #f8fafc; border-left: 3px solid #d4af37; padding: 20px 22px; margin: 24px 0; border-radius: 0 8px 8px 0;">
-                    <div style="font-size: 15px; font-weight: 600; color: #1e293b; margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">Booking Information</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #1e293b; margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">Booking Details</div>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
                             <td style="padding: 10px 0; font-size: 14px; color: #64748b; width: 40%;">Room Type</td>
@@ -88,10 +88,10 @@ function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
 
                 <!-- Status Info -->
                 <div style="background-color: #eff6ff; border-left: 3px solid #3b82f6; padding: 18px 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
-                    <div style="font-size: 14px; font-weight: 600; color: #1e40af; margin: 0 0 10px;">Request Status</div>
+                    <div style="font-size: 14px; font-weight: 600; color: #1e40af; margin: 0 0 10px;">Next Steps</div>
                     <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.6;">
-                        Our hotel staff will contact you to confirm via <strong>phone</strong> or <strong>email</strong>.<br>
-                        Pricing and payment details will be provided after confirmation.
+                        Our team will contact you via <strong>phone</strong> or <strong>email</strong> to confirm availability and discuss pricing.<br>
+                        Please keep your booking code handy for reference.
                     </p>
                 </div>
 
@@ -128,7 +128,7 @@ function getBookingConfirmationNoPriceEmailHTML($booking, $hotel_info = []) {
                 </div>
                 
                 <p style="font-size: 15px; color: #475569; margin: 0; line-height: 1.7;">
-                    Best regards,<br><strong>The {$hotel_name} Team</strong>
+                    Warm regards,<br><strong>The {$hotel_name} Team</strong>
                 </p>
             </div>
             
@@ -157,15 +157,15 @@ function getBookingConfirmationNoPriceEmailText($booking, $hotel_info = []) {
     
     return <<<TEXT
 {$hotel_name}
-BOOKING REQUEST SUBMITTED
+BOOKING REQUEST RECEIVED
 
 Dear {$booking['guest_name']},
 
-Your booking request has been successfully submitted to {$hotel_name}.
-Our reception team will confirm as soon as possible.
+Thank you for your interest in staying at {$hotel_name}. Your booking request has been successfully received.
+Our team will review it and contact you with pricing details and confirmation.
 
 BOOKING CODE: {$booking['booking_code']}
-STATUS: Pending Confirmation
+STATUS: Pending Review
 
 BOOKING INFORMATION:
 - Room Type: {$booking['type_name']}
@@ -174,15 +174,16 @@ BOOKING INFORMATION:
 - Number of Nights: {$booking['total_nights']} nights
 - Number of Guests: {$booking['num_adults']} adults
 
-You will receive a confirmation email once the hotel approves your request.
+NEXT STEPS:
+- Staff will contact you via phone or email
+- Pricing details will be provided after confirmation
+- Free cancellation up to 24 hours before check-in time
 
 CONTACT:
 Phone: {$hotel_phone}
 Email: {$hotel_email}
 
-We look forward to serving you!
-
-Best regards,
+Warm regards,
 The {$hotel_name} Team
 TEXT;
 }

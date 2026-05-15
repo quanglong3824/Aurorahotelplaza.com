@@ -4,8 +4,6 @@ function getBookingConfirmedCustomerEmail($data) {
     $checkOut = date('d/m/Y', strtotime($data['check_out_date']));
     $bookingDate = date('H:i d/m/Y', strtotime($data['created_at']));
 
-    $isInquiry = ($data['booking_type'] ?? 'instant') === 'inquiry';
-
     return "
     <html>
     <head>
@@ -37,6 +35,10 @@ function getBookingConfirmedCustomerEmail($data) {
             .total-box { background: #fefce8; padding: 16px; border-radius: 8px; text-align: right; border: 2px solid #d4af37; margin: 16px 0; }
             .total-box .label { font-size: 14px; color: #666; }
             .total-box .amount { font-size: 24px; font-weight: 700; color: #d4af37; }
+            .tips-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 16px 0; }
+            .tips-box h4 { margin: 0 0 10px; color: #16a34a; font-size: 14px; }
+            .tips-box ul { margin: 0; padding-left: 18px; }
+            .tips-box li { font-size: 13px; color: #475569; line-height: 1.8; }
             .footer { background: #f8f9fa; padding: 24px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee; }
             .footer .hotel-name { font-size: 14px; font-weight: 700; color: #d4af37; margin-bottom: 4px; }
         </style>
@@ -52,8 +54,8 @@ function getBookingConfirmedCustomerEmail($data) {
                     Dear <strong>{$data['guest_name']}</strong>,
                 </div>
                 <p>
-                    We are pleased to confirm your booking at Aurora Hotel Plaza has been approved.
-                    Below are the details:
+                    Thank you for choosing Aurora Hotel Plaza! We are delighted to confirm your reservation.
+                    Your room is being prepared to ensure a comfortable and memorable stay.
                 </p>
 
                 <div class='booking-code'>
@@ -62,7 +64,7 @@ function getBookingConfirmedCustomerEmail($data) {
                 </div>
 
                 <div class='section'>
-                    <div class='section-title'>Room Information</div>
+                    <div class='section-title'>Your Room</div>
                     <div class='info-row'>
                         <span class='info-label'>Room Type:</span>
                         <span class='info-value'>{$data['type_name']}</span>
@@ -92,7 +94,7 @@ function getBookingConfirmedCustomerEmail($data) {
                         <div class='date-box checkin'>
                             <div class='label'>Check-in</div>
                             <div class='date'>$checkIn</div>
-                            <div style='font-size:11px;color:#666;margin-top:4px;'>After 14:00</div>
+                            <div style='font-size:11px;color:#666;margin-top:4px;'>From 14:00</div>
                         </div>
                         <div class='date-box checkout'>
                             <div class='label'>Check-out</div>
@@ -118,17 +120,28 @@ function getBookingConfirmedCustomerEmail($data) {
                 " . ($data['special_requests'] ? "
                 <div class='section'>
                     <div class='section-title'>Special Requests</div>
-                    <p style='background:#f8f9fa;padding:12px;border-radius:8px;'>" . nl2br(htmlspecialchars($data['special_requests'])) . "</p>
+                    <p style='background:#f8f9fa;padding:12px;border-radius:8px;'>We have noted your requests and will do our best to accommodate them:</p>
+                    <p style='background:#f8f9fa;padding:12px;border-radius:8px;margin-top:8px;'>" . nl2br(htmlspecialchars($data['special_requests'])) . "</p>
                 </div>" : "") . "
 
+                <div class='tips-box'>
+                    <h4>Check-in Tips</h4>
+                    <ul>
+                        <li>Please bring your ID card or passport for check-in</li>
+                        <li>Present your booking code at the front desk</li>
+                        <li>Early check-in is subject to room availability</li>
+                        <li>Free Wi-Fi is available throughout the hotel</li>
+                    </ul>
+                </div>
+
                 <p style='margin-top:24px;'>
-                    Please present your booking code at check-in at the front desk.
-                    If you have any questions, please feel free to contact us.
+                    Should you need any assistance or wish to modify your booking,
+                    please do not hesitate to contact us. We look forward to welcoming you!
                 </p>
 
                 <p style='margin-top:20px;'>
-                    Best regards,<br>
-                    <strong>Aurora Hotel Plaza</strong>
+                    Warm regards,<br>
+                    <strong>Aurora Hotel Plaza Team</strong>
                 </p>
             </div>
             <div class='footer'>
