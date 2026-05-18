@@ -79,8 +79,8 @@ $page_title = 'Điều khoản sử dụng';
                                 </h2>
                                 <div class="policy-section-content text-white/80">
                                     <p>
-                                        Aurora Hotel Plaza là khách sạn cao cấp tọa lạc tại trung tâm thành phố Biên
-                                        Hòa, tỉnh Đồng Nai.
+                                        Aurora Hotel Plaza là khách sạn cao cấp tọa lạc tại trung tâm thành phố Đồng
+                                        Nai.
                                         Chúng tôi cung cấp dịch vụ lưu trú, nhà hàng, hội nghị và các dịch vụ tiện ích
                                         khác.
                                     </p>

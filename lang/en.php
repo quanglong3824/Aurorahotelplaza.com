@@ -360,7 +360,7 @@ return [
         'come_to_aurora' => 'Come to Aurora Hotel Plaza',
         'location_desc' => 'Located in a central position, easy access to important destinations in the area.',
         'address_label' => 'Address',
-        'address_full' => '253 Pham Van Thuan, KP2<br>Tam Hiep, Dong Nai City<br>Dong Nai Province',
+        'address_full' => '253 Pham Van Thuan, KP2<br>Tam Hiep, Dong Nai City',
         'phone_label' => 'Phone',
         'email_label' => 'Email',
         'working_hours_label' => 'Working Hours',

@@ -469,7 +469,7 @@ return [
         'come_to_aurora' => 'Đến với Aurora Hotel Plaza',
         'location_desc' => 'Tọa lạc tại vị trí trung tâm, dễ dàng di chuyển đến các điểm đến quan trọng trong khu vực.',
         'address_label' => 'Địa chỉ',
-        'address_full' => '253 Phạm Văn Thuận, KP2<br>Tam Hiệp, TP. Đồng Nai<br>Tỉnh Đồng Nai',
+        'address_full' => '253 Phạm Văn Thuận, KP2<br>Tam Hiệp, TP. Đồng Nai',
         'phone_label' => 'Điện thoại',
         'email_label' => 'Email',
         'working_hours_label' => 'Giờ làm việc',
