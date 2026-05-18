@@ -394,11 +394,11 @@ return [
     // Homepage
     'home' => [
         'read_more' => 'Đọc thêm',
-        'meta_title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa',
+        'meta_title' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại Đồng Nai',
         'reception_24_7' => 'Lễ tân 24/24',
         'about_us' => 'Về chúng tôi',
         'welcome_title' => 'Chào mừng đến với Aurora Hotel Plaza',
-        'welcome_desc' => 'Tọa lạc tại trung tâm thành phố Biên Hòa, Aurora Hotel Plaza mang đến trải nghiệm sang trọng và thanh bình vô song. Với hơn 10 năm kinh nghiệm trong ngành khách sạn, chúng tôi cam kết mang đến dịch vụ 4 sao với giá cả hợp lý nhất.',
+        'welcome_desc' => 'Tọa lạc tại trung tâm thành phố Đồng Nai, Aurora Hotel Plaza mang đến trải nghiệm sang trọng và thanh bình vô song. Với hơn 10 năm kinh nghiệm trong ngành khách sạn, chúng tôi cam kết mang đến dịch vụ 4 sao với giá cả hợp lý nhất.',
         'rooms_apartments' => 'Phòng & Căn hộ',
         'happy_customers' => 'Khách hàng hài lòng',
         'years_experience' => 'Năm kinh nghiệm',
@@ -469,7 +469,7 @@ return [
         'come_to_aurora' => 'Đến với Aurora Hotel Plaza',
         'location_desc' => 'Tọa lạc tại vị trí trung tâm, dễ dàng di chuyển đến các điểm đến quan trọng trong khu vực.',
         'address_label' => 'Địa chỉ',
-        'address_full' => '253 Phạm Văn Thuận, KP2<br>Tam Hiệp, TP. Biên Hòa<br>Tỉnh Đồng Nai',
+        'address_full' => '253 Phạm Văn Thuận, KP2<br>Tam Hiệp, TP. Đồng Nai<br>Tỉnh Đồng Nai',
         'phone_label' => 'Điện thoại',
         'email_label' => 'Email',
         'working_hours_label' => 'Giờ làm việc',
@@ -601,7 +601,7 @@ return [
         'title' => 'Giới thiệu - Aurora Hotel Plaza',
         'about_us' => 'Về chúng tôi',
         'page_title' => 'Về Aurora Hotel Plaza',
-        'page_subtitle' => 'Nơi sang trọng gặp gỡ sự thoải mái, tạo nên trải nghiệm nghỉ dưỡng đẳng cấp tại trung tâm Biên Hòa',
+        'page_subtitle' => 'Nơi sang trọng gặp gỡ sự thoải mái, tạo nên trải nghiệm nghỉ dưỡng đẳng cấp tại trung tâm Đồng Nai',
         'book_now' => 'Đặt phòng ngay',
         'learn_more' => 'Tìm hiểu thêm',
         'our_story' => 'Câu chuyện của chúng tôi',
@@ -621,7 +621,7 @@ return [
         'dedicated_service' => 'Dịch vụ tận tâm',
         'dedicated_service_desc' => 'Đội ngũ nhân viên chuyên nghiệp, nhiệt tình phục vụ 24/7 với nụ cười thân thiện',
         'prime_location' => 'Vị trí đắc địa',
-        'prime_location_desc' => 'Tọa lạc tại trung tâm Biên Hòa, thuận tiện di chuyển đến các điểm đến quan trọng',
+        'prime_location_desc' => 'Tọa lạc tại trung tâm Đồng Nai, thuận tiện di chuyển đến các điểm đến quan trọng',
         'diverse_cuisine' => 'Ẩm thực đa dạng',
         'diverse_cuisine_desc' => 'Nhà hàng phục vụ các món ăn Á - Âu với đầu bếp giàu kinh nghiệm',
         'modern_amenities' => 'Tiện nghi hiện đại',
@@ -685,7 +685,7 @@ return [
     'explore_page' => [
         'title' => 'Khám phá - Aurora Hotel Plaza',
         'badge' => 'Khám phá Aurora Hotel Plaza',
-        'hero_title' => 'Trải nghiệm <span class="text-accent"> đẳng cấp</span><br>tại trung tâm Biên Hòa',
+        'hero_title' => 'Trải nghiệm <span class="text-accent"> đẳng cấp</span><br>tại trung tâm Đồng Nai',
         'hero_desc' => 'Khám phá không gian sang trọng, dịch vụ 4 sao và những trải nghiệm tuyệt vời đang chờ đón bạn tại Aurora Hotel Plaza',
         'book_now' => 'Đặt phòng ngay',
         'explore_more' => 'Khám phá thêm',
@@ -1391,7 +1391,7 @@ return [
     // Footer
     'footer' => [
         'about' => 'Về chúng tôi',
-        'description' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại trung tâm Biên Hòa, Đồng Nai. Chúng tôi mang đến trải nghiệm nghỉ dưỡng đẳng cấp với dịch vụ hoàn hảo và tiện nghi hiện đại.',
+        'description' => 'Aurora Hotel Plaza - Khách sạn sang trọng tại trung tâm Đồng Nai. Chúng tôi mang đến trải nghiệm nghỉ dưỡng đẳng cấp với dịch vụ hoàn hảo và tiện nghi hiện đại.',
         'follow_us' => 'Theo dõi chúng tôi',
         'quick_links' => 'Liên kết nhanh',
         'about_us' => 'Về chúng tôi',

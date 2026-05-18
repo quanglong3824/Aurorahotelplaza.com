@@ -2343,7 +2343,7 @@ function updateToggleButtonText() {
 // Show toast notification
 function showToast(message, type = 'info') {
     const toast = document.createElement('div');
-    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-[9999] transition-all duration-300 transform translate-x-0 ${
+    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-[999999] transition-all duration-300 transform translate-x-0 ${
         type === 'success' ? 'bg-green-600 text-white' :
         type === 'error' ? 'bg-red-600 text-white' :
         'bg-blue-600 text-white'

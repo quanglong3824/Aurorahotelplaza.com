@@ -125,7 +125,7 @@ class ContactEmailTemplates
             <!-- Footer -->
             <div style="background-color: #f8fafc; padding: 28px 32px; text-align: center; border-top: 1px solid #e2e8f0;">
                 <p style="margin: 0; font-size: 14px; font-weight: 600; color: #b8941f;">Aurora Hotel Plaza</p>
-                <p style="margin: 4px 0 0; font-size: 13px; color: #94a3b8;">253 Pham Van Thuan, KP2, Tam Hiep, Bien Hoa, Dong Nai</p>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #94a3b8;">253 Pham Van Thuan, KP2, Tam Hiep, Dong Nai City</p>
                 <p style="margin: 4px 0 0; font-size: 13px; color: #94a3b8;">(+84-251) 391 8888 | info@aurorahotelplaza.com</p>
                 <p style="margin: 12px 0 0; font-size: 12px; color: #94a3b8;">© 2025 Aurora Hotel Plaza. All rights reserved.</p>
             </div>

@@ -157,7 +157,7 @@ foreach ($room_types as $room) {
 
         <!-- ANTI-SPAM: Show block modal if user has pending bookings -->
         <?php if (!$spam_check_passed && !empty($booking_block_message)): ?>
-            <div id="bookingBlockModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+            <div id="bookingBlockModal" class="fixed inset-0 z-[999999] flex items-center justify-center p-4"
                 style="background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);" role="dialog" aria-modal="true">
                 <div class="relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 rounded-3xl shadow-2xl w-full max-w-lg border border-white/10 max-h-[90vh] overflow-y-auto"
                     onclick="event.stopPropagation()" style="box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">

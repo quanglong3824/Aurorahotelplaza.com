@@ -355,7 +355,7 @@ if (!function_exists('__')) {
 </script>
 
 <!-- Booking Type Modal -->
-<div id="bookingTypeModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+<div id="bookingTypeModal" class="fixed inset-0 z-[999999] hidden items-center justify-center p-4"
     style="background:rgba(0,0,0,0.7);">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
@@ -392,7 +392,7 @@ if (!function_exists('__')) {
 </div>
 
 <!-- Group Contact Modal -->
-<div id="groupContactModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+<div id="groupContactModal" class="fixed inset-0 z-[999999] hidden items-center justify-center p-4"
     style="background:rgba(0,0,0,0.7);">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-white/10">
         <div
@@ -417,7 +417,7 @@ if (!function_exists('__')) {
 </div>
 
 <!-- Booking Disabled Modal -->
-<div id="bookingDisabledModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4"
+<div id="bookingDisabledModal" class="fixed inset-0 z-[999999] hidden items-center justify-center p-4"
     style="background:rgba(0,0,0,0.75);">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg border border-red-500/30">
         <div

@@ -182,7 +182,7 @@ class EmailHelper {
                 </div>
                 
                 <div class='footer'>
-                    <p>Aurora Hotel Plaza - Khách sạn sang trọng tại Biên Hòa</p>
+                    <p>Aurora Hotel Plaza - Khách sạn sang trọng tại Đồng Nai</p>
                     <p>Email: info@aurorahotelplaza.com | Hotline: (+84-251) 391 8888</p>
                 </div>
             </div>

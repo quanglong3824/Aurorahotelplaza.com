@@ -41,8 +41,8 @@ class SEOManager {
             // Fallback defaults
             self::$settings = [
                 'site_name' => 'Aurora Hotel Plaza',
-                'site_tagline_vi' => 'Khách sạn sang trọng tại Biên Hòa',
-                'site_tagline_en' => 'Luxury Hotel in Bien Hoa',
+                'site_tagline_vi' => 'Khách sạn sang trọng tại Đồng Nai',
+                'site_tagline_en' => 'Luxury Hotel in Dong Nai',
                 'default_og_image' => '/assets/img/og-image.jpg',
                 'twitter_handle' => '@aurorahotelplaza',
                 'schema_star_rating' => '4',
@@ -315,7 +315,7 @@ class SEOManager {
         $priceRange = self::getSetting('schema_price_range', '$$');
         
         // Get local SEO settings from database
-        $geoCity = self::getSetting('geo_city', 'Biên Hòa');
+        $geoCity = self::getSetting('geo_city', 'Đồng Nai');
         $geoRegion = self::getSetting('geo_region', 'Đồng Nai');
         $geoCountry = self::getSetting('geo_country', 'Vietnam');
         $geoLat = self::getSetting('geo_latitude', '10.957145');
@@ -331,8 +331,8 @@ class SEOManager {
             '@context' => 'https://schema.org',
             '@type' => 'Hotel',
             'name' => 'Aurora Hotel Plaza',
-            'alternateName' => ['Aurora Hotel Biên Hòa', 'Khách sạn Aurora Đồng Nai', 'Aurora Plaza Bien Hoa'],
-            'description' => 'Khách sạn 4 sao sang trọng tại trung tâm Biên Hòa, Đồng Nai với hơn 200 phòng nghỉ và căn hộ cao cấp. Vị trí đắc địa gần KCN Amata, Big C Biên Hòa.',
+            'alternateName' => ['Aurora Hotel Đồng Nai', 'Khách sạn Aurora Đồng Nai', 'Aurora Plaza Dong Nai'],
+            'description' => 'Khách sạn 4 sao sang trọng tại trung tâm Đồng Nai với hơn 200 phòng nghỉ và căn hộ cao cấp. Vị trí đắc địa gần KCN Amata, Big C Đồng Nai.',
             'image' => [
                 $baseUrl . '/assets/img/hotel-exterior.jpg',
                 $baseUrl . '/assets/img/lobby.jpg',
@@ -362,7 +362,7 @@ class SEOManager {
             ],
             'location' => [
                 '@type' => 'Place',
-                'name' => 'Biên Hòa, Đồng Nai',
+                'name' => 'Đồng Nai',
                 'geo' => [
                     '@type' => 'GeoCoordinates',
                     'latitude' => $geoLat,
@@ -561,7 +561,7 @@ class SEOManager {
             ],
             'areaServed' => [
                 '@type' => 'City',
-                'name' => 'Biên Hòa'
+                'name' => 'Đồng Nai'
             ],
             'offers' => [
                 '@type' => 'Offer',
@@ -671,11 +671,11 @@ class SEOManager {
             'name' => 'Aurora Hotel Plaza',
             'url' => $baseUrl,
             'logo' => $baseUrl . '/assets/img/logo.png',
-            'description' => 'Khách sạn 4 sao sang trọng tại Biên Hòa, Đồng Nai',
+            'description' => 'Khách sạn 4 sao sang trọng tại Đồng Nai',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => '253, Phạm Văn Thuận, KP2',
-                'addressLocality' => 'Biên Hòa',
+                'addressLocality' => 'Đồng Nai',
                 'addressRegion' => 'Đồng Nai',
                 'postalCode' => '810000',
                 'addressCountry' => 'VN'
@@ -857,20 +857,20 @@ class SEOManager {
      */
     private static function getDefaultTitle($lang) {
         $siteName = self::getSetting('site_name', 'Aurora Hotel Plaza');
-        $tagline = self::getSetting('site_tagline_' . $lang, $lang === 'vi' ? 'Khách sạn sang trọng tại Biên Hòa' : 'Luxury Hotel in Bien Hoa');
+        $tagline = self::getSetting('site_tagline_' . $lang, $lang === 'vi' ? 'Khách sạn sang trọng tại Đồng Nai' : 'Luxury Hotel in Dong Nai');
         return $siteName . ' - ' . $tagline;
     }
 
     private static function getDefaultDescription($lang) {
         return $lang === 'vi'
-            ? 'Khách sạn Aurora Hotel Plaza 4 sao hàng đầu tại Biên Hòa, Đồng Nai. Phòng nghỉ cao cấp, căn hộ Indochine, tiệc cưới, hội nghị.'
-            : 'Aurora Hotel Plaza - Premier 4-star hotel in Bien Hoa, Dong Nai. Luxury rooms, Indochine apartments, wedding venue, conference center.';
+            ? 'Khách sạn Aurora Hotel Plaza 4 sao hàng đầu tại Đồng Nai. Phòng nghỉ cao cấp, căn hộ Indochine, tiệc cưới, hội nghị.'
+            : 'Aurora Hotel Plaza - Premier 4-star hotel in Dong Nai. Luxury rooms, Indochine apartments, wedding venue, conference center.';
     }
 
     private static function getDefaultKeywords($lang) {
         return $lang === 'vi'
-            ? 'khách sạn biên hòa, aurora hotel plaza, khách sạn 4 sao, khách sạn đồng nai, đặt phòng'
-            : 'hotel bien hoa, aurora hotel plaza, 4 star hotel, dong nai hotel, booking';
+            ? 'khách sạn đồng nai, aurora hotel plaza, khách sạn 4 sao, khách sạn đồng nai, đặt phòng'
+            : 'hotel dong nai, aurora hotel plaza, 4 star hotel, dong nai hotel, booking';
     }
 
     /**
